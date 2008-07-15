@@ -1,0 +1,32 @@
+h1. CWB R3 code architecture
+
+This document is a rough guideline to the architecture of the CWB source code.
+It assumes basic familiarity with the corpus model, data formats and query
+processing strategies.  Its main purpose is to show which tasks each source
+file is responsible for, in which header files declarations can be found, and
+how the source files depend on each other.
+
+h2. The CL library
+
+h4. cl/cl.h
+
+* declares all exported functions, constants and type definitions
+* other source files (and headers) in CL that implement the exported functions include @cl.h@
+* various utility functions (added after v2.2): memory management, string functions, regular expressions with optimisation, hashes and lists (for lexical data)
+* for the core CL functions, which give access to corpus data, there are currently two sets of declarations in this file
+** full declarations for the "old-style" functions (CWB v2.2) 
+** macro definitions that map "new-style" functions (as used in CWB v3.0) to the old-style names
+* old-style syntax is deprecated as of v3.0 and will no longer be supported in future releases (which may introduce yet another syntax change, depending on where open-source development of CWB leads)
+* after the public release of 3.0, the source code should be rewritten to use new-style syntax only (also implementations in the @XXX.c@ files should declare functions in new-style syntax)
+
+h4. cl/globals.h cl/globals.c
+
+* 
+
+h2. CQP (query processor and interactive environment)
+
+
+
+h2. Command-line utilities
+
+

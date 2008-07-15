@@ -1,0 +1,46 @@
+
+Version 3.0
+-----------
+
+ - this will be the first official release of the IMS Open Corpus Workbench
+ - should be released as soon as possible, after some testing by developer community (and perhaps an overhaul of installation procedure)
+ - hopefully, binary packages for various platforms will be contributed by volunteers
+
+Bug fixes:
+
+ - [2008-01-03] Fixed a strange bug in which the query
+	([pos = "IN|TO"] [pos = "DT.*"]? [pos = "JJ.*"]* [pos = "N.*"]+){3};
+   causes CQP to segfault on Darwin/PowerPC platforms (discovered on Mac OS X 10.4 with PowerPC G4 CPU).
+   The problem occurs for >= 3 repetitions, but not for 1 or 2 repetitions.  It turned out that 
+   AddState()<cqp/regex2dfa.c> reallocates the state table STab[], which might move it to a different
+   memory location, breaking a pointer into the array held by calling function FormState() in a local variable SP.
+   This bug was difficult to find because it only causes problems if the original memory location of STab[]
+   is overwritten immediately (perhaps by shifting STab[] to an overlapping location); otherwise, access through
+   the stale copy pointed to by SP works fine.  To fix the bug, SP is now updated in FormState()<cqp/regex2dfa.c>
+   immediately after calling AddState().
+
+ - [2008-05-05] Added code to detect infinite loops in FSA simulation when executing a standard CQP query. Such
+   loops can be caused by unlimited quantification over zero-width elements (XML tags and lookahead constraints),
+   but will be triggered only in certain circumstances. While these queries are obviously nonsensical, novice
+   users of Web interfaces often write things like ``<s> * ...'', thinking that ``*'' matches an arbitrary word.
+   Some examples should illustrate the problem:
+ 	<s> *         # not executed ("start state is final state")
+	<s> +         # runs normally, but returns no matches (because all matches have length zero)
+	<s> * []      # works correctly in standard mode, but triggers infinite loop in longest match mode
+	<s> * "xxx"   # gets stuck in infinite loop if "xxx" doesn't match
+	"!" (<p> <s> | [: word = "[A-Z].*" :]){3,} "The"  # infinite loops aren't always easy to detect
+   A simple solution has been implemented which tests the state/position vector after each FSA simulation step.
+   If the vector hasn't changed, the FSA must be in an infinite loop and query execution is aborted with an
+   emphatic error message (in case the new code should abort a valid query). This catches most cases, but some
+   more complex situations (as the last example above) will still get stuck: because of the way the FSA is
+   implemented in CQP, it will oscillate between different configurations of active states.  A fully reliable
+   solution would require an analysis of "empty" cycles in the FSA before query execution.
+
+
+Version 2.2.b99 (2007-03-11)
+----------------------------
+
+ - initial public release of the CWB source code on http://cwb.sf.net
+ - source code and build system has already been cleaned up from the IMS-internal version
+ - intended to be ready for public release (as v3.0) without major changes or additions
+

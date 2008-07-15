@@ -1,0 +1,41 @@
+Es gibt in der CWB ein Menge von "Hardlimits": fest im Sourcecode
+verankerten Einschraenkungen, die sich nicht ohne weiteres anpassen
+lassen. Im folgenden werden bekannte Hardlimits zusammen mit ihren
+"Quellen" aufgefuehrt. 
+
+
+* jedes CWB-Korpus muss ein p-Attribut mit dem Namen 'word' besitzen
+! obwohl in cl/attributes.h DEFAULT_ATT_NAME definiert wird, ist der
+! Name word an zahlreichen anderen Stellen fest verdrahtet, so dass 
+! sich diese Beschraenkung nicht mit vertretbarem Aufwand umgehen
+! laesst 
+
+* maximal 1024 s-Attribute pro Korpus
+- utils/encode.c: MAXRANGES
+- utils/decode.c: MAX_ATTRS (implizit)
+- cqp/concordance.c: MAX_S_ATTRS
+
+* decode kann maximal 1024 Attribute gleichzeitig ausgeben
+- utils/decode.c: MAX_ATTRS
+
+* die maximale Zeilenlaenge in (vertikalisierten) Quelldateien fuer
+encode betraegt 16383 Zeichen
+- utils/encode.c: MAX_INPUT_LINE_LENGTH
+
+* liefern builtin-Funktionen von CQP einen dynamisch erzeugten String
+zurueck, so darf dieser maximal 2048 Zeichen lang sein
+! liegt daran, dass hierfuer in DynCallResult-Objekten ein statischer
+! Buffer bereitgestellt wird; dynamische Speicherverwaltung ist
+! aufgrund der fehlerhaften Verwaltung von DynCallResult's in CQP 
+! nicht moeglich
+- cl/cl.h: CL_DYN_STRING_SIZE
+
+* Dateinamen, Attributname, Labels, etc. duerfen maximal 1024 Zeichen
+lang sein 
+- cl/globals.h: MAX_IDENTIFIER_LENGTH
+
+* Strings, die in statischen Buffern gespeichert werden, duerfen
+maximal 4096 Zeichen lang sein; betroffen sind u.a. regulaere
+Ausdruecke in CQP-Queries
+- cl/globals.h: MAX_LINE_LENGTH
+

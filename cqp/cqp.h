@@ -1,0 +1,86 @@
+/* 
+ *  IMS Open Corpus Workbench (CWB)
+ *  Copyright (C) 1993-2006 by IMS, University of Stuttgart
+ *  Copyright (C) 2007-     by the respective contributers (see file AUTHORS)
+ * 
+ *  This program is free software; you can redistribute it and/or modify it
+ *  under the terms of the GNU General Public License as published by the
+ *  Free Software Foundation; either version 2, or (at your option) any later
+ *  version.
+ * 
+ *  This program is distributed in the hope that it will be useful, but
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+ *  Public License for more details (in the file "COPYING", or available via
+ *  WWW at http://www.gnu.org/copyleft/gpl.html).
+ */
+
+#ifndef _cqp_h_
+#define _cqp_h_
+
+#define CQPRC_NAME ".cqprc"
+#define CQPMACRORC_NAME ".cqpmacros"
+#define MAXCQPFILES 20
+
+#define QUERY_BUFFER_SIZE 2048
+
+#include <stdio.h>
+
+#define True 1
+#define False 0
+typedef char Boolean;
+/* typedef enum bool { False, True } Boolean; */
+
+typedef enum _cyctype {
+  NoExpression, Query, Activation, SetOperation, Assignment
+} CYCtype;
+
+CYCtype LastExpression;
+
+extern
+int reading_cqprc;
+
+/* ======================================== Query Buffer Interface */
+
+/* ========== see parser.l:extendQueryBuffer() for details */
+/* ========== initialization done in parse_actions.c:prepare_parse() */
+
+extern char QueryBuffer[QUERY_BUFFER_SIZE];	/* buffer for queries */
+extern int QueryBufferP;	/* pointer into this buffer, for appending */
+extern int QueryBufferOverflow;	/* flag which signals buffer overflows */
+
+/* ======================================== Other global variables */
+
+char *searchstr;		/* needs to be global, unfortunately */
+int exit_cqp;			/* 1 iff exit-command was issued while parsing */
+
+char *cqp_input_string;
+int cqp_input_string_position;
+
+void cqp_randomize(void);
+
+int initialize_cqp(int argc, char **argv);
+
+/* !! cqp_parse_file() fclose()s fd unless it is STDOUT !! */
+int cqp_parse_file(FILE *fd, int exit_on_parse_errors);
+
+int cqp_parse_string(char *s);
+
+/* ====================================================================== */
+
+typedef void (*InterruptCheckProc)(void);
+
+int EvaluationIsRunning;
+
+int setInterruptCallback(InterruptCheckProc f);
+
+void CheckForInterrupts();
+
+int signal_handler_is_installed;
+
+void install_signal_handler(void); /* install Ctrl-C interrupt handler (clears EvaluationIsRunning flag) */
+
+
+/* ====================================================================== */
+
+#endif
