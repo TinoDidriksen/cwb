@@ -1,4 +1,4 @@
-##  -*-Makefile-*-
+##   -*-Makefile-*-
 ## 
 ##  IMS Open Corpus Workbench (CWB)
 ##  Copyright (C) 1993-2006 by IMS, University of Stuttgart
@@ -16,17 +16,22 @@
 ##  WWW at http://www.gnu.org/copyleft/gpl.html).
 
 ##
-##  SITE-SPECIFIC CONFIGURATION FILE: Binary release for Solaris 8 (SunOS 2.8) on UltraSPARC
+##  PLATFORM CONFIGURATION FILE: Mac OS X (Darwin) on 64-bit Intel Core2 and newer CPUs
 ##
 
-## Inherits from generic configuration for binary releases
-include $(TOP)/config/site/binary-release
+## Inherits from basic Darwin configuration
+include $(TOP)/config/platform/darwin
 
-# Solaris doesn't provide a static version of the dynamic linking library libdl.a, so we need
-# to provide stubs for the dlclose(), dlopen(), and dlsym() functions referenced in libc.a
-# (the static build doesn't use dynamic linking, so the functions are never needed).
-# These stubs are in cl/dl_stub.o, which other platforms (and the dynamically linked Solaris version) MUST NOT link.
-SITE_LDFLAGS = -static ../cl/dl_stub.o
+## Intel i386 CPUs are little-endian 
+ENDIAN = little
 
-# Solaris doesn't include GNU-compatible 'tar' program, so require separately installed 'gtar'
-TAR = gtar
+## Core 2 optimisations are only available with Xcode 3.1 (using gcc-4.2)
+CC = /usr/bin/gcc-4.2
+
+## Optimise for Core2 architecture
+CFLAGS = -Wall -O3 -arch x86_64 -arch i386 -march=core2 -mtune=core2
+
+DEPEND_CFLAGS = -Wall -O3
+
+## CPU architecture and operating system used to name binary releases
+RELEASE_ARCH = core2

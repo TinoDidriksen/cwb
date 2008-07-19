@@ -33,10 +33,11 @@
 #         darwin-g5      - with optimization for PowerPC G5 processor
 #         darwin-i386    - configuration for i386-compatible processors
 #         darwin-64      - 64-bit build on Intel Core2 and newer processors
+#         darwin-core2   - optimised build for Core 2 CPU (requires Xcode 3.1)
 #       solaris       SUN Solaris 8 for SPARC CPU
 #       cygwin        Win32 build using Cygwin emulation layer (experimental)
 #
-include $(TOP)/config/platform/darwin-64
+include $(TOP)/config/platform/darwin-core2
 
 #
 # SITE-SPECIFIC CONFIGURATION (installation path and other local settings)
