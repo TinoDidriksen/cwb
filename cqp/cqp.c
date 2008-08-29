@@ -254,6 +254,11 @@ int cqp_parse_file(FILE *fd, int exit_on_parse_errors)
     yyrestart(yyin);
 
     while (ok && !feof(fd) && !exit_cqp) {
+      if (child_process && ferror(fd)) {
+        /* in child mode, abort on read errors (to avoid hang-up when parent has died etc.) */
+        fprintf(stderr, "READ ERROR -- aborting CQP session\n");
+        break;
+      }
 
       if (!quiet) {
 	if (current_corpus != NULL)

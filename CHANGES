@@ -36,6 +36,10 @@ Bug fixes:
    implemented in CQP, it will oscillate between different configurations of active states.  A fully reliable
    solution would require an analysis of "empty" cycles in the FSA before query execution.
 
+ - [2008-08-29] If CQP is run as a backend and the master process is killed, CQP hangs and produces 100% CPU load,
+   apparently because it's still trying to read from its input pipe which keeps returning error conditions. As a
+   workaround, CQP now exits immediately (with an error message on stderr) if it is running in child mode (-c) and
+   and error condition is detected on the input stream.
 
 Version 2.2.b99 (2007-03-11)
 ----------------------------
