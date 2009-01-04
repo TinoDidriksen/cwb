@@ -34,10 +34,10 @@
 
 
 void *binsert_g(const void *key,
-		void **base,
-		size_t *nel,
-		size_t size,
-		int (*compar)(const  void  *,  const  void *))
+                void **base,
+                size_t *nel,
+                size_t size,
+                int (*compar)(const  void  *,  const  void *))
 {
   int low, high, found, mid, comp;
   
@@ -49,7 +49,7 @@ void *binsert_g(const void *key,
     memmove(*base, key, size);
     *nel = 1;
 
-    return *base;		/* address of element */
+    return *base;               /* address of element */
 
   }
   else {
@@ -67,11 +67,11 @@ void *binsert_g(const void *key,
       comp = (*compar)(*base + (mid * size), key);
       
       if (comp < 0)
-	low = mid + 1;
+        low = mid + 1;
       else if (comp > 0)
-	high = mid - 1;
+        high = mid - 1;
       else
-	found = 1;
+        found = 1;
     }
 
     if (found)
@@ -81,24 +81,24 @@ void *binsert_g(const void *key,
       int ins_pos;
 
       if (comp < 0)
-	ins_pos = mid + 1;
+        ins_pos = mid + 1;
       else
-	ins_pos = mid;
+        ins_pos = mid;
 
       if (*nel % REALLOC_THRESHOLD == 0) {
 
-	(*base) = (void *)cl_realloc(*base,
-				  size * (*nel +
-					  REALLOC_THRESHOLD));
+        (*base) = (void *)cl_realloc(*base,
+                                  size * (*nel +
+                                          REALLOC_THRESHOLD));
       }
 
       /* shift the elements from the insertion position to the right */
 
       if (ins_pos < *nel)
 
-	memmove(*base + ((ins_pos+1) * size),
-		*base + ((ins_pos)   * size),
-		(*nel - ins_pos) * size);
+        memmove(*base + ((ins_pos+1) * size),
+                *base + ((ins_pos)   * size),
+                (*nel - ins_pos) * size);
 
       memmove(*base + (ins_pos * size), key, size);
       *nel = *nel + 1;
@@ -111,9 +111,9 @@ void *binsert_g(const void *key,
 /* call:
 
     (void) binsert_g(&nr,
-		     (void **)&Table,
-		     &Nr_Elements,
-		     sizeof(int),
-		     intcompare);
+                     (void **)&Table,
+                     &Nr_Elements,
+                     sizeof(int),
+                     intcompare);
 
 */

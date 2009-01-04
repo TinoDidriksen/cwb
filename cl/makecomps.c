@@ -103,12 +103,9 @@ int creat_sort_lexicon(Component *lexsrt)
     /* ok, we now have to convert the table to NETWORK order in case
      * other (later) steps rely on its format. */
 
-#if defined(CWB_LITTLE_ENDIAN)
-
+    /* convert network byte order to native integers */
     for (i = 0; i < lexsrt->data.nr_items; i++)
       lexsrt->data.data[i] = htonl(lexsrt->data.data[i]);
-
-#endif
     
     return 1;
   }
@@ -179,11 +176,10 @@ int creat_freqs(Component *freqs)
 
     /* ok, we now have to convert the table to NETWORK order in case
      * other steps rely on its format. */
-
-#if defined(CWB_LITTLE_ENDIAN)
+    
+    /* convert network byte order to native integers */ 
     for (ptr = 0; ptr < freqs->size; ptr++)
       freqs->data.data[ptr] = htonl(freqs->data.data[ptr]);
-#endif
 
     return 1;
   }
@@ -250,7 +246,7 @@ creat_rev_corpus(Component *revcorp) {
 
   if (cl_debug) {
     fprintf(stderr, "\nCreating REVCORP component as '%s' ... \n", revcorp->path);
-    fprintf(stderr, "Size = %d INTs,  Buffer Size = %d INTs\n", datasize, bufsize);
+    fprintf(stderr, "Size = %d INTs,  Buffer Size = %ld INTs\n", datasize, bufsize);
   }
 
   primus = 0;

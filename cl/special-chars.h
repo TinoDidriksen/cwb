@@ -19,7 +19,7 @@
 #define _special_chars_h_
 
 
-#include "globals.h"			/* flag and function definitions now in <cl.h> */
+#include "globals.h"                    /* flag and function definitions now in <cl.h> */
 
 
 #endif

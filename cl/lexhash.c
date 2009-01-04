@@ -47,14 +47,15 @@ is_prime(int n) {
 
 int 
 find_prime(int n) {
-  for( ; n > 0 ; n++)		/* will exit on int overflow */
+  for( ; n > 0 ; n++)           /* will exit on int overflow */
     if (is_prime(n)) 
       return n;
   return 0;
 }
 
 unsigned int 
-hash_string(unsigned char *s) {
+hash_string(char *string) {
+  unsigned char *s = (unsigned char *)string;
   unsigned int result = 0;
   for( ; *s; s++)
     result = (result * 33 ) ^ (result >> 27) ^ *s;
@@ -73,15 +74,15 @@ typedef void (*cl_lexhash_cleanup_func)(cl_lexhash_entry);
 
 /* typedef struct _cl_lexhash *cl_lexhash; in <cl.h> */
 struct _cl_lexhash {
-  cl_lexhash_entry *table;	/* list of buckets, each one being a pointer to a list of entries */
-  unsigned int buckets;		/* number of buckets in list */
-  int next_id;			/* ID that will be assigned to next new entry */
-  int entries;			/* current number of entries in hash */
-  cl_lexhash_cleanup_func cleanup_func;	/* callback function used when deleting entries (see <cl.h>) */
-  int performance_counter;	/* variables used for estimating hash performance (avg no of comparisons) */
+  cl_lexhash_entry *table;      /* list of buckets, each one being a pointer to a list of entries */
+  unsigned int buckets;         /* number of buckets in list */
+  int next_id;                  /* ID that will be assigned to next new entry */
+  int entries;                  /* current number of entries in hash */
+  cl_lexhash_cleanup_func cleanup_func; /* callback function used when deleting entries (see <cl.h>) */
+  int performance_counter;      /* variables used for estimating hash performance (avg no of comparisons) */
   int comparisons;
   double last_performance;
-  int auto_grow;		/* whether to expand hash automatically */
+  int auto_grow;                /* whether to expand hash automatically */
 };
 
 
@@ -132,9 +133,9 @@ cl_delete_lexhash(cl_lexhash hash) {
     for (i = 0; i < hash->buckets; i++) {
       entry = hash->table[i];
       while (entry != NULL) {
-	temp = entry;
-	entry = entry->next;
-	cl_delete_lexhash_entry(hash, temp);
+        temp = entry;
+        entry = entry->next;
+        cl_delete_lexhash_entry(hash, temp);
       }
     }
   }
@@ -171,11 +172,11 @@ cl_lexhash_check_grow(cl_lexhash hash) {
   if (hash->auto_grow && (hash->last_performance > DEFAULT_PERFORMANCE_LIMIT)) {
     if (cl_debug) {
       fprintf(stderr, "[lexhash autogrow: (perf = %3.1f  @ fill rate = %3.1f (%d/%d)]\n",
-	      hash->last_performance, fill_rate, hash->entries, hash->buckets);
+              hash->last_performance, fill_rate, hash->entries, hash->buckets);
     }
     if (fill_rate < 2.0) {
       if (cl_debug)
-	fprintf(stderr, "[autogrow aborted because of low fill rate]\n");
+        fprintf(stderr, "[autogrow aborted because of low fill rate]\n");
       return 0;
     }
     temp = cl_new_lexhash(hash->entries); /* create new hash with fill rate == 1.0 */
@@ -185,24 +186,24 @@ cl_lexhash_check_grow(cl_lexhash hash) {
     for (idx = 0; idx < old_buckets; idx++) {
       entry = hash->table[idx];
       while (entry != NULL) {
-	next = entry->next;	/* remember pointer to next entry */
-	offset = hash_string(entry->key) % new_buckets;
-	entry->next = temp->table[offset]; /* insert entry into its bucket in temp (most buckets should contain only 1 entry) */
-	temp->table[offset] = entry;
-	temp->entries++;
-	entry = next;		/* continue while loop */
+        next = entry->next;     /* remember pointer to next entry */
+        offset = hash_string(entry->key) % new_buckets;
+        entry->next = temp->table[offset]; /* insert entry into its bucket in temp (most buckets should contain only 1 entry) */
+        temp->table[offset] = entry;
+        temp->entries++;
+        entry = next;           /* continue while loop */
       }
     }
     assert((temp->entries == hash->entries) && "lexhash.c: inconsistency during hash expansion");
-    cl_free(hash->table);		/* old hash table should be empty and can be deallocated */
-    hash->table = temp->table;	/* update hash from temp (copy hash table and its size) */
+    cl_free(hash->table);               /* old hash table should be empty and can be deallocated */
+    hash->table = temp->table;  /* update hash from temp (copy hash table and its size) */
     hash->buckets = temp->buckets;
     hash->last_performance = 0.0; /* reset performance estimate */
-    cl_free(temp);		/* we can simply deallocate temp now, having stolen its hash table */
+    cl_free(temp);              /* we can simply deallocate temp now, having stolen its hash table */
     if (cl_debug) {
       fill_rate = ((double) hash->entries) / hash->buckets;
       fprintf(stderr, "[grown to %d buckets  @ fill rate = %3.1f (%d/%d)]\n",
-	      hash->buckets, fill_rate, hash->entries, hash->buckets);
+              hash->buckets, fill_rate, hash->entries, hash->buckets);
     }
   }
   return 0;
@@ -223,10 +224,10 @@ cl_lexhash_find_i(cl_lexhash hash, char *token, unsigned int *ret_offset) {
   if (ret_offset != NULL) *ret_offset = offset;
   entry = hash->table[offset];
   if (entry != NULL) 
-    hash->comparisons++;	/* will need one comparison at least */
+    hash->comparisons++;        /* will need one comparison at least */
   while (entry != NULL && strcmp(entry->key, token) != 0) {
     entry = entry->next;
-    hash->comparisons++;	/* this counts additional comparisons */
+    hash->comparisons++;        /* this counts additional comparisons */
   }
   hash->performance_counter--;
   if (hash->performance_counter <= 0) {
@@ -246,7 +247,7 @@ cl_lexhash_find(cl_lexhash hash, char *token) {
 cl_lexhash_entry
 cl_lexhash_add(cl_lexhash hash, char *token) {
   cl_lexhash_entry entry, insert_point;
-  int offset;
+  unsigned int offset;
   
   entry = cl_lexhash_find_i(hash, token, &offset);
   if (entry != NULL) {
@@ -260,18 +261,18 @@ cl_lexhash_add(cl_lexhash hash, char *token) {
     entry->key = cl_strdup(token);
     entry->freq = 1;
     entry->id = (hash->next_id)++;
-    entry->data.integer = 0;	/* initialise data fields to zero values */
+    entry->data.integer = 0;    /* initialise data fields to zero values */
     entry->data.numeric = 0.0;
     entry->data.pointer = NULL;
     entry->next = NULL;
-    insert_point = hash->table[offset];	/* insert entry into its bucket in the hash table */
+    insert_point = hash->table[offset]; /* insert entry into its bucket in the hash table */
     if (insert_point == NULL) {
       hash->table[offset] = entry; /* only entry in this bucket so far */
     }
     else { /* always insert as last entry in its bucket (because of Zipf's Law:
-	      frequent lexemes tend to occur early in the corpus and should be first in their buckets for faster access) */
+              frequent lexemes tend to occur early in the corpus and should be first in their buckets for faster access) */
       while (insert_point->next != NULL)
-	insert_point = insert_point->next;
+        insert_point = insert_point->next;
       insert_point->next = entry;
     }
     hash->entries++;
@@ -298,11 +299,11 @@ cl_lexhash_freq(cl_lexhash hash, char *token) {
 int 
 cl_lexhash_del(cl_lexhash hash, char *token) {
   cl_lexhash_entry entry, previous;
-  int offset, f;
+  unsigned int offset, f;
 
   entry = cl_lexhash_find_i(hash, token, &offset);
   if (entry == NULL) {
-    return 0;			/* not in lexhash */
+    return 0;                   /* not in lexhash */
   }
   else {
     f = entry->freq;
@@ -312,7 +313,7 @@ cl_lexhash_del(cl_lexhash hash, char *token) {
     else {
       previous = hash->table[offset];
       while (previous->next != entry)
-	previous = previous->next;
+        previous = previous->next;
       previous->next = entry->next;
     }
     cl_delete_lexhash_entry(hash, entry);

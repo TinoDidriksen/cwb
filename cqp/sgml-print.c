@@ -43,11 +43,13 @@
 
 /* ---------------------------------------------------------------------- */
 
+/* -- seems to be unused (purpose unclear) --
 #define NR_FIELD_NAMES 3
-static char *field_names[] = { "collocate", /* field #0 */
-			       "keyword",   /* field #1 */
-			       "tab"	     /* field#>1 */
+static char *field_names[] = { "collocate",
+                               "keyword",
+                               "tab"
 };
+*/
 
 /* ---------------------------------------------------------------------- */
 
@@ -57,34 +59,34 @@ char *sgml_print_field(FieldType field, int start);
 
 PrintDescriptionRecord
 SGMLPrintDescriptionRecord = {
-  "<MATCHNUM>%d</MATCHNUM>",	/* CPOSPrintFormat */
+  "<MATCHNUM>%d</MATCHNUM>",    /* CPOSPrintFormat */
 
-  "<STRUCS>",			/* BeforePrintStructures */
-  " ",				/* PrintStructureSeparator */
-  "</STRUCS>",			/* AfterPrintStructures */
+  "<STRUCS>",                   /* BeforePrintStructures */
+  " ",                          /* PrintStructureSeparator */
+  "</STRUCS>",                  /* AfterPrintStructures */
 
-  "&lt;",			/* StructureBeginPrefix */
-  "&gt;",			/* StructureBeginSuffix */
+  "&lt;",                       /* StructureBeginPrefix */
+  "&gt;",                       /* StructureBeginSuffix */
 
-  " ",				/* StructureSeparator */
+  " ",                          /* StructureSeparator */
 
-  "&lt;/",			/* StructureEndPrefix */
-  "&gt;",			/* StructureEndSuffix */
+  "&lt;/",                      /* StructureEndPrefix */
+  "&gt;",                       /* StructureEndSuffix */
 
-  "<TOKEN>",			/* BeforeToken */
-  " ",				/* TokenSeparator */
-  "/",				/* AttributeSeparator */
-  "</TOKEN>",			/* AfterToken */
+  "<TOKEN>",                    /* BeforeToken */
+  " ",                          /* TokenSeparator */
+  "/",                          /* AttributeSeparator */
+  "</TOKEN>",                   /* AfterToken */
 
-  "<CONTENT>",			/* BeforeField */
-  NULL,				/* FieldSeparator */
-  "</CONTENT>",			/* AfterField */
+  "<CONTENT>",                  /* BeforeField */
+  NULL,                         /* FieldSeparator */
+  "</CONTENT>",                 /* AfterField */
 
-  "<LINE>",			/* BeforeLine */
-  "</LINE>\n",			/* AfterLine */
+  "<LINE>",                     /* BeforeLine */
+  "</LINE>\n",                  /* AfterLine */
 
-  "<CONCORDANCE>\n",		/* BeforeConcordance */
-  "</CONCORDANCE>\n",		/* AfterConcordance */
+  "<CONCORDANCE>\n",            /* BeforeConcordance */
+  "</CONCORDANCE>\n",           /* AfterConcordance */
 
   sgml_convert_string,
   sgml_print_field
@@ -187,15 +189,15 @@ sgml_puts(FILE *fd, char *s, int flags)
   if (flags) {
     while (*s) {
       if (*s == '<' && (flags & SUBST_LT))
-	fputs("&lt;", fd);
+        fputs("&lt;", fd);
       else if (*s == '>' && (flags & SUBST_GT))
-	fputs("&gt;", fd);
+        fputs("&gt;", fd);
       else if (*s == '&' && (flags & SUBST_AMP))
-	fputs("&amp;", fd);
+        fputs("&amp;", fd);
       else if (*s == '"' && (flags & SUBST_QUOT))
-	fputs("&quot;", fd);
+        fputs("&quot;", fd);
       else 
-	fputc(*s, fd);
+        fputc(*s, fd);
       s++;
     }
   }
@@ -233,7 +235,7 @@ void sgml_print_context(ContextDescriptor *cd, FILE *stream)
     break;
   }
   fprintf(stream, "<leftContext size=%d base=\"%s\">\n",
-	  cd->left_width, s);
+          cd->left_width, s);
 
 
   switch(cd->right_type) {
@@ -251,7 +253,7 @@ void sgml_print_context(ContextDescriptor *cd, FILE *stream)
     break;
   }
   fprintf(stream, "<rightContext size=%d base=\"%s\">\n",
-	  cd->right_width, s);
+          cd->right_width, s);
 
 }
 
@@ -265,20 +267,20 @@ void sgml_print_corpus_header(CorpusList *cl, FILE *stream)
   /* disabled because of incompatibilities between different Linux versions */
 
   fprintf(stream,
-	  "<concordanceInfo>\n"
-	  "<user><userID>%s</userID><userName>%s</userName></user>\n"
-	  "<date>%s</date>\n"
-	  "<corpusInfo><corpusID>%s</corpusID><corpusName>%s</corpusName></corpusInfo>\n"
-	  "<subcorpusInfo size=%d>\n"
-	  "<name>%s:%s</name>\n"
-	  "</subcorpusInfo>\n",
-	  (pwd ? pwd->pw_name : "unknown"),
-	  (pwd ? pwd->pw_gecos  : "unknown"),
-	  ctime(&now),
-	  (cl->corpus && cl->corpus->registry_name ? cl->corpus->registry_name : "unknown"),
-	  (cl->corpus && cl->corpus->name ? cl->corpus->name : "unknown"),
-	  cl->size,
-	  cl->mother_name, cl->name);
+          "<concordanceInfo>\n"
+          "<user><userID>%s</userID><userName>%s</userName></user>\n"
+          "<date>%s</date>\n"
+          "<corpusInfo><corpusID>%s</corpusID><corpusName>%s</corpusName></corpusInfo>\n"
+          "<subcorpusInfo size=%d>\n"
+          "<name>%s:%s</name>\n"
+          "</subcorpusInfo>\n",
+          (pwd ? pwd->pw_name : "unknown"),
+          (pwd ? pwd->pw_gecos  : "unknown"),
+          ctime(&now),
+          (cl->corpus && cl->corpus->registry_name ? cl->corpus->registry_name : "unknown"),
+          (cl->corpus && cl->corpus->name ? cl->corpus->name : "unknown"),
+          cl->size,
+          cl->mother_name, cl->name);
   
   sgml_print_context(&CD, stream);
 
@@ -286,13 +288,13 @@ void sgml_print_corpus_header(CorpusList *cl, FILE *stream)
 }
 
 void sgml_print_output(CorpusList *cl, 
-		       FILE *stream,
-		       int interactive,
-		       ContextDescriptor *cd,
-		       int first, int last)
+                       FILE *stream,
+                       int interactive,
+                       ContextDescriptor *cd,
+                       int first, int last)
 {
   int line, real_line;
-  ConcLineField clf[NoField];	/* NoField is largest field code (not used by us) */
+  ConcLineField clf[NoField];   /* NoField is largest field code (not used by us) */
   AttributeList *strucs;
   PrintDescriptionRecord *pdr = &SGMLPrintDescriptionRecord;
 
@@ -308,9 +310,9 @@ void sgml_print_output(CorpusList *cl,
     
     for (ai = cd->attributes->list; ai; ai = ai->next) {
       if (ai->attribute && ai->status > 0) {
-	fprintf(stream, "<attribute type=positional name=\"%s\" anr=%d>\n",
-		ai->attribute->any.name, anr);
-	anr++;
+        fprintf(stream, "<attribute type=positional name=\"%s\" anr=%d>\n",
+                ai->attribute->any.name, anr);
+        anr++;
       }
     }
   }
@@ -363,19 +365,19 @@ void sgml_print_output(CorpusList *cl,
     {
       char *outstr;
       int dummy;
-	
+        
       outstr = compose_kwic_line(cl->corpus, 
-				 cl->range[real_line].start, 
-				 cl->range[real_line].end,
-				 &CD, 
-				 &dummy,
-				 &dummy, &dummy,
-				 NULL, NULL, 
-				 NULL, 0, NULL,
-				 clf, NoField, /* NoField = # of entries in clf[] */
-				 ConcLineHorizontal, 
-				 pdr,
-				 0, NULL);
+                                 cl->range[real_line].start, 
+                                 cl->range[real_line].end,
+                                 &CD, 
+                                 &dummy,
+                                 &dummy, &dummy,
+                                 NULL, NULL, 
+                                 NULL, 0, NULL,
+                                 clf, NoField, /* NoField = # of entries in clf[] */
+                                 ConcLineHorizontal, 
+                                 pdr,
+                                 0, NULL);
       fputs(outstr, stream);
       free(outstr);
     }
@@ -385,11 +387,11 @@ void sgml_print_output(CorpusList *cl,
     
     if (CD.alignedCorpora != NULL) {
       printAlignedStrings(cl->corpus, 
-			  &CD, 
-			  cl->range[real_line].start, 
-			  cl->range[real_line].end, 
-			  0,	/* ASCII print mode only */
-			  stream);
+                          &CD, 
+                          cl->range[real_line].start, 
+                          cl->range[real_line].end, 
+                          0,    /* ASCII print mode only */
+                          stream);
     }
 
   }

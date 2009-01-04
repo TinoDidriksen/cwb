@@ -22,9 +22,6 @@
 ## Inherits from generic Unix configuration
 include $(TOP)/config/platform/unix
 
-## i386 and compatible processors have little-endian byte order
-ENDIAN = little
-
 ## Linux distribution should include GNU install
 INSTALL = install
 

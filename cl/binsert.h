@@ -19,9 +19,9 @@
 #define _BINSERT_H_
 
 void *binsert_g(const void *key,
-		void **base,
-		size_t *nel,
-		size_t size,
-		int (*compar)(const  void  *,  const  void *));
+                void **base,
+                size_t *nel,
+                size_t size,
+                int (*compar)(const  void  *,  const  void *));
 
 #endif

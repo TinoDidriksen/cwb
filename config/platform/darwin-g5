@@ -22,9 +22,6 @@
 ## Inherits from basic Darwin configuration
 include $(TOP)/config/platform/darwin
 
-## PowerPC CPUs are big-endian 
-ENDIAN = big
-
 ## Make sure that Apple's gcc is used (not e.g. a fink-installed version)
 CC = /usr/bin/gcc
 

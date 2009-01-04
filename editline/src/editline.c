@@ -405,7 +405,7 @@ STATIC void TTYinfo()
        return;
     }
     p = tgetstr("le", &bp);
-    backspace = p ? strdup(p) : NULL;
+    backspace = (CHAR *)(p ? strdup(p) : NULL);
     backspace = (CHAR *)tgetstr("le", &bp);
     upline = (CHAR *)tgetstr("up", &bp);
     clrpage = (CHAR *)tgetstr("cl", &bp);

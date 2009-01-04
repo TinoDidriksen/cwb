@@ -27,21 +27,9 @@
 #define _ENDIAN_H_
 
 
-/* The CWB currently supports two types of byte ordering, indicated by the preprocessor symbols
-
-   CWB_LITTLE_ENDIAN	LSB first (Intel, Vax, ...)
-   CWB_BIG_ENDIAN	MSB first (Network, SUN, 68k, ...)
-
-   The CWB uses _network_ byte order for 32-bit quantities stored in disk files.
-   On little-endian machines, data must be converted from big-endian - or "network" - to 
-   machine format and back.  This is done through the BSD functions/macros htonl() and ntohl()
-   when they are available.  Otherwise, the CWB defines its own macros (which are either
-   no-ops or fairly expensive subroutine calls).
-
-   Note that the LITTLE or BIG endian option has to be set even when htonl() and ntohl()
-   are available from the system libraries.  This is because conversion loops for integer
-   vectors loaded into memory are skipped completely on big-endian systems, rather than
-   being loops of no-ops (which the compiler may or may not optimize away).
+/* The CWB uses _network_ byte order for 32-bit integers stored in its platform-independent disk files.
+   Conversion to and from native byte order is handled by the BSD functions/macros htonl() and ntohl(),
+   which must be available in the system library.
 */
 
 /*
@@ -51,33 +39,20 @@
 /* macros ntohl() and htonl() should usually be defined here (or in <arpa/inet.h>?) */
 #include <netinet/in.h>
 
-/* use system library macros if available, which should be no-ops on big-endian machines
-   and compiled to efficient machine code instructions on little-endian machines */
+/* rely on system library macros ntohl() and htonl(), so we don't have to work out endianness of the current architecture;
+   this is essential for Universal builds on Mac OS X, and should also be the most efficient solution because these
+   macros are no-ops on big-endian machines and compiled to efficient machine code instructions on little-endian machines */
 
 #if !( defined(ntohl) && defined(htonl) ) 
 
-/* In the CWB_BIG_ENDIAN case, network byte order and machine byte order
-   are the same, so we simply define dummy macros. */
-
-#ifdef CWB_BIG_ENDIAN
-
-#define	ntohl(x)	(x)
-#define	htonl(x)	(x)
-
-#else
-
-#define ntohl(x) cwb_bswap32(x)
-#define htonl(x) cwb_bswap32(x)
+#error Sorry, ntohl() and htonl() macros are required by the CWB code, but don't seem to be defined on your machine.
 
 #endif
 
-#endif
 
-/* This function is a portable bswap implementation of the macros ntohl() and htonl(),
-   which is used on little-endian systems where the macros are not available in the 
-   system libraries.  This function is visible on all platforms, so it is possible
-   to convert integers explicitly to a little-endian format (such functionality is
-   provided by cwb-itoa and cwb-atoi, for instance). */
-int cwb_bswap32(int x);		/* internal function defined in endian.c */
+/* This function is a portable bswap implementation allowing explicit conversion to little-endian format
+   (by a combination of cl_bswap32() and htonl())
+*/
+int cl_bswap32(int x);		/* internal function defined in endian.c */
 
 #endif /* _ENDIAN_H_ */

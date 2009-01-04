@@ -84,7 +84,7 @@ unsigned char latin1_nodiac_tab[256] = {
        65, 65, 65, 65, 65, 65, 65, 67, 69, /* uppercase */
    69, 69, 69, 73, 73, 73, 73, 68, 78, 79,
    79, 79, 79, 79,215, 79, 85, 85, 85, 85,
-   89, 84,115,			/* thorn -> 'T', szlig -> 's' */
+   89, 84,115,                  /* thorn -> 'T', szlig -> 's' */
                97, 97, 97, 97, 97, 97, 97, /* lowercase */
    99,101,101,101,101,105,105,105,105,100,
   110,111,111,111,111,111,247,111,117,117,
@@ -210,10 +210,10 @@ cl_string_maptable(CorpusCharset charset /*ignored*/, int flags) {
   if (icase && idiac) {
     if (! latin1_nocase_nodiac_tab_init) {
       for (i = 0; i < 256; i++) {
-	latin1_nocase_nodiac_tab[i] = latin1_nocase_tab[latin1_nodiac_tab[i]];
-	if (latin1_nocase_nodiac_tab[i] != latin1_nodiac_tab[latin1_nocase_tab[i]]) {
-	  fprintf(stderr, "tables inconsistent for #%d -> #%d\n", i, latin1_nocase_nodiac_tab[i]);
-	}
+        latin1_nocase_nodiac_tab[i] = latin1_nocase_tab[latin1_nodiac_tab[i]];
+        if (latin1_nocase_nodiac_tab[i] != latin1_nodiac_tab[latin1_nocase_tab[i]]) {
+          fprintf(stderr, "tables inconsistent for #%d -> #%d\n", i, latin1_nocase_nodiac_tab[i]);
+        }
       }
       latin1_nocase_nodiac_tab_init = 1;
     }
@@ -228,7 +228,7 @@ cl_string_maptable(CorpusCharset charset /*ignored*/, int flags) {
   else {
     if (! latin1_identity_tab_init) {
       for (i = 0; i < 256; i++) {
-	latin1_identity_tab[i] = i;
+        latin1_identity_tab[i] = i;
       }
       latin1_identity_tab_init = 1;
     }
@@ -238,13 +238,13 @@ cl_string_maptable(CorpusCharset charset /*ignored*/, int flags) {
 
 
 void 
-cl_string_canonical(unsigned char *s, int flags)
+cl_string_canonical(char *s, int flags)
 {
   register unsigned char *p, *maptable;
 
-  if (flags) {			/* don't waste time if no flags are specified */
+  if (flags) {                  /* don't waste time if no flags are specified */
     maptable = cl_string_maptable(latin1, flags);
-    for (p = s; *p; p++) {
+    for (p = (unsigned char *)s; *p; p++) {
       *p = maptable[*p];
     }
   }
@@ -259,7 +259,7 @@ cl_string_canonical(unsigned char *s, int flags)
  */
 
 char 
-*cl_string_latex2iso(unsigned char *str, unsigned char *result, int target_len)
+*cl_string_latex2iso(char *str, char *result, int target_len)
 {
   /* the positions in the source and target strings */
 
@@ -292,116 +292,116 @@ char
       c = popc(str, src_pos);
 
       if (isdigit(c) && isdigit(str[src_pos]) && isdigit(str[src_pos+1])) {
-	val = 0;
-	for (i = 0; i < 3; i++) {
-	  val = val * 8 + ((c - '0') % 8);
-	  c = popc(str, src_pos);
-	}
-	pushc(result, (char) (val % 256), target_pos, target_len);
+        val = 0;
+        for (i = 0; i < 3; i++) {
+          val = val * 8 + ((c - '0') % 8);
+          c = popc(str, src_pos);
+        }
+        pushc(result, (char) (val % 256), target_pos, target_len);
       }
       else if (c == '"') {
-	switch ( c = popc(str, src_pos) ) {
-	case 'A': pushc(result, 'Ä', target_pos, target_len); break;
-	case 'E': pushc(result, 'Ë', target_pos, target_len); break;
-	case 'I': pushc(result, 'Ï', target_pos, target_len); break;
-	case 'O': pushc(result, 'Ö', target_pos, target_len); break;
-	case 'U': pushc(result, 'Ü', target_pos, target_len); break;
-	case 'a': pushc(result, 'ä', target_pos, target_len); break;
-	case 'e': pushc(result, 'ë', target_pos, target_len); break;
-	case 'i': pushc(result, 'ï', target_pos, target_len); break;
-	case 'o': pushc(result, 'ö', target_pos, target_len); break;
-	case 'u': pushc(result, 'ü', target_pos, target_len); break;
-	case 's': pushc(result, 'ß', target_pos, target_len); break;
-	default:   /* copy both */
-	  pushc(result, '"', target_pos, target_len);
-	  pushc(result, c,   target_pos, target_len);
-	  break;
-	}
-	c = popc(str, src_pos);
+        switch ( c = popc(str, src_pos) ) {
+        case 'A': pushc(result, 'Ä', target_pos, target_len); break;
+        case 'E': pushc(result, 'Ë', target_pos, target_len); break;
+        case 'I': pushc(result, 'Ï', target_pos, target_len); break;
+        case 'O': pushc(result, 'Ö', target_pos, target_len); break;
+        case 'U': pushc(result, 'Ü', target_pos, target_len); break;
+        case 'a': pushc(result, 'ä', target_pos, target_len); break;
+        case 'e': pushc(result, 'ë', target_pos, target_len); break;
+        case 'i': pushc(result, 'ï', target_pos, target_len); break;
+        case 'o': pushc(result, 'ö', target_pos, target_len); break;
+        case 'u': pushc(result, 'ü', target_pos, target_len); break;
+        case 's': pushc(result, 'ß', target_pos, target_len); break;
+        default:   /* copy both */
+          pushc(result, '"', target_pos, target_len);
+          pushc(result, c,   target_pos, target_len);
+          break;
+        }
+        c = popc(str, src_pos);
       }
-      else if (c == '\'') {	/* accent aigu */
-	switch ( c = popc(str, src_pos) ) {
-	case 'A': pushc(result, 'Á', target_pos, target_len); break;
-	case 'E': pushc(result, 'É', target_pos, target_len); break;
-	case 'I': pushc(result, 'Í', target_pos, target_len); break;
-	case 'O': pushc(result, 'Ó', target_pos, target_len); break;
-	case 'U': pushc(result, 'Ú', target_pos, target_len); break;
-	case 'a': pushc(result, 'á', target_pos, target_len); break;
-	case 'e': pushc(result, 'é', target_pos, target_len); break;
-	case 'i': pushc(result, 'í', target_pos, target_len); break;
-	case 'o': pushc(result, 'ó', target_pos, target_len); break;
-	case 'u': pushc(result, 'ú', target_pos, target_len); break;
-	default:   /* copy both */
-	  pushc(result, '\'', target_pos, target_len);
-	  pushc(result, c,   target_pos, target_len);
-	  break;
-	}
-	c = popc(str, src_pos);
+      else if (c == '\'') {     /* accent aigu */
+        switch ( c = popc(str, src_pos) ) {
+        case 'A': pushc(result, 'Á', target_pos, target_len); break;
+        case 'E': pushc(result, 'É', target_pos, target_len); break;
+        case 'I': pushc(result, 'Í', target_pos, target_len); break;
+        case 'O': pushc(result, 'Ó', target_pos, target_len); break;
+        case 'U': pushc(result, 'Ú', target_pos, target_len); break;
+        case 'a': pushc(result, 'á', target_pos, target_len); break;
+        case 'e': pushc(result, 'é', target_pos, target_len); break;
+        case 'i': pushc(result, 'í', target_pos, target_len); break;
+        case 'o': pushc(result, 'ó', target_pos, target_len); break;
+        case 'u': pushc(result, 'ú', target_pos, target_len); break;
+        default:   /* copy both */
+          pushc(result, '\'', target_pos, target_len);
+          pushc(result, c,   target_pos, target_len);
+          break;
+        }
+        c = popc(str, src_pos);
       }
-      else if (c == '`') {	/* accent grave */
-	switch ( c = popc(str, src_pos) ) {
-	case 'A': pushc(result, 'À', target_pos, target_len); break;
-	case 'E': pushc(result, 'È', target_pos, target_len); break;
-	case 'I': pushc(result, 'Ì', target_pos, target_len); break;
-	case 'O': pushc(result, 'Ò', target_pos, target_len); break;
-	case 'U': pushc(result, 'Ù', target_pos, target_len); break;
-	case 'a': pushc(result, 'à', target_pos, target_len); break;
-	case 'e': pushc(result, 'è', target_pos, target_len); break;
-	case 'i': pushc(result, 'ì', target_pos, target_len); break;
-	case 'o': pushc(result, 'ò', target_pos, target_len); break;
-	case 'u': pushc(result, 'ù', target_pos, target_len); break;
-	default:   /* copy both */
-	  pushc(result, '`', target_pos, target_len);
-	  pushc(result, c,   target_pos, target_len);
-	  break;
-	}
-	c = popc(str, src_pos);
+      else if (c == '`') {      /* accent grave */
+        switch ( c = popc(str, src_pos) ) {
+        case 'A': pushc(result, 'À', target_pos, target_len); break;
+        case 'E': pushc(result, 'È', target_pos, target_len); break;
+        case 'I': pushc(result, 'Ì', target_pos, target_len); break;
+        case 'O': pushc(result, 'Ò', target_pos, target_len); break;
+        case 'U': pushc(result, 'Ù', target_pos, target_len); break;
+        case 'a': pushc(result, 'à', target_pos, target_len); break;
+        case 'e': pushc(result, 'è', target_pos, target_len); break;
+        case 'i': pushc(result, 'ì', target_pos, target_len); break;
+        case 'o': pushc(result, 'ò', target_pos, target_len); break;
+        case 'u': pushc(result, 'ù', target_pos, target_len); break;
+        default:   /* copy both */
+          pushc(result, '`', target_pos, target_len);
+          pushc(result, c,   target_pos, target_len);
+          break;
+        }
+        c = popc(str, src_pos);
       }
-      else if (c == '^') {	/* accent circonflex */
-	switch ( c = popc(str, src_pos) ) {
-	case 'A': pushc(result, 'Â', target_pos, target_len); break;
-	case 'E': pushc(result, 'Ê', target_pos, target_len); break;
-	case 'I': pushc(result, 'Î', target_pos, target_len); break;
-	case 'O': pushc(result, 'Ô', target_pos, target_len); break;
-	case 'U': pushc(result, 'í', target_pos, target_len); break;
-	case 'a': pushc(result, 'â', target_pos, target_len); break;
-	case 'e': pushc(result, 'ê', target_pos, target_len); break;
-	case 'i': pushc(result, 'î', target_pos, target_len); break;
-	case 'o': pushc(result, 'ô', target_pos, target_len); break;
-	case 'u': pushc(result, 'û', target_pos, target_len); break;
-	default:   /* copy both */
-	  pushc(result, '^', target_pos, target_len);
-	  pushc(result, c,   target_pos, target_len);
-	  break;
-	}
-	c = popc(str, src_pos);
+      else if (c == '^') {      /* accent circonflex */
+        switch ( c = popc(str, src_pos) ) {
+        case 'A': pushc(result, 'Â', target_pos, target_len); break;
+        case 'E': pushc(result, 'Ê', target_pos, target_len); break;
+        case 'I': pushc(result, 'Î', target_pos, target_len); break;
+        case 'O': pushc(result, 'Ô', target_pos, target_len); break;
+        case 'U': pushc(result, 'í', target_pos, target_len); break;
+        case 'a': pushc(result, 'â', target_pos, target_len); break;
+        case 'e': pushc(result, 'ê', target_pos, target_len); break;
+        case 'i': pushc(result, 'î', target_pos, target_len); break;
+        case 'o': pushc(result, 'ô', target_pos, target_len); break;
+        case 'u': pushc(result, 'û', target_pos, target_len); break;
+        default:   /* copy both */
+          pushc(result, '^', target_pos, target_len);
+          pushc(result, c,   target_pos, target_len);
+          break;
+        }
+        c = popc(str, src_pos);
       }
-      else if (c == ',') {	/* cedille */
-	switch ( c = popc(str, src_pos) ) {
-	case 'C': pushc(result, 'Ç', target_pos, target_len); break;
-	case 'c': pushc(result, 'ç', target_pos, target_len); break;
-	default:   /* copy both */
-	  pushc(result, ',', target_pos, target_len);
-	  pushc(result, c,   target_pos, target_len);
-	  break;
-	}
-	c = popc(str, src_pos);
+      else if (c == ',') {      /* cedille */
+        switch ( c = popc(str, src_pos) ) {
+        case 'C': pushc(result, 'Ç', target_pos, target_len); break;
+        case 'c': pushc(result, 'ç', target_pos, target_len); break;
+        default:   /* copy both */
+          pushc(result, ',', target_pos, target_len);
+          pushc(result, c,   target_pos, target_len);
+          break;
+        }
+        c = popc(str, src_pos);
       }
       else if (c == '~') {
-	switch ( c = popc(str, src_pos) ) {
-	case 'n': pushc(result, 'ñ', target_pos, target_len); break;
-	case 'N': pushc(result, 'Ñ', target_pos, target_len); break;
-	default:   /* copy both */
-	  pushc(result, '~', target_pos, target_len);
-	  pushc(result, c,   target_pos, target_len);
-	  break;
-	}
-	c = popc(str, src_pos);
+        switch ( c = popc(str, src_pos) ) {
+        case 'n': pushc(result, 'ñ', target_pos, target_len); break;
+        case 'N': pushc(result, 'Ñ', target_pos, target_len); break;
+        default:   /* copy both */
+          pushc(result, '~', target_pos, target_len);
+          pushc(result, c,   target_pos, target_len);
+          break;
+        }
+        c = popc(str, src_pos);
       }
       else /* print both */ {
-	pushc(result, '\\', target_pos, target_len);
-	pushc(result, c, target_pos, target_len);
-	c = popc(str, src_pos);
+        pushc(result, '\\', target_pos, target_len);
+        pushc(result, c, target_pos, target_len);
+        c = popc(str, src_pos);
       }
     }
   }

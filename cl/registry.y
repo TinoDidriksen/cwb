@@ -30,7 +30,7 @@ extern int creglex();
 Corpus *cregcorpus = NULL;
 Attribute *cregattrib = NULL;
 
-unsigned char cregestring[256];
+char cregestring[1024];
 
 /* ====================================================================== */
 
@@ -40,7 +40,7 @@ DynArg *makearg(char *type_id);
 { \
   if (!declare_component(attr, cid, path)) { \
     sprintf(cregestring, "Component %s with path %s declared twice" \
-	    " (or internal error)", cid_name(cid), path); \
+            " (or internal error)", cid_name(cid), path); \
     cl_free(path); \
     cregerror(cregestring); \
   } \
@@ -67,17 +67,17 @@ void cregerror_cleanup(char *message)
 %}
 
 %union {
-  unsigned char    *strval;
-  int               ival;
-  void              *args;
-  void              *attr;
+  char    *strval;
+  int      ival;
+  void    *args;
+  void    *attr;
 
   IDList   idlist;
 
   struct {
     int status;
-    unsigned char *path;
-  }                 storage;
+    char *path;
+  } storage;
 }
 
 %token NAME_SYM
@@ -101,8 +101,8 @@ void cregerror_cleanup(char *message)
 %token DYNAMIC_SYM
 %token DOTS_SYM
 
-%token IGNORE_SYM		/* *** ignore MAPTABLEs and NGRAMs, which are present
-				   in many corpora *** */
+%token IGNORE_SYM               /* *** ignore MAPTABLEs and NGRAMs, which are present
+                                   in many corpora *** */
 
 %token ADMIN_SYM
 %token ACCESS_SYM
@@ -138,47 +138,47 @@ void cregerror_cleanup(char *message)
 %%
 
 Registry        : /* eps */         { cregcorpus = new(Corpus); 
-				      cregcorpus->attributes = NULL;
-				      cregcorpus->name = NULL;
-				      cregcorpus->id = NULL;
-				      cregcorpus->path = NULL;
-				      cregcorpus->charset = latin1;  /* default charset is latin1 */
-				      cregcorpus->properties = NULL;
-				      cregcorpus->info_file = NULL;
-				      cregcorpus->admin = NULL;
-				      cregcorpus->groupAccessList = NULL;
-				      cregcorpus->hostAccessList = NULL;
-				      cregcorpus->userAccessList = NULL;
-				      cregcorpus->registry_dir = NULL;
-				      cregcorpus->registry_name = NULL;
-				      cregcorpus->nr_of_loads = 1;
-				      cregcorpus->next = NULL;
-				    }
+                                      cregcorpus->attributes = NULL;
+                                      cregcorpus->name = NULL;
+                                      cregcorpus->id = NULL;
+                                      cregcorpus->path = NULL;
+                                      cregcorpus->charset = latin1;  /* default charset is latin1 */
+                                      cregcorpus->properties = NULL;
+                                      cregcorpus->info_file = NULL;
+                                      cregcorpus->admin = NULL;
+                                      cregcorpus->groupAccessList = NULL;
+                                      cregcorpus->hostAccessList = NULL;
+                                      cregcorpus->userAccessList = NULL;
+                                      cregcorpus->registry_dir = NULL;
+                                      cregcorpus->registry_name = NULL;
+                                      cregcorpus->nr_of_loads = 1;
+                                      cregcorpus->next = NULL;
+                                    }
                   Header
                   Declaration       { if (cregcorpus->attributes == NULL) {
-  		                        cregerror("Illegal corpus declaration -- no attributes defined"); 
-		                      }
-				    }
-		| error 	    { cregerror_cleanup("Parse Error."); YYABORT; }
+                                        cregerror("Illegal corpus declaration -- no attributes defined"); 
+                                      }
+                                    }
+                | error             { cregerror_cleanup("Parse Error."); YYABORT; }
                 ;
 
-Declaration	: Attributes        { /* nop */ }
-		  ;
+Declaration     : Attributes        { /* nop */ }
+                  ;
 
-Header		: NameDecl
+Header          : NameDecl
                   IDDecl 
                   OptHome
                   OptInfo           { cregcorpus->name      = $1;
-				      cregcorpus->id        = $2;
-				      cregcorpus->path      = $3;
-				      cregcorpus->info_file = $4;
-				    }
+                                      cregcorpus->id        = $2;
+                                      cregcorpus->path      = $3;
+                                      cregcorpus->info_file = $4;
+                                    }
                   OptAdmin
-		  OptHostAccessClause
+                  OptHostAccessClause
                   OptUserAccessClause
-		  OptGroupAccessClause
-		  OptProperties
-		;
+                  OptGroupAccessClause
+                  OptProperties
+                ;
 
 OptInfo         : INFO_SYM path     { $$ = $2; }
                 | /* eps */         { $$ = NULL; }
@@ -207,163 +207,163 @@ OptHostAccessClause: HOST_SYM
                 | /* eps */         { cregcorpus->hostAccessList = NULL; }
                 ;
 
-NameDecl	: NAME_SYM string   { $$ = $2; }
-		;
+NameDecl        : NAME_SYM string   { $$ = $2; }
+                ;
 
-IDDecl		: ID_SYM id         { $$ = $2; }
-		| /* eps */         { $$ = NULL; }
-		;
-		   
-Attributes	: Attribute         { 
+IDDecl          : ID_SYM id         { $$ = $2; }
+                | /* eps */         { $$ = NULL; }
+                ;
+                   
+Attributes      : Attribute         { 
                                       /* declare components which are not yet declared for local attrs. */
                                       if ((((Attribute *)$1)->any.path == NULL) &&
-	                                  (cregcorpus->path != NULL))
+                                          (cregcorpus->path != NULL))
                                         ((Attribute *)$1)->any.path = cl_strdup(cregcorpus->path);
                                       declare_default_components((Attribute *)$1);
                                     }
                   Attributes
-		| IGNORE_SYM id id StorageSpec {}
+                | IGNORE_SYM id id StorageSpec {}
                   /* *** this rule helps us ignore MAPTABLE and NGRAM attributes *** */
                   Attributes
                 | /* eps */
-		  ;
+                  ;
 
-Attribute	: ATTRIBUTE_SYM 
+Attribute       : ATTRIBUTE_SYM 
                   id                { 
                                       if ((cregattrib = setup_attribute(cregcorpus, $2, ATT_POS, NULL)) == NULL) {
-					sprintf(cregestring, 
-						"Positional attribute %s declared twice -- "
-						"semantic error", $2);
-					cl_free($2);
-					cregerror(cregestring);
-				      }
-				    }
+                                        sprintf(cregestring, 
+                                                "Positional attribute %s declared twice -- "
+                                                "semantic error", $2);
+                                        cl_free($2);
+                                        cregerror(cregestring);
+                                      }
+                                    }
                   AttrBody          { $$ = cregattrib; cregattrib = NULL; }
 
-		| ALIGNED_SYM id StorageSpec
+                | ALIGNED_SYM id StorageSpec
                                     { if (($$ = setup_attribute(cregcorpus, $2, ATT_ALIGN, NULL)) == NULL) {
-					sprintf(cregestring, "Alignment attribute %s declared twice -- "
-						"semantic error", $2);
-					cl_free($2);
-					cl_free($3.path);
-					cregerror(cregestring);
-				      }
+                                        sprintf(cregestring, "Alignment attribute %s declared twice -- "
+                                                "semantic error", $2);
+                                        cl_free($2);
+                                        cl_free($3.path);
+                                        cregerror(cregestring);
+                                      }
 
-				      ((Attribute *)$$)->align.path = $3.path;
-				    }
-		| STRUCTURE_SYM id StorageSpec
+                                      ((Attribute *)$$)->align.path = $3.path;
+                                    }
+                | STRUCTURE_SYM id StorageSpec
                                     { if (($$ = setup_attribute(cregcorpus, $2, ATT_STRUC, NULL)) == NULL) {
-					sprintf(cregestring, "Structure attribute %s declared twice -- "
-						"semantic error", $2);
-					cl_free($2);
-					cl_free($3.path);
-					cregerror(cregestring);
-				      }
+                                        sprintf(cregestring, "Structure attribute %s declared twice -- "
+                                                "semantic error", $2);
+                                        cl_free($2);
+                                        cl_free($3.path);
+                                        cregerror(cregestring);
+                                      }
 
-				      ((Attribute *)$$)->struc.path = $3.path;
-				    }
+                                      ((Attribute *)$$)->struc.path = $3.path;
+                                    }
                 | DYNAMIC_SYM id '(' 
                   ArgList 
                   ')' ':' SingleArg string  
                                     { if (($$ = setup_attribute(cregcorpus, $2, ATT_DYN, NULL)) == NULL) {
 
-					DynArg *a;
+                                        DynArg *a;
 
-					sprintf(cregestring, "Dynamic attribute %s declared twice -- "
-						"semantic error", $2);
-					cl_free($2);
-					cl_free($7);
-					cl_free($8);
+                                        sprintf(cregestring, "Dynamic attribute %s declared twice -- "
+                                                "semantic error", $2);
+                                        cl_free($2);
+                                        cl_free($7);
+                                        cl_free($8);
 
-					while ($4 != NULL) {
-					  a = (DynArg *)$4;
-					  $4 = ((DynArg *)a)->next;
-					  cl_free(a);
-					}
+                                        while ($4 != NULL) {
+                                          a = (DynArg *)$4;
+                                          $4 = ((DynArg *)a)->next;
+                                          cl_free(a);
+                                        }
 
-					cregerror(cregestring);
-				      }
+                                        cregerror(cregestring);
+                                      }
 
-				      ((Attribute *)$$)->dyn.arglist = $4;
-				      ((Attribute *)$$)->dyn.res_type = ((DynArg *)$7)->type;
-				      free($7);
-				      ((Attribute *)$$)->dyn.call = $8;
+                                      ((Attribute *)$$)->dyn.arglist = $4;
+                                      ((Attribute *)$$)->dyn.res_type = ((DynArg *)$7)->type;
+                                      free($7);
+                                      ((Attribute *)$$)->dyn.call = $8;
 
                                       ((Attribute *)$$)->dyn.path = NULL;
-				    }
-		;
-
-StorageSpec     : path              { $$.path = $1; 
-				    }
-                | /* eps */         { $$.path = NULL;
-				    }
+                                    }
                 ;
 
-AttrBody	: OptFieldDefs      { assert(cregattrib != NULL);
-				      if ((cregattrib->any.path == NULL) &&
-					  (cregcorpus->path != NULL))
-					cregattrib->any.path = cl_strdup(cregcorpus->path);
-				    }
+StorageSpec     : path              { $$.path = $1; 
+                                    }
+                | /* eps */         { $$.path = NULL;
+                                    }
+                ;
+
+AttrBody        : OptFieldDefs      { assert(cregattrib != NULL);
+                                      if ((cregattrib->any.path == NULL) &&
+                                          (cregcorpus->path != NULL))
+                                        cregattrib->any.path = cl_strdup(cregcorpus->path);
+                                    }
                 | path              { assert(cregattrib != NULL);
                                       cregattrib->any.path = $1; 
-				    }
+                                    }
                 ;
 
 ArgList         : SingleArg         { $$ = $1; }
                 | ArgList ',' SingleArg  
                                     { 
-				      DynArg *last;
-				      assert($1 != NULL);
-				      last = $1; 
-				      while (last->next != NULL) last = (DynArg *)last->next;
-				      
-				      last->next = $3; 
-				      $$ = $1; 
-				    }
+                                      DynArg *last;
+                                      assert($1 != NULL);
+                                      last = $1; 
+                                      while (last->next != NULL) last = (DynArg *)last->next;
+                                      
+                                      last->next = $3; 
+                                      $$ = $1; 
+                                    }
                 ; 
 
 SingleArg       : id                { $$ = (DynArg *)makearg($1); 
-				      if ($$ == NULL) {
-					sprintf(cregestring, "Illegal argument type %s or "
-						"not enough memory -- FATAL ERROR", $1);
-					cregerror(cregestring);
-				      }
-				    }
+                                      if ($$ == NULL) {
+                                        sprintf(cregestring, "Illegal argument type %s or "
+                                                "not enough memory -- FATAL ERROR", $1);
+                                        cregerror(cregestring);
+                                      }
+                                    }
                 | DOTS_SYM          { $$ = (DynArg *)makearg("VARARG"); 
-				      if ($$ == NULL)
-					cregerror("Internal error while parsing variable "
-						  "argument list -- FATAL ERROR");
-				    }
+                                      if ($$ == NULL)
+                                        cregerror("Internal error while parsing variable "
+                                                  "argument list -- FATAL ERROR");
+                                    }
                 ; 
 
 OptFieldDefs    : '{' FieldDefs '}'
                 | /* eps */
                 ;
 
-FieldDefs	: FieldDef FieldDefs
-		| /* eps */
-		;
-
-FieldDef	: DIR_SYM path      { cregSetAttrComponentPath(cregattrib, CompDirectory,    $2); }
-		| CORPUS_SYM path   { cregSetAttrComponentPath(cregattrib, CompCorpus,       $2); }
-		| REVCORP_SYM path  { cregSetAttrComponentPath(cregattrib, CompRevCorpus,    $2); }
-		| REVCIDX_SYM path  { cregSetAttrComponentPath(cregattrib, CompRevCorpusIdx, $2); }
-		| FREQS_SYM path    { cregSetAttrComponentPath(cregattrib, CompCorpusFreqs,  $2); }
-		| LEXICON_SYM path  { cregSetAttrComponentPath(cregattrib, CompLexicon,      $2); }
-		| LEXIDX_SYM path   { cregSetAttrComponentPath(cregattrib, CompLexiconIdx,   $2); }
-		| LEXSRT_SYM path   { cregSetAttrComponentPath(cregattrib, CompLexiconSrt,   $2); }
+FieldDefs       : FieldDef FieldDefs
+                | /* eps */
                 ;
 
-path		: id                { $$ = $1; }
-		;
+FieldDef        : DIR_SYM path      { cregSetAttrComponentPath(cregattrib, CompDirectory,    $2); }
+                | CORPUS_SYM path   { cregSetAttrComponentPath(cregattrib, CompCorpus,       $2); }
+                | REVCORP_SYM path  { cregSetAttrComponentPath(cregattrib, CompRevCorpus,    $2); }
+                | REVCIDX_SYM path  { cregSetAttrComponentPath(cregattrib, CompRevCorpusIdx, $2); }
+                | FREQS_SYM path    { cregSetAttrComponentPath(cregattrib, CompCorpusFreqs,  $2); }
+                | LEXICON_SYM path  { cregSetAttrComponentPath(cregattrib, CompLexicon,      $2); }
+                | LEXIDX_SYM path   { cregSetAttrComponentPath(cregattrib, CompLexiconIdx,   $2); }
+                | LEXSRT_SYM path   { cregSetAttrComponentPath(cregattrib, CompLexiconSrt,   $2); }
+                ;
 
-id		: IDENTIFIER        { $$ = $1; }
-		| NUMBER            { char *nr;
-				      nr = (char *)cl_malloc(16);
-				      sprintf(nr, "%d", $1);
-				      $$ = nr;
-				    }
-		;
+path            : id                { $$ = $1; }
+                ;
+
+id              : IDENTIFIER        { $$ = $1; }
+                | NUMBER            { char *nr;
+                                      nr = (char *)cl_malloc(16);
+                                      sprintf(nr, "%d", $1);
+                                      $$ = nr;
+                                    }
+                ;
 
 IDList          : IDList id         { IDList n;
                                       n = (IDList)cl_malloc(sizeof(IDBuf));
@@ -374,23 +374,23 @@ IDList          : IDList id         { IDList n;
                 | /* eps */         { $$ = NULL; }
                 ;
 
-string		: STRING            { $$ = $1; } 
-		;
+string          : STRING            { $$ = $1; } 
+                ;
 
-OptProperties	: OptProperties Property
-		| /* eps */
-		;
+OptProperties   : OptProperties Property
+                | /* eps */
+                ;
 
-Property	: PROPERTY_SYM IDENTIFIER '=' STRING
-					{
-					  add_corpus_property(cregcorpus, $2, $4);
-					}
-		| PROPERTY_SYM IDENTIFIER '=' id
-					{ /* allow IDs and numbers without quotes */
-					  add_corpus_property(cregcorpus, $2, $4);
-					}
-		;
-						
+Property        : PROPERTY_SYM IDENTIFIER '=' STRING
+                                        {
+                                          add_corpus_property(cregcorpus, $2, $4);
+                                        }
+                | PROPERTY_SYM IDENTIFIER '=' id
+                                        { /* allow IDs and numbers without quotes */
+                                          add_corpus_property(cregcorpus, $2, $4);
+                                        }
+                ;
+                                                
 
 
 %%

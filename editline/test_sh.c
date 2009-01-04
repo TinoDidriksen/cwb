@@ -17,59 +17,61 @@
 #include "editline_config.h"
 
 #include <stdio.h>
-#if	defined(HAVE_STDLIB)
+#if     defined(HAVE_STDLIB)
 #include <stdlib.h>
-#endif	/* defined(HAVE_STDLIB) */
+#endif  /* defined(HAVE_STDLIB) */
 
-#if	!defined(HAVE_STDLIB)
-extern int	chdir();
-extern int	free();
-extern int	strncmp();
-extern int	system();
-extern void	exit();
-extern char	*getenv();
-#endif	/* !defined(HAVE_STDLIB) */
+#if     !defined(HAVE_STDLIB)
+extern int      chdir();
+extern int      free();
+extern int      strncmp();
+extern int      system();
+extern void     exit();
+extern char     *getenv();
+#endif  /* !defined(HAVE_STDLIB) */
 
 
-#if	defined(NEED_PERROR)
+#if     defined(NEED_PERROR)
 void
 perror(s)
-    char	*s;
+    char        *s;
 {
-    extern int	errno;
+    extern int  errno;
 
     (voidf)printf(stderr, "%s: error %d\n", s, errno);
 }
-#endif	/* defined(NEED_PERROR) */
+#endif  /* defined(NEED_PERROR) */
 
 
 /* ARGSUSED1 */
 int
 main(ac, av)
-    int		ac;
-    char	*av[];
+    int         ac;
+    char        *av[];
 {
-    char	*prompt;
-    char	*p;
-    int		doit;
+    char        *prompt;
+    char        *p;
+    int         doit;
 
     read_history("TEST_SH_HISTORY");
 
     doit = ac == 1;
     if ((prompt = getenv("TESTPROMPT")) == NULL)
-	prompt = "test_sh>  ";
+        prompt = "test_sh>  ";
 
     while ((p = readline(prompt)) != NULL) {
-	(void)printf("\t\t\t|%s|\n", p);
-	if (doit)
-	    if (strncmp(p, "cd ", 3) == 0) {
-		if (chdir(&p[3]) < 0)
-		    perror(&p[3]);
-	    }
-	    else if (system(p) != 0)
-		perror(p);
-	add_history(p);
-	free(p);
+        (void)printf("\t\t\t|%s|\n", p);
+        if (doit) {
+            if (strncmp(p, "cd ", 3) == 0) {
+                if (chdir(&p[3]) < 0)
+                    perror(&p[3]);
+            }
+            else if (system(p) != 0) {
+                perror(p);
+            }
+        }
+        add_history(p);
+        free(p);
     }
 
     write_history("TEST_SH_HISTORY");

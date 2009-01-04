@@ -37,7 +37,7 @@ process_fd(FILE *fd)
   while(fgets(buf, MAX_LINE_LENGTH, fd)) {
     i = htonl(atoi(buf));
     if (little_endian) 
-      i = cwb_bswap32(i);	/* explicit conversion */
+      i = cl_bswap32(i);	/* explicit conversion */
     fwrite(&i, 4, 1, stdout);	/* always write 4 bytes ! */
   }
 }

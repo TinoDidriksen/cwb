@@ -27,7 +27,7 @@
 /* some utility functions which can be re-used for other hash tables */
 int is_prime(int n);                                          /* returns True iff <n> is a prime */
 int find_prime(int n);                                        /* returns smallest prime >= n */
-unsigned int hash_string(unsigned char *s);                   /* compute 32bit hash value for string <s> */
+unsigned int hash_string(char *s);                            /* compute 32bit hash value for string <s> */
 
 
 

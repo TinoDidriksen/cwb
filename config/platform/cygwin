@@ -22,9 +22,6 @@
 ## Inherits from generic Unix configuration
 include $(TOP)/config/platform/unix
 
-## Intel i386 CPUs have little-endian byte order
-ENDIAN = little
-
 ## Use termcap support from ncurses library 
 TERMCAP_LIBS = -lncurses
 TERMCAP_DEFINES = -I/usr/include/ncurses

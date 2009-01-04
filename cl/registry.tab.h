@@ -106,17 +106,17 @@
 typedef union YYSTYPE
 #line 69 "registry.y"
 {
-  unsigned char    *strval;
-  int               ival;
-  void              *args;
-  void              *attr;
+  char    *strval;
+  int      ival;
+  void    *args;
+  void    *attr;
 
   IDList   idlist;
 
   struct {
     int status;
-    unsigned char *path;
-  }                 storage;
+    char *path;
+  } storage;
 }
 /* Line 1529 of yacc.c.  */
 #line 123 "registry.tab.h"

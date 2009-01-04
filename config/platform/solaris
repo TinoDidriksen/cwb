@@ -22,9 +22,6 @@
 ## Inherits from generic Unix configuration
 include $(TOP)/config/platform/unix
 
-## SPARC CPUs use big-endian byte order
-ENDIAN = big
-
 ## Standard Solaris doesn't include ncurses library, but has compatible termcap
 TERMCAP_LIBS = -ltermcap
 

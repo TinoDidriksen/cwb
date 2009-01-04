@@ -57,7 +57,7 @@ int cl_strcmp(char *s1, char *s2)
   register signed char* c1;
   register signed char* c2;
 
-  c1 = s1; c2 = s2;
+  c1 = (signed char *)s1; c2 = (signed char *)s2;
 
   for ( ; *c1 == *c2; c1++,c2++)
     if ( *c1 == '\0')
@@ -618,14 +618,12 @@ int *get_positions(Attribute *attribute, int id, int *freq, int *restrictor_list
     memcpy(buffer, 
 	   revcorp->data.data + ntohl(revcidx->data.data[id]),
 	   *freq * sizeof(int));
-    
-#if defined(CWB_LITTLE_ENDIAN)
-    {
+
+    { /* convert network byte order to native integers */
       int i;
       for (i = 0; i < *freq; i++)
 	buffer[i] = ntohl(buffer[i]);
     }
-#endif
     
     if (restrictor_list != NULL && restrictor_list_size > 0) {
       int res_ptr, buf_ptr, ins_ptr;
@@ -854,13 +852,11 @@ ReadPositionStream(PositionStream ps,
 
     ps->nr_items += items_to_read;
 
-#if defined(CWB_LITTLE_ENDIAN)
-    {
+    { /* convert network byte order to native integers */
       int i;
       for (i = 0; i < items_to_read; i++)
 	buffer[i] = ntohl(buffer[i]);
     }
-#endif
     
   }
 
@@ -1385,7 +1381,7 @@ int *get_previous_mark(int *data, int size, int position)
 /* new style functions with normalised behaviour */
 
 int cl_cpos2struc(Attribute *a, int cpos) { /* normalised to standard return value behaviour */
-  int struc;
+  int struc = -1;
   if (get_num_of_struc(a, cpos, &struc))
     return struc;
   else
@@ -1393,7 +1389,7 @@ int cl_cpos2struc(Attribute *a, int cpos) { /* normalised to standard return val
 }
 
 int cl_max_struc(Attribute *a) { /* normalised to standard return value behaviour */
-  int nr;
+  int nr = -1;
   if (get_nr_of_strucs(a, &nr)) 
     return nr;
   else
@@ -1618,7 +1614,7 @@ char *structure_value(Attribute *attribute, int struc_num)
 
 char *structure_value_at_position(Attribute *struc, int position)
 {
-  int snum;
+  int snum = -1;
   
   if ((struc == NULL) || 
       (!get_num_of_struc(struc, position, &snum)))

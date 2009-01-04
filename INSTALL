@@ -1,8 +1,8 @@
 
-	IMS Open Corpus Workbench (CWB)
-	Release 3
+        IMS Open Corpus Workbench (CWB)
+        Release 3
 
-	Installation Guide
+        Installation Guide
 
 
 This file describes how to build and install the CWB from source code.  Binary
@@ -25,7 +25,7 @@ information provided on the wiki, you should join the CWBdev mailing list
 and ask your question there.
 
 
-	PREREQUISITES
+        PREREQUISITES
 
  - any modern Unix flavour (must be POSIX compatible)
  - GCC 3.3 or newer recommended (other ANSI C compilers might also work)
@@ -33,7 +33,7 @@ and ask your question there.
  - GNU make or a compatible program
  - the ncurses library (or a similar terminal control library)
 
-	RECOMMENDED SOFTWARE (not essential)
+        RECOMMENDED SOFTWARE (not essential)
 
  - GNU install or a compatible program
  - GNU bison & flex for updating automatically generated parsers
@@ -41,26 +41,26 @@ and ask your question there.
  - GNU less pager for interactive display of query results in CQP
 
 
-	QUICK INSTALLATION
+        QUICK INSTALLATION
 
 Edit "config.mk", selecting suitable platform and site configuration files
 for your system (available options are documented in "config.mk").  You
-can also override indvidual settings manually there.  If you cannot find an
+can also override individual settings manually there.  If you cannot find an
 appropriate configuration, see WRITING YOUR OWN CONFIGURATION FILES below.
 
 Now, to compile the Corpus Library, CQP, CQPcl, CQPserver, and the
 command-line utilities, type
 
-	make clean
-	make depend
-	make all
+        make clean
+        make depend
+        make all
 
 If your default make program is not GNU make, you may have to type "gmake"
 instead of "make" (the current Makefile system only works with GNU make and
 fully compatible programs).  To install the corpus library, all programs, and
 the man pages, type
 
-	make install
+        make install
 
 Note that you must have write permission in the installation directories in
 order to do so (usually the "/usr/local" tree, but site configuration files may
@@ -74,14 +74,14 @@ for your first experiments.
 If you want to make sure that all automatically generated files are up to
 date, you should type
 
-	make realclean
+        make realclean
 
 before starting the build process.  This will update makefile dependencies,
 the generated bison/flex parsers and all man pages.  Note that this will only
 work if the recommended software is installed (bison, flex and pod2man).
 
 
-	WRITING YOUR OWN CONFIGURATION FILES
+        WRITING YOUR OWN CONFIGURATION FILES
 
 If you cannot find a suitable platform and site configuration files, or if 
 you need to override some settings and expect to install future CWB releases
@@ -105,11 +105,11 @@ If your configuration files inherit from standard configurations, use include
 paths of the form "$(TOP)/config/...".
 
 
-	BUILDING BINARY RELEASES
-	
+        BUILDING BINARY RELEASES
+        
 If you want to create a binary package for your platform, type
 
-	make release
+        make release
 
 This will install the CWB locally in a subdirectory of "build/" and wrap it
 in a ".tar.gz" archive for distribution.  The filename of this archive (which
@@ -123,28 +123,28 @@ directories (except for the general PREFIX) and access permissions will be
 ignored when building a binary release.
 
 
-	BUILDING SOURCE RELEASES
+        BUILDING SOURCE RELEASES
 
 In order to "clean up" the source code tree for a standard source distribution,
 the recommended command sequence is
 
-	make realclean
-	make depend
-	make clean
+        make realclean
+        make depend
+        make clean
 
 This will remove all automatically generated files, and then recreate the 
 makefile dependencies and bison/flex parsers, so that the CWB can be compiled
 from source with a minimal set of prerequisites.
 
 
-	BUILDING RPM PACKAGES FOR LINUX
+        BUILDING RPM PACKAGES FOR LINUX
 
 In order to create a binary Linux distribution in RPM format, edit the file
 "rpm-linux.spec" as necessary, then copy the sourcecode archive (whose precise
 name must be listed in the "Source:" field of the RPM specification) into
 "/usr/src/packages/SOURCES", and run
 
-	rpmbuild -bb --clean --rmsource rpm-linux.spec
+        rpmbuild -bb --clean --rmsource rpm-linux.spec
 
 The ready-made binary RPM package will then be available in the appropriate
 subdirectory of "/usr/src/packages/RPMS/".  It may be necessary to select the
@@ -154,29 +154,29 @@ Otherwise, the build process will automatically select the generic Linux
 configuration for standard i386-compatible processors.
 
 
-	PACKAGE CONTENTS
+        PACKAGE CONTENTS
 
-Makefile		top-level makefile
-config.mk		makefile configuration
-definitions.mk		standard settings and definitions for make system
-rpm-linux.spec		configuration file for building binary RPM packages
-install.sh		a GNU-compatible install program (shell script)
-README, INSTALL, ...	the usual open source "boilerplate"
+Makefile                top-level makefile
+config.mk               makefile configuration
+definitions.mk          standard settings and definitions for make system
+rpm-linux.spec          configuration file for building binary RPM packages
+install.sh              a GNU-compatible install program (shell script)
+README, INSTALL, ...    the usual open source "boilerplate"
 
-doc/		 	some technical documentation
+doc/                    some technical documentation
 
-config/			platform and site configuration files 
+config/                 platform and site configuration files 
   config/platform/        compiler flags and settings for various platforms
-  config/site/		  site-specific settings (installation paths etc.)
+  config/site/            site-specific settings (installation paths etc.)
 
-instutils/		utilities for installing and binary packages
+instutils/              utilities for installing and binary packages
 
-cl/			corpus library (CL) source code
-cqp/			CQP query processor source code
-CQi/			CQPserver (implements client-server interface CQi)
-utils/			source code of command-line utilities
+cl/                     corpus library (CL) source code
+cqp/                    CQP query processor source code
+CQi/                    CQPserver (implements client-server interface CQi)
+utils/                  source code of command-line utilities
 
-man/			manpages for CQP and the command-line utilities
+man/                    manpages for CQP and the command-line utilities
 
-editline/		local copy of the CSTR Editline library used by CQP
+editline/               local copy of the CSTR Editline library used by CQP
 

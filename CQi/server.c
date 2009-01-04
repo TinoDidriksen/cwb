@@ -32,7 +32,7 @@
 #include <unistd.h>
 #include <stdio.h>
 
-#include "../cl/cl.h"		/* this is the local cl.h header */
+#include "../cl/cl.h"           /* this is the local cl.h header */
 #include "../cl/macros.h"
 
 #include "../cqp/options.h"
@@ -53,15 +53,15 @@
 
 
 int sockfd, connfd;
-FILE *conn_out;			/* buffered output (don't forget to flush()) */
+FILE *conn_out;                 /* buffered output (don't forget to flush()) */
 struct sockaddr_in my_addr, client_addr;
 struct hostent *remote_host;
 char *remote_address;
-cqi_byte netbuf[NETBUFSIZE];	/* do we need it at all? */
-int bytes;			/* always used for data held in netbuf[] */
+cqi_byte netbuf[NETBUFSIZE];    /* do we need it at all? */
+int bytes;                      /* always used for data held in netbuf[] */
 
 
-int cqi_errno = CQI_STATUS_OK;	/* CQi last error */
+int cqi_errno = CQI_STATUS_OK;  /* CQi last error */
 char cqi_error_string[GENERAL_ERROR_SIZE] = "No error.";
 
 /*
@@ -115,7 +115,7 @@ void cqi_general_error(char *errstring) {
 int 
 accept_connection(int port) {
   const int on = 1;
-  int sin_size = sizeof(struct sockaddr_in);
+  socklen_t sin_size = sizeof(struct sockaddr_in);
   pid_t child_pid;
 
   if (SIG_ERR == signal(SIGCHLD, SIG_IGN)) {
@@ -160,7 +160,7 @@ accept_connection(int port) {
   if (server_quit) {
     pid_t pid = fork();
     if (pid != 0) {
-      close(sockfd);		/* parent returns to caller */
+      close(sockfd);            /* parent returns to caller */
       printf("[CQPserver running in background now]\n");
       exit(0);
     }
@@ -174,13 +174,13 @@ accept_connection(int port) {
       
       tv.tv_sec = 10;
       tv.tv_usec = 0;
-      FD_ZERO(&read_fd);	/* select() on sockfd */
+      FD_ZERO(&read_fd);        /* select() on sockfd */
       FD_SET(sockfd, &read_fd);
       
       if ((select(sockfd+1, &read_fd, NULL, NULL, &tv) <= 0)
-	  || (!FD_ISSET(sockfd, &read_fd))) {
-	printf("Port #%d timed out in private server mode. Aborting.\n", port);
-	exit(1);
+          || (!FD_ISSET(sockfd, &read_fd))) {
+        printf("Port #%d timed out in private server mode. Aborting.\n", port);
+        exit(1);
       }
     }
 
@@ -197,7 +197,7 @@ accept_connection(int port) {
     if (server_log) {
       printf("Connection established with %s ", remote_address);
       if (remote_host != NULL) 
-	printf("(%s)", remote_host->h_name);
+        printf("(%s)", remote_host->h_name);
       printf("\n");
     }
     
@@ -209,16 +209,16 @@ accept_connection(int port) {
     }
     
     if (child_pid == 0)
-      break;			/* the child exits the listen() loop */
+      break;                    /* the child exits the listen() loop */
 
     /* this is the listening 'parent', which exits immediately */
     printf("Spawned CQPserver, pid = %d.\n", (int)child_pid);
-    close(connfd);		/* this is the child's connection */
+    close(connfd);              /* this is the child's connection */
 
     if (private_server) {
       printf("Accepting no more connections (private server).\n");
       close(sockfd);
-      exit(0);			/* SIGCHLD should be reaped by calling process */
+      exit(0);                  /* SIGCHLD should be reaped by calling process */
     }
   }
 
@@ -578,8 +578,8 @@ cqi_read_int(void) {
   n = (n << 8) | cqi_read_byte();
   n = (n << 8) | cqi_read_byte();
   n = (n << 8) | cqi_read_byte();
-  if (n & 0x80000000)		/* negative 32bit quantity */
-    n |= minus_bits;		/* expand to full size of int type */
+  if (n & 0x80000000)           /* negative 32bit quantity */
+    n |= minus_bits;            /* expand to full size of int type */
   if (snoop) {
     fprintf(stderr, "CQi READ INT    %08X  [= %d]\n", n, n);
   }
@@ -593,7 +593,7 @@ cqi_read_string(void) {
 
   len = cqi_read_word();
   s = (char *) cl_malloc(len + 1);
-  if (!cqi_recv_bytes(s, len))
+  if (!cqi_recv_bytes((cqi_byte *)s, len))
     cqi_recv_error("cqi_read_string");
   s[len] = '\0';
   if (snoop)
@@ -785,7 +785,7 @@ split_attribute_spec(char *spec, char **corpus, char **attribute) {
   if (!check_corpus_name(*corpus) || !check_attribute_name(*attribute)) {
     free(*corpus);
     free(*attribute);
-    return 0;			/* cqi_errno set by check_* function */
+    return 0;                   /* cqi_errno set by check_* function */
   }
   cqi_errno = CQI_STATUS_OK;
   return 1;
@@ -810,7 +810,7 @@ split_subcorpus_spec(char *spec, char **corpus, char **subcorpus) {
     {
       cl_free(*corpus);
       cl_free(*subcorpus);
-      return 0;			/* cqi_errno set by check_* function */
+      return 0;                 /* cqi_errno set by check_* function */
     }
   cqi_errno = CQI_STATUS_OK;
   return 1;
@@ -839,7 +839,7 @@ combine_subcorpus_spec(char *corpus, char *subcorpus) {
 typedef struct att_bucket {
   char *string; /* the key */
   Attribute *attribute;
-  int type;			/* ATT_NONE, ATT_POS, ATT_STRUC, ... */
+  int type;                     /* ATT_NONE, ATT_POS, ATT_STRUC, ... */
 } AttBucket;
 
 struct att_hashtable {
@@ -850,7 +850,7 @@ struct att_hashtable {
 
 typedef struct att_hashtable *AttHashTable;
 
-AttHashTable AttHash = NULL;	/* this is the global attribute hash */
+AttHashTable AttHash = NULL;    /* this is the global attribute hash */
 
 /* has to be called once to initialise the hash */
 void 
@@ -898,7 +898,7 @@ att_hash_lookup(char *str)
 
   for(i = (int)AttHash->size/5; i>0; p++,i--) {
     if(p >= end) p = AttHash->space;
-    if(p->string == NULL) {	/* init new bucket */
+    if(p->string == NULL) {     /* init new bucket */
       p->string = cl_strdup(str);
       p->attribute = NULL;
       p->type = ATT_NONE;
@@ -998,7 +998,7 @@ cqi_find_corpus(char *name) {
       cl = findcorpus(name, SUB, 0);
     }
     else {
-      cl = NULL;			/* cqi_errno set by split_subcorpus_spec */
+      cl = NULL;                        /* cqi_errno set by split_subcorpus_spec */
     }
   }
 

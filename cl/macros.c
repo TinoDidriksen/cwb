@@ -33,7 +33,7 @@ cl_malloc(size_t bytes) {
   block = malloc(bytes);
   if (block == NULL) {
     fprintf(stderr, "CL: Out of memory. (killed)\n");
-    fprintf(stderr, "CL: [cl_malloc(%d)]\n", bytes);
+    fprintf(stderr, "CL: [cl_malloc(%ld)]\n", bytes);
     printf("\n");		/* for CQP's child mode */
     exit(1);
   }
@@ -47,7 +47,7 @@ cl_calloc(size_t nr_of_elements, size_t element_size) {
   block = calloc(nr_of_elements, element_size);
   if (block == NULL) {
     fprintf(stderr, "CL: Out of memory. (killed)\n");
-    fprintf(stderr, "CL: [cl_calloc(%d*%d bytes)]\n", nr_of_elements, element_size);
+    fprintf(stderr, "CL: [cl_calloc(%ld*%ld bytes)]\n", nr_of_elements, element_size);
     printf("\n");		/* for CQP's child mode */
     exit(1);
   }
@@ -71,7 +71,7 @@ cl_realloc(void *block, size_t bytes) {
     }
     else {
       fprintf(stderr, "CL: Out of memory. (killed)\n");
-      fprintf(stderr, "CL: [cl_realloc(block at %p to %d bytes)]\n", block, bytes);
+      fprintf(stderr, "CL: [cl_realloc(block at %p to %ld bytes)]\n", block, bytes);
       printf("\n");		/* for CQP's child mode */
       exit(1);
     }
@@ -86,7 +86,7 @@ cl_strdup(char *string) {
   new_string = strdup(string);
   if (new_string == NULL) {
     fprintf(stderr, "CL: Out of memory. (killed)\n");
-    fprintf(stderr, "CL: [cl_strdup(addr=%p, len=%d)]\n", string, strlen(string));
+    fprintf(stderr, "CL: [cl_strdup(addr=%p, len=%ld)]\n", string, strlen(string));
     printf("\n");		/* for CQP's child mode */
     exit(1);
   }
@@ -151,7 +151,7 @@ int progress_bar_simple = 0;
 
 void
 progress_bar_child_mode(int on_off) {
-  progress_bar_simple = progress_bar_child_mode;
+  progress_bar_simple = on_off;
 }
 
 void

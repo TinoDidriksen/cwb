@@ -22,9 +22,6 @@
 ## Inherits from basic Darwin configuration
 include $(TOP)/config/platform/darwin
 
-## Intel i386 CPUs are little-endian 
-ENDIAN = little
-
 ## Core 2 optimisations are only available with Xcode 3.1 (using gcc-4.2)
 CC = /usr/bin/gcc-4.2
 

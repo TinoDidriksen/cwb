@@ -23,8 +23,8 @@
 #
 # CWB version
 #
-VERSION = 2.2.b99
-# 2.2.b99 = beta version b99 derived from 2.2 release
+VERSION = 2.2.100
+# the absolutely last release candidate for 3.0
 
 #
 # Check that required configuration variables are set
@@ -54,10 +54,6 @@ endif
 # ifndef LDFLAGS
 # $(error Configuration variable LDFLAGS is not set (linker options))
 # endif
-
-ifndef ENDIAN
-$(error Configuration variable ENDIAN is not set ('big' or 'little'))
-endif
 
 ifndef YACC
 $(error Configuration variable YACC is not set (yacc or bison parser))
@@ -192,17 +188,6 @@ endif
 
 # define macro variables for some global settings
 INTERNAL_DEFINES = -DREGISTRY_DEFAULT_PATH=\""$(DEFAULT_REGISTRY)"\" -DCOMPILE_DATE=\"$(COMPILE_DATE)\" -DVERSION=\"$(VERSION)\"
-
-# check that endianness is well-defined ('big' or 'little')
-ifeq ($(ENDIAN), big)
-INTERNAL_DEFINES += -DCWB_BIG_ENDIAN
-else
-ifeq ($(ENDIAN), little)
-INTERNAL_DEFINES += -DCWB_LITTLE_ENDIAN
-else
-$(error ENDIAN variable must be either 'big' or 'little')
-endif
-endif
 
 # path to locally compiled CL library and linker command
 LIBCL_PATH = $(TOP)/cl/libcl.a

@@ -24,7 +24,7 @@
 # PLATFORM-SPECIFIC CONFIGURATION (OS and CPU type)
 #
 # Pre-defined platform configuration files:
-#       unix          standard Unix configuration [must set ENDIAN manually!]
+#       unix          generic Unix / GCC configuration (should work on most Unix platforms)
 #       linux         i386-Linux (generic)
 #         linux-64       - configuration for 64-bit CPUs
 #         linux-opteron  - with optimimzation for AMD Opteron processor
@@ -33,11 +33,12 @@
 #         darwin-g5      - with optimization for PowerPC G5 processor
 #         darwin-i386    - configuration for i386-compatible processors
 #         darwin-64      - 64-bit build on Intel Core2 and newer processors
-#         darwin-core2   - optimised build for Core 2 CPU (requires Xcode 3.1)
+#         darwin-universal - Universal build for ppc, i386 and x86_64 architecturs
+#         darwin-core2   - optimised build for Core 2 CPU (requires Xcode 3.1 / OS X 10.5)
 #       solaris       SUN Solaris 8 for SPARC CPU
 #       cygwin        Win32 build using Cygwin emulation layer (experimental)
 #
-include $(TOP)/config/platform/darwin-core2
+include $(TOP)/config/platform/darwin-universal
 
 #
 # SITE-SPECIFIC CONFIGURATION (installation path and other local settings)
@@ -46,7 +47,7 @@ include $(TOP)/config/platform/darwin-core2
 #       standard        standard configuration (installation in /usr/local tree)
 #       classic         "classic" configuration (CWB v2.2, uses /corpora/c1/registry)
 #       osx-fink        Mac OS X installation in Fink's /sw tree
-#       binary-release  Build binary package for release (static if possible, local install in build/ tree)
+#       binary-release  Build binary package for release (static if possible, use with "make release")
 #         osx-release     ... for Mac OS X
 #         linux-release   ... for i386 Linux
 #         solaris-release ... for SUN Solaris 2.x
@@ -92,9 +93,6 @@ include $(TOP)/config/site/standard
 
 ## C compiler to use (GCC is highly recommended, others may not work)
 # CC = gcc
-
-## Endianness of CPU ('big' or 'little'), should be set in platform config file!
-# ENDIAN = ???
 
 ## Override options for C compiler and linker (complete override)
 # CFLAGS = -O2 -Wall

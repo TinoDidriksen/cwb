@@ -16,10 +16,9 @@
  */
 
 
-/* provides function definition for cwb_bswap32(), i.e. the CWB
-   implementation of the ntohl() and htonl() functions, if required.
-   See endian.h for details. */
-
+/* provides definition of the cl_bswap32() function, which was used as a portable implementation of the ntohl()
+   and htonl() macros in earlier CWB versions; still needed for explicit conversion to little-endian format
+*/
 
 
 #include "globals.h" /* globals.h checks whether endianness is well-defined */
@@ -29,7 +28,7 @@
 
 /*  Note that the function defined here will work correctly with 32bit and larger
    int data types. */
-int cwb_bswap32(int x) {
+int cl_bswap32(int x) {
   register int y;	        /* return value */
   y = x & 0xff;			/* let the compiler worry about optimisation */
   y = (y << 8) + ((x >> 8) & 0xff);

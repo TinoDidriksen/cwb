@@ -623,10 +623,8 @@ Component *load_component(Attribute *attribute, ComponentID cid)
 	  /* bcopy(comp->data.data, attribute->pos.hc, sizeof(HCD)); */
 	  memcpy(attribute->pos.hc, comp->data.data, sizeof(HCD));
 
-#if defined(CWB_LITTLE_ENDIAN)
-	  { 
+	  { /* convert network byte order to native integers */
 	    int i;
-	    /* shit, but we have to */
 	    attribute->pos.hc->size = ntohl(attribute->pos.hc->size);
 	    attribute->pos.hc->length = ntohl(attribute->pos.hc->length);
 	    attribute->pos.hc->min_codelen = ntohl(attribute->pos.hc->min_codelen);
@@ -637,7 +635,6 @@ Component *load_component(Attribute *attribute, ComponentID cid)
 	      attribute->pos.hc->min_code[i] = ntohl(attribute->pos.hc->min_code[i]);
 	    }
 	  }
-#endif
 	  attribute->pos.hc->symbols = comp->data.data + (4+3*MAXCODELEN);
 	
 	  comp->size = attribute->pos.hc->length;

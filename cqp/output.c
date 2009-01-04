@@ -21,7 +21,7 @@
 #include <stdarg.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <sys/time.h>		/* for select() */
+#include <sys/time.h>           /* for select() */
 
 
 #include "../cl/cl.h"
@@ -73,9 +73,9 @@ setenv(const char *name, const char *value, int overwrite) {
 
 void 
 print_corpus_info_header(CorpusList *cl, 
-			 FILE *stream, 
-			 PrintMode mode,
-			 int force)
+                         FILE *stream, 
+                         PrintMode mode,
+                         int force)
 {
   if (force || GlobalPrintOptions.print_header) {
 
@@ -175,7 +175,7 @@ open_pager(char *cmd, CorpusCharset charset) {
   if ((tested_pager == NULL) || (strcmp(tested_pager, cmd) != 0)) {
     pipe = popen(cmd, "w");
     if ((pipe == NULL) || (pclose(pipe) != 0)) {
-      return NULL;		/* new pager cmd doesn't work -> return error */
+      return NULL;              /* new pager cmd doesn't work -> return error */
     }
     if (tested_pager != NULL)
       free(tested_pager);
@@ -183,11 +183,11 @@ open_pager(char *cmd, CorpusCharset charset) {
   }
 
   /* if (less_charset_variable != "" and charset != ascii) set environment variable accordingly */
-  if (*less_charset_variable && charset != ascii) {	
+  if (*less_charset_variable && charset != ascii) {     
     char *new_value = "iso8859"; /* default setting is ISO-8859 */
     char *current_value = getenv(less_charset_variable);
     if (charset == utf8) 
-      new_value = "utf-8";	/* UTF-8 */
+      new_value = "utf-8";      /* UTF-8 */
     /* call setenv() if variable is not set or different from desired value */
     if (!current_value || strcmp(current_value, new_value)) {
       setenv(less_charset_variable, new_value, 1);
@@ -195,7 +195,7 @@ open_pager(char *cmd, CorpusCharset charset) {
   }
 
   pipe = popen(cmd, "w");
-  return pipe;			/* NULL if popen() failed for some reason */
+  return pipe;                  /* NULL if popen() failed for some reason */
 }
 
 int
@@ -211,20 +211,20 @@ open_stream(struct Redir *rd, CorpusCharset charset)
       i++;
     
     if ((rd->name[i] == '|') &&
-	(rd->name[i+1] != '\0')) {
+        (rd->name[i+1] != '\0')) {
       
       if (insecure) {
-	rd->stream = NULL;
-	rd->is_pipe = False;
-	rd->is_paging = False;
+        rd->stream = NULL;
+        rd->is_pipe = False;
+        rd->is_paging = False;
       }
       else {
-	
-	/* we send the output to a pipe */
+        
+        /* we send the output to a pipe */
 
-	rd->is_pipe = True;
-	rd->is_paging = False;
-	rd->stream = popen(rd->name+i+1, rd->mode);
+        rd->is_pipe = True;
+        rd->is_paging = False;
+        rd->stream = popen(rd->name+i+1, rd->mode);
       }
     }
     else {
@@ -240,29 +240,29 @@ open_stream(struct Redir *rd, CorpusCharset charset)
   else {
     if (pager && paging && isatty(fileno(stdout))) {
       if (insecure) {
-	cqpmessage(Error, "Insecure mode, paging not allowed.\n");
-	rd->stream = stdout;
-	rd->is_paging = False;
-	rd->is_pipe = False;
+        cqpmessage(Error, "Insecure mode, paging not allowed.\n");
+        rd->stream = stdout;
+        rd->is_paging = False;
+        rd->is_pipe = False;
       }
       else if ((rd->stream = open_pager(pager, charset)) == NULL) {
-	cqpmessage(Warning, "Could not start pager '%s', trying fallback '%s'.\n", pager, CQP_FALLBACK_PAGER);
-	if ((rd->stream = open_pager(CQP_FALLBACK_PAGER, charset)) == NULL) {
-	  cqpmessage(Warning, "Could not start fallback pager '%s'. Paging disabled.\n", CQP_FALLBACK_PAGER);
-	  set_integer_option_value("Paging", 0);
-	  rd->is_pipe = False;
-	  rd->is_paging = False;
-	  rd->stream = stdout;
-	}
-	else {
-	  rd->is_pipe = 1;
-	  rd->is_paging = True;
-	  set_string_option_value("Pager", cl_strdup(CQP_FALLBACK_PAGER));
-	}
+        cqpmessage(Warning, "Could not start pager '%s', trying fallback '%s'.\n", pager, CQP_FALLBACK_PAGER);
+        if ((rd->stream = open_pager(CQP_FALLBACK_PAGER, charset)) == NULL) {
+          cqpmessage(Warning, "Could not start fallback pager '%s'. Paging disabled.\n", CQP_FALLBACK_PAGER);
+          set_integer_option_value("Paging", 0);
+          rd->is_pipe = False;
+          rd->is_paging = False;
+          rd->stream = stdout;
+        }
+        else {
+          rd->is_pipe = 1;
+          rd->is_paging = True;
+          set_string_option_value("Pager", cl_strdup(CQP_FALLBACK_PAGER));
+        }
       }
       else {
-	rd->is_pipe = 1;
-	rd->is_paging = True;
+        rd->is_pipe = 1;
+        rd->is_paging = True;
       }
     }
     else {
@@ -311,17 +311,17 @@ open_input_stream(struct InputRedir *rd)
     if ((rd->name[i] == '|') && i >= 1) {
 
       if (insecure) {
-	rd->stream = NULL;
-	rd->is_pipe = False;
+        rd->stream = NULL;
+        rd->is_pipe = False;
       }
       else {
-	/* we read the input from a pipe */
-	rd->is_pipe = True;
-	tmp = (char *) cl_malloc(i + 1);
-	strncpy(tmp, rd->name, i);
-	tmp[i] = '\0';
-	rd->stream = popen(tmp, "r");
-	cl_free(tmp);
+        /* we read the input from a pipe */
+        rd->is_pipe = True;
+        tmp = (char *) cl_malloc(i + 1);
+        strncpy(tmp, rd->name, i);
+        tmp[i] = '\0';
+        rd->stream = popen(tmp, "r");
+        cl_free(tmp);
       }
     }
     else {
@@ -378,11 +378,11 @@ bp_signal_handler(int signum)
 
 void 
 print_output(CorpusList *cl, 
-	     FILE *fd,
-	     int interactive,
-	     ContextDescriptor *cd,
-	     int first, int last, /* range checking done by mode-specific print function */
-	     PrintMode mode)
+             FILE *fd,
+             int interactive,
+             ContextDescriptor *cd,
+             int first, int last, /* range checking done by mode-specific print function */
+             PrintMode mode)
 {
   switch (mode) {
     
@@ -410,9 +410,9 @@ print_output(CorpusList *cl,
 
 void 
 catalog_corpus(CorpusList *cl,
-	       struct Redir *rd,
-	       int first, int last,
-	       PrintMode mode)
+               struct Redir *rd,
+               int first, int last,
+               PrintMode mode)
 {
   int i;
   Boolean printHeader = False;
@@ -463,7 +463,7 @@ catalog_corpus(CorpusList *cl,
 
     if (rd->is_pipe && handle_sigpipe) {
       if (signal(SIGPIPE, bp_signal_handler) == SIG_ERR)
-	perror("Can't install signal handler for broken pipe (ignored)");
+        perror("Can't install signal handler for broken pipe (ignored)");
     }
 
     /* do the job. */
@@ -493,12 +493,12 @@ catalog_corpus(CorpusList *cl,
       fprintf(rd->stream, "%d matches.\n", cl->size);
     
     print_output(cl, rd->stream, 
-		 isatty(fileno(rd->stream)) || rd->is_paging, 
-		 &CD, first, last, mode);
+                 isatty(fileno(rd->stream)) || rd->is_paging, 
+                 &CD, first, last, mode);
     
     if (rd->is_paging && handle_sigpipe)
       if (signal(SIGPIPE, SIG_IGN) == SIG_ERR)
-	perror("Can't reinstall SIG_IGN signal handler");
+        perror("Can't reinstall SIG_IGN signal handler");
     
   }
 
@@ -551,7 +551,7 @@ corpus_info(CorpusList *cl)
   FILE *outfd;
   char buf[1024];
   int i, ok, stream_ok;
-  struct Redir rd = { NULL, NULL, NULL, 0, 0 };	/* for paging (with open_stream()) */
+  struct Redir rd = { NULL, NULL, NULL, 0, 0 }; /* for paging (with open_stream()) */
 
   CorpusList * mom = NULL;
   CorpusProperty p;
@@ -577,7 +577,7 @@ corpus_info(CorpusList *cl)
       fprintf(outfd, "\t<none>\n");
     else 
       for ( ; p != NULL; p = cl_next_corpus_property(p))
-	fprintf(outfd, "\t%s = '%s'\n", p->property, p->value);
+        fprintf(outfd, "\t%s = '%s'\n", p->property, p->value);
     fprintf(outfd, "\n");
     
 
@@ -585,32 +585,32 @@ corpus_info(CorpusList *cl)
       fprintf(outfd, "No further information available about %s\n", cl->name);
     else if ((fd = OpenFile(cl->corpus->info_file, "r")) == NULL)
       cqpmessage(Warning,
-		 "Can't open info file %s for reading",
-		 cl->corpus->info_file);
+                 "Can't open info file %s for reading",
+                 cl->corpus->info_file);
     else {
       ok = 1;
       do {
-	i = fread(&buf[0], sizeof(char), 1024, fd);
-	if (fwrite(&buf[0], sizeof(char), i, outfd) != i)
-	  ok = 0;
+        i = fread(&buf[0], sizeof(char), 1024, fd);
+        if (fwrite(&buf[0], sizeof(char), i, outfd) != i)
+          ok = 0;
       } while (ok && (i == 1024));
       fclose(fd);
     }
 
     if (stream_ok) 
-      close_stream(&rd);	/* close pipe to pager if we were using it */
+      close_stream(&rd);        /* close pipe to pager if we were using it */
   }
   else if (cl->mother_name == NULL)
     cqpmessage(Warning, 
-	       "Corrupt corpus information for %s", cl->name);
+               "Corrupt corpus information for %s", cl->name);
   else if ((mom = findcorpus(cl->mother_name, SYSTEM, 0)) != NULL) {
     corpus_info(mom);
   }
   else {
     cqpmessage(Info,
-	       "%s is a subcorpus of %s which is not loaded. Try 'info %s' "
-	       "for information about %s.\n",
-	       cl->name, cl->mother_name, cl->mother_name, cl->mother_name);
+               "%s is a subcorpus of %s which is not loaded. Try 'info %s' "
+               "for information about %s.\n",
+               cl->name, cl->mother_name, cl->mother_name, cl->mother_name);
   }
 }
 
@@ -649,11 +649,11 @@ new_tabulation_item(void) {
 void
 append_tabulation_item(TabulationItem item) {
   TabulationItem end = TabulationList;
-  item->next = NULL;		/* make sure that item is marked as end of list */
-  if (end == NULL) {		/* empty list: item becomes first entry */
+  item->next = NULL;            /* make sure that item is marked as end of list */
+  if (end == NULL) {            /* empty list: item becomes first entry */
     TabulationList = item;
   }
-  else {			/* otherwise, seek end of list and append item */
+  else {                        /* otherwise, seek end of list and append item */
     while (end->next) 
       end = end->next;
     end->next = item;
@@ -684,7 +684,7 @@ pt_get_anchor_cpos(CorpusList *cl, int n, FieldType anchor, int offset) {
     break;
   }
 
-  if (cpos < 0) return cpos;	/* -1 indicates undefined anchor */
+  if (cpos < 0) return cpos;    /* -1 indicates undefined anchor */
   
   cpos += offset;
   if (cpos < 0) cpos = 0;
@@ -729,24 +729,24 @@ print_tabulation(CorpusList *cl, int first, int last, struct Redir *rd) {
   if (! cl) 
     return 0;
 
-  if (first <= 0) first = 0;	/* make sure that first and last match to tabulate are in range */
+  if (first <= 0) first = 0;    /* make sure that first and last match to tabulate are in range */
   if (last >= cl->size) last = cl->size - 1;
 
-  while (item) {		/* obtain attribute handles for tabulation items */
+  while (item) {                /* obtain attribute handles for tabulation items */
     if (item->attribute_name) {
-      if (item->attribute = cl_new_attribute(cl->corpus, item->attribute_name, ATT_POS)) {
-	item->attribute_type = ATT_POS;
+      if (NULL != (item->attribute = cl_new_attribute(cl->corpus, item->attribute_name, ATT_POS))) {
+        item->attribute_type = ATT_POS;
       }
-      else if (item->attribute = cl_new_attribute(cl->corpus, item->attribute_name, ATT_STRUC)) {
-	item->attribute_type = ATT_STRUC;
-	if (! cl_struc_values(item->attribute)) {
-	  cqpmessage(Error, "No annotated values for s-attribute ``%s'' in named query %s", item->attribute_name, cl->name);
-	  return 0;
-	}
+      else if (NULL != (item->attribute = cl_new_attribute(cl->corpus, item->attribute_name, ATT_STRUC))) {
+        item->attribute_type = ATT_STRUC;
+        if (! cl_struc_values(item->attribute)) {
+          cqpmessage(Error, "No annotated values for s-attribute ``%s'' in named query %s", item->attribute_name, cl->name);
+          return 0;
+        }
       }
       else {
-	cqpmessage(Error, "Can't find attribute ``%s'' for named query %s", item->attribute_name, cl->name);
-	return 0;
+        cqpmessage(Error, "Can't find attribute ``%s'' for named query %s", item->attribute_name, cl->name);
+        return 0;
       }
     }
     else {
@@ -771,37 +771,37 @@ print_tabulation(CorpusList *cl, int first, int last, struct Redir *rd) {
       int cpos;
 
       if (start < 0 || end < 0) /* one of the anchors is undefined -> print single undefined value for entire range */
-	start = end = -1;
+        start = end = -1;
 
       for (cpos = start; cpos <= end; cpos++) {
-	if (item->attribute_type == ATT_NONE) {
-	  fprintf(rd->stream, "%d", cpos);
-	}
-	else {
-	  if (cpos >= 0) {	/* undefined anchors print empty string */
-	    char *string = NULL;
-	    if (item->attribute_type == ATT_POS) 
-	      string = cl_cpos2str(item->attribute, cpos);
-	    else
-	      string = cl_cpos2struc2str(item->attribute, cpos);
-	    if (string) {
-	      if (item->flags) {
-		char *copy = cl_strdup(string);
-		cl_string_canonical(copy, item->flags);
-		fprintf(rd->stream, "%s", copy);
-		cl_free(copy);
-	      }
-	      else {
-		fprintf(rd->stream, "%s", string);
-	      }
-	    }
-	  }
-	}
-	if (cpos < end) 	/* multiple values for tabulation item are separated by blanks */
-	  fprintf(rd->stream, " "); 
+        if (item->attribute_type == ATT_NONE) {
+          fprintf(rd->stream, "%d", cpos);
+        }
+        else {
+          if (cpos >= 0) {      /* undefined anchors print empty string */
+            char *string = NULL;
+            if (item->attribute_type == ATT_POS) 
+              string = cl_cpos2str(item->attribute, cpos);
+            else
+              string = cl_cpos2struc2str(item->attribute, cpos);
+            if (string) {
+              if (item->flags) {
+                char *copy = cl_strdup(string);
+                cl_string_canonical(copy, item->flags);
+                fprintf(rd->stream, "%s", copy);
+                cl_free(copy);
+              }
+              else {
+                fprintf(rd->stream, "%s", string);
+              }
+            }
+          }
+        }
+        if (cpos < end)         /* multiple values for tabulation item are separated by blanks */
+          fprintf(rd->stream, " "); 
       }
-      if (item->next) 		/* multiple tabulation items are separated by TABs */
-	fprintf(rd->stream, "\t");
+      if (item->next)           /* multiple tabulation items are separated by TABs */
+        fprintf(rd->stream, "\t");
       item = item->next;
     }
     fprintf(rd->stream, "\n");

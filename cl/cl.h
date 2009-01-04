@@ -141,8 +141,8 @@ char *cl_strdup(char *string);
 int cl_strcmp(char *s1, char *s2);
 
 /* string normalization features used by CL regexes and CQP (modify input string!) */
-void cl_string_canonical(unsigned char *s, int flags);  /* modifies string <s> in place; flags are IGNORE_CASE and IGNORE_DIAC */
-char *cl_string_latex2iso(unsigned char *str, unsigned char *result, int target_len); 
+void cl_string_canonical(char *s, int flags);  /* modifies string <s> in place; flags are IGNORE_CASE and IGNORE_DIAC */
+char *cl_string_latex2iso(char *str, char *result, int target_len); 
 /* <result> points to buffer of appropriate size; auto-allocated if NULL; 
    str == result is explicitly allowed; conveniently returns <result> */
 unsigned char *cl_string_maptable(CorpusCharset charset /*ignored*/, int flags);
@@ -175,7 +175,7 @@ double cl_runif(void);		/* get random number in the range [0,1] with uniform dis
 typedef struct _cl_lexhash *cl_lexhash;
 typedef struct _cl_lexhash_entry {
   char *key;			/* hash key == token */
-  int freq;
+  unsigned int freq;
   int id;
   /* data fields: use as entry->data.integer, entry->data.numeric, ... */
   struct _cl_lexhash_entry_data {

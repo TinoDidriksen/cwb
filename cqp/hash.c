@@ -34,7 +34,8 @@ find_prime(int n) {
 }
 
 unsigned int 
-hash_string(unsigned char *s) {
+hash_string(char *string) {
+  unsigned char *s = (unsigned char *)string;
   unsigned int result = 0;
   for( ; *s; s++)
     result = (result * 33 ) ^ (result >> 27) ^ *s;
@@ -42,7 +43,8 @@ hash_string(unsigned char *s) {
 }
 
 unsigned int 
-hash_macro(unsigned char *name, unsigned int args) {
+hash_macro(char *macro_name, unsigned int args) {
+  unsigned char *name = (unsigned char *)macro_name;
   unsigned int result = args;
   for( ; *name; name++)
     result = (result * 33 ) ^ (result >> 27) ^ *name;

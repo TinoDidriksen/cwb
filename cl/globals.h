@@ -61,17 +61,4 @@ extern size_t cl_memory_limit;	/* in megabytes (0 = off); some functions will tr
 			    exit(1);}
 
 
-/* Make sure that byte order has been appropriately defined. */
-#if (defined(CWB_LITTLE_ENDIAN)) && (defined(CWB_BIG_ENDIAN))
-
-#error Only one of the symbols CWB_LITTLE_ENDIAN and CWB_BIG_ENDIAN may be defined!
-
-#endif
-
-#if (!defined(CWB_LITTLE_ENDIAN) && !defined(CWB_BIG_ENDIAN))
-
-#error Byte order not specified. Define either CWB_LITTLE_ENDIAN or CWB_BIG_ENDIAN!
-
-#endif
-
 #endif

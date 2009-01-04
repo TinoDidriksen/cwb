@@ -43,11 +43,13 @@
 
 /* ---------------------------------------------------------------------- */
 
+/* -- seems to be unused (purpose unclear) --
 #define NR_FIELD_NAMES 3
-static char *field_names[] = { "b",	/* field #0 */
-			       "em",   /* field #1 */
-			       "sl"	/* field#>1 */
+static char *field_names[] = { "b",
+                               "em",
+                               "sl"
 };
+*/
 
 /* ------------------------------------------------------ */
 
@@ -58,33 +60,33 @@ html_print_field(FieldType field, int start);
 
 PrintDescriptionRecord
 HTMLPrintDescriptionRecord = {
-  "<EM>%d:</EM>",		/* CPOSPrintFormat */
+  "<EM>%d:</EM>",               /* CPOSPrintFormat */
 
-  "<EM>",			/* BeforePrintStructures */
-  " ",				/* PrintStructureSeparator */
-  "</EM>",			/* AfterPrintStructures */
+  "<EM>",                       /* BeforePrintStructures */
+  " ",                          /* PrintStructureSeparator */
+  "</EM>",                      /* AfterPrintStructures */
 
-  "&lt;",			/* StructureBeginPrefix */
-  "&gt;",			/* StructureBeginSuffix */
+  "&lt;",                       /* StructureBeginPrefix */
+  "&gt;",                       /* StructureBeginSuffix */
 
-  " ",				/* StructureSeparator */
-  "&lt;/",			/* StructureEndPrefix */
-  "&gt;",			/* StructureEndSuffix */
+  " ",                          /* StructureSeparator */
+  "&lt;/",                      /* StructureEndPrefix */
+  "&gt;",                       /* StructureEndSuffix */
 
-  NULL,				/* BeforeToken */
-  " ",				/* TokenSeparator */
-  "/",				/* AttributeSeparator */
-  NULL,				/* AfterToken */
+  NULL,                         /* BeforeToken */
+  " ",                          /* TokenSeparator */
+  "/",                          /* AttributeSeparator */
+  NULL,                         /* AfterToken */
 
-  NULL,				/* BeforeField */
-  NULL,				/* FieldSeparator */
-  NULL,				/* AfterField */
+  NULL,                         /* BeforeField */
+  NULL,                         /* FieldSeparator */
+  NULL,                         /* AfterField */
 
-  "<LI>",			/* BeforeLine */
-  "\n",				/* AfterLine */
+  "<LI>",                       /* BeforeLine */
+  "\n",                         /* AfterLine */
 
-  "<HR>\n<UL>\n",		/* BeforeConcordance */
-  "</UL>\n<HR>\n",		/* AfterConcordance */
+  "<HR>\n<UL>\n",               /* BeforeConcordance */
+  "</UL>\n<HR>\n",              /* AfterConcordance */
 
   html_convert_string,
   html_print_field
@@ -92,33 +94,33 @@ HTMLPrintDescriptionRecord = {
 
 PrintDescriptionRecord 
 HTMLTabularPrintDescriptionRecord = {
-  "<TD ALIGN=RIGHT>%d:</TD>",	/* CPOSPrintFormat */
+  "<TD ALIGN=RIGHT>%d:</TD>",   /* CPOSPrintFormat */
 
-  "<TD><EM>",			/* BeforePrintStructures */
-  " ",				/* PrintStructureSeparator */
-  "</EM></TD>",			/* AfterPrintStructures */
+  "<TD><EM>",                   /* BeforePrintStructures */
+  " ",                          /* PrintStructureSeparator */
+  "</EM></TD>",                 /* AfterPrintStructures */
 
-  "&lt;",			/* StructureBeginPrefix */
-  "&gt;",			/* StructureBeginSuffix */
+  "&lt;",                       /* StructureBeginPrefix */
+  "&gt;",                       /* StructureBeginSuffix */
 
-  " ",				/* StructureSeparator */
-  "&lt;/",			/* StructureEndPrefix */
-  "&gt;",			/* StructureEndSuffix */
+  " ",                          /* StructureSeparator */
+  "&lt;/",                      /* StructureEndPrefix */
+  "&gt;",                       /* StructureEndSuffix */
 
-  NULL,				/* BeforeToken */
-  " ",				/* TokenSeparator */
-  "/",				/* AttributeSeparator */
-  NULL,				/* AfterToken */
+  NULL,                         /* BeforeToken */
+  " ",                          /* TokenSeparator */
+  "/",                          /* AttributeSeparator */
+  NULL,                         /* AfterToken */
 
-  "<TD ALIGN=RIGHT> ",		/* BeforeField */
-  NULL,				/* FieldSeparator */
-  "</TD>",			/* AfterField */
+  "<TD ALIGN=RIGHT> ",          /* BeforeField */
+  NULL,                         /* FieldSeparator */
+  "</TD>",                      /* AfterField */
 
-  "<TR>",			/* BeforeLine */
-  "</TR>\n",			/* AfterLine */
+  "<TR>",                       /* BeforeLine */
+  "</TR>\n",                    /* AfterLine */
 
-  "<HR>\n<TABLE>\n",		/* BeforeConcordance */
-  "</TABLE>\n<HR>\n",		/* AfterConcordance */
+  "<HR>\n<TABLE>\n",            /* BeforeConcordance */
+  "</TABLE>\n<HR>\n",           /* AfterConcordance */
   html_convert_string,
   html_print_field
 };
@@ -127,31 +129,31 @@ PrintDescriptionRecord
 HTMLTabularNowrapPrintDescriptionRecord = {
   "<TD ALIGN=RIGHT nowrap>%d:</TD>", /* CPOSPrintFormat */
 
-  "<TD nowrap><EM>",		/* BeforePrintStructures */
-  " ",				/* PrintStructureSeparator */
-  "</EM></TD>",			/* AfterPrintStructures */
+  "<TD nowrap><EM>",            /* BeforePrintStructures */
+  " ",                          /* PrintStructureSeparator */
+  "</EM></TD>",                 /* AfterPrintStructures */
 
-  "&lt;",			/* StructureBeginPrefix */
-  "&gt;",			/* StructureBeginSuffix */
+  "&lt;",                       /* StructureBeginPrefix */
+  "&gt;",                       /* StructureBeginSuffix */
 
-  " ",				/* StructureSeparator */
-  "&lt;/",			/* StructureEndPrefix */
-  "&gt;",			/* StructureEndSuffix */
+  " ",                          /* StructureSeparator */
+  "&lt;/",                      /* StructureEndPrefix */
+  "&gt;",                       /* StructureEndSuffix */
 
-  NULL,				/* BeforeToken */
-  " ",				/* TokenSeparator */
-  "/",				/* AttributeSeparator */
-  NULL,				/* AfterToken */
+  NULL,                         /* BeforeToken */
+  " ",                          /* TokenSeparator */
+  "/",                          /* AttributeSeparator */
+  NULL,                         /* AfterToken */
 
-  "<TD nowrap ALIGN=RIGHT> ",	/* BeforeField */
-  NULL,				/* FieldSeparator */
-  "</TD>",			/* AfterField */
+  "<TD nowrap ALIGN=RIGHT> ",   /* BeforeField */
+  NULL,                         /* FieldSeparator */
+  "</TD>",                      /* AfterField */
 
-  "<TR>",			/* BeforeLine */
-  "</TR>\n",			/* AfterLine */
+  "<TR>",                       /* BeforeLine */
+  "</TR>\n",                    /* AfterLine */
 
-  "<HR>\n<TABLE>\n",		/* BeforeConcordance */
-  "</TABLE>\n<HR>\n",		/* AfterConcordance */
+  "<HR>\n<TABLE>\n",            /* BeforeConcordance */
+  "</TABLE>\n<HR>\n",           /* AfterConcordance */
   html_convert_string,
   html_print_field
 };
@@ -167,15 +169,15 @@ html_puts(FILE *fd, char *s, int flags)
   if (flags) {
     while (*s) {
       if (*s == '<' && (flags & SUBST_LT))
-	fputs("&lt;", fd);
+        fputs("&lt;", fd);
       else if (*s == '>' && (flags & SUBST_GT))
-	fputs("&gt;", fd);
+        fputs("&gt;", fd);
       else if (*s == '&' && (flags & SUBST_AMP))
-	fputs("&amp;", fd);
+        fputs("&amp;", fd);
       else if (*s == '"' && (flags & SUBST_QUOT))
-	fputs("&quot;", fd);
+        fputs("&quot;", fd);
       else 
-	fputc(*s, fd);
+        fputc(*s, fd);
       s++;
     }
   }
@@ -199,15 +201,15 @@ html_print_field(FieldType field, int at_end)
   case MatchField:
     if (GlobalPrintOptions.print_tabular) {
       if (at_end) {
-	if (GlobalPrintOptions.print_wrap) 
-	  return "</B></TD><TD>";
-	else
-	  return "</B></TD><TD nowrap>";
+        if (GlobalPrintOptions.print_wrap) 
+          return "</B></TD><TD>";
+        else
+          return "</B></TD><TD nowrap>";
       }
       else if (GlobalPrintOptions.print_wrap)
-	return "</TD><TD><B>";
+        return "</TD><TD><B>";
       else 
-	return "</TD><TD nowrap><B>";
+        return "</TD><TD nowrap><B>";
     }
     else {
       return (at_end ? "</B>" : "<B>");
@@ -276,14 +278,14 @@ html_convert_string(char *s)
 
 void
 html_print_aligned_line(FILE *stream, 
-			char *attribute_name, 
-			char *line)
+                        char *attribute_name, 
+                        char *line)
 {
   fputc('\n', stream);
 
   if (GlobalPrintOptions.print_tabular) {
     fprintf(stream, "<TR><TD colspan=4%s><EM><B><EM>--&gt;", 
-	    GlobalPrintOptions.print_wrap   ? "" : " nowrap");
+            GlobalPrintOptions.print_wrap   ? "" : " nowrap");
   }
   else 
     html_puts(stream, "<P><B><EM>--&gt;", 0);
@@ -313,7 +315,7 @@ void html_print_context(ContextDescriptor *cd, FILE *stream)
     break;
   case STRUC_CONTEXT:
     fprintf(stream, "%d %s", cd->left_width, 
-	    cd->left_structure_name ? cd->left_structure_name : "???");
+            cd->left_structure_name ? cd->left_structure_name : "???");
     break;
   default:
     s = "error";
@@ -333,7 +335,7 @@ void html_print_context(ContextDescriptor *cd, FILE *stream)
     break;
   case STRUC_CONTEXT:
     fprintf(stream, "%d %s", cd->right_width, 
-	    cd->right_structure_name ? cd->right_structure_name : "???");
+            cd->right_structure_name ? cd->right_structure_name : "???");
     break;
   default:
     s = "error";
@@ -355,21 +357,21 @@ void html_print_corpus_header(CorpusList *cl, FILE *stream)
     /* disabled because of incompatibilities between different Linux versions */
     
     fprintf(stream,
-	    "<em><b>This concordance was generated by:</b></em><p>\n"
-	    "<table>\n"
-	    "<tr><td nowrap><em>User:</em></td><td nowrap>%s (%s)</td></tr>\n"
-	    "<tr><td nowrap><em>Date:</em></td><td nowrap>%s</td></tr>\n"
-	    "<tr><td nowrap><em>Corpus:</em></td><td nowrap>%s</td></tr>\n"
-	    "<tr><td nowrap> </td><td nowrap>%s</td></tr>\n"
-	    "<tr><td nowrap><em>Subcorpus:</em></td><td nowrap>%s:%s</td></tr>\n"
-	    "<tr><td nowrap><em>Number of Matches:</em></td><td nowrap>%d</td></tr>\n",
-	    (pwd ? pwd->pw_name : "unknown"),
-	    (pwd ? pwd->pw_gecos  : "unknown"),
-	    ctime(&now),
-	    (cl->corpus && cl->corpus->registry_name ? cl->corpus->registry_name : "unknown"),
-	    (cl->corpus && cl->corpus->name ? cl->corpus->name : "unknown"),
-	    cl->mother_name, cl->name,
-	    cl->size);
+            "<em><b>This concordance was generated by:</b></em><p>\n"
+            "<table>\n"
+            "<tr><td nowrap><em>User:</em></td><td nowrap>%s (%s)</td></tr>\n"
+            "<tr><td nowrap><em>Date:</em></td><td nowrap>%s</td></tr>\n"
+            "<tr><td nowrap><em>Corpus:</em></td><td nowrap>%s</td></tr>\n"
+            "<tr><td nowrap> </td><td nowrap>%s</td></tr>\n"
+            "<tr><td nowrap><em>Subcorpus:</em></td><td nowrap>%s:%s</td></tr>\n"
+            "<tr><td nowrap><em>Number of Matches:</em></td><td nowrap>%d</td></tr>\n",
+            (pwd ? pwd->pw_name : "unknown"),
+            (pwd ? pwd->pw_gecos  : "unknown"),
+            ctime(&now),
+            (cl->corpus && cl->corpus->registry_name ? cl->corpus->registry_name : "unknown"),
+            (cl->corpus && cl->corpus->name ? cl->corpus->name : "unknown"),
+            cl->mother_name, cl->name,
+            cl->size);
     
     html_print_context(&CD, stream);
     
@@ -377,7 +379,7 @@ void html_print_corpus_header(CorpusList *cl, FILE *stream)
     
     if (cl->query_corpus && cl->query_text) {
       fprintf(stream, "<P><EM>Query text:</EM> <BR>\n<BLOCKQUOTE><CODE>\n%s; %s\n</CODE></BLOCKQUOTE>\n",
-	      cl->query_corpus, cl->query_text);
+              cl->query_corpus, cl->query_text);
     }
     
     fputs("<p>\n", stream);
@@ -386,13 +388,13 @@ void html_print_corpus_header(CorpusList *cl, FILE *stream)
 }
 
 void html_print_output(CorpusList *cl, 
-		       FILE *stream,
-		       int interactive,
-		       ContextDescriptor *cd,
-		       int first, int last)
+                       FILE *stream,
+                       int interactive,
+                       ContextDescriptor *cd,
+                       int first, int last)
 {
   int line, real_line;
-  ConcLineField clf[NoField];	/* NoField is largest field code (not used by us) */
+  ConcLineField clf[NoField];   /* NoField is largest field code (not used by us) */
   AttributeList *strucs;
   PrintDescriptionRecord *pdr;
 
@@ -408,7 +410,7 @@ void html_print_output(CorpusList *cl,
       pdr = &HTMLTabularNowrapPrintDescriptionRecord;
 
     fprintf(stream, "<HR><TABLE%s>\n",
-	    GlobalPrintOptions.print_border ? " BORDER=1" : "");
+            GlobalPrintOptions.print_border ? " BORDER=1" : "");
   }
   else {
     pdr = &HTMLPrintDescriptionRecord;
@@ -462,19 +464,19 @@ void html_print_output(CorpusList *cl,
     {
       char *outstr;
       int dummy;
-	
+        
       outstr = compose_kwic_line(cl->corpus, 
-				 cl->range[real_line].start, 
-				 cl->range[real_line].end,
-				 &CD, 
-				 &dummy,
-				 &dummy, &dummy,
-				 NULL, NULL, 
-				 NULL, 0, NULL,
-				 clf, NoField, /* NoField = # of entries in clf[] */
-				 ConcLineHorizontal, 
-				 pdr,
-				 0, NULL);
+                                 cl->range[real_line].start, 
+                                 cl->range[real_line].end,
+                                 &CD, 
+                                 &dummy,
+                                 &dummy, &dummy,
+                                 NULL, NULL, 
+                                 NULL, 0, NULL,
+                                 clf, NoField, /* NoField = # of entries in clf[] */
+                                 ConcLineHorizontal, 
+                                 pdr,
+                                 0, NULL);
 
       fputs(outstr, stream);
 
@@ -485,11 +487,11 @@ void html_print_output(CorpusList *cl,
 
     if (CD.alignedCorpora != NULL) {
       printAlignedStrings(cl->corpus, 
-			  &CD, 
-			  cl->range[real_line].start, 
-			  cl->range[real_line].end, 
-			  0,	/* ASCII print mode only */
-			  stream);
+                          &CD, 
+                          cl->range[real_line].start, 
+                          cl->range[real_line].end, 
+                          0,    /* ASCII print mode only */
+                          stream);
     }
 
     /* fputc('\n', stream); */

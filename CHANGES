@@ -6,10 +6,16 @@ Version 3.0
  - should be released as soon as possible, after some testing by developer community (and perhaps an overhaul of installation procedure)
  - hopefully, binary packages for various platforms will be contributed by volunteers
 
+Major changes:
+
+ - Configuration no longer requires explicit knowledge of CPU endianness, relying instead on system macros
+   htonl() and nothl() to convert between platform-independent disk format and native byte ordering.
+   This simplifies compilation on generic Unix platforms and allows true Universal releases on Mac OS X.
+
 Bug fixes:
 
  - [2008-01-03] Fixed a strange bug in which the query
-	([pos = "IN|TO"] [pos = "DT.*"]? [pos = "JJ.*"]* [pos = "N.*"]+){3};
+        ([pos = "IN|TO"] [pos = "DT.*"]? [pos = "JJ.*"]* [pos = "N.*"]+){3};
    causes CQP to segfault on Darwin/PowerPC platforms (discovered on Mac OS X 10.4 with PowerPC G4 CPU).
    The problem occurs for >= 3 repetitions, but not for 1 or 2 repetitions.  It turned out that 
    AddState()<cqp/regex2dfa.c> reallocates the state table STab[], which might move it to a different
@@ -24,11 +30,11 @@ Bug fixes:
    but will be triggered only in certain circumstances. While these queries are obviously nonsensical, novice
    users of Web interfaces often write things like ``<s> * ...'', thinking that ``*'' matches an arbitrary word.
    Some examples should illustrate the problem:
- 	<s> *         # not executed ("start state is final state")
-	<s> +         # runs normally, but returns no matches (because all matches have length zero)
-	<s> * []      # works correctly in standard mode, but triggers infinite loop in longest match mode
-	<s> * "xxx"   # gets stuck in infinite loop if "xxx" doesn't match
-	"!" (<p> <s> | [: word = "[A-Z].*" :]){3,} "The"  # infinite loops aren't always easy to detect
+        <s> *         # not executed ("start state is final state")
+        <s> +         # runs normally, but returns no matches (because all matches have length zero)
+        <s> * []      # works correctly in standard mode, but triggers infinite loop in longest match mode
+        <s> * "xxx"   # gets stuck in infinite loop if "xxx" doesn't match
+        "!" (<p> <s> | [: word = "[A-Z].*" :]){3,} "The"  # infinite loops aren't always easy to detect
    A simple solution has been implemented which tests the state/position vector after each FSA simulation step.
    If the vector hasn't changed, the FSA must be in an infinite loop and query execution is aborted with an
    emphatic error message (in case the new code should abort a valid query). This catches most cases, but some
@@ -40,6 +46,9 @@ Bug fixes:
    apparently because it's still trying to read from its input pipe which keeps returning error conditions. As a
    workaround, CQP now exits immediately (with an error message on stderr) if it is running in child mode (-c) and
    and error condition is detected on the input stream.
+
+ - [2009-01-04] Fixed all compiler warnings where possible (for Universal build on Mac OS X with gcc-4.0)
+
 
 Version 2.2.b99 (2007-03-11)
 ----------------------------

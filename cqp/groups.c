@@ -80,6 +80,9 @@ sum_freqs(ID_Count_Mapping *buffer, int bufsize, int cutoff_f)
 
   qsort(buffer, insp, sizeof(ID_Count_Mapping), compare_by_freq);
 
+  if (progress_bar) 
+    progress_bar_percentage(2, 2, 100); /* so total percentage runs up to 100% */
+
   return insp;
 }
 
@@ -131,9 +134,9 @@ get_group_id(Group *group, int i, int target) {
     if (is_struc) {
       char *str = cl_cpos2struc2str(attr, pos);
       if (str) 
-	id = str - base;
+        id = str - base;
       else
-	id = -1;
+        id = -1;
     }
     else {
       id = cl_cpos2id(attr, pos);
@@ -152,7 +155,7 @@ Group_id2str(Group *group, int id, int target) {
   else if (id < 0)
     return "(none)";
   else if (is_struc) 
-    return base+id;		/* keep fingers crossed ... */
+    return base+id;             /* keep fingers crossed ... */
   else 
     return cl_id2str(attr, id);
 }
@@ -163,7 +166,8 @@ ComputeGroupInternally(Group *group)
   ID_Count_Mapping node;
   ID_Count_Mapping *result;
 
-  int i, nr_nodes;
+  int i;
+  size_t nr_nodes;
   int percentage, new_percentage; /* for ProgressBar */
   int size = group->my_corpus->size;
 
@@ -179,25 +183,25 @@ ComputeGroupInternally(Group *group)
 
   for (i = 0; i < size; i++) {
     if (! EvaluationIsRunning)
-      break;			/* user abort (Ctrl-C) */
+      break;                    /* user abort (Ctrl-C) */
 
     if (progress_bar) {
       new_percentage = floor(0.5 + (100.0 * i) / size);
       if (new_percentage > percentage) {
-	percentage = new_percentage;
-	progress_bar_percentage(1, 2, percentage);
+        percentage = new_percentage;
+        progress_bar_percentage(1, 2, percentage);
       }
     }
 
-    node.s = get_group_id(group, i, 0);	      /* source ID */
+    node.s = get_group_id(group, i, 0);       /* source ID */
     node.t = get_group_id(group, i, 1);       /* target ID */
     node.freq = 0;
   
     result = binsert_g(&node,
-		       (void **) &(group->count_cells),
-		       &nr_nodes,
-		       sizeof(ID_Count_Mapping),
-		       compare_st_cells);
+                       (void **) &(group->count_cells),
+                       &nr_nodes,
+                       sizeof(ID_Count_Mapping),
+                       compare_st_cells);
 
     result->freq++;
   }
@@ -210,12 +214,12 @@ ComputeGroupInternally(Group *group)
     
     if (group->nr_cells < nr_nodes)
       group->count_cells = 
-	cl_realloc(group->count_cells, (group->nr_cells * sizeof(ID_Count_Mapping)));
+        cl_realloc(group->count_cells, (group->nr_cells * sizeof(ID_Count_Mapping)));
   }
   else {
     cqpmessage(Warning, "Group operation aborted by user.");
     if (which_app == cqp) install_signal_handler();
-    free_group(&group);		/* sets return value to NULL to indicate failure */
+    free_group(&group);         /* sets return value to NULL to indicate failure */
   }
   EvaluationIsRunning = 0;
     
@@ -252,13 +256,13 @@ ComputeGroupExternally(Group *group)
   sprintf(sort_call, ExternalGroupingCommand, temporary_name);
   if (GROUP_DEBUG)
     fprintf(stderr, "Running grouping sort: \n\t%s\n",
-	    sort_call);
+            sort_call);
   if ((pipe = popen(sort_call, "r")) == NULL) {
     perror("Failure opening grouping pipe");
     cqpmessage(Warning, "Can't open grouping pipe:\n%s\n"
-	       "Disable external grouping by\n"
-	       "  set UseExternalGrouping off;", 
-	       sort_call);
+               "Disable external grouping by\n"
+               "  set UseExternalGrouping off;", 
+               sort_call);
   }
   else {
     int freq, p1, p2, tokens;
@@ -266,26 +270,26 @@ ComputeGroupExternally(Group *group)
 
     while ((tokens = fscanf(pipe, "%d%d%d", &freq, &p1, &p2)) == 3) {
       if (freq > cutoff_freq) {
-	if ((group->nr_cells % GROUP_REALLOC) == 0) {
-	  if (group->count_cells == NULL) {
-	    group->count_cells = 
-	      (ID_Count_Mapping *)cl_malloc(GROUP_REALLOC *
-					 sizeof(ID_Count_Mapping));
-	  }
-	  else {
-	    group->count_cells = 
-	      (ID_Count_Mapping *)cl_realloc(group->count_cells,
-					  (group->nr_cells + GROUP_REALLOC) *
-					  sizeof(ID_Count_Mapping));
-	  }
-	  assert(group->count_cells);
-	}
+        if ((group->nr_cells % GROUP_REALLOC) == 0) {
+          if (group->count_cells == NULL) {
+            group->count_cells = 
+              (ID_Count_Mapping *)cl_malloc(GROUP_REALLOC *
+                                         sizeof(ID_Count_Mapping));
+          }
+          else {
+            group->count_cells = 
+              (ID_Count_Mapping *)cl_realloc(group->count_cells,
+                                          (group->nr_cells + GROUP_REALLOC) *
+                                          sizeof(ID_Count_Mapping));
+          }
+          assert(group->count_cells);
+        }
 
-	group->count_cells[group->nr_cells].s = p1;
-	group->count_cells[group->nr_cells].t = p2;
-	group->count_cells[group->nr_cells].freq = freq;
+        group->count_cells[group->nr_cells].s = p1;
+        group->count_cells[group->nr_cells].t = p2;
+        group->count_cells[group->nr_cells].freq = freq;
 
-	group->nr_cells = group->nr_cells + 1;
+        group->nr_cells = group->nr_cells + 1;
       }
     }
 
@@ -298,13 +302,13 @@ ComputeGroupExternally(Group *group)
 
   if (GROUP_DEBUG) {
     fprintf(stderr, "Keeping temporary file %s -- delete manually\n",
-	    temporary_name);
+            temporary_name);
   }
   else if (unlink(temporary_name) != 0) {
     perror(temporary_name);
     fprintf(stderr, "Can't remove temporary file %s -- \n\t"
-	    "I will continue, but you should remove that file.\n",
-	    temporary_name);
+            "I will continue, but you should remove that file.\n",
+            temporary_name);
   }
   
   return group;
@@ -312,13 +316,13 @@ ComputeGroupExternally(Group *group)
 
 
 Group *compute_grouping(CorpusList *cl,
-			FieldType source_field,
-			int source_offset,
-			char *source_attr_name,
-			FieldType target_field,
-			int target_offset,
-			char *target_attr_name,
-			int cutoff_freq)
+                        FieldType source_field,
+                        int source_offset,
+                        char *source_attr_name,
+                        FieldType target_field,
+                        int target_offset,
+                        char *target_attr_name,
+                        int cutoff_freq)
 {
   Group *group;
   Attribute *source_attr, *target_attr;
@@ -332,7 +336,7 @@ Group *compute_grouping(CorpusList *cl,
 
   if ((cl->size == 0) || (cl->range == NULL)) {
     cqpmessage(Warning, "Corpus %s is empty, no grouping possible",
-	       cl->name);
+               cl->name);
     return NULL;
   }
 
@@ -347,33 +351,33 @@ Group *compute_grouping(CorpusList *cl,
     }
     if (source_attr == NULL) {
       cqpmessage(Error, "Can't find attribute ``%s'' for named query %s",
-		 source_attr_name, cl->name);
+                 source_attr_name, cl->name);
       return NULL;
     }
     if (source_is_struc) {
       if (cl_struc_values(source_attr)) {
-	source_base = cl_struc2str(source_attr, 0); /* should be beginning of the attribute's lexicon */
-	assert(source_base && "Internal error. Please don't use s-attributes in group command.");
+        source_base = cl_struc2str(source_attr, 0); /* should be beginning of the attribute's lexicon */
+        assert(source_base && "Internal error. Please don't use s-attributes in group command.");
       }
       else {
-	cqpmessage(Error, "No annotated values for s-attribute ``%s'' in named query %s",
-		   source_attr_name, cl->name);
-	return NULL;
+        cqpmessage(Error, "No annotated values for s-attribute ``%s'' in named query %s",
+                   source_attr_name, cl->name);
+        return NULL;
       }
     }
 
     switch (source_field) {
     case KeywordField:
       if (cl->keywords == NULL) {
-	cqpmessage(Error, "No keyword anchors defined for %s", cl->name);
-	return NULL;
+        cqpmessage(Error, "No keyword anchors defined for %s", cl->name);
+        return NULL;
       }
       break;
       
     case TargetField:
       if (cl->targets == NULL) {
-	cqpmessage(Error, "No target anchors defined for %s", cl->name);
-	return NULL;
+        cqpmessage(Error, "No target anchors defined for %s", cl->name);
+        return NULL;
       }
       break;
       
@@ -397,7 +401,7 @@ Group *compute_grouping(CorpusList *cl,
   }
   if (target_attr == NULL) {
     cqpmessage(Error, "Can't find attribute ``%s'' for named query %s",
-	       target_attr_name, cl->name);
+               target_attr_name, cl->name);
     return NULL;
   }
   if (target_is_struc) {
@@ -407,7 +411,7 @@ Group *compute_grouping(CorpusList *cl,
     }
     else {
       cqpmessage(Error, "No annotated values for s-attribute ``%s'' in named query %s",
-		 target_attr_name, cl->name);
+                 target_attr_name, cl->name);
       return NULL;
     }
   }

@@ -30,30 +30,30 @@
 
 
 typedef struct _single_mapping {
-  char *class_name;		/* my class name */
-  int nr_tokens;		/* the number of tokens which I own */
-  int *tokens;			/* the tokens themselves */
+  char *class_name;             /* my class name */
+  int nr_tokens;                /* the number of tokens which I own */
+  int *tokens;                  /* the tokens themselves */
 } SingleMappingRecord, 
     *SingleMapping;
 
 
 typedef struct _mapping {
-  Corpus *corpus;		/* the corpus I'm valid in */
-  Attribute *attribute;		/* the attribute I'm valid for */
-  char *mapping_name;		/* my name */
-  int nr_classes;		/* the number of mappings */
-  SingleMappingRecord *classes;	/* the mappings themselves */
+  Corpus *corpus;               /* the corpus I'm valid in */
+  Attribute *attribute;         /* the attribute I'm valid for */
+  char *mapping_name;           /* my name */
+  int nr_classes;               /* the number of mappings */
+  SingleMappingRecord *classes; /* the mappings themselves */
 } MappingRecord, *Mapping;
 
 
 /* -------------------- create/destruct mappings */
 
 Mapping
-read_mapping(Corpus *corpus,	/* the corpus for which I'm valid */
-	     char *attr_name,	/* the attribute for which I'm valid */
-	     char *file_name,	/* the filename of the map spec */
-	     char **error_string); /* a char * (not char[]), 
-				    * set to an error string or NULL if ok */
+read_mapping(Corpus *corpus,    /* the corpus for which I'm valid */
+             char *attr_name,   /* the attribute for which I'm valid */
+             char *file_name,   /* the filename of the map spec */
+             char **error_string); /* a char * (not char[]), 
+                                    * set to an error string or NULL if ok */
 
 int
 drop_mapping(Mapping *map);
@@ -65,15 +65,15 @@ print_mapping(Mapping map);
 
 SingleMapping
 map_token_to_class(Mapping map, 
-		   char *token);
+                   char *token);
 
 int
 map_token_to_class_number(Mapping map, 
-			  char *token);
+                          char *token);
 
 int
 map_id_to_class_number(Mapping map, 
-		       int id);
+                       int id);
 
 /* -------------------- class -> {tokens} */
 
@@ -82,7 +82,7 @@ map_id_to_class_number(Mapping map,
 
 int *
 map_class_to_tokens(SingleMapping map,
-		    int *nr_tokens);
+                    int *nr_tokens);
 
 
 /* -------------------- utils */
@@ -100,12 +100,12 @@ number_of_tokens(SingleMapping map);
 
 int
 member_of_class_s(Mapping map, 
-		  SingleMapping class, 
-		  char *token);
+                  SingleMapping class, 
+                  char *token);
 
 int
 member_of_class_i(Mapping map, 
-		  SingleMapping class, 
-		  int id);
+                  SingleMapping class, 
+                  int id);
 
 #endif

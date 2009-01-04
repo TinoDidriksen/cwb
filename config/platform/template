@@ -32,9 +32,6 @@ CFLAGS = -O2 -Wall
 ## Linker flags (libraries to link against, search path, static linkage)
 LDFLAGS = -lm
 
-## Endianness of CPU architecture ('big' or 'little') must be set for each particular platform
-ENDIAN = big / little
-
 ## Parser and lexical scanner generator (recommended combination is bison + flex)
 YACC = bison -d -t
 LEX = flex -8
