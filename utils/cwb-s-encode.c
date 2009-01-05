@@ -41,7 +41,7 @@
 #include "../cl/endian.h"
 #include "../cl/macros.h"
 #include "../cl/cl.h"
-#include "../cl/storage.h"	/* for NwriteInt() */
+#include "../cl/storage.h"      /* for NwriteInt() */
 #include "../cl/lexhash.h"
 
 /* ---------------------------------------------------------------------- */
@@ -62,37 +62,37 @@
 
 /* configuration variables // command-line switches */
 int debug = 0;
-int silent = 0;			/* avoid messages in -M / -a modes */
-int strip_blanks_in_values = 0;	/* Wow, this is unused :o) */
-int set_syntax_strict = 0;	/* check that set attributes are always given in the same syntax */
-int in_memory = 0;		/* create list of regions in memory (allowing non-linear input), then write to disk */
-int add_to_existing = 0;	/* add to existing attribute: implies <in_memory>, existing regions are automatically inserted at startup */
+int silent = 0;                 /* avoid messages in -M / -a modes */
+int strip_blanks_in_values = 0; /* Wow, this is unused :o) */
+int set_syntax_strict = 0;      /* check that set attributes are always given in the same syntax */
+int in_memory = 0;              /* create list of regions in memory (allowing non-linear input), then write to disk */
+int add_to_existing = 0;        /* add to existing attribute: implies <in_memory>, existing regions are automatically inserted at startup */
 FILE *text_fd = NULL;
 
 /* global variables */
-Corpus *corpus = NULL;		/* corpus we're working on; at the moment, this is only required for <add_to_existing> */
+Corpus *corpus = NULL;          /* corpus we're working on; at the moment, this is only required for <add_to_existing> */
 int line = 0;
 enum { 
   set_none, set_any, set_regular, set_whitespace 
-} set_att = set_none;		/* set attributes */
+} set_att = set_none;           /* set attributes */
 
 
 /* ---------------------------------------------------------------------- */
 
 typedef struct {
-  char *dir;			/* directory where this range is stored */
-  char *name;			/* range name */
+  char *dir;                    /* directory where this range is stored */
+  char *name;                   /* range name */
 
-  int store_values;		/* flag indicating whether to store values */
+  int store_values;             /* flag indicating whether to store values */
 
-  int ready;			/* flag indicates whether open_range() has already been called */
-  FILE *fd;			/* fd of x.rng */
-  FILE *avx;			/* the attribute value index */
-  FILE *avs;			/* the attribute values */
+  int ready;                    /* flag indicates whether open_range() has already been called */
+  FILE *fd;                     /* fd of x.rng */
+  FILE *avx;                    /* the attribute value index */
+  FILE *avs;                    /* the attribute values */
 
-  int last_cpos;		/* end of last region (consistency checking) */
-  int num;			/* the next will be the num-th structure */
-  int offset;			/* string offset for next string */
+  int last_cpos;                /* end of last region (consistency checking) */
+  int num;                      /* the next will be the num-th structure */
+  int offset;                   /* string offset for next string */
 } Range;
 
 Range range;
@@ -112,23 +112,23 @@ char *progname = NULL;
  */
 
 typedef struct _SL {
-  int start;			/* start of region */
-  int end;			/* end of region */
-  char *annot;			/* annotated string */
+  int start;                    /* start of region */
+  int end;                      /* end of region */
+  char *annot;                  /* annotated string */
   struct _SL *prev;
   struct _SL *next;
 } *SL;
 
-SL StructureList = NULL;	/* (single) global list */
-SL SL_Point = NULL;		/* pointer into list; NULL = start of list; linear search starts from SL_Point */
+SL StructureList = NULL;        /* (single) global list */
+SL SL_Point = NULL;             /* pointer into list; NULL = start of list; linear search starts from SL_Point */
 
 /* SL functions:
  *  item = SL_seek(cpos);           (find region containing (or preceding) cpos; NULL = start of list; sets SL_Point to returned value)
  *  item = SL_insert_after_point(start, end, annot);   (insert region [start, end, annot] after SL_Point; no overlap/position checking)
- *  SL_delete(item);		    (delete region from list; updates SL_Point if it happened to point at item)
+ *  SL_delete(item);                (delete region from list; updates SL_Point if it happened to point at item)
  *  SL_insert(start, end, annot);   (user function: combines SL_seek(), SL_insert_at_point() and ambiguity resolution)
- *  SL_rewind();		    (reset SL_Point to start of list)
- *  item = SL_next();		    (returns item marked by point, then advances point to next item; NULL at end of list)
+ *  SL_rewind();                    (reset SL_Point to start of list)
+ *  item = SL_next();               (returns item marked by point, then advances point to next item; NULL at end of list)
  */
 
 void
@@ -148,12 +148,12 @@ SL_next(void) {
 
 SL
 SL_seek(int cpos) {
-  if (SL_Point == NULL)		 /* start-of-list case */
+  if (SL_Point == NULL)          /* start-of-list case */
     SL_Point = StructureList;
 
   while (SL_Point != NULL) {
     if ((SL_Point->start <= cpos) && (cpos <= SL_Point->end))
-      return SL_Point;		 /* found region containing cpos */
+      return SL_Point;           /* found region containing cpos */
     if ((cpos < SL_Point->start)) {
       SL_Point = SL_Point->prev; /* try previous region: SL_Point may become NULL = start of list */
     }
@@ -161,7 +161,7 @@ SL_seek(int cpos) {
       SL_Point = SL_Point->next; /* try next region, but only if it isn't _behind_ cpos */
     }
     else {
-      return SL_Point;		/* can't do better than that */
+      return SL_Point;          /* can't do better than that */
     }
   }
   return NULL;
@@ -180,7 +180,7 @@ SL_insert_after_point(int start, int end, char *annot) {
   item->prev = NULL;
   item->next = NULL;
   /* this function has to handle a number of special cases ... */
-  if (SL_Point == NULL) {	   /* insert at start of list */
+  if (SL_Point == NULL) {          /* insert at start of list */
     if (StructureList == NULL) {   /* empty list */
       SL_Point = StructureList = item;
     }
@@ -194,10 +194,10 @@ SL_insert_after_point(int start, int end, char *annot) {
     item->prev = SL_Point;
     SL_Point = SL_Point->next = item;
   }
-  else {			    /* insert somewhere inside list */
+  else {                            /* insert somewhere inside list */
     item->next = SL_Point->next; /* links between new item and following item */
     SL_Point->next->prev = item;
-    SL_Point->next = item;	 /* links between point and new item */
+    SL_Point->next = item;       /* links between point and new item */
     item->prev = SL_Point;
     SL_Point = item;
   }
@@ -207,19 +207,19 @@ SL_insert_after_point(int start, int end, char *annot) {
 void
 SL_delete(SL item) {
   /* unlink item ... we have to handle a few special cases again */
-  if (item->prev == NULL) {	/* delete first list element */
+  if (item->prev == NULL) {     /* delete first list element */
     StructureList = item->next;
     if (item->next != NULL) 
       item->next->prev = NULL;
     if (item == SL_Point)
-      SL_Point = item->next;	/* if SL_Point was positioned at this item, set it to following one */
+      SL_Point = item->next;    /* if SL_Point was positioned at this item, set it to following one */
   }
   else {
     item->prev->next = item->next; /* link preceding item to following item (which may be NULL) */
     if (item->next != NULL)
       item->next->prev = item->prev;
     if (item == SL_Point)
-      SL_Point = item->prev;	/* default is to set SL_Point to preceding item (which we now know to exist) */
+      SL_Point = item->prev;    /* default is to set SL_Point to preceding item (which we now know to exist) */
   }
   /* free item object */
   cl_free(item->annot);
@@ -238,12 +238,12 @@ SL_insert(int start, int end, char *annot) {
     if ((point->start < start) || (point->end > end)) { /* overlap: don't insert */
       return;
     }
-    else {                      			/* overlap: overwrite previous entry */
+    else {                                              /* overlap: overwrite previous entry */
       item = SL_insert_after_point(start, end, annot);
-      SL_delete(point);	/* this re-establishes list ordering */
+      SL_delete(point); /* this re-establishes list ordering */
     }
   }
-  else {			/* non-overlapping: simply insert new region after point */
+  else {                        /* non-overlapping: simply insert new region after point */
     item = SL_insert_after_point(start, end, annot);
   }
   
@@ -303,16 +303,16 @@ parse_line(char *line, int *start, int *end, char **annot) {
   if (has_annotation) {
     field_end = strchr(field, '\t');
     if (field_end != NULL) {
-      return 0;			/* make sure there are no extra fields */
+      return 0;                 /* make sure there are no extra fields */
     }
     else {
       field_end = strchr(field, '\n');
       if (field_end == NULL) {
-	return 0;
+        return 0;
       }
       else {
-	*field_end = 0;
-	*annot = cl_strdup(field);
+        *field_end = 0;
+        *annot = cl_strdup(field);
       }
     }
   }
@@ -321,7 +321,7 @@ parse_line(char *line, int *start, int *end, char **annot) {
   }
   
   cl_free(line_copy);
-  return 1;			/* OK */
+  return 1;                     /* OK */
 }
 
 
@@ -336,10 +336,10 @@ parse_line(char *line, int *start, int *end, char **annot) {
 char *
 check_set(char *annot) {
   char *set;
-  int split;			/* need to split on whitespace? */
+  int split;                    /* need to split on whitespace? */
 
   if (set_att == set_none || annot == NULL) {
-    return annot;		/* no modification needed */
+    return annot;               /* no modification needed */
   }
   else if ((!set_syntax_strict) || set_att == set_any) {
     if (annot[0] == '|') {
@@ -373,8 +373,8 @@ usage() {
   fprintf(stderr, "  -r <dir>  set registry directory <dir>\n");
   fprintf(stderr, "  -C <id>   work on corpus <id> (with -a option)\n");
   fprintf(stderr, "  -a        add to existing annotation (resolving overlaps, implies -M)\n");
-  fprintf(stderr, "  -m        treat annotations as set (or 'multi-value') attribute\n");
-  fprintf(stderr, "  -s        (with -m) check that form of set annotations is consistent\n");
+  fprintf(stderr, "  -m        treat annotations as feature set (or 'multi-value') attribute\n");
+  fprintf(stderr, "  -s        (with -m) check that format of set annotations is consistent\n");
   fprintf(stderr, "  -q        silent mode ('be quiet')\n");
   fprintf(stderr, "  -D        debug mode\n");
   fprintf(stderr, "  -S <att>  generate s-attribute <att>\n");
@@ -444,15 +444,15 @@ close_range(void)
     
     if (range.avs) {
       if (EOF == fclose(range.avs)) {
-	perror("Error writing AVS file");
-	exit(1);
+        perror("Error writing AVS file");
+        exit(1);
       }
     }
 
     if (range.avx) {
       if (EOF == fclose(range.avx)) {
-	perror("Error writing AVX file");
-	exit(1);
+        perror("Error writing AVX file");
+        exit(1);
       }
     }
 
@@ -503,12 +503,12 @@ parse_options(int argc, char **argv)
       /* f: read input from file */
     case 'f':
       if (text_fd) {
-	fprintf(stderr, "Error: -f option used twice\n\n");
-	exit(1);
+        fprintf(stderr, "Error: -f option used twice\n\n");
+        exit(1);
       }
       if ((text_fd = fopen(optarg, "r")) == NULL) {
-	perror("Can't open input file");
-	exit(1);
+        perror("Can't open input file");
+        exit(1);
       }
       break;
 
@@ -535,7 +535,7 @@ parse_options(int argc, char **argv)
 
       /* m: set ('multi-value') attribute */
     case 'm':
-      set_att = set_any;	/* don't know yet whether it's '|'-delimited or "split on whitespace" */
+      set_att = set_any;        /* don't know yet whether it's '|'-delimited or "split on whitespace" */
       break;
       
       /* s: strict syntax checks on set attribute */
@@ -552,8 +552,8 @@ parse_options(int argc, char **argv)
     case 'S':
       declare_range(optarg, directory, 0);
       if (optind < argc) {
-	fprintf(stderr, "Error: -S <att> must be last flag on command line.\n\n");
-	exit(1);
+        fprintf(stderr, "Error: -S <att> must be last flag on command line.\n\n");
+        exit(1);
       }
       break;
 
@@ -561,8 +561,8 @@ parse_options(int argc, char **argv)
     case 'V':
       declare_range(optarg, directory, 1);
       if (optind < argc) {
-	fprintf(stderr, "Error: -V <att> must be last flag on command line.\n\n");
-	exit(1);
+        fprintf(stderr, "Error: -V <att> must be last flag on command line.\n\n");
+        exit(1);
       }
       break;
 
@@ -599,7 +599,7 @@ parse_options(int argc, char **argv)
 
 /* ======================================== write region data to disk files (as defined in global variable <range>) */
 
-cl_lexhash LH = NULL;		/* use lexhash to avoid multiple copies of annotations (-m mode) */
+cl_lexhash LH = NULL;           /* use lexhash to avoid multiple copies of annotations (-m mode) */
 
 void
 write_region_to_disk(int start, int end, char *annot) {
@@ -624,8 +624,8 @@ write_region_to_disk(int start, int end, char *annot) {
       entry->data.integer = range.offset;
       range.offset += strlen(annot) + 1; /* increment range offset */
       if (0 > fprintf(range.avs, "%s%c", annot, 0)) {
-	perror("Error writing AVS file");
-	exit(1);
+        perror("Error writing AVS file");
+        exit(1);
       }
     }
     id = entry->id;
@@ -669,26 +669,26 @@ main(int argc, char **argv)
       V_switch = range.store_values;
       values = cl_struc_values(att);
       if (V_switch && (!values)) {
-	fprintf(stderr, "Error: Existing regions of -V attribute have no annotations.\n");
-	exit(1);
+        fprintf(stderr, "Error: Existing regions of -V attribute have no annotations.\n");
+        exit(1);
       }
       else if ((!V_switch) && values) {
-	fprintf(stderr, "Error: Existing regions of -S attributes have annotations.\n");
-	exit(1);
+        fprintf(stderr, "Error: Existing regions of -S attributes have annotations.\n");
+        exit(1);
       }
       if (!silent)
-	printf("[Loading previous <%s> regions]\n", range.name);
+        printf("[Loading previous <%s> regions]\n", range.name);
       
       N = cl_max_struc(att);
       for (i = 0; i < N; i++) {
-	cl_struc2cpos(att, i, &start, &end);
-	annot = cl_struc2str(att, i);
-	SL_insert(start, end, annot);
+        cl_struc2cpos(att, i, &start, &end);
+        annot = cl_struc2str(att, i);
+        SL_insert(start, end, annot);
       }
     }
     else {
       if (!silent)
-	printf("[No <%s> regions defined (skipped)]\n", range.name);
+        printf("[No <%s> regions defined (skipped)]\n", range.name);
     }
   }
 
@@ -719,8 +719,8 @@ main(int argc, char **argv)
       /* convert set annotation into standard syntax */
       annot = check_set(annot);
       if (annot == NULL) {
-	fprintf(stderr, "SET ANNOTATION SYNTAX ERROR on line #%d:\n>> %s", input_line, buf);
-	exit(1);
+        fprintf(stderr, "SET ANNOTATION SYNTAX ERROR on line #%d:\n>> %s", input_line, buf);
+        exit(1);
       }
     }
 
@@ -728,7 +728,7 @@ main(int argc, char **argv)
     if (debug) {
       printf("[%d, %d]", start, end);
       if (annot != NULL) {
-	printf(" <%s>", annot);
+        printf(" <%s>", annot);
       }
       printf("\n");
     }

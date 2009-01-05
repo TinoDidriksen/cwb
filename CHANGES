@@ -6,11 +6,23 @@ Version 3.0
  - should be released as soon as possible, after some testing by developer community (and perhaps an overhaul of installation procedure)
  - hopefully, binary packages for various platforms will be contributed by volunteers
 
-Major changes:
+New features:
 
  - Configuration no longer requires explicit knowledge of CPU endianness, relying instead on system macros
    htonl() and nothl() to convert between platform-independent disk format and native byte ordering.
    This simplifies compilation on generic Unix platforms and allows true Universal releases on Mac OS X.
+
+ - cwb-encode now supports format validation and normalisation for feature set attributes (see CQP tutorial for
+   and introduction).  Attributes declared with trailing slash "/" are considered as feature sets.  If a value
+   is not well-formed, a warning is issued (for every line containing a malformed feature set!) and the value
+   is replaced by the empty set |.  Annotations of s-attributes can also be treated as feature sets, including
+   individual element attributes; in this case, the "/" marker has to be attached to the main attribute name
+   (e.g. -V flags/:2) or the respective element attribute declaration (e.g. -S np:2+agr/+head+f/).
+   
+ - New "-F <dir>" option for cwb-encode reads all input files named *.vrt or *.vrt.gz in the specified
+   directory (very convenient if a corpus consists of many small individual files).  Only regular files will
+   be considered, and it is not possible to scan subdirectories recursively.  If no input files are found
+   in a directory, a warning message is printed on stderr, but the encoding process continues.
 
 Bug fixes:
 
@@ -49,6 +61,8 @@ Bug fixes:
 
  - [2009-01-04] Fixed all compiler warnings where possible (for Universal build on Mac OS X with gcc-4.0)
 
+ - [2009-01-05] The "-d" (data directory) option for cwb-encode is now mandatory, so if you just type "cwb-encode",
+   it will no longer litter your current working directory with empty data files and wait for standard input.
 
 Version 2.2.b99 (2007-03-11)
 ----------------------------

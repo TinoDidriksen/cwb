@@ -206,9 +206,9 @@ DynArg *makearg(char *type_id)
 /* ---------------------------------------------------------------------- */
 
 Attribute *setup_attribute(Corpus *corpus, 
-			   char *attribute_name, 
-			   int type,
-			   char *data)
+                           char *attribute_name, 
+                           int type,
+                           char *data)
 {
   Attribute *attr;
   Attribute *prev;
@@ -219,8 +219,8 @@ Attribute *setup_attribute(Corpus *corpus,
 
   if (find_attribute(corpus, attribute_name, type, data) != NULL)
     fprintf(stderr, "attributes:setup_attribute(): Warning: \n"
-	    "  Attribute %s of type %s already defined in corpus %s\n",
-	    attribute_name, aid_name(type), corpus->id);
+            "  Attribute %s of type %s already defined in corpus %s\n",
+            attribute_name, aid_name(type), corpus->id);
   else {
 
     ComponentID cid;
@@ -245,7 +245,7 @@ Attribute *setup_attribute(Corpus *corpus,
       corpus->attributes = attr;
     else {
       for (prev = corpus->attributes; prev->any.next; prev = prev->any.next)
-	a_num++;
+        a_num++;
       assert(prev);
       assert(prev->any.next == NULL);
       prev->any.next = attr;
@@ -276,9 +276,9 @@ Attribute *setup_attribute(Corpus *corpus,
 }
 
 Attribute *find_attribute(Corpus *corpus, 
-			  char *attribute_name, 
-			  int type, 
-			  char *data)
+                          char *attribute_name, 
+                          int type, 
+                          char *data)
 {
   Attribute *attr;
 
@@ -290,16 +290,16 @@ Attribute *find_attribute(Corpus *corpus,
     
     for (attr = corpus->attributes; attr != NULL; attr = attr->any.next)
       if ((type == attr->type) &&
-	  STREQ(attr->any.name, attribute_name))
-	break;
+          STREQ(attr->any.name, attribute_name))
+        break;
   }
   return attr;
 }
 
 int drop_attribute(Corpus *corpus,
-		   char *attribute_name,
-		   int type,
-		   char *data)
+                   char *attribute_name,
+                   int type,
+                   char *data)
 {
   if (corpus == NULL) {
     fprintf(stderr, "attributes:drop_attribute(): called with NULL corpus\n");
@@ -333,25 +333,25 @@ int attr_drop_attribute(Attribute *attribute)
       /* remove attribute from corpus attribute list */
 
       for (prev = corpus->attributes; 
-	   (prev != NULL) && (prev->any.next != attribute);
-	   prev = prev->any.next)
-	;
+           (prev != NULL) && (prev->any.next != attribute);
+           prev = prev->any.next)
+        ;
       
       if (prev == NULL)
-	fprintf(stderr, "attributes:attr_drop_attribute():\n"
-		"  Warning: Attribute %s not in list of corpus attributes\n",
-		attribute->any.name);
+        fprintf(stderr, "attributes:attr_drop_attribute():\n"
+                "  Warning: Attribute %s not in list of corpus attributes\n",
+                attribute->any.name);
       else {
-	assert("Error in attribute chain" && (prev->any.next == attribute));
-	prev->any.next = attribute->any.next;
+        assert("Error in attribute chain" && (prev->any.next == attribute));
+        prev->any.next = attribute->any.next;
       }
     }
       
     /* get rid of components */
     for (cid = CompDirectory; cid < CompLast; cid++)
       if (attribute->any.components[cid]) {
-	comp_drop_component(attribute->any.components[cid]);
-	attribute->any.components[cid] = NULL;
+        comp_drop_component(attribute->any.components[cid]);
+        attribute->any.components[cid] = NULL;
       }
 
     cl_free(attribute->any.name);
@@ -368,9 +368,9 @@ int attr_drop_attribute(Attribute *attribute)
     case ATT_DYN:
       cl_free(attribute->dyn.call);
       while (attribute->dyn.arglist != NULL) {
-	arg = attribute->dyn.arglist;
-	attribute->dyn.arglist = arg->next;
-	cl_free(arg);
+        arg = attribute->dyn.arglist;
+        attribute->dyn.arglist = arg->next;
+        cl_free(arg);
       }
       break;
 
@@ -400,8 +400,8 @@ Component *declare_component(Attribute *attribute, ComponentID cid, char *path)
 
   if (attribute == NULL) {
     fprintf(stderr, "attributes:declare_component(): \n"
-	    "  NULL attribute passed in declaration of %s component\n",
-	    cid_name(cid));
+            "  NULL attribute passed in declaration of %s component\n",
+            cid_name(cid));
     return NULL;
   }
   else if ((component = attribute->any.components[cid]) == NULL) {
@@ -426,8 +426,8 @@ Component *declare_component(Attribute *attribute, ComponentID cid, char *path)
   else {
 
     fprintf(stderr, "attributes:declare_component(): Warning:\n"
-	    "  Component %s of %s declared twice\n",
-	    cid_name(cid), attribute->any.name);
+            "  Component %s of %s declared twice\n",
+            cid_name(cid), attribute->any.name);
     return component;
   }
 
@@ -442,12 +442,12 @@ void declare_default_components(Attribute *attribute)
 
   if (attribute == NULL)
     fprintf(stderr, "attributes:declare_default_components(): \n"
-	    "  NULL attribute passed -- can't create defaults\n");
+            "  NULL attribute passed -- can't create defaults\n");
   else {
     for (i = CompDirectory; i < CompLast; i++)
       if (((Component_Field_Specs[i].using_atts & attribute->type) != 0) &&
-	  (attribute->any.components[i] == NULL))
-	(void) declare_component(attribute, i, NULL);
+          (attribute->any.components[i] == NULL))
+        (void) declare_component(attribute, i, NULL);
   }
 }
 
@@ -512,7 +512,7 @@ char *component_full_name(Attribute *attribute, ComponentID cid, char *path)
   if (path == NULL) {
     if ((compspec = find_cid_id(cid)) == NULL) {
       fprintf(stderr, "attributes:component_full_name(): Warning:\n"
-	      "  can't find component table entry for Component #%d\n", cid);
+              "  can't find component table entry for Component #%d\n", cid);
       return NULL;
     }
     path = compspec->default_path;
@@ -530,13 +530,13 @@ char *component_full_name(Attribute *attribute, ComponentID cid, char *path)
 
       /*  reference to the name of another component. */
 
-      dollar = ppos;		/* memorize the position of the $ */
+      dollar = ppos;            /* memorize the position of the $ */
 
       rpos = 0;
-      c = path[++ppos];		/* first skip the '$' */
+      c = path[++ppos];         /* first skip the '$' */
       while (isupper(c)) {
-	rname[rpos++] = c;
-	c = path[++ppos];
+        rname[rpos++] = c;
+        c = path[++ppos];
       }
       rname[rpos] = '\0';
 
@@ -547,25 +547,25 @@ char *component_full_name(Attribute *attribute, ComponentID cid, char *path)
       reference = NULL;
 
       if (STREQ(rname, "HOME"))
-	reference = getenv(rname);
+        reference = getenv(rname);
       else if (STREQ(rname, "APATH"))
-	reference = (attribute->any.path ? attribute->any.path 
-		     : attribute->any.mother->path);
+        reference = (attribute->any.path ? attribute->any.path 
+                     : attribute->any.mother->path);
       else if (STREQ(rname, "ANAME"))
-	reference = attribute->any.name;
+        reference = attribute->any.name;
       else if ((compspec = find_cid_name(rname)) != NULL)
-	reference = component_full_name(attribute, compspec->id, NULL);
+        reference = component_full_name(attribute, compspec->id, NULL);
       
       if (reference == NULL) {
-	fprintf(stderr, "attributes:component_full_name(): Warning:\n"
-		"  Can't reference to the value of %s -- copying\n",
-		rname);
-	reference = rname;
+        fprintf(stderr, "attributes:component_full_name(): Warning:\n"
+                "  Can't reference to the value of %s -- copying\n",
+                rname);
+        reference = rname;
       }
 
       for (rpos = 0; reference[rpos] != '\0'; rpos++) {
-	buf[bpos] = reference[rpos];
-	bpos++;
+        buf[bpos] = reference[rpos];
+        bpos++;
       }
     }
     else {
@@ -598,8 +598,8 @@ Component *load_component(Attribute *attribute, ComponentID cid)
 
   if (comp == NULL) {
     fprintf(stderr, "attributes:load_component(): Warning:\n"
-	    "  Component %s is not declared for %s attribute\n",
-	    cid_name(cid), aid_name(attribute->type));
+            "  Component %s is not declared for %s attribute\n",
+            cid_name(cid), aid_name(attribute->type));
   }
   else if (comp_component_state(comp) == ComponentUnloaded) {
 
@@ -609,53 +609,53 @@ Component *load_component(Attribute *attribute, ComponentID cid)
 
       if (item_sequence_is_compressed(attribute)) {
 
-	if (read_file_into_blob(comp->path, MMAPPED, sizeof(int), &(comp->data)) == 0)
-	  fprintf(stderr, "attributes:load_component(): Warning:\n"
-		  "  Data of %s component of attribute %s can't be loaded\n",
-		  cid_name(cid), attribute->any.name);
-	else {
-	  
-	  if (attribute->pos.hc != NULL)
-	    fprintf(stderr, "attributes:load_component: WARNING:\n\t"
-		    "HCD block already loaded, overwritten.\n");
-	  
-	  attribute->pos.hc = new(HCD);
-	  /* bcopy(comp->data.data, attribute->pos.hc, sizeof(HCD)); */
-	  memcpy(attribute->pos.hc, comp->data.data, sizeof(HCD));
+        if (read_file_into_blob(comp->path, MMAPPED, sizeof(int), &(comp->data)) == 0)
+          fprintf(stderr, "attributes:load_component(): Warning:\n"
+                  "  Data of %s component of attribute %s can't be loaded\n",
+                  cid_name(cid), attribute->any.name);
+        else {
+          
+          if (attribute->pos.hc != NULL)
+            fprintf(stderr, "attributes:load_component: WARNING:\n\t"
+                    "HCD block already loaded, overwritten.\n");
+          
+          attribute->pos.hc = new(HCD);
+          /* bcopy(comp->data.data, attribute->pos.hc, sizeof(HCD)); */
+          memcpy(attribute->pos.hc, comp->data.data, sizeof(HCD));
 
-	  { /* convert network byte order to native integers */
-	    int i;
-	    attribute->pos.hc->size = ntohl(attribute->pos.hc->size);
-	    attribute->pos.hc->length = ntohl(attribute->pos.hc->length);
-	    attribute->pos.hc->min_codelen = ntohl(attribute->pos.hc->min_codelen);
-	    attribute->pos.hc->max_codelen = ntohl(attribute->pos.hc->max_codelen);
-	    for (i = 0; i < MAXCODELEN; i++) {
-	      attribute->pos.hc->lcount[i] = ntohl(attribute->pos.hc->lcount[i]);
-	      attribute->pos.hc->symindex[i] = ntohl(attribute->pos.hc->symindex[i]);
-	      attribute->pos.hc->min_code[i] = ntohl(attribute->pos.hc->min_code[i]);
-	    }
-	  }
-	  attribute->pos.hc->symbols = comp->data.data + (4+3*MAXCODELEN);
-	
-	  comp->size = attribute->pos.hc->length;
-	  assert(comp_component_state(comp) == ComponentLoaded);
-	}
+          { /* convert network byte order to native integers */
+            int i;
+            attribute->pos.hc->size = ntohl(attribute->pos.hc->size);
+            attribute->pos.hc->length = ntohl(attribute->pos.hc->length);
+            attribute->pos.hc->min_codelen = ntohl(attribute->pos.hc->min_codelen);
+            attribute->pos.hc->max_codelen = ntohl(attribute->pos.hc->max_codelen);
+            for (i = 0; i < MAXCODELEN; i++) {
+              attribute->pos.hc->lcount[i] = ntohl(attribute->pos.hc->lcount[i]);
+              attribute->pos.hc->symindex[i] = ntohl(attribute->pos.hc->symindex[i]);
+              attribute->pos.hc->min_code[i] = ntohl(attribute->pos.hc->min_code[i]);
+            }
+          }
+          attribute->pos.hc->symbols = comp->data.data + (4+3*MAXCODELEN);
+        
+          comp->size = attribute->pos.hc->length;
+          assert(comp_component_state(comp) == ComponentLoaded);
+        }
       }
       else {
-	fprintf(stderr, "attributes/load_component: missing files of compressed PA,\n"
-		"\tcomponent CompHuffCodes not loaded\n");
+        fprintf(stderr, "attributes/load_component: missing files of compressed PA,\n"
+                "\tcomponent CompHuffCodes not loaded\n");
       }
 
     }
     else if ((cid > CompDirectory) && (cid < CompLast)) {
 
       if (read_file_into_blob(comp->path, MMAPPED, sizeof(int), &(comp->data)) == 0)
-	fprintf(stderr, "attributes:load_component(): Warning:\n"
-		"  Data of %s component of attribute %s can't be loaded\n",
-		cid_name(cid), attribute->any.name);
+        fprintf(stderr, "attributes:load_component(): Warning:\n"
+                "  Data of %s component of attribute %s can't be loaded\n",
+                cid_name(cid), attribute->any.name);
       else {
-	comp->size = comp->data.nr_items;
-	assert(comp_component_state(comp) == ComponentLoaded);
+        comp->size = comp->data.nr_items;
+        assert(comp_component_state(comp) == ComponentLoaded);
       }
     }
   }
@@ -693,9 +693,9 @@ Component *create_component(Attribute *attribute, ComponentID cid)
     case CompLexicon:
     case CompLexiconIdx:
       fprintf(stderr, "attributes:create_component(): Warning:\n"
-	      "  Can't create the '%s' component. Use 'encode' to create it"
-	      " out of a text file\n",
-	      cid_name(cid));
+              "  Can't create the '%s' component. Use 'encode' to create it"
+              " out of a text file\n",
+              cid_name(cid));
       return NULL;
       break;
 
@@ -703,18 +703,18 @@ Component *create_component(Attribute *attribute, ComponentID cid)
     case CompHuffCodes:
     case CompHuffSync:
       fprintf(stderr, "attributes:create_component(): Warning:\n"
-	      "  Can't create the '%s' component. Use 'huffcode' to create it"
-	      " out of an item sequence file\n",
-	      cid_name(cid));
+              "  Can't create the '%s' component. Use 'huffcode' to create it"
+              " out of an item sequence file\n",
+              cid_name(cid));
       return NULL;
       break;
       
     case CompCompRF:
     case CompCompRFX:
       fprintf(stderr, "attributes:create_component(): Warning:\n"
-	      "  Can't create the '%s' component. Use 'compress-rdx' to create it"
-	      " out of the reversed file index\n",
-	      cid_name(cid));
+              "  Can't create the '%s' component. Use 'compress-rdx' to create it"
+              " out of the reversed file index\n",
+              cid_name(cid));
       return NULL;
       break;
       
@@ -740,9 +740,9 @@ Component *create_component(Attribute *attribute, ComponentID cid)
     case CompStrucAVS:
     case CompStrucAVX:
       fprintf(stderr, "attributes:create_component(): Warning:\n"
-	      "  Can't create the '%s' component of %s attribute %s.\n"
-	      "  Use the appropriate external tool to create it.\n",
-	       cid_name(cid), aid_name(attribute->type), attribute->any.name);
+              "  Can't create the '%s' component of %s attribute %s.\n"
+              "  Use the appropriate external tool to create it.\n",
+               cid_name(cid), aid_name(attribute->type), attribute->any.name);
       return NULL;
       break;
       
@@ -768,7 +768,7 @@ Component *ensure_component(Attribute *attribute, ComponentID cid, int try_creat
 
     /*  component is undeclared */
     fprintf(stderr, "attributes:ensure_component(): Warning:\n"
-	    "  Undeclared component: %s\n", cid_name(cid));
+            "  Undeclared component: %s\n", cid_name(cid));
 #ifdef ENSURE_COMPONENT_EXITS    
     exit(1);
 #endif
@@ -785,63 +785,63 @@ Component *ensure_component(Attribute *attribute, ComponentID cid, int try_creat
       (void) load_component(attribute, cid); /* try to load the component */
       if (comp_component_state(comp) != ComponentLoaded) {
 #ifndef KEEP_SILENT
-	fprintf(stderr, "attributes:ensure_component(): Warning:\n"
-		"  Can't load %s component of %s\n", 
-		cid_name(cid), attribute->any.name);
+        fprintf(stderr, "attributes:ensure_component(): Warning:\n"
+                "  Can't load %s component of %s\n", 
+                cid_name(cid), attribute->any.name);
 #endif
 #ifdef ENSURE_COMPONENT_EXITS    
-	exit(1);
+        exit(1);
 #endif
-	return NULL;
+        return NULL;
       }
       break;
 
-    case ComponentDefined:	  /*  try to create the component */
+    case ComponentDefined:        /*  try to create the component */
 
       if (try_creation != 0) {
 
 #ifdef ALLOW_COMPONENT_CREATION
 
-	(void) create_component(attribute, cid);
-	if (comp_component_state(comp) != ComponentLoaded) {
+        (void) create_component(attribute, cid);
+        if (comp_component_state(comp) != ComponentLoaded) {
 #ifndef KEEP_SILENT
-	  fprintf(stderr, "attributes:ensure_component(): Warning:\n"
-		  "  Can't load or create %s component of %s\n", 
-		  cid_name(cid), attribute->any.name);
+          fprintf(stderr, "attributes:ensure_component(): Warning:\n"
+                  "  Can't load or create %s component of %s\n", 
+                  cid_name(cid), attribute->any.name);
 #endif
 #ifdef ENSURE_COMPONENT_EXITS
-	  exit(1);
+          exit(1);
 #endif
-	  return NULL;
-	}
+          return NULL;
+        }
 #else
-	fprintf(stderr, "Sorry, but this program is not set up to allow the\n"
-		"creation of corpus components. Please refer to the manuals\n"
-		"or use the ''makeall'' tool.\n");
+        fprintf(stderr, "Sorry, but this program is not set up to allow the\n"
+                "creation of corpus components. Please refer to the manuals\n"
+                "or use the ''makeall'' tool.\n");
 #ifdef ENSURE_COMPONENT_EXITS    
-	exit(1);
+        exit(1);
 #endif
-	return NULL;
+        return NULL;
 #endif
 
       }
       else {
 #ifndef KEEP_SILENT
-	fprintf(stderr, "attributes:ensure_component(): Warning:\n"
-		"  I'm not allowed to create %s component of %s\n", 
-		  cid_name(cid), attribute->any.name);
+        fprintf(stderr, "attributes:ensure_component(): Warning:\n"
+                "  I'm not allowed to create %s component of %s\n", 
+                  cid_name(cid), attribute->any.name);
 #endif
 #ifdef ENSURE_COMPONENT_EXITS    
-	exit(1);
+        exit(1);
 #endif
-	return NULL;
+        return NULL;
       }
       break;
 
     case ComponentUndefined:      /*  don't have this, -> error */
       fprintf(stderr, "attributes:ensure_component(): Warning:\n"
-	      "  Can't ensure undefined/illegal %s component of %s\n", 
-	      cid_name(cid), attribute->any.name);
+              "  Can't ensure undefined/illegal %s component of %s\n", 
+              cid_name(cid), attribute->any.name);
 #ifdef ENSURE_COMPONENT_EXITS    
       exit(1);
 #endif
@@ -849,8 +849,8 @@ Component *ensure_component(Attribute *attribute, ComponentID cid, int try_creat
 
     default:
       fprintf(stderr, "attributes:ensure_component(): Warning:\n"
-	      "  Illegal state of  %s component of %s\n", 
-	      cid_name(cid), attribute->any.name);
+              "  Illegal state of  %s component of %s\n", 
+              cid_name(cid), attribute->any.name);
 #ifdef ENSURE_COMPONENT_EXITS    
       exit(1);
 #endif
@@ -948,12 +948,12 @@ void describe_attribute(Attribute *attribute)
     for (arg = attribute->dyn.arglist; arg; arg = arg->next) {
       printf("%s", argid_name(arg->type));
       if (arg->next != NULL)
-	printf(", ");
+        printf(", ");
     }
     printf("):%s\n"
            "               by \"%s\"\n",
-	   argid_name(attribute->dyn.res_type),
-	   attribute->dyn.call);
+           argid_name(attribute->dyn.res_type),
+           attribute->dyn.call);
   }
   printf("\n");
   for (cid = CompDirectory; cid < CompLast; cid++)
@@ -999,9 +999,9 @@ void describe_component(Component *component)
  */ 
 char *
 cl_make_set(char *s, int split) {
-  char *copy = cl_strdup(s);	           /* work on copy of <s> */
+  char *copy = cl_strdup(s);               /* work on copy of <s> */
   cl_string_list l = cl_new_string_list(); /* list of set elements */
-  int ok = 0;			/* for split and element check */
+  int ok = 0;                   /* for split and element check */
   char *p, *mark, *set;
   int i, sl, length;
 
@@ -1011,41 +1011,41 @@ cl_make_set(char *s, int split) {
     p = copy;
     while (*p != 0) {
       while (*p == ' ' || *p == '\t' || *p == '\n') {
-	p++;
+        p++;
       }
       mark = p;
       while (*p != 0 && *p != ' ' && *p != '\t' && *p != '\n') {
-	p++;
+        p++;
       }
-      if (*p != 0) {		/* mark end of substring */
-	*p = 0;
-	p++;
+      if (*p != 0) {            /* mark end of substring */
+        *p = 0;
+        p++;
       }
       else {
-	/* p points to end of string; since it hasn't been advanced, the while loop will terminate */
+        /* p points to end of string; since it hasn't been advanced, the while loop will terminate */
       }
       if (p != mark) {
-	cl_string_list_append(l, mark);
+        cl_string_list_append(l, mark);
       }
     }
-    ok = 1;			/* split on whitespace can't really fail */
+    ok = 1;                     /* split on whitespace can't really fail */
   }
   else {
     /* check and split '|'-delimited syntax */
     if (copy[0] == '|') {
       mark = p = copy+1;
       while (*p != 0) {
-	if (*p == '|') {
-	  *p = 0;
-	  cl_string_list_append(l, mark);
-	  mark = p = p+1;
-	}
-	else {
-	  p++;
-	}
+        if (*p == '|') {
+          *p = 0;
+          cl_string_list_append(l, mark);
+          mark = p = p+1;
+        }
+        else {
+          p++;
+        }
       }
-      if (p == mark) {		/* otherwise, there was no trailing '|' */
-	ok = 1;
+      if (p == mark) {          /* otherwise, there was no trailing '|' */
+        ok = 1;
       }
     }
   }
@@ -1069,19 +1069,19 @@ cl_make_set(char *s, int split) {
   cl_string_list_qsort(l);
 
   /* (5) combine elements into set attribute string */
-  sl = 2;			/* compute length of string */
+  sl = 2;                       /* compute length of string */
   for (i = 0; i < length; i++) {
     sl += strlen(cl_string_list_get(l, i)) + 1;
   }
-  set = cl_malloc(sl);		/* allocate string of exact size */
+  set = cl_malloc(sl);          /* allocate string of exact size */
   p = set;
   *p++ = '|';
   for (i = 0; i < length; i++) {
     strcpy(p, cl_string_list_get(l, i));
     p += strlen(cl_string_list_get(l, i));
-    *p++ = '|';			/* overwrites EOS mark inserted by strcpy() */
+    *p++ = '|';                 /* overwrites EOS mark inserted by strcpy() */
   }
-  *p = 0;			/* EOS */
+  *p = 0;                       /* EOS */
  
   /* (6) free intermediate data and return the set string */
   cl_delete_string_list(l);
@@ -1118,40 +1118,40 @@ cl_set_size(char *s) {
 
 int 
 cl_set_intersection(char *result, const char *s1, const char *s2) {
-  static char f1[CL_DYN_STRING_SIZE], f2[CL_DYN_STRING_SIZE];	/* static feature buffers (hold current feature) */
+  static char f1[CL_DYN_STRING_SIZE], f2[CL_DYN_STRING_SIZE];   /* static feature buffers (hold current feature) */
   char *p;
   int comparison;
 
   if ((*s1++ != '|') || (*s2++ != '|'))
     return 0;
 
-  *result++ = '|';		/* Initialise result */
+  *result++ = '|';              /* Initialise result */
 
   while (*s1 && *s2) {
     /* while a feature is active, *s_i points to the '|' separator at its end;
        when the feature is used up, *s_i is advanced and we read the next feature */
     if (*s1 != '|') { 
       for (p = f1; *s1 != '|'; s1++) {
-	if (!*s1) return 0;	/* unexpected end of string */
-	*p++ = *s1;
-	/* should check for buffer overflow here! */
+        if (!*s1) return 0;     /* unexpected end of string */
+        *p++ = *s1;
+        /* should check for buffer overflow here! */
       }
-      *p = 0;			/* terminate feature string */
+      *p = 0;                   /* terminate feature string */
     }
     if (*s2 != '|') { 
       for (p = f2; *s2 != '|'; s2++) {
-	if (!*s2) return 0;	/* unexpected end of string */
-	*p++ = *s2;
-	/* should check for buffer overflow here! */
+        if (!*s2) return 0;     /* unexpected end of string */
+        *p++ = *s2;
+        /* should check for buffer overflow here! */
       }
-      *p = 0;			/* terminate feature string */
+      *p = 0;                   /* terminate feature string */
     }
     /* now compare the two active features (uses cl_strcmp to ensure standard behaviour) */
     comparison = cl_strcmp(f1,f2);
     if (comparison == 0) {
       /* common feature -> copy to result vector */
       for (p = f1; *p; p++)
-	*result++ = *p;
+        *result++ = *p;
       *result++ = '|';
       /* both features are used up now */
       s1++; s2++;

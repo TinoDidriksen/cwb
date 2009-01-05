@@ -48,7 +48,7 @@ cl_delete_int_list(cl_int_list l) {
 
 void
 cl_int_list_lumpsize(cl_int_list l, int s) {
-  if (s >= LUMPSIZE) {		/* lumpsize may not be smaller than default */
+  if (s >= LUMPSIZE) {          /* lumpsize may not be smaller than default */
     l->lumpsize = s;
   }
 }
@@ -80,15 +80,15 @@ cl_int_list_set(cl_int_list l, int n, int val) {
       l->size = n+1;
       /* auto-extend list if necessary */
       if (l->size > l->allocated) {
-	newalloc = l->size;
-	if ((newalloc - l->allocated) < l->lumpsize) {
-	  newalloc = l->allocated + l->lumpsize;
-	}
-	l->data = cl_realloc(l->data, newalloc * sizeof(int));
-	for (i = l->allocated; i < newalloc; i++) {
-	  l->data[i] = 0;
-	}
-	l->allocated = newalloc;
+        newalloc = l->size;
+        if ((newalloc - l->allocated) < l->lumpsize) {
+          newalloc = l->allocated + l->lumpsize;
+        }
+        l->data = cl_realloc(l->data, newalloc * sizeof(int));
+        for (i = l->allocated; i < newalloc; i++) {
+          l->data[i] = 0;
+        }
+        l->allocated = newalloc;
       }
     }
     /* now we can safely set the desired list element */
@@ -136,13 +136,13 @@ cl_free_string_list(cl_string_list l) {
   int i;
 
   for (i = 0; i < l->size; i++) {
-    cl_free(l->data[i]);		/* cl_free() checks if pointer is NULL */
+    cl_free(l->data[i]);                /* cl_free() checks if pointer is NULL */
   }
 }
 
 void
 cl_string_list_lumpsize(cl_string_list l, int s) {
-  if (s >= LUMPSIZE) {		/* lumpsize may not be smaller than default */
+  if (s >= LUMPSIZE) {          /* lumpsize may not be smaller than default */
     l->lumpsize = s;
   }
 }
@@ -174,15 +174,15 @@ cl_string_list_set(cl_string_list l, int n, char *val) {
       l->size = n+1;
       /* auto-extend list if necessary */
       if (l->size > l->allocated) {
-	newalloc = l->size;
-	if ((newalloc - l->allocated) < l->lumpsize) {
-	  newalloc = l->allocated + l->lumpsize;
+        newalloc = l->size;
+        if ((newalloc - l->allocated) < l->lumpsize) {
+          newalloc = l->allocated + l->lumpsize;
       }
-	l->data = cl_realloc(l->data, newalloc * sizeof(char *));
-	for (i = l->allocated; i < newalloc; i++) {
-	  l->data[i] = NULL;
-	}
-	l->allocated = newalloc;
+        l->data = cl_realloc(l->data, newalloc * sizeof(char *));
+        for (i = l->allocated; i < newalloc; i++) {
+          l->data[i] = NULL;
+        }
+        l->allocated = newalloc;
       }
     }
     /* now we can safely set the desired list element */
