@@ -94,7 +94,10 @@ typedef struct _DCR {
 #define IGNORE_DIAC 2
 #define IGNORE_REGEX 4
 
-
+/* flags set in return values of cl_cpos2boundary() function */
+#define STRUC_INSIDE 1
+#define STRUC_LBOUND 2
+#define STRUC_RBOUND 4
 
 /* 
  *  error handling (error values and related functions) 
@@ -116,6 +119,9 @@ typedef struct _DCR {
 #define CDA_EOTHER	-14	/* other error */
 #define CDA_ENYI        -15	/* not yet implemented */
 #define CDA_EBADREGEX   -16     /* bad regular expression */
+#define CDA_EFSETINV    -17     /* invalid feature set format */
+#define CDA_EBUFFER     -18     /* buffer overflow (hard-coded internal buffer sizes) */
+#define CDA_EINTERNAL   -19     /* internal data consistency error (really bad) */
 
 extern int cderrno;		/* is set after access */
 void cdperror(char *message);	/* prints out error string */
@@ -277,6 +283,7 @@ char *cl_charset_name(CorpusCharset id);
 #define cl_idlist2cpos(a, idlist, idlist_size, sort, size) collect_matches(a, idlist, idlist_size, sort, size, NULL, 0)
 #define cl_cpos2struc2cpos(a, cpos, start, end) get_struc_attribute(a, cpos, start, end)
 int cl_cpos2struc(Attribute *a, int cpos);  /* normalised to standard return value behaviour */
+int cl_cpos2boundary(Attribute *a, int cpos);  /* convenience function: within region or at boundary? */
 #define cl_struc2cpos(a, struc, start, end) get_bounds_of_nth_struc(a, struc, start, end)
 int cl_max_struc(Attribute *a);             /* normalised to standard return value behaviour */
 #define cl_struc_values(a) structure_has_values(a)

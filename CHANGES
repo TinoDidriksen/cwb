@@ -2,7 +2,7 @@
 Version 3.0
 -----------
 
- - this will be the first official release of the IMS Open Corpus Workbench
+This will be the first official release of the IMS Open Corpus Workbench.
  - should be released as soon as possible, after some testing by developer community (and perhaps an overhaul of installation procedure)
  - hopefully, binary packages for various platforms will be contributed by volunteers
 
@@ -63,6 +63,11 @@ Bug fixes:
 
  - [2009-01-05] The "-d" (data directory) option for cwb-encode is now mandatory, so if you just type "cwb-encode",
    it will no longer litter your current working directory with empty data files and wait for standard input.
+
+ - [2009-01-25] Error reporting of CL library has been made more consistent (including some obvious bugs),
+   triggered by stricter tests in new version of the Perl API (CWB::CL module).  Also introduced some new
+   error codes (e.g. for internal buffer overflow), but these are not checked and set systematically yet.
+
 
 Version 2.2.b99 (2007-03-11)
 ----------------------------

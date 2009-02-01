@@ -1005,6 +1005,8 @@ cl_make_set(char *s, int split) {
   char *p, *mark, *set;
   int i, sl, length;
 
+  cderrno = CDA_OK;
+
   /* (1) split input string into set elements */
   if (split) {
     /* split on whitespace */
@@ -1062,6 +1064,7 @@ cl_make_set(char *s, int split) {
   if (!ok) {
     cl_delete_string_list(l);
     cl_free(copy);
+    cderrno = CDA_EFSETINV;
     return NULL;
   }
 
@@ -1098,7 +1101,9 @@ int
 cl_set_size(char *s) {
   int count = 0;
 
+  cderrno = CDA_OK;
   if (*s++ != '|') {
+    cderrno = CDA_EFSETINV;
     return -1;
   }
   while (*s) {
@@ -1106,6 +1111,7 @@ cl_set_size(char *s) {
     s++;
   }
   if (s[-1] != '|') {
+    cderrno = CDA_EFSETINV;
     return -1;
   }
   return count;
@@ -1122,8 +1128,16 @@ cl_set_intersection(char *result, const char *s1, const char *s2) {
   char *p;
   int comparison;
 
-  if ((*s1++ != '|') || (*s2++ != '|'))
+  cderrno = CDA_OK;
+
+  if ((*s1++ != '|') || (*s2++ != '|')) {
+    cderrno = CDA_EFSETINV;
     return 0;
+  }
+  if (strlen(s1) >= CL_DYN_STRING_SIZE || strlen(s2) >= CL_DYN_STRING_SIZE) {
+    cderrno = CDA_EBUFFER;
+    return 0;
+  }
 
   *result++ = '|';              /* Initialise result */
 
@@ -1132,7 +1146,10 @@ cl_set_intersection(char *result, const char *s1, const char *s2) {
        when the feature is used up, *s_i is advanced and we read the next feature */
     if (*s1 != '|') { 
       for (p = f1; *s1 != '|'; s1++) {
-        if (!*s1) return 0;     /* unexpected end of string */
+        if (!*s1) {
+          cderrno = CDA_EFSETINV;
+          return 0;     /* unexpected end of string */
+        }
         *p++ = *s1;
         /* should check for buffer overflow here! */
       }
@@ -1140,7 +1157,10 @@ cl_set_intersection(char *result, const char *s1, const char *s2) {
     }
     if (*s2 != '|') { 
       for (p = f2; *s2 != '|'; s2++) {
-        if (!*s2) return 0;     /* unexpected end of string */
+        if (!*s2) {
+          cderrno = CDA_EFSETINV;
+          return 0;     /* unexpected end of string */
+        }
         *p++ = *s2;
         /* should check for buffer overflow here! */
       }
