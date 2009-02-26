@@ -47,8 +47,8 @@
 /* nr of buckets of lexhashes used for checking duplicate errors (undeclared element and attribute names in XML tags) */
 #define REP_CHECK_LEXHASH_SIZE 1000
 
-/* if we have XML tags with attributes, input lines can become pretty long ... */
-#define MAX_INPUT_LINE_LENGTH  16384
+/* if we have XML tags with attributes, input lines can become pretty long (but there's basically just a single buffer) */
+#define MAX_INPUT_LINE_LENGTH  65536
 
 /* implicit knowledge about CL component files naming conventions */
 #define STRUC_RNG  "%s/%s.rng"
@@ -643,7 +643,7 @@ void
 close_range(Range *rng, int end_pos) {
   cl_lexhash_entry entry;
   int close_this_range = 0;     /* whether we actually have to close this range (may be skipped or delegated in recursion mode) */
-  int i, n_children;
+  int i, n_children, l;
 
   if (rng->null_attribute)      /* do nothing for NULL attributes */
     return;
@@ -690,9 +690,21 @@ close_range(Range *rng, int end_pos) {
       NwriteInt(rng->start_pos, rng->fd); /* write (start, end) to .rng component */
       NwriteInt(end_pos, rng->fd);
       if (rng->store_values) {
-        /* check if annot is already in hash */
         if (rng->annot == NULL) /* shouldn't happen, just to be on the safe side ... */
           rng->annot = cl_strdup("");
+        /* check annotation length & truncate if necessary */
+        l = strlen(rng->annot);
+        if (l >= MAX_LINE_LENGTH) {
+          if (!silent) {
+            fprintf(stderr, "Value of <%s> region exceeds maximum string length (%d > %d chars), truncated (", 
+                    rng->name, l, MAX_LINE_LENGTH-1);
+            print_input_line();
+            fprintf(stderr, ").\n");
+          }
+          rng->annot[MAX_LINE_LENGTH-2] = '$'; /* truncation marker, as e.g. in Emacs */
+          rng->annot[MAX_LINE_LENGTH-1] = '\0';
+        }
+        /* check if annot is already in hash */
         if ((entry = cl_lexhash_find(rng->lh, rng->annot)) != NULL) {
           /* annotation is already in hash (and hence, stored in .avs component */
           int offset = entry->data.integer;
@@ -1233,7 +1245,7 @@ void parse_options(int argc, char **argv) {
 /* process token data line */
 void 
 addline(char *str) {
-  int fc, id;
+  int fc, id, l;
   char *field, *token;
   cl_lexhash_entry entry;
 
@@ -1274,6 +1286,19 @@ addline(char *str) {
     }
     else {
       token = field;
+    }
+
+    /* check annotation length & truncate if necessary (assumes it's ok to modify token[] destructively) */
+    l = strlen(token); /* check annotation length & truncate if necessary */
+    if (l >= MAX_LINE_LENGTH) {
+      if (!silent) {
+        fprintf(stderr, "Value of p-attribute '%s' exceeds maximum string length (%d > %d chars), truncated (", 
+                wattrs[fc].name, l, MAX_LINE_LENGTH-1);
+        print_input_line();
+        fprintf(stderr, ").\n");
+      }
+      token[MAX_LINE_LENGTH-2] = '$'; /* truncation marker, as e.g. in Emacs */
+      token[MAX_LINE_LENGTH-1] = '\0';
     }
 
     id = cl_lexhash_id(wattrs[fc].lh, token);
@@ -1428,7 +1453,7 @@ main(int argc, char **argv) {
     }
 
     if ( (! (skip_empty_lines && (buf[0] == '\0')) ) &&                              /* skip empty lines with -s option */
-         (! (xml_aware && (buf[0] == '<') && ((buf[1] == '?') || (buf[1] == '!'))) ) /* skip XML declarations with -x option */
+         (! (xml_aware && (buf[0] == '<') && ((buf[1] == '?') || (buf[1] == '!'))) ) /* skip XML declarations and line comments with -x option */
       ) {
       /* skip empty lines with -s option (for an empty line, first character will usually be newline) */
       handled = 0;

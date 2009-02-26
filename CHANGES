@@ -68,6 +68,10 @@ Bug fixes:
    triggered by stricter tests in new version of the Perl API (CWB::CL module).  Also introduced some new
    error codes (e.g. for internal buffer overflow), but these are not checked and set systematically yet.
 
+ - [2009-02-26] Added safety checks to cwb-encode in order to ensure that annotation strings are not longer than
+   the internal hard-coded limit of MAX_LINE_LENGTH-1 characters.  Oversized annotation strings are now truncated
+   with a warning message.
+
 
 Version 2.2.b99 (2007-03-11)
 ----------------------------
