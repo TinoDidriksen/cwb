@@ -43,12 +43,13 @@
    this is essential for Universal builds on Mac OS X, and should also be the most efficient solution because these
    macros are no-ops on big-endian machines and compiled to efficient machine code instructions on little-endian machines */
 
+/* -- skip check for availability of macros, since it breaks during "make depend" on some Linux platforms
+
 #if !( defined(ntohl) && defined(htonl) ) 
-
-#error Sorry, ntohl() and htonl() macros are required by the CWB code, but don't seem to be defined on your machine.
-
+#error Sorry, ntohl() and htonl() macros are required by the CWB code, but do not seem to be defined on your machine.
 #endif
 
+*/
 
 /* This function is a portable bswap implementation allowing explicit conversion to little-endian format
    (by a combination of cl_bswap32() and htonl())

@@ -697,8 +697,14 @@ main(int argc, char **argv)
     printf("[Reading input data]\n");
   input_line = 0;
   while (fgets(buf, MAX_LINE_LENGTH, text_fd)) {  
-
     input_line++;
+    
+    /* check for buffer overflow */
+    if (strlen(buf) >= (MAX_LINE_LENGTH - 1)) {
+      fprintf(stderr, "BUFFER OVERFLOW, input line #%d is too long:\n>> %s", input_line, buf);
+      exit(1);      
+    }
+
     if (! parse_line(buf, &start, &end, &annot)) {
       fprintf(stderr, "FORMAT ERROR on line #%d:\n>> %s", input_line, buf);
       exit(1);
