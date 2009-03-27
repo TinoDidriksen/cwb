@@ -25,12 +25,12 @@
 
 #include "macros.h"
 #include "attributes.h"
-#include "registry.tab.h"	/* the bison parser table */
+#include "registry.tab.h"       /* the bison parser table */
 
 #include "corpus.h"
 
 
-void creg_scan_string(const char *str);	/* function only used by demo version */
+void creg_scan_string(const char *str); /* function only used by demo version */
 
 
 extern FILE *cregin;
@@ -43,7 +43,7 @@ char errmsg[MAX_LINE_LENGTH];
 
 Corpus *loaded_corpora = NULL;
 
-char *cregin_path = "";		/* for registry parser error messages */
+char *cregin_path = "";         /* for registry parser error messages */
 char *cregin_name = "";
 
 /* ---------------------------------------------------------------------- */
@@ -72,23 +72,23 @@ find_corpus(char *registry_dir, char *registry_name) {
   for (c = loaded_corpora; c != NULL; c = c->next) {
     int l_dir = strlen(c->registry_dir);
     if ( 
-	STREQ(registry_name, c->registry_name) && /* corpus ID must be the same */
-	(mark = strstr(registry_dir, c->registry_dir)) && /* find registry dir of <c> as substring of list <registry_dir> */
-	/* now we must check that the substring corresponds to a full component of the list */
-	(mark == registry_dir || mark[-1] == ':') && /* must start at beginning of string or after ':' separator */
-	(mark[l_dir] == '\0' || mark[l_dir] == ':') /* must end at end of string or before ':' separator */
-	) {
+        STREQ(registry_name, c->registry_name) && /* corpus ID must be the same */
+        (mark = strstr(registry_dir, c->registry_dir)) && /* find registry dir of <c> as substring of list <registry_dir> */
+        /* now we must check that the substring corresponds to a full component of the list */
+        (mark == registry_dir || mark[-1] == ':') && /* must start at beginning of string or after ':' separator */
+        (mark[l_dir] == '\0' || mark[l_dir] == ':') /* must end at end of string or before ':' separator */
+        ) {
       break;
     }
   }
 
-  return c;			/* either return matching corpus object or NULL at end of list */
+  return c;                     /* either return matching corpus object or NULL at end of list */
 }
 
 FILE *
 find_corpus_registry(char *registry_dir,
-		     char *registry_name,
-		     char **real_registry_dir)
+                     char *registry_name,
+                     char **real_registry_dir)
 {
   char full_name[MAX_LINE_LENGTH];
 
@@ -104,37 +104,39 @@ find_corpus_registry(char *registry_dir,
       return NULL;
     }
     else {
+      if (registry_dir[re_p] == '?' && registry_dir[re_p+1] != '\0' && registry_dir[re_p+1] != ':')
+        re_p++; /* this is an optional registry directory, which will not cause warnings if it is not mounted */
 
       ins_p = 0;
       start_of_entry = re_p;
 
       do {
 
-	full_name[ins_p++] = registry_dir[re_p++];
+        full_name[ins_p++] = registry_dir[re_p++];
 
       } while ((registry_dir[re_p] != ':') && 
-	       (registry_dir[re_p] != '\0'));
+               (registry_dir[re_p] != '\0'));
 
       end_of_entry = re_p;
 
       if (full_name[ins_p - 1] != '/')
-	full_name[ins_p++] = '/';
+        full_name[ins_p++] = '/';
 
       for (p = 0; registry_name[p]; p++)
-	full_name[ins_p++] = registry_name[p];
+        full_name[ins_p++] = registry_name[p];
 
       full_name[ins_p] = '\0';
 
       if ((fd = fopen(full_name, "r")) != NULL) {
-	(*real_registry_dir) = (char *)cl_malloc(end_of_entry - start_of_entry + 1);
-	strncpy(*real_registry_dir, 
-		registry_dir+start_of_entry, 
-		end_of_entry - start_of_entry);
-	(*real_registry_dir)[end_of_entry - start_of_entry] = '\0';
-	return fd;
+        (*real_registry_dir) = (char *)cl_malloc(end_of_entry - start_of_entry + 1);
+        strncpy(*real_registry_dir, 
+                registry_dir+start_of_entry, 
+                end_of_entry - start_of_entry);
+        (*real_registry_dir)[end_of_entry - start_of_entry] = '\0';
+        return fd;
       }
       else if (registry_dir[re_p] == ':')
-	re_p++;
+        re_p++;
     }
   }
   
@@ -184,20 +186,20 @@ int CheckAccessConditions(Corpus *corpus, int verbose)
       struct group *grpent = NULL;
       
       for (i = 0; i < nr_groups; i++) {
-	
-	/* 	grpent = getgrgid(gidset[i]); */
-	fprintf(stderr, "CL Error: Sorry, user/group access restrictions are disabled due to incompatibilities.\n");
+        
+        /*      grpent = getgrgid(gidset[i]); */
+        fprintf(stderr, "CL Error: Sorry, user/group access restrictions are disabled due to incompatibilities.\n");
 
-	if (grpent == NULL) {
-	  perror("getgrgid(2): ");
-	  fprintf(stderr, "Can't get group information for gid %d\n",
-		  (int) gidset[i]);
-	  access_ok = 0;
-	}
-	else if (memberIDList(grpent->gr_name, corpus->groupAccessList)) {
-	  access_ok = 1;
-	  break;
-	}
+        if (grpent == NULL) {
+          perror("getgrgid(2): ");
+          fprintf(stderr, "Can't get group information for gid %d\n",
+                  (int) gidset[i]);
+          access_ok = 0;
+        }
+        else if (memberIDList(grpent->gr_name, corpus->groupAccessList)) {
+          access_ok = 1;
+          break;
+        }
       }
     }
   }
@@ -215,11 +217,11 @@ int CheckAccessConditions(Corpus *corpus, int verbose)
       IDList l;
 
       fprintf(stderr, 
-	      "The corpus ``%s'' may be used on the following systems only:\n",
-	      corpus->id ? corpus->id : "(unknown)");
+              "The corpus ``%s'' may be used on the following systems only:\n",
+              corpus->id ? corpus->id : "(unknown)");
       
       for (l = corpus->hostAccessList; l; l = l->next) {
-	fprintf(stderr, "\t%s\n", l->string ? l->string : "(null)");
+        fprintf(stderr, "\t%s\n", l->string ? l->string : "(null)");
       }
 #endif
     }
@@ -230,8 +232,8 @@ int CheckAccessConditions(Corpus *corpus, int verbose)
   
   if (!access_ok) {
     fprintf(stderr, "User ``%s'' is not authorized to access corpus ``%s''\n",
-	    (pwd && pwd->pw_name) ? pwd->pw_name : "(unknown)",
-	    corpus->name);
+            (pwd && pwd->pw_name) ? pwd->pw_name : "(unknown)",
+            corpus->name);
   }
   
   return access_ok;
@@ -239,14 +241,14 @@ int CheckAccessConditions(Corpus *corpus, int verbose)
 
 Corpus *
 setup_corpus(char *registry_dir,
-	     char *registry_name)
+             char *registry_name)
 { 
   char *real_registry_name;
   static char *canonical_name = NULL;
   Corpus *corpus;
   
   /* corpus name must be all lowercase at this level -> canonicalise (standard) uppercase and (deprecated) mixed-case forms */
-  cl_free(canonical_name);	/* if necessary, free buffer allocated in previous call to setup_corpus() */
+  cl_free(canonical_name);      /* if necessary, free buffer allocated in previous call to setup_corpus() */
 
   canonical_name = cl_strdup(registry_name);
   cl_string_canonical(canonical_name, IGNORE_CASE);
@@ -268,33 +270,33 @@ setup_corpus(char *registry_dir,
       registry_dir = central_corpus_directory();
 
     cregin = find_corpus_registry(registry_dir, 
-				  canonical_name, 
-				  &real_registry_name);
+                                  canonical_name, 
+                                  &real_registry_name);
 
     if (cregin == NULL) {
       fprintf(stderr, "setup_corpus: can't locate <%s> in %s\n", 
-	      registry_name, 
-	      registry_dir);
+              registry_name, 
+              registry_dir);
     }
     else {
       cregrestart(cregin);
       cregin_path = real_registry_name;
       cregin_name = canonical_name;
-      if (cregparse() == 0) {	/* OK */
-	if (CheckAccessConditions(cregcorpus, 0)) {
-	  corpus = cregcorpus;
-	  corpus->registry_dir = real_registry_name;
-	  corpus->registry_name = cl_strdup(canonical_name);
-	  corpus->next = loaded_corpora;
-	  loaded_corpora = corpus;
-	  /* check whether ID field corresponds to name of registry file */
-	  if (corpus->id && (strcmp(corpus->id, canonical_name) != 0)) {
-	    fprintf(stderr, "CL warning: ID field '%s' does not match name of registry file %s/%s\n", corpus->id, real_registry_name, canonical_name);
-	  }
-	}
-	else {
-	  drop_corpus(cregcorpus);
-	}
+      if (cregparse() == 0) {   /* OK */
+        if (CheckAccessConditions(cregcorpus, 0)) {
+          corpus = cregcorpus;
+          corpus->registry_dir = real_registry_name;
+          corpus->registry_name = cl_strdup(canonical_name);
+          corpus->next = loaded_corpora;
+          loaded_corpora = corpus;
+          /* check whether ID field corresponds to name of registry file */
+          if (corpus->id && (strcmp(corpus->id, canonical_name) != 0)) {
+            fprintf(stderr, "CL warning: ID field '%s' does not match name of registry file %s/%s\n", corpus->id, real_registry_name, canonical_name);
+          }
+        }
+        else {
+          drop_corpus(cregcorpus);
+        }
       }
       cregin_path = "";
       cregin_name = "";
@@ -311,7 +313,7 @@ setup_corpus(char *registry_dir,
   return corpus;
 }
 
-int drop_corpus(Corpus *corpus)	
+int drop_corpus(Corpus *corpus) 
 {
   Corpus *prev;
 
@@ -330,15 +332,15 @@ int drop_corpus(Corpus *corpus)
       prev = loaded_corpora;
 
       while (prev && (prev->next != corpus))
-	prev = prev->next;
+        prev = prev->next;
       
       if (prev == NULL) {
-	if (corpus != cregcorpus)
-	  assert("Error in list of loaded corpora" && 0);
+        if (corpus != cregcorpus)
+          assert("Error in list of loaded corpora" && 0);
       }
       else {
-	assert(prev->next == corpus);
-	prev->next = corpus->next;
+        assert(prev->next == corpus);
+        prev->next = corpus->next;
       }
     }
 
@@ -396,9 +398,9 @@ void describe_corpus(Corpus *corpus)
   printf("Info:\t%s\n", corpus->info_file ? corpus->info_file : "(null)");
 
   printf("\nRegistry Directory:\t%s\n", 
-	 corpus->registry_dir ? corpus->registry_dir : "(null)");
+         corpus->registry_dir ? corpus->registry_dir : "(null)");
   printf("Registry Name:     \t%s\n\n", 
-	 corpus->registry_name ? corpus->registry_name : "(null)");
+         corpus->registry_name ? corpus->registry_name : "(null)");
 
   printf("Attributes:\n");
   for (attr = (Attribute *)(corpus->attributes); 
@@ -538,7 +540,7 @@ add_corpus_property(Corpus *corpus, char *property, char *value) {
   else {
     new_prop = (CorpusProperty) cl_malloc(sizeof(struct TCorpusProperty));
     new_prop->property = property; /* use this function from registry.y only! */
-    new_prop->value = value;	   /* property & value are strdup()ed in registry.l */
+    new_prop->value = value;       /* property & value are strdup()ed in registry.l */
     new_prop->next = corpus->properties;
     corpus->properties = new_prop;
     
@@ -547,10 +549,10 @@ add_corpus_property(Corpus *corpus, char *property, char *value) {
       charset = unknown_charset;
 
       for (i = 0; charset_names[i].name; i++) {
-	if (strcasecmp(value, charset_names[i].name) == 0) {
-	  charset = charset_names[i].id;
-	  break;
-	}
+        if (strcasecmp(value, charset_names[i].name) == 0) {
+          charset = charset_names[i].id;
+          break;
+        }
       }
       corpus->charset = charset;
     }

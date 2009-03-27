@@ -998,6 +998,11 @@ void load_corpusnames(enum corpus_type ct)
   for (dirname = get_path_component(dirlist); 
        dirname;
        dirname = get_path_component(NULL)) {
+   int optional_dir = 0; /* 1 = optional registry directory -> don't issue warning if not mounted */
+   if (*dirname == '?') {
+     dirname++;
+     optional_dir = 1;
+   }
 
     dp = opendir(dirname);
   
@@ -1077,7 +1082,7 @@ void load_corpusnames(enum corpus_type ct)
       }
       (void)closedir(dp);
     }
-    else if (!silent)
+    else if (!silent && !optional_dir)
       cqpmessage(Warning, "Couldn't open directory %s (continuing)", dirname);
   }
 }

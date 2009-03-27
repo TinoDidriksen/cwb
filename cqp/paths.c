@@ -44,9 +44,9 @@ char *get_path_component(char *s)
 
     if (c == ':' || c == '\0') {
       if (c == 0)
-	s = NULL;
+        s = NULL;
       else
-	s[-1] = 0;
+        s[-1] = 0;
       last = s;
       return (tok);
     }

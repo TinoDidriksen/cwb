@@ -105,31 +105,31 @@ show_statistics (Corpus *corpus) {
       tokens = cl_max_cpos(a);
       types = cl_max_id(a);
       if ((tokens > 0) && (types > 0))
-	printf("%10d tokens, %8d types", tokens, types);
+        printf("%10d tokens, %8d types", tokens, types);
       else 
-	printf("           NO DATA");
+        printf("           NO DATA");
       break;
     case ATT_STRUC: 
       printf("s-ATT %-16s ", a->any.name); 
       regions = cl_max_struc(a);
       if (regions >= 0) {
-	printf("%10d regions", regions);
-	if (cl_struc_values(a))
-	  printf(" (with annotations)");
+        printf("%10d regions", regions);
+        if (cl_struc_values(a))
+          printf(" (with annotations)");
       }
       else 
-	printf("           NO DATA");
+        printf("           NO DATA");
       break;
     case ATT_ALIGN: 
       printf("a-ATT %-16s ", a->any.name); 
       blocks = cl_max_alg(a);
       if (blocks >= 0) {
-	printf("%10d alignment blocks", blocks);
-	if (cl_has_extended_alignment(a))
-	  printf(" (extended)");
+        printf("%10d alignment blocks", blocks);
+        if (cl_has_extended_alignment(a))
+          printf(" (extended)");
       }
       else
-	printf("           NO DATA");
+        printf("           NO DATA");
       break;
     default:
       printf("???   %-16s (unknown attribute type)", a->any.name); 
@@ -164,8 +164,8 @@ main(int argc, char **argv) {
     case 'r':
       if (registry == NULL) registry = optarg;
       else {
-	fprintf(stderr, "%s: -r option used twice\n", progname);
-	exit(2);
+        fprintf(stderr, "%s: -r option used twice\n", progname);
+        exit(2);
       }
       break;
       
