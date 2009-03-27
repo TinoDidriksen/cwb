@@ -4,7 +4,7 @@ cwb-s-decode - Decode single structural annotation of CWB corpus
 
 =head1 SYNOPSIS
 
-B<cwb-s-decode> [-h] [-r I<registry_dir>] I<corpus> -S I<attribute>
+B<cwb-s-decode> [I<options>] I<corpus> -S I<attribute>
 
 =head1 DESCRIPTION
 
@@ -14,6 +14,8 @@ B<TODO>
 =head1 OPTIONS
 
   -r <reg> use registry directory <reg>
+  -n       do not show corpus positions
+  -v       do not show annotated values
   -h       print this usage text.
 
 =over 4

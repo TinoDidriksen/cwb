@@ -24,15 +24,17 @@ char *progname;
 
 void usage() {
   fprintf(stderr, 
-	  "\n"
-	  "Usage: %s [options] corpus-id -S attribute-name\n"
-	  "Options:\n"
-	  "  -r <reg> use registry directory <reg>\n"
-	  "  -h       print this usage text.\n"
-	  "Output line format:\n"
-	  "   <region_start> TAB <region_end> [ TAB <annotation> ]\n"
-	  "Part of the IMS Open Corpus Workbench v" VERSION "\n\n"
-	  , progname);
+          "\n"
+          "Usage: %s [options] corpus-id -S <att>\n"
+          "Options:\n"
+          "  -r <reg>  use registry directory <reg>\n"
+          "  -n        do not show corpus positions\n"
+          "  -v        do not show annotated values\n"
+          "  -h        print this usage text.\n"
+          "Output line format:\n"
+          "   <region_start> TAB <region_end> [ TAB <annotation> ]\n"
+          "Part of the IMS Open Corpus Workbench v" VERSION "\n\n"
+          , progname);
   exit(1);
 }
 
@@ -43,6 +45,9 @@ main(int argc, char **argv) {
   char *attr_name = NULL;
   Corpus *corpus = NULL;
   Attribute *att = NULL;
+  int show_values = 1;
+  int show_regions = 1;
+
   int has_values, att_size, n, start, end;
   char *annot;
 
@@ -55,18 +60,28 @@ main(int argc, char **argv) {
   progname = argv[0];
 
   /* parse arguments */
-  while ((c = getopt(argc, argv, "+r:h")) != EOF) 
+  while ((c = getopt(argc, argv, "+r:nvh")) != EOF) 
     switch (c) {
 
     /* r: registry directory */
     case 'r': 
       if (registry_directory == NULL) registry_directory = optarg;
       else {
-	fprintf(stderr, "%s: -r option used twice\n", progname);
-	exit(2);
+        fprintf(stderr, "%s: -r option used twice\n", progname);
+        exit(2);
       }
       break;
       
+    /* n: do not show corpus positions */
+    case 'n':
+      show_regions = 0;
+      break;
+    
+    /* v: do not show annotated values */
+    case 'v':
+      show_values = 0;
+      break;
+    
     default: 
     case 'h':
       usage();
@@ -78,32 +93,43 @@ main(int argc, char **argv) {
   if (argc <= (optind + 2))
     usage();
 
+  if (!show_regions && !show_values) {
+    fprintf(stderr, "Error: options -n and -v cannot be combined (would print nothing)\n");
+    exit(1);
+  }
+
   /* first argument: corpus id */
   corpus_id = argv[optind++];
   if ((corpus = cl_new_corpus(registry_directory, corpus_id)) == NULL) {
     fprintf(stderr, "%s: Corpus <%s> not registered in %s\n", 
-	      progname,
-	      corpus_id,
-	      (registry_directory ? registry_directory 
-	       : central_corpus_directory()));
+              progname,
+              corpus_id,
+              (registry_directory ? registry_directory 
+               : central_corpus_directory()));
     exit(1);
   }
 
   /* second argument: -S */
-  if (strcmp(argv[optind++], "-S")) 
+  if (strcmp(argv[optind++], "-S") != 0)
     usage();
 
   /* third argument: attribute name */
   attr_name = argv[optind];
   if ((att = cl_new_attribute(corpus, attr_name, ATT_STRUC)) == NULL) {
     fprintf(stderr, "%s: Can't access s-attribute <%s.%s>\n", 
-	      progname,
-	      corpus_id, attr_name);
+              progname,
+              corpus_id, attr_name);
     exit(1);
   }
 
   /* check if attribute has annotations */
   has_values = cl_struc_values(att);
+  if (! has_values)
+    show_values = 0;
+  if (!show_regions && !has_values) {
+    fprintf(stderr, "Error: option -n can only be used if s-attribute has annotated values\n");
+    exit(1);
+  }
 
   /* attribute size, i.e. number of regions */
   att_size = cl_max_struc(att);
@@ -114,14 +140,18 @@ main(int argc, char **argv) {
       cl_error("Can't find region boundaries");
       exit(1);
     }
-    printf("%d\t%d", start, end);
-    if (has_values) {
+    if (show_regions) {
+      printf("%d\t%d", start, end);
+      if (show_values)
+        printf("\t");
+    }
+    if (show_values) {
       annot = cl_struc2str(att, n);
       if (annot == NULL) {
-	printf("\t<no annotation>");
+        printf("<no annotation>");
       }
       else {
-	printf("\t%s", annot);
+        printf("%s", annot);
       }
     }
     printf("\n");

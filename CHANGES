@@ -24,6 +24,9 @@ New features:
    be considered, and it is not possible to scan subdirectories recursively.  If no input files are found
    in a directory, a warning message is printed on stderr, but the encoding process continues.
 
+ - For s-attributes with annotated values, cwb-s-decode can optionally suppress either the annotated
+   strings (-v) or the start and end positions of regions (-n).
+
 Bug fixes:
 
  - [2008-01-03] Fixed a strange bug in which the query
