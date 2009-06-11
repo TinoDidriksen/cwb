@@ -28,20 +28,20 @@ typedef struct vstack_t {
 
 
 typedef struct feature_maps_t {
-  Attribute *att1;		/* word attribute of source corpus */
-  Attribute *att2;		/* word attribute of target corpus */
-  Attribute *s1;		/* sentence regions of source corpus */
-  Attribute *s2;		/* sentence regions of target corpus */
-  int n_features;		/* number of allocated features */
-  int **w2f1;			/* feature maps */
+  Attribute *att1;              /* word attribute of source corpus */
+  Attribute *att2;              /* word attribute of target corpus */
+  Attribute *s1;                /* sentence regions of source corpus */
+  Attribute *s2;                /* sentence regions of target corpus */
+  int n_features;               /* number of allocated features */
+  int **w2f1;                   /* feature maps */
   int **w2f2;
-  int *fweight;			/* feature weights */
+  int *fweight;                 /* feature weights */
 
   vstack_t *vstack;
 
 } feature_maps_t;
 
-typedef feature_maps_t *FMS;	/* FMS : feature map handle */
+typedef feature_maps_t *FMS;    /* FMS : feature map handle */
 
 
 /* FMS = create_feature_maps(config_data, nr_of_config_lines, source_word, target_word, source_s, target_s); 
@@ -51,10 +51,10 @@ representing the feature map configuration. <nr_of_config_lines> is the number o
 items stored in <config_data>.
 */
 FMS
-create_feature_maps(char **config, int config_lines,		    
-		    Attribute *w_attr1, Attribute *w_attr2,
-		    Attribute *s_attr1, Attribute *s_attr2
-		    );
+create_feature_maps(char **config, int config_lines,                
+                    Attribute *w_attr1, Attribute *w_attr2,
+                    Attribute *s_attr1, Attribute *s_attr2
+                    );
 
 /* feature count vector handling
    (used internally by feature_match) 
@@ -76,7 +76,7 @@ specify the index of the first and last sentence in a region
 */
 int
 feature_match(FMS fms, 
-	      int f1, int l1, int f2, int l2);
+              int f1, int l1, int f2, int l2);
 
 /* show_feature(FMS, 1/2, "word");
 
@@ -104,15 +104,15 @@ the results of the previous search.
 
 void
 best_path(FMS fms,
-	  int f1, int l1,
-	  int f2, int l2,
-	  int beam_width,	/* beam search */
-	  int verbose,		/* echo progress info on stdout ? */
-	  /* output */
-	  int *steps,
-	  int **out1,
-	  int **out2,
-	  int **out_quality);
+          int f1, int l1,
+          int f2, int l2,
+          int beam_width,       /* beam search */
+          int verbose,          /* echo progress info on stdout ? */
+          /* output */
+          int *steps,
+          int **out1,
+          int **out2,
+          int **out_quality);
 
 
 

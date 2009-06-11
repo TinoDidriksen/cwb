@@ -284,8 +284,8 @@ create_feature_maps(char **config, int config_lines,
   fs1=(int*)malloc(sizeof(int)*fcount1[nw1]); assert(fs1);
   fs2=(int*)malloc(sizeof(int)*fcount2[nw2]); assert(fs2);
   
-  r->w2f1=(int **)malloc(sizeof(unsigned int)*(nw1+1)); assert(r->w2f1);
-  r->w2f2=(int **)malloc(sizeof(unsigned int)*(nw2+1)); assert(r->w2f2);
+  r->w2f1=(int **)malloc(sizeof(unsigned int *)*(nw1+1)); assert(r->w2f1);
+  r->w2f2=(int **)malloc(sizeof(unsigned int *)*(nw2+1)); assert(r->w2f2);
 
   for(i=0;i<=nw1;i++) r->w2f1[i]=fs1+fcount1[i];
   for(i=0;i<=nw2;i++) r->w2f2[i]=fs2+fcount2[i];

@@ -79,6 +79,10 @@ Bug fixes:
    the internal hard-coded limit of MAX_LINE_LENGTH-1 characters.  Oversized annotation strings are now truncated
    with a warning message.
 
+ - [2009-06-11] Fixed segmentation fault in cwb-align on 64-bit platforms (original developer had assumed that
+   a pointer always has the same sized as an unsigned int ... aaaargh!).  Kudos to Bogdan Babych (b.babych@leeds.ac.uk)
+   for a beautiful and fully reproducible bug report.
+
 
 Version 2.2.b99 (2007-03-11)
 ----------------------------
