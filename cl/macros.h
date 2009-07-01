@@ -1,13 +1,13 @@
-/* 
+/*
  *  IMS Open Corpus Workbench (CWB)
  *  Copyright (C) 1993-2006 by IMS, University of Stuttgart
  *  Copyright (C) 2007-     by the respective contributers (see file AUTHORS)
- * 
+ *
  *  This program is free software; you can redistribute it and/or modify it
  *  under the terms of the GNU General Public License as published by the
  *  Free Software Foundation; either version 2, or (at your option) any later
  *  version.
- * 
+ *
  *  This program is distributed in the hope that it will be useful, but
  *  WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
@@ -28,7 +28,7 @@
  *   cl_realloc()
  *   cl_strdup()
  *   cl_free(p)
- * on out_of_memory, prints error message & aborts program 
+ * on out_of_memory, prints error message & aborts program
  */
 
 /* function prototypes and macros now in <cl.h> */
@@ -50,7 +50,7 @@
 
 
 /*
- *  display progress bar in terminal window (STDERR, child mode: STDOUT) 
+ *  display progress bar in terminal window (STDERR, child mode: STDOUT)
  */
 
 void
@@ -73,8 +73,8 @@ progress_bar_percentage(int pass, int total, int percentage);
  */
 
 void
-start_indented_list(int linewidth, int tabsize, int indent); 
-/* <tabsize> = tabulator steps; is <linewidth>, <tabsize>, or <indent> is zero, uses internal default */
+start_indented_list(int linewidth, int tabsize, int indent);
+/* <tabsize> = tabulator steps; if <linewidth>, <tabsize>, or <indent> is zero, uses internal default */
 
 void
 print_indented_list_br(char *label);	/* starts new line (as <br> in HTML) [showing optional label in indentation] */

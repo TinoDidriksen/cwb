@@ -1,13 +1,13 @@
-/* 
+/*
  *  IMS Open Corpus Workbench (CWB)
  *  Copyright (C) 1993-2006 by IMS, University of Stuttgart
  *  Copyright (C) 2007-     by the respective contributers (see file AUTHORS)
- * 
+ *
  *  This program is free software; you can redistribute it and/or modify it
  *  under the terms of the GNU General Public License as published by the
  *  Free Software Foundation; either version 2, or (at your option) any later
  *  version.
- * 
+ *
  *  This program is distributed in the hope that it will be useful, but
  *  WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
@@ -48,7 +48,7 @@ static MemBlob *SortIndex;
    the definition below conforms to ANSI and POSIX standards according to the LDP */
 static int scompare(const void *idx1, const void *idx2)
 {
-  return 
+  return
     cl_strcmp((char *)SortLexicon->data + ntohl(SortIndex->data[*(int *)idx1]),
 	      (char *)SortLexicon->data + ntohl(SortIndex->data[*(int *)idx2]));
 }
@@ -92,7 +92,7 @@ int creat_sort_lexicon(Component *lexsrt)
     lexsrt->data.data[i] = i;
 
   /* now sort the area */
-  
+
   SortLexicon = &(lex->data);		/* for the comparison function */
   SortIndex = &(lexidx->data);
 
@@ -106,10 +106,10 @@ int creat_sort_lexicon(Component *lexsrt)
     /* convert network byte order to native integers */
     for (i = 0; i < lexsrt->data.nr_items; i++)
       lexsrt->data.data[i] = htonl(lexsrt->data.data[i]);
-    
+
     return 1;
   }
-  else 
+  else
     return 0;
 }
 
@@ -118,7 +118,7 @@ int creat_freqs(Component *freqs)
 {
   FILE *fd;
   int mc_buf[BUFSIZE];
-  
+
   char *corpus_fn;
 
   int i, k, ptr;
@@ -154,9 +154,9 @@ int creat_freqs(Component *freqs)
     perror(corpus_fn);
     exit(2);
   }
-  
+
   /* do the counts */
-    
+
   do {
     i = fread(&mc_buf[0], sizeof(int), BUFSIZE, fd);
     for ( k = 0; k < i; k++) {
@@ -176,23 +176,23 @@ int creat_freqs(Component *freqs)
 
     /* ok, we now have to convert the table to NETWORK order in case
      * other steps rely on its format. */
-    
-    /* convert network byte order to native integers */ 
+
+    /* convert network byte order to native integers */
     for (ptr = 0; ptr < freqs->size; ptr++)
       freqs->data.data[ptr] = htonl(freqs->data.data[ptr]);
 
     return 1;
   }
-  else 
+  else
     return 0;
 }
 
-int 
+int
 creat_rev_corpus(Component *revcorp) {
 
   Component *freqs;
   int cpos = 0, f, id, ints_written, pass;
-  
+
   int datasize;
   int primus, secundus, lexsize, buf_used;
   int *buffer;
@@ -202,10 +202,10 @@ creat_rev_corpus(Component *revcorp) {
 
   FILE *revcorp_fd;
   Attribute *attr;		/* the attribute we're working on */
-  
+
   /* this function should only be invoked by the makeall tool (via create_component()),
-     which must make sure that the lexicon and (possibly) compressed token stream have been 
-     created by now, so CL access to the token stream works (see do_attribute()<makeall.c>) */ 
+     which must make sure that the lexicon and (possibly) compressed token stream have been
+     created by now, so CL access to the token stream works (see do_attribute()<makeall.c>) */
 
   assert(revcorp != NULL);
   assert(revcorp->path != NULL);
@@ -218,13 +218,13 @@ creat_rev_corpus(Component *revcorp) {
 
   assert(freqs != NULL);
   assert(freqs->corpus == revcorp->corpus); /* gotta be kidding ... */
-  
+
   lexsize = cl_max_id(attr);	/* this is the number of lexicon entries for this attribute */
   ptab = (int **) cl_malloc(sizeof(int *) * lexsize); /* table of pointers into <buffer> */
 
   /* determine REVCORP size (== number of tokens) */
   datasize = cl_max_cpos(attr);
-  
+
   /* allocate buffer of required size, or maximum allowed by cl_memory_limit */
   bufsize = (cl_memory_limit > 0) ? cl_memory_limit * (256 * 1024) : datasize; /* 1MB == 256k INTs */
   if (datasize < bufsize) {
@@ -273,7 +273,7 @@ creat_rev_corpus(Component *revcorp) {
       double perc = (100.0 * secundus) / lexsize;
       fprintf(stderr, "Pass #%-3d (%6.2f%c complete)\n", pass, perc, '%');
     }
-    
+
     for (cpos = 0; cpos < datasize; cpos++) {
       id = cl_cpos2id(attr, cpos);	  /* lex. ID of token found at <cpos> */
       assert((id >= 0) && (id < lexsize) && "Lexicon ID out of range. Abort.");
@@ -285,7 +285,7 @@ creat_rev_corpus(Component *revcorp) {
 	*(ptab[id]++) = cpos;	/* store occurrence in buffer and update pointer */
       }
     }
-    
+
     /* check pointers (i.e. observed frequencies vs. data from FREQS component) */
     ptr = buffer;
     for (id = primus + 1; id < secundus; id++) {
@@ -302,11 +302,11 @@ creat_rev_corpus(Component *revcorp) {
 
     /* now start next pass ... */
     primus = secundus + 1;
-  }
-  
+  }                                             /* endwhile (primus < lexsize) */
+
   /* we're done: close REVCORP filehandle */
   fclose(revcorp_fd);
-  
+
   /* finally, check amount of data read/written vs. expected */
   if ((ints_written != cpos) || (ints_written != datasize)) {
     fprintf(stderr, "Data size inconsistency: expected=%d, read=%d, written=%d.\n", datasize, cpos, ints_written);
@@ -330,7 +330,7 @@ int creat_rev_corpus_idx(Component *revcidx)
   Component *freqs;
 
   int i, k, sum;
-  
+
   freqs = ensure_component(revcidx->attribute, CompCorpusFreqs, 1);
 
   assert(revcidx->path != NULL);
@@ -351,14 +351,14 @@ int creat_rev_corpus_idx(Component *revcidx)
   revcidx->data.data = (int *)cl_malloc(sizeof(int) * revcidx->data.nr_items);
   memset(revcidx->data.data, '\0', revcidx->data.size);
   revcidx->size = revcidx->data.nr_items;
-  
+
   sum = 0;
   for (k = 0; k < freqs->size; k++) { /* for each entry in freqs ... */
 
     i = ntohl(freqs->data.data[k]);    /* the frequency of word[k] */
-    
+
     /* the start of word[k] is the sum of freqs of words[i<k] */
-    revcidx->data.data[k] = htonl(sum);  
+    revcidx->data.data[k] = htonl(sum);
 
     sum += i;          /* compute the sum for the next word */
   }
@@ -375,6 +375,6 @@ int creat_rev_corpus_idx(Component *revcidx)
     perror(revcidx->path);
     exit(2);
   }
-  
+
   return 1;
 }

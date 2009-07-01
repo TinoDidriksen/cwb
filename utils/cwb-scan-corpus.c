@@ -1,13 +1,13 @@
-/* 
+/*
  *  IMS Open Corpus Workbench (CWB)
  *  Copyright (C) 1993-2006 by IMS, University of Stuttgart
  *  Copyright (C) 2007-     by the respective contributers (see file AUTHORS)
- * 
+ *
  *  This program is free software; you can redistribute it and/or modify it
  *  under the terms of the GNU General Public License as published by the
  *  Free Software Foundation; either version 2, or (at your option) any later
  *  version.
- * 
+ *
  *  This program is distributed in the hope that it will be useful, but
  *  WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
@@ -80,7 +80,7 @@ char *ranges_file = NULL;	/* file with ranges to scan (pairs of corpus positions
 FILE *ranges_fh = NULL;		/* corresponding filehandle */
 int quiet = 0;			/* if set, don't show progress information on stderr */
 
-void 
+void
 usage() {
   fprintf(stderr, "\n");
   fprintf(stderr, "Usage: %s [options] <corpus> <key1> <key2> ... \n\n", progname);
@@ -102,7 +102,7 @@ usage() {
   fprintf(stderr, "  -o <file> write frequency table to <file> [default"": standard output]\n"); /* 'default:' confuses Emacs C-mode */
   fprintf(stderr, "            (compressed with gzip if <file> ends in '.gz')\n");
   fprintf(stderr, "  -f <n>    include only items with frequency >= <n> in result table\n");
-  fprintf(stderr, "  -F <att>  add up frequency values from p-attribute <att>\n"); 
+  fprintf(stderr, "  -F <att>  add up frequency values from p-attribute <att>\n");
   fprintf(stderr, "  -C        clean up data, i.e. accept only 'regular' words\n");
   fprintf(stderr, "  -s <n>    start scanning at corpus position <n>\n");
   fprintf(stderr, "  -e <n>    stop scanning at corpus position <n>\n");
@@ -113,7 +113,7 @@ usage() {
   exit(1);
 }
 
-int 
+int
 parse_options(int argc, char *argv[]) {
   extern int optind;
   extern char *optarg;
@@ -122,7 +122,7 @@ parse_options(int argc, char *argv[]) {
   while ((c = getopt(argc, argv, "+r:b:o:f:F:Cs:e:R:qh")) != EOF)
     switch (c) {
     case 'r':			/* -r <dir> */
-      if (reg_dir == NULL) 
+      if (reg_dir == NULL)
 	reg_dir = optarg;
       else {
         fprintf(stderr, "Error: -r option used twice.\n");
@@ -133,7 +133,7 @@ parse_options(int argc, char *argv[]) {
       Hash.buckets = atoi(optarg);
       break;
     case 'o':			/* -o <file> */
-      if (output_file == NULL) 
+      if (output_file == NULL)
 	output_file = optarg;
       else {
         fprintf(stderr, "Error: -o option used twice.\n");
@@ -181,28 +181,28 @@ parse_options(int argc, char *argv[]) {
 
 
 /* hash utility functions */
-int 
+int
 is_prime(int n) {
   int i;
   for(i = 2; i*i <= n; i++)
-    if ((n % i) == 0) 
+    if ((n % i) == 0)
       return 0;
   return 1;
 }
 
-int 
+int
 find_prime(int n) {
   for( ; n > 0 ; n++)		/* will exit on int overflow */
-    if (is_prime(n)) 
+    if (is_prime(n))
       return n;
   return 0;
 }
 
 /* compute hash index for N-tuple of ints: tuple[] */
-unsigned int 
+unsigned int
 hash_index(int N, int *tuple) {
   unsigned int result = 0;
-  int i; 
+  int i;
 
   for(i = 0 ; i < N; i++)
     result = (result * 33 ) ^ (result >> 27) ^ tuple[i];
@@ -259,7 +259,12 @@ is_letter(char c) {
   return
     ( (c >= 'A' && c <= 'Z') ||
       (c >= 'a' && c <= 'z') ||
-      (c >= 'À' && c <= 'ÿ') );
+      (c >= 0xc0 && c <= 0xff );
+/*      (c >= '\xfffd' && c <= '\xfffd') );
+ * this line became corrupt when imported into the SVN due to non-ASCII characters (see above)
+ * I replaced it with the hex values for capital-a-grave to little-y-diaresis,
+ * having looked them up in earlier version of the code... -- AH 1/7/09
+ */
 }
 
 /* check 'regularity' of a token (i.e. must contain only letters, numbers, dashes) */
@@ -338,9 +343,9 @@ add_key(char *key) {
     }
     offset = atoi(p);
   }
-  
+
   /* now <buf> points to the attribute name, <regex> is NULL or points to a regular expression,
-     the optional <flags> are set up, and <offset> is 0 or set to <n> */ 
+     the optional <flags> are set up, and <offset> is 0 or set to <n> */
   att = cl_new_attribute(C, buf, ATT_POS);
   if (att != NULL) {
     is_structural = 0;
@@ -458,7 +463,7 @@ main (int argc, char *argv[]) {
   Hash.K = 0;
   Hash.max_offset = 0;
   Hash.buckets = find_prime(Hash.buckets); /* make sure number of buckets is a prime */
-  Hash.table = cl_calloc(Hash.buckets, sizeof(HashEntry)); 
+  Hash.table = cl_calloc(Hash.buckets, sizeof(HashEntry));
   Hash.frequency_values = NULL;
   Hash.frequency = NULL;
 
@@ -492,7 +497,7 @@ main (int argc, char *argv[]) {
 
   /* if -R option was used, open file with ranges of corpus positions ("-" for stdin) */
   if (ranges_file) {
-    if (strcmp(ranges_file, "-") == 0) 
+    if (strcmp(ranges_file, "-") == 0)
       ranges_fh = stdin;
     else {
       ranges_fh = fopen(ranges_file, "r");
@@ -513,7 +518,7 @@ main (int argc, char *argv[]) {
       fprintf(stderr, "Error: can't load attribute %s.%s\n", corpname, frequency_att);
       exit(1);
     }
-    
+
     freq_id_range = cl_max_id(Hash.frequency_values);
     Hash.frequency = (int *) cl_malloc(freq_id_range * sizeof(int));
     for (id = 0; id < freq_id_range; id++) {
@@ -549,7 +554,7 @@ main (int argc, char *argv[]) {
       end_cpos -= Hash.max_offset; /* adjust end_cpos so that all tokens in the tuple fall within the specified range */
     if (end_cpos < start_cpos) {
       fprintf(stderr, "Warning: range [%d, %d] is too small for selected data (skipped).\n",
-	      start_cpos, end_cpos + Hash.max_offset);
+              start_cpos, end_cpos + Hash.max_offset);
     }
 
     /* start the scan loop for this range */
@@ -558,14 +563,14 @@ main (int argc, char *argv[]) {
       int i=0, k, accept;
 
       next_cpos = cpos + 1;	/* this device allows the code to "skip" to the next matching region for s-attribute constraints */
-      
+
       if ((! quiet) && ((cpos & 0xffff) == 0)) {
-	int cpK = cpos >> 10;
-	int csK = Csize >> 10;
-	fprintf(stderr, "Progress: %6dK / %dK   \r", cpK, csK);
-	fflush(stderr);
+        int cpK = cpos >> 10;
+        int csK = Csize >> 10;
+        fprintf(stderr, "Progress: %6dK / %dK   \r", cpK, csK);
+        fflush(stderr);
       }
-    
+
       accept = 1;
       k = 0;
       for (i = 0; i < Hash.N; i++) { /* don't abort when accept==0, because of side effects for s-attributes */
@@ -573,7 +578,7 @@ main (int argc, char *argv[]) {
 	int id, size, bot, top, mid;
 	int *idlist;
 	char *str;
-	
+
 	if (! accept) 		/* once accept==0, no need to compute id's and check constraints */
 	  continue;
 
@@ -587,7 +592,7 @@ main (int argc, char *argv[]) {
 	    bot = 0; top = size - 1;
 	    while (bot < top) {
 	      mid = (bot + top) / 2; /* split [bot, top] into [bot, mid] and [mid+1, top] */
-	      if (id <= idlist[mid]) 
+	      if (id <= idlist[mid])
 		top = mid;
 	      else
 		bot = mid + 1;
@@ -622,7 +627,7 @@ main (int argc, char *argv[]) {
 		Hash.constraint_ok[i] = 0;
 	      if (Hash.regex[i] != NULL) { /* may jump directly to next region when regex constraint is present */
 		int jump_target;
-		if (Hash.constraint_ok[i]) 
+		if (Hash.constraint_ok[i])
 		  jump_target = Hash.start_cpos[i] - Hash.offset[i]; /* convert back from effective_cpos to cpos */
 		else
 		  jump_target = Hash.end_cpos[i] + 1 - Hash.offset[i]; /* jump past next region if it doesn't match the constraint */
@@ -633,7 +638,7 @@ main (int argc, char *argv[]) {
 	  }
 
 	  if (effective_cpos >= Hash.start_cpos[i]) { /* when in region, use relevant information in Hash data structure */
-	    id = Hash.virtual_id[i]; 
+	    id = Hash.virtual_id[i];
 	    if (Hash.regex[i] != NULL || check_words) /* apply stored constraint flag if regex or -C is in effect */
 	      if (! Hash.constraint_ok[i])
 		accept = 0;
@@ -649,11 +654,11 @@ main (int argc, char *argv[]) {
 	  tuple[k++] = id;	/* build K-tuple for this corpus position */
 	}
       }
-    
+
       if (accept) {
 	if (Hash.frequency_values) /* note that the frequency attribute is always used with offset 0 */
 	  hash_add(tuple, Hash.frequency[cl_cpos2id(Hash.frequency_values, cpos)]);
-	else 
+	else
 	  hash_add(tuple, 1);
       }
     } /* end of scan loop for current range */
@@ -664,7 +669,7 @@ main (int argc, char *argv[]) {
     fprintf(stderr, "Scan complete.                          \n");
 
   /* close ranges file (if -R option had been used) */
-  if (ranges_fh && ranges_fh != stdin) 
+  if (ranges_fh && ranges_fh != stdin)
     fclose(ranges_fh);
 
   /* print hash contents to stdout or file (in hash-internal order) */
@@ -736,7 +741,7 @@ main (int argc, char *argv[]) {
 	entry = entry->next;
       }
     }
-    
+
     if (output_file != NULL) {
       if (is_pipe)
 	pclose(of);
@@ -744,7 +749,7 @@ main (int argc, char *argv[]) {
 	fclose(of);
     }
     if (! quiet)
-      fprintf(stderr, "ok.\n");	
+      fprintf(stderr, "ok.\n");
   }
 
   exit(0);			/* that was easy, wasn't it? */

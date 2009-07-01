@@ -1,13 +1,13 @@
-/* 
+/*
  *  IMS Open Corpus Workbench (CWB)
  *  Copyright (C) 1993-2006 by IMS, University of Stuttgart
  *  Copyright (C) 2007-     by the respective contributers (see file AUTHORS)
- * 
+ *
  *  This program is free software; you can redistribute it and/or modify it
  *  under the terms of the GNU General Public License as published by the
  *  Free Software Foundation; either version 2, or (at your option) any later
  *  version.
- * 
+ *
  *  This program is distributed in the hope that it will be useful, but
  *  WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
@@ -23,9 +23,10 @@
 char *progname;
 
 void usage() {
-  fprintf(stderr, 
+  fprintf(stderr,
           "\n"
-          "Usage: %s [options] corpus-id -S <att>\n"
+          "Usage: %s [options] corpus-id -S <att>\n\n"
+          "Outputs a list of the given s-attribute, with begin and end positions\n\n"
           "Options:\n"
           "  -r <reg>  use registry directory <reg>\n"
           "  -n        do not show corpus positions\n"
@@ -60,35 +61,35 @@ main(int argc, char **argv) {
   progname = argv[0];
 
   /* parse arguments */
-  while ((c = getopt(argc, argv, "+r:nvh")) != EOF) 
+  while ((c = getopt(argc, argv, "+r:nvh")) != EOF)
     switch (c) {
 
     /* r: registry directory */
-    case 'r': 
+    case 'r':
       if (registry_directory == NULL) registry_directory = optarg;
       else {
         fprintf(stderr, "%s: -r option used twice\n", progname);
         exit(2);
       }
       break;
-      
+
     /* n: do not show corpus positions */
     case 'n':
       show_regions = 0;
       break;
-    
+
     /* v: do not show annotated values */
     case 'v':
       show_values = 0;
       break;
-    
-    default: 
+
+    default:
     case 'h':
       usage();
       break;
 
     }
-  
+
   /* expect three arguments: <corpus> -S <attribute> */
   if (argc <= (optind + 2))
     usage();
@@ -101,10 +102,10 @@ main(int argc, char **argv) {
   /* first argument: corpus id */
   corpus_id = argv[optind++];
   if ((corpus = cl_new_corpus(registry_directory, corpus_id)) == NULL) {
-    fprintf(stderr, "%s: Corpus <%s> not registered in %s\n", 
+    fprintf(stderr, "%s: Corpus <%s> not registered in %s\n",
               progname,
               corpus_id,
-              (registry_directory ? registry_directory 
+              (registry_directory ? registry_directory
                : central_corpus_directory()));
     exit(1);
   }
@@ -116,7 +117,7 @@ main(int argc, char **argv) {
   /* third argument: attribute name */
   attr_name = argv[optind];
   if ((att = cl_new_attribute(corpus, attr_name, ATT_STRUC)) == NULL) {
-    fprintf(stderr, "%s: Can't access s-attribute <%s.%s>\n", 
+    fprintf(stderr, "%s: Can't access s-attribute <%s.%s>\n",
               progname,
               corpus_id, attr_name);
     exit(1);

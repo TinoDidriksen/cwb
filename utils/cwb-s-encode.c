@@ -1,13 +1,13 @@
-/* 
+/*
  *  IMS Open Corpus Workbench (CWB)
  *  Copyright (C) 1993-2006 by IMS, University of Stuttgart
  *  Copyright (C) 2007-     by the respective contributers (see file AUTHORS)
- * 
+ *
  *  This program is free software; you can redistribute it and/or modify it
  *  under the terms of the GNU General Public License as published by the
  *  Free Software Foundation; either version 2, or (at your option) any later
  *  version.
- * 
+ *
  *  This program is distributed in the hope that it will be useful, but
  *  WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
@@ -72,8 +72,8 @@ FILE *text_fd = NULL;
 /* global variables */
 Corpus *corpus = NULL;          /* corpus we're working on; at the moment, this is only required for <add_to_existing> */
 int line = 0;
-enum { 
-  set_none, set_any, set_regular, set_whitespace 
+enum {
+  set_none, set_any, set_regular, set_whitespace
 } set_att = set_none;           /* set attributes */
 
 
@@ -141,7 +141,7 @@ SL_next(void) {
   SL item;
 
   item = SL_Point;
-  if (SL_Point != NULL) 
+  if (SL_Point != NULL)
     SL_Point = SL_Point->next;
   return item;
 }
@@ -209,7 +209,7 @@ SL_delete(SL item) {
   /* unlink item ... we have to handle a few special cases again */
   if (item->prev == NULL) {     /* delete first list element */
     StructureList = item->next;
-    if (item->next != NULL) 
+    if (item->next != NULL)
       item->next->prev = NULL;
     if (item == SL_Point)
       SL_Point = item->next;    /* if SL_Point was positioned at this item, set it to following one */
@@ -246,7 +246,7 @@ SL_insert(int start, int end, char *annot) {
   else {                        /* non-overlapping: simply insert new region after point */
     item = SL_insert_after_point(start, end, annot);
   }
-  
+
   /* new item may overlap one or more of the following ones, which we must delete */
   point = item->next;
   while ((point != NULL) && (point->start <= item->end)) { /* (point->start > item->start) implied by insertion above */
@@ -261,20 +261,20 @@ SL_insert(int start, int end, char *annot) {
 
 
 
-/* ok = parse_line(char *line, int *start, int *end, char **annot); 
+/* ok = parse_line(char *line, int *start, int *end, char **annot);
    parse input line; expects standard TAB-separated format;
    first two fields must be numbers, optional third field is returned in <annot> */
-int 
+int
 parse_line(char *line, int *start, int *end, char **annot) {
-  char *field, *field_end; 
+  char *field, *field_end;
   char *line_copy = cl_strdup(line); /* work on copy to retain original for error messages */
   int has_annotation = 1;
-  
+
   /* first field: INT range_start */
   field = line_copy;
   field_end = strchr(field, '\t');
-  if (field_end == NULL) 
-    return 0; 
+  if (field_end == NULL)
+    return 0;
   else {
     *field_end = 0;
     errno = 0;
@@ -289,8 +289,8 @@ parse_line(char *line, int *start, int *end, char **annot) {
     has_annotation = 0;
     field_end = strchr(field, '\n');
   }
-  if (field_end == NULL) 
-    return 0; 
+  if (field_end == NULL)
+    return 0;
   else {
     *field_end = 0;
     errno = 0;
@@ -319,7 +319,7 @@ parse_line(char *line, int *start, int *end, char **annot) {
   else {
     *annot = NULL;
   }
-  
+
   cl_free(line_copy);
   return 1;                     /* OK */
 }
@@ -327,7 +327,7 @@ parse_line(char *line, int *start, int *end, char **annot) {
 
 /* ---------------------------------------------------------------------- */
 
-/* annot = check_set(char *annot); 
+/* annot = check_set(char *annot);
    changes annotation string <annot> to standard set attribute syntax; on first call,
    checks whether annotations are already given in '|'-delimited form, otherwise it will
    always split on whitespace;
@@ -349,22 +349,25 @@ check_set(char *annot) {
       set_att = set_whitespace;
     }
   }
-  
+
   split = (set_att == set_whitespace) ? 1 : 0;
   set = cl_make_set(annot, split);
   cl_free(annot);
   return set;
 }
-   
+
 
 /* ---------------------------------------------------------------------- */
 
 /* ======================================== print usage message and exit */
 
-void 
+void
 usage() {
   fprintf(stderr, "\n");
   fprintf(stderr, "Usage:  %s [options] (-S <att> | -V <att>)\n", progname);
+  fprintf(stderr, "\n");
+  fprintf(stderr, "Adds s-attributes with computed start and end points to a corpus\n");
+  fprintf(stderr, "\n");
   fprintf(stderr, "Options:\n");
   fprintf(stderr, "  -B        strip leading/trailing blanks from annotations\n");
   fprintf(stderr, "  -d <dir>  directory for output files\n");
@@ -386,7 +389,7 @@ usage() {
 /* =================================================== declare_range() / open_range() / close_range() */
 
 /* initialise range and set name/directory */
-void 
+void
 declare_range(char *name, char *directory, int store_values)
 {
   range.name = cl_strdup(name);
@@ -404,7 +407,7 @@ declare_range(char *name, char *directory, int store_values)
 }
 
 /* open disk files for declared range */
-void  
+void
 open_range(void)
 {
   char buf[MAX_LINE_LENGTH];
@@ -428,12 +431,12 @@ open_range(void)
       exit(1);
     }
   }
-  
+
   range.ready = 1;
 }
 
 /* close disk files of open range */
-void  
+void
 close_range(void)
 {
   if (range.ready) {
@@ -441,7 +444,7 @@ close_range(void)
       perror("Error writing RNG file");
       exit(1);
     }
-    
+
     if (range.avs) {
       if (EOF == fclose(range.avs)) {
         perror("Error writing AVS file");
@@ -463,7 +466,7 @@ close_range(void)
 
 /* ======================================== parse options and set global vars */
 
-void 
+void
 parse_options(int argc, char **argv)
 {
   int c;
@@ -516,13 +519,13 @@ parse_options(int argc, char **argv)
     case 'M':
       in_memory++;
       break;
-      
+
       /* a: add to existing attribute (implies -M) */
     case 'a':
       add_to_existing++;
       in_memory++;
       break;
-      
+
       /* r: registry directory */
     case 'r':
       registry = optarg;
@@ -537,12 +540,12 @@ parse_options(int argc, char **argv)
     case 'm':
       set_att = set_any;        /* don't know yet whether it's '|'-delimited or "split on whitespace" */
       break;
-      
+
       /* s: strict syntax checks on set attribute */
     case 's':
       set_syntax_strict++;
       break;
-      
+
       /* D: debug mode */
     case 'D':
       debug++;
@@ -572,9 +575,9 @@ parse_options(int argc, char **argv)
       usage();
       break;
     }
-  
+
   /* now, check the default and obligatory values */
-  if (!text_fd) 
+  if (!text_fd)
     text_fd = stdin;
   if (range.name == NULL) {
     fprintf(stderr, "Error: either -S or -V flag must be specified.\n\n");
@@ -607,16 +610,16 @@ write_region_to_disk(int start, int end, char *annot) {
     open_range();
   if (range.store_values && (LH == NULL))
     LH = cl_new_lexhash(0);
-  
+
   /* write start & end positions of region */
-  NwriteInt(start, range.fd);    
-  NwriteInt(end, range.fd);    
+  NwriteInt(start, range.fd);
+  NwriteInt(end, range.fd);
 
   /* store annotation for -V attribute */
-  if (range.store_values) { 
+  if (range.store_values) {
     int offset, id;
     cl_lexhash_entry entry;
-      
+
     entry = cl_lexhash_find(LH, annot);
     if (entry == NULL) {
       /* must add string to hash */
@@ -630,7 +633,7 @@ write_region_to_disk(int start, int end, char *annot) {
     }
     id = entry->id;
     offset = entry->data.integer;
-    
+
     NwriteInt(range.num, range.avx);
     NwriteInt(offset, range.avx);
   }
@@ -643,8 +646,8 @@ write_region_to_disk(int start, int end, char *annot) {
 
 /*
  *  MAIN PROGRAM
- */      
-int 
+ */
+int
 main(int argc, char **argv)
 {
   int input_line;
@@ -678,7 +681,7 @@ main(int argc, char **argv)
       }
       if (!silent)
         printf("[Loading previous <%s> regions]\n", range.name);
-      
+
       N = cl_max_struc(att);
       for (i = 0; i < N; i++) {
         cl_struc2cpos(att, i, &start, &end);
@@ -696,13 +699,13 @@ main(int argc, char **argv)
   if (in_memory && (!silent))
     printf("[Reading input data]\n");
   input_line = 0;
-  while (fgets(buf, MAX_LINE_LENGTH, text_fd)) {  
+  while (fgets(buf, MAX_LINE_LENGTH, text_fd)) {
     input_line++;
-    
+
     /* check for buffer overflow */
     if (strlen(buf) >= (MAX_LINE_LENGTH - 1)) {
       fprintf(stderr, "BUFFER OVERFLOW, input line #%d is too long:\n>> %s", input_line, buf);
-      exit(1);      
+      exit(1);
     }
 
     if (! parse_line(buf, &start, &end, &annot)) {
@@ -740,9 +743,9 @@ main(int argc, char **argv)
     }
 
     /* in -M mode, store this region in memory; otherwise write it to the disk files */
-    if (in_memory) 
+    if (in_memory)
       SL_insert(start, end, annot);
-    else 
+    else
       write_region_to_disk(start, end, annot);
 
     cl_free(annot);
@@ -751,11 +754,11 @@ main(int argc, char **argv)
   /* in -M mode, write data to disk now */
   if (in_memory) {
     SL item;
-    
+
     if (!silent)
       printf("[Creating encoded disk file(s)]\n");
     SL_rewind();
-    while ((item = SL_next()) != NULL) 
+    while ((item = SL_next()) != NULL)
       write_region_to_disk(item->start, item->end, item->annot);
   }
 

@@ -1,13 +1,13 @@
-/* 
+/*
  *  IMS Open Corpus Workbench (CWB)
  *  Copyright (C) 1993-2006 by IMS, University of Stuttgart
  *  Copyright (C) 2007-     by the respective contributers (see file AUTHORS)
- * 
+ *
  *  This program is free software; you can redistribute it and/or modify it
  *  under the terms of the GNU General Public License as published by the
  *  Free Software Foundation; either version 2, or (at your option) any later
  *  version.
- * 
+ *
  *  This program is distributed in the hope that it will be useful, but
  *  WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
@@ -45,12 +45,12 @@ component_ok(Attribute *attr, ComponentID cid) {
 }
 
 /* create component if it doesn't already exist; aborts on error */
-void 
+void
 make_component(Attribute *attr, ComponentID cid) {
   int state;
 
   if (! component_ok(attr, cid)) {
-    
+
     printf(" + creating %s ... ", cid_name(cid));
     fflush(stdout);
     (void) create_component(attr, cid);
@@ -128,20 +128,20 @@ validate_revcorp(Attribute *attr) {
       return 0;
     }
   }
-  
+
   cl_free(ptab);
 
   printf("OK\n");
   return 1;
 }
 
-void 
+void
 do_attribute(Attribute *attr, ComponentID cid, int validate) {
   assert(attr);
 
   if (cid == CompLast) {
-    printf("ATTRIBUTE %s\n", attr->any.name); 
-    /* automatically create all necessary components */ 
+    printf("ATTRIBUTE %s\n", attr->any.name);
+    /* automatically create all necessary components */
 
     /* check whether directory for data files exists (may be misspelt in registry) */
     if (! is_directory(attr->any.path)) {
@@ -160,7 +160,7 @@ do_attribute(Attribute *attr, ComponentID cid, int validate) {
 	  !component_ok(attr, CompHuffSeq) && !component_ok(attr, CompHuffCodes) &&
 	  !component_ok(attr, CompHuffSync) &&
 	  !component_ok(attr, CompRevCorpus) && !component_ok(attr, CompRevCorpusIdx) &&
-	  !component_ok(attr, CompCompRF) && !component_ok(attr, CompCompRFX)) 
+	  !component_ok(attr, CompCompRF) && !component_ok(attr, CompCompRFX))
 	{
 	  /* issue a warning message & return */
 	  printf(" ! attribute not created yet (skipped)\n");
@@ -227,10 +227,13 @@ do_attribute(Attribute *attr, ComponentID cid, int validate) {
 
 }
 
-void 
+void
 usage() {
   fprintf(stderr, "\n");
   fprintf(stderr, "Usage:  %s [options] <corpus> [<attribute> ...] \n", progname);
+  fprintf(stderr, "\n");
+  fprintf(stderr, "Creates a lexicon and index for each p-attribute of an encoded CWB corpus.\n");
+  fprintf(stderr, "\n");
   fprintf(stderr, "Options:\n");
   fprintf(stderr, "  -D        debug mode\n");
   fprintf(stderr, "  -r <dir>  use registry directory <dir>\n");
@@ -245,7 +248,7 @@ usage() {
 
 
 
-int 
+int
 main(int argc, char **argv) {
 
   char *attr_name;
@@ -276,7 +279,7 @@ main(int argc, char **argv) {
     switch (c) {
 
     /* r: registry directory */
-    case 'r': 
+    case 'r':
       if (registry_directory == NULL) registry_directory = optarg;
       else {
 	fprintf(stderr, "%s: -r option used twice\n", progname);
@@ -306,7 +309,7 @@ main(int argc, char **argv) {
       break;
 
     case 'h':
-    default: 
+    default:
       usage();
     }
 
@@ -331,9 +334,9 @@ main(int argc, char **argv) {
 
 
   if ((corpus = cl_new_corpus(registry_directory, corpus_id)) == NULL) {
-    fprintf(stderr, "Corpus %s not found in registry %s . Aborted.\n", 
+    fprintf(stderr, "Corpus %s not found in registry %s . Aborted.\n",
 	    corpus_id,
-	    (registry_directory ? registry_directory 
+	    (registry_directory ? registry_directory
 	     : central_corpus_directory()));
     exit(1);
   }
@@ -365,12 +368,12 @@ main(int argc, char **argv) {
   }
   else {
     /* process each p-attribute of the corpus in turn */
-    for (attribute = corpus->attributes; attribute; attribute = attribute->any.next) 
+    for (attribute = corpus->attributes; attribute; attribute = attribute->any.next)
       if (attribute->type == ATT_POS) {
 	ComponentID my_cid;
 
 	do_attribute(attribute, cid, validate);
-	/* now destoy all components; this makes the attribute unusable, 
+	/* now destoy all components; this makes the attribute unusable,
 	   but it is currently the only way to free allocated and memory-mapped data */
 	for (my_cid = CompDirectory; my_cid < CompLast; my_cid++) { /* ordering gleaned from attributes.h */
 	  drop_component(attribute, my_cid);

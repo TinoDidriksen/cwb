@@ -1,13 +1,13 @@
-/* 
+/*
  *  IMS Open Corpus Workbench (CWB)
  *  Copyright (C) 1993-2006 by IMS, University of Stuttgart
  *  Copyright (C) 2007-     by the respective contributers (see file AUTHORS)
- * 
+ *
  *  This program is free software; you can redistribute it and/or modify it
  *  under the terms of the GNU General Public License as published by the
  *  Free Software Foundation; either version 2, or (at your option) any later
  *  version.
- * 
+ *
  *  This program is distributed in the hope that it will be useful, but
  *  WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
@@ -41,7 +41,7 @@ char *input_filename = NULL;
 
 /* ---------------------------------------------------------------------- */
 
-void 
+void
 print_info(Attribute *attr, int id, char *fallback_s) {
   char *lemma;
   int freq, slen;
@@ -49,7 +49,7 @@ print_info(Attribute *attr, int id, char *fallback_s) {
   if (id >= 0) {
     if (fallback_s == NULL)
       fallback_s = "(none)";
-  
+
     lemma = get_id_info(attr, id, &freq, &slen);
     if (cderrno != CDA_OK) {
       cdperror("(aborting) get_id_info() failed");
@@ -62,7 +62,7 @@ print_info(Attribute *attr, int id, char *fallback_s) {
     slen = 0;
     lemma = NULL;
   }
-    
+
   if (print_nr)    printf("%7d\t", id);
   if (print_freqs) printf("%7d\t", freq);
   if (print_len)   printf("%7d\t", slen);
@@ -70,7 +70,7 @@ print_info(Attribute *attr, int id, char *fallback_s) {
 }
 
 
-void 
+void
 do_show(char *attr_name, char *rx, int rx_flags) {
   int i, k, len, size;
   int attr_size;
@@ -117,10 +117,10 @@ do_show(char *attr_name, char *rx, int rx_flags) {
       }
 
       while (fgets(s, 1024, input_fd) != NULL) {
-	
+
 	len = strlen(s);
 	if (len <= 0) {
-	  fprintf(stderr, "%s Warning: read empty string from input file (ignored)\n", 
+	  fprintf(stderr, "%s Warning: read empty string from input file (ignored)\n",
 		  progname);
 	}
 	else {
@@ -128,18 +128,18 @@ do_show(char *attr_name, char *rx, int rx_flags) {
 	    s[len-1] = '\0';
 	    len--;
 	  }
-	    
+
 	  if (input_are_numbers)
 	    i = atoi(s);
-	  else 
+	  else
 	    i = cl_str2id(attr, s);
-	  
+
 	  if ((i < 0) && (!freq_0_if_unknown))
 	      fprintf(stderr, "%s Warning: ``%s'' not found in lexicon (ignored)\n", progname, s);
 	    else
 	      print_info(attr, i, (input_are_numbers) ? NULL : s);
 	}
-	
+
       }
 
       if (input_fd != stdin)
@@ -147,15 +147,15 @@ do_show(char *attr_name, char *rx, int rx_flags) {
 
     }
     else {			/* without -F option */
-      
+
       if (rx != NULL) {
 	idlist = cl_regex2id(attr, rx, rx_flags, &size);
 	if ((size == 0) || (idlist == NULL))
 	  return;		/* no matches */
       }
-      
+
       for (k = 0; k < size; k++) {
-	
+
 	if (idlist != NULL) {
 	  i = idlist[k];
 	}
@@ -169,7 +169,7 @@ do_show(char *attr_name, char *rx, int rx_flags) {
 	else {
 	  i = k;
 	}
-	
+
 	print_info(attr, i, NULL);
       }
     }
@@ -180,8 +180,8 @@ do_show(char *attr_name, char *rx, int rx_flags) {
 void usage() {
   fprintf(stderr, "\n");
   fprintf(stderr, "Usage:  %s [options] <corpus>\n\n", progname);
-  fprintf(stderr, "Print the lexicon (or part of it) of a positional attribute on stdout,\n");
-  fprintf(stderr, "optionally with frequency information. The output line format is\n"); 
+  fprintf(stderr, "Prints the lexicon (or part of it) of a positional attribute on stdout,\n");
+  fprintf(stderr, "optionally with frequency information. The output line format is\n");
   fprintf(stderr, "  [ <lexicon id> TAB ] [ <frequency> TAB ] [<length> TAB ] <string>\n\n");
   fprintf(stderr, "Options:\n");
   fprintf(stderr, "  -P <att>  use p-attribute <att> [default: word]\n");
@@ -234,7 +234,7 @@ main(int argc, char **argv) {
       break;
 
     case 'r':			/* r: registry directory */
-      if (registry_directory == NULL) 
+      if (registry_directory == NULL)
 	registry_directory = optarg;
       else {
 	fprintf(stderr, "%s: -r option used twice\n", progname);
@@ -245,11 +245,11 @@ main(int argc, char **argv) {
     case 'f':			/* f: print frequencies */
       print_freqs++;
       break;
-  
+
     case 'n':			/* n: print line numbers */
       print_nr++;
       break;
-     
+
     case 'l':			/* l: print word length */
       print_len++;
       break;
@@ -257,7 +257,7 @@ main(int argc, char **argv) {
     case 's':			/* s: print sorted */
       sort++;
       break;
-     
+
     case 'p':			/* p: match regular expression */
       rx = optarg;
       break;
@@ -288,41 +288,41 @@ main(int argc, char **argv) {
       input_are_numbers++;
       break;
 
-    default: 
+    default:
     case 'h':
       usage();
       break;
     }
-    
+
   }
-  
+
   /* single argument: corpus id */
   if (optind < argc) {
 
     corpus_id = argv[optind++];
 
     if ((corpus = cl_new_corpus(registry_directory, corpus_id)) == NULL) {
-      fprintf(stderr, "%s: Corpus %s not found in registry %s . Aborted.\n", 
+      fprintf(stderr, "%s: Corpus %s not found in registry %s . Aborted.\n",
 	      progname, corpus_id,
 	      (registry_directory ? registry_directory : central_corpus_directory()));
       exit(1);
     }
 
     if (optind < argc) {
-      fprintf(stderr, "Too many arguments. Try \"%s -h\" for more information.\n", 
+      fprintf(stderr, "Too many arguments. Try \"%s -h\" for more information.\n",
 	      progname);
       exit(2);
     }
 
     do_show(attr_name, rx, rx_flags);
-    
+
     cl_delete_corpus(corpus);
   }
   else {
-    fprintf(stderr, "No corpus specified. Try \"%s -h\" for more information.\n", 
+    fprintf(stderr, "No corpus specified. Try \"%s -h\" for more information.\n",
 	    progname);
     exit(2);
-  }  
+  }
 
   exit(0);
 }

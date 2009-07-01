@@ -21,14 +21,14 @@ include $(TOP)/config.mk
 
 ## The following targets are available:
 #
-#  all		create archive libcl.a
+#  all          create archive libcl.a
 #  clean        remove object files and libcl.a
 #  realclean    also deleted automatically generated parsers and dependencies
-#  depend	update dependencies
-#  install	install libcl.a and CL headers
-#  uninstall	uninstall libcl.a and headers from chosen locations (currently not supported)
-#  relase       install to binary release dir
-#  size		print size of source code (line counts)
+#  depend       update dependencies
+#  install      install libcl.a and CL headers
+#  uninstall    uninstall libcl.a and headers from chosen locations (currently not supported)
+#  release      install to binary release dir
+#  size         print size of source code (line counts)
 #
 
 .PHONY: all clean realclean depend install uninstall size
@@ -36,7 +36,7 @@ include $(TOP)/config.mk
 ## Use bison/flex to compile parser for registry entries
 PARSEH  = registry.tab.h
 PARSES  = registry.tab.c lex.creg.c
-PARSEG	= registry.l registry.y
+PARSEG  = registry.l registry.y
 PARSEO  = registry.tab.o lex.creg.o
 
 ## cl.h header file will be installed in subdirectory cwb/

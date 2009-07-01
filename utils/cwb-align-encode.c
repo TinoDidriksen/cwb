@@ -1,13 +1,13 @@
-/* 
+/*
  *  IMS Open Corpus Workbench (CWB)
  *  Copyright (C) 1993-2006 by IMS, University of Stuttgart
  *  Copyright (C) 2007-     by the respective contributers (see file AUTHORS)
- * 
+ *
  *  This program is free software; you can redistribute it and/or modify it
  *  under the terms of the GNU General Public License as published by the
  *  Free Software Foundation; either version 2, or (at your option) any later
  *  version.
- * 
+ *
  *  This program is distributed in the hope that it will be useful, but
  *  WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
@@ -34,10 +34,14 @@ int data_dir_from_corpus = 0;	/* determine data directory from registry entry? *
 int verbose = 0;		/* print some information about what files are created */
 
 /* print_usage() */
-void 
+void
 print_usage(void) {
   fprintf(stderr, "\n");
   fprintf(stderr, "Usage: %s [options] <aligment file>\n\n", progname);
+  fprintf(stderr, "\n");
+  fprintf(stderr, "Adds an alignment attribute to an existing CWB corpus\n");
+  fprintf(stderr, "\n");
+  fprintf(stderr, "Options:\n");
   fprintf(stderr, "  -d <dir> write data file(s) to directory <dir>\n");
   fprintf(stderr, "  -D       write files to corpus data directory\n");
   fprintf(stderr, "  -C       compatibility mode (creates .alg file)\n");
@@ -47,13 +51,13 @@ print_usage(void) {
   fprintf(stderr, "  -v       verbose mode\n");
   fprintf(stderr, "  -h       this help page\n\n");
   fprintf(stderr, "Part of the IMS Open Corpus Workbench v" VERSION "\n\n");
-  exit(1); 
-} 
+  exit(1);
+}
 /* note: must specify either -d or -D option */
 
 
 /* optindex = parse_args(argc, argv, required_arguments); */
-int 
+int
 parse_args(int ac, char *av[], int min_args) {
   extern int optind;		/* getopt() interface */
   extern char *optarg;		/* getopt() interface */
@@ -62,8 +66,8 @@ parse_args(int ac, char *av[], int min_args) {
   while ((c = getopt(ac, av, "hd:DCRr:v")) != EOF)
     switch (c) {
       /* -d: data directory */
-    case 'd': 
-      if (data_dir == NULL) 
+    case 'd':
+      if (data_dir == NULL)
 	data_dir = optarg;
       else {
 	fprintf(stderr, "%s: -d option used twice\n", progname);
@@ -83,8 +87,8 @@ parse_args(int ac, char *av[], int min_args) {
       reverse = 1;
       break;
       /* -r: registry directory */
-    case 'r': 
-      if (registry_dir == NULL) 
+    case 'r':
+      if (registry_dir == NULL)
 	registry_dir = optarg;
       else {
 	fprintf(stderr, "%s: -r option used twice\n", progname);
@@ -107,15 +111,15 @@ parse_args(int ac, char *av[], int min_args) {
      print_usage();		/* no optional arguments in this case */
 
   if ((data_dir == NULL) && (! data_dir_from_corpus)) {
-    fprintf(stderr, "%s: either -d or -D must be specified\n", progname); 
-    fprintf(stderr, "Type \"%s -h\" for more information.\n", progname); 
+    fprintf(stderr, "%s: either -d or -D must be specified\n", progname);
+    fprintf(stderr, "Type \"%s -h\" for more information.\n", progname);
     exit(1);
   }
 
   if ((data_dir != NULL) && data_dir_from_corpus) {
-    fprintf(stderr, "%s: -d and -D flags cannot be used at the same time\n", progname); 
-    fprintf(stderr, "Type \"%s -h\" for more information.\n", progname); 
-    exit(1);    
+    fprintf(stderr, "%s: -d and -D flags cannot be used at the same time\n", progname);
+    fprintf(stderr, "Type \"%s -h\" for more information.\n", progname);
+    exit(1);
   }
 
   return(optind);		/* return index of first argument in argv[] */
@@ -128,7 +132,7 @@ parse_args(int ac, char *av[], int min_args) {
 ***    MAIN()   ***
 \*****************/
 
-int 
+int
 main(int argc, char *argv[]) {
   int argindex;			/* index of first argument in argv[] */
 
@@ -234,7 +238,7 @@ main(int argc, char *argv[]) {
   attribute_name = cl_strdup((reverse) ? corpus1_name : corpus2_name);
   cl_string_canonical(attribute_name, IGNORE_CASE); /* fold attribute name to lowercase */
 
-  /* with -D option, determine data file name(s) from actual source corpus; 
+  /* with -D option, determine data file name(s) from actual source corpus;
      otherwise use directory specified with -d and the usual naming conventions */
   if (data_dir_from_corpus) {
     Attribute *alignment = cl_new_attribute(source_corpus, attribute_name, ATT_ALIGN);
@@ -257,7 +261,7 @@ main(int argc, char *argv[]) {
 	fprintf(stderr, "%s: can't determine pathname for .alg file (internal error)\n", progname);
 	exit(1);
       }
-      strcpy(alg_name, comp_pathname); 
+      strcpy(alg_name, comp_pathname);
     }
   }
   else {
@@ -265,7 +269,7 @@ main(int argc, char *argv[]) {
     if (compatibility)
       sprintf(alg_name, "%s/%s.alg", data_dir, attribute_name);
   }
-  
+
   /* now open output file(s) */
   alx = fopen(alx_name, "w");
   if (alx == NULL) {
@@ -300,7 +304,7 @@ main(int argc, char *argv[]) {
       fprintf(stderr, "%s: input format error: %s", progname, line);
       exit(1);
     }
-    
+
     /* skip 0:1 and 1:0 alignments */
     if (l1 < f1) {
       n_0_1++; continue;
@@ -308,7 +312,7 @@ main(int argc, char *argv[]) {
     if (l2 < f2) {
       n_1_0++; continue;
     }
-    
+
     /* check that source regions are non-overlapping and in ascending order */
     if (((reverse) ? f2 : f1) <= mark) {
       fprintf(stderr, "%s: source regions of alignment must be in ascending order\n", progname);

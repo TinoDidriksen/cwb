@@ -1,13 +1,13 @@
-/* 
+/*
  *  IMS Open Corpus Workbench (CWB)
  *  Copyright (C) 1993-2006 by IMS, University of Stuttgart
  *  Copyright (C) 2007-     by the respective contributers (see file AUTHORS)
- * 
+ *
  *  This program is free software; you can redistribute it and/or modify it
  *  under the terms of the GNU General Public License as published by the
  *  Free Software Foundation; either version 2, or (at your option) any later
  *  version.
- * 
+ *
  *  This program is distributed in the hope that it will be useful, but
  *  WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
@@ -49,7 +49,7 @@ int COL_SEP = 2;		/* column separator (blanks) */
 #define WIDE_COL_SEP   6
 
 /* print_help();  [lists interactive commands] */
-void 
+void
 print_help(void) {
   fprintf(stderr, "  RET    show next aligned region\n");
   fprintf(stderr, "  p <n>  print next <n> regions\n");
@@ -59,7 +59,7 @@ print_help(void) {
 }
 
 /* print_usage(); */
-void 
+void
 print_usage(void) {
   fprintf(stderr, "\n");
   fprintf(stderr, "Usage: %s [options] <alignment file>\n\n", progname);
@@ -69,7 +69,7 @@ print_usage(void) {
   fprintf(stderr, "  -s <n>     set column separator width to <n> [%d]\n", COL_SEP);
   fprintf(stderr, "  -W         display width settings for wide xterm window\n");
   fprintf(stderr, "  -h         this help page\n\n");
-  fprintf(stderr, "Display alignment results in terminal. Aligned regions are\n");
+  fprintf(stderr, "Displays alignment results in terminal. Aligned regions are\n");
   fprintf(stderr, "displayed side-by-side, one region at a time. The following\n");
   fprintf(stderr, "interactive commands are available:\n\n");
   print_help();
@@ -79,7 +79,7 @@ print_usage(void) {
 }
 
 /* optindex = parse_args(argc, argv, required_arguments); */
-int 
+int
 parse_args(int ac, char *av[], int min_args) {
   extern int optind;		/* getopt() interface */
   extern char *optarg;		/* getopt() interface */
@@ -93,8 +93,8 @@ parse_args(int ac, char *av[], int min_args) {
       strcpy(word_name, optarg);
       break;
       /* -r: registry directory */
-    case 'r': 
-      if (registry_dir == NULL) 
+    case 'r':
+      if (registry_dir == NULL)
 	registry_dir = optarg;
       else {
 	fprintf(stderr, "%s: -r option used twice\n", progname);
@@ -106,7 +106,7 @@ parse_args(int ac, char *av[], int min_args) {
       if (1 != sscanf(optarg, "%d", &n))
 	print_usage();
       if ((n < MIN_COL_WIDTH) || (n > MAX_COL_WIDTH)) {
-	fprintf(stderr, "%s: column width must be in range %d .. %d\n", 
+	fprintf(stderr, "%s: column width must be in range %d .. %d\n",
 		progname, MIN_COL_WIDTH, MAX_COL_WIDTH);
 	exit(1);
       }
@@ -137,7 +137,7 @@ parse_args(int ac, char *av[], int min_args) {
   return(optind);		/* return index of first argument in argv[] */
 }
 
-/* goodbye(); 
+/* goodbye();
    close alignment file handle (if open) and exit program */
 void
 goodbye(int error_level) {
@@ -145,7 +145,7 @@ goodbye(int error_level) {
     if (af_is_pipe) {
       /* skip rest of alignment file to avoid "broken pipe" message */
       char line[4096];
-      while (!feof(af)) 
+      while (!feof(af))
 	fgets(line, 4096, af);
       pclose(af);
     }
@@ -158,27 +158,27 @@ goodbye(int error_level) {
   exit(error_level);
 }
 
-/* end_of_alignment(); 
+/* end_of_alignment();
    exit program because the end of the .align file has been reached */
-void 
+void
 end_of_alignment(void) {
   printf("=========================== END OF ALIGNMENT FILE ============================\n");
   goodbye(0);
 }
 
-/* skip_next_region(filehandle); 
+/* skip_next_region(filehandle);
    read and discard next alignment region from .align file. */
-void 
+void
 skip_next_region(FILE *f) {
   char line[4096];
- 
+
   if (feof(f)) end_of_alignment();
   fgets(line, 4096, f);
 }
 
-/* print_next_region(filehandle); 
+/* print_next_region(filehandle);
    read next alignment region from .align file and display it on stdout. */
-void 
+void
 print_next_region(FILE *f) {
   char line[4096];
   int f1, l1, f2, l2;
@@ -189,7 +189,7 @@ print_next_region(FILE *f) {
   char col[MAX_COL_WIDTH + 1];	/* line buffer for columns */
   int w;			/* current column width */
   int i1, i2, n;
-  
+
 
   /* get next alignment region */
   if (feof(f)) end_of_alignment();
@@ -201,7 +201,7 @@ print_next_region(FILE *f) {
   }
 
   /* print separator bar */
-  if (args == 6) 
+  if (args == 6)
     sprintf(line, "%s-alignment [%d, %d] x [%d, %d] (%d)", type, f1, l1, f2, l2, quality);
   else
     sprintf(line, "%s-alignment [%d, %d] x [%d, %d] ", type, f1, l1, f2, l2);
@@ -225,7 +225,7 @@ print_next_region(FILE *f) {
       if ((w + n) > COL_WIDTH) break; /* column full */
       sprintf(col + w, "%s", word); w += n;
       i1++;			/* next token */
-      if (w < COL_WIDTH) { 
+      if (w < COL_WIDTH) {
 	sprintf(col + w, " ");	/* add token separator, if there's room */
 	w++;
       }
@@ -248,7 +248,7 @@ print_next_region(FILE *f) {
       if ((w + n) > COL_WIDTH) break; /* column full */
       sprintf(col + w, "%s", word); w += n;
       i2++;			/* next token */
-      if (w < COL_WIDTH) { 
+      if (w < COL_WIDTH) {
 	sprintf(col + w, " ");	/* add token separator, if there's room */
 	w++;
       }
@@ -266,7 +266,7 @@ print_next_region(FILE *f) {
 ***    MAIN()   ***
 \*****************/
 
-int main(int argc, char** argv) 
+int main(int argc, char** argv)
 {
   int argindex;			/* index of first argument in argv[] */
   char line[4096];		/* input buffer for .align file */
@@ -274,7 +274,7 @@ int main(int argc, char** argv)
   int l;
 
   progname = argv[0];
-  
+
   /* parse command line and read arguments */
   argindex = parse_args(argc, argv, 1);
   align_name = argv[argindex];
@@ -329,17 +329,17 @@ int main(int argc, char** argv)
     goodbye(1);
   }
   if (NULL == (s1 = cl_new_attribute(corpus1, s1_name, ATT_STRUC))) {
-    fprintf(stderr, "%s: can't open s-attribute %s.%s\n", 
+    fprintf(stderr, "%s: can't open s-attribute %s.%s\n",
 	    progname, corpus1_name, s1_name);
     goodbye(1);
   }
   if (NULL == (s2 = cl_new_attribute(corpus2, s2_name, ATT_STRUC))) {
-    fprintf(stderr, "%s: can't open s-attribute %s.%s\n", 
+    fprintf(stderr, "%s: can't open s-attribute %s.%s\n",
 	    progname, corpus2_name, s2_name);
     goodbye(1);
   }
 
-  printf("Displaying alignment for [%s, %s] from file %s\n", 
+  printf("Displaying alignment for [%s, %s] from file %s\n",
 	 corpus1_name, corpus2_name, align_name);
   printf("Enter 'h' for help.\n");
 
