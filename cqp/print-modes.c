@@ -1,13 +1,13 @@
-/* 
+/*
  *  IMS Open Corpus Workbench (CWB)
  *  Copyright (C) 1993-2006 by IMS, University of Stuttgart
  *  Copyright (C) 2007-     by the respective contributers (see file AUTHORS)
- * 
+ *
  *  This program is free software; you can redistribute it and/or modify it
  *  under the terms of the GNU General Public License as published by the
  *  Free Software Foundation; either version 2, or (at your option) any later
  *  version.
- * 
+ *
  *  This program is distributed in the hope that it will be useful, but
  *  WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
@@ -59,7 +59,7 @@ AttributeList *ComputePrintStructures(CorpusList *cl)
 
       if ((struc = find_attribute(cl->corpus, token, ATT_STRUC, NULL))
 	  == NULL) {
-	cqpmessage(Warning, 
+	cqpmessage(Warning,
 		   "Structure ``%s'' not declared for corpus ``%s''.",
 		   token, cl->corpus->registry_name);
       }
@@ -80,7 +80,7 @@ AttributeList *ComputePrintStructures(CorpusList *cl)
 
     if (al) {
       if (!VerifyList(al, cl->corpus, 1)) {
-	cqpmessage(Error, 
+	cqpmessage(Error,
 		   "Problems while computing print structure list");
 	DestroyAttributeList(&al);
 	al = NULL;
@@ -100,7 +100,7 @@ AttributeList *ComputePrintStructures(CorpusList *cl)
       p += strlen(p);
       ai = ai->next;
     }
-    
+
     return al;
   }
   assert(0 && "Not reached ;-|");
@@ -110,13 +110,14 @@ AttributeList *ComputePrintStructures(CorpusList *cl)
 void
 ResetPrintOptions()
 {
+  /* ??? */
 }
 
 void
 ParsePrintOptions()
 {
   if (printModeOptions) {
-    
+
     char *token;
     char s[1024];
     int value;
@@ -135,7 +136,7 @@ ParsePrintOptions()
       }
       else
 	value = 1;
-      
+
       if (strcasecmp(token, "wrap") == 0) {
 	GlobalPrintOptions.print_wrap = value;
       }
@@ -154,13 +155,13 @@ ParsePrintOptions()
       else if (!silent)
 	fprintf(stderr, "Warning: %s: unknown print option\n",
 		token);
-      
+
       token = strtok(NULL, " \t\n,.");
     }
   }
 }
 
-void 
+void
 CopyPrintOptions(PrintOptions *target, PrintOptions *source)
 {
   if (target && source)

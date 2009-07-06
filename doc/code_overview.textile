@@ -100,7 +100,7 @@ h4. cl/fileutils.h ; cl/fileutils.c
 ** file_length(): string filename
 ** fd_file_length(): FILE * pointer
 ** fd_file_length(): int file number
-** fprobe()fucntion seems to be a replica of fd_file_length() (??) 
+** fprobe() function seems to be a replica of fd_file_length() (??) 
 * is_directory(), is_file(), is_link() functions
 * _depends on_: only globals
 
@@ -220,9 +220,298 @@ h4. CQi/server.h ; CQi/server.c
 * _depends on_: the CL API and @cl/macros.c@
 * _depends on_: functions drawn from CQP: options, corpmanag, parse_actions, hash
 
+
+
+
+
 h2. CQP (query processor and interactive environment)
 
-*TODO*
+Dependencies in this directory on the CL are not noted unless especially relevant. Basically everything here depends on the CL one way or another. Also, interdependencies between different cqp modules are not noted.
+
+h4. cqp/ascii-print.c ; cqp/ascii-print.h
+
+* this is one of a set of parallel "printing" modules
+** others are: @html-print, latex-print, sgml-print@ -- q.v.
+* most of the functions in this module are prefixed @ascii_print_@ and print various things to a file pointer.
+* for instance, @ascii_print_corpus_header()@
+* there is a @PrintDescriptionRecord@ called @ASCIIPrintDescriptionRecord@ declared as global here.
+* Two other functions deal with colour / typeface on the terminal: 
+** @get_colour_escape() get_typeface_escape()@
+* _depends on_: the @PrintDescriptionRecord@ definition comes from @print-modes@
+
+h4. cqp/attlist.c ; cqp/attlist.h
+
+* Creates two data types: @AttributeInfo@ and @AttributeList@
+** AttributeInfo is a linked-list holder structure for the Attribute type.
+** AttributeList is a holder for the head pointer of such a linked-list.
+* As well as allocation and deallocation functions, there are also:
+** AddNameToAL()
+** RemoveNameFromAL()
+** NrOfElementsAL()
+** MemberAL()
+** FindInAL()
+** RecomputeAL()
+** VerifyList()
+** ... in all of these, AL is short for "attribute list" of course.
+* _depends on_: @cl/attributes@ obviously
+
+h4. cqp/builtins.c ; cqp/builtins.h
+
+* this has to do with the "built-in function", as described in the data structure @BuiltinF@
+* a global array of these structures called @builtin_function@ is defined in @builtins.c@
+* The functions for dealing with these are:
+** @find_predefined()@ 
+** @is_predefined_function()@ 
+** @call_predefined_function()@
+* The function names declared in that global array are:
+** @f distance dist distabs int lbound rbound unify ambiguity add sub mul prefix is_prefix minus ignore@
+* Each of these is actrually implemented as a case statement within @call_predefined_function()@
+
+h4. cqp/concordance.c ; cqp/concordance.h
+
+* Code for presentation of a concordance; the most notable function is @compose_kwic_line()@
+
+h4. cqp/context_descriptor.c ; cqp/context_descriptor.h
+
+* The header contains a structure (@ContextDescriptor@) for describing context for searches
+* and assorted functions for dealing with. The most improtant one is @verify_context_descriptor()@.
+
+h4. cqp/corpmanag.c ; cqp/corpmanag.h
+
+* Defines the CorpusList object (for a linked list of available corpora) and two global pointers to this: @current_corpus@ and @corpuslist@ 
+* There are also a bundle of functions for dealing with this object. There are extensive comments for (some) of these in the header file.
+
+h4. cqp/cqp.c ; cqp/cqp.h
+
+* There are two bundles of stuff here. The first is signal handling for the interrupt (CTRL+C).
+* The second (and more major) bundle is the following three functions:
+** @initialize_cqp()@ -- sets up settings, reads the ini file, reads macro file, checks available corpora, 
+** @cqp_parse_file()@ -- this contains the main loop for the CQP command prompt and/or lines of file input
+*** it adds its file handle argument to the @cqp_files@ array, allowing a "stack" of handles to be remembered
+*** and it assigns that file handle to @yyin@ - a pointer to the file handle that @yyparse@ uses as file input.
+** @cqp_parse_string()@ -- loops on the string stored in @cqp_input_string@ and calls @yyparse()@
+*** note that the @YY_INPUT()@ macro, used by the parser, loads a character from the string (if there is one) and otherwise from the file handle.
+* these functions call yyparse() which interprets the input commands and carries them out.
+* note that cqp.h has the following:
+** @typedef char Boolean; /* typedef enum bool { False, True } Boolean; */@
+** True and False are #defined as 1 and 0 here as well.
+* _depends on_: most obviously on the parser!
+
+h4. cqp/cqpcl.c
+
+* Extremely lightweight @main()@ function for cqpcl which calls @initialize_cqp()@ and @cqp_parse_string()@
+* compare @llquery.c@ 
+
+h4. cqp/dummy_auth.c
+
+* dummy version sof the CQi user-authorisation functions which just print an error message
+* _depends on_: output, also @CQi/auth.h@
+
+h4. cqp/eval.c ; cqp/eval.h
+
+* defines the (very complex, nested) @Constraint@ object and @Constrainttree@ as a pointer type to @Constraint@
+* also defines @ActualParamList@ - structure for a linked list of @Constrainttree@s
+* and various other unions and enumerations involved in evaluation trees 
+* _most notably: @Evaltree@, @EvalEnvironment@ and its pointer type, @EEP@
+** a global array of @EvalEnvironment@ called @Environment@ is created 
+* most of the functions in this module are not in the header. The ones that are fall into 3 groups:
+** Ones relating to environments: @next_environment() free_environment() show_environment() free_environments()@
+** Ones relating to running CQP queries: @cqp_run_query()@ and two variants, @cqp_run_mu_query() cqp_run_tab_query()@
+*** These look pretty central but I've not worked out how yet....
+** One on its own: @eval_bool()@
+
+h4. cqp/groups.c ; cqp/groups.h
+
+* defines the @Group@ structure and gives 4 functions for use with it
+** most important one: @compute_grouping()@ which sets up the Group object
+** also: @Group_id2str()@ -- which wraps @cl_id2str()
+** also: @free_group() print_group()@
+* there are other functions in the source file that are not prototyped in the header.
+
+h4. cqp/hash.c ; cqp/hash.h
+
+* four functions:
+** @is_prime()@ -- returns whether or not this its argument is a prime number
+** @find_prime()@ -- returns the smallest prime number that is greater than its argument 
+** @hash_string()@ -- rolls a string into an int -- its 32bit hash value
+** @hash_macro()@ -- rolls a macro name & its number of arguments into an int
+
+h4. cqp/html-print.c ; cqp/html-print.h
+
+* this is one of a set of parallel "printing" modules
+* the prefix for the functions here is @html_print_@
+* Also we have two other functions here:
+** @html_convert_string()@, which copies  astring with replacement for &lt; &gt; &amp; &quot;
+** @html_puts()@, which streams text to a file pointer with replacement for &lt; &gt; &amp; &quot; 
+
+
+h4. cqp/latex-print.c ; cqp/latex-print.h
+
+* this is one of a set of parallel "printing" modules
+* the prefix for the functions is @latex_print_@
+* As well as these functions, there is @latex_convert_string()@ which escapes Latex control characters in a string
+
+
+h4. cqp/llquery.c
+
+* This file contains the @main()@ function for @cqp@.
+* there are two "versions" of this file, one "normal" version and one which is compiled if @USE_READLINE@ is defined. If this is the case, additional functions are defined.
+** @cc_compl_list_init() cc_compl_list_add() cc_compl_list_sort()  cc_compl_list_sort_uniq() cqp_custom_completion() ensure_semicolon() readline_main()@
+** the most interesting is @readline_main()@, which is called by @main()@ if @USE_READLINE@ is defined.
+** in the normal version, @main()@ just passes either the batch file argument or stdin to @cqp_parse_file()
+** in the @USE_READLINE@ version, @readline_main()@ takes the file handle argument and deals with it in the same way 
+* note - there is no @.h@ file here 
+* _depends on_: the @cqp_parse_file()@ function is in @cqp.c@
+
+h4. cqp/macro.c ; cqp/macro.h
+
+* this is "macro" in the sense of "CQP macro", not "C macro" (as in @cl/macro.h@)
+* these are functionas for definig, loading, etc. CQP macros.
+* the ones defined in macro.h are fairly heavily commented
+* macro.c contains many functions additional to those declared in macro.h 
+
+
+h4. cqp/matchlist.c ; cqp/matchlist.h
+
+* Deals with matchlists and set ops on them
+* Two data structures: @MLSetOp@ and @Matchlist@
+* and five functions:
+** @init_matchlist() show_matchlist() show_matchlist_firstelements() free_matchlist() Setop()
+** @Setop@ is the only one of these that is weighty. It performs an "operation" on two match lists.@
+
+h4. cqp/options.c ; cqp/options.h
+
+* As you might expect, this contains the code that creates option settings
+* The options are of two types:
+** global integers declared in the header file
+** options contained within a @CQPOption@ structure
+** for the latter type, a global array of @CQPOption@ called @cqpoptions@ is created (and initialised at declaration)
+* Functions made available here (for accessing said global array):
+** @find_option set_string_option_value set_integer_option_value set_context_option_value int_option_values print_option_value parse_options@
+* There are other functions as well. The most notable is @syntax()@ which is the "print help and exit" function and which is called by @parse_options()@
+
+h4. cqp/output.c ; cqp/output.h
+
+* Contains things related to the "tabulate" command (data structure, global list, and functions)
+* Also contains functions for opening/closing streams and files (inc. temp files)
+* Also contains the @cqpmessage()@ function which is used all over the shop and which prints a message to STDERR.
+* And, finally, four other functions for printing things: most notably, @print_output()@ 
+
+h4. cqp/parser.l ; cqp/parser.y
+
+* source files processed by flex and bison to produce three source files:
+** @lex.yy.c parser.tab.c parser.tab.h@
+* what these files represent is a parser for the CQP query language
+* the function @yyparse()@ is key, it parses query strings (see @cqp/cqp.c@)
+** it takes its input from the global variable @cqp_input_string@
+* in particular, note that the parser _executes_ commands as well as just parsing them.
+** in @parser.tab.c@ there is a huge switch statement which contains code for every possible action - depending on which instruction the parser found on the input line.
+** the case statements in this switch derive from the RULES defned in @parser.y@ 
+*** and typically involve the functions in @parse_actions@
+
+h4. cqp/parse_actions.c ; cqp/parse_actions.h
+
+* This module contains the functions that are used within the rule definitions in @parser.y@ 
+* The following "groups" of functions are declared in @parse_actions.h@:
+** PARSER ACTIONS
+** Regular Expressions
+** BOOLEAN OPS
+** Variable Settings
+** PARSER UTILS
+** CQP Child mode:  Size & Dump 
+
+
+h4. cqp/paths.c ; cqp/paths.h
+
+* contains just one function, @get_path_component()@ . This breaks apart a string of:words:linked:like:this and returns them in l-to-r order, one by one on repeated calls.
+
+
+h4. cqp/print-modes.c ; cqp/print-modes.h
+
+* Defines two objects: @PrintDescriptionRecord, PrintOptions@; and one enum: @PrintMode@ which contains a setting for what the output mode is.
+* There are three functions made available via the header:
+** @ComputePrintStructures() ParsePrintOptions() CopyPrintOptions()@
+
+h4. cqp/print_align.c ; cqp/print_align.h
+
+* Just one function, @printAlignedStrings()@
+* which does pretty much what it says on the tin - pritns strings aligned between two corpora.
+
+h4. cqp/ranges.c ; cqp/ranges.h
+
+* This module contains the functions for sorting query results (e.g., @RangeSort()@, @SortSubcorpus()@ ...)
+** and the @SortClause@ pointer-to-structure that goes along with sorting
+* It also contains:
+** functions for deleting / copying concordance lines (called "intervals")
+
+h4. cqp/regex2dfa.c ; cqp/regex2dfa.h
+
+* "DFA" here = "deterministic finite-state automaton"
+* defines the DFA datatype and functions for dealing with
+* Lots and lots of functions but only four are in the header:
+** @init_dfa()@ and @free_dfa()@
+** @regex2dfa()@ -- the key one
+** @show_complete_dfa()@, whihc is a printout function for the data structure.
+
+h4. cqp/sgml-print.c ; cqp/sgml-print.h
+
+* this is one of a set of parallel "printing" modules
+* the prefix for the functions here is @sgml_print_@
+* There is a difference between this and @html-print@: there are @sgml_convert_string()@ and @sgml_puts()@ functions with replacement for &lt; &gt; &amp; &quot; (same as @html_print_@) but these functions are not declared in the header file
+
+
+h4. cqp/symtab.c ; cqp/symtab.h
+
+* "global symbol table" -- explained in a long comment at the start of the header file
+* has #definitions, data structures, and functions in two sections: 
+** The SYMBOL LOOKUP part: SymbolTable and LabelEntry 
+** The DATA ARRAY part: RefTab 
+** (... where SymbolTable, LabelEntry, and RefTab are pointer-types to the structures dealt with)
+
+h4. cqp/table.c ; cqp/table.h
+
+* @table.h@ contains structure and function declarations for the "table" that contains a query result / subcorpus (i.e. a list of ~Match and MatchEnd coordinates with optional extra columns. Each column is represent as an @(int *)@.
+* @table.c@ does not actually contain any definitions or declarations - where are the functions?
+* There are _lots_ of comments in @table.h@ so the way it all works is mostly documented there.
+
+h4. cqp/targets.c ; cqp/targets.h
+
+* Contains code for four functions:
+** @string_to_strategy()@
+** @set_target()@
+** @evaluate_target()@
+** @evaluate_subset()@
+
+h4. cqp/tree.c ; cqp/tree.h
+
+* "evaluation tree" -- this module contains functions for doing "things" with Evaltree and Constrainttree objects (see @eval@)
+* many of the functions are for printing / deleting trees.
+* _depends on_: the @eval@ module
+
+h4. cqp/treemacros.h
+
+* No .c file, only a .h file
+* defines preprocessor macros @NEW_TNODE()@, @NEW_EVALNODE()@, @NEW_EVALLEAF()@, @NEW_BNODE()@, @DELETE_NODE()@,  and @DELETE()@ (the last two being synonyms for @cl_free()@)  
+* _depends on_: only the corpus library - no other part of CQP.
+
+h4. cqp/variables.c ; cqp/variables.h
+
+* This file contains code for handling "variables" which are elements in the evaluation of a search (I think)
+* The VariableBuffer structure (and the Variable type which is a pointer to it) are declared here
+* A global array of @Variable@s called @VariableSpace@ is declared (as well as @nr_variables@ which contains the size of that array)
+* ... and there are various functions for dealing with this array (allocating, reallocated, getting a variable from, etc.)
+
+
+
+h4. cqp/Makefile
+
+* a Makefile for all of this! There are many useful comments in this file, some of which are summarised here.
+* Three binaries are built: cqp, cqpcl, and cqpserver.
+* All three depend on the same source files, but
+** cqpcl and cqp add different files for their @main()@ function: @cqpcl@  and @llquery.c@ respectively
+** cqpserver adds @server@ and @auth@ from CQi (whereas cqp uses the dummy versions of these)
+*** the @main()@ function for cqpserver is actually part of CQi, even though its build is here.
+
 
 
 
@@ -383,4 +672,34 @@ This directory contains shell scripts (@sh@) for configuring / installing CWB.
 
 h3. man
 
-This contains the *.pod source files for the man entries for @cqp@ and the CWB command-line utilties
+This contains the *.pod source files for the man entries for @cqp@ and the CWB command-line utilties.
+
+
+h2. Global variables in CL
+
+(This is just an idea --- useful? Or overkill? -- AH)
+
+|_. Name|_. Type|_. Defined in|_. Declared @extern@ in|_. What is it?|
+|@@|@@|@@|@@||
+|@@|@@|@@|@@||
+|@@|@@|@@|@@||
+|@@|@@|@@|@@||
+|@@|@@|@@|@@||
+|@@|@@|@@|@@||
+
+
+
+
+h2. Global variables in CQP 
+
+
+(This is just an idea --- useful? Or overkill? -- AH)
+
+|_. Name|_. Type|_. Defined in|_. Declared @extern@ in|_. What is it?|
+|@@|@@|@@|@@||
+|@@|@@|@@|@@||
+|@@|@@|@@|@@||
+|@@|@@|@@|@@||
+|@@|@@|@@|@@||
+|@@|@@|@@|@@||
+

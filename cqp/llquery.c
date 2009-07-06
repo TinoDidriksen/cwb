@@ -1,13 +1,13 @@
-/* 
+/*
  *  IMS Open Corpus Workbench (CWB)
  *  Copyright (C) 1993-2006 by IMS, University of Stuttgart
  *  Copyright (C) 2007-     by the respective contributers (see file AUTHORS)
- * 
+ *
  *  This program is free software; you can redistribute it and/or modify it
  *  under the terms of the GNU General Public License as published by the
  *  Free Software Foundation; either version 2, or (at your option) any later
  *  version.
- * 
+ *
  *  This program is distributed in the hope that it will be useful, but
  *  WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
@@ -51,7 +51,7 @@ int cc_compl_list_allocated = 0;  /* number of entries allocated for list (incl.
 
 
 /* initialise completion list (size 0) without freeing it (because it will be freed by editline library) */
-void 
+void
 cc_compl_list_init(void) {
   cc_compl_list = (char **) cl_malloc(CC_COMPL_LIST_ALLOC_BLOCK * sizeof(char *));
   cc_compl_list_allocated = CC_COMPL_LIST_ALLOC_BLOCK;
@@ -116,7 +116,7 @@ cqp_custom_completion(char *line, int start, int end) {
   char *real_name, *colon;
   int mother_len, real_len, prefix_len;
   char *completion;
-  
+
   text = line + start;
   text_len = end - start;
   /* the string that GNU readline would supply to a custom completer ist
@@ -140,7 +140,7 @@ cqp_custom_completion(char *line, int start, int end) {
       return NULL;
     }
   }
-      
+
   /*
    *  (B) variable name completion (triggered by '$' character)
    */
@@ -148,7 +148,7 @@ cqp_custom_completion(char *line, int start, int end) {
     cc_compl_list_init();	/* init list only if custom completion has been triggered */
     variables_iterator_new();
     prefix = text + 1;
-    prefix_len = text_len - 1; 
+    prefix_len = text_len - 1;
     var = variables_iterator_next();
     while (var != NULL) {
       if (strncmp(prefix, var->my_name, prefix_len) == 0) { /* found variable matching prefix -> format and add */
@@ -183,7 +183,7 @@ cqp_custom_completion(char *line, int start, int end) {
     }
     free(prefix);
     return cc_compl_list_sort_uniq();
-  } 
+  }
 
   /* at the moment, everything else triggers (sub)corpus name completion */
 
@@ -210,10 +210,10 @@ cqp_custom_completion(char *line, int start, int end) {
   while (cl != NULL) {
     if ((cl->type == SYSTEM) || (cl->type == SUB)) /* don't show subcorpora with status TEMP */
     {
-      int handled = 0; 
+      int handled = 0;
       /* token must be prefix of corpus name (if mother name is given, consider only subcorpora) */
       if ((strncmp(cl->name, real_name, real_len) == 0)
-	  && (!mother_len || (cl->type == SUB))) { 
+	  && (!mother_len || (cl->type == SUB))) {
 	/* if mother name is given, that has to match also; same if we're looking at a subcorpus */
 	if (cl->type == SUB) {
 	  char *expected_mother;
@@ -246,8 +246,8 @@ cqp_custom_completion(char *line, int start, int end) {
       }
       if (! handled) {
 	/* other possibility: current token is prefix of mother part of a subcorpus */
-	if ((cl->type == SUB) && (!mother_len) && cl->mother_name && 
-	    (strncmp(cl->mother_name, real_name, real_len) == 0))  { 
+	if ((cl->type == SUB) && (!mother_len) && cl->mother_name &&
+	    (strncmp(cl->mother_name, real_name, real_len) == 0))  {
 	  /* requires special handling: return ''<mother>:'' */
 	  char *completion = (char *) cl_malloc(strlen(cl->mother_name) + 2);
 	  /* just show there are subcorpora as well; user must type ':' to see subcorpora completions */
@@ -263,7 +263,7 @@ cqp_custom_completion(char *line, int start, int end) {
   return cc_compl_list_sort_uniq();
 }
 
-/* check that line ends in semicolon, otherwise append one to the string 
+/* check that line ends in semicolon, otherwise append one to the string
    (returns either same pointer or re-allocated and modified string) */
 char *
 ensure_semicolon (char *line) {
@@ -299,13 +299,13 @@ ensure_semicolon (char *line) {
 
 
 /* this function replaces cqp_parse_file(stdin,0) if we're using GNU Readline */
-void readline_main(void) 
+void readline_main(void)
 {
   char prompt[512];
   char *input = NULL;
 
   /* activate CQP's custom completion function */
-  el_user_completion_function = cqp_custom_completion; 
+  el_user_completion_function = cqp_custom_completion;
   /* if CQP history file is specified, read history from file */
   if (cqp_history_file != NULL) {
     /* ignore errors; it's probably just that the history file doesn't exist yet */
@@ -314,13 +314,13 @@ void readline_main(void)
 
   /* == the line input loop == */
   while (!exit_cqp) {
-    
+
     if (input != NULL)
       {
 	free(input);
 	input = NULL;
       }
-    
+
     if (highlighting) {
       printf(get_typeface_escape('n'));	/* work around 'bug' in less which may not switch off display attributes when user exits */
       fflush(stdout);
@@ -335,7 +335,7 @@ void readline_main(void)
 	  sprintf(prompt, "%s> ", current_corpus->name);
 	else
 	  sprintf(prompt, "%s:%s[%d]> ",
-		  current_corpus->mother_name, 
+		  current_corpus->mother_name,
 		  current_corpus->name,
 		  current_corpus->size);
       }
@@ -345,17 +345,17 @@ void readline_main(void)
       input = readline(prompt);
     }
 
-    if (input != NULL) {	
+    if (input != NULL) {
       input = ensure_semicolon(input); /* add semicolon at end of line if missing (also replaces ws-only lines by "") */
       if (*input) add_history(input); /* add input line to history (unless it's an empty line) */
       cqp_parse_string(input);        /* parse & execute query */
-    } 
+    }
     else {
       exit_cqp = True;                /* NULL means we've had an EOF character */
     }
-    
+
     /* reinstall signal handler if necessary */
-    if (! signal_handler_is_installed) 
+    if (! signal_handler_is_installed)
       install_signal_handler();
   }
 
@@ -381,7 +381,7 @@ int main(int argc, char *argv[])
   }
 
   /* Test ANSII colours (if CQP was invoked with -C switch) */
-  if (use_colour) { 
+  if (use_colour) {
     char *blue = get_colour_escape('b', 1);
     char *green = get_colour_escape('g', 1);
     char *red = get_colour_escape('r', 1);
@@ -395,25 +395,25 @@ int main(int argc, char *argv[])
     char *normal = get_typeface_escape('n');
     char sc_colour[256];
     int i, j;
-    
+
     printf("%s%sWelcome%s to %s%sC%s%sQ%s%sP%s -- ", green, bold, normal, red, bold, pink, bold, blue, bold, normal);
     printf("the %s Colourful %s Query %s Processor %s.\n", yellowBack, greenBack, cyanBack, normal);
 
-    for (i = 3; i <= 4; i++) { 
+    for (i = 3; i <= 4; i++) {
       printf("[");
       for (j = 0; j < 8; j++) {
 	sprintf(sc_colour, "\x1B[0;%d%dm", i,j);
-	printf("%d%d: %sN%s%sB%s%sU%s%sS%s  ", 
+	printf("%d%d: %sN%s%sB%s%sU%s%sS%s  ",
 	       i, j,
 	       sc_colour,
-	       sc_colour, bold, 
+	       sc_colour, bold,
 	       sc_colour, underline,
 	       sc_colour, standout,
 	       normal);
       }
       printf("]\n");
     }
-  }
+  } /* endif use_colour */
 
   install_signal_handler();
 
@@ -430,7 +430,7 @@ int main(int argc, char *argv[])
   }
   else {
 #ifdef USE_READLINE
-    if (use_readline) 
+    if (use_readline)
       readline_main();
     else
 #endif /* USE_READLINE */

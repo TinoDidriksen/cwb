@@ -1,13 +1,13 @@
-/* 
+/*
  *  IMS Open Corpus Workbench (CWB)
  *  Copyright (C) 1993-2006 by IMS, University of Stuttgart
  *  Copyright (C) 2007-     by the respective contributers (see file AUTHORS)
- * 
+ *
  *  This program is free software; you can redistribute it and/or modify it
  *  under the terms of the GNU General Public License as published by the
  *  Free Software Foundation; either version 2, or (at your option) any later
  *  version.
- * 
+ *
  *  This program is distributed in the hope that it will be useful, but
  *  WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
@@ -59,7 +59,7 @@ int QueryBufferOverflow = 0;
 
 /* =============================================================== */
 
-static void 
+static void
 sigINT_signal_handler(int signum)
 {
   if (EvaluationIsRunning) {
@@ -133,14 +133,14 @@ int initialize_cqp(int argc, char **argv)
   yydebug = parser_debug;
 
   /*
-   * read initialization file 
+   * read initialization file
    */
-  
-  if (cqp_init_file || 
+
+  if (cqp_init_file ||
       (!child_process && (!batchmode || (batchfd == NULL)) && !(which_app == cqpserver))
       ) {
-    
-    /* 
+
+    /*
      * Read init file specified with -I <file>
      *   if no init file was specified, and we're not in batchmode, child mode, or cqpserver,
      *   looks for ~/.cqprc
@@ -170,7 +170,7 @@ int initialize_cqp(int argc, char **argv)
 	  exit(1);
 	}
 	reading_cqprc = 0;
-	
+
 	/* fclose(cqprc);  was already closed by cqp_parse_file!! */
       }
       else if (cqp_init_file) {
@@ -182,7 +182,7 @@ int initialize_cqp(int argc, char **argv)
   }
 
   if (!enable_macros && macro_init_file)
-    cqpmessage(Warning, "Macros not enabled. Ignoring macro init file %s.", macro_init_file); 
+    cqpmessage(Warning, "Macros not enabled. Ignoring macro init file %s.", macro_init_file);
 
   if (enable_macros &&
       (macro_init_file ||
@@ -208,7 +208,7 @@ int initialize_cqp(int argc, char **argv)
 	  exit(1);
 	}
 	reading_cqprc = 0;
-	
+
 	/* fclose(cqprc);  was already closed by cqp_parse_file!! */
       }
       else if (macro_init_file) {
@@ -217,7 +217,7 @@ int initialize_cqp(int argc, char **argv)
 	exit(1);
       }
     }
-  } /* ends (!child_process || (batchmode ... ) ... ) */
+  } /* ends if (!child_process || (batchmode ... ) ... ) */
 
   check_available_corpora(UNDEF);
 
@@ -227,7 +227,7 @@ int initialize_cqp(int argc, char **argv)
 	    default_corpus);
     exit(1);
   }
-  
+
   if (signal(SIGPIPE, SIG_IGN) == SIG_IGN) {
     /* fprintf(stderr, "Couldn't install SIG_IGN for SIGPIPE signal\n"); */
     /* -- be silent about not being able to ignore the SIGPIPE signal, which often happens in slave mode */
@@ -266,7 +266,7 @@ int cqp_parse_file(FILE *fd, int exit_on_parse_errors)
 	    printf("%s> ", current_corpus->name);
 	  else
 	    printf("%s:%s[%d]> ",
-		   current_corpus->mother_name, 
+		   current_corpus->mother_name,
 		   current_corpus->name,
 		   current_corpus->size);
 	else
@@ -278,22 +278,22 @@ int cqp_parse_file(FILE *fd, int exit_on_parse_errors)
 	ok = 0;
 
       if (child_process && (cqp_status != 0) && !reading_cqprc) {
-	fprintf(stderr, "PARSE ERROR\n"); /*  */
+        fprintf(stderr, "PARSE ERROR\n"); /*  */
       }
       if (child_process && !reading_cqprc) {
 #if 0
-	/* empty lines after commands in child mode have been disabled as of version 2.2.b94 */
-	printf("\n");		/* print empty line as separator in child mode */
+        /* empty lines after commands in child mode have been disabled as of version 2.2.b94 */
+        printf("\n");		/* print empty line as separator in child mode */
 #endif
-	fflush(stdout);
-	fflush(stderr);
+        fflush(stdout);
+        fflush(stderr);
       }
 
-    }
-    
+    } /* endwhile */
+
     if (fd != stdin)
       fclose(fd);
-    
+
     cqp_file_p--;
     yyin = cqp_files[cqp_file_p];
 
@@ -301,7 +301,7 @@ int cqp_parse_file(FILE *fd, int exit_on_parse_errors)
       save_unsaved_subcorpora();
 
     return ok;
-  }
+  } /* endif (cqp_file_p < MAXCQPFILES) */
   else {
     fprintf(stderr, "CQP: too many nested files (%d)\n", cqp_file_p);
     return 0;
@@ -321,8 +321,8 @@ int cqp_parse_string(char *s)
   cqp_input_string = s;
 
   while (ok && (cqp_input_string_position < len) && !exit_cqp) {
-    
-    if (abort) {		/* trying to parse a second command -> abort with error */
+
+    if (abort) {        /* trying to parse a second command -> abort with error */
       cqpmessage(Error, "Multiple commands on a single line not allowed in CQPserver mode.");
       ok = 0;
       break;
@@ -333,9 +333,10 @@ int cqp_parse_string(char *s)
       ok = 0;
 
     if (which_app == cqpserver)
-      abort = 1;	/* only one command per line in CQPserver (security reasons) */
-  }
-    
+      abort = 1;        /* only one command per line in CQPserver (security reasons) */
+
+  } /* endwhile */
+
   cqp_input_string_position = 0;
   cqp_input_string = NULL;
 

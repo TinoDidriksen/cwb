@@ -21,14 +21,14 @@ include $(TOP)/config.mk
 
 ## The following targets are available:
 #
-#  all		create binaries cqp, cqpcl, and cqpserver
+#  all          create binaries cqp, cqpcl, and cqpserver
 #  clean        remove object files and binaries
 #  realclean    also deleted automatically generated parsers and dependencies
-#  depend	update dependencies
-#  install	install binaries
-#  uninstall	uninstall binaries from chosen location (currently not supported)
-#  relase       install to binary release dir
-#  size		print size of source code (line counts)
+#  depend       update dependencies
+#  install      install binaries
+#  uninstall    uninstall binaries from chosen location (currently not supported)
+#  release      install to binary release dir
+#  size         print size of source code (line counts)
 #
 
 .PHONY: all clean realclean depend install uninstall size
@@ -46,7 +46,7 @@ SRCS =  llquery.c cqp.c cqpcl.c symtab.c eval.c tree.c options.c corpmanag.c \
 	regex2dfa.c output.c ranges.c builtins.c groups.c targets.c \
 	matchlist.c paths.c \
 	concordance.c \
-        parse_actions.c attlist.c context_descriptor.c \
+	parse_actions.c attlist.c context_descriptor.c \
 	print-modes.c ascii-print.c sgml-print.c html-print.c latex-print.c \
 	variables.c print_align.c \
 	macro.c hash.c \
@@ -58,7 +58,7 @@ OBJS =  cqp.o symtab.o eval.o tree.o options.o \
 	corpmanag.o regex2dfa.o output.o ranges.o builtins.o \
 	groups.o targets.o matchlist.o paths.o \
 	concordance.o \
-        parse_actions.o attlist.o context_descriptor.o \
+	parse_actions.o attlist.o context_descriptor.o \
 	print-modes.o ascii-print.o sgml-print.o html-print.o latex-print.o \
 	variables.o print_align.o \
 	macro.o hash.o \
@@ -78,7 +78,7 @@ HDRS =  cqp.h options.h symtab.h tree.h eval.h corpmanag.h \
 	groups.h targets.h matchlist.h paths.h \
 	concordance.h \
 	parse_actions.h attlist.h context_descriptor.h \
-        print-modes.h ascii-print.h sgml-print.h html-print.h latex-print.h \
+	print-modes.h ascii-print.h sgml-print.h html-print.h latex-print.h \
 	variables.h print_align.h \
 	macro.h hash.h \
 	table.h \

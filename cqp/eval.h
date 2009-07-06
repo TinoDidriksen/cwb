@@ -1,13 +1,13 @@
-/* 
+/*
  *  IMS Open Corpus Workbench (CWB)
  *  Copyright (C) 1993-2006 by IMS, University of Stuttgart
  *  Copyright (C) 2007-     by the respective contributers (see file AUTHORS)
- * 
+ *
  *  This program is free software; you can redistribute it and/or modify it
  *  under the terms of the GNU General Public License as published by the
  *  Free Software Foundation; either version 2, or (at your option) any later
  *  version.
- * 
+ *
  *  This program is distributed in the hope that it will be useful, but
  *  WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
@@ -41,19 +41,19 @@
 
 
 enum b_ops { b_and,      /* boolean and operator           */
-	     b_or,       /* boolean or operator            */
-	     b_implies,  /* boolean implication (->) operator */
-	     b_not,      /* boolean negation               */
-	     
-	     cmp_gt,     /* compare: greater than          */
-	     cmp_lt,     /* compare: less than             */
-	     cmp_get,    /* compare: greater or equal than */
-	     cmp_let,    /* compare: less or equal than    */
-	     cmp_eq,     /* compare: equal                 */
-	     cmp_neq,    /* compare: not equal             */
+             b_or,       /* boolean or operator            */
+             b_implies,  /* boolean implication (->) operator */
+             b_not,      /* boolean negation               */
 
-	     cmp_ex      /* is value present? bool exprs   */
-	   };
+             cmp_gt,     /* compare: greater than          */
+             cmp_lt,     /* compare: less than             */
+             cmp_get,    /* compare: greater or equal than */
+             cmp_let,    /* compare: less or equal than    */
+             cmp_eq,     /* compare: equal                 */
+             cmp_neq,    /* compare: not equal             */
+
+             cmp_ex      /* is value present? bool exprs   */
+           };
 
 
 enum wf_type { NORMAL, REGEXP, CID };
@@ -68,7 +68,7 @@ enum bnodetype { bnode,		/* boolean evaluation node            */
 		 string_leaf,	/* string constant */
 		 int_leaf,	/* integer constant */
 		 float_leaf,	/* float constant */
-		 
+
 		 id_list,	/* list of IDs */
 		 var_ref	/* variable reference */
 	       };
@@ -200,7 +200,7 @@ union e_tree {
     enum tnodetype type;
     enum re_ops    op_id;      /* id_number of the RE operator */
     Evaltree       left,       /* points to the first argument */
-                   right;      /* points to the second argument -- */ 
+                   right;      /* points to the second argument -- */
 			       /* if it exists.                    */
     int            min,        /* minimum number of repetitions.  */
                    max;        /* maximum number of repetitions.  */
@@ -250,7 +250,7 @@ typedef union _avs {
     Boolean is_target;
     Boolean lookahead;		/* whether pattern is just a lookahead constraint */
   } matchall;
-  
+
   /* a constraint tree */
   struct {
     AVSType type;		/* Pattern */
@@ -259,7 +259,7 @@ typedef union _avs {
     Boolean is_target;
     Boolean lookahead;		/* whether pattern is just a lookahead constraint */
   } con;
-  
+
   /* a structure describing tag */
   struct {
     AVSType type;		/* Tag */
@@ -304,13 +304,13 @@ typedef struct ctxtsp {
 int eep;			/* eval environment pointer */
 
 typedef struct evalenv {
-  
+
   CorpusList *query_corpus;	/* the search corpus for this query part */
 
   int rp;			/* index of current range (in subqueries) */
-  
+
   SymbolTable labels;		/* symbol table for labels */
-  
+
   int MaxPatIndex;		/* the current number of patterns */
   Patternlist patternlist;	/* global variable which holds the pattern list */
 
@@ -333,7 +333,7 @@ typedef struct evalenv {
   int negated;			/* 1 iff we should negate alignment constr */
 
 } EvalEnvironment;
-  
+
 typedef EvalEnvironment *EEP;
 
 EvalEnvironment Environment[MAXENVIRONMENT];

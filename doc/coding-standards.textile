@@ -1,0 +1,54 @@
+h1. Rules-of-thumb for formatting code in CWB / CQP
+
+
+h2. Brace style
+
+* For blocks after control structures:
+** opening braces are on the same line as the control structure that they go with
+** closing braces are on a line of their own, aligned with the start of the control structure keyword
+* For function definitions:
+** opening brace on a line of its own, hard-left-aligned
+** closing brace on a line of its own, hard-left-aligned
+
+h2. Indenting
+
+* Indent second half of a one-statement @if / for / while@ by 1 tab
+* Indent lines within braces by 1 tab
+* Indent width: 2 spaces (or 8 spaces???) (with tabs or with sopaces???)
+* Spaces, not tab characters, are used for aligning comments at the _end_ of code lines
+
+h2. Function definitions
+
+* the return type of the function goes on the same line as the function name
+** _there are exceptions to this however????_
+* parameters are declared -- with types -- in the brackets (i.e. ANSI-style)
+* if there are relatively few parameters they also go on the same line
+* if there are many parameters:
+** put the first on the same line as the function name
+** put each subsequent parameter on a line of its own, using spaces to indent so they all begin at the same point as the first
+
+h2. Function and object names
+
+* data structure, enumeration etc. typedefs have names in CamelCase with an initial cap (the actual @struct@ names can be anything)
+* functions have names in all-lowercase (except when referring to an object name that contains uppercase) with "words" separated by underscore
+** "families" of functions, e.g. in a single module, share a @prefix_@ where possible
+** _there are a massive heap of exceptions to this ????_
+* global variables are named like functions ((except some don't, they use CamelCase instead))
+
+h2. Global variables
+
+* Global variables are declared in source files when ????????
+* Global variables are declared in header files when ????????
+* @extern@ statements for global variables go in the corresponding header file rather than being declared in every source file that uses the variable.
+
+
+h2. API commenting
+
+* Overall comments about what a function does, how to use it, etc., go immediately before the prototype in the header file
+* If a function is not in the header file, then such comments go directly before the definition
+
+h2. Boolean values
+
+* _Not sure what the preferred usage is here_
+** ( {most of} CQP uses a char typedef to Boolean plus #defined True and False;
+** {most of} CL uses ints with literal 0 or 1??????)
