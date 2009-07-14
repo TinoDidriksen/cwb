@@ -259,7 +259,7 @@ is_letter(char c) {
   return
     ( (c >= 'A' && c <= 'Z') ||
       (c >= 'a' && c <= 'z') ||
-      (c >= 0xc0 && c <= 0xff );
+      (c >= 0xc0 && c <= 0xff ));
 /*      (c >= '\xfffd' && c <= '\xfffd') );
  * this line became corrupt when imported into the SVN due to non-ASCII characters (see above)
  * I replaced it with the hex values for capital-a-grave to little-y-diaresis,
