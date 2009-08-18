@@ -248,8 +248,8 @@ void
 do_cqi_corpus_structural_attribute_has_values(void) {
   char *a;
   Attribute *attribute;
-	  
-  a = cqi_read_string();	/* need to try all possible attribute types */
+          
+  a = cqi_read_string();        /* need to try all possible attribute types */
   if (server_debug)
     fprintf(stderr, "CQi: CQI_CORPUS_STRUCTURAL_ATTRIBUTE_HAS_VALUES('%s')\n", a);
   attribute = cqi_lookup_attribute(a, ATT_STRUC);
@@ -267,8 +267,8 @@ do_cqi_cl_attribute_size(void) {
   char *a;
   Attribute *attribute;
   int size;
-	  
-  a = cqi_read_string();	/* need to try all possible attribute types */
+          
+  a = cqi_read_string();        /* need to try all possible attribute types */
   if (server_debug)
     fprintf(stderr, "CQi: CQI_CL_ATTRIBUTE_SIZE('%s')\n", a);
   attribute = cqi_lookup_attribute(a, ATT_POS);
@@ -286,27 +286,27 @@ do_cqi_cl_attribute_size(void) {
     if (attribute != NULL) {
       size = cl_max_struc(attribute);
       if (size < 0) {
-	/*  	send_cl_error(); */
-	/* current version of CL considers 0 regions a data access error condition, but we want to allow that */
-	cqi_data_int(0);
+        /*      send_cl_error(); */
+        /* current version of CL considers 0 regions a data access error condition, but we want to allow that */
+        cqi_data_int(0);
       }
       else {
-	cqi_data_int(size);
+        cqi_data_int(size);
       }
     }
     else {
       attribute = cqi_lookup_attribute(a, ATT_ALIGN);
       if (attribute != NULL) {
-	size = cl_max_alg(attribute);
-	if (size < 0) {
-	  send_cl_error();
-	}
-	else {
-	  cqi_data_int(size);
-	}
+        size = cl_max_alg(attribute);
+        if (size < 0) {
+          send_cl_error();
+        }
+        else {
+          cqi_data_int(size);
+        }
       }
       else {
-	cqi_command(cqi_errno);	/* return errno from the last lookup */
+        cqi_command(cqi_errno); /* return errno from the last lookup */
       }
     }
   }
@@ -318,7 +318,7 @@ do_cqi_cl_lexicon_size(void) {
   char *a;
   Attribute *attribute;
   int size;
-	  
+          
   a = cqi_read_string();
   if (server_debug)
     fprintf(stderr, "CQi: CQI_CL_LEXICON_SIZE('%s')\n", a);
@@ -333,7 +333,7 @@ do_cqi_cl_lexicon_size(void) {
     }
   }
   else {
-    cqi_command(cqi_errno);	/* cqi_errno set by lookup() */
+    cqi_command(cqi_errno);     /* cqi_errno set by lookup() */
   }
   free(a);
 }
@@ -370,17 +370,17 @@ do_cqi_cl_str2id(void) {
     /* we assemble the CQI_DATA_INT_LIST() return command by hand,
        so we don't have to allocate a temporary list */
     cqi_send_word(CQI_DATA_INT_LIST);
-    cqi_send_int(len);		/* list size */
+    cqi_send_int(len);          /* list size */
     for (i=0; i<len; i++) {
       id = cl_str2id(attribute, strlist[i]);
       if (id < 0) 
-	id = -1;		/* -1 => string not found in lexicon */
+        id = -1;                /* -1 => string not found in lexicon */
       cqi_send_int(id);
     }
   }
   cqi_flush();
   if (strlist != NULL)
-    free(strlist);      	/* don't forget to free allocated memory */
+    free(strlist);              /* don't forget to free allocated memory */
   free(a);
 }
 
@@ -407,15 +407,15 @@ do_cqi_cl_id2str(void) {
     /* we assemble the CQI_DATA_STRING_LIST() return command by hand,
        so we don't have to allocate a temporary list */
     cqi_send_word(CQI_DATA_STRING_LIST);
-    cqi_send_int(len);		/* list size */
+    cqi_send_int(len);          /* list size */
     for (i=0; i<len; i++) {
       str = cl_id2str(attribute, idlist[i]);
-      cqi_send_string(str);	/* sends "" if str == NULL (ID out of range) */
+      cqi_send_string(str);     /* sends "" if str == NULL (ID out of range) */
     }
   }
   cqi_flush();
   if (idlist != NULL)
-    free(idlist);      	        /* don't forget to free allocated memory */
+    free(idlist);               /* don't forget to free allocated memory */
   free(a);
 }
 
@@ -442,17 +442,17 @@ do_cqi_cl_id2freq(void) {
     /* we assemble the CQI_DATA_INT_LIST() return command by hand,
        so we don't have to allocate a temporary list */
     cqi_send_word(CQI_DATA_INT_LIST);
-    cqi_send_int(len);		/* list size */
+    cqi_send_int(len);          /* list size */
     for (i=0; i<len; i++) {
       f = cl_id2freq(attribute, idlist[i]);
       if (f < 0) 
-	f = 0;			/* return 0 if ID is out of range */
+        f = 0;                  /* return 0 if ID is out of range */
       cqi_send_int(f);
     }
   }
   cqi_flush();
   if (idlist != NULL)
-    free(idlist);      	        /* don't forget to free allocated memory */
+    free(idlist);               /* don't forget to free allocated memory */
   free(a);
 }
 
@@ -479,15 +479,15 @@ do_cqi_cl_cpos2str(void) {
     /* we assemble the CQI_DATA_STRING_LIST() return command by hand,
        so we don't have to allocate a temporary list */
     cqi_send_word(CQI_DATA_STRING_LIST);
-    cqi_send_int(len);		/* list size */
+    cqi_send_int(len);          /* list size */
     for (i=0; i<len; i++) {
       str = cl_cpos2str(attribute, cposlist[i]);
-      cqi_send_string(str);	/* sends "" if str == NULL (cpos out of range) */
+      cqi_send_string(str);     /* sends "" if str == NULL (cpos out of range) */
     }
   }
   cqi_flush();
   if (cposlist != NULL)
-    free(cposlist);    	        /* don't forget to free allocated memory */
+    free(cposlist);             /* don't forget to free allocated memory */
   free(a);
 }
 
@@ -514,17 +514,17 @@ do_cqi_cl_cpos2id(void) {
     /* we assemble the CQI_DATA_INT_LIST() return command by hand,
        so we don't have to allocate a temporary list */
     cqi_send_word(CQI_DATA_INT_LIST);
-    cqi_send_int(len);		/* list size */
+    cqi_send_int(len);          /* list size */
     for (i=0; i<len; i++) {
       id = cl_cpos2id(attribute, cposlist[i]);
       if (id < 0) 
-	id = -1;			/* return -1 if cpos is out of range */
+        id = -1;                        /* return -1 if cpos is out of range */
       cqi_send_int(id);
     }
   }
   cqi_flush();
   if (cposlist != NULL)
-    free(cposlist);      	        /* don't forget to free allocated memory */
+    free(cposlist);                     /* don't forget to free allocated memory */
   free(a);
 }
 
@@ -551,16 +551,16 @@ do_cqi_cl_cpos2struc(void) {
     /* we assemble the CQI_DATA_INT_LIST() return command by hand,
        so we don't have to allocate a temporary list */
     cqi_send_word(CQI_DATA_INT_LIST);
-    cqi_send_int(len);		/* list size */
+    cqi_send_int(len);          /* list size */
     for (i=0; i<len; i++) {
       struc = cl_cpos2struc(attribute, cposlist[i]);
       if (struc < 0) 
-	struc = -1;			/* return -1 if cpos is out of range */
+        struc = -1;                     /* return -1 if cpos is out of range */
       cqi_send_int(struc);
     }
   }
   cqi_flush();
-  cl_free(cposlist);      	        /* don't forget to free allocated memory */
+  cl_free(cposlist);                    /* don't forget to free allocated memory */
   free(a);
 }
 
@@ -591,22 +591,22 @@ do_cqi_cl_cpos2lbound(void) {
     /* we assemble the CQI_DATA_INT_LIST() return command by hand,
        so we don't have to allocate a temporary list */
     cqi_send_word(CQI_DATA_INT_LIST);
-    cqi_send_int(len);		/* list size */
+    cqi_send_int(len);          /* list size */
     for (i=0; i<len; i++) {
       struc = cl_cpos2struc(attribute, cposlist[i]);
       if (struc < 0) {
-	cqi_send_int(-1);			/* return -1 if cpos is not in region */
+        cqi_send_int(-1);                       /* return -1 if cpos is not in region */
       }
       else {
-	if (cl_struc2cpos(attribute, struc, &lb, &rb))
-	  cqi_send_int(lb);
-	else
-	  cqi_send_int(-1);	/* cannot return error within list, so send -1 */
+        if (cl_struc2cpos(attribute, struc, &lb, &rb))
+          cqi_send_int(lb);
+        else
+          cqi_send_int(-1);     /* cannot return error within list, so send -1 */
       }
     }
   }
   cqi_flush();
-  cl_free(cposlist);      	        /* don't forget to free allocated memory */
+  cl_free(cposlist);                    /* don't forget to free allocated memory */
   free(a);
 }
 
@@ -633,22 +633,22 @@ do_cqi_cl_cpos2rbound(void) {
     /* we assemble the CQI_DATA_INT_LIST() return command by hand,
        so we don't have to allocate a temporary list */
     cqi_send_word(CQI_DATA_INT_LIST);
-    cqi_send_int(len);		/* list size */
+    cqi_send_int(len);          /* list size */
     for (i=0; i<len; i++) {
       struc = cl_cpos2struc(attribute, cposlist[i]);
       if (struc < 0) {
-	cqi_send_int(-1);			/* return -1 if cpos is not in region */
+        cqi_send_int(-1);                       /* return -1 if cpos is not in region */
       }
       else {
-	if (cl_struc2cpos(attribute, struc, &lb, &rb))
-	  cqi_send_int(rb);
-	else
-	  cqi_send_int(-1);	/* cannot return error within list, so send -1 */
+        if (cl_struc2cpos(attribute, struc, &lb, &rb))
+          cqi_send_int(rb);
+        else
+          cqi_send_int(-1);     /* cannot return error within list, so send -1 */
       }
     }
   }
   cqi_flush();
-  cl_free(cposlist);      	        /* don't forget to free allocated memory */
+  cl_free(cposlist);                    /* don't forget to free allocated memory */
   free(a);
 }
 
@@ -675,17 +675,17 @@ do_cqi_cl_cpos2alg(void) {
     /* we assemble the CQI_DATA_INT_LIST() return command by hand,
        so we don't have to allocate a temporary list */
     cqi_send_word(CQI_DATA_INT_LIST);
-    cqi_send_int(len);		/* list size */
+    cqi_send_int(len);          /* list size */
     for (i=0; i<len; i++) {
       alg = cl_cpos2alg(attribute, cposlist[i]);
       if (alg < 0) 
-	alg = -1;			/* return -1 if cpos is out of range */
+        alg = -1;                       /* return -1 if cpos is out of range */
       cqi_send_int(alg);
     }
   }
   cqi_flush();
   if (cposlist != NULL)
-    free(cposlist);      	        /* don't forget to free allocated memory */
+    free(cposlist);                     /* don't forget to free allocated memory */
   free(a);
 }
 
@@ -712,15 +712,15 @@ do_cqi_cl_struc2str(void) {
     /* we assemble the CQI_DATA_STRING_LIST() return command by hand,
        so we don't have to allocate a temporary list */
     cqi_send_word(CQI_DATA_STRING_LIST);
-    cqi_send_int(len);		/* list size */
+    cqi_send_int(len);          /* list size */
     for (i=0; i<len; i++) {
       str = cl_struc2str(attribute, struclist[i]);
-      cqi_send_string(str);	/* sends "" if str == NULL (wrong alignment number) */
+      cqi_send_string(str);     /* sends "" if str == NULL (wrong alignment number) */
     }
   }
   cqi_flush();
   if (struclist != NULL)
-    free(struclist);      	        /* don't forget to free allocated memory */
+    free(struclist);                    /* don't forget to free allocated memory */
   free(a);
 }
 
@@ -748,7 +748,7 @@ do_cqi_cl_id2cpos(void) {
       free(cposlist);
     }
   }
-  free(a);			/* don't forget to free allocated space */
+  free(a);                      /* don't forget to free allocated space */
 }
 
 void
@@ -781,7 +781,7 @@ do_cqi_cl_idlist2cpos(void) {
   }
   cqi_flush();
   if (idlist != NULL)
-    free(idlist);      	        /* don't forget to free allocated memory */
+    free(idlist);               /* don't forget to free allocated memory */
   free(a);
 }
 
@@ -804,9 +804,9 @@ do_cqi_cl_regex2id(void) {
     idlist = cl_regex2id(attribute, regex, 0, &len);
     if (idlist == NULL) {
       if (cderrno != CDA_OK) 
-	send_cl_error();
+        send_cl_error();
       else
-	cqi_data_int_list(NULL, 0); /* no matches -> zero size list */
+        cqi_data_int_list(NULL, 0); /* no matches -> zero size list */
     }
     else {
       cqi_data_int_list(idlist, len);
@@ -814,7 +814,7 @@ do_cqi_cl_regex2id(void) {
     }
   }
   free(regex);
-  free(a);			/* don't forget to free allocated space */
+  free(a);                      /* don't forget to free allocated space */
 }
 
 void
@@ -837,7 +837,7 @@ do_cqi_cl_struc2cpos(void) {
     else
       send_cl_error();
   }
-  free(a);			/* don't forget to free allocated space */
+  free(a);                      /* don't forget to free allocated space */
 }
 
 void
@@ -860,7 +860,7 @@ do_cqi_cl_alg2cpos(void) {
     else
       send_cl_error();
   }
-  free(a);			/* don't forget to free allocated space */
+  free(a);                      /* don't forget to free allocated space */
 }
 
 void
@@ -880,13 +880,13 @@ do_cqi_cqp_list_subcorpora(void) {
     /* ugly, but it's easiest ... first count corpora, then return names one by one */
     for (cl = FirstCorpusFromList(); cl != NULL; cl = NextCorpusFromList(cl)) {
       if (cl->type == SUB && cl->corpus == mother->corpus)
-	n++;
+        n++;
     }
     cqi_send_word(CQI_DATA_STRING_LIST);
     cqi_send_int(n);
     for (cl = FirstCorpusFromList(); cl != NULL; cl = NextCorpusFromList(cl)) {
       if (cl->type == SUB && cl->corpus == mother->corpus)
-	cqi_send_string(cl->name);
+        cqi_send_string(cl->name);
     }
     cqi_flush();
 
@@ -904,7 +904,7 @@ query_has_semicolon(char *query) {
   if (query == NULL || *query == 0)
     return 0;
   p = query + strlen(query); 
-  while (--p > query)		/* stop at first non-blank char or at first string character */
+  while (--p > query)           /* stop at first non-blank char or at first string character */
     if (!(*p == ' ' || *p == '\t')) break;
   return (*p == ';') ? 1 : 0;
 }
@@ -930,36 +930,36 @@ do_cqi_cqp_query(void) {
       cqi_command(cqi_errno);
     }
     else {
-      query_lock = floor(1e9 * cl_runif()) + 1;	/* activate query lock mode with random key */
+      query_lock = floor(1e9 * cl_runif()) + 1; /* activate query lock mode with random key */
 
       printf("CQPSERVER: query_lock = %d\n", query_lock);
       if (query_has_semicolon(query))
-	sprintf(cqp_query, "%s = %s", child, query);
+        sprintf(cqp_query, "%s = %s", child, query);
       else
-	sprintf(cqp_query, "%s = %s;", child, query);
+        sprintf(cqp_query, "%s = %s;", child, query);
       if (!cqp_parse_string(cqp_query))
-	cqi_command(CQI_CQP_ERROR_GENERAL); /* should be changed to detailed error messages */
+        cqi_command(CQI_CQP_ERROR_GENERAL); /* should be changed to detailed error messages */
       else {
-	char *full_child;
-	CorpusList *childcl;
-	
-	full_child = combine_subcorpus_spec(c, child); /* c is the 'physical' part of the mother corpus */
-	childcl = cqi_find_corpus(full_child);
-	if ((childcl) == NULL)
-	  cqi_command(CQI_CQP_ERROR_GENERAL);
-	else {
-	  if (server_log) {
-	    printf("'%s' ran the following query on %s\n", user, mother);
-	    printf("\t%s\n", cqp_query);
-	    printf("and got %d matches.\n", childcl->size);
-	  }
-	  cqi_command(CQI_STATUS_OK);
+        char *full_child;
+        CorpusList *childcl;
+        
+        full_child = combine_subcorpus_spec(c, child); /* c is the 'physical' part of the mother corpus */
+        childcl = cqi_find_corpus(full_child);
+        if ((childcl) == NULL)
+          cqi_command(CQI_CQP_ERROR_GENERAL);
+        else {
+          if (server_log) {
+            printf("'%s' ran the following query on %s\n", user, mother);
+            printf("\t%s\n", cqp_query);
+            printf("and got %d matches.\n", childcl->size);
+          }
+          cqi_command(CQI_STATUS_OK);
 
-	}
-	free(full_child);
+        }
+        free(full_child);
       }
 
-      query_lock = 0;		/* deactivate query lock mode */
+      query_lock = 0;           /* deactivate query lock mode */
     }
     free(cqp_query);
   }
@@ -997,7 +997,7 @@ cqi_field_name(cqi_byte field) {
   case CQI_CONST_FIELD_KEYWORD:
     return "KEYWORD";
   default:
-    return NULL;		/* invalid field */
+    return NULL;                /* invalid field */
   }
 }
 
@@ -1007,7 +1007,7 @@ do_cqi_cqp_subcorpus_has_field(void) {
   CorpusList *cl;
   cqi_byte field;
   char *fieldname;
-  int field_ok = 1;		/* field valid? */
+  int field_ok = 1;             /* field valid? */
 
   subcorpus = cqi_read_string();
   field = cqi_read_byte();
@@ -1019,7 +1019,7 @@ do_cqi_cqp_subcorpus_has_field(void) {
   }
   if (server_debug) 
     fprintf(stderr, "CQi: CQI_CQP_SUBCORPUS_HAS_FIELD('%s', %s)\n", 
-	    subcorpus, fieldname);
+            subcorpus, fieldname);
 
   cl = cqi_find_corpus(subcorpus);
   if (cl == NULL) 
@@ -1036,15 +1036,15 @@ do_cqi_cqp_subcorpus_has_field(void) {
       break;
     case CQI_CONST_FIELD_TARGET:
       if (cl->targets == NULL) 
-	cqi_data_bool(CQI_CONST_NO);
+        cqi_data_bool(CQI_CONST_NO);
       else 
-	cqi_data_bool(CQI_CONST_YES);
+        cqi_data_bool(CQI_CONST_YES);
       break;
     case CQI_CONST_FIELD_KEYWORD:
       if (cl->keywords == NULL) 
-	cqi_data_bool(CQI_CONST_NO);
+        cqi_data_bool(CQI_CONST_NO);
       else 
-	cqi_data_bool(CQI_CONST_YES);
+        cqi_data_bool(CQI_CONST_YES);
       break;
     default:
       internal_error("do_cqi_cqp_subcorpus_has_field", "Can't identify requested field.");
@@ -1069,7 +1069,7 @@ do_cqi_cqp_dump_subcorpus(void) {
   cqi_byte field;
   int i, first, last, size;
   char *fieldname;
-  int field_ok = 1;		/* field valid? */
+  int field_ok = 1;             /* field valid? */
 
   subcorpus = cqi_read_string();
   field = cqi_read_byte();
@@ -1083,7 +1083,7 @@ do_cqi_cqp_dump_subcorpus(void) {
   }
   if (server_debug) 
     fprintf(stderr, "CQi: CQI_CQP_DUMP_SUBCORPUS('%s', %s, %d, %d)\n", 
-	    subcorpus, fieldname, first, last);
+            subcorpus, fieldname, first, last);
 
   cl = cqi_find_corpus(subcorpus);
   if (cl == NULL) 
@@ -1093,34 +1093,34 @@ do_cqi_cqp_dump_subcorpus(void) {
   else if ((last < first) || (first < 0) || (last >= cl->size)) 
     cqi_command(CQI_CQP_ERROR_OUT_OF_RANGE);
   else {
-      cqi_send_word(CQI_DATA_INT_LIST);	/* assemble by hand, so we don't have to allocate a temporary list */
+      cqi_send_word(CQI_DATA_INT_LIST); /* assemble by hand, so we don't have to allocate a temporary list */
       size = last - first + 1;
       cqi_send_int(size);
       switch (field) {
       case CQI_CONST_FIELD_MATCH:
-	for (i=first; i<=last; i++)
-	  cqi_send_int(cl->range[i].start);
-	break;
+        for (i=first; i<=last; i++)
+          cqi_send_int(cl->range[i].start);
+        break;
       case CQI_CONST_FIELD_MATCHEND:
-	for (i=first; i<=last; i++)
-	  cqi_send_int(cl->range[i].end);
-	break;
+        for (i=first; i<=last; i++)
+          cqi_send_int(cl->range[i].end);
+        break;
       case CQI_CONST_FIELD_TARGET:
-	if (cl->targets == NULL) 
-	  cqi_send_minus_one_list(size);
-	else 
-	  for (i=first; i<=last; i++)
-	    cqi_send_int(cl->targets[i]);
-	break;
+        if (cl->targets == NULL) 
+          cqi_send_minus_one_list(size);
+        else 
+          for (i=first; i<=last; i++)
+            cqi_send_int(cl->targets[i]);
+        break;
       case CQI_CONST_FIELD_KEYWORD:
-	if (cl->keywords == NULL) 
-	  cqi_send_minus_one_list(size);
-	else 
-	  for (i=first; i<=last; i++)
-	    cqi_send_int(cl->keywords[i]);
-	break;
+        if (cl->keywords == NULL) 
+          cqi_send_minus_one_list(size);
+        else 
+          for (i=first; i<=last; i++)
+            cqi_send_int(cl->keywords[i]);
+        break;
       default:
-	internal_error("do_cqi_cqp_dump_subcorpus", "No handler for requested field.");
+        internal_error("do_cqi_cqp_dump_subcorpus", "No handler for requested field.");
       }
       cqi_flush();
   }
@@ -1171,7 +1171,7 @@ do_cqi_cqp_fdist_1(void) {
   int i, size;
   char *fieldname;
   FieldType fieldtype = NoField;
-  int field_ok = 1;		/* field valid? */
+  int field_ok = 1;             /* field valid? */
 
   subcorpus = cqi_read_string();
   cutoff = cqi_read_int();
@@ -1189,7 +1189,7 @@ do_cqi_cqp_fdist_1(void) {
   }
   if (server_debug) 
     fprintf(stderr, "CQi: CQI_CQP_FDIST_1('%s', %d, %s, %s)\n", 
-	    subcorpus, cutoff, fieldname, att);
+            subcorpus, cutoff, fieldname, att);
   
   cl = cqi_find_corpus(subcorpus);
   if (cl == NULL) 
@@ -1205,12 +1205,12 @@ do_cqi_cqp_fdist_1(void) {
     }
     else {
       size = table->nr_cells;
-      cqi_send_word(CQI_DATA_INT_TABLE);	/* return table with 2 columns & <size> rows */
+      cqi_send_word(CQI_DATA_INT_TABLE);        /* return table with 2 columns & <size> rows */
       cqi_send_int(size);
       cqi_send_int(2);
       for (i=0; i < size; i++) {
-	cqi_send_int(table->count_cells[i].t);
-	cqi_send_int(table->count_cells[i].freq);
+        cqi_send_int(table->count_cells[i].t);
+        cqi_send_int(table->count_cells[i].freq);
       }
       cqi_flush();
       free_group(&table);
@@ -1233,7 +1233,7 @@ do_cqi_cqp_fdist_2(void) {
   int i, size;
   char *fieldname1, *fieldname2;
   FieldType fieldtype1 = NoField, fieldtype2 = NoField;
-  int fields_ok = 1;		/* (both) fields valid? */
+  int fields_ok = 1;            /* (both) fields valid? */
 
   subcorpus = cqi_read_string();
   cutoff = cqi_read_int();
@@ -1261,7 +1261,7 @@ do_cqi_cqp_fdist_2(void) {
   }
   if (server_debug) 
     fprintf(stderr, "CQi: CQI_CQP_FDIST_2('%s', %d, %s, %s, %s, %s)\n", 
-	    subcorpus, cutoff, fieldname1, att1, fieldname2, att2);
+            subcorpus, cutoff, fieldname1, att1, fieldname2, att2);
   
   cl = cqi_find_corpus(subcorpus);
   if (cl == NULL) 
@@ -1277,13 +1277,13 @@ do_cqi_cqp_fdist_2(void) {
     }
     else {
       size = table->nr_cells;
-      cqi_send_word(CQI_DATA_INT_TABLE);	/* return table with 3 columns & <size> rows */
+      cqi_send_word(CQI_DATA_INT_TABLE);        /* return table with 3 columns & <size> rows */
       cqi_send_int(size);
       cqi_send_int(3);
       for (i=0; i < size; i++) {
-	cqi_send_int(table->count_cells[i].s);
-	cqi_send_int(table->count_cells[i].t);
-	cqi_send_int(table->count_cells[i].freq);
+        cqi_send_int(table->count_cells[i].s);
+        cqi_send_int(table->count_cells[i].t);
+        cqi_send_int(table->count_cells[i].freq);
       }
       cqi_flush();
       free_group(&table);
@@ -1317,28 +1317,28 @@ interpreter(void) {
     case CQI_CTRL:
       switch (cmd) {
       case CQI_CTRL_CONNECT:
-	wrong_command_error(cmd);
+        wrong_command_error(cmd);
       case CQI_CTRL_BYE:
-	if (server_debug) 
-	  fprintf(stderr, "CQi: CQI_CTRL_BYE()\n");
-	cqi_command(CQI_STATUS_BYE_OK);
-	return;			/* exit CQi command interpreter */
+        if (server_debug) 
+          fprintf(stderr, "CQi: CQI_CTRL_BYE()\n");
+        cqi_command(CQI_STATUS_BYE_OK);
+        return;                 /* exit CQi command interpreter */
       case CQI_CTRL_USER_ABORT:
-	if (server_debug)
-	  fprintf(stderr, "CQi: CQI_CTRL_ABORT signal ... ignored\n");
-	break;
+        if (server_debug)
+          fprintf(stderr, "CQi: CQI_CTRL_ABORT signal ... ignored\n");
+        break;
       case CQI_CTRL_PING:
-	if (server_debug)
-	  fprintf(stderr, "CQi: CQI_CTRL_PING()\n");
-	cqi_command(CQI_STATUS_PING_OK);
-	break;
+        if (server_debug)
+          fprintf(stderr, "CQi: CQI_CTRL_PING()\n");
+        cqi_command(CQI_STATUS_PING_OK);
+        break;
       case CQI_CTRL_LAST_GENERAL_ERROR:
-	if (server_debug)
-	  fprintf(stderr, "CQi: CQI_CTRL_LAST_GENERAL_ERROR() => '%s'", cqi_error_string);
-	cqi_data_string(cqi_error_string);
-	break;
+        if (server_debug)
+          fprintf(stderr, "CQi: CQI_CTRL_LAST_GENERAL_ERROR() => '%s'", cqi_error_string);
+        cqi_data_string(cqi_error_string);
+        break;
       default:
-	unknown_command_error(cmd);
+        unknown_command_error(cmd);
       }
       break;
       
@@ -1346,24 +1346,24 @@ interpreter(void) {
     case CQI_ASK_FEATURE:
       switch (cmd) {
       case CQI_ASK_FEATURE_CQI_1_0:
-	if (server_debug)
-	  fprintf(stderr, "CQi: CQI_ASK_FEATURE_CQI_1_0 ... CQi v1.0 ok\n");
-	cqi_data_bool(CQI_CONST_YES);
-	break;
+        if (server_debug)
+          fprintf(stderr, "CQi: CQI_ASK_FEATURE_CQI_1_0 ... CQi v1.0 ok\n");
+        cqi_data_bool(CQI_CONST_YES);
+        break;
       case CQI_ASK_FEATURE_CL_2_3:
-	if (server_debug)
-	  fprintf(stderr, "CQi: CQI_ASK_FEATURE_CL_2_3 ... CL v2.3 ok\n");
-	cqi_data_bool(CQI_CONST_YES);
-	break;
+        if (server_debug)
+          fprintf(stderr, "CQi: CQI_ASK_FEATURE_CL_2_3 ... CL v2.3 ok\n");
+        cqi_data_bool(CQI_CONST_YES);
+        break;
       case CQI_ASK_FEATURE_CQP_2_3:
-	if (server_debug)
-	  fprintf(stderr, "CQi: CQI_ASK_FEATURE_CQP_2_3 ... CQP v2.3 ok\n");
-	cqi_data_bool(CQI_CONST_YES);
-	break;
+        if (server_debug)
+          fprintf(stderr, "CQi: CQI_ASK_FEATURE_CQP_2_3 ... CQP v2.3 ok\n");
+        cqi_data_bool(CQI_CONST_YES);
+        break;
       default:
-	if (server_debug)
-	  fprintf(stderr, "CQi: CQI_ASK_FEATURE_* ... <unknown feature> not supported\n");
-	cqi_data_bool(CQI_CONST_NO);
+        if (server_debug)
+          fprintf(stderr, "CQi: CQI_ASK_FEATURE_* ... <unknown feature> not supported\n");
+        cqi_data_bool(CQI_CONST_NO);
       }
       break;
 
@@ -1371,31 +1371,31 @@ interpreter(void) {
     case CQI_CORPUS:
       switch (cmd) {
       case CQI_CORPUS_LIST_CORPORA:
-	do_cqi_corpus_list_corpora();
-	break;
+        do_cqi_corpus_list_corpora();
+        break;
       case CQI_CORPUS_CHARSET:
-	do_cqi_corpus_charset();
-	break;
+        do_cqi_corpus_charset();
+        break;
       case CQI_CORPUS_PROPERTIES:
-	do_cqi_corpus_properties();
-	break;
+        do_cqi_corpus_properties();
+        break;
       case CQI_CORPUS_POSITIONAL_ATTRIBUTES:
-	do_cqi_corpus_attributes(ATT_POS);
-	break;
+        do_cqi_corpus_attributes(ATT_POS);
+        break;
       case CQI_CORPUS_STRUCTURAL_ATTRIBUTES:
-	do_cqi_corpus_attributes(ATT_STRUC);
-	break;
+        do_cqi_corpus_attributes(ATT_STRUC);
+        break;
       case CQI_CORPUS_STRUCTURAL_ATTRIBUTE_HAS_VALUES:
-	do_cqi_corpus_structural_attribute_has_values();
-	break;
+        do_cqi_corpus_structural_attribute_has_values();
+        break;
       case CQI_CORPUS_ALIGNMENT_ATTRIBUTES:
-	do_cqi_corpus_attributes(ATT_ALIGN);
-	break;
+        do_cqi_corpus_attributes(ATT_ALIGN);
+        break;
       case CQI_CORPUS_FULL_NAME:
-	do_cqi_corpus_full_name();
-	break;
+        do_cqi_corpus_full_name();
+        break;
       default:
-	unknown_command_error(cmd);
+        unknown_command_error(cmd);
       }
       break;
       
@@ -1403,61 +1403,61 @@ interpreter(void) {
     case CQI_CL:
       switch (cmd) {
       case CQI_CL_ATTRIBUTE_SIZE:
-	do_cqi_cl_attribute_size();
-	break;
+        do_cqi_cl_attribute_size();
+        break;
       case CQI_CL_LEXICON_SIZE:
-	do_cqi_cl_lexicon_size();
-	break;
+        do_cqi_cl_lexicon_size();
+        break;
       case CQI_CL_DROP_ATTRIBUTE:
-	do_cqi_cl_drop_attribute();
-	break;
+        do_cqi_cl_drop_attribute();
+        break;
       case CQI_CL_STR2ID:
-	do_cqi_cl_str2id();
-	break;
+        do_cqi_cl_str2id();
+        break;
       case CQI_CL_ID2STR:
-	do_cqi_cl_id2str();
-	break;
+        do_cqi_cl_id2str();
+        break;
       case CQI_CL_ID2FREQ:
-	do_cqi_cl_id2freq();
-	break;
+        do_cqi_cl_id2freq();
+        break;
       case CQI_CL_CPOS2ID:
-	do_cqi_cl_cpos2id();
-	break;
+        do_cqi_cl_cpos2id();
+        break;
       case CQI_CL_CPOS2STR:
-	do_cqi_cl_cpos2str();
-	break;
+        do_cqi_cl_cpos2str();
+        break;
       case CQI_CL_CPOS2STRUC:
-	do_cqi_cl_cpos2struc();
-	break;
+        do_cqi_cl_cpos2struc();
+        break;
       case CQI_CL_CPOS2LBOUND:
-	do_cqi_cl_cpos2lbound();
-	break;
+        do_cqi_cl_cpos2lbound();
+        break;
       case CQI_CL_CPOS2RBOUND:
-	do_cqi_cl_cpos2rbound();
-	break;
+        do_cqi_cl_cpos2rbound();
+        break;
       case CQI_CL_CPOS2ALG:
-	do_cqi_cl_cpos2alg();
-	break;
+        do_cqi_cl_cpos2alg();
+        break;
       case CQI_CL_STRUC2STR:
-	do_cqi_cl_struc2str();
-	break;
+        do_cqi_cl_struc2str();
+        break;
       case CQI_CL_ID2CPOS:
-	do_cqi_cl_id2cpos();
-	break;
+        do_cqi_cl_id2cpos();
+        break;
       case CQI_CL_IDLIST2CPOS:
-	do_cqi_cl_idlist2cpos();
-	break;
+        do_cqi_cl_idlist2cpos();
+        break;
       case CQI_CL_REGEX2ID:
-	do_cqi_cl_regex2id();
-	break;
+        do_cqi_cl_regex2id();
+        break;
       case CQI_CL_STRUC2CPOS:
-	do_cqi_cl_struc2cpos();
-	break;
+        do_cqi_cl_struc2cpos();
+        break;
       case CQI_CL_ALG2CPOS:
-	do_cqi_cl_alg2cpos();
-	break;
+        do_cqi_cl_alg2cpos();
+        break;
       default:
-	unknown_command_error(cmd);
+        unknown_command_error(cmd);
       }
       break;
 
@@ -1465,31 +1465,31 @@ interpreter(void) {
     case CQI_CQP:
       switch (cmd) {
       case CQI_CQP_QUERY:
-	do_cqi_cqp_query();
-	break;
+        do_cqi_cqp_query();
+        break;
       case CQI_CQP_LIST_SUBCORPORA:
-	do_cqi_cqp_list_subcorpora();
-	break;
+        do_cqi_cqp_list_subcorpora();
+        break;
       case CQI_CQP_SUBCORPUS_SIZE:
-	do_cqi_cqp_subcorpus_size();
-	break;
+        do_cqi_cqp_subcorpus_size();
+        break;
       case CQI_CQP_SUBCORPUS_HAS_FIELD:
-	do_cqi_cqp_subcorpus_has_field();
-	break;
+        do_cqi_cqp_subcorpus_has_field();
+        break;
       case CQI_CQP_DUMP_SUBCORPUS:
-	do_cqi_cqp_dump_subcorpus();
-	break;
+        do_cqi_cqp_dump_subcorpus();
+        break;
       case CQI_CQP_DROP_SUBCORPUS:
-	do_cqi_cqp_drop_subcorpus();
-	break;
+        do_cqi_cqp_drop_subcorpus();
+        break;
       case CQI_CQP_FDIST_1:
-	do_cqi_cqp_fdist_1();
-	break;
+        do_cqi_cqp_fdist_1();
+        break;
       case CQI_CQP_FDIST_2:
-	do_cqi_cqp_fdist_2();
-	break;
+        do_cqi_cqp_fdist_2();
+        break;
       default:
-	unknown_command_error(cmd);
+        unknown_command_error(cmd);
       }
       break;
       
@@ -1559,7 +1559,7 @@ int main(int argc, char *argv[]) {
     CorpusList *cl = FirstCorpusFromList();
     while (cl != NULL) {
       if (!check_grant(user, cl->name))
-	dropcorpus(cl);
+        dropcorpus(cl);
       cl = NextCorpusFromList(cl);
     }
     }

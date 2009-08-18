@@ -255,15 +255,19 @@ hash_add(int *tuple, int f) {
 }
 
 int
-is_letter(char c) {
+is_letter(unsigned char c) {
   return
     ( (c >= 'A' && c <= 'Z') ||
       (c >= 'a' && c <= 'z') ||
-      (c >= 0xc0 && c <= 0xff ));
+      (c >= 0xC0 && c <= 0xFF ));
 /*      (c >= '\xfffd' && c <= '\xfffd') );
  * this line became corrupt when imported into the SVN due to non-ASCII characters (see above)
  * I replaced it with the hex values for capital-a-grave to little-y-diaresis,
  * having looked them up in earlier version of the code... -- AH 1/7/09
+ * Which means that the condition could never be satisfied on a platform where char is signed
+ * (because the non-ASCII characters have negative codes in this case); I've explicitly made the
+ * function argument an "unsigned char" now, which should fix the problem. -- SE 18/08/09
+ * (NB: there's still a harmless warning that "comparison is always true" for "c <= 0xFF")
  */
 }
 

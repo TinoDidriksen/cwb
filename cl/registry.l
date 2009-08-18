@@ -39,8 +39,8 @@ id              [a-zA-Z0-9_\-/$À-ÿ][^ \t\n\r\(\)\:\,]*
 path            [a-zA-Z0-9/$]+
 number          [0-9]+
 
-string		\"([^"\n\r]|\\\")*["\n\r]
-whitespaces	[ \t\n\r]+
+string          \"([^"\n\r]|\\\")*["\n\r]
+whitespaces     [ \t\n\r]+
 
 %%
 
@@ -78,27 +78,27 @@ HOST            { return(HOST_SYM); }
 
 "..."           { return(DOTS_SYM); }
 
-##::		{ return(PROPERTY_SYM); }
-#[^#].*		; /* single line comment, skip; unless the comment begins with '##::' */
-##[^:].*	;
-##:[^:].*	;
+##::            { return(PROPERTY_SYM); }
+#[^#].*         ; /* single line comment, skip; unless the comment begins with '##::' */
+##[^:].*        ;
+##:[^:].*       ;
 #               ;
 
 {whitespaces}   ;  /* skip */
 
 
 {number}        { creglval.ival = atoi(cregtext);
-		  return(NUMBER); 
-		}
+                  return(NUMBER); 
+                }
 {id}            { creglval.strval = cl_strdup(cregtext);
-		  return(IDENTIFIER); 
-		}
+                  return(IDENTIFIER); 
+                }
 {string}        { creglval.strval = cl_strdup(cregtext+1);
-		  creglval.strval[yyleng - 2] = '\0';
-		  return(STRING); 
-		}
+                  creglval.strval[yyleng - 2] = '\0';
+                  return(STRING); 
+                }
 
-.             	return cregtext[0];
+.               return cregtext[0];
 
 %%
 

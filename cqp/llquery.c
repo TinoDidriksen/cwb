@@ -44,8 +44,8 @@
    can build NULL-terminated string lists of arbitrary size;
    all functions & static variables use the namespace prefix cc_... (for custom completion)
 */
-char **cc_compl_list = NULL;	  /* list of possible completions */
-int cc_compl_list_size = 0;	  /* number of completions in list */
+char **cc_compl_list = NULL;      /* list of possible completions */
+int cc_compl_list_size = 0;       /* number of completions in list */
 int cc_compl_list_allocated = 0;  /* number of entries allocated for list (incl. NULL terminator) */
 #define CC_COMPL_LIST_ALLOC_BLOCK 256 /* how many list cells to allocate at a time */
 
@@ -85,16 +85,16 @@ char **
 cc_compl_list_sort_uniq(void) {
   int mark, point;
   if (cc_compl_list_size > 0)
-    qsort(cc_compl_list, cc_compl_list_size, sizeof(char *), cc_compl_list_sort);	/* don't sort NULL at end of list */
+    qsort(cc_compl_list, cc_compl_list_size, sizeof(char *), cc_compl_list_sort);       /* don't sort NULL at end of list */
   /* now for the tricky part ... go through list and remove duplicates */
   mark = 0;
-  point = 1;			/* always keep first list element */
+  point = 1;                    /* always keep first list element */
   while (point < cc_compl_list_size) {
     if (strcmp(cc_compl_list[mark], cc_compl_list[point]) == 0) {
       free(cc_compl_list[point]); /* duplicate -> free, don't advance point */
     }
     else {
-      mark++;			/* new string -> advance mark & copy there */
+      mark++;                   /* new string -> advance mark & copy there */
       cc_compl_list[mark] = cc_compl_list[point];
     }
     point++;
@@ -107,7 +107,7 @@ cc_compl_list_sort_uniq(void) {
 /* custom completion function: complete corpus/subcorpus names */
 char **
 cqp_custom_completion(char *line, int start, int end) {
-  char *text;	    /* the part of the line editline wants us to complete */
+  char *text;       /* the part of the line editline wants us to complete */
   int text_len;     /* are the first text_len characters of text[] */
   Variable var;
   CorpusList *cl;
@@ -145,16 +145,16 @@ cqp_custom_completion(char *line, int start, int end) {
    *  (B) variable name completion (triggered by '$' character)
    */
   if (text[0] == '$') {
-    cc_compl_list_init();	/* init list only if custom completion has been triggered */
+    cc_compl_list_init();       /* init list only if custom completion has been triggered */
     variables_iterator_new();
     prefix = text + 1;
     prefix_len = text_len - 1;
     var = variables_iterator_next();
     while (var != NULL) {
       if (strncmp(prefix, var->my_name, prefix_len) == 0) { /* found variable matching prefix -> format and add */
-	completion = cl_malloc(strlen(var->my_name) + 2);
-	sprintf(completion, "$%s", var->my_name);
-	cc_compl_list_add(completion);
+        completion = cl_malloc(strlen(var->my_name) + 2);
+        sprintf(completion, "$%s", var->my_name);
+        cc_compl_list_add(completion);
       }
       var = variables_iterator_next();
     }
@@ -174,10 +174,10 @@ cqp_custom_completion(char *line, int start, int end) {
     while (prototype != NULL) {
       /* since the iterator ignores partially complete argument lists, we have to check that <prototype> really extends <text> */
       if (strncmp(text, prototype, text_len) == 0) {
-	cc_compl_list_add(prototype);
+        cc_compl_list_add(prototype);
       }
       else {
-	free(prototype);	/* if prototype isn't accepted, we have to free it */
+        free(prototype);        /* if prototype isn't accepted, we have to free it */
       }
       prototype = macro_iterator_next_prototype(prefix);
     }
@@ -213,49 +213,49 @@ cqp_custom_completion(char *line, int start, int end) {
       int handled = 0;
       /* token must be prefix of corpus name (if mother name is given, consider only subcorpora) */
       if ((strncmp(cl->name, real_name, real_len) == 0)
-	  && (!mother_len || (cl->type == SUB))) {
-	/* if mother name is given, that has to match also; same if we're looking at a subcorpus */
-	if (cl->type == SUB) {
-	  char *expected_mother;
-	  if (mother_len) {
-	    expected_mother = mother;
-	  }
-	  else if (current_corpus) {
-	    expected_mother = (current_corpus->type == SUB) ? current_corpus->mother_name : current_corpus->name;
-	  }
-	  else {
-	    expected_mother = cl->mother_name; /* a neat little trick: don't try mother name if no corpus is activated */
-	  }
-	  if (strcmp(cl->mother_name, expected_mother) == 0) {
-	    if (mother_len) {
-	      /* we must allocate a string of sufficient length and build a full subcorpus specifier */
-	      completion = (char *) cl_malloc(mother_len + 1 + strlen(cl->name) + 1);
-	      sprintf(completion, "%s:%s", mother, cl->name);
-	      cc_compl_list_add(completion);
-	    }
-	    else {
-	      cc_compl_list_add(cl_strdup(cl->name));
-	    }
-	    handled = 1;
-	  }
-	}
-	else {
-	  cc_compl_list_add(cl_strdup(cl->name));
-	  handled = 1;
-	}
+          && (!mother_len || (cl->type == SUB))) {
+        /* if mother name is given, that has to match also; same if we're looking at a subcorpus */
+        if (cl->type == SUB) {
+          char *expected_mother;
+          if (mother_len) {
+            expected_mother = mother;
+          }
+          else if (current_corpus) {
+            expected_mother = (current_corpus->type == SUB) ? current_corpus->mother_name : current_corpus->name;
+          }
+          else {
+            expected_mother = cl->mother_name; /* a neat little trick: don't try mother name if no corpus is activated */
+          }
+          if (strcmp(cl->mother_name, expected_mother) == 0) {
+            if (mother_len) {
+              /* we must allocate a string of sufficient length and build a full subcorpus specifier */
+              completion = (char *) cl_malloc(mother_len + 1 + strlen(cl->name) + 1);
+              sprintf(completion, "%s:%s", mother, cl->name);
+              cc_compl_list_add(completion);
+            }
+            else {
+              cc_compl_list_add(cl_strdup(cl->name));
+            }
+            handled = 1;
+          }
+        }
+        else {
+          cc_compl_list_add(cl_strdup(cl->name));
+          handled = 1;
+        }
       }
       if (! handled) {
-	/* other possibility: current token is prefix of mother part of a subcorpus */
-	if ((cl->type == SUB) && (!mother_len) && cl->mother_name &&
-	    (strncmp(cl->mother_name, real_name, real_len) == 0))  {
-	  /* requires special handling: return ''<mother>:'' */
-	  char *completion = (char *) cl_malloc(strlen(cl->mother_name) + 2);
-	  /* just show there are subcorpora as well; user must type ':' to see subcorpora completions */
-	  sprintf(completion, "%s:", cl->mother_name);
-	  /* note that this will return the same string over and over again if there are multiple subcorpora;
-	     fortunately, readline sorts and uniqs the list of completions, so we don't have to worry */
-	  cc_compl_list_add(completion);
-	}
+        /* other possibility: current token is prefix of mother part of a subcorpus */
+        if ((cl->type == SUB) && (!mother_len) && cl->mother_name &&
+            (strncmp(cl->mother_name, real_name, real_len) == 0))  {
+          /* requires special handling: return ''<mother>:'' */
+          char *completion = (char *) cl_malloc(strlen(cl->mother_name) + 2);
+          /* just show there are subcorpora as well; user must type ':' to see subcorpora completions */
+          sprintf(completion, "%s:", cl->mother_name);
+          /* note that this will return the same string over and over again if there are multiple subcorpora;
+             fortunately, readline sorts and uniqs the list of completions, so we don't have to worry */
+          cc_compl_list_add(completion);
+        }
       }
     }
     cl = NextCorpusFromList(cl);
@@ -274,26 +274,26 @@ ensure_semicolon (char *line) {
     if (l > 0) {
       i = l-1;
       while ((i >= 0) && (line[i] == ' ' || line[i] == '\t' || line[i] == '\n'))
-	i--;
+        i--;
       if (i < 0) {
-	*line = 0;		/* line contains only whitespace -> replace by empty string */
+        *line = 0;              /* line contains only whitespace -> replace by empty string */
       }
       else {
-	if (line[i] != ';') {	/* this is the problematic case: last non-ws character is not a ';' */
-	  if (i+1 < l) {	/* have some whitespace at end of string that we can overwrite */
-	    line[i+1] = ';';
-	    line[i+2] = 0;
-	  }
-	  else {		/* need to reallocate string to make room for ';' */
-	    line = cl_realloc(line, l+2);
-	    line[l] = ';';
-	    line[l+1] = 0;
-	  }
-	}
+        if (line[i] != ';') {   /* this is the problematic case: last non-ws character is not a ';' */
+          if (i+1 < l) {        /* have some whitespace at end of string that we can overwrite */
+            line[i+1] = ';';
+            line[i+2] = 0;
+          }
+          else {                /* need to reallocate string to make room for ';' */
+            line = cl_realloc(line, l+2);
+            line[l] = ';';
+            line[l+1] = 0;
+          }
+        }
       }
     }
   }
-  return (line);		/* return pointer to line (may have been modified and reallocated */
+  return (line);                /* return pointer to line (may have been modified and reallocated */
 }
 
 
@@ -317,12 +317,12 @@ void readline_main(void)
 
     if (input != NULL)
       {
-	free(input);
-	input = NULL;
+        free(input);
+        input = NULL;
       }
 
     if (highlighting) {
-      printf(get_typeface_escape('n'));	/* work around 'bug' in less which may not switch off display attributes when user exits */
+      printf(get_typeface_escape('n')); /* work around 'bug' in less which may not switch off display attributes when user exits */
       fflush(stdout);
     }
 
@@ -330,17 +330,17 @@ void readline_main(void)
       input = readline(NULL);
     } else {
       if (current_corpus != NULL) {
-	/* don't use terminal colours for the prompt because they mess up readline's formatting */
-	if (STREQ(current_corpus->name, current_corpus->mother_name))
-	  sprintf(prompt, "%s> ", current_corpus->name);
-	else
-	  sprintf(prompt, "%s:%s[%d]> ",
-		  current_corpus->mother_name,
-		  current_corpus->name,
-		  current_corpus->size);
+        /* don't use terminal colours for the prompt because they mess up readline's formatting */
+        if (STREQ(current_corpus->name, current_corpus->mother_name))
+          sprintf(prompt, "%s> ", current_corpus->name);
+        else
+          sprintf(prompt, "%s:%s[%d]> ",
+                  current_corpus->mother_name,
+                  current_corpus->name,
+                  current_corpus->size);
       }
       else
-	sprintf(prompt, "[no corpus]> ");
+        sprintf(prompt, "[no corpus]> ");
 
       input = readline(prompt);
     }
@@ -402,14 +402,14 @@ int main(int argc, char *argv[])
     for (i = 3; i <= 4; i++) {
       printf("[");
       for (j = 0; j < 8; j++) {
-	sprintf(sc_colour, "\x1B[0;%d%dm", i,j);
-	printf("%d%d: %sN%s%sB%s%sU%s%sS%s  ",
-	       i, j,
-	       sc_colour,
-	       sc_colour, bold,
-	       sc_colour, underline,
-	       sc_colour, standout,
-	       normal);
+        sprintf(sc_colour, "\x1B[0;%d%dm", i,j);
+        printf("%d%d: %sN%s%sB%s%sU%s%sS%s  ",
+               i, j,
+               sc_colour,
+               sc_colour, bold,
+               sc_colour, underline,
+               sc_colour, standout,
+               normal);
       }
       printf("]\n");
     }

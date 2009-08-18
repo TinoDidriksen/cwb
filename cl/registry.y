@@ -355,6 +355,7 @@ FieldDef        : DIR_SYM path      { cregSetAttrComponentPath(cregattrib, CompD
                 ;
 
 path            : id                { $$ = $1; }
+                | string            { $$ = $1; }
                 ;
 
 id              : IDENTIFIER        { $$ = $1; }

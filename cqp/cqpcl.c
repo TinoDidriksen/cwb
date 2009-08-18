@@ -46,8 +46,8 @@ int main(int argc, char *argv[])
   else {
     for (i = optind; i < argc; i++)
       if (!cqp_parse_string(argv[i])) {
-	fprintf(stderr, "Syntax error, exiting\n");
-	exit(1);
+        fprintf(stderr, "Syntax error, exiting\n");
+        exit(1);
       }
   }
 
