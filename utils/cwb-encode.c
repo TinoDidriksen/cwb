@@ -1388,7 +1388,48 @@ get_input_line(char *buffer, int bufsize) {
   }
 }
 
+/* quote path name if necessary (for HOME and INFO fields of registry file);
+   always returns a newly allocated string for consistency */
+char *
+quote_file_path(char *path) {
+  char *p, *q, *quoted_path;
+  int need_quotes = 0;
 
+  for (p = path; *p; p++) {
+    if ((*p >= 'A' && *p <= 'Z') ||
+        (*p >= 'a' && *p <= 'z') ||
+        (*p >= '0' && *p <= '9') ||
+        (*p == '-') || (*p == '_') || (*p == '/') || 
+        (p > path && (*p == '.' || *p == '\\'))
+       )
+      /* pass */ ;
+    else
+      need_quotes = 1;
+  }
+  
+  if (need_quotes) {
+    int num_escapes = 0; /* double quotes and backslashes in path name need to be escaped */
+    for (p = path; *p; p++) {
+      if (*p == '"' || *p == '\\')
+        num_escapes++;
+    }
+    quoted_path = (char *) cl_malloc(strlen(path) + num_escapes + 3);
+    q = quoted_path;
+    *q++ = '"';
+    for (p = path; *p; p++, q++) {
+      if (*p == '"' || *p == '\\')
+        *q++ = '\\';
+      *q = *p;
+    }
+    *q++ = '"';
+    *q = '\0';
+  }
+  else {
+    quoted_path = cl_strdup(path);
+  }
+  
+  return(quoted_path);
+}
 
 /*
  *  main program
@@ -1633,7 +1674,9 @@ main(int argc, char **argv) {
     FILE *registry_fd;
     char *registry_id;          /* use last part of registry filename (i.e. string following last '/' character) */
     char *corpus_name = NULL;   /* name of the corpus == uppercase version of registry_id */
-
+    char *info_file = NULL;     /* name of INFO file == <directory>/.info */
+    char *path = NULL;
+    
     if (debug)
       fprintf(stderr, "Writing registry file %s ...\n", registry_file);
 
@@ -1658,6 +1701,9 @@ main(int argc, char **argv) {
       i--;
     }
 
+    info_file = (char *) cl_malloc(strlen(directory) + 8); /* 1 byte extra as safety margin */
+    sprintf(info_file, "%s/.info", directory);
+
     /* write header part for registry file */
     fprintf(registry_fd, "##\n## registry entry for corpus %s\n##\n\n", corpus_name);
     fprintf(registry_fd, "# long descriptive name for the corpus\n");
@@ -1665,9 +1711,13 @@ main(int argc, char **argv) {
     fprintf(registry_fd, "# corpus ID (must be lowercase in registry!)\n");
     fprintf(registry_fd, "ID   %s\n", registry_id);
     fprintf(registry_fd, "# path to binary data files\n");
-    fprintf(registry_fd, "HOME %s\n", directory);
+    path = quote_file_path(directory);
+    fprintf(registry_fd, "HOME %s\n", path);
+    cl_free(path);
     fprintf(registry_fd, "# optional info file (displayed by \"info;\" command in CQP)\n");
-    fprintf(registry_fd, "INFO %s/.info\n\n", directory);
+    path = quote_file_path(info_file);
+    fprintf(registry_fd, "INFO %s\n\n", path);
+    cl_free(path);
     fprintf(registry_fd, "# corpus properties provide additional information about the corpus:\n");
     fprintf(registry_fd, "##:: charset  = \"latin1\" # change if your corpus uses different charset\n");
     fprintf(registry_fd, "##:: language = \"??\"     # insert ISO code for language (de, en, fr, ...)\n");

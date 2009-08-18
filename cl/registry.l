@@ -33,13 +33,30 @@
 #define cregwrap() 1
 */
 
+/* remove \" and \\ escapes, but keep all other "literal" backslashes; modified <string> in place */
+void
+unescape_string (char *string) {
+  char *p, *q;
+  for (p = q = string; *p; p++) {
+    char next = *(p + 1);
+    if (*p == '\\' && (next == '"' || next == '\\')) {
+      p++; /* skip this escape backslash */
+      *q++ = next; /* but keep the escaped character */
+    }
+    else {
+      *q++ = *p;
+    }
+  }
+  *q = '\0';  
+}
+
 %}
 
 id              [a-zA-Z0-9_\-/$À-ÿ][^ \t\n\r\(\)\:\,]*
 path            [a-zA-Z0-9/$]+
 number          [0-9]+
 
-string          \"([^"\n\r]|\\\")*["\n\r]
+string          \"([^"\n\r]|\\\"|\\\\)*["\n\r]
 whitespaces     [ \t\n\r]+
 
 %%
@@ -95,6 +112,7 @@ HOST            { return(HOST_SYM); }
                 }
 {string}        { creglval.strval = cl_strdup(cregtext+1);
                   creglval.strval[yyleng - 2] = '\0';
+                  unescape_string(creglval.strval);
                   return(STRING); 
                 }
 
