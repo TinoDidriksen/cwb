@@ -134,7 +134,7 @@ clean:
 	-$(RM) *.o libcl.a registry.output *~
 
 realclean:	clean
-	-$(RM) registry.tab.c registry.tab.c lex.creg.c
+	-$(RM) registry.tab.c registry.tab.c lex.creg.c registry.tab.h
 	-$(RM) depend.mk
 
 size:	$(SRCS) $(HDRS)

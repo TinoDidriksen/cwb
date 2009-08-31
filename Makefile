@@ -121,7 +121,7 @@ clean:
 
 realclean:	clean
 	for i in $(SUBDIRS) ; do $(MAKE) -C $$i realclean; done;
-	-$(RM) -rf editline/config.log editline/autom4te.cache
+	-$(RM) -rf editline/config.log editline/autom4te.cache editline/config.status editline/Makefile editline/editline_config.h
 
 install:
 	$(MAKE) -C cl install   # not in for loop to make sure we abort on error

@@ -118,7 +118,7 @@ typedef union YYSTYPE
     char *path;
   } storage;
 }
-/* Line 1529 of yacc.c.  */
+/* Line 1489 of yacc.c.  */
 #line 123 "registry.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

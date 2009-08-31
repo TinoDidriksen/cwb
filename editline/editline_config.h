@@ -33,7 +33,7 @@
 /* #undef HAVE_SYS_NDIR_H */
 
 /* Define if you have the <termio.h> header file.  */
-/* #undef HAVE_TERMIO_H */
+#define HAVE_TERMIO_H 1
 
 /* Define if you have the <walloc.h> header file.  */
 /* #undef HAVE_WALLOC_H */
