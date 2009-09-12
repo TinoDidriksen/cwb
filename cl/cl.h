@@ -19,7 +19,7 @@
 #ifndef _cwb_cl_h
 #define _cwb_cl_h
 
-#include <strings.h>		/* for size_t */
+#include <strings.h>                /* for size_t */
 
 /*
  *  declaration of opaque object structures,
@@ -31,9 +31,22 @@ typedef struct _position_stream_rec_ *PositionStream;
 typedef struct _CL_Regex *CL_Regex;
 typedef struct _CL_BitVec *CL_BitVec;
 
+/**
+ * Underlying structure for the CorpusProperty object-pointer type.
+ * The structure takes the form of a linked-list entry.
+ */
 typedef struct TCorpusProperty {
+  /**
+   * A string specifying the property in question.
+   */
   char *property;
+  /**
+   * A string containing the value of the property in question.
+   */
   char *value;
+  /**
+   * Pointer to the next entry in the linked list.
+   */
   struct TCorpusProperty *next;
 } *CorpusProperty;
 
@@ -52,10 +65,17 @@ typedef enum ECorpusCharset {
   unknown_charset
 } CorpusCharset;
 
-/* full definition of DynCallResult structure (needed to allocate space for dyn. func. arguments) */
-#define CL_DYN_STRING_SIZE 2048	/* maximum size of 'dynamic' strings */
+
+/**
+ *  maximum size of 'dynamic' strings
+ */
+#define CL_DYN_STRING_SIZE 2048
+
+/**
+ *  full definition of DynCallResult structure (needed to allocate space for dynamic function arguments)
+ */
 typedef struct _DCR {
-  int type;			/* ATTAT_x */
+  int type;                        /* ATTAT_x */
   union {
     int intres;
     char *charres;
@@ -79,13 +99,13 @@ typedef struct _DCR {
 
 #define ATT_ALL        ATT_POS   | ATT_STRUC | ATT_ALIGN | ATT_DYN 
 #define ATT_REAL       ATT_POS   | ATT_STRUC | ATT_ALIGN 
-		       
+
 /* result and argument types of dynamic attributes */
 #define ATTAT_NONE    0
 #define ATTAT_POS     1
 #define ATTAT_STRING  2
 #define ATTAT_INT     3
-#define ATTAT_VAR     4		/* variable number of string arguments (only in arglist) */
+#define ATTAT_VAR     4                /* variable number of string arguments (only in arglist) */
 #define ATTAT_FLOAT   5
 #define ATTAT_PAREF   6
 
@@ -102,29 +122,29 @@ typedef struct _DCR {
 /* 
  *  error handling (error values and related functions) 
  */
-#define CDA_OK           0	/* everything fine */
-#define CDA_ENULLATT    -1	/* NULL passed as attribute argument */
-#define CDA_EATTTYPE    -2	/* function was called on illegal attribute */
-#define CDA_EIDORNG     -3	/* id out of range */
-#define CDA_EPOSORNG    -4	/* position out of range */
-#define CDA_EIDXORNG    -5	/* index out of range */
-#define CDA_ENOSTRING   -6	/* no such string encoded */
-#define CDA_EPATTERN    -7	/* illegal pattern */
-#define CDA_ESTRUC      -8	/* no structure at position */
-#define CDA_EALIGN      -9	/* no alignment at position */
-#define CDA_EREMOTE     -10	/* error in remote access */
-#define CDA_ENODATA     -11	/* can't load/create necessary data */
-#define CDA_EARGS       -12	/* error in arguments for dynamic call */
-#define CDA_ENOMEM      -13	/* memory fault [unused] */
-#define CDA_EOTHER	-14	/* other error */
-#define CDA_ENYI        -15	/* not yet implemented */
+#define CDA_OK           0        /* everything fine */
+#define CDA_ENULLATT    -1        /* NULL passed as attribute argument */
+#define CDA_EATTTYPE    -2        /* function was called on illegal attribute */
+#define CDA_EIDORNG     -3        /* id out of range */
+#define CDA_EPOSORNG    -4        /* position out of range */
+#define CDA_EIDXORNG    -5        /* index out of range */
+#define CDA_ENOSTRING   -6        /* no such string encoded */
+#define CDA_EPATTERN    -7        /* illegal pattern */
+#define CDA_ESTRUC      -8        /* no structure at position */
+#define CDA_EALIGN      -9        /* no alignment at position */
+#define CDA_EREMOTE     -10        /* error in remote access */
+#define CDA_ENODATA     -11        /* can't load/create necessary data */
+#define CDA_EARGS       -12        /* error in arguments for dynamic call */
+#define CDA_ENOMEM      -13        /* memory fault [unused] */
+#define CDA_EOTHER        -14        /* other error */
+#define CDA_ENYI        -15        /* not yet implemented */
 #define CDA_EBADREGEX   -16     /* bad regular expression */
 #define CDA_EFSETINV    -17     /* invalid feature set format */
 #define CDA_EBUFFER     -18     /* buffer overflow (hard-coded internal buffer sizes) */
 #define CDA_EINTERNAL   -19     /* internal data consistency error (really bad) */
 
-extern int cderrno;		/* is set after access */
-void cdperror(char *message);	/* prints out error string */
+extern int cderrno;                /* is set after access */
+void cdperror(char *message);        /* prints out error string */
 char *cdperror_string(int error_num); /* returns error string */
 
 /*
@@ -165,22 +185,22 @@ CL_Regex cl_new_regex(char *regex, int flags, CorpusCharset charset /*ignored*/)
 int cl_regex_optimised(CL_Regex rx); /* 0 = not optimised; otherwise, value indicates level of optimisation */
 int cl_regex_match(CL_Regex rx, char *str); /* automatically uses normalisation flags from constructor; returns True when regex matches */
 void cl_delete_regex(CL_Regex rx);
-extern char cl_regex_error[];	/* contains regex compilation error after cl_new_regex() failed  */
+extern char cl_regex_error[];        /* contains regex compilation error after cl_new_regex() failed  */
 
 /* built-in random number generator (RNG) */
-void cl_set_seed(unsigned int seed);	/* initialise RNG from single 32-bit number */
-void cl_randomize(void);	/* use current system time as seed */
+void cl_set_seed(unsigned int seed);        /* initialise RNG from single 32-bit number */
+void cl_randomize(void);        /* use current system time as seed */
 void cl_get_rng_state(unsigned int *i1, unsigned int *i2); /* read current state of CL-internal RNG (two unsigned 32-bit integers) */
 void cl_set_rng_state(unsigned int i1, unsigned int i2);   /* restore state of CL-internal RNG */
 unsigned int cl_random(void);   /* get random unsigned 32-bit integer with uniform distribution */
-double cl_runif(void);		/* get random number in the range [0,1] with uniform distribution */
+double cl_runif(void);                /* get random number in the range [0,1] with uniform distribution */
 
 /*
  *  the cl_lexhash class (lexicon hashes, with IDs and frequency counts)
  */
 typedef struct _cl_lexhash *cl_lexhash;
 typedef struct _cl_lexhash_entry {
-  char *key;			/* hash key == token */
+  char *key;                        /* hash key == token */
   unsigned int freq;
   int id;
   /* data fields: use as entry->data.integer, entry->data.numeric, ... */
@@ -202,12 +222,12 @@ void cl_lexhash_auto_grow(cl_lexhash lh, int flag);
 
 cl_lexhash_entry
 cl_lexhash_add(cl_lexhash lh, char *token);                   /* inserts copy of <token> into hash, with auto-assigned id;
-								 returns pointer to (new or existing) entry */
+                                                                 returns pointer to (new or existing) entry */
 cl_lexhash_entry
 cl_lexhash_find(cl_lexhash lh, char *token);                  /* returns pointer to entry, NULL if not in hash */
 int cl_lexhash_id(cl_lexhash lh, char *token);                /* returns ID of <token>, -1 if not in hash */
 int cl_lexhash_freq(cl_lexhash lh, char *token);              /* returns frequency of <token>, 0 if not in hash */
-int cl_lexhash_del(cl_lexhash lh, char *token);	              /* deletes <token> from hash & returns its frequency */
+int cl_lexhash_del(cl_lexhash lh, char *token);                      /* deletes <token> from hash & returns its frequency */
 int cl_lexhash_size(cl_lexhash lh);                           /* returns number of tokens stored in lexhash */
 
 
@@ -294,8 +314,8 @@ int cl_has_extended_alignment(Attribute *attribute);
 int cl_max_alg(Attribute *attribute);
 int cl_cpos2alg(Attribute *attribute, int cpos);
 int cl_alg2cpos(Attribute *attribute, int alg,
-		int *source_region_start, int *source_region_end,
-		int *target_region_start, int *target_region_end);
+                int *source_region_start, int *source_region_end,
+                int *target_region_start, int *target_region_end);
 
 /*
  * Old-style API for the core CL functions -- deprecated as of v3.0
@@ -311,9 +331,9 @@ char *central_corpus_directory();
 
 /* attribute access functions: general functions */
 Attribute *find_attribute(Corpus *corpus, 
-			  char *attribute_name, 
-			  int type, 
-			  char *data);	/* *** UNUSED *** */
+                          char *attribute_name,
+                          int type,
+                          char *data);        /* *** UNUSED *** */
 int attr_drop_attribute(Attribute *attribute);
 int item_sequence_is_compressed(Attribute *attribute);
 int inverted_file_is_compressed(Attribute *attribute);
@@ -322,8 +342,8 @@ int inverted_file_is_compressed(Attribute *attribute);
 PositionStream OpenPositionStream(Attribute *attribute, int id);
 int ClosePositionStream(PositionStream *ps);
 int ReadPositionStream(PositionStream ps,
-		       int *buffer,
-		       int buffer_size);
+                       int *buffer,
+                       int buffer_size);
 
 /* attribute access functions: lexicon access (positional attributes) */
 char *get_string_of_id(Attribute *attribute, int id);
@@ -345,10 +365,10 @@ int get_id_frequency(Attribute *attribute, int id);
    area is 2 * restrictor_list_size!!!
    */
 int *get_positions(Attribute *attribute, 
-		   int id, 
-		   int *freq,
-		   int *restrictor_list,
-		   int restrictor_list_size);
+                   int id,
+                   int *freq,
+                   int *restrictor_list,
+                   int restrictor_list_size);
 
 int get_id_at_position(Attribute *attribute, int position);
 char *get_string_at_position(Attribute *attribute, int position);
@@ -356,7 +376,7 @@ char *get_string_at_position(Attribute *attribute, int position);
 /* ========== some high-level constructs */
 
 char *get_id_info(Attribute *attribute,
-		  int index, int *freq, int *slen);
+                  int index, int *freq, int *slen);
 
 /* collect_matching_ids:
  *
@@ -364,9 +384,9 @@ char *get_id_info(Attribute *attribute,
  * is alloced with malloc, so do a free() when you don't need it any more.  
  */
 int *collect_matching_ids(Attribute *attribute, 
-			  char *pattern,
-			  int canonicalize,
-			  int *number_of_matches);
+                          char *pattern,
+                          int canonicalize,
+                          int *number_of_matches);
 /* cumulative_id_frequency:
  *
  * returns the sum of the word frequencies of words, which
@@ -376,8 +396,8 @@ int *collect_matching_ids(Attribute *attribute,
  */
 
 int cumulative_id_frequency(Attribute *attribute,
-			    int *ids,
-			    int number_of_ids);
+                            int *ids,
+                            int number_of_ids);
 
 /* collect_matches:
  *
@@ -406,32 +426,32 @@ int cumulative_id_frequency(Attribute *attribute,
  * of ids. */
 
 int *collect_matches(Attribute *attribute,
-		     
-		     int *ids,	          /* a list of word_ids */
-		     int number_of_ids,   /* the length of this list */
-		     
-		     int sort,	          /* return sorted list? */
-		     
-		     int *size_of_table,  /* the size of the allocated table */
-		     
-		     int *restrictor_list,
-		     int restrictor_list_size);
+
+                     int *ids,                  /* a list of word_ids */
+                     int number_of_ids,   /* the length of this list */
+
+                     int sort,                  /* return sorted list? */
+
+                     int *size_of_table,  /* the size of the allocated table */
+
+                     int *restrictor_list,
+                     int restrictor_list_size);
 
 
 /* attribute access functions: structural attributes */
 int get_struc_attribute(Attribute *attribute, 
-			int position,
-			int *struc_start,
-			int *struc_end);
+                        int position,
+                        int *struc_start,
+                        int *struc_end);
 int get_num_of_struc(Attribute *attribute,
-		     int position,
-		     int *struc_num);
+                     int position,
+                     int *struc_num);
 int get_bounds_of_nth_struc(Attribute *attribute,
-			    int struc_num,
-			    int *struc_start,
-			    int *struc_end);
+                            int struc_num,
+                            int *struc_start,
+                            int *struc_end);
 int get_nr_of_strucs(Attribute *attribute,
-		     int *nr_strucs);
+                     int *nr_strucs);
 int structure_has_values(Attribute *attribute);
 /* does not strdup(), so don't free returned char * */
 char *structure_value(Attribute *attribute, int struc_num);
@@ -440,11 +460,11 @@ char *structure_value_at_position(Attribute *attribute, int position);
 
 /* attribute access functions: alignment attributes (old style)*/
 int get_alg_attribute(Attribute *attribute, 
-		      int position, 
-		      int *aligned_start,
-		      int *aligned_end,
-		      int *aligned_start2,
-		      int *aligned_end2);
+                      int position,
+                      int *aligned_start,
+                      int *aligned_end,
+                      int *aligned_start2,
+                      int *aligned_end2);
 
 /* attribute access functions: dynamic attributes (N/A) */
 
@@ -452,9 +472,9 @@ int get_alg_attribute(Attribute *attribute,
  * which gets the result (*int or *char)
  */
 int call_dynamic_attribute(Attribute *attribute,
-			   DynCallResult *dcr,
-			   DynCallResult *args,	
-			   int nr_args);
+                           DynCallResult *dcr,
+                           DynCallResult *args,
+                           int nr_args);
 int nr_of_arguments(Attribute *attribute);
 
 

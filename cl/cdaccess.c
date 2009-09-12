@@ -1,13 +1,13 @@
-/* 
+/*
  *  IMS Open Corpus Workbench (CWB)
  *  Copyright (C) 1993-2006 by IMS, University of Stuttgart
  *  Copyright (C) 2007-     by the respective contributers (see file AUTHORS)
- * 
+ *
  *  This program is free software; you can redistribute it and/or modify it
  *  under the terms of the GNU General Public License as published by the
  *  Free Software Foundation; either version 2, or (at your option) any later
  *  version.
- * 
+ *
  *  This program is distributed in the hope that it will be useful, but
  *  WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
@@ -51,7 +51,7 @@ int cl_strcmp(char *s1, char *s2)
 {
   /* BIG BIG BIG warning:
      although it says unsigned_char_strcmp it really operates
-     on SIGNED char strings (and it didn't even say that explicitly, so the 
+     on SIGNED char strings (and it didn't even say that explicitly, so the
      whole thing broke down on 'unsigned char'-machines) !!!  */
 
   register signed char* c1;
@@ -62,7 +62,7 @@ int cl_strcmp(char *s1, char *s2)
   for ( ; *c1 == *c2; c1++,c2++)
     if ( *c1 == '\0')
       return 0;
-  
+
   return *c1 - *c2;
 }
 
@@ -160,7 +160,7 @@ char *get_string_of_id(Attribute *attribute, int id)
 
   lex = ensure_component(attribute, CompLexicon, 0);
   lexidx = ensure_component(attribute, CompLexiconIdx, 0);
-  
+
   if ((lex == NULL) || (lexidx == NULL)) {
     cderrno = CDA_ENODATA;
     return NULL;
@@ -195,7 +195,7 @@ int get_id_of_string(Attribute *attribute, char *id_string)
   lexidx = ensure_component(attribute, CompLexiconIdx, 0);
   lexsrt = ensure_component(attribute, CompLexiconSrt, 0);
   lex =  ensure_component(attribute, CompLexicon, 0);
-  
+
   if ((lexidx == NULL) || (lexsrt == NULL) || (lex == NULL)) {
     cderrno = CDA_ENODATA;
     return CDA_ENODATA;
@@ -203,31 +203,31 @@ int get_id_of_string(Attribute *attribute, char *id_string)
   else {
     low = 0;
     high = lexidx->size;
-    
+
     /*  simple binary search */
     for(nr = 0; ; nr++) {
-      
+
       if (nr >= 1000000) {
-        fprintf(stderr, "get_id_of_string: too many comparisons with %s\n", 
+        fprintf(stderr, "get_id_of_string: too many comparisons with %s\n",
                 id_string);
         cderrno = CDA_EOTHER;
         return CDA_EOTHER;
       }
-      
+
       mid = low + (high - low)/2;
-      
-      str2 = (char *)(lex->data.data) + 
+
+      str2 = (char *)(lex->data.data) +
         ntohl(lexidx->data.data[ntohl(lexsrt->data.data[mid])]);
-      
+
       comp = cl_strcmp(id_string, str2);
-      
-      if(comp == 0) { 
-        cderrno = CDA_OK; 
-        return ntohl(lexsrt->data.data[mid]); 
+
+      if(comp == 0) {
+        cderrno = CDA_OK;
+        return ntohl(lexsrt->data.data[mid]);
       }
-      if(mid == low) { 
-        cderrno = CDA_ENOSTRING; 
-        return cderrno; 
+      if(mid == low) {
+        cderrno = CDA_ENOSTRING;
+        return cderrno;
       }
       if(comp > 0) low = mid;
       else high = mid;
@@ -247,7 +247,7 @@ int get_id_string_len(Attribute *attribute, int id)
   check_arg(attribute, ATT_POS, cderrno);
 
   lexidx = ensure_component(attribute, CompLexiconIdx, 0);
-  
+
   if (lexidx == NULL) {
     cderrno = CDA_ENODATA;
     return CDA_ENODATA;
@@ -258,10 +258,10 @@ int get_id_string_len(Attribute *attribute, int id)
   }
   else {
     if ((id + 1) == lexidx->size) {
-      
+
       /* last word */
       s = get_string_of_id(attribute, id);
-      
+
       if (s != NULL) {
         cderrno = CDA_OK;
         return strlen(s);
@@ -273,7 +273,7 @@ int get_id_string_len(Attribute *attribute, int id)
     }
     else {
       cderrno = CDA_OK;
-      return (ntohl(lexidx->data.data[id+1]) - 
+      return (ntohl(lexidx->data.data[id+1]) -
               ntohl(lexidx->data.data[id])) - 1;
     }
   }
@@ -290,12 +290,12 @@ int get_id_from_sortidx(Attribute *attribute, int sort_index_position)
   check_arg(attribute, ATT_POS, cderrno);
 
   srtidx = ensure_component(attribute, CompLexiconSrt, 0);
-  
+
   if (srtidx == NULL) {
     cderrno = CDA_ENODATA;
     return CDA_ENODATA;
   }
-  
+
   if ((sort_index_position >=0) && (sort_index_position < srtidx->size)) {
     cderrno = CDA_OK;
     return ntohl(srtidx->data.data[sort_index_position]);
@@ -316,19 +316,19 @@ int get_sortidxpos_of_id(Attribute *attribute, int id)
   check_arg(attribute, ATT_POS, cderrno);
 
   srtidx = ensure_component(attribute, CompLexiconSrt, 0);
-  
+
   if (srtidx == NULL) {
     cderrno = CDA_ENODATA;
     return CDA_ENODATA;
   }
-  
+
   if ((id >=0) && (id < srtidx->size)) {
     cderrno = CDA_OK;
-    
+
     cderrno = CDA_ENYI;
     return CDA_ENYI;
   }
-  
+
   assert("Not reached" && 0);
   return 0;
 }
@@ -355,14 +355,14 @@ int item_sequence_is_compressed(Attribute *attribute)
     return 1;
   else {
 
-    /* if CompCorpus is in memory, we do not access the compressed 
+    /* if CompCorpus is in memory, we do not access the compressed
      * sequence.
      */
 
-    state = component_state(attribute, CompCorpus); 
+    state = component_state(attribute, CompCorpus);
     if (state == ComponentLoaded)
       return 0;
-    
+
     state = component_state(attribute, CompHuffSeq);
     if (!(state == ComponentLoaded || state == ComponentUnloaded))
       return 0;
@@ -395,15 +395,15 @@ int inverted_file_is_compressed(Attribute *attribute)
   if ((component_state(attribute, CompRevCorpus) == ComponentLoaded) &&
       (component_state(attribute, CompRevCorpusIdx) == ComponentLoaded))
     return 0;
-  
+
   state = component_state(attribute, CompCompRF);
   if (!(state == ComponentLoaded || state == ComponentUnloaded))
     return 0;
-  
+
   state = component_state(attribute, CompCompRFX);
   if (!(state == ComponentLoaded || state == ComponentUnloaded))
     return 0;
-  
+
   return 1;
 }
 
@@ -453,7 +453,7 @@ int get_id_range(Attribute *attribute)
   check_arg(attribute, ATT_POS, cderrno);
 
   comp = ensure_component(attribute, CompLexiconIdx, 0);
-    
+
   if (comp == NULL) {
     cderrno = CDA_ENODATA;
     return CDA_ENODATA;
@@ -478,7 +478,7 @@ int get_id_frequency(Attribute *attribute, int id)
   check_arg(attribute, ATT_POS, cderrno);
 
   freqs = ensure_component(attribute, CompCorpusFreqs, 0);
-  
+
   if (freqs == NULL) {
     cderrno = CDA_ENODATA;
     return CDA_ENODATA;
@@ -512,7 +512,7 @@ int *get_positions(Attribute *attribute, int id, int *freq, int *restrictor_list
     /*        attribute->any.name); */
       return NULL;
   }
-  
+
   range  = get_id_range(attribute);
   if ((range <= 0) || (cderrno != CDA_OK)) {
     /*       fprintf(stderr, "Cannot determine ID range of PA %s\n", */
@@ -534,56 +534,56 @@ int *get_positions(Attribute *attribute, int id, int *freq, int *restrictor_list
     /*        *freq, id, attribute->any.name); */
     return NULL;
   }
-  
-  
+
+
   /* there are no items in a PA with freq 0 - we don't have to
      catch that special case. */
 
 
   buffer = (int *)cl_malloc(*freq * sizeof(int));
   /* error handling removed because cl_malloc() is now used */
-  
+
   if (inverted_file_is_compressed(attribute) == 1) {
-    
+
     BStream bs;
     unsigned int i, b, last_pos, gap, offset, ins_ptr, res_ptr;
-    
+
     revcorp = ensure_component(attribute, CompCompRF, 0);
     revcidx = ensure_component(attribute, CompCompRFX, 0);
-    
+
     if (revcorp == NULL || revcidx == NULL) {
       cderrno = CDA_ENODATA;
       *freq = 0;
       return NULL;
     }
-    
+
     b = compute_ba(*freq, size);
-    
+
     offset = ntohl(revcidx->data.data[id]); /* byte offset in RFC */
-    
+
     BSopen((unsigned char *)revcorp->data.data, "r", &bs);
     BSseek(&bs, offset);
-    
+
     last_pos = 0;
     ins_ptr = 0;
     res_ptr = 0;
-    
+
     for (i = 0; i < *freq; i++) {
-      
+
       gap = read_golomb_code_bs(b, &bs);
       last_pos += gap;
-      
+
       /* when the end of the restrictor list is reached, we can
            also leave the for loop above -- TODO
            */
-      
+
       if (restrictor_list && restrictor_list_size > 0) {
         while (res_ptr < restrictor_list_size &&
                last_pos > restrictor_list[res_ptr * 2 + 1]) {
           /* beyond last restricting range */
           res_ptr++;
         }
-        if (res_ptr < restrictor_list_size && 
+        if (res_ptr < restrictor_list_size &&
             last_pos >= restrictor_list[res_ptr * 2] &&
             last_pos <= restrictor_list[res_ptr * 2 + 1]) {
           buffer[ins_ptr++] = last_pos;
@@ -594,11 +594,11 @@ int *get_positions(Attribute *attribute, int id, int *freq, int *restrictor_list
         buffer[ins_ptr++] = last_pos;
       }
     }
-    
+
     BSclose(&bs);
-    
+
       /* reduce, if possible */
-    
+
     if (ins_ptr < *freq && ins_ptr != *freq) {
       if (ins_ptr == 0) {
         assert(buffer != NULL);
@@ -609,13 +609,13 @@ int *get_positions(Attribute *attribute, int id, int *freq, int *restrictor_list
       }
       *freq = ins_ptr;
     }
-    
+
   }
   else {
-      
+
     revcorp = ensure_component(attribute, CompRevCorpus, 0);
     revcidx = ensure_component(attribute, CompRevCorpusIdx, 0);
-    
+
     if (revcorp == NULL || revcidx == NULL) {
       cderrno = CDA_ENODATA;
       /*        fprintf(stderr, "Cannot load REVCORP or REVCIDX component of %s\n",  */
@@ -623,8 +623,8 @@ int *get_positions(Attribute *attribute, int id, int *freq, int *restrictor_list
       *freq = 0;
       return NULL;
     }
-    
-    memcpy(buffer, 
+
+    memcpy(buffer,
            revcorp->data.data + ntohl(revcidx->data.data[id]),
            *freq * sizeof(int));
 
@@ -633,18 +633,18 @@ int *get_positions(Attribute *attribute, int id, int *freq, int *restrictor_list
       for (i = 0; i < *freq; i++)
         buffer[i] = ntohl(buffer[i]);
     }
-    
+
     if (restrictor_list != NULL && restrictor_list_size > 0) {
       int res_ptr, buf_ptr, ins_ptr;
-      
+
       /* force all items to be within the restrictor's ranges */
-      
+
       ins_ptr = 0;
       res_ptr = 0;
       buf_ptr = 0;
-      
+
       while (buf_ptr < *freq && res_ptr < restrictor_list_size) {
-        
+
         if (buffer[buf_ptr] < restrictor_list[res_ptr*2]) {
           /* before start */
           buf_ptr++;
@@ -658,7 +658,7 @@ int *get_positions(Attribute *attribute, int id, int *freq, int *restrictor_list
           buffer[ins_ptr++] = buffer[buf_ptr++];
         }
       }
-      
+
       if (ins_ptr < *freq && ins_ptr != *freq) {
         if (ins_ptr == 0) {
           cl_free(buffer);
@@ -668,14 +668,14 @@ int *get_positions(Attribute *attribute, int id, int *freq, int *restrictor_list
         }
         *freq = ins_ptr;
       }
-      
+
     }
-    
+
   }
-      
+
     cderrno = CDA_OK;
     return buffer;
-    
+
   assert("Not reached" && 0);
   return NULL;
 }
@@ -688,7 +688,7 @@ typedef struct _position_stream_rec_ {
   int id;
   int id_freq;                  /* id frequency */
   int nr_items;                 /* how many items delivered so far */
-  
+
   int is_compressed;            /* attribute REVCORP is compressed? */
 
   /* for compressed streams */
@@ -705,36 +705,36 @@ typedef struct _position_stream_rec_ {
 
 
 PositionStream
-OpenPositionStream(Attribute *attribute, 
+OpenPositionStream(Attribute *attribute,
                    int id)
 {
   Component *revcorp, *revcidx;
   int size, freq, range;
 
   PositionStream ps = NULL;
-  
-  check_arg(attribute, ATT_POS, NULL); 
-  
+
+  check_arg(attribute, ATT_POS, NULL);
+
   size  = get_attribute_size(attribute);
   if ((size <= 0) || (cderrno != CDA_OK))
     return NULL;
-  
+
   range  = get_id_range(attribute);
   if ((range <= 0) || (cderrno != CDA_OK))
     return NULL;
-  
+
   if ((id <0) || (id >= range)) {
     cderrno = CDA_EIDORNG;
     return NULL;
   }
-    
+
   freq = get_id_frequency(attribute, id);
   if ((freq < 0) || (cderrno != CDA_OK))
     return NULL;
-  
+
   ps = new(PositionStreamRecord);
   assert(ps);
-    
+
   ps->attribute = attribute;
   ps->id = id;
   ps->id_freq = freq;
@@ -759,19 +759,19 @@ OpenPositionStream(Attribute *attribute,
     }
 
     ps->b = compute_ba(ps->id_freq, size);
-    
+
     offset = ntohl(revcidx->data.data[id]); /* byte offset in RFC */
-      
+
     BSopen((unsigned char *)revcorp->data.data, "r", &(ps->bs));
     BSseek(&(ps->bs), offset);
-    
+
     ps->last_pos = 0;
-      
+
   }
   else {
-    
+
     ps->is_compressed = 0;
-    
+
     revcorp = ensure_component(attribute, CompRevCorpus, 0);
     revcidx = ensure_component(attribute, CompRevCorpusIdx, 0);
 
@@ -780,11 +780,11 @@ OpenPositionStream(Attribute *attribute,
       free(ps);
       return NULL;
     }
-      
+
     ps->base = revcorp->data.data + ntohl(revcidx->data.data[ps->id]);
-    
+
   }
-  
+
   return ps;
 }
 
@@ -819,15 +819,15 @@ ReadPositionStream(PositionStream ps,
                    int buffer_size)
 {
   int items_to_read;
-  
+
   assert(ps);
   assert(buffer);
-  
-  /* gib 0 zurück, wenn wir schon >= freq items gelesen haben */
+
+  /* gib 0 zurueck, wenn wir schon >= freq items gelesen haben */
 
   if (ps->nr_items >= ps->id_freq)
     return 0;
-  
+
   if (ps->nr_items + buffer_size > ps->id_freq) {
     items_to_read = ps->id_freq - ps->nr_items;
   }
@@ -836,26 +836,26 @@ ReadPositionStream(PositionStream ps,
   }
 
   assert(items_to_read >= 0);
-  
+
   if (items_to_read == 0)
     return 0;
-  
+
   if (ps->is_compressed) {
-    
+
     int gap, i;
 
     for (i = 0; i < items_to_read; i++,ps->nr_items++) {
-      
+
       gap = read_golomb_code_bs(ps->b, &(ps->bs));
       ps->last_pos += gap;
-      
+
       *buffer = ps->last_pos;
       buffer++;
     }
   }
   else {
 
-    memcpy(buffer, 
+    memcpy(buffer,
            ps->base + ps->nr_items,
            items_to_read * sizeof(int));
 
@@ -866,7 +866,7 @@ ReadPositionStream(PositionStream ps,
       for (i = 0; i < items_to_read; i++)
         buffer[i] = ntohl(buffer[i]);
     }
-    
+
   }
 
   return items_to_read;
@@ -874,7 +874,8 @@ ReadPositionStream(PositionStream ps,
 
 /* ---------------------------------------------------------------------- */
 
-int get_id_at_position(Attribute *attribute, int position)
+int
+get_id_at_position(Attribute *attribute, int position)
 {
   Component *corpus;
 
@@ -908,7 +909,7 @@ int get_id_at_position(Attribute *attribute, int position)
 
       block = position / SYNCHRONIZATION;
       rest  = position % SYNCHRONIZATION;
-      
+
       if (attribute->pos.this_block_nr != block) {
 
         /* the current block in the decompression buffer is not the
@@ -916,7 +917,7 @@ int get_id_at_position(Attribute *attribute, int position)
          * and hope that we'll get a cache hit next time. */
 
         if (COMPRESS_DEBUG > 0)
-          fprintf(stderr, "Block miss: have %d, want %d\n", 
+          fprintf(stderr, "Block miss: have %d, want %d\n",
                   attribute->pos.this_block_nr, block);
 
         /* is the block we read the last block of the corpus? Then, we
@@ -936,29 +937,29 @@ int get_id_at_position(Attribute *attribute, int position)
         if (COMPRESS_DEBUG > 1)
           fprintf(stderr, "-> Block %d, rest %d, offset %d\n",
                   block, rest, offset);
-      
+
         BSopen((unsigned char *)cis->data.data, "r", &bs);
         BSseek(&bs, offset);
-        
+
         for (i = 0; i < max; i++) {
-          
+
           if (!BSread(&bit, 1, &bs)) {
             fprintf(stderr, "cdaccess:decompressed read: Read error/1\n");
             cderrno = CDA_ENODATA;
             return cderrno;
           }
-        
+
           v = (bit ? 1 : 0);
           l = 1;
-          
+
           while (v < attribute->pos.hc->min_code[l]) {
-            
+
             if (!BSread(&bit, 1, &bs)) {
               fprintf(stderr, "cdaccess:decompressed read: Read error/2\n");
               cderrno = CDA_ENODATA;
               return cderrno;
             }
-            
+
             v <<= 1;
             if (bit)
               v++;
@@ -967,7 +968,7 @@ int get_id_at_position(Attribute *attribute, int position)
 
           /* we now have the item - store it in the decompression block */
 
-          item = ntohl(attribute->pos.hc->symbols[attribute->pos.hc->symindex[l] + v - 
+          item = ntohl(attribute->pos.hc->symbols[attribute->pos.hc->symindex[l] + v -
                                                  attribute->pos.hc->min_code[l]]);
 
           attribute->pos.this_block[i] = item;
@@ -976,11 +977,11 @@ int get_id_at_position(Attribute *attribute, int position)
         BSclose(&bs);
 
       }
-      else if (COMPRESS_DEBUG > 0) 
+      else if (COMPRESS_DEBUG > 0)
         fprintf(stderr, "Block hit: block[%d,%d]\n", block, rest);
-     
+
       assert(rest < SYNCHRONIZATION);
-      
+
       cderrno = CDA_OK;         /* hi 'Oli' ! */
       return attribute->pos.this_block[rest];
     }
@@ -1013,7 +1014,8 @@ int get_id_at_position(Attribute *attribute, int position)
 }
 
 
-char *get_string_at_position(Attribute *attribute, int position)
+char *
+get_string_at_position(Attribute *attribute, int position)
 {
   int id;
 
@@ -1545,7 +1547,7 @@ int get_nr_of_strucs(Attribute *attribute,
   check_arg(attribute, ATT_STRUC, cderrno);
 
   struc_data = ensure_component(attribute, CompStrucData, 0);
-    
+
   if (struc_data == NULL) {
     cderrno = CDA_ENODATA;
     return 0;
@@ -1953,10 +1955,11 @@ int cl_alg2cpos(Attribute *attribute, int alg,
  * which gets the result (*int or *char)
  */
 
-int call_dynamic_attribute(Attribute *attribute,
-                           DynCallResult *dcr,
-                           DynCallResult *args,
-                           int nr_args)
+int
+call_dynamic_attribute(Attribute *attribute,
+                       DynCallResult *dcr,
+                       DynCallResult *args,
+                       int nr_args)
 {
   char call[2048];
   char istr[32];
@@ -2161,7 +2164,16 @@ int call_dynamic_attribute(Attribute *attribute,
   return 0;
 }
 
-int nr_of_arguments(Attribute *attribute)
+/**
+ * Count the number of arguments on the attribute's dynamic argument list.
+ *
+ * @param attribute  pointer to the Attribute object to analyse
+ * @return           int specifying the number of arguments;
+ *                   a negative integer is returned if for any argument
+ *                   on dyn.arglist, the type is equal to ATTAT_VAR
+ */
+int
+nr_of_arguments(Attribute *attribute)
 {
   int nr;
   DynArg *arg;
@@ -2185,4 +2197,3 @@ int nr_of_arguments(Attribute *attribute)
 }
 
 /* ================================================== EOF */
-

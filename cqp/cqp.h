@@ -28,6 +28,9 @@
 
 #define True 1
 #define False 0
+/**
+ * DEPRACATED means of storing a Boolean value
+ */
 typedef char Boolean;
 /* typedef enum bool { False, True } Boolean; */
 
@@ -37,8 +40,7 @@ typedef enum _cyctype {
 
 CYCtype LastExpression;
 
-extern
-int reading_cqprc;
+extern int reading_cqprc;
 
 /* ======================================== Query Buffer Interface */
 

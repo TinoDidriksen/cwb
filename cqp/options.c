@@ -31,8 +31,12 @@
 #include "../cl/attributes.h"
 #include "../cl/macros.h"
 
+#ifndef True
 #define True 1
+#endif
+#ifndef False
 #define False 0
+#endif
 
 #define DEFAULT_EXTERNAL_SORTING_COMMAND \
    "sort -k 2 -k 1n "
