@@ -51,9 +51,7 @@
 
 */
 
-/* This function is a portable bswap implementation allowing explicit conversion to little-endian format
-   (by a combination of cl_bswap32() and htonl())
-*/
-int cl_bswap32(int x);		/* internal function defined in endian.c */
+
+int cl_bswap32(int x);
 
 #endif /* _ENDIAN_H_ */

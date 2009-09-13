@@ -156,10 +156,10 @@
 <li>void <a class="el" href="cl_8h.html#fda8febb5dbef0056da18adc857f06e7">cdperror</a> (char *message)
 <li>char * <a class="el" href="cl_8h.html#ddf2104c6242f686c7fbc814b070de8e">cdperror_string</a> (int error_num)
 <li>void * <a class="el" href="cl_8h.html#4e4eccd789155123ab533ed0cecbecea">cl_malloc</a> (size_t <a class="el" href="server_8c.html#3e18e5ab1201e205ce88c473a2f4bf99">bytes</a>)
-<li>void * <a class="el" href="cl_8h.html#5b756594ae431fd5ec0ffbdc77db1e64">cl_calloc</a> (size_t nr_of_elements, size_t element_size)
-<li>void * <a class="el" href="cl_8h.html#7480d6ea66599014088f218912ddb89f">cl_realloc</a> (void *block, size_t <a class="el" href="server_8c.html#3e18e5ab1201e205ce88c473a2f4bf99">bytes</a>)
-<li>char * <a class="el" href="cl_8h.html#6647d75d1d69c7d25447da514b7e4682">cl_strdup</a> (char *string)
-<li>int <a class="el" href="cl_8h.html#bf5768f9ef1a1fda1d35becaf9053927">cl_strcmp</a> (char *<a class="el" href="cwb-align_8c.html#ac99deaca25373d974a3efbdf554f837">s1</a>, char *<a class="el" href="cwb-align_8c.html#6e160b1019fe31e82941efd8de8076d4">s2</a>)
+<dl class="el"><dd class="mdescRight">safely allocates memory malloc-style.  <a href="#4e4eccd789155123ab533ed0cecbecea"></a><br></dl><li>void * <a class="el" href="cl_8h.html#5b756594ae431fd5ec0ffbdc77db1e64">cl_calloc</a> (size_t nr_of_elements, size_t element_size)
+<dl class="el"><dd class="mdescRight">safely allocates memory calloc-style.  <a href="#5b756594ae431fd5ec0ffbdc77db1e64"></a><br></dl><li>void * <a class="el" href="cl_8h.html#7480d6ea66599014088f218912ddb89f">cl_realloc</a> (void *block, size_t <a class="el" href="server_8c.html#3e18e5ab1201e205ce88c473a2f4bf99">bytes</a>)
+<dl class="el"><dd class="mdescRight">safely reallocates memory.  <a href="#7480d6ea66599014088f218912ddb89f"></a><br></dl><li>char * <a class="el" href="cl_8h.html#6647d75d1d69c7d25447da514b7e4682">cl_strdup</a> (char *string)
+<dl class="el"><dd class="mdescRight">safely duplicates a string.  <a href="#6647d75d1d69c7d25447da514b7e4682"></a><br></dl><li>int <a class="el" href="cl_8h.html#bf5768f9ef1a1fda1d35becaf9053927">cl_strcmp</a> (char *<a class="el" href="cwb-align_8c.html#ac99deaca25373d974a3efbdf554f837">s1</a>, char *<a class="el" href="cwb-align_8c.html#6e160b1019fe31e82941efd8de8076d4">s2</a>)
 <li>void <a class="el" href="cl_8h.html#012ffb5a06680b1985a6f08e739d45b0">cl_string_canonical</a> (char *s, int flags)
 <li>char * <a class="el" href="cl_8h.html#8e3a6183c822cb47f163cc14d114f0d5">cl_string_latex2iso</a> (char *str, char *result, int target_len)
 <li>unsigned char * <a class="el" href="cl_8h.html#e86d5e60c27778b82281ac1679409512">cl_string_maptable</a> (<a class="el" href="cl_8h.html#3502421ae8eac74673133702852dde32">CorpusCharset</a> charset, int flags)
@@ -171,12 +171,12 @@
 <li>int <a class="el" href="cl_8h.html#7a9d3816260f385cf56e15839c518cee">cl_regex_match</a> (<a class="el" href="struct___c_l___regex.html">CL_Regex</a> rx, char *str)
 <li>void <a class="el" href="cl_8h.html#b18bf7e3faf1265c2d987ecc6ba6ab0f">cl_delete_regex</a> (<a class="el" href="struct___c_l___regex.html">CL_Regex</a> rx)
 <li>void <a class="el" href="cl_8h.html#a8a31610291c48d2014055c5c1d4cfea">cl_set_seed</a> (unsigned int seed)
-<li>void <a class="el" href="cl_8h.html#e33baa79e30f7b5efb597baa4e6898cb">cl_randomize</a> (void)
-<li>void <a class="el" href="cl_8h.html#c9432febb78896e98110708fa2cefb54">cl_get_rng_state</a> (unsigned int *i1, unsigned int *i2)
-<li>void <a class="el" href="cl_8h.html#bae04f24d7ffb03fa5ee294ba1e5e543">cl_set_rng_state</a> (unsigned int i1, unsigned int i2)
-<li>unsigned int <a class="el" href="cl_8h.html#551e0245007f49ff7b6c39498409e104">cl_random</a> (void)
-<li>double <a class="el" href="cl_8h.html#2d569901446d6bb0ad3b48eb82c8ede7">cl_runif</a> (void)
-<li><a class="el" href="struct__cl__lexhash.html">cl_lexhash</a> <a class="el" href="cl_8h.html#44f2692c5af7f16fc46640e31c7ae192">cl_new_lexhash</a> (int buckets)
+<dl class="el"><dd class="mdescRight">Initialises the CL-internal random number generator.  <a href="#a8a31610291c48d2014055c5c1d4cfea"></a><br></dl><li>void <a class="el" href="cl_8h.html#e33baa79e30f7b5efb597baa4e6898cb">cl_randomize</a> (void)
+<dl class="el"><dd class="mdescRight">Initialises the CL-internal random number generator from the current system time.  <a href="#e33baa79e30f7b5efb597baa4e6898cb"></a><br></dl><li>void <a class="el" href="cl_8h.html#c9432febb78896e98110708fa2cefb54">cl_get_rng_state</a> (unsigned int *i1, unsigned int *i2)
+<dl class="el"><dd class="mdescRight">Reads current <a class="el" href="structstate.html">state</a> of CL-internal random number generator.  <a href="#c9432febb78896e98110708fa2cefb54"></a><br></dl><li>void <a class="el" href="cl_8h.html#bae04f24d7ffb03fa5ee294ba1e5e543">cl_set_rng_state</a> (unsigned int i1, unsigned int i2)
+<dl class="el"><dd class="mdescRight">Restores the <a class="el" href="structstate.html">state</a> of the CL-internal random number generator.  <a href="#bae04f24d7ffb03fa5ee294ba1e5e543"></a><br></dl><li>unsigned int <a class="el" href="cl_8h.html#551e0245007f49ff7b6c39498409e104">cl_random</a> (void)
+<dl class="el"><dd class="mdescRight">Gets a random number.  <a href="#551e0245007f49ff7b6c39498409e104"></a><br></dl><li>double <a class="el" href="cl_8h.html#2d569901446d6bb0ad3b48eb82c8ede7">cl_runif</a> (void)
+<dl class="el"><dd class="mdescRight">Gets a random number in the range [0,1] with uniform distribution.  <a href="#2d569901446d6bb0ad3b48eb82c8ede7"></a><br></dl><li><a class="el" href="struct__cl__lexhash.html">cl_lexhash</a> <a class="el" href="cl_8h.html#44f2692c5af7f16fc46640e31c7ae192">cl_new_lexhash</a> (int buckets)
 <li>void <a class="el" href="cl_8h.html#8e1f661b560fe3c7f17c891bdc5d5313">cl_delete_lexhash</a> (<a class="el" href="struct__cl__lexhash.html">cl_lexhash</a> lh)
 <li>void <a class="el" href="cl_8h.html#23daf1cda8a906b4188eedba5a080473">cl_lexhash_set_cleanup_function</a> (<a class="el" href="struct__cl__lexhash.html">cl_lexhash</a> lh, void(*func)(<a class="el" href="struct__cl__lexhash__entry.html">cl_lexhash_entry</a>))
 <li>void <a class="el" href="cl_8h.html#4c33223f182ba61fc6d2ba68692977f9">cl_lexhash_auto_grow</a> (<a class="el" href="struct__cl__lexhash.html">cl_lexhash</a> lh, int flag)
@@ -2249,6 +2249,16 @@ full definition of DynCallResult structure (needed to allocate space for dynamic
 <div class="memdoc">
 
 <p>
+safely allocates memory calloc-style. 
+<p>
+<dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="macros_8c.html#4e4eccd789155123ab533ed0cecbecea" title="safely allocates memory malloc-style.">cl_malloc</a> </dd></dl>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>nr_of_elements</em>&nbsp;</td><td>Number of elements to allocate </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>element_size</em>&nbsp;</td><td>Size of each element </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>Pointer to the block of allocated memory </dd></dl>
 
 <p>Referenced by <a class="el" href="storage_8h.html#2c4c793bee0dd47e6f5fb822ba3beb09">alloc_mblob()</a>, <a class="el" href="list_8c.html#6ee10e6ef077f8fa95995c7987205439">cl_new_int_list()</a>, <a class="el" href="lexhash_8c.html#44f2692c5af7f16fc46640e31c7ae192">cl_new_lexhash()</a>, <a class="el" href="list_8c.html#3ddaa979e97ca8e1feb6ab92ecb589df">cl_new_string_list()</a>, <a class="el" href="cl_8h.html#19c764c027474dcfd9c4c8815d50dbf3">collect_matching_ids()</a>, <a class="el" href="cwb-huffcode_8c.html#80203248d1441475e98106bf8f8ea6ec">compute_code_lengths()</a>, <a class="el" href="cwb-encode_8c.html#24c98c7fc24344b98cf63c129d68d066">declare_range()</a>, <a class="el" href="targets_8h.html#8b35d277644a38526a9dd897fe1866f0">evaluate_target()</a>, <a class="el" href="cwb-scan-corpus_8c.html#0ddf1224851353fc92bfbff6f499fa97">main()</a>, and <a class="el" href="cwb-makeall_8c.html#0e221f9ff29909cc9c828ae87ac5455b">validate_revcorp()</a>.</p>
 
@@ -2598,6 +2608,15 @@ full definition of DynCallResult structure (needed to allocate space for dynamic
 <div class="memdoc">
 
 <p>
+Reads current <a class="el" href="structstate.html">state</a> of CL-internal random number generator. 
+<p>
+The integers currently held in RNG_I1 and RNG_I2 are written to the two memory locations supplied as arguments.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>i1</em>&nbsp;</td><td>Target location for the value of RNG_I1 </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>i2</em>&nbsp;</td><td>Target location for the value of RNG_I2 </td></tr>
+  </table>
+</dl>
 
 </div>
 </div><p>
@@ -3096,6 +3115,15 @@ full definition of DynCallResult structure (needed to allocate space for dynamic
 <div class="memdoc">
 
 <p>
+safely allocates memory malloc-style. 
+<p>
+This function allocates a block of memory of the requested size, and does a test for malloc() failure which aborts the program and prints an error message if the system is out of memory. So the return value of this function can be used without further testing for malloc() failure.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>bytes</em>&nbsp;</td><td>Number of bytes to allocate </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>Pointer to the block of allocated memory </dd></dl>
 
 <p>Referenced by <a class="el" href="corpus_8h.html#5492efc3742070f65be1b0bcbead995a">add_corpus_property()</a>, <a class="el" href="auth_8h.html#3000523a790002dac6d9ba78d27a091b">add_grant_to_last_user()</a>, <a class="el" href="auth_8h.html#05cd1513ddf2ff1ad96bad1ac63bf50d">add_host_to_list()</a>, <a class="el" href="auth_8h.html#deea09d31126f7ba47e449099695f0c4">add_hosts_in_subnet_to_list()</a>, <a class="el" href="parse__actions_8h.html#906ec73e9c4be22fd13629898fe69986">add_tabular_pattern()</a>, <a class="el" href="concordance_8h.html#2b5b1e905d1a2c30ec7bb58f9b121b7f">add_to_string()</a>, <a class="el" href="auth_8h.html#c090d32c6dc0e8c597bff8ccdbccb6d8">add_user_to_list()</a>, <a class="el" href="attlist_8h.html#7be7f302f175dc78fd71765f617ce585">AddNameToAL()</a>, <a class="el" href="storage_8h.html#2c4c793bee0dd47e6f5fb822ba3beb09">alloc_mblob()</a>, <a class="el" href="regex2dfa_8c.html#01b2aff7068366c448834355a0de88e5">Allocate()</a>, <a class="el" href="binsert_8h.html#8e88957097a213a2bf28f0e9bf5804c5">binsert_g()</a>, <a class="el" href="eval_8c.html#6b88f677ea68fdf529f6588033930492">check_alignment_constraints()</a>, <a class="el" href="lexhash_8c.html#4a0eb190bffe4ca27d93a2248aa63d9b">cl_lexhash_add()</a>, <a class="el" href="cl_8h.html#8e1d05d565a13c56790b5dd35d144d49">cl_make_set()</a>, <a class="el" href="list_8c.html#6ee10e6ef077f8fa95995c7987205439">cl_new_int_list()</a>, <a class="el" href="lexhash_8c.html#44f2692c5af7f16fc46640e31c7ae192">cl_new_lexhash()</a>, <a class="el" href="regopt_8c.html#2c4607eb8e094b7699062df8eb744058">cl_new_regex()</a>, <a class="el" href="list_8c.html#3ddaa979e97ca8e1feb6ab92ecb589df">cl_new_string_list()</a>, <a class="el" href="special-chars_8c.html#8e3a6183c822cb47f163cc14d114f0d5">cl_string_latex2iso()</a>, <a class="el" href="cl_8h.html#a5e937c206920436456d58958dd99efd">collect_matches()</a>, <a class="el" href="cl_8h.html#19c764c027474dcfd9c4c8815d50dbf3">collect_matching_ids()</a>, <a class="el" href="server_8h.html#b5f0263a907556908ff1a0dffb7b8413">combine_subcorpus_spec()</a>, <a class="el" href="cwb-huffcode_8c.html#80203248d1441475e98106bf8f8ea6ec">compute_code_lengths()</a>, <a class="el" href="groups_8h.html#1e8f0dbf75269530b413a3aff966d326">compute_grouping()</a>, <a class="el" href="groups_8c.html#26c1dd72764bdec994f1517e699af745">ComputeGroupExternally()</a>, <a class="el" href="server_8h.html#783919f365481b24e1f40b9e06aec67f">cqi_read_bool_list()</a>, <a class="el" href="server_8h.html#2b6b8e991234c8d906fbd7fc10616d9b">cqi_read_byte_list()</a>, <a class="el" href="server_8h.html#41ab4d995d9f204f6745b251cb2a3ddb">cqi_read_int_list()</a>, <a class="el" href="server_8h.html#b6c0ae8fbfe08d8d16ec4cc330dcda17">cqi_read_string()</a>, <a class="el" href="server_8h.html#cce7ea1fecd59f2fe212f39c08752f06">cqi_read_string_list()</a>, <a class="el" href="eval_8h.html#8040881844328772004bc1980c4fea1a">cqp_run_mu_query()</a>, <a class="el" href="eval_8h.html#00fa95009fb1f64cd7c16bfe5841a741">cqp_run_tab_query()</a>, <a class="el" href="makecomps_8h.html#b8f0ec6caf733eae459326a9c0483608">creat_rev_corpus()</a>, <a class="el" href="makecomps_8h.html#16dff38182e22b8bd7b37bc5dc13dfe4">creat_rev_corpus_idx()</a>, <a class="el" href="bitfields_8h.html#22dc84a6d194440c86a2ddba08a08ba3">create_bitfield()</a>, <a class="el" href="macro_8h.html#b59abd6d37fac294aedb96f14fc21f82">define_macro()</a>, <a class="el" href="cqpserver_8c.html#0c7327cf2c044dc71462eb0d8e70e57a">do_cqi_cqp_query()</a>, <a class="el" href="parse__actions_8h.html#c5fbebcf44cd212f00f1890a6ab56a0a">do_flagged_re_variable()</a>, <a class="el" href="parse__actions_8h.html#8e2ecc29b1dc6f146b2b11690d136aef">do_MeetStatement()</a>, <a class="el" href="parse__actions_8h.html#ebbdee09270339c0b9e08de62ad01161">do_mval_string()</a>, <a class="el" href="parse__actions_8h.html#4d494e76da98d09f20a77d1dfb9b7fd2">do_undump()</a>, <a class="el" href="parse__actions_8h.html#b82ef271cc57700c4ae5549b919ecdc5">do_UnionStatement()</a>, <a class="el" href="parse__actions_8h.html#4335ddbb14865c031041a194e182ed92">do_XMLTag()</a>, <a class="el" href="corpmanag_8h.html#b20d278862cada0d5427b8232a3b69ad">duplicate_corpus()</a>, <a class="el" href="tree_8h.html#c3ff698ce6813b633cd396e6829d73b1">evaltree2searchstr()</a>, <a class="el" href="corpus_8c.html#e4b2cca2b7b9b49c52b63430577051ad">find_corpus_registry()</a>, <a class="el" href="eval_8c.html#ead01bf924ccdd541a9018bf1d72730e">get_leaf_value()</a>, <a class="el" href="eval_8c.html#31c86ea932365a90b02b4af7462f4196">get_matched_corpus_positions()</a>, <a class="el" href="cl_8h.html#443d11045572d4bd47a91403a5d6ea6e">get_positions()</a>, <a class="el" href="variables_8h.html#2d9b75bc6795dc3ee9da28f948ccb9d7">GetVariableItems()</a>, <a class="el" href="variables_8h.html#e4d0229163e993c38f59291bf8343752">GetVariableStrings()</a>, <a class="el" href="cwb-scan-corpus_8c.html#9e44f8ee16add21125bfc4956588a40f">hash_add()</a>, <a class="el" href="symtab_8h.html#c0093e82d521c18e97808dece3977a8e">labellookup()</a>, <a class="el" href="macro_8h.html#23de683b4d0fd2cc39ba4a0ba668c179">list_macros()</a>, <a class="el" href="macro_8h.html#2096a56771ccb4bd3851cf351a5a8310">macro_iterator_next_prototype()</a>, <a class="el" href="macro_8c.html#1f1488f174c35f4ec98d39451707dad1">MacroAddSegment()</a>, <a class="el" href="macro_8c.html#d85b0a62b3c11de0400169eab0dd1890">MacroHashAdd()</a>, <a class="el" href="cwb-align-encode_8c.html#0ddf1224851353fc92bfbff6f499fa97">main()</a>, <a class="el" href="server_8h.html#6f81c046570703b84676139d556f53ad">make_attribute_hash()</a>, <a class="el" href="parse__actions_8h.html#f19329bc090c308aa0f77f2fe6055e79">make_first_tabular_pattern()</a>, <a class="el" href="corpmanag_8h.html#3567391cc22d572100bf63c0733b87ff">make_temp_corpus()</a>, <a class="el" href="macro_8c.html#603effb8b3d1fa34860f313311e1dcef">MakeMacroHash()</a>, <a class="el" href="storage_8h.html#ddba8fd8fb04e0f369de95d5b01f7bae">mallocfile()</a>, <a class="el" href="eval_8c.html#bcf01813cbf1161269761c3d6a2dc239">matchfirstpattern()</a>, <a class="el" href="eval_8c.html#d49aedc126aa9ab11de81b6c5d62db6a">meet_mu()</a>, <a class="el" href="parse__actions_8c.html#3b90dd12b9afe53fc28299dc9b4337a2">mval_string_conversion()</a>, <a class="el" href="symtab_8h.html#6ae8b59e9ea13b28c1a979173668228c">new_reftab()</a>, <a class="el" href="symtab_8h.html#94e8385f5fd60d94b2081b0fdb24cce0">new_symbol_table()</a>, <a class="el" href="output_8h.html#49f47b1503aa7f8f01f033f8b7bccf1b">new_tabulation_item()</a>, <a class="el" href="attlist_8h.html#73b57594edd263982b39913df8fad527">NewAttributeList()</a>, <a class="el" href="context__descriptor_8h.html#138d94c0dba63bafa0154148fac5d919">NewContextDescriptor()</a>, <a class="el" href="variables_8h.html#00a96b5247de8850bd0f0acf4a1fe871">NewVariable()</a>, <a class="el" href="output_8h.html#14e320f7e110fa3f4c81f78a09d41335">open_input_stream()</a>, <a class="el" href="parse__actions_8c.html#f171dda31157fe9e0f1a31f8ce2d687f">OptimizeStringConstraint()</a>, <a class="el" href="macro_8c.html#866134319e613786515f4524eff22cb7">parse_macro_name()</a>, <a class="el" href="macro_8c.html#69a970691e1befae1add259bcf41f66b">PushInputBuffer()</a>, <a class="el" href="cwb-encode_8c.html#6428b5a878e6daaed645c95518466eb5">quote_file_path()</a>, <a class="el" href="ranges_8h.html#07b912b75ffdca85b0e961a6fdb313c4">RangeSetop()</a>, <a class="el" href="ranges_8h.html#1ab410ce8460f2f5f41a4aac0e43faf0">RangeSort()</a>, <a class="el" href="class-mapping_8h.html#416d19ddd272a2c289369bc44f18b282">read_mapping()</a>, <a class="el" href="cwb-huffcode_8c.html#54819f1c7b28623c39a3231a6a23f49e">ReadHCD()</a>, <a class="el" href="cwb-encode_8c.html#913e0101c0276a26860d59bb15ef32c6">scan_directory()</a>, <a class="el" href="eval_8c.html#31acd70920a1fa63e63a7087eab71722">set_corpus_matchlists()</a>, <a class="el" href="targets_8h.html#3bfdee135e380d0931994127d69a8df8">set_target()</a>, <a class="el" href="matchlist_8h.html#ceac8bbec1e489f033a2bee302b1b193">Setop()</a>, <a class="el" href="corpmanag_8c.html#0cbf57d76b0c6eece0dc3fd61aa7eb92">show_corpora_files1()</a>, <a class="el" href="eval_8c.html#6d83579b3075256f14a62888a2e4b284">simulate_dfa()</a>, <a class="el" href="cwb-s-encode_8c.html#aa1fe19da0a3acca96e84533fd318722">SL_insert_after_point()</a>, <a class="el" href="ranges_8c.html#0199b9d38e35100de957e78f0ad63169">SortExternally()</a>, <a class="el" href="ranges_8h.html#af5f006cef0ac7c1fdb5c9d55558c11a">SortSubcorpus()</a>, <a class="el" href="ranges_8h.html#816771441eaa5f9006f4187f9d0b99b4">SortSubcorpusRandomize()</a>, <a class="el" href="server_8c.html#a3fe862e1a310fbf63cd2ffc01806d53">strdupto()</a>, <a class="el" href="tree_8h.html#28175b9d3283db5580269676c3f60b9c">try_optimization()</a>, and <a class="el" href="variables_8h.html#5d9d9348b89f237787ee280678bfccb3">VariableAddItem()</a>.</p>
 
@@ -3299,6 +3327,10 @@ full definition of DynCallResult structure (needed to allocate space for dynamic
 <div class="memdoc">
 
 <p>
+Gets a random number. 
+<p>
+Part of the CL-internal random number generator.<p>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>The random number, an unsigned 32-bit integer with uniform distribution </dd></dl>
 
 <p>Referenced by <a class="el" href="macros_8c.html#2d569901446d6bb0ad3b48eb82c8ede7">cl_runif()</a>, and <a class="el" href="ranges_8h.html#816771441eaa5f9006f4187f9d0b99b4">SortSubcorpusRandomize()</a>.</p>
 
@@ -3320,6 +3352,8 @@ full definition of DynCallResult structure (needed to allocate space for dynamic
 </div>
 <div class="memdoc">
 
+<p>
+Initialises the CL-internal random number generator from the current system time. 
 <p>
 
 <p>References <a class="el" href="cl_8h.html#a8a31610291c48d2014055c5c1d4cfea">cl_set_seed()</a>.</p>
@@ -3354,6 +3388,15 @@ full definition of DynCallResult structure (needed to allocate space for dynamic
 <div class="memdoc">
 
 <p>
+safely reallocates memory. 
+<p>
+<dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="macros_8c.html#4e4eccd789155123ab533ed0cecbecea" title="safely allocates memory malloc-style.">cl_malloc</a> </dd></dl>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>block</em>&nbsp;</td><td>Pointer to the block to be reallocated </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>bytes</em>&nbsp;</td><td>Number of bytes to allocate to the resized memory block @ return Pointer to the block of reallocated memory </td></tr>
+  </table>
+</dl>
 
 <p>Referenced by <a class="el" href="concordance_8h.html#2b5b1e905d1a2c30ec7bb58f9b121b7f">add_to_string()</a>, <a class="el" href="binsert_8h.html#8e88957097a213a2bf28f0e9bf5804c5">binsert_g()</a>, <a class="el" href="list_8c.html#4e5bea92d8d1bda5e43d1c42e2e9d657">cl_int_list_set()</a>, <a class="el" href="list_8c.html#c2c687324983ff852165e42c90104cb3">cl_string_list_set()</a>, <a class="el" href="groups_8c.html#26c1dd72764bdec994f1517e699af745">ComputeGroupExternally()</a>, <a class="el" href="groups_8c.html#f2a9b2c57eae7adc352b65db3e9d5443">ComputeGroupInternally()</a>, <a class="el" href="cl_8h.html#443d11045572d4bd47a91403a5d6ea6e">get_positions()</a>, <a class="el" href="macro_8h.html#3c545105614ab570fcbd3aa56a77b971">load_macro_file()</a>, <a class="el" href="eval_8c.html#d49aedc126aa9ab11de81b6c5d62db6a">meet_mu()</a>, <a class="el" href="variables_8h.html#00a96b5247de8850bd0f0acf4a1fe871">NewVariable()</a>, <a class="el" href="ranges_8h.html#07b912b75ffdca85b0e961a6fdb313c4">RangeSetop()</a>, <a class="el" href="class-mapping_8h.html#416d19ddd272a2c289369bc44f18b282">read_mapping()</a>, <a class="el" href="regex2dfa_8c.html#59a03c6c0148d8bb164bdae60fc9122a">Reallocate()</a>, <a class="el" href="matchlist_8h.html#ceac8bbec1e489f033a2bee302b1b193">Setop()</a>, and <a class="el" href="variables_8h.html#5d9d9348b89f237787ee280678bfccb3">VariableAddItem()</a>.</p>
 
@@ -3433,6 +3476,10 @@ full definition of DynCallResult structure (needed to allocate space for dynamic
 <div class="memdoc">
 
 <p>
+Gets a random number in the range [0,1] with uniform distribution. 
+<p>
+Part of the CL-internal random number generator.<p>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>The generated random number. </dd></dl>
 
 <p>References <a class="el" href="cl_8h.html#551e0245007f49ff7b6c39498409e104">cl_random()</a>.</p>
 
@@ -3577,6 +3624,14 @@ full definition of DynCallResult structure (needed to allocate space for dynamic
 <div class="memdoc">
 
 <p>
+Restores the <a class="el" href="structstate.html">state</a> of the CL-internal random number generator. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>i1</em>&nbsp;</td><td>The value to set the first RNG integer to (if zero, resets it to 1) </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>i2</em>&nbsp;</td><td>The value to set the second RNG integer to (if zero, resets it to 1) </td></tr>
+  </table>
+</dl>
 
 <p>Referenced by <a class="el" href="macros_8c.html#a8a31610291c48d2014055c5c1d4cfea">cl_set_seed()</a>, and <a class="el" href="ranges_8h.html#816771441eaa5f9006f4187f9d0b99b4">SortSubcorpusRandomize()</a>.</p>
 
@@ -3599,6 +3654,13 @@ full definition of DynCallResult structure (needed to allocate space for dynamic
 <div class="memdoc">
 
 <p>
+Initialises the CL-internal random number generator. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>seed</em>&nbsp;</td><td>A single 32bit number to use as the seed </td></tr>
+  </table>
+</dl>
 
 <p>References <a class="el" href="cl_8h.html#bae04f24d7ffb03fa5ee294ba1e5e543">cl_set_rng_state()</a>.</p>
 
@@ -3678,6 +3740,15 @@ full definition of DynCallResult structure (needed to allocate space for dynamic
 <div class="memdoc">
 
 <p>
+safely duplicates a string. 
+<p>
+<dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="macros_8c.html#4e4eccd789155123ab533ed0cecbecea" title="safely allocates memory malloc-style.">cl_malloc</a> </dd></dl>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>string</em>&nbsp;</td><td>Pointer to the original string </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>Pointer to the newly duplicated string </dd></dl>
 
 <p>Referenced by <a class="el" href="auth_8h.html#3000523a790002dac6d9ba78d27a091b">add_grant_to_last_user()</a>, <a class="el" href="auth_8h.html#c090d32c6dc0e8c597bff8ccdbccb6d8">add_user_to_list()</a>, <a class="el" href="cwb-encode_8c.html#f99342049f0c726b2e1223b1f5c7feab">addline()</a>, <a class="el" href="attlist_8h.html#7be7f302f175dc78fd71765f617ce585">AddNameToAL()</a>, <a class="el" href="parse__actions_8h.html#3889058f05a543a8bdfbcd51a365c8b8">after_Query()</a>, <a class="el" href="corpmanag_8h.html#f5eed52e11c9ca3a493ab6176fb9af54">assign_temp_to_sub()</a>, <a class="el" href="server_8c.html#e08e9f05d751077e190df68c373fdcfc">att_hash_lookup()</a>, <a class="el" href="cl_8h.html#118ad9f02aecfc1301027d8fc591b23a">call_dynamic_attribute()</a>, <a class="el" href="lexhash_8c.html#4a0eb190bffe4ca27d93a2248aa63d9b">cl_lexhash_add()</a>, <a class="el" href="cl_8h.html#8e1d05d565a13c56790b5dd35d144d49">cl_make_set()</a>, <a class="el" href="regopt_8c.html#2c4607eb8e094b7699062df8eb744058">cl_new_regex()</a>, <a class="el" href="cwb-encode_8c.html#b80a63938c6804f9600afdf8ccb6bfc0">close_range()</a>, <a class="el" href="server_8h.html#b5f0263a907556908ff1a0dffb7b8413">combine_subcorpus_spec()</a>, <a class="el" href="attributes_8h.html#f6fc50d4c50b0538882db38df7751e0d">component_full_name()</a>, <a class="el" href="concordance_8h.html#56419cf83985974f599ea0fa65f554ce">compose_kwic_line()</a>, <a class="el" href="cwb-encode_8c.html#24c98c7fc24344b98cf63c129d68d066">declare_range()</a>, <a class="el" href="cwb-encode_8c.html#715be4b1e2130e65d5911a14aa355bfb">declare_wattr()</a>, <a class="el" href="parse__actions_8h.html#4335ddbb14865c031041a194e182ed92">do_XMLTag()</a>, <a class="el" href="corpmanag_8h.html#b20d278862cada0d5427b8232a3b69ad">duplicate_corpus()</a>, <a class="el" href="tree_8h.html#c3ff698ce6813b633cd396e6829d73b1">evaltree2searchstr()</a>, <a class="el" href="options_8c.html#c25b2835b607daf6f05f6f87df840e40">execute_side_effects()</a>, <a class="el" href="options_8c.html#4dd97968a2f31c7ae6a622b651251043">expand_filename()</a>, <a class="el" href="macro_8h.html#a343c98285f1a32ef30f8da7cd1ce4a8">expand_macro()</a>, <a class="el" href="corpmanag_8c.html#6971e7cc89868423f1044529eb3047da">GetSystemCorpus()</a>, <a class="el" href="symtab_8h.html#c0093e82d521c18e97808dece3977a8e">labellookup()</a>, <a class="el" href="corpmanag_8c.html#a57f32e05db80db43f0f9e8b97bcf08d">load_corpusnames()</a>, <a class="el" href="macro_8h.html#3c545105614ab570fcbd3aa56a77b971">load_macro_file()</a>, <a class="el" href="macro_8c.html#d85b0a62b3c11de0400169eab0dd1890">MacroHashAdd()</a>, <a class="el" href="cwb-align-encode_8c.html#0ddf1224851353fc92bfbff6f499fa97">main()</a>, <a class="el" href="corpmanag_8h.html#3567391cc22d572100bf63c0733b87ff">make_temp_corpus()</a>, <a class="el" href="variables_8h.html#00a96b5247de8850bd0f0acf4a1fe871">NewVariable()</a>, <a class="el" href="output_8c.html#ae8694f9a2a52053f1336b020c430eec">open_pager()</a>, <a class="el" href="cwb-encode_8c.html#dff58f0a1109dd9e778ba480c6b33327">open_range()</a>, <a class="el" href="output_8h.html#8daf0f4a91a7fb631d27c19b8f75353b">open_stream()</a>, <a class="el" href="cwb-s-encode_8c.html#452debbf417cc5dfccaffe9063fe90cf">parse_line()</a>, <a class="el" href="options_8c.html#3b63ff1af997333f51cad78bf921732a">parse_options()</a>, <a class="el" href="output_8h.html#b5e1d7c16acef5e942e242f803a494f9">print_tabulation()</a>, <a class="el" href="print__align_8h.html#788d17c5137b4ed29a1cbef60a2e657e">printAlignedStrings()</a>, <a class="el" href="cwb-encode_8c.html#6428b5a878e6daaed645c95518466eb5">quote_file_path()</a>, <a class="el" href="class-mapping_8h.html#416d19ddd272a2c289369bc44f18b282">read_mapping()</a>, <a class="el" href="options_8h.html#93847df2fb331e55cc129cb33e7fd440">set_context_option_value()</a>, <a class="el" href="options_8c.html#68cf4247c7f432e135801330c87cf8bf">set_default_option_values()</a>, <a class="el" href="corpus_8c.html#84eb9130d44b1b40bd3bfe5a94f777d9">setup_corpus()</a>, <a class="el" href="cwb-s-encode_8c.html#aa1fe19da0a3acca96e84533fd318722">SL_insert_after_point()</a>, <a class="el" href="ranges_8h.html#af5f006cef0ac7c1fdb5c9d55558c11a">SortSubcorpus()</a>, <a class="el" href="server_8h.html#89a5eb56c012472931e60cac0aedf886">split_attribute_spec()</a>, <a class="el" href="server_8h.html#344ff3b1714cb7c1b8938fc366a3782d">split_subcorpus_spec()</a>, <a class="el" href="variables_8h.html#5d9d9348b89f237787ee280678bfccb3">VariableAddItem()</a>, and <a class="el" href="variables_8h.html#e6e743183feb09fe2d9fc4b95f2fde0d">VerifyVariable()</a>.</p>
 
@@ -5201,7 +5272,7 @@ Count the number of arguments on the attribute's dynamic argument list.
 </div>
 </div><p>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Sat Sep 12 19:04:09 2009 for CWB by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Mon Sep 14 00:12:02 2009 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

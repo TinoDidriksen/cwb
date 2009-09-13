@@ -22,62 +22,87 @@
 #include "globals.h"
 
 
-/* safely allocate/reallocate memory:
- *   cl_malloc()
- *   cl_calloc()
- *   cl_realloc()
- *   cl_strdup()
- *   cl_free(p)
- * on out_of_memory, prints error message & aborts program
- */
+
 
 /* function prototypes and macros now in <cl.h> */
 
 
-/* memory allocation macros */
+/**
+ * Allocates a new object.
+ *
+ * A macro for memory allocation which implements an object-oriented-style
+ * "new" term: it evaluates to a pointer to a newly-laid out memory block
+ * of the size of the specified type.
+ *
+ * @param T  The data type of the "object" to be created.
+ * @return   A pointer to the new "object"
+ * memory allocation macros
+ */
 #define new(T) (T *)cl_malloc(sizeof(T))
+/**
+ * Synonym for new (making it case-insensitive)
+ * @see new
+ */
 #define New(P,T)  P = (T *)cl_malloc(sizeof(T))
 
 
-/* be careful: strings are considered equal if they are both NULL,
- * they are considered non-equal when one of both is NULL
+/**
+ * Tests two strings for equality.
+ *
+ * This macro evaluates to 1 if the strings are equal, 0 otherwise.
+ * Be careful: strings are considered equal if they are both NULL,
+ * they are considered non-equal when one of both is NULL.
+ * @param a  the first string
+ * @param b  the second string
+ * @return   a Boolean
  */
 #define STREQ(a,b) (((a) == (b)) || \
-		    ((a) && (b) && (strcmp((a), (b)) == 0)))
+                    ((a) && (b) && (strcmp((a), (b)) == 0)))
 
+/**
+ * Evaluates to the smaller of two integer arguments.
+ */
 #define MIN(a,b) ((a)<(b) ? (a) : (b))
+/**
+ * Evaluates to the greater of two integer arguments.
+ */
 #define MAX(a,b) ((a)>(b) ? (a) : (b))
 
 
 /*
- *  display progress bar in terminal window (STDERR, child mode: STDOUT)
+ * display progress bar in terminal window (STDERR, child mode: STDOUT)
  */
 
 void
-progress_bar_child_mode(int on_off); /* 1 = simple messages on STDOUT, 0 = pretty-printed messages with carriage returns ON STDERR */
+progress_bar_child_mode(int on_off);
 
 void
-progress_bar_clear_line(void);	/* assumes line width of 60 characters */
+progress_bar_clear_line(void);
 
 void
 progress_bar_message(int pass, int total, char *message);
-/* [pass <pass> of <total>: <message>]   (if total == 0, uses pass and total values from last call) */
 
 void
 progress_bar_percentage(int pass, int total, int percentage);
-/* [pass <pass> of <total>: <percentage>% complete]  (if total == 0, uses pass and total values from last call) */
+
+
 
 
 /*
  *  print indented 'tabularised' lists
  */
 
-void
-start_indented_list(int linewidth, int tabsize, int indent);
-/* <tabsize> = tabulator steps; if <linewidth>, <tabsize>, or <indent> is zero, uses internal default */
+/* new-style API */
+#define ilist_start(lw, ts, id) start_indented_list(lw, ts, id)
+#define ilist_print_break(l) print_indented_list_br(l)
+#define ilist_print_item(s) print_indented_list_item(s)
+#define ilist_end end_indented_list
 
 void
-print_indented_list_br(char *label);	/* starts new line (as <br> in HTML) [showing optional label in indentation] */
+start_indented_list(int linewidth, int tabsize, int indent);
+
+void
+print_indented_list_br(char *label);
 
 void
 print_indented_list_item(char *string);

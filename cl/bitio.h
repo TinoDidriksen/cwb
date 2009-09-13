@@ -23,6 +23,9 @@
 
 #include "globals.h"
 
+/**
+ * File buffer for bit input / output.
+ */
 typedef struct _bfilebuf {
   FILE *fd;
   char mode;
@@ -31,6 +34,9 @@ typedef struct _bfilebuf {
   off_t position;
 } BFile;
 
+/**
+ * Stream buffer for bit input / output.
+ */
 typedef struct _bstreambuf {
   unsigned char *base;
   char mode;
@@ -39,7 +45,7 @@ typedef struct _bstreambuf {
   off_t position;
 } BStream;
 
-/* both return 1 on success, 0 on failure (not like fopen/fclose) */
+
 
 int BFopen(char *filename, char *type, BFile *bf);
 int BFclose(BFile *stream);
@@ -47,25 +53,14 @@ int BFclose(BFile *stream);
 int BSopen(unsigned char *base, char *type, BStream *bf);
 int BSclose(BStream *stream);
 
-/* flushes in case of output stream, even incomplete byte (so the next
- * one begins at a new byte), and skips to the next input byte for
- * input streams. */
-
 int BFflush(BFile *stream);
-int BFwrite(unsigned char data, int nbits, BFile *stream);
-
 int BSflush(BStream *stream);
-int BSwrite(unsigned char data, int nbits, BStream *stream);
 
-/* ============================================================ 
- * NOTE: be sure that you read the data into an unsigned char !
- * ============================================================ */
+int BFwrite(unsigned char data, int nbits, BFile *stream);
+int BSwrite(unsigned char data, int nbits, BStream *stream);
 
 int BFread(unsigned char *data, int nbits, BFile *stream);
 int BSread(unsigned char *data, int nbits, BStream *stream);
-
-
-/* the next two read nbits into an unsigned int, padded to the right */
 
 int BFwriteWord(unsigned int data, int nbits, BFile *stream);
 

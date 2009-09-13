@@ -34,11 +34,12 @@
 #  depend	update dependencies (only necessary after major changes)
 #  tags		create an emacs ETAGS file
 #
-#  cl		to compile the Corpus Library only
-#  cqp		to compile CQP only
-#  utils 	to compile the utilities only
+#  cl           to compile the Corpus Library only
+#  cqp          to compile CQP only
+#  utils        to compile the utilities only
 #  man          to update the manpages from their .pod sources
-#  editline	to compile the editline library shipped with the CWB
+#  doxygen      to update the HTML code documentation (requires doxygen to be installed)
+#  editline     to compile the editline library shipped with the CWB
 #  
 
 TOP = $(shell pwd)
@@ -66,11 +67,12 @@ default:
 	@$(ECHO) "  make cqp       build CQP query processor"
 	@$(ECHO) "  make utils     build command-line utilities"
 	@$(ECHO) "  make man       update manpages from POD sources"
+	@$(ECHO) "  make doxygen   update HTML code documentation"
 	@$(ECHO) "  make instutils configure installation scripts"
 	@$(ECHO) "  make tags      generate symbol index for GNU Emacs"
 	@$(ECHO) "  make size      check total size of CWB source code"   
 
-all: 	$(EXTERNALS) $(SUBDIRS)
+all:  $(EXTERNALS) $(SUBDIRS)
 
 cl:
 	@$(ECHO) "--------------------------------- BUILDING CORPUS LIBRARY (CL)"
@@ -87,6 +89,11 @@ utils:
 man:
 	@$(ECHO) "--------------------------------- BUILDING MANPAGES"
 	$(MAKE) -C man
+
+doxygen:
+	@$(ECHO) "--------------------------------- BUILDING CODE DOCUMENTATION"
+	-$(RM) -rf doc/html/*
+	doxygen doc/doxygen-config
 
 editline:
 	@$(ECHO) "--------------------------------- BUILDING EDITLINE LIBRARY"

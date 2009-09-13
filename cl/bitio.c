@@ -18,13 +18,21 @@
 #include <sys/types.h>
 
 #include "globals.h"
-
 #include "endian.h"
-
 #include "bitio.h"
 
-/* ================================================== IMPLEMENTATION */
 
+
+/**
+ * Opens a file for bit input / output.
+ *
+ * Sets up a bit input/output file buffer (BF)
+ *
+ * @param filename  Name of file to open
+ * @param type      File-open mode string: "w" or "r" accepted
+ * @param bf        Buffer in which to set up the opened BF
+ * @return          1 on success, 0 on failure (not like fopen/fclose)
+ */
 int BFopen(char *filename, char *type, BFile *bf)
 {
   bf->fd = fopen(filename, type);
@@ -38,6 +46,16 @@ int BFopen(char *filename, char *type, BFile *bf)
   return (bf->fd ? 1 : 0);
 }
 
+/**
+ * Creates a stream buffer for bit input / output.
+ *
+ * Sets up a bit input/output stream buffer (BS)
+ *
+ * @param base  Pointer to the stream
+ * @param type  Mode-string: "w" or "r" accepted
+ * @param bf    Buffer in which to set up the opened BS
+ * @return      boolean: 1 on success, 0 on failure (not like fopen/fclose)
+ */
 int BSopen(unsigned char *base, char *type, BStream *bf)
 {
   bf->base = base;
@@ -51,6 +69,14 @@ int BSopen(unsigned char *base, char *type, BStream *bf)
   return (bf->base ? 1 : 0);
 }
 
+/**
+ * Closes a bit input / output file buffer.
+ *
+ * If this is an output buffer, it is flushed before closing.
+ *
+ * @param stream  The file buffer to close.
+ * @return        Always returns true.
+ */
 int BFclose(BFile *stream)
 {
   if (stream->mode == 'w') 
@@ -59,6 +85,14 @@ int BFclose(BFile *stream)
   return (fclose(stream->fd) == 0 ? 1 : 0);
 }
 
+/**
+ * Closes a bit input / output stream buffer.
+ *
+ * If this is an output buffer, it is flushed before closing.
+ *
+ * @param stream  The stream buffer to close.
+ * @return        Always returns true.
+ */
 int BSclose(BStream *stream)
 {
   if (stream->mode == 'w') 
@@ -68,6 +102,17 @@ int BSclose(BStream *stream)
   return 1;
 }
 
+/**
+ * Flushes a bit input / output file buffer.
+ *
+ * In the case of an output file buffer, the buffer is flushed,
+ * even an incomplete byte (so the next one begins at a new byte).
+ * In the case of an input file buffer, the buffer skips to the
+ * next input byte.
+ *
+ * @param stream  The file buffer to flush.
+ * @return        Boolean: 1 for all OK, 0 for a problem.
+ */
 int BFflush(BFile *stream)
 {
   int retval;
@@ -76,14 +121,14 @@ int BFflush(BFile *stream)
 
   if (stream->mode == 'w') {
     if ((stream->bits_in_buf > 0) && 
-	(stream->bits_in_buf < 8)) {
+        (stream->bits_in_buf < 8)) {
       
       stream->buf <<= (8 - stream->bits_in_buf);
       fwrite(&stream->buf, sizeof(unsigned char), 1, stream->fd);
       stream->position++;
       
       if (fflush(stream->fd) == 0)
-	retval = 1;
+        retval = 1;
 
       stream->buf = '\0';
       stream->bits_in_buf = 0;
@@ -104,6 +149,17 @@ int BFflush(BFile *stream)
   return retval;
 }
 
+/**
+ * Flushes a bit input / output stream buffer.
+ *
+ * In the case of an output stream, the stream is flushed,
+ * even an incomplete byte (so the next one begins at a new byte).
+ * In the case of an input stream, the stream skips to the
+ * next input byte.
+ *
+ * @param stream  The stream to flush.
+ * @return        Boolean: 1 for all OK, 0 for a problem.
+ */
 int BSflush(BStream *stream)
 {
   int retval;
@@ -139,6 +195,18 @@ int BSflush(BStream *stream)
   return retval;
 }
 
+/**
+ * Writes bit data to file via a BFile buffer.
+ *
+ * Bits accumulate in the buffer till there are 8 of them.
+ * Then a byte is written to file (as an unsigned char).
+ *
+ *
+ * @param data    The data to write.
+ * @param nbits   The number of bits to write from data.
+ * @param stream  The buffer to write via.
+ * @return        Boolean: 1 for all OK, 0 for a problem.
+ */
 int BFwrite(unsigned char data, int nbits, BFile *stream)
 {
 
@@ -159,7 +227,7 @@ int BFwrite(unsigned char data, int nbits, BFile *stream)
     
     if (stream->bits_in_buf == 8) {
       if (fwrite(&stream->buf, sizeof(unsigned char), 1, stream->fd) != 1)
-	return 0;
+        return 0;
       stream->position++;
       stream->buf = 0;
       stream->bits_in_buf = 0;
@@ -171,6 +239,18 @@ int BFwrite(unsigned char data, int nbits, BFile *stream)
   return 1;
 }
 
+/**
+ * Writes bit data to a character stream via a BStream buffer.
+ *
+ * Bits accumulate in the buffer till there are 8 of them.
+ * Then a byte is written to the stream (as an unsigned char).
+ *
+ *
+ * @param data    The data to write.
+ * @param nbits   The number of bits to write from data.
+ * @param stream  The buffer to write via.
+ * @return        Boolean: 1 for all OK, 0 for a problem.
+ */
 int BSwrite(unsigned char data, int nbits, BStream *stream)
 {
   unsigned char mask;
@@ -201,6 +281,18 @@ int BSwrite(unsigned char data, int nbits, BStream *stream)
   return 1;
 }
 
+
+
+/**
+ * Read bit data from a file via a BFile buffer.
+ *
+ * NOTE: be sure that you read the data into an unsigned char!
+ *
+ * @param data    Pointer to the location for the read bit data.
+ * @param nbits   Number of bits to read.
+ * @param stream  The BFile buffer to use.
+ * @return        Boolean: 1 for all OK, 0 for a problem.
+ */
 int BFread(unsigned char *data, int nbits, BFile *stream)
 {
   *data = '\0';
@@ -209,7 +301,7 @@ int BFread(unsigned char *data, int nbits, BFile *stream)
   
     if (stream->bits_in_buf == 0) {
       if (fread(&stream->buf, sizeof(unsigned char), 1, stream->fd) != 1)
-	return 0;
+        return 0;
       stream->position++;
       stream->bits_in_buf = 8;
     }
@@ -226,6 +318,16 @@ int BFread(unsigned char *data, int nbits, BFile *stream)
   return 1;
 }
 
+/**
+ * Read bit data from a stream via a BStream buffer.
+ *
+ * NOTE: be sure that you read the data into an unsigned char!
+ *
+ * @param data    Pointer to the location for the read bit data.
+ * @param nbits   Number of bits to read.
+ * @param stream  The BStream buffer to use.
+ * @return        Boolean: 1 for all OK, 0 for a problem.
+ */
 int BSread(unsigned char *data, int nbits, BStream *stream)
 {
   *data = '\0';
@@ -251,7 +353,18 @@ int BSread(unsigned char *data, int nbits, BStream *stream)
 }
 
 
+/* the next two read nbits into an unsigned int, padded to the right */
 
+/**
+ * Writes bit data to a file from an unsigned int.
+ *
+ * This function writes nbits from an unsigned int, padded to the right.
+ *
+ * @param data    The data to write.
+ * @param nbits   Number of bits to write.
+ * @param stream  The BFile buffer to use.
+ * @return        Boolean: 1 for all OK, 0 for a problem.
+ */
 int BFwriteWord(unsigned int data, int nbits, BFile *stream)
 {
   int bytes, rest, i;
@@ -283,6 +396,16 @@ int BFwriteWord(unsigned int data, int nbits, BFile *stream)
   return 1;
 }
 
+/**
+ * Reads bit data from a file into an unsigned int.
+ *
+ * This function reads nbits into an unsigned int, padded to the right.
+ *
+ * @param data    Pointer to the location for the read bit data.
+ * @param nbits   Number of bits to read.
+ * @param stream  The BFile buffer to use.
+ * @return        Boolean: 1 for all OK, 0 for a problem.
+ */
 int BFreadWord(unsigned int *data, int nbits, BFile *stream)
 {
   int bytes, rest, i;
@@ -318,19 +441,31 @@ int BFreadWord(unsigned int *data, int nbits, BFile *stream)
 
 /* I'm just glad Oli didn't implement BSwriteWord() ... */
 
-
+/**
+ * Gets the stream position of a BFile.
+ */
 int BFposition(BFile *stream)
 {
   assert(stream);
   return stream->position;
 }
 
+/**
+ * Gets the stream position of a BStream.
+ */
 int BSposition(BStream *stream)
 {
   assert(stream);
   return stream->position;
 }
 
+/**
+ * Moves the position marker of a BStream (clearing the bit buffer in the process)
+ *
+ * @param stream  The stream whose position marker is changed.
+ * @param offset  The desired new offset.
+ * @return  Always true.
+ */
 int BSseek(BStream *stream, off_t offset)
 {
   stream->buf = '\0';

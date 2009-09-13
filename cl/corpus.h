@@ -27,7 +27,7 @@
 typedef struct _idbuf *IDList;
 
 /**
- * Entry in linked list of strings containing ID
+ * Entry in linked list of strings containing ID codes
  */
 typedef struct _idbuf {
   char *string;

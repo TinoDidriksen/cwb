@@ -29,31 +29,31 @@
 <h2>Data Structures</h2>
 <ul>
 <li>struct <a class="el" href="struct__bfilebuf.html">_bfilebuf</a>
-<li>struct <a class="el" href="struct__bstreambuf.html">_bstreambuf</a>
-</ul>
+<dl class="el"><dd class="mdescRight">File buffer for bit input / output.  <a href="struct__bfilebuf.html#_details">More...</a><br></dl><li>struct <a class="el" href="struct__bstreambuf.html">_bstreambuf</a>
+<dl class="el"><dd class="mdescRight">Stream buffer for bit input / output.  <a href="struct__bstreambuf.html#_details">More...</a><br></dl></ul>
 <h2>Typedefs</h2>
 <ul>
 <li>typedef struct <a class="el" href="struct__bfilebuf.html">_bfilebuf</a> <a class="el" href="bitio_8h.html#0deef113b897f2c12e9d292c2b543cad">BFile</a>
-<li>typedef struct <a class="el" href="struct__bstreambuf.html">_bstreambuf</a> <a class="el" href="bitio_8h.html#0b73770054eb539224534a0e5bef7ad9">BStream</a>
-</ul>
+<dl class="el"><dd class="mdescRight">File buffer for bit input / output.  <a href="#0deef113b897f2c12e9d292c2b543cad"></a><br></dl><li>typedef struct <a class="el" href="struct__bstreambuf.html">_bstreambuf</a> <a class="el" href="bitio_8h.html#0b73770054eb539224534a0e5bef7ad9">BStream</a>
+<dl class="el"><dd class="mdescRight">Stream buffer for bit input / output.  <a href="#0b73770054eb539224534a0e5bef7ad9"></a><br></dl></ul>
 <h2>Functions</h2>
 <ul>
 <li>int <a class="el" href="bitio_8h.html#7a29ed721336791868ff232d01c55f40">BFopen</a> (char *filename, char *type, <a class="el" href="struct__bfilebuf.html">BFile</a> *bf)
-<li>int <a class="el" href="bitio_8h.html#04d5562b530acc3e364f5ec7d1d0292d">BFclose</a> (<a class="el" href="struct__bfilebuf.html">BFile</a> *stream)
-<li>int <a class="el" href="bitio_8h.html#5a9d5735b3848354391b29169d17cd63">BSopen</a> (unsigned char *base, char *type, <a class="el" href="struct__bstreambuf.html">BStream</a> *bf)
-<li>int <a class="el" href="bitio_8h.html#360188291b10b8dcd6a1807b832428ab">BSclose</a> (<a class="el" href="struct__bstreambuf.html">BStream</a> *stream)
-<li>int <a class="el" href="bitio_8h.html#ed66972c0fb2c592485c2950ef943186">BFflush</a> (<a class="el" href="struct__bfilebuf.html">BFile</a> *stream)
-<li>int <a class="el" href="bitio_8h.html#bf3928f6c6f7b2136b5827c317c4b0d6">BFwrite</a> (unsigned char data, int nbits, <a class="el" href="struct__bfilebuf.html">BFile</a> *stream)
-<li>int <a class="el" href="bitio_8h.html#b59e90ad9379a80af49332aa89153741">BSflush</a> (<a class="el" href="struct__bstreambuf.html">BStream</a> *stream)
-<li>int <a class="el" href="bitio_8h.html#7bd698229580beedbfed645e63e02fd0">BSwrite</a> (unsigned char data, int nbits, <a class="el" href="struct__bstreambuf.html">BStream</a> *stream)
-<li>int <a class="el" href="bitio_8h.html#d56d704eb6e4cae4f6c60304ebed7c27">BFread</a> (unsigned char *data, int nbits, <a class="el" href="struct__bfilebuf.html">BFile</a> *stream)
-<li>int <a class="el" href="bitio_8h.html#61f65178be14b01eb41e7521d078e58e">BSread</a> (unsigned char *data, int nbits, <a class="el" href="struct__bstreambuf.html">BStream</a> *stream)
-<li>int <a class="el" href="bitio_8h.html#7970d098d9cb7e90b28b6f54ab49eb54">BFwriteWord</a> (unsigned int data, int nbits, <a class="el" href="struct__bfilebuf.html">BFile</a> *stream)
-<li>int <a class="el" href="bitio_8h.html#41a3fc03753ac3898d52602d88116497">BFreadWord</a> (unsigned int *data, int nbits, <a class="el" href="struct__bfilebuf.html">BFile</a> *stream)
-<li>int <a class="el" href="bitio_8h.html#e3206a0bf17674c68cd0d6fdf6cb6934">BFposition</a> (<a class="el" href="struct__bfilebuf.html">BFile</a> *stream)
-<li>int <a class="el" href="bitio_8h.html#a50df4d5ad6e94a0ae64c13f08b59a79">BSposition</a> (<a class="el" href="struct__bstreambuf.html">BStream</a> *stream)
-<li>int <a class="el" href="bitio_8h.html#8f2235c665815e48bd973c87d3af8d5f">BSseek</a> (<a class="el" href="struct__bstreambuf.html">BStream</a> *stream, off_t offset)
-</ul>
+<dl class="el"><dd class="mdescRight">Opens a file for bit input / output.  <a href="#7a29ed721336791868ff232d01c55f40"></a><br></dl><li>int <a class="el" href="bitio_8h.html#04d5562b530acc3e364f5ec7d1d0292d">BFclose</a> (<a class="el" href="struct__bfilebuf.html">BFile</a> *stream)
+<dl class="el"><dd class="mdescRight">Closes a bit input / output file buffer.  <a href="#04d5562b530acc3e364f5ec7d1d0292d"></a><br></dl><li>int <a class="el" href="bitio_8h.html#5a9d5735b3848354391b29169d17cd63">BSopen</a> (unsigned char *base, char *type, <a class="el" href="struct__bstreambuf.html">BStream</a> *bf)
+<dl class="el"><dd class="mdescRight">Creates a stream buffer for bit input / output.  <a href="#5a9d5735b3848354391b29169d17cd63"></a><br></dl><li>int <a class="el" href="bitio_8h.html#360188291b10b8dcd6a1807b832428ab">BSclose</a> (<a class="el" href="struct__bstreambuf.html">BStream</a> *stream)
+<dl class="el"><dd class="mdescRight">Closes a bit input / output stream buffer.  <a href="#360188291b10b8dcd6a1807b832428ab"></a><br></dl><li>int <a class="el" href="bitio_8h.html#ed66972c0fb2c592485c2950ef943186">BFflush</a> (<a class="el" href="struct__bfilebuf.html">BFile</a> *stream)
+<dl class="el"><dd class="mdescRight">Flushes a bit input / output file buffer.  <a href="#ed66972c0fb2c592485c2950ef943186"></a><br></dl><li>int <a class="el" href="bitio_8h.html#b59e90ad9379a80af49332aa89153741">BSflush</a> (<a class="el" href="struct__bstreambuf.html">BStream</a> *stream)
+<dl class="el"><dd class="mdescRight">Flushes a bit input / output stream buffer.  <a href="#b59e90ad9379a80af49332aa89153741"></a><br></dl><li>int <a class="el" href="bitio_8h.html#bf3928f6c6f7b2136b5827c317c4b0d6">BFwrite</a> (unsigned char data, int nbits, <a class="el" href="struct__bfilebuf.html">BFile</a> *stream)
+<dl class="el"><dd class="mdescRight">Writes bit data to file via a BFile buffer.  <a href="#bf3928f6c6f7b2136b5827c317c4b0d6"></a><br></dl><li>int <a class="el" href="bitio_8h.html#7bd698229580beedbfed645e63e02fd0">BSwrite</a> (unsigned char data, int nbits, <a class="el" href="struct__bstreambuf.html">BStream</a> *stream)
+<dl class="el"><dd class="mdescRight">Writes bit data to a character stream via a BStream buffer.  <a href="#7bd698229580beedbfed645e63e02fd0"></a><br></dl><li>int <a class="el" href="bitio_8h.html#d56d704eb6e4cae4f6c60304ebed7c27">BFread</a> (unsigned char *data, int nbits, <a class="el" href="struct__bfilebuf.html">BFile</a> *stream)
+<dl class="el"><dd class="mdescRight">Read bit data from a file via a BFile buffer.  <a href="#d56d704eb6e4cae4f6c60304ebed7c27"></a><br></dl><li>int <a class="el" href="bitio_8h.html#61f65178be14b01eb41e7521d078e58e">BSread</a> (unsigned char *data, int nbits, <a class="el" href="struct__bstreambuf.html">BStream</a> *stream)
+<dl class="el"><dd class="mdescRight">Read bit data from a stream via a BStream buffer.  <a href="#61f65178be14b01eb41e7521d078e58e"></a><br></dl><li>int <a class="el" href="bitio_8h.html#7970d098d9cb7e90b28b6f54ab49eb54">BFwriteWord</a> (unsigned int data, int nbits, <a class="el" href="struct__bfilebuf.html">BFile</a> *stream)
+<dl class="el"><dd class="mdescRight">Writes bit data to a file from an unsigned int.  <a href="#7970d098d9cb7e90b28b6f54ab49eb54"></a><br></dl><li>int <a class="el" href="bitio_8h.html#41a3fc03753ac3898d52602d88116497">BFreadWord</a> (unsigned int *data, int nbits, <a class="el" href="struct__bfilebuf.html">BFile</a> *stream)
+<dl class="el"><dd class="mdescRight">Reads bit data from a file into an unsigned int.  <a href="#41a3fc03753ac3898d52602d88116497"></a><br></dl><li>int <a class="el" href="bitio_8h.html#e3206a0bf17674c68cd0d6fdf6cb6934">BFposition</a> (<a class="el" href="struct__bfilebuf.html">BFile</a> *stream)
+<dl class="el"><dd class="mdescRight">Gets the stream position of a BFile.  <a href="#e3206a0bf17674c68cd0d6fdf6cb6934"></a><br></dl><li>int <a class="el" href="bitio_8h.html#a50df4d5ad6e94a0ae64c13f08b59a79">BSposition</a> (<a class="el" href="struct__bstreambuf.html">BStream</a> *stream)
+<dl class="el"><dd class="mdescRight">Gets the stream position of a BStream.  <a href="#a50df4d5ad6e94a0ae64c13f08b59a79"></a><br></dl><li>int <a class="el" href="bitio_8h.html#8f2235c665815e48bd973c87d3af8d5f">BSseek</a> (<a class="el" href="struct__bstreambuf.html">BStream</a> *stream, off_t offset)
+<dl class="el"><dd class="mdescRight">Moves the position marker of a BStream (clearing the bit buffer in the process).  <a href="#8f2235c665815e48bd973c87d3af8d5f"></a><br></dl></ul>
 <hr><h2>Typedef Documentation</h2>
 <a class="anchor" name="0deef113b897f2c12e9d292c2b543cad"></a><!-- doxytag: member="bitio.h::BFile" ref="0deef113b897f2c12e9d292c2b543cad" args="" -->
 <div class="memitem">
@@ -66,6 +66,8 @@
 </div>
 <div class="memdoc">
 
+<p>
+File buffer for bit input / output. 
 <p>
 
 </div>
@@ -81,6 +83,8 @@
 </div>
 <div class="memdoc">
 
+<p>
+Stream buffer for bit input / output. 
 <p>
 
 </div>
@@ -103,6 +107,15 @@
 <div class="memdoc">
 
 <p>
+Closes a bit input / output file buffer. 
+<p>
+If this is an output buffer, it is flushed before closing.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>stream</em>&nbsp;</td><td>The file buffer to close. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>Always returns true. </dd></dl>
 
 <p>References <a class="el" href="bitio_8c.html#ed66972c0fb2c592485c2950ef943186">BFflush()</a>, <a class="el" href="struct__bfilebuf.html#600b792d6d2ff2e71096dfa60d97a3b0">_bfilebuf::fd</a>, and <a class="el" href="struct__bfilebuf.html#000e34997df38c2005a83d63e67d9282">_bfilebuf::mode</a>.</p>
 
@@ -127,6 +140,15 @@
 <div class="memdoc">
 
 <p>
+Flushes a bit input / output file buffer. 
+<p>
+In the case of an output file buffer, the buffer is flushed, even an incomplete byte (so the next one begins at a new byte). In the case of an input file buffer, the buffer skips to the next input byte.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>stream</em>&nbsp;</td><td>The file buffer to flush. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>Boolean: 1 for all OK, 0 for a problem. </dd></dl>
 
 <p>References <a class="el" href="struct__bfilebuf.html#6725d81d95a63ead5245c70a330e9891">_bfilebuf::bits_in_buf</a>, <a class="el" href="struct__bfilebuf.html#107c2e0139ccbee62e56e52e35ab1f15">_bfilebuf::buf</a>, <a class="el" href="struct__bfilebuf.html#600b792d6d2ff2e71096dfa60d97a3b0">_bfilebuf::fd</a>, <a class="el" href="struct__bfilebuf.html#000e34997df38c2005a83d63e67d9282">_bfilebuf::mode</a>, and <a class="el" href="struct__bfilebuf.html#3cc8afc6744e62ffaca90152930a3fc1">_bfilebuf::position</a>.</p>
 
@@ -166,6 +188,17 @@
 <div class="memdoc">
 
 <p>
+Opens a file for bit input / output. 
+<p>
+Sets up a bit input/output file buffer (BF)<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>filename</em>&nbsp;</td><td>Name of file to open </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>type</em>&nbsp;</td><td>File-open mode string: "w" or "r" accepted </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>bf</em>&nbsp;</td><td>Buffer in which to set up the opened BF </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>1 on success, 0 on failure (not like fopen/fclose) </dd></dl>
 
 <p>References <a class="el" href="struct__bfilebuf.html#6725d81d95a63ead5245c70a330e9891">_bfilebuf::bits_in_buf</a>, <a class="el" href="struct__bfilebuf.html#107c2e0139ccbee62e56e52e35ab1f15">_bfilebuf::buf</a>, <a class="el" href="struct__bfilebuf.html#600b792d6d2ff2e71096dfa60d97a3b0">_bfilebuf::fd</a>, <a class="el" href="struct__bfilebuf.html#000e34997df38c2005a83d63e67d9282">_bfilebuf::mode</a>, and <a class="el" href="struct__bfilebuf.html#3cc8afc6744e62ffaca90152930a3fc1">_bfilebuf::position</a>.</p>
 
@@ -189,6 +222,8 @@
 </div>
 <div class="memdoc">
 
+<p>
+Gets the stream position of a BFile. 
 <p>
 
 <p>References <a class="el" href="struct__bfilebuf.html#3cc8afc6744e62ffaca90152930a3fc1">_bfilebuf::position</a>.</p>
@@ -229,6 +264,17 @@
 <div class="memdoc">
 
 <p>
+Read bit data from a file via a BFile buffer. 
+<p>
+NOTE: be sure that you read the data into an unsigned char!<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>data</em>&nbsp;</td><td>Pointer to the location for the read bit data. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>nbits</em>&nbsp;</td><td>Number of bits to read. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>stream</em>&nbsp;</td><td>The BFile buffer to use. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>Boolean: 1 for all OK, 0 for a problem. </dd></dl>
 
 <p>References <a class="el" href="struct__bfilebuf.html#6725d81d95a63ead5245c70a330e9891">_bfilebuf::bits_in_buf</a>, <a class="el" href="struct__bfilebuf.html#107c2e0139ccbee62e56e52e35ab1f15">_bfilebuf::buf</a>, <a class="el" href="struct__bfilebuf.html#600b792d6d2ff2e71096dfa60d97a3b0">_bfilebuf::fd</a>, and <a class="el" href="struct__bfilebuf.html#3cc8afc6744e62ffaca90152930a3fc1">_bfilebuf::position</a>.</p>
 
@@ -268,6 +314,17 @@
 <div class="memdoc">
 
 <p>
+Reads bit data from a file into an unsigned int. 
+<p>
+This function reads nbits into an unsigned int, padded to the right.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>data</em>&nbsp;</td><td>Pointer to the location for the read bit data. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>nbits</em>&nbsp;</td><td>Number of bits to read. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>stream</em>&nbsp;</td><td>The BFile buffer to use. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>Boolean: 1 for all OK, 0 for a problem. </dd></dl>
 
 <p>References <a class="el" href="bitio_8c.html#d56d704eb6e4cae4f6c60304ebed7c27">BFread()</a>, and <a class="el" href="server_8c.html#3e18e5ab1201e205ce88c473a2f4bf99">bytes</a>.</p>
 
@@ -305,6 +362,17 @@
 <div class="memdoc">
 
 <p>
+Writes bit data to file via a BFile buffer. 
+<p>
+Bits accumulate in the buffer till there are 8 of them. Then a byte is written to file (as an unsigned char).<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>data</em>&nbsp;</td><td>The data to write. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>nbits</em>&nbsp;</td><td>The number of bits to write from data. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>stream</em>&nbsp;</td><td>The buffer to write via. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>Boolean: 1 for all OK, 0 for a problem. </dd></dl>
 
 <p>References <a class="el" href="struct__bfilebuf.html#6725d81d95a63ead5245c70a330e9891">_bfilebuf::bits_in_buf</a>, <a class="el" href="struct__bfilebuf.html#107c2e0139ccbee62e56e52e35ab1f15">_bfilebuf::buf</a>, <a class="el" href="struct__bfilebuf.html#600b792d6d2ff2e71096dfa60d97a3b0">_bfilebuf::fd</a>, and <a class="el" href="struct__bfilebuf.html#3cc8afc6744e62ffaca90152930a3fc1">_bfilebuf::position</a>.</p>
 
@@ -344,6 +412,17 @@
 <div class="memdoc">
 
 <p>
+Writes bit data to a file from an unsigned int. 
+<p>
+This function writes nbits from an unsigned int, padded to the right.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>data</em>&nbsp;</td><td>The data to write. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>nbits</em>&nbsp;</td><td>Number of bits to write. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>stream</em>&nbsp;</td><td>The BFile buffer to use. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>Boolean: 1 for all OK, 0 for a problem. </dd></dl>
 
 <p>References <a class="el" href="bitio_8c.html#bf3928f6c6f7b2136b5827c317c4b0d6">BFwrite()</a>, and <a class="el" href="server_8c.html#3e18e5ab1201e205ce88c473a2f4bf99">bytes</a>.</p>
 
@@ -368,6 +447,15 @@
 <div class="memdoc">
 
 <p>
+Closes a bit input / output stream buffer. 
+<p>
+If this is an output buffer, it is flushed before closing.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>stream</em>&nbsp;</td><td>The stream buffer to close. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>Always returns true. </dd></dl>
 
 <p>References <a class="el" href="struct__bstreambuf.html#d4c44be2a36deae7d084b424d90a224b">_bstreambuf::base</a>, <a class="el" href="bitio_8c.html#b59e90ad9379a80af49332aa89153741">BSflush()</a>, and <a class="el" href="struct__bstreambuf.html#000e34997df38c2005a83d63e67d9282">_bstreambuf::mode</a>.</p>
 
@@ -392,6 +480,15 @@
 <div class="memdoc">
 
 <p>
+Flushes a bit input / output stream buffer. 
+<p>
+In the case of an output stream, the stream is flushed, even an incomplete byte (so the next one begins at a new byte). In the case of an input stream, the stream skips to the next input byte.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>stream</em>&nbsp;</td><td>The stream to flush. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>Boolean: 1 for all OK, 0 for a problem. </dd></dl>
 
 <p>References <a class="el" href="struct__bstreambuf.html#d4c44be2a36deae7d084b424d90a224b">_bstreambuf::base</a>, <a class="el" href="struct__bstreambuf.html#6725d81d95a63ead5245c70a330e9891">_bstreambuf::bits_in_buf</a>, <a class="el" href="struct__bstreambuf.html#107c2e0139ccbee62e56e52e35ab1f15">_bstreambuf::buf</a>, <a class="el" href="struct__bstreambuf.html#000e34997df38c2005a83d63e67d9282">_bstreambuf::mode</a>, and <a class="el" href="struct__bstreambuf.html#3cc8afc6744e62ffaca90152930a3fc1">_bstreambuf::position</a>.</p>
 
@@ -431,6 +528,17 @@
 <div class="memdoc">
 
 <p>
+Creates a stream buffer for bit input / output. 
+<p>
+Sets up a bit input/output stream buffer (BS)<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>base</em>&nbsp;</td><td>Pointer to the stream </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>type</em>&nbsp;</td><td>Mode-string: "w" or "r" accepted </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>bf</em>&nbsp;</td><td>Buffer in which to set up the opened BS </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>boolean: 1 on success, 0 on failure (not like fopen/fclose) </dd></dl>
 
 <p>References <a class="el" href="struct__bstreambuf.html#d4c44be2a36deae7d084b424d90a224b">_bstreambuf::base</a>, <a class="el" href="struct__bstreambuf.html#6725d81d95a63ead5245c70a330e9891">_bstreambuf::bits_in_buf</a>, <a class="el" href="struct__bstreambuf.html#107c2e0139ccbee62e56e52e35ab1f15">_bstreambuf::buf</a>, <a class="el" href="struct__bstreambuf.html#000e34997df38c2005a83d63e67d9282">_bstreambuf::mode</a>, and <a class="el" href="struct__bstreambuf.html#3cc8afc6744e62ffaca90152930a3fc1">_bstreambuf::position</a>.</p>
 
@@ -454,6 +562,8 @@
 </div>
 <div class="memdoc">
 
+<p>
+Gets the stream position of a BStream. 
 <p>
 
 <p>References <a class="el" href="struct__bstreambuf.html#3cc8afc6744e62ffaca90152930a3fc1">_bstreambuf::position</a>.</p>
@@ -492,6 +602,17 @@
 <div class="memdoc">
 
 <p>
+Read bit data from a stream via a BStream buffer. 
+<p>
+NOTE: be sure that you read the data into an unsigned char!<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>data</em>&nbsp;</td><td>Pointer to the location for the read bit data. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>nbits</em>&nbsp;</td><td>Number of bits to read. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>stream</em>&nbsp;</td><td>The BStream buffer to use. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>Boolean: 1 for all OK, 0 for a problem. </dd></dl>
 
 <p>References <a class="el" href="struct__bstreambuf.html#d4c44be2a36deae7d084b424d90a224b">_bstreambuf::base</a>, <a class="el" href="struct__bstreambuf.html#6725d81d95a63ead5245c70a330e9891">_bstreambuf::bits_in_buf</a>, <a class="el" href="struct__bstreambuf.html#107c2e0139ccbee62e56e52e35ab1f15">_bstreambuf::buf</a>, and <a class="el" href="struct__bstreambuf.html#3cc8afc6744e62ffaca90152930a3fc1">_bstreambuf::position</a>.</p>
 
@@ -525,6 +646,15 @@
 <div class="memdoc">
 
 <p>
+Moves the position marker of a BStream (clearing the bit buffer in the process). 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>stream</em>&nbsp;</td><td>The stream whose position marker is changed. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>offset</em>&nbsp;</td><td>The desired new offset. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>Always true. </dd></dl>
 
 <p>References <a class="el" href="struct__bstreambuf.html#6725d81d95a63ead5245c70a330e9891">_bstreambuf::bits_in_buf</a>, <a class="el" href="struct__bstreambuf.html#107c2e0139ccbee62e56e52e35ab1f15">_bstreambuf::buf</a>, and <a class="el" href="struct__bstreambuf.html#3cc8afc6744e62ffaca90152930a3fc1">_bstreambuf::position</a>.</p>
 
@@ -564,13 +694,24 @@
 <div class="memdoc">
 
 <p>
+Writes bit data to a character stream via a BStream buffer. 
+<p>
+Bits accumulate in the buffer till there are 8 of them. Then a byte is written to the stream (as an unsigned char).<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>data</em>&nbsp;</td><td>The data to write. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>nbits</em>&nbsp;</td><td>The number of bits to write from data. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>stream</em>&nbsp;</td><td>The buffer to write via. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>Boolean: 1 for all OK, 0 for a problem. </dd></dl>
 
 <p>References <a class="el" href="struct__bstreambuf.html#d4c44be2a36deae7d084b424d90a224b">_bstreambuf::base</a>, <a class="el" href="struct__bstreambuf.html#6725d81d95a63ead5245c70a330e9891">_bstreambuf::bits_in_buf</a>, <a class="el" href="struct__bstreambuf.html#107c2e0139ccbee62e56e52e35ab1f15">_bstreambuf::buf</a>, and <a class="el" href="struct__bstreambuf.html#3cc8afc6744e62ffaca90152930a3fc1">_bstreambuf::position</a>.</p>
 
 </div>
 </div><p>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Sat Sep 12 19:04:09 2009 for CWB by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Mon Sep 14 00:12:02 2009 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

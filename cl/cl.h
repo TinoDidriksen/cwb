@@ -188,12 +188,12 @@ void cl_delete_regex(CL_Regex rx);
 extern char cl_regex_error[];        /* contains regex compilation error after cl_new_regex() failed  */
 
 /* built-in random number generator (RNG) */
-void cl_set_seed(unsigned int seed);        /* initialise RNG from single 32-bit number */
-void cl_randomize(void);        /* use current system time as seed */
-void cl_get_rng_state(unsigned int *i1, unsigned int *i2); /* read current state of CL-internal RNG (two unsigned 32-bit integers) */
-void cl_set_rng_state(unsigned int i1, unsigned int i2);   /* restore state of CL-internal RNG */
-unsigned int cl_random(void);   /* get random unsigned 32-bit integer with uniform distribution */
-double cl_runif(void);                /* get random number in the range [0,1] with uniform distribution */
+void cl_set_seed(unsigned int seed);
+void cl_randomize(void);
+void cl_get_rng_state(unsigned int *i1, unsigned int *i2);
+void cl_set_rng_state(unsigned int i1, unsigned int i2);
+unsigned int cl_random(void);
+double cl_runif(void);
 
 /*
  *  the cl_lexhash class (lexicon hashes, with IDs and frequency counts)

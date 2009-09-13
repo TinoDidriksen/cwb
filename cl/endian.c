@@ -26,8 +26,19 @@
 #include "endian.h"
 
 
-/*  Note that the function defined here will work correctly with 32bit and larger
-   int data types. */
+/**
+ * Swaps the byte order of a integer.
+ *
+ * This function is a portable bswap implementation allowing explicit
+ * conversion to little-endian format (by a combination of cl_bswap32() and
+ * htonl())
+ *
+ * Note that this function will work correctly with 32bit and larger
+ * int data types.
+ *
+ * @param x  The integer whose bytes are to be reordered.
+ * @return   The reordered integer.
+ */
 int cl_bswap32(int x) {
   register int y;	        /* return value */
   y = x & 0xff;			/* let the compiler worry about optimisation */
