@@ -133,7 +133,7 @@ depend.mk:	$(PARSEH) $(PARSES) $(SRCS)
 clean:
 	-$(RM) *.o libcl.a registry.output *~
 
-realclean:	clean
+realclean: clean
 	-$(RM) registry.tab.c registry.tab.c lex.creg.c registry.tab.h
 	-$(RM) depend.mk
 

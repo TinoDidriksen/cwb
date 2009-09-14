@@ -41,6 +41,9 @@ int cregparse();
 
 char errmsg[MAX_LINE_LENGTH];
 
+/**
+ * Head of a linked list of loaded corpora (global variable)
+ */
 Corpus *loaded_corpora = NULL;
 
 char *cregin_path = "";         /* for registry parser error messages */
@@ -48,8 +51,14 @@ char *cregin_name = "";
 
 /* ---------------------------------------------------------------------- */
 
+/**
+ * The default registry directory.
+ */
 static char *regdir = NULL;
 
+/**
+ * Gets a string containing the path of the default registry directory.
+ */
 char *central_corpus_directory()
 {
   if (regdir == NULL) 
@@ -61,6 +70,13 @@ char *central_corpus_directory()
 
 /* ---------------------------------------------------------------------- */
 
+/* NON-EXPORTED FUNCTIONS */
+
+/**
+ * Gets a pointer to the Corpus object with the specified CWB-name and registry location.
+ *
+ * (Works by searching the loaded_corpora global linked list.)
+ */
 Corpus *
 find_corpus(char *registry_dir, char *registry_name) {
   Corpus *c;
@@ -85,6 +101,9 @@ find_corpus(char *registry_dir, char *registry_name) {
   return c;                     /* either return matching corpus object or NULL at end of list */
 }
 
+/**
+ * Gets a file handle for the registry file of the corpus with the specified CWB-name and registry location.
+ */
 FILE *
 find_corpus_registry(char *registry_dir,
                      char *registry_name,
@@ -145,7 +164,16 @@ find_corpus_registry(char *registry_dir,
   return NULL;
 }
 
-int CheckAccessConditions(Corpus *corpus, int verbose)
+
+/**
+ * Checks whether the corpus can be accessed.
+ *
+ * @param corpus   The corpus.
+ * @param verbose  A boolean.
+ * @return         A boolean.
+ */
+int
+check_access_conditions(Corpus *corpus, int verbose)
 {
   int access_ok = 1;
   struct passwd *pwd = NULL;
@@ -239,6 +267,14 @@ int CheckAccessConditions(Corpus *corpus, int verbose)
   return access_ok;
 }
 
+/**
+ * Creates a Corpus object.
+ *
+ * @param registry_dir   Path to the CWB registry directory from which the corpus is to be loaded.
+ *                       This may be NULL, in which case the default registry directory is used.
+ * @param registry_name  The CWB-name of the indexed corpus to load (in the all-lowercase form)
+ * @return               Pointer to the resulting Corpus object.
+ */
 Corpus *
 setup_corpus(char *registry_dir,
              char *registry_name)
@@ -283,7 +319,7 @@ setup_corpus(char *registry_dir,
       cregin_path = real_registry_name;
       cregin_name = canonical_name;
       if (cregparse() == 0) {   /* OK */
-        if (CheckAccessConditions(cregcorpus, 0)) {
+        if (check_access_conditions(cregcorpus, 0)) {
           corpus = cregcorpus;
           corpus->registry_dir = real_registry_name;
           corpus->registry_name = cl_strdup(canonical_name);
@@ -313,7 +349,11 @@ setup_corpus(char *registry_dir,
   return corpus;
 }
 
-int drop_corpus(Corpus *corpus) 
+/**
+ * Deletes a Corpus object.
+ */
+int
+drop_corpus(Corpus *corpus)
 {
   Corpus *prev;
 
@@ -384,7 +424,11 @@ int drop_corpus(Corpus *corpus)
 
 /* ---------------------------------------------------------------------- */
 
-void describe_corpus(Corpus *corpus)
+/**
+ * Prints a description of the corpus to STDOUT.
+ */
+void
+describe_corpus(Corpus *corpus)
 {
   Attribute *attr;
   
@@ -413,7 +457,8 @@ void describe_corpus(Corpus *corpus)
 
 /* ---------------------------------------------------------------------- */
 
-void FreeIDList(IDList *list)
+void
+FreeIDList(IDList *list)
 {
   IDList l;
   
@@ -426,7 +471,8 @@ void FreeIDList(IDList *list)
   *list = NULL;
 }
 
-int memberIDList(char *s, IDList l)
+int
+memberIDList(char *s, IDList l)
 {
   while (l) {
     if (strcmp(s, l->string) == 0)
@@ -442,22 +488,51 @@ int memberIDList(char *s, IDList l)
  * corpus properties
  */
 
-/* corpus properties iterator / property datatype is public */
+/**
+ * Gets the first entry in this corpus's list of properties.
+ *
+ * (The corpus properties iterator / property datatype is public.)
+ *
+ * @param corpus    Pointer to the Corpus object.
+ * @return          The first property.
+ */
 CorpusProperty 
-cl_first_corpus_property(Corpus *corpus) {
+cl_first_corpus_property(Corpus *corpus)
+{
   return corpus->properties;
 }
+
+/**
+ * Gets the next corpus property on the list of properties.
+ *
+ * (The corpus properties iterator / property datatype is public.)
+ *
+ * @param prop      The current property.
+ * @return          The next property on the list.
+ *
+ */
 CorpusProperty
-cl_next_corpus_property(CorpusProperty prop) {
+cl_next_corpus_property(CorpusProperty prop)
+{
   if (prop == NULL)
     return NULL;
   else
     return prop->next;
 }
 
-/* returns property value or NULL if undefined */
+
+/**
+ * Gets the value of the specified corpus property.
+ *
+ * @param corpus    Pointer to the Corpus object.
+ * @param property  Name of the property to retrieve.
+ * @return          Value of the property, or NULL if
+ *                  the specified property is undefined
+ *                  for this Corpus object.
+ */
 char *
-cl_corpus_property(Corpus *corpus, char *property) {
+cl_corpus_property(Corpus *corpus, char *property)
+{
   CorpusProperty p = cl_first_corpus_property(corpus);
 
   while ((p != NULL) && strcmp(property, p->property)) 
@@ -470,11 +545,17 @@ cl_corpus_property(Corpus *corpus, char *property) {
 
 /* ---------------------------------------------------------------------- */
 
-/* the special 'charset' property */
+/**
+ * Retrieves the special 'charset' property
+ * @param corpus  The corpus object from which to retrieve the charset
+ * @return        The character set (as a CorpusCharset object).
+ */
 CorpusCharset
-cl_corpus_charset(Corpus *corpus) {
+cl_corpus_charset(Corpus *corpus)
+{
   return corpus->charset;
 }
+
 
 /* list of charset names */
 typedef struct _charset_spec {
@@ -482,6 +563,7 @@ typedef struct _charset_spec {
   char *name;
 } charset_spec;
 
+/** a list of charset names as strings linked to CorpusCharset objects */
 charset_spec charset_names[] = {
   { ascii,   "ascii"},
   { latin1,  "latin1"},
@@ -513,9 +595,12 @@ charset_spec charset_names[] = {
   { utf8,    "utf8"},
   { unknown_charset, NULL} };
 
-/* return name of charset */
+/**
+ * Gets a string containing the name of the specified CorpusCharset character set object.
+ */
 char *
-cl_charset_name(CorpusCharset id) {
+cl_charset_name(CorpusCharset id)
+{
   int i;
 
   for (i = 0; charset_names[i].name; i++) {
@@ -525,11 +610,19 @@ cl_charset_name(CorpusCharset id) {
   return "<unsupported>";
 }
 
-/* add property to list of corpus properties
-   :: ignore and warn if already defined
-   :: if property=='charset', set corpus charset as well */
+/**
+ * Adds a property to the list of corpus properties.
+ *
+ * If the property is already defined, ignore and warn.
+ * If the property is 'charset', corpus charset is set as well.
+ *
+ * @param corpus    Corpus object to add property to.
+ * @param property  Name of property to add.
+ * @param value     Value of property to add.
+ */
 void 
-add_corpus_property(Corpus *corpus, char *property, char *value) {
+add_corpus_property(Corpus *corpus, char *property, char *value)
+{
   CorpusProperty new_prop;
   CorpusCharset charset;
   int i;
