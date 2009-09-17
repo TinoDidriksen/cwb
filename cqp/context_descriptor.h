@@ -66,13 +66,13 @@ typedef struct _context_description_block {
  * string fields in CD are supposed to be malloced and freed. */
 
 int verify_context_descriptor(Corpus *corpus, 
-			      ContextDescriptor *cd,
-			      int remove_illegal_entries);
+                              ContextDescriptor *cd,
+                              int remove_illegal_entries);
 
 int initialize_context_descriptor(ContextDescriptor *cd);
 
 int update_context_descriptor(Corpus *corpus,
-			      ContextDescriptor *cd);
+                              ContextDescriptor *cd);
 
 ContextDescriptor *NewContextDescriptor();
 

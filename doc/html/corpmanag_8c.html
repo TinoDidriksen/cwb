@@ -54,6 +54,7 @@
 </ul>
 <h2>Functions</h2>
 <ul>
+<li>static <a class="el" href="cqp_8h.html#2d275961e4a2bd704dde5f6a5d27f880">Boolean</a> <a class="el" href="corpmanag_8c.html#5bd617c344c791d4cea751a4e043f2e3">attach_subcorpus</a> (<a class="el" href="structcl.html">CorpusList</a> *<a class="el" href="structcl.html">cl</a>, char *advertised_directory, char *advertised_filename)
 <li><a class="el" href="structcl.html">CorpusList</a> * <a class="el" href="corpmanag_8c.html#6971e7cc89868423f1044529eb3047da">GetSystemCorpus</a> (char *name, char *<a class="el" href="options_8h.html#b6be6986e1a07fc76b7a5a77aa7cc43b">registry</a>)
 <li>void <a class="el" href="corpmanag_8c.html#03871eef560c68779ca07a668f27f603">init_corpuslist</a> (void)
 <li>void <a class="el" href="corpmanag_8c.html#c15e0e3266238b8728caa182e4b4407d">initialize_cl</a> (<a class="el" href="structcl.html">CorpusList</a> *<a class="el" href="structcl.html">cl</a>, int free_name)
@@ -71,6 +72,10 @@
 <li><a class="el" href="structcl.html">CorpusList</a> * <a class="el" href="corpmanag_8c.html#3567391cc22d572100bf63c0733b87ff">make_temp_corpus</a> (<a class="el" href="structcl.html">CorpusList</a> *<a class="el" href="structcl.html">cl</a>, char *new_name)
 <li><a class="el" href="structcl.html">CorpusList</a> * <a class="el" href="corpmanag_8c.html#f5eed52e11c9ca3a493ab6176fb9af54">assign_temp_to_sub</a> (<a class="el" href="structcl.html">CorpusList</a> *tmp, char *subname)
 <li>void <a class="el" href="corpmanag_8c.html#1b955ef83dbea1eee94b9406d9b646e2">drop_temp_corpora</a> (void)
+<li>static char * <a class="el" href="corpmanag_8c.html#be8b5e85eca4eec7763c9a895acaef4b">changecase_string</a> (char *str, enum <a class="el" href="corpmanag_8h.html#2499845cf1a7faad4b8a53bd342d27c0">case_mode</a> <a class="el" href="cwb-decode_8c.html#1ea5d0cb93f22f7d0fdf804bd68c3326">mode</a>)
+<li>static char * <a class="el" href="corpmanag_8c.html#866d2cad2e64711a326126d9123dd62a">changecase_string_no_copy</a> (char *str, enum <a class="el" href="corpmanag_8h.html#2499845cf1a7faad4b8a53bd342d27c0">case_mode</a> <a class="el" href="cwb-decode_8c.html#1ea5d0cb93f22f7d0fdf804bd68c3326">mode</a>)
+<li>static char * <a class="el" href="corpmanag_8c.html#5e91735fe599faa9c613f37d326b729f">get_fulllocalpath</a> (<a class="el" href="structcl.html">CorpusList</a> *<a class="el" href="structcl.html">cl</a>, int qualify)
+<li>static <a class="el" href="cqp_8h.html#2d275961e4a2bd704dde5f6a5d27f880">Boolean</a> <a class="el" href="corpmanag_8c.html#e11471eefadf9070c8c174f35647ac10">accessible</a> (char *dir, char *file)
 <li>int <a class="el" href="corpmanag_8c.html#1d4c0fdae4bbd33ba5f7d5d3ca9c1c58">check_stamp</a> (char *<a class="el" href="cwb-encode_8c.html#8eadc6730ef4fbdae87a20414b789faf">directory</a>, char *fname)
 <li>void <a class="el" href="corpmanag_8c.html#a57f32e05db80db43f0f9e8b97bcf08d">load_corpusnames</a> (enum <a class="el" href="corpmanag_8h.html#b595f682e895370f86580c128681d88e">corpus_type</a> ct)
 <li>void <a class="el" href="corpmanag_8c.html#7fe1322b68023d0c8969fac787155280">check_available_corpora</a> (enum <a class="el" href="corpmanag_8h.html#b595f682e895370f86580c128681d88e">corpus_type</a> ct)
@@ -89,6 +94,7 @@
 <li><a class="el" href="cqp_8h.html#2d275961e4a2bd704dde5f6a5d27f880">Boolean</a> <a class="el" href="corpmanag_8c.html#3f5760d1adaed5f55433209860c70fc1">touch_corpus</a> (<a class="el" href="structcl.html">CorpusList</a> *cp)
 <li>int <a class="el" href="corpmanag_8c.html#8620a08c033dbc0f5b90fc81a028ff14">set_current_corpus</a> (<a class="el" href="structcl.html">CorpusList</a> *cp, int force)
 <li>int <a class="el" href="corpmanag_8c.html#9ba7a43161a1082a4db9b0f4d1a47f48">set_current_corpus_name</a> (char *name, int force)
+<li>static int <a class="el" href="corpmanag_8c.html#6ba39601aefbe1213ea374d79e535277">show_corpora_files_sort</a> (const void *p1, const void *p2)
 <li>void <a class="el" href="corpmanag_8c.html#0cbf57d76b0c6eece0dc3fd61aa7eb92">show_corpora_files1</a> (enum <a class="el" href="corpmanag_8h.html#b595f682e895370f86580c128681d88e">corpus_type</a> ct)
 <li>void <a class="el" href="corpmanag_8c.html#8645893b8eb6233c56840ee3806ab322">show_corpora_files</a> (enum <a class="el" href="corpmanag_8h.html#b595f682e895370f86580c128681d88e">corpus_type</a> ct)
 <li>void <a class="el" href="corpmanag_8c.html#88b862547d8881d4b4cda61464ba6c49">CorpusListInit</a> (void)
@@ -161,6 +167,8 @@
 
 <p>
 
+<p>Referenced by <a class="el" href="corpmanag_8c.html#5bd617c344c791d4cea751a4e043f2e3">attach_subcorpus()</a>.</p>
+
 </div>
 </div><p>
 <a class="anchor" name="db5b0211f3c2e4ce554a48f9874135f4"></a><!-- doxytag: member="corpmanag.c::SUBCORPMAGIC" ref="db5b0211f3c2e4ce554a48f9874135f4" args="" -->
@@ -176,7 +184,7 @@
 
 <p>
 
-<p>Referenced by <a class="el" href="corpmanag_8c.html#1d4c0fdae4bbd33ba5f7d5d3ca9c1c58">check_stamp()</a>, <a class="el" href="corpmanag_8h.html#e8901e96861c947b4fa68df2c2b423de">save_subcorpus()</a>, and <a class="el" href="cwb-decode-nqrfile_8c.html#f701eb9e70d033003bf4915fbddecbd0">show_subcorpus_info()</a>.</p>
+<p>Referenced by <a class="el" href="corpmanag_8c.html#5bd617c344c791d4cea751a4e043f2e3">attach_subcorpus()</a>, <a class="el" href="corpmanag_8c.html#1d4c0fdae4bbd33ba5f7d5d3ca9c1c58">check_stamp()</a>, <a class="el" href="corpmanag_8h.html#e8901e96861c947b4fa68df2c2b423de">save_subcorpus()</a>, and <a class="el" href="cwb-decode-nqrfile_8c.html#f701eb9e70d033003bf4915fbddecbd0">show_subcorpus_info()</a>.</p>
 
 </div>
 </div><p>
@@ -199,9 +207,42 @@
 
 <p>
 
-<p>References <a class="el" href="cqp_8h.html#306ebd41c0cd1303b1372c6153f0caf8">False</a>, <a class="el" href="structcl.html#57b5372d8f1a40be529f9ba7c2ece1ed">cl::loaded</a>, <a class="el" href="structcl.html#9b09e2bd59ba8ed71d59933389faba1b">cl::range</a>, <a class="el" href="structcl.html#b1f9d035161a53874c84ac68634b947a">cl::saved</a>, <a class="el" href="structcl.html#439227feff9d7f55384e8780cfc2eb82">cl::size</a>, <a class="el" href="corpmanag_8h.html#b595f682e895370f86580c128681d88e12b733d4941495e86811fe6ceeeff9da">SUB</a>, <a class="el" href="corpmanag_8h.html#b595f682e895370f86580c128681d88e57cc238145ec1361c72c327674c0d754">SYSTEM</a>, <a class="el" href="corpmanag_8h.html#b595f682e895370f86580c128681d88e5937389a60030a604f0efdf5e3927325">TEMP</a>, <a class="el" href="cqp_8h.html#dd3ca9eefe3b5b754426f51d3043e579">True</a>, and <a class="el" href="structcl.html#aeb0da22893ef241c1ad027ca78da765">cl::type</a>.</p>
+<p>References <a class="el" href="corpmanag_8c.html#5bd617c344c791d4cea751a4e043f2e3">attach_subcorpus()</a>, <a class="el" href="cqp_8h.html#306ebd41c0cd1303b1372c6153f0caf8">False</a>, <a class="el" href="structcl.html#57b5372d8f1a40be529f9ba7c2ece1ed">cl::loaded</a>, <a class="el" href="structcl.html#9b09e2bd59ba8ed71d59933389faba1b">cl::range</a>, <a class="el" href="structcl.html#b1f9d035161a53874c84ac68634b947a">cl::saved</a>, <a class="el" href="structcl.html#439227feff9d7f55384e8780cfc2eb82">cl::size</a>, <a class="el" href="corpmanag_8h.html#b595f682e895370f86580c128681d88e12b733d4941495e86811fe6ceeeff9da">SUB</a>, <a class="el" href="corpmanag_8h.html#b595f682e895370f86580c128681d88e57cc238145ec1361c72c327674c0d754">SYSTEM</a>, <a class="el" href="corpmanag_8h.html#b595f682e895370f86580c128681d88e5937389a60030a604f0efdf5e3927325">TEMP</a>, <a class="el" href="cqp_8h.html#dd3ca9eefe3b5b754426f51d3043e579">True</a>, and <a class="el" href="structcl.html#aeb0da22893ef241c1ad027ca78da765">cl::type</a>.</p>
 
 <p>Referenced by <a class="el" href="output_8h.html#3705e2e9564604bb7378a724691cb97b">catalog_corpus()</a>, <a class="el" href="corpmanag_8h.html#f79d0506b8ca791ff009faf17092d3e8">change_corpus()</a>, <a class="el" href="corpmanag_8c.html#f28bc5e7f9028643c6c69ef9fe6043f9">CorpusLoad()</a>, <a class="el" href="server_8h.html#e353d1823477b57f50ea5b6f3af4aee8">cqi_find_corpus()</a>, <a class="el" href="server_8h.html#4ed474bdc682e0da18871d421eb691be">cqi_lookup_attribute()</a>, <a class="el" href="cqpserver_8c.html#10e179d58abfa38f8edbae43b5d478fb">do_cqi_corpus_attributes()</a>, <a class="el" href="cqpserver_8c.html#fb49ac865f86e4d0d15470be399b28e9">do_cqi_corpus_full_name()</a>, <a class="el" href="corpmanag_8c.html#c2bc10afb97f5bafaf76b5793d0e7471">findcorpus()</a>, <a class="el" href="parse__actions_8h.html#58e2b0f6dcef9f88c8ca38e1b2840246">prepare_AlignmentConstraints()</a>, <a class="el" href="parse__actions_8h.html#0cd76ad97a709afa3bd6610768e1d39d">prepare_Query()</a>, <a class="el" href="eval_8c.html#3da7267ea29929e02bd6321d700d2cca">red_factor()</a>, <a class="el" href="matchlist_8h.html#ceac8bbec1e489f033a2bee302b1b193">Setop()</a>, <a class="el" href="ranges_8h.html#af5f006cef0ac7c1fdb5c9d55558c11a">SortSubcorpus()</a>, and <a class="el" href="ranges_8h.html#816771441eaa5f9006f4187f9d0b99b4">SortSubcorpusRandomize()</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="e11471eefadf9070c8c174f35647ac10"></a><!-- doxytag: member="corpmanag.c::accessible" ref="e11471eefadf9070c8c174f35647ac10" args="(char *dir, char *file)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="cqp_8h.html#2d275961e4a2bd704dde5f6a5d27f880">Boolean</a> accessible           </td>
+          <td>(</td>
+          <td class="paramtype">char *&nbsp;</td>
+          <td class="paramname"> <em>dir</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&nbsp;</td>
+          <td class="paramname"> <em>file</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+<p>References <a class="el" href="cl_8h.html#4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="cqp_8h.html#306ebd41c0cd1303b1372c6153f0caf8">False</a>, and <a class="el" href="cqp_8h.html#dd3ca9eefe3b5b754426f51d3043e579">True</a>.</p>
+
+<p>Referenced by <a class="el" href="corpmanag_8c.html#a57f32e05db80db43f0f9e8b97bcf08d">load_corpusnames()</a>.</p>
 
 </div>
 </div><p>
@@ -238,6 +279,45 @@
 
 </div>
 </div><p>
+<a class="anchor" name="5bd617c344c791d4cea751a4e043f2e3"></a><!-- doxytag: member="corpmanag.c::attach_subcorpus" ref="5bd617c344c791d4cea751a4e043f2e3" args="(CorpusList *cl, char *advertised_directory, char *advertised_filename)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="cqp_8h.html#2d275961e4a2bd704dde5f6a5d27f880">Boolean</a> attach_subcorpus           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structcl.html">CorpusList</a> *&nbsp;</td>
+          <td class="paramname"> <em>cl</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&nbsp;</td>
+          <td class="paramname"> <em>advertised_directory</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&nbsp;</td>
+          <td class="paramname"> <em>advertised_filename</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+<p>References <a class="el" href="structcl.html#caf638a727608c3a357755ecbb724330">cl::abs_fn</a>, <a class="el" href="cl_8h.html#9e15a3c725711d9effd623b2f3e225be">cl_free</a>, <a class="el" href="cl_8h.html#4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="cl_8h.html#6647d75d1d69c7d25447da514b7e4682">cl_strdup()</a>, <a class="el" href="structcl.html#ca3a1fb765418f9b9b1d74051aa88667">cl::corpus</a>, <a class="el" href="output_8c.html#c523a4b34d2f925e027d8f433de703c9">cqpmessage()</a>, <a class="el" href="corpmanag_8c.html#411a4b044a2214dc19180334cbcd1601">dropcorpus()</a>, <a class="el" href="corpmanag_8c.html#3445af54d7f23a9dcd4fcd795e015ac9">ensure_syscorpus()</a>, <a class="el" href="cqp_8h.html#306ebd41c0cd1303b1372c6153f0caf8">False</a>, <a class="el" href="fileutils_8c.html#2c12da91ca3bc84c8fe066451b33d098">file_length()</a>, <a class="el" href="corpmanag_8c.html#5e91735fe599faa9c613f37d326b729f">get_fulllocalpath()</a>, <a class="el" href="corpmanag_8c.html#c15e0e3266238b8728caa182e4b4407d">initialize_cl()</a>, <a class="el" href="structcl.html#0a97de3454e7f0e1362f65b6d9c19ed2">cl::keywords</a>, <a class="el" href="structcl.html#57b5372d8f1a40be529f9ba7c2ece1ed">cl::loaded</a>, <a class="el" href="structcl.html#24268424ee0678c4ff66ef929d88eed3">cl::mother_name</a>, <a class="el" href="structcl.html#aecdad35f89c84d3d8b329955b28f18f">cl::mother_size</a>, <a class="el" href="structcl.html#5ac083a645d964373f022d03df4849c8">cl::name</a>, <a class="el" href="structcl.html#60fdb8cfe061a7d895942dd0ccbd33d6">cl::needs_update</a>, <a class="el" href="output_8c.html#779bec70705ad7999d3006996e266b2f">OpenFile()</a>, <a class="el" href="structcl.html#9b09e2bd59ba8ed71d59933389faba1b">cl::range</a>, <a class="el" href="structcl.html#b6be6986e1a07fc76b7a5a77aa7cc43b">cl::registry</a>, <a class="el" href="structcl.html#b1f9d035161a53874c84ac68634b947a">cl::saved</a>, <a class="el" href="structcl.html#439227feff9d7f55384e8780cfc2eb82">cl::size</a>, <a class="el" href="structcl.html#11418c0a440cc8d7adbc6459368abfe0">cl::sortidx</a>, <a class="el" href="corpmanag_8h.html#b595f682e895370f86580c128681d88e12b733d4941495e86811fe6ceeeff9da">SUB</a>, <a class="el" href="corpmanag_8c.html#a7ff557015bc8491027901059313322e">subcorpload_debug</a>, <a class="el" href="corpmanag_8c.html#db5b0211f3c2e4ce554a48f9874135f4">SUBCORPMAGIC</a>, <a class="el" href="structcl.html#fb9d881897259d5af5cf582f5cdbd86a">cl::targets</a>, <a class="el" href="corpmanag_8h.html#b595f682e895370f86580c128681d88e5937389a60030a604f0efdf5e3927325">TEMP</a>, <a class="el" href="cqp_8h.html#dd3ca9eefe3b5b754426f51d3043e579">True</a>, <a class="el" href="structcl.html#aeb0da22893ef241c1ad027ca78da765">cl::type</a>, and <a class="el" href="output_8h.html#9c2eeea9cd09fb001747ef4cc99399a448f2bb70fceb692a2dedd8cea496c44b">Warning</a>.</p>
+
+<p>Referenced by <a class="el" href="corpmanag_8h.html#133d99a40e4b51fe8cad6362e8b4e737">access_corpus()</a>, and <a class="el" href="corpmanag_8c.html#bc4b504862b3c36cb40aa76dd8200395">ensure_corpus_size()</a>.</p>
+
+</div>
+</div><p>
 <a class="anchor" name="f79d0506b8ca791ff009faf17092d3e8"></a><!-- doxytag: member="corpmanag.c::change_corpus" ref="f79d0506b8ca791ff009faf17092d3e8" args="(char *name, Boolean silent)" -->
 <div class="memitem">
 <div class="memproto">
@@ -266,6 +346,72 @@
 <p>
 
 <p>References <a class="el" href="corpmanag_8c.html#133d99a40e4b51fe8cad6362e8b4e737">access_corpus()</a>, <a class="el" href="cqp_8h.html#306ebd41c0cd1303b1372c6153f0caf8">False</a>, <a class="el" href="structcl.html#5ac083a645d964373f022d03df4849c8">cl::name</a>, <a class="el" href="corpmanag_8c.html#82fddc9e324fffcce6129e4399e31cc8">search_corpus()</a>, <a class="el" href="corpmanag_8c.html#8620a08c033dbc0f5b90fc81a028ff14">set_current_corpus()</a>, and <a class="el" href="cqp_8h.html#dd3ca9eefe3b5b754426f51d3043e579">True</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="be8b5e85eca4eec7763c9a895acaef4b"></a><!-- doxytag: member="corpmanag.c::changecase_string" ref="be8b5e85eca4eec7763c9a895acaef4b" args="(char *str, enum case_mode mode)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">static char* changecase_string           </td>
+          <td>(</td>
+          <td class="paramtype">char *&nbsp;</td>
+          <td class="paramname"> <em>str</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">enum <a class="el" href="corpmanag_8h.html#2499845cf1a7faad4b8a53bd342d27c0">case_mode</a>&nbsp;</td>
+          <td class="paramname"> <em>mode</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+<p>References <a class="el" href="cl_8h.html#6647d75d1d69c7d25447da514b7e4682">cl_strdup()</a>, and <a class="el" href="corpmanag_8h.html#2499845cf1a7faad4b8a53bd342d27c0a1017e9b343135a54a98b6f479354d16">LOWER</a>.</p>
+
+<p>Referenced by <a class="el" href="corpmanag_8c.html#5e91735fe599faa9c613f37d326b729f">get_fulllocalpath()</a>, and <a class="el" href="corpmanag_8c.html#6971e7cc89868423f1044529eb3047da">GetSystemCorpus()</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="866d2cad2e64711a326126d9123dd62a"></a><!-- doxytag: member="corpmanag.c::changecase_string_no_copy" ref="866d2cad2e64711a326126d9123dd62a" args="(char *str, enum case_mode mode)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">static char* changecase_string_no_copy           </td>
+          <td>(</td>
+          <td class="paramtype">char *&nbsp;</td>
+          <td class="paramname"> <em>str</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">enum <a class="el" href="corpmanag_8h.html#2499845cf1a7faad4b8a53bd342d27c0">case_mode</a>&nbsp;</td>
+          <td class="paramname"> <em>mode</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+<p>References <a class="el" href="corpmanag_8h.html#2499845cf1a7faad4b8a53bd342d27c0a1017e9b343135a54a98b6f479354d16">LOWER</a>.</p>
+
+<p>Referenced by <a class="el" href="corpmanag_8c.html#a57f32e05db80db43f0f9e8b97bcf08d">load_corpusnames()</a>.</p>
 
 </div>
 </div><p>
@@ -799,7 +945,7 @@
 
 <p>References <a class="el" href="corpmanag_8h.html#1f1c9e6e4dec994353f8d8ee00f38faa">current_corpus</a>, <a class="el" href="corpmanag_8c.html#c15e0e3266238b8728caa182e4b4407d">initialize_cl()</a>, <a class="el" href="structcl.html#fdcc09ad7f27c639d3bb56e7ac18c31c">cl::next</a>, <a class="el" href="corpmanag_8c.html#8620a08c033dbc0f5b90fc81a028ff14">set_current_corpus()</a>, and <a class="el" href="cqp_8h.html#dd3ca9eefe3b5b754426f51d3043e579">True</a>.</p>
 
-<p>Referenced by <a class="el" href="corpmanag_8h.html#f5eed52e11c9ca3a493ab6176fb9af54">assign_temp_to_sub()</a>, <a class="el" href="ranges_8h.html#78b58ed6800e15c907fb6f0a5da0ea67">copy_intervals()</a>, <a class="el" href="corpmanag_8c.html#7ba6f73a68bee7724ef2ad17d6c2ee07">CorpusDiscard()</a>, <a class="el" href="cqpserver_8c.html#6912e5826b0c2389d696760d1aecc59c">do_cqi_cqp_drop_subcorpus()</a>, <a class="el" href="corpmanag_8h.html#1b955ef83dbea1eee94b9406d9b646e2">drop_temp_corpora()</a>, <a class="el" href="corpmanag_8c.html#bc4b504862b3c36cb40aa76dd8200395">ensure_corpus_size()</a>, and <a class="el" href="cqpserver_8c.html#0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
+<p>Referenced by <a class="el" href="corpmanag_8h.html#f5eed52e11c9ca3a493ab6176fb9af54">assign_temp_to_sub()</a>, <a class="el" href="corpmanag_8c.html#5bd617c344c791d4cea751a4e043f2e3">attach_subcorpus()</a>, <a class="el" href="ranges_8h.html#78b58ed6800e15c907fb6f0a5da0ea67">copy_intervals()</a>, <a class="el" href="corpmanag_8c.html#7ba6f73a68bee7724ef2ad17d6c2ee07">CorpusDiscard()</a>, <a class="el" href="cqpserver_8c.html#6912e5826b0c2389d696760d1aecc59c">do_cqi_cqp_drop_subcorpus()</a>, <a class="el" href="corpmanag_8h.html#1b955ef83dbea1eee94b9406d9b646e2">drop_temp_corpora()</a>, <a class="el" href="corpmanag_8c.html#bc4b504862b3c36cb40aa76dd8200395">ensure_corpus_size()</a>, and <a class="el" href="cqpserver_8c.html#0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
 
 </div>
 </div><p>
@@ -860,7 +1006,7 @@
 
 <p>
 
-<p>References <a class="el" href="cdaccess_8c.html#19cdf6dd32b5379c47e316fc514b2f09">cderrno</a>, <a class="el" href="cdaccess_8c.html#8ac6eea4775338bda7be76722186aae5">cdperror_string()</a>, <a class="el" href="structcl.html#ca3a1fb765418f9b9b1d74051aa88667">cl::corpus</a>, <a class="el" href="output_8c.html#c523a4b34d2f925e027d8f433de703c9">cqpmessage()</a>, <a class="el" href="corpmanag_8c.html#411a4b044a2214dc19180334cbcd1601">dropcorpus()</a>, <a class="el" href="cqp_8h.html#306ebd41c0cd1303b1372c6153f0caf8">False</a>, <a class="el" href="structcl.html#57b5372d8f1a40be529f9ba7c2ece1ed">cl::loaded</a>, <a class="el" href="structcl.html#aab17b7203855bf9e6bdf36d99fc5837">cl::local_dir</a>, <a class="el" href="structcl.html#24268424ee0678c4ff66ef929d88eed3">cl::mother_name</a>, <a class="el" href="structcl.html#aecdad35f89c84d3d8b329955b28f18f">cl::mother_size</a>, <a class="el" href="structcl.html#5ac083a645d964373f022d03df4849c8">cl::name</a>, <a class="el" href="structcl.html#9b09e2bd59ba8ed71d59933389faba1b">cl::range</a>, <a class="el" href="corpmanag_8h.html#b595f682e895370f86580c128681d88e12b733d4941495e86811fe6ceeeff9da">SUB</a>, <a class="el" href="corpmanag_8h.html#b595f682e895370f86580c128681d88e57cc238145ec1361c72c327674c0d754">SYSTEM</a>, <a class="el" href="corpmanag_8c.html#4f63cab0af8cda50a92cf71b8e5630c4">SystemCorpusSize()</a>, <a class="el" href="cqp_8h.html#dd3ca9eefe3b5b754426f51d3043e579">True</a>, <a class="el" href="structcl.html#aeb0da22893ef241c1ad027ca78da765">cl::type</a>, <a class="el" href="options_8h.html#ab9e332c1bce81280f568ba84aa55026">user_level</a>, and <a class="el" href="output_8h.html#9c2eeea9cd09fb001747ef4cc99399a448f2bb70fceb692a2dedd8cea496c44b">Warning</a>.</p>
+<p>References <a class="el" href="corpmanag_8c.html#5bd617c344c791d4cea751a4e043f2e3">attach_subcorpus()</a>, <a class="el" href="cdaccess_8c.html#19cdf6dd32b5379c47e316fc514b2f09">cderrno</a>, <a class="el" href="cdaccess_8c.html#8ac6eea4775338bda7be76722186aae5">cdperror_string()</a>, <a class="el" href="structcl.html#ca3a1fb765418f9b9b1d74051aa88667">cl::corpus</a>, <a class="el" href="output_8c.html#c523a4b34d2f925e027d8f433de703c9">cqpmessage()</a>, <a class="el" href="corpmanag_8c.html#411a4b044a2214dc19180334cbcd1601">dropcorpus()</a>, <a class="el" href="cqp_8h.html#306ebd41c0cd1303b1372c6153f0caf8">False</a>, <a class="el" href="structcl.html#57b5372d8f1a40be529f9ba7c2ece1ed">cl::loaded</a>, <a class="el" href="structcl.html#aab17b7203855bf9e6bdf36d99fc5837">cl::local_dir</a>, <a class="el" href="structcl.html#24268424ee0678c4ff66ef929d88eed3">cl::mother_name</a>, <a class="el" href="structcl.html#aecdad35f89c84d3d8b329955b28f18f">cl::mother_size</a>, <a class="el" href="structcl.html#5ac083a645d964373f022d03df4849c8">cl::name</a>, <a class="el" href="structcl.html#9b09e2bd59ba8ed71d59933389faba1b">cl::range</a>, <a class="el" href="corpmanag_8h.html#b595f682e895370f86580c128681d88e12b733d4941495e86811fe6ceeeff9da">SUB</a>, <a class="el" href="corpmanag_8h.html#b595f682e895370f86580c128681d88e57cc238145ec1361c72c327674c0d754">SYSTEM</a>, <a class="el" href="corpmanag_8c.html#4f63cab0af8cda50a92cf71b8e5630c4">SystemCorpusSize()</a>, <a class="el" href="cqp_8h.html#dd3ca9eefe3b5b754426f51d3043e579">True</a>, <a class="el" href="structcl.html#aeb0da22893ef241c1ad027ca78da765">cl::type</a>, <a class="el" href="options_8h.html#ab9e332c1bce81280f568ba84aa55026">user_level</a>, and <a class="el" href="output_8h.html#9c2eeea9cd09fb001747ef4cc99399a448f2bb70fceb692a2dedd8cea496c44b">Warning</a>.</p>
 
 <p>Referenced by <a class="el" href="corpmanag_8c.html#3445af54d7f23a9dcd4fcd795e015ac9">ensure_syscorpus()</a>, and <a class="el" href="corpmanag_8c.html#c2bc10afb97f5bafaf76b5793d0e7471">findcorpus()</a>.</p>
 
@@ -894,6 +1040,8 @@
 <p>
 
 <p>References <a class="el" href="corpmanag_8c.html#bc4b504862b3c36cb40aa76dd8200395">ensure_corpus_size()</a>, <a class="el" href="corpmanag_8c.html#6971e7cc89868423f1044529eb3047da">GetSystemCorpus()</a>, <a class="el" href="corpmanag_8c.html#999fbf759df5edab70703bfb10399ef0">LoadedCorpus()</a>, <a class="el" href="structcl.html#fdcc09ad7f27c639d3bb56e7ac18c31c">cl::next</a>, and <a class="el" href="corpmanag_8h.html#b595f682e895370f86580c128681d88e57cc238145ec1361c72c327674c0d754">SYSTEM</a>.</p>
+
+<p>Referenced by <a class="el" href="corpmanag_8c.html#5bd617c344c791d4cea751a4e043f2e3">attach_subcorpus()</a>.</p>
 
 </div>
 </div><p>
@@ -1029,6 +1177,39 @@
 
 </div>
 </div><p>
+<a class="anchor" name="5e91735fe599faa9c613f37d326b729f"></a><!-- doxytag: member="corpmanag.c::get_fulllocalpath" ref="5e91735fe599faa9c613f37d326b729f" args="(CorpusList *cl, int qualify)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">static char* get_fulllocalpath           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structcl.html">CorpusList</a> *&nbsp;</td>
+          <td class="paramname"> <em>cl</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>qualify</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+<p>References <a class="el" href="corpmanag_8c.html#be8b5e85eca4eec7763c9a895acaef4b">changecase_string()</a>, <a class="el" href="cl_8h.html#9e15a3c725711d9effd623b2f3e225be">cl_free</a>, <a class="el" href="cl_8h.html#6647d75d1d69c7d25447da514b7e4682">cl_strdup()</a>, <a class="el" href="options_8h.html#5a77eb2bfdcb8ca8dc6732342d69ae7a">LOCAL_CORP_PATH</a>, <a class="el" href="structcl.html#24268424ee0678c4ff66ef929d88eed3">cl::mother_name</a>, <a class="el" href="structcl.html#5ac083a645d964373f022d03df4849c8">cl::name</a>, and <a class="el" href="corpmanag_8h.html#2499845cf1a7faad4b8a53bd342d27c0e704d5d328a8522a6193aa3efb28c724">UPPER</a>.</p>
+
+<p>Referenced by <a class="el" href="corpmanag_8c.html#5bd617c344c791d4cea751a4e043f2e3">attach_subcorpus()</a>.</p>
+
+</div>
+</div><p>
 <a class="anchor" name="6971e7cc89868423f1044529eb3047da"></a><!-- doxytag: member="corpmanag.c::GetSystemCorpus" ref="6971e7cc89868423f1044529eb3047da" args="(char *name, char *registry)" -->
 <div class="memitem">
 <div class="memproto">
@@ -1056,7 +1237,7 @@
 
 <p>
 
-<p>References <a class="el" href="structcl.html#caf638a727608c3a357755ecbb724330">cl::abs_fn</a>, <a class="el" href="cl_8h.html#6647d75d1d69c7d25447da514b7e4682">cl_strdup()</a>, <a class="el" href="structcl.html#ca3a1fb765418f9b9b1d74051aa88667">cl::corpus</a>, <a class="el" href="cqp_8h.html#306ebd41c0cd1303b1372c6153f0caf8">False</a>, <a class="el" href="structcl.html#0a97de3454e7f0e1362f65b6d9c19ed2">cl::keywords</a>, <a class="el" href="structcl.html#57b5372d8f1a40be529f9ba7c2ece1ed">cl::loaded</a>, <a class="el" href="corpmanag_8h.html#2499845cf1a7faad4b8a53bd342d27c0a1017e9b343135a54a98b6f479354d16">LOWER</a>, <a class="el" href="structcl.html#24268424ee0678c4ff66ef929d88eed3">cl::mother_name</a>, <a class="el" href="structcl.html#aecdad35f89c84d3d8b329955b28f18f">cl::mother_size</a>, <a class="el" href="structcl.html#5ac083a645d964373f022d03df4849c8">cl::name</a>, <a class="el" href="structcl.html#60fdb8cfe061a7d895942dd0ccbd33d6">cl::needs_update</a>, <a class="el" href="macros_8h.html#1064d02af1aefec3388cb9b9581c9190">New</a>, <a class="el" href="corpmanag_8c.html#29e8c045958457814bbb47c44cb6383e">NewCL()</a>, <a class="el" href="structcl.html#fdcc09ad7f27c639d3bb56e7ac18c31c">cl::next</a>, <a class="el" href="structcl.html#9b09e2bd59ba8ed71d59933389faba1b">cl::range</a>, <a class="el" href="structcl.html#b6be6986e1a07fc76b7a5a77aa7cc43b">cl::registry</a>, <a class="el" href="struct_t_corpus.html#1151e3383439ca5d8096811a09b42823">TCorpus::registry_dir</a>, <a class="el" href="structcl.html#b1f9d035161a53874c84ac68634b947a">cl::saved</a>, <a class="el" href="cl_8h.html#84eb9130d44b1b40bd3bfe5a94f777d9">setup_corpus()</a>, <a class="el" href="structcl.html#439227feff9d7f55384e8780cfc2eb82">cl::size</a>, <a class="el" href="structcl.html#11418c0a440cc8d7adbc6459368abfe0">cl::sortidx</a>, <a class="el" href="corpmanag_8h.html#b595f682e895370f86580c128681d88e57cc238145ec1361c72c327674c0d754">SYSTEM</a>, <a class="el" href="structcl.html#fb9d881897259d5af5cf582f5cdbd86a">cl::targets</a>, <a class="el" href="cqp_8h.html#dd3ca9eefe3b5b754426f51d3043e579">True</a>, and <a class="el" href="structcl.html#aeb0da22893ef241c1ad027ca78da765">cl::type</a>.</p>
+<p>References <a class="el" href="structcl.html#caf638a727608c3a357755ecbb724330">cl::abs_fn</a>, <a class="el" href="corpmanag_8c.html#be8b5e85eca4eec7763c9a895acaef4b">changecase_string()</a>, <a class="el" href="cl_8h.html#6647d75d1d69c7d25447da514b7e4682">cl_strdup()</a>, <a class="el" href="structcl.html#ca3a1fb765418f9b9b1d74051aa88667">cl::corpus</a>, <a class="el" href="cqp_8h.html#306ebd41c0cd1303b1372c6153f0caf8">False</a>, <a class="el" href="structcl.html#0a97de3454e7f0e1362f65b6d9c19ed2">cl::keywords</a>, <a class="el" href="structcl.html#57b5372d8f1a40be529f9ba7c2ece1ed">cl::loaded</a>, <a class="el" href="corpmanag_8h.html#2499845cf1a7faad4b8a53bd342d27c0a1017e9b343135a54a98b6f479354d16">LOWER</a>, <a class="el" href="structcl.html#24268424ee0678c4ff66ef929d88eed3">cl::mother_name</a>, <a class="el" href="structcl.html#aecdad35f89c84d3d8b329955b28f18f">cl::mother_size</a>, <a class="el" href="structcl.html#5ac083a645d964373f022d03df4849c8">cl::name</a>, <a class="el" href="structcl.html#60fdb8cfe061a7d895942dd0ccbd33d6">cl::needs_update</a>, <a class="el" href="macros_8h.html#1064d02af1aefec3388cb9b9581c9190">New</a>, <a class="el" href="corpmanag_8c.html#29e8c045958457814bbb47c44cb6383e">NewCL()</a>, <a class="el" href="structcl.html#fdcc09ad7f27c639d3bb56e7ac18c31c">cl::next</a>, <a class="el" href="structcl.html#9b09e2bd59ba8ed71d59933389faba1b">cl::range</a>, <a class="el" href="structcl.html#b6be6986e1a07fc76b7a5a77aa7cc43b">cl::registry</a>, <a class="el" href="struct_t_corpus.html#1151e3383439ca5d8096811a09b42823">TCorpus::registry_dir</a>, <a class="el" href="structcl.html#b1f9d035161a53874c84ac68634b947a">cl::saved</a>, <a class="el" href="cl_8h.html#84eb9130d44b1b40bd3bfe5a94f777d9">setup_corpus()</a>, <a class="el" href="structcl.html#439227feff9d7f55384e8780cfc2eb82">cl::size</a>, <a class="el" href="structcl.html#11418c0a440cc8d7adbc6459368abfe0">cl::sortidx</a>, <a class="el" href="corpmanag_8h.html#b595f682e895370f86580c128681d88e57cc238145ec1361c72c327674c0d754">SYSTEM</a>, <a class="el" href="structcl.html#fb9d881897259d5af5cf582f5cdbd86a">cl::targets</a>, <a class="el" href="cqp_8h.html#dd3ca9eefe3b5b754426f51d3043e579">True</a>, and <a class="el" href="structcl.html#aeb0da22893ef241c1ad027ca78da765">cl::type</a>.</p>
 
 <p>Referenced by <a class="el" href="corpmanag_8c.html#3445af54d7f23a9dcd4fcd795e015ac9">ensure_syscorpus()</a>, and <a class="el" href="corpmanag_8c.html#a57f32e05db80db43f0f9e8b97bcf08d">load_corpusnames()</a>.</p>
 
@@ -1115,7 +1296,7 @@
 
 <p>References <a class="el" href="structcl.html#caf638a727608c3a357755ecbb724330">cl::abs_fn</a>, <a class="el" href="structcl.html#142578589404d311ce777152fdaa66a6">cl::cd</a>, <a class="el" href="cl_8h.html#9e15a3c725711d9effd623b2f3e225be">cl_free</a>, <a class="el" href="structcl.html#ca3a1fb765418f9b9b1d74051aa88667">cl::corpus</a>, <a class="el" href="cqp_8h.html#306ebd41c0cd1303b1372c6153f0caf8">False</a>, <a class="el" href="context__descriptor_8c.html#39dd069d4fcf6ab2daaf08c0f2a1931c">FreeContextDescriptor()</a>, <a class="el" href="structcl.html#0a97de3454e7f0e1362f65b6d9c19ed2">cl::keywords</a>, <a class="el" href="structcl.html#57b5372d8f1a40be529f9ba7c2ece1ed">cl::loaded</a>, <a class="el" href="structcl.html#24268424ee0678c4ff66ef929d88eed3">cl::mother_name</a>, <a class="el" href="structcl.html#aecdad35f89c84d3d8b329955b28f18f">cl::mother_size</a>, <a class="el" href="structcl.html#5ac083a645d964373f022d03df4849c8">cl::name</a>, <a class="el" href="structcl.html#60fdb8cfe061a7d895942dd0ccbd33d6">cl::needs_update</a>, <a class="el" href="structcl.html#a920f0b8a7e7eb128467d01854c09a08">cl::query_corpus</a>, <a class="el" href="structcl.html#60336713f36aa8441230c4323dca923d">cl::query_text</a>, <a class="el" href="structcl.html#9b09e2bd59ba8ed71d59933389faba1b">cl::range</a>, <a class="el" href="structcl.html#b6be6986e1a07fc76b7a5a77aa7cc43b">cl::registry</a>, <a class="el" href="structcl.html#b1f9d035161a53874c84ac68634b947a">cl::saved</a>, <a class="el" href="structcl.html#439227feff9d7f55384e8780cfc2eb82">cl::size</a>, <a class="el" href="structcl.html#11418c0a440cc8d7adbc6459368abfe0">cl::sortidx</a>, <a class="el" href="structcl.html#fb9d881897259d5af5cf582f5cdbd86a">cl::targets</a>, <a class="el" href="structcl.html#aeb0da22893ef241c1ad027ca78da765">cl::type</a>, and <a class="el" href="corpmanag_8h.html#b595f682e895370f86580c128681d88e632fa39438c1676b435ec43e6a0f9647">UNDEF</a>.</p>
 
-<p>Referenced by <a class="el" href="corpmanag_8h.html#f5eed52e11c9ca3a493ab6176fb9af54">assign_temp_to_sub()</a>, <a class="el" href="corpmanag_8h.html#1b955ef83dbea1eee94b9406d9b646e2">drop_temp_corpora()</a>, <a class="el" href="corpmanag_8h.html#411a4b044a2214dc19180334cbcd1601">dropcorpus()</a>, <a class="el" href="corpmanag_8h.html#b20d278862cada0d5427b8232a3b69ad">duplicate_corpus()</a>, <a class="el" href="corpmanag_8h.html#204af03e1c4c39f8366a65fd927ab2a6">free_corpuslist()</a>, and <a class="el" href="corpmanag_8h.html#3567391cc22d572100bf63c0733b87ff">make_temp_corpus()</a>.</p>
+<p>Referenced by <a class="el" href="corpmanag_8h.html#f5eed52e11c9ca3a493ab6176fb9af54">assign_temp_to_sub()</a>, <a class="el" href="corpmanag_8c.html#5bd617c344c791d4cea751a4e043f2e3">attach_subcorpus()</a>, <a class="el" href="corpmanag_8h.html#1b955ef83dbea1eee94b9406d9b646e2">drop_temp_corpora()</a>, <a class="el" href="corpmanag_8h.html#411a4b044a2214dc19180334cbcd1601">dropcorpus()</a>, <a class="el" href="corpmanag_8h.html#b20d278862cada0d5427b8232a3b69ad">duplicate_corpus()</a>, <a class="el" href="corpmanag_8h.html#204af03e1c4c39f8366a65fd927ab2a6">free_corpuslist()</a>, and <a class="el" href="corpmanag_8h.html#3567391cc22d572100bf63c0733b87ff">make_temp_corpus()</a>.</p>
 
 </div>
 </div><p>
@@ -1161,7 +1342,7 @@
 
 <p>
 
-<p>References <a class="el" href="cl_8h.html#4d7cb8811357af41ee0c95d6a3ce3b65">central_corpus_directory()</a>, <a class="el" href="cl_8h.html#6647d75d1d69c7d25447da514b7e4682">cl_strdup()</a>, <a class="el" href="corpmanag_8c.html#8301ee0d0b0055ebb4e8ecc46fadd69e">COLON</a>, <a class="el" href="cwb-compress-rdx_8c.html#ca3a1fb765418f9b9b1d74051aa88667">corpus</a>, <a class="el" href="output_8c.html#c523a4b34d2f925e027d8f433de703c9">cqpmessage()</a>, <a class="el" href="corpmanag_8c.html#1b955ef83dbea1eee94b9406d9b646e2">drop_temp_corpora()</a>, <a class="el" href="cqp_8h.html#306ebd41c0cd1303b1372c6153f0caf8">False</a>, <a class="el" href="paths_8c.html#c8a4810c7e66b90fa20be473157f9b4b">get_path_component()</a>, <a class="el" href="corpmanag_8c.html#6971e7cc89868423f1044529eb3047da">GetSystemCorpus()</a>, <a class="el" href="structcl.html#57b5372d8f1a40be529f9ba7c2ece1ed">cl::loaded</a>, <a class="el" href="corpmanag_8c.html#999fbf759df5edab70703bfb10399ef0">LoadedCorpus()</a>, <a class="el" href="options_8h.html#5a77eb2bfdcb8ca8dc6732342d69ae7a">LOCAL_CORP_PATH</a>, <a class="el" href="structcl.html#aab17b7203855bf9e6bdf36d99fc5837">cl::local_dir</a>, <a class="el" href="globals_8h.html#f0f2173e3b202ddf5756531b4471dcb2">MAX_LINE_LENGTH</a>, <a class="el" href="structcl.html#24268424ee0678c4ff66ef929d88eed3">cl::mother_name</a>, <a class="el" href="structcl.html#5ac083a645d964373f022d03df4849c8">cl::name</a>, <a class="el" href="structcl.html#60fdb8cfe061a7d895942dd0ccbd33d6">cl::needs_update</a>, <a class="el" href="corpmanag_8c.html#29e8c045958457814bbb47c44cb6383e">NewCL()</a>, <a class="el" href="structcl.html#fdcc09ad7f27c639d3bb56e7ac18c31c">cl::next</a>, <a class="el" href="options_8h.html#b6be6986e1a07fc76b7a5a77aa7cc43b">registry</a>, <a class="el" href="structcl.html#b1f9d035161a53874c84ac68634b947a">cl::saved</a>, <a class="el" href="options_8h.html#582e2ef9670c974c00e00ad10af0e629">silent</a>, <a class="el" href="corpmanag_8h.html#b595f682e895370f86580c128681d88e12b733d4941495e86811fe6ceeeff9da">SUB</a>, <a class="el" href="corpmanag_8h.html#b595f682e895370f86580c128681d88e57cc238145ec1361c72c327674c0d754">SYSTEM</a>, <a class="el" href="corpmanag_8h.html#b595f682e895370f86580c128681d88e5937389a60030a604f0efdf5e3927325">TEMP</a>, <a class="el" href="cqp_8h.html#dd3ca9eefe3b5b754426f51d3043e579">True</a>, <a class="el" href="structcl.html#aeb0da22893ef241c1ad027ca78da765">cl::type</a>, <a class="el" href="corpmanag_8h.html#2499845cf1a7faad4b8a53bd342d27c0e704d5d328a8522a6193aa3efb28c724">UPPER</a>, and <a class="el" href="output_8h.html#9c2eeea9cd09fb001747ef4cc99399a448f2bb70fceb692a2dedd8cea496c44b">Warning</a>.</p>
+<p>References <a class="el" href="corpmanag_8c.html#e11471eefadf9070c8c174f35647ac10">accessible()</a>, <a class="el" href="cl_8h.html#4d7cb8811357af41ee0c95d6a3ce3b65">central_corpus_directory()</a>, <a class="el" href="corpmanag_8c.html#866d2cad2e64711a326126d9123dd62a">changecase_string_no_copy()</a>, <a class="el" href="cl_8h.html#6647d75d1d69c7d25447da514b7e4682">cl_strdup()</a>, <a class="el" href="corpmanag_8c.html#8301ee0d0b0055ebb4e8ecc46fadd69e">COLON</a>, <a class="el" href="cwb-compress-rdx_8c.html#ca3a1fb765418f9b9b1d74051aa88667">corpus</a>, <a class="el" href="output_8c.html#c523a4b34d2f925e027d8f433de703c9">cqpmessage()</a>, <a class="el" href="corpmanag_8c.html#1b955ef83dbea1eee94b9406d9b646e2">drop_temp_corpora()</a>, <a class="el" href="cqp_8h.html#306ebd41c0cd1303b1372c6153f0caf8">False</a>, <a class="el" href="paths_8c.html#c8a4810c7e66b90fa20be473157f9b4b">get_path_component()</a>, <a class="el" href="corpmanag_8c.html#6971e7cc89868423f1044529eb3047da">GetSystemCorpus()</a>, <a class="el" href="structcl.html#57b5372d8f1a40be529f9ba7c2ece1ed">cl::loaded</a>, <a class="el" href="corpmanag_8c.html#999fbf759df5edab70703bfb10399ef0">LoadedCorpus()</a>, <a class="el" href="options_8h.html#5a77eb2bfdcb8ca8dc6732342d69ae7a">LOCAL_CORP_PATH</a>, <a class="el" href="structcl.html#aab17b7203855bf9e6bdf36d99fc5837">cl::local_dir</a>, <a class="el" href="globals_8h.html#f0f2173e3b202ddf5756531b4471dcb2">MAX_LINE_LENGTH</a>, <a class="el" href="structcl.html#24268424ee0678c4ff66ef929d88eed3">cl::mother_name</a>, <a class="el" href="structcl.html#5ac083a645d964373f022d03df4849c8">cl::name</a>, <a class="el" href="structcl.html#60fdb8cfe061a7d895942dd0ccbd33d6">cl::needs_update</a>, <a class="el" href="corpmanag_8c.html#29e8c045958457814bbb47c44cb6383e">NewCL()</a>, <a class="el" href="structcl.html#fdcc09ad7f27c639d3bb56e7ac18c31c">cl::next</a>, <a class="el" href="options_8h.html#b6be6986e1a07fc76b7a5a77aa7cc43b">registry</a>, <a class="el" href="structcl.html#b1f9d035161a53874c84ac68634b947a">cl::saved</a>, <a class="el" href="options_8h.html#582e2ef9670c974c00e00ad10af0e629">silent</a>, <a class="el" href="corpmanag_8h.html#b595f682e895370f86580c128681d88e12b733d4941495e86811fe6ceeeff9da">SUB</a>, <a class="el" href="corpmanag_8h.html#b595f682e895370f86580c128681d88e57cc238145ec1361c72c327674c0d754">SYSTEM</a>, <a class="el" href="corpmanag_8h.html#b595f682e895370f86580c128681d88e5937389a60030a604f0efdf5e3927325">TEMP</a>, <a class="el" href="cqp_8h.html#dd3ca9eefe3b5b754426f51d3043e579">True</a>, <a class="el" href="structcl.html#aeb0da22893ef241c1ad027ca78da765">cl::type</a>, <a class="el" href="corpmanag_8h.html#2499845cf1a7faad4b8a53bd342d27c0e704d5d328a8522a6193aa3efb28c724">UPPER</a>, and <a class="el" href="output_8h.html#9c2eeea9cd09fb001747ef4cc99399a448f2bb70fceb692a2dedd8cea496c44b">Warning</a>.</p>
 
 <p>Referenced by <a class="el" href="corpmanag_8h.html#7fe1322b68023d0c8969fac787155280">check_available_corpora()</a>.</p>
 
@@ -1506,9 +1687,40 @@
 
 <p>
 
-<p>References <a class="el" href="cl_8h.html#4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="macros_8c.html#41bcc7ad3a75561243f1a5b02fa7e474">end_indented_list()</a>, <a class="el" href="structcl.html#57b5372d8f1a40be529f9ba7c2ece1ed">cl::loaded</a>, <a class="el" href="structcl.html#24268424ee0678c4ff66ef929d88eed3">cl::mother_name</a>, <a class="el" href="structcl.html#5ac083a645d964373f022d03df4849c8">cl::name</a>, <a class="el" href="structcl.html#60fdb8cfe061a7d895942dd0ccbd33d6">cl::needs_update</a>, <a class="el" href="structcl.html#fdcc09ad7f27c639d3bb56e7ac18c31c">cl::next</a>, <a class="el" href="options_8h.html#257bb056aaee026d2574fd4d834e2101">pretty_print</a>, <a class="el" href="macros_8c.html#1b27ed98d3464dc245eba9bb74fe5df5">print_indented_list_br()</a>, <a class="el" href="macros_8c.html#cef8ddea11d09bf367bba1e5b1c344d2">print_indented_list_item()</a>, <a class="el" href="structcl.html#b1f9d035161a53874c84ac68634b947a">cl::saved</a>, <a class="el" href="structcl.html#439227feff9d7f55384e8780cfc2eb82">cl::size</a>, <a class="el" href="macros_8c.html#e4547421b721416673d9597c563951a5">start_indented_list()</a>, <a class="el" href="corpmanag_8h.html#b595f682e895370f86580c128681d88e12b733d4941495e86811fe6ceeeff9da">SUB</a>, <a class="el" href="corpmanag_8h.html#b595f682e895370f86580c128681d88e57cc238145ec1361c72c327674c0d754">SYSTEM</a>, and <a class="el" href="structcl.html#aeb0da22893ef241c1ad027ca78da765">cl::type</a>.</p>
+<p>References <a class="el" href="cl_8h.html#4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="macros_8c.html#41bcc7ad3a75561243f1a5b02fa7e474">end_indented_list()</a>, <a class="el" href="structcl.html#57b5372d8f1a40be529f9ba7c2ece1ed">cl::loaded</a>, <a class="el" href="structcl.html#24268424ee0678c4ff66ef929d88eed3">cl::mother_name</a>, <a class="el" href="structcl.html#5ac083a645d964373f022d03df4849c8">cl::name</a>, <a class="el" href="structcl.html#60fdb8cfe061a7d895942dd0ccbd33d6">cl::needs_update</a>, <a class="el" href="structcl.html#fdcc09ad7f27c639d3bb56e7ac18c31c">cl::next</a>, <a class="el" href="options_8h.html#257bb056aaee026d2574fd4d834e2101">pretty_print</a>, <a class="el" href="macros_8c.html#1b27ed98d3464dc245eba9bb74fe5df5">print_indented_list_br()</a>, <a class="el" href="macros_8c.html#cef8ddea11d09bf367bba1e5b1c344d2">print_indented_list_item()</a>, <a class="el" href="structcl.html#b1f9d035161a53874c84ac68634b947a">cl::saved</a>, <a class="el" href="corpmanag_8c.html#6ba39601aefbe1213ea374d79e535277">show_corpora_files_sort()</a>, <a class="el" href="structcl.html#439227feff9d7f55384e8780cfc2eb82">cl::size</a>, <a class="el" href="macros_8c.html#e4547421b721416673d9597c563951a5">start_indented_list()</a>, <a class="el" href="corpmanag_8h.html#b595f682e895370f86580c128681d88e12b733d4941495e86811fe6ceeeff9da">SUB</a>, <a class="el" href="corpmanag_8h.html#b595f682e895370f86580c128681d88e57cc238145ec1361c72c327674c0d754">SYSTEM</a>, and <a class="el" href="structcl.html#aeb0da22893ef241c1ad027ca78da765">cl::type</a>.</p>
 
 <p>Referenced by <a class="el" href="corpmanag_8h.html#93a0fe59766df5ffa3e14b0fb7522971">show_corpora_files()</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="6ba39601aefbe1213ea374d79e535277"></a><!-- doxytag: member="corpmanag.c::show_corpora_files_sort" ref="6ba39601aefbe1213ea374d79e535277" args="(const void *p1, const void *p2)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">static int show_corpora_files_sort           </td>
+          <td>(</td>
+          <td class="paramtype">const void *&nbsp;</td>
+          <td class="paramname"> <em>p1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const void *&nbsp;</td>
+          <td class="paramname"> <em>p2</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+<p>Referenced by <a class="el" href="corpmanag_8c.html#0cbf57d76b0c6eece0dc3fd61aa7eb92">show_corpora_files1()</a>.</p>
 
 </div>
 </div><p>
@@ -1660,7 +1872,7 @@
 </div>
 </div><p>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Mon Sep 14 01:53:37 2009 for CWB by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Thu Sep 17 01:41:01 2009 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

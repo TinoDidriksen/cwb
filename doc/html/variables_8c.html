@@ -52,6 +52,7 @@
 <li>void <a class="el" href="variables_8c.html#3fa0b2acd275a6055cc75f7738a6e1e3">variables_iterator_new</a> (void)
 <li><a class="el" href="struct__variable__buf.html">Variable</a> <a class="el" href="variables_8c.html#37e8048f0a0273e20fb2ea892589231c">variables_iterator_next</a> (void)
 <li>int <a class="el" href="variables_8c.html#e6e743183feb09fe2d9fc4b95f2fde0d">VerifyVariable</a> (<a class="el" href="struct__variable__buf.html">Variable</a> v, <a class="el" href="struct_t_corpus.html">Corpus</a> *<a class="el" href="cwb-s-encode_8c.html#ca3a1fb765418f9b9b1d74051aa88667">corpus</a>, <a class="el" href="union___attribute.html">Attribute</a> *attribute)
+<li>static int <a class="el" href="variables_8c.html#e98330ef3e5bb8dc3b997f5b8c83415e">intcompare</a> (const void *i, const void *j)
 <li>int * <a class="el" href="variables_8c.html#2d9b75bc6795dc3ee9da28f948ccb9d7">GetVariableItems</a> (<a class="el" href="struct__variable__buf.html">Variable</a> v, <a class="el" href="struct_t_corpus.html">Corpus</a> *<a class="el" href="cwb-s-encode_8c.html#ca3a1fb765418f9b9b1d74051aa88667">corpus</a>, <a class="el" href="union___attribute.html">Attribute</a> *attribute, int *nr_items)
 <li>char ** <a class="el" href="variables_8c.html#e4d0229163e993c38f59291bf8343752">GetVariableStrings</a> (<a class="el" href="struct__variable__buf.html">Variable</a> v, int *nr_items)
 </ul>
@@ -182,7 +183,7 @@
 
 <p>
 
-<p>References <a class="el" href="cl_8h.html#4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="struct__variable__item.html#4573817871ec032055c7d539617626fe">_variable_item::free</a>, <a class="el" href="struct__variable__buf.html#739265133fa542ef9c8264e7f4e0b967">_variable_buf::items</a>, <a class="el" href="struct__variable__item.html#19233a42865dd45eae5fc8cf34a6775a">_variable_item::ival</a>, <a class="el" href="struct__variable__buf.html#6d5513ad0df2259dcd11f09d7c5487d7">_variable_buf::nr_items</a>, <a class="el" href="struct__variable__buf.html#448ea2028184d0491b511f70f44b98fe">_variable_buf::nr_valid_items</a>, and <a class="el" href="variables_8c.html#e6e743183feb09fe2d9fc4b95f2fde0d">VerifyVariable()</a>.</p>
+<p>References <a class="el" href="cl_8h.html#4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="struct__variable__item.html#4573817871ec032055c7d539617626fe">_variable_item::free</a>, <a class="el" href="cdaccess_8c.html#e98330ef3e5bb8dc3b997f5b8c83415e">intcompare()</a>, <a class="el" href="struct__variable__buf.html#739265133fa542ef9c8264e7f4e0b967">_variable_buf::items</a>, <a class="el" href="struct__variable__item.html#19233a42865dd45eae5fc8cf34a6775a">_variable_item::ival</a>, <a class="el" href="struct__variable__buf.html#6d5513ad0df2259dcd11f09d7c5487d7">_variable_buf::nr_items</a>, <a class="el" href="struct__variable__buf.html#448ea2028184d0491b511f70f44b98fe">_variable_buf::nr_valid_items</a>, and <a class="el" href="variables_8c.html#e6e743183feb09fe2d9fc4b95f2fde0d">VerifyVariable()</a>.</p>
 
 <p>Referenced by <a class="el" href="parse__actions_8c.html#cc58abfdc0cb4fe0ab037d276eb993c3">Varref2IDList()</a>.</p>
 
@@ -218,6 +219,35 @@
 <p>References <a class="el" href="cl_8h.html#4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="struct__variable__item.html#4573817871ec032055c7d539617626fe">_variable_item::free</a>, <a class="el" href="struct__variable__buf.html#739265133fa542ef9c8264e7f4e0b967">_variable_buf::items</a>, <a class="el" href="struct__variable__buf.html#6d5513ad0df2259dcd11f09d7c5487d7">_variable_buf::nr_items</a>, and <a class="el" href="struct__variable__item.html#67b0aabebe4716eb05b110ebab15984c">_variable_item::sval</a>.</p>
 
 <p>Referenced by <a class="el" href="parse__actions_8h.html#2f1ff314ad45ddeb2c1a236742afdd0c">do_AddSubVariables()</a>, and <a class="el" href="parse__actions_8h.html#c5fbebcf44cd212f00f1890a6ab56a0a">do_flagged_re_variable()</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="e98330ef3e5bb8dc3b997f5b8c83415e"></a><!-- doxytag: member="variables.c::intcompare" ref="e98330ef3e5bb8dc3b997f5b8c83415e" args="(const void *i, const void *j)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">static int intcompare           </td>
+          <td>(</td>
+          <td class="paramtype">const void *&nbsp;</td>
+          <td class="paramname"> <em>i</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const void *&nbsp;</td>
+          <td class="paramname"> <em>j</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
 
 </div>
 </div><p>
@@ -545,7 +575,7 @@
 </div>
 </div><p>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Mon Sep 14 01:53:37 2009 for CWB by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Thu Sep 17 01:41:01 2009 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

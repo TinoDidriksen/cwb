@@ -23,7 +23,10 @@
   </div>
 </div>
 <div class="contents">
-<h1>_Attribute Union Reference</h1><!-- doxytag: class="_Attribute" --><code>#include &lt;attributes.h&gt;</code>
+<h1>_Attribute Union Reference</h1><!-- doxytag: class="_Attribute" -->The Attribute object.  
+<a href="#_details">More...</a>
+<p>
+<code>#include &lt;attributes.h&gt;</code>
 <p>
 <h2>Data Fields</h2>
 <ul>
@@ -34,6 +37,12 @@
 <li><a class="el" href="struct_alg___attribute.html">Alg_Attribute</a> <a class="el" href="union___attribute.html#d1786ffce10a697b9dd595f8902237ce">align</a>
 <li><a class="el" href="struct_dynamic___attribute.html">Dynamic_Attribute</a> <a class="el" href="union___attribute.html#74f8d07f045cdfbd5e3bc4e732adb983">dyn</a>
 </ul>
+<hr><a name="_details"></a><h2>Detailed Description</h2>
+The Attribute object. 
+<p>
+The Attribute object is a union of structures, one for each of the various kinds of attribute (positional (P), structural (S), alignment, dynamic).<p>
+The "any" member allows the shared fields to be accessed even if it's not known what the type of the Attribute you're working with is.<p>
+<dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="attributes_8h.html#493c716f0c2cdf70614dcaa0b9aae21f" title="Members found in ALL the different types of Attribute object.">COMMON_ATTR_FIELDS</a> </dd></dl>
 <hr><h2>Field Documentation</h2>
 <a class="anchor" name="d1786ffce10a697b9dd595f8902237ce"></a><!-- doxytag: member="_Attribute::align" ref="d1786ffce10a697b9dd595f8902237ce" args="" -->
 <div class="memitem">
@@ -138,7 +147,7 @@
 <hr>The documentation for this union was generated from the following file:<ul>
 <li>cl/<a class="el" href="attributes_8h.html">attributes.h</a></ul>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Mon Sep 14 01:53:38 2009 for CWB by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Thu Sep 17 01:41:01 2009 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

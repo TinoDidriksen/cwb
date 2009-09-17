@@ -35,10 +35,23 @@
 
 #define COMPRESS_DEBUG 0
 
-int cderrno;                    /* is set after access */
+/**
+ * Error number for CL: is set after access
+ */
+int cderrno;
 
-/* ---------------------------------------------------------------------- */
 
+
+
+/**
+ * Checks an Attribute passed as a function argument for usability in that function.
+ *
+ * (a) arg must not be NULL.
+ *
+ * (b) arg type has to be the type specified in atyp.
+ *
+ * If these conditions are not specified, the function returns rval.
+ */
 #define check_arg(arg,atyp,rval) \
 if (arg == NULL) { \
   cderrno = CDA_ENULLATT; return rval; \
@@ -47,7 +60,11 @@ else if (arg->type != atyp) { \
   cderrno = CDA_EATTTYPE; return rval; \
 }
 
-int cl_strcmp(char *s1, char *s2)
+/**
+ * CL internal string comparison (uses signed char on all platforms)
+ */
+int
+cl_strcmp(char *s1, char *s2)
 {
   /* BIG BIG BIG warning:
      although it says unsigned_char_strcmp it really operates
@@ -66,7 +83,13 @@ int cl_strcmp(char *s1, char *s2)
   return *c1 - *c2;
 }
 
-char *cdperror_string(int errno)
+/**
+ * Gets a string describing the error identified by an error number.
+ *
+ * @param errno  Error number integer (a CDA_* constant as defined in cl.h)
+ */
+char *
+cdperror_string(int errno)
 {
   char *s;
 
@@ -138,7 +161,11 @@ char *cdperror_string(int errno)
   return s;
 }
 
-void cdperror(char *message)
+/**
+ * Prints an error message, together with a string identifying the current error number.
+ */
+void
+cdperror(char *message)
 {
   if (message != NULL)
     fprintf(stderr, "%s: %s\n", cdperror_string(cderrno), message);
@@ -146,12 +173,23 @@ void cdperror(char *message)
     fprintf(stderr, "%s\n", cdperror_string(cderrno));
 }
 
+
+
+
+
 /* ================================================== POSITIONAL ATTRIBUTES */
 
 /* ==================== the mapping between strings and their ids */
 
-
-char *get_string_of_id(Attribute *attribute, int id)
+/**
+ * Gets the string that corresponds to the specified item on the given P-attribute.
+ *
+ * @param attribute  The Attribute to look the item up on
+ * @param id         Identifier of an item on this attribute.
+ * @return           The string, or NULL if there is an error
+ */
+char *
+get_string_of_id(Attribute *attribute, int id)
 {
   Component *lex;
   Component *lexidx;
@@ -179,7 +217,15 @@ char *get_string_of_id(Attribute *attribute, int id)
 }
 
 
-int get_id_of_string(Attribute *attribute, char *id_string)
+/**
+ * Gets the ID code that corresponds to the specified string on the given P-attribute.
+ *
+ * @param attribute  The (positional) Attribute to look the string up on
+ * @param id_string  The string of an item on this attribute
+ * @return           Either the integer ID of the item, or an error code (if less than 0)
+ */
+int
+get_id_of_string(Attribute *attribute, char *id_string)
 {
   int low, high, nr, mid, comp;
 
@@ -229,8 +275,10 @@ int get_id_of_string(Attribute *attribute, char *id_string)
         cderrno = CDA_ENOSTRING;
         return cderrno;
       }
-      if(comp > 0) low = mid;
-      else high = mid;
+      if(comp > 0)
+        low = mid;
+      else
+        high = mid;
     }
   }
 
@@ -238,8 +286,16 @@ int get_id_of_string(Attribute *attribute, char *id_string)
   return 0;
 }
 
-
-int get_id_string_len(Attribute *attribute, int id)
+/**
+ * Calculates the length of the string that corresponds to the specified
+ * item on the given P-attribute.
+ *
+ * @param attribute  The (positional) Attribute to look up the item on
+ * @param id         Identifier of an item on this attribute.
+ * @return           The length of the string, or a CDA_ error code
+ */
+int
+get_id_string_len(Attribute *attribute, int id)
 {
   Component *lexidx;
   char *s;
@@ -283,7 +339,16 @@ int get_id_string_len(Attribute *attribute, int id)
 }
 
 
-int get_id_from_sortidx(Attribute *attribute, int sort_index_position)
+/**
+ * Gets the ID code of the item at the specified position in the Attribute's sorted wordlist index.
+ *
+ * @see get_sortidxpos_of_id
+ * @param attribute            The (positional) Attribute whose index is to be searched.
+ * @param sort_index_position  The offset in the index where the ID code is to be found.
+ * @return                     Either the integer ID, or an error code (if less than 0)
+ */
+int
+get_id_from_sortidx(Attribute *attribute, int sort_index_position)
 {
   Component *srtidx;
 
@@ -309,7 +374,19 @@ int get_id_from_sortidx(Attribute *attribute, int sort_index_position)
   return 0;
 }
 
-int get_sortidxpos_of_id(Attribute *attribute, int id)
+/**
+ * Gets the position in the Attribute's sorted wordlist index of the item
+ * with the specified ID code.
+ *
+ * This function is NOT YET IMPLEMENTED.
+ *
+ * @see get_id_from_sortidx
+ * @param attribute  The (positional) Attribute whose index is to be searched
+ * @param id         Identifier of an item on this attribute.
+ * @return           The offset of that item in the sorted wordlist index.
+ */
+int
+get_sortidxpos_of_id(Attribute *attribute, int id)
 {
   Component *srtidx;
 
@@ -336,7 +413,15 @@ int get_sortidxpos_of_id(Attribute *attribute, int id)
 
 /* ==================== information about the corpus */
 
-int item_sequence_is_compressed(Attribute *attribute)
+/**
+ * Checks whether the item sequence of the given P-attribute is compressed.
+ *
+ * See comments in body of function for what counts as "compressed".
+ *
+ * @return  Boolean.
+ */
+int
+item_sequence_is_compressed(Attribute *attribute)
 {
   ComponentState state;
 
@@ -379,7 +464,15 @@ int item_sequence_is_compressed(Attribute *attribute)
   }
 }
 
-int inverted_file_is_compressed(Attribute *attribute)
+/**
+ * Check whether the index (inverted file) of the given P-attribute is compressed.
+ *
+ * See comments in body of function for what counts as "compressed".
+ *
+ * @return  Boolean.
+ */
+int
+inverted_file_is_compressed(Attribute *attribute)
 {
   ComponentState state;
 
@@ -407,9 +500,27 @@ int inverted_file_is_compressed(Attribute *attribute)
   return 1;
 }
 
+
+
 /* ------------------------------------------------------------ */
 
-int get_attribute_size(Attribute *attribute)
+/**
+ * Gets the maximum position on this P-attribute (ie the size of the
+ * attribute).
+ *
+ * The result of this function is equal to the number of tokens
+ * in the attribute.
+ *
+ * If the attribute's item sequence is compressed, this is read from
+ * the attribute's Huffman code descriptor block.
+ *
+ * Otherwise, it is read from the size member of the Attribute's
+ * CompCorpus component.
+ *
+ * @return  The maximum corpus position, or an error code (if less than 0)
+ */
+int
+get_attribute_size(Attribute *attribute)
 {
   Component *corpus;
 
@@ -445,8 +556,17 @@ int get_attribute_size(Attribute *attribute)
   return 0;
 }
 
-
-int get_id_range(Attribute *attribute)
+/**
+ * Gets the maximum id on this P-attribute (ie the range of the attribute's ID codes).
+ *
+ * The result of this function is equal to the number of types in this attribute.
+ *
+ * @see get_attribute_size
+ *
+ * @return  The maximum Id, or an error code (if less than 0)
+ */
+int
+get_id_range(Attribute *attribute)
 {
   Component *comp;
 
@@ -471,7 +591,14 @@ int get_id_range(Attribute *attribute)
 
 /* ==================== the relation between ids and the corpus */
 
-int get_id_frequency(Attribute *attribute, int id)
+/**
+ * Gets the frequency of an item on this attribute.
+ *
+ * @param id  Identifier of an item on this attribute.
+ * @return    The frequency count of the item specified by id, or an error code (if less than 0)
+ */
+int
+get_id_frequency(Attribute *attribute, int id)
 {
   Component *freqs;
 
@@ -1951,10 +2078,17 @@ int cl_alg2cpos(Attribute *attribute, int alg,
 
 /* ================================================== DYNAMIC ATTRIBUTES */
 
-/* ...: parameters (of *int or *char) and structure
- * which gets the result (*int or *char)
+/* ...: parameters  and structure
+ * which gets the result
  */
-
+/**
+ * Attribute access function for dynamic attributes.
+ *
+ * @param attribute  The (dynamic) attribute in question.
+ * @param dcr        Location for the result (*int or *char).
+ * @param args       Location of the parameters (of *int or *char).
+ * @return           Boolean: True for all OK, false for error.
+ */
 int
 call_dynamic_attribute(Attribute *attribute,
                        DynCallResult *dcr,
@@ -2165,10 +2299,11 @@ call_dynamic_attribute(Attribute *attribute,
 }
 
 /**
- * Count the number of arguments on the attribute's dynamic argument list.
+ * Count the number of arguments on an attribute's dynamic argument list.
  *
- * @param attribute  pointer to the Attribute object to analyse
- * @return           int specifying the number of arguments;
+ * @param attribute  pointer to the Attribute object to analyse; it must
+ *                   be a dynamic attribute.
+ * @return           integer specifying the number of arguments;
  *                   a negative integer is returned if for any argument
  *                   on dyn.arglist, the type is equal to ATTAT_VAR
  */

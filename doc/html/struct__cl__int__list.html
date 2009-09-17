@@ -23,16 +23,20 @@
   </div>
 </div>
 <div class="contents">
-<h1>_cl_int_list Struct Reference</h1><!-- doxytag: class="_cl_int_list" --><code>#include &lt;list.h&gt;</code>
+<h1>_cl_int_list Struct Reference</h1><!-- doxytag: class="_cl_int_list" -->Underlying structure for the cl_int_list object.  
+<a href="#_details">More...</a>
+<p>
+<code>#include &lt;list.h&gt;</code>
 <p>
 <h2>Data Fields</h2>
 <ul>
 <li>int <a class="el" href="struct__cl__int__list.html#439227feff9d7f55384e8780cfc2eb82">size</a>
-<li>int <a class="el" href="struct__cl__int__list.html#115235fc25fdf1c03d856bd072b6cead">allocated</a>
-<li>int <a class="el" href="struct__cl__int__list.html#e942cf7841b482b48babe57494b1c2d9">lumpsize</a>
-<li>int * <a class="el" href="struct__cl__int__list.html#c103627c1ad15cbec2f22d0abe6d54b6">data</a>
-</ul>
-<hr><h2>Field Documentation</h2>
+<dl class="el"><dd class="mdescRight">number of elements  <a href="#439227feff9d7f55384e8780cfc2eb82"></a><br></dl><li>int <a class="el" href="struct__cl__int__list.html#115235fc25fdf1c03d856bd072b6cead">allocated</a>
+<dl class="el"><dd class="mdescRight">number of elements, for which space has been allocated  <a href="#115235fc25fdf1c03d856bd072b6cead"></a><br></dl><li>int <a class="el" href="struct__cl__int__list.html#e942cf7841b482b48babe57494b1c2d9">lumpsize</a>
+<dl class="el"><dd class="mdescRight">lump size by which list is reallocated  <a href="#e942cf7841b482b48babe57494b1c2d9"></a><br></dl><li>int * <a class="el" href="struct__cl__int__list.html#c103627c1ad15cbec2f22d0abe6d54b6">data</a>
+<dl class="el"><dd class="mdescRight">pointer to the data  <a href="#c103627c1ad15cbec2f22d0abe6d54b6"></a><br></dl></ul>
+<hr><a name="_details"></a><h2>Detailed Description</h2>
+Underlying structure for the cl_int_list object. <hr><h2>Field Documentation</h2>
 <a class="anchor" name="115235fc25fdf1c03d856bd072b6cead"></a><!-- doxytag: member="_cl_int_list::allocated" ref="115235fc25fdf1c03d856bd072b6cead" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -44,6 +48,8 @@
 </div>
 <div class="memdoc">
 
+<p>
+number of elements, for which space has been allocated 
 <p>
 
 <p>Referenced by <a class="el" href="list_8c.html#4e5bea92d8d1bda5e43d1c42e2e9d657">cl_int_list_set()</a>, and <a class="el" href="list_8c.html#6ee10e6ef077f8fa95995c7987205439">cl_new_int_list()</a>.</p>
@@ -62,6 +68,8 @@
 <div class="memdoc">
 
 <p>
+pointer to the data 
+<p>
 
 <p>Referenced by <a class="el" href="list_8c.html#db459101b62a587d872f9a1572f65d1a">cl_delete_int_list()</a>, <a class="el" href="list_8c.html#5ad0b20a7e05b51a38901d6d3538c13f">cl_int_list_get()</a>, <a class="el" href="list_8c.html#cc29ac646ed272d9f491334c4dc6d4a3">cl_int_list_qsort()</a>, <a class="el" href="list_8c.html#4e5bea92d8d1bda5e43d1c42e2e9d657">cl_int_list_set()</a>, and <a class="el" href="list_8c.html#6ee10e6ef077f8fa95995c7987205439">cl_new_int_list()</a>.</p>
 
@@ -78,6 +86,8 @@
 </div>
 <div class="memdoc">
 
+<p>
+lump size by which list is reallocated 
 <p>
 
 <p>Referenced by <a class="el" href="list_8c.html#a88ac1a672a63db0c15e056e10c3f0f6">cl_int_list_lumpsize()</a>, <a class="el" href="list_8c.html#4e5bea92d8d1bda5e43d1c42e2e9d657">cl_int_list_set()</a>, and <a class="el" href="list_8c.html#6ee10e6ef077f8fa95995c7987205439">cl_new_int_list()</a>.</p>
@@ -96,6 +106,8 @@
 <div class="memdoc">
 
 <p>
+number of elements 
+<p>
 
 <p>Referenced by <a class="el" href="list_8c.html#cbd34565838f935b1dbf5e1e6aef2016">cl_int_list_append()</a>, <a class="el" href="list_8c.html#5ad0b20a7e05b51a38901d6d3538c13f">cl_int_list_get()</a>, <a class="el" href="list_8c.html#cc29ac646ed272d9f491334c4dc6d4a3">cl_int_list_qsort()</a>, <a class="el" href="list_8c.html#4e5bea92d8d1bda5e43d1c42e2e9d657">cl_int_list_set()</a>, <a class="el" href="list_8c.html#19172026cace031e07b63a15865bae91">cl_int_list_size()</a>, and <a class="el" href="list_8c.html#6ee10e6ef077f8fa95995c7987205439">cl_new_int_list()</a>.</p>
 
@@ -104,7 +116,7 @@
 <hr>The documentation for this struct was generated from the following file:<ul>
 <li>cl/<a class="el" href="list_8h.html">list.h</a></ul>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Mon Sep 14 01:53:38 2009 for CWB by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Thu Sep 17 01:41:01 2009 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

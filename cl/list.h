@@ -20,21 +20,31 @@
 
 #include "cl.h"
 
-/* just defined the structs here; <cl.h> contains object definitions:
+/* just define the structs here; <cl.h> contains object definitions:
    typedef struct _cl_int_list    *cl_int_list;
    typedef struct _cl_string_list *cl_string_list; */
+
+/**
+ * Underlying structure for the cl_int_list object.
+ */
 struct _cl_int_list {
-  int size;			/* number of elements */
-  int allocated;		/* number of elements, for which space has been allocated */
-  int lumpsize;			/* lump size by which list is reallocated */
-  int *data;
+  int size;         /**< number of elements */
+  int allocated;    /**< number of elements, for which space has been allocated */
+  int lumpsize;     /**< lump size by which list is reallocated */
+  int *data;        /**< pointer to the data */
 };
 
+/**
+ * Underlying structure for the cl_string_list object.
+ *
+ * Note -- the data in this object is ONLY an "array" of pointers-to-char.
+ * The strings themselves are stored elsewhere.
+ */
 struct _cl_string_list {
-  int size;
-  int allocated;
-  int lumpsize;
-  char **data;
+  int size;         /**< number of elements */
+  int allocated;    /**< number of elements, for which space has been allocated */
+  int lumpsize;     /**< lump size by which list is reallocated */
+  char **data;      /**< pointer to the data */
 };
 
 /* function prototypes now in <cl.h> */

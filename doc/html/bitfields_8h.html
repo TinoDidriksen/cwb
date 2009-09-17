@@ -29,7 +29,7 @@
 <h2>Data Structures</h2>
 <ul>
 <li>struct <a class="el" href="struct_b_f_buf.html">BFBuf</a>
-</ul>
+<dl class="el"><dd class="mdescRight">The Bitfield object.  <a href="struct_b_f_buf.html#_details">More...</a><br></dl></ul>
 <h2>Typedefs</h2>
 <ul>
 <li>typedef unsigned char <a class="el" href="bitfields_8h.html#4dd4ca04618ab319a08ff7cb48d02653">BFBaseType</a>
@@ -38,18 +38,18 @@
 <h2>Functions</h2>
 <ul>
 <li><a class="el" href="struct_b_f_buf.html">Bitfield</a> <a class="el" href="bitfields_8h.html#22dc84a6d194440c86a2ddba08a08ba3">create_bitfield</a> (int nr_of_elements)
-<li><a class="el" href="struct_b_f_buf.html">Bitfield</a> <a class="el" href="bitfields_8h.html#681c6d96bd90ad1a9815aa3473524edd">copy_bitfield</a> (<a class="el" href="struct_b_f_buf.html">Bitfield</a> source)
-<li>int <a class="el" href="bitfields_8h.html#203675ec8c83546558603bf24be6d938">destroy_bitfield</a> (<a class="el" href="struct_b_f_buf.html">Bitfield</a> *bptr)
-<li>int <a class="el" href="bitfields_8h.html#24b556c73d8ad4d838638735965f8915">set_bit</a> (<a class="el" href="struct_b_f_buf.html">Bitfield</a> bitfield, int element)
-<li>int <a class="el" href="bitfields_8h.html#d3061818aa08b4bf624cf4778246b701">clear_bit</a> (<a class="el" href="struct_b_f_buf.html">Bitfield</a> bitfield, int element)
-<li>int <a class="el" href="bitfields_8h.html#e5979492fae86ce526453a18700b9a3c">clear_all_bits</a> (<a class="el" href="struct_b_f_buf.html">Bitfield</a> bitfield)
-<li>int <a class="el" href="bitfields_8h.html#15f5f583c9a272cc32a1114249d5aa5b">set_all_bits</a> (<a class="el" href="struct_b_f_buf.html">Bitfield</a> bitfield)
-<li>int <a class="el" href="bitfields_8h.html#d210c275b3c58c3b52a48803326ddc54">get_bit</a> (<a class="el" href="struct_b_f_buf.html">Bitfield</a> bitfield, int element)
-<li>int <a class="el" href="bitfields_8h.html#552f58f2765709031479a1a51b918fe3">toggle_bit</a> (<a class="el" href="struct_b_f_buf.html">Bitfield</a> bitfield, int element)
-<li>int <a class="el" href="bitfields_8h.html#0a574f8eaf5b71f90da69c3582135a26">nr_bits_set</a> (<a class="el" href="struct_b_f_buf.html">Bitfield</a> bitfield)
-<li>int <a class="el" href="bitfields_8h.html#6ef99585813d224acd33676d08870f95">bf_equal</a> (<a class="el" href="struct_b_f_buf.html">Bitfield</a> bf1, <a class="el" href="struct_b_f_buf.html">Bitfield</a> bf2)
-<li>int <a class="el" href="bitfields_8h.html#83e4e6a455897377f9cc3f119777d7d2">bf_compare</a> (<a class="el" href="struct_b_f_buf.html">Bitfield</a> bf1, <a class="el" href="struct_b_f_buf.html">Bitfield</a> bf2)
-</ul>
+<dl class="el"><dd class="mdescRight">Create a new Bitfield object.  <a href="#22dc84a6d194440c86a2ddba08a08ba3"></a><br></dl><li><a class="el" href="struct_b_f_buf.html">Bitfield</a> <a class="el" href="bitfields_8h.html#681c6d96bd90ad1a9815aa3473524edd">copy_bitfield</a> (<a class="el" href="struct_b_f_buf.html">Bitfield</a> source)
+<dl class="el"><dd class="mdescRight">Copies a Bitfield.  <a href="#681c6d96bd90ad1a9815aa3473524edd"></a><br></dl><li>int <a class="el" href="bitfields_8h.html#203675ec8c83546558603bf24be6d938">destroy_bitfield</a> (<a class="el" href="struct_b_f_buf.html">Bitfield</a> *bptr)
+<dl class="el"><dd class="mdescRight">Deletes a bitfield object.  <a href="#203675ec8c83546558603bf24be6d938"></a><br></dl><li>int <a class="el" href="bitfields_8h.html#24b556c73d8ad4d838638735965f8915">set_bit</a> (<a class="el" href="struct_b_f_buf.html">Bitfield</a> bitfield, int element)
+<dl class="el"><dd class="mdescRight">Sets a bit in a Bitfield to 1.  <a href="#24b556c73d8ad4d838638735965f8915"></a><br></dl><li>int <a class="el" href="bitfields_8h.html#d3061818aa08b4bf624cf4778246b701">clear_bit</a> (<a class="el" href="struct_b_f_buf.html">Bitfield</a> bitfield, int element)
+<dl class="el"><dd class="mdescRight">Sets a bit in a Bitfield to 0 (clears it).  <a href="#d3061818aa08b4bf624cf4778246b701"></a><br></dl><li>int <a class="el" href="bitfields_8h.html#e5979492fae86ce526453a18700b9a3c">clear_all_bits</a> (<a class="el" href="struct_b_f_buf.html">Bitfield</a> bitfield)
+<dl class="el"><dd class="mdescRight">Clears an entire Bitfield (ie sets all bits to 0).  <a href="#e5979492fae86ce526453a18700b9a3c"></a><br></dl><li>int <a class="el" href="bitfields_8h.html#15f5f583c9a272cc32a1114249d5aa5b">set_all_bits</a> (<a class="el" href="struct_b_f_buf.html">Bitfield</a> bitfield)
+<dl class="el"><dd class="mdescRight">Sets an entire Bitfield (ie sets all bits to 1, all bytes to 0xff).  <a href="#15f5f583c9a272cc32a1114249d5aa5b"></a><br></dl><li>int <a class="el" href="bitfields_8h.html#d210c275b3c58c3b52a48803326ddc54">get_bit</a> (<a class="el" href="struct_b_f_buf.html">Bitfield</a> bitfield, int element)
+<dl class="el"><dd class="mdescRight">Gets the value of the bit at the specified offset in the Bitfield.  <a href="#d210c275b3c58c3b52a48803326ddc54"></a><br></dl><li>int <a class="el" href="bitfields_8h.html#552f58f2765709031479a1a51b918fe3">toggle_bit</a> (<a class="el" href="struct_b_f_buf.html">Bitfield</a> bitfield, int element)
+<dl class="el"><dd class="mdescRight">Switches the value of the specified bit in a Bitfield.  <a href="#552f58f2765709031479a1a51b918fe3"></a><br></dl><li>int <a class="el" href="bitfields_8h.html#0a574f8eaf5b71f90da69c3582135a26">nr_bits_set</a> (<a class="el" href="struct_b_f_buf.html">Bitfield</a> bitfield)
+<dl class="el"><dd class="mdescRight">Gets the number of bits set to 1 in the given Bitfield.  <a href="#0a574f8eaf5b71f90da69c3582135a26"></a><br></dl><li>int <a class="el" href="bitfields_8h.html#6ef99585813d224acd33676d08870f95">bf_equal</a> (<a class="el" href="struct_b_f_buf.html">Bitfield</a> bf1, <a class="el" href="struct_b_f_buf.html">Bitfield</a> bf2)
+<dl class="el"><dd class="mdescRight">Checks two Bitfield objects for equality of all bits.  <a href="#6ef99585813d224acd33676d08870f95"></a><br></dl><li>int <a class="el" href="bitfields_8h.html#83e4e6a455897377f9cc3f119777d7d2">bf_compare</a> (<a class="el" href="struct_b_f_buf.html">Bitfield</a> bf1, <a class="el" href="struct_b_f_buf.html">Bitfield</a> bf2)
+<dl class="el"><dd class="mdescRight">Compares two Bitfield objects.  <a href="#83e4e6a455897377f9cc3f119777d7d2"></a><br></dl></ul>
 <hr><h2>Typedef Documentation</h2>
 <a class="anchor" name="4dd4ca04618ab319a08ff7cb48d02653"></a><!-- doxytag: member="bitfields.h::BFBaseType" ref="4dd4ca04618ab319a08ff7cb48d02653" args="" -->
 <div class="memitem">
@@ -108,8 +108,12 @@
 <div class="memdoc">
 
 <p>
+Compares two Bitfield objects. 
+<p>
+Comparison is done from the start of the bitfield onwards. The Bitfields compared must have the same number of elements!<p>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>0 if the two are the same; 1 if bf1 is less; -1 if bf2 is less. </dd></dl>
 
-<p>References <a class="el" href="struct_b_f_buf.html#3e18e5ab1201e205ce88c473a2f4bf99">BFBuf::bytes</a>, <a class="el" href="struct_b_f_buf.html#3c5df9c474b82fd6fbb560987c2492c8">BFBuf::elements</a>, and <a class="el" href="struct_b_f_buf.html#be406d7ef31ddd9f46750c60e82264da">BFBuf::field</a>.</p>
+<p>References <a class="el" href="bitfields_8c.html#fe9f2098291462ba91508ce136a7f126">BaseTypeBits</a>, <a class="el" href="bitfields_8c.html#925c55b19adb39808581b7cbbc376c0a">BaseTypeSize</a>, <a class="el" href="struct_b_f_buf.html#3e18e5ab1201e205ce88c473a2f4bf99">BFBuf::bytes</a>, <a class="el" href="struct_b_f_buf.html#3c5df9c474b82fd6fbb560987c2492c8">BFBuf::elements</a>, and <a class="el" href="struct_b_f_buf.html#be406d7ef31ddd9f46750c60e82264da">BFBuf::field</a>.</p>
 
 </div>
 </div><p>
@@ -139,8 +143,12 @@
 <div class="memdoc">
 
 <p>
+Checks two Bitfield objects for equality of all bits. 
+<p>
+The Bitfields compared must have the same number of elements!<p>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>Boolean: false if the two bitfields are different, true if they are the same. </dd></dl>
 
-<p>References <a class="el" href="struct_b_f_buf.html#3e18e5ab1201e205ce88c473a2f4bf99">BFBuf::bytes</a>, <a class="el" href="struct_b_f_buf.html#3c5df9c474b82fd6fbb560987c2492c8">BFBuf::elements</a>, and <a class="el" href="struct_b_f_buf.html#be406d7ef31ddd9f46750c60e82264da">BFBuf::field</a>.</p>
+<p>References <a class="el" href="bitfields_8c.html#fe9f2098291462ba91508ce136a7f126">BaseTypeBits</a>, <a class="el" href="bitfields_8c.html#925c55b19adb39808581b7cbbc376c0a">BaseTypeSize</a>, <a class="el" href="struct_b_f_buf.html#3e18e5ab1201e205ce88c473a2f4bf99">BFBuf::bytes</a>, <a class="el" href="struct_b_f_buf.html#3c5df9c474b82fd6fbb560987c2492c8">BFBuf::elements</a>, and <a class="el" href="struct_b_f_buf.html#be406d7ef31ddd9f46750c60e82264da">BFBuf::field</a>.</p>
 
 </div>
 </div><p>
@@ -161,6 +169,9 @@
 <div class="memdoc">
 
 <p>
+Clears an entire Bitfield (ie sets all bits to 0). 
+<p>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>False if passed a NULL pointer; otherwise true. </dd></dl>
 
 <p>References <a class="el" href="struct_b_f_buf.html#3e18e5ab1201e205ce88c473a2f4bf99">BFBuf::bytes</a>, <a class="el" href="struct_b_f_buf.html#be406d7ef31ddd9f46750c60e82264da">BFBuf::field</a>, and <a class="el" href="struct_b_f_buf.html#ba6696ae0a592f8980adf0e7f40ce8f9">BFBuf::nr_bits_set</a>.</p>
 
@@ -194,8 +205,19 @@
 <div class="memdoc">
 
 <p>
+Sets a bit in a Bitfield to 0 (clears it). 
+<p>
+The number of bits set is decreased by 1 iff the clearing of the specified bit has resulted in a change in the bitfield.<p>
+If the offset specified does not exist within this Bitfield, the function returns false (plus an error message is printed). Otherwise it returns true.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>Bitfield</em>&nbsp;</td><td>The Bitfield object to work with. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>element</em>&nbsp;</td><td>The offset of the bit to set. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>Boolean (see description). </dd></dl>
 
-<p>References <a class="el" href="struct_b_f_buf.html#be406d7ef31ddd9f46750c60e82264da">BFBuf::field</a>, and <a class="el" href="struct_b_f_buf.html#ba6696ae0a592f8980adf0e7f40ce8f9">BFBuf::nr_bits_set</a>.</p>
+<p>References <a class="el" href="bitfields_8c.html#fe9f2098291462ba91508ce136a7f126">BaseTypeBits</a>, <a class="el" href="struct_b_f_buf.html#be406d7ef31ddd9f46750c60e82264da">BFBuf::field</a>, and <a class="el" href="struct_b_f_buf.html#ba6696ae0a592f8980adf0e7f40ce8f9">BFBuf::nr_bits_set</a>.</p>
 
 </div>
 </div><p>
@@ -216,6 +238,15 @@
 <div class="memdoc">
 
 <p>
+Copies a Bitfield. 
+<p>
+Creates a new bitfield object whihc is an exact duplicate of the source Bitfield.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>source</em>&nbsp;</td><td>The Bitfield to copy </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>The duplicate Bitfield (or NULL if it was passed NULL). </dd></dl>
 
 <p>References <a class="el" href="struct_b_f_buf.html#3e18e5ab1201e205ce88c473a2f4bf99">BFBuf::bytes</a>, <a class="el" href="bitfields_8c.html#22dc84a6d194440c86a2ddba08a08ba3">create_bitfield()</a>, <a class="el" href="struct_b_f_buf.html#3c5df9c474b82fd6fbb560987c2492c8">BFBuf::elements</a>, <a class="el" href="struct_b_f_buf.html#be406d7ef31ddd9f46750c60e82264da">BFBuf::field</a>, and <a class="el" href="struct_b_f_buf.html#ba6696ae0a592f8980adf0e7f40ce8f9">BFBuf::nr_bits_set</a>.</p>
 
@@ -238,8 +269,16 @@
 <div class="memdoc">
 
 <p>
+Create a new Bitfield object. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>nr_of_elements</em>&nbsp;</td><td>The number of bits the field should contain. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>The new Bitfield object. </dd></dl>
 
-<p>References <a class="el" href="struct_b_f_buf.html#3e18e5ab1201e205ce88c473a2f4bf99">BFBuf::bytes</a>, <a class="el" href="cl_8h.html#4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="struct_b_f_buf.html#3c5df9c474b82fd6fbb560987c2492c8">BFBuf::elements</a>, <a class="el" href="struct_b_f_buf.html#be406d7ef31ddd9f46750c60e82264da">BFBuf::field</a>, and <a class="el" href="struct_b_f_buf.html#ba6696ae0a592f8980adf0e7f40ce8f9">BFBuf::nr_bits_set</a>.</p>
+<p>References <a class="el" href="bitfields_8c.html#fe9f2098291462ba91508ce136a7f126">BaseTypeBits</a>, <a class="el" href="bitfields_8c.html#925c55b19adb39808581b7cbbc376c0a">BaseTypeSize</a>, <a class="el" href="struct_b_f_buf.html#3e18e5ab1201e205ce88c473a2f4bf99">BFBuf::bytes</a>, <a class="el" href="cl_8h.html#4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="struct_b_f_buf.html#3c5df9c474b82fd6fbb560987c2492c8">BFBuf::elements</a>, <a class="el" href="struct_b_f_buf.html#be406d7ef31ddd9f46750c60e82264da">BFBuf::field</a>, and <a class="el" href="struct_b_f_buf.html#ba6696ae0a592f8980adf0e7f40ce8f9">BFBuf::nr_bits_set</a>.</p>
 
 <p>Referenced by <a class="el" href="bitfields_8h.html#681c6d96bd90ad1a9815aa3473524edd">copy_bitfield()</a>, <a class="el" href="parse__actions_8h.html#c4a1a3059f49c902206ded175e91c2d8">do_delete_lines()</a>, <a class="el" href="parse__actions_8h.html#4496bd424ac57e01410f15563f12fe13">do_delete_lines_num()</a>, <a class="el" href="parse__actions_8h.html#2d2735c622403fc1509ad9273e2cf368">do_reduce()</a>, <a class="el" href="parse__actions_8h.html#2aaabbb6bcc4e5210745065baaaf715c">do_StandardQuery()</a>, and <a class="el" href="eval_8c.html#bcf01813cbf1161269761c3d6a2dc239">matchfirstpattern()</a>.</p>
 
@@ -262,6 +301,9 @@
 <div class="memdoc">
 
 <p>
+Deletes a bitfield object. 
+<p>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>Always 1. </dd></dl>
 
 <p>Referenced by <a class="el" href="parse__actions_8h.html#c4a1a3059f49c902206ded175e91c2d8">do_delete_lines()</a>, <a class="el" href="parse__actions_8h.html#4496bd424ac57e01410f15563f12fe13">do_delete_lines_num()</a>, <a class="el" href="parse__actions_8h.html#2d2735c622403fc1509ad9273e2cf368">do_reduce()</a>, <a class="el" href="parse__actions_8h.html#2aaabbb6bcc4e5210745065baaaf715c">do_StandardQuery()</a>, and <a class="el" href="eval_8c.html#bcf01813cbf1161269761c3d6a2dc239">matchfirstpattern()</a>.</p>
 
@@ -293,8 +335,17 @@
 <div class="memdoc">
 
 <p>
+Gets the value of the bit at the specified offset in the Bitfield. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>Bitfield</em>&nbsp;</td><td>The Bitfield to work with. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>element</em>&nbsp;</td><td>Offset of the desired bit. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>1 if the bit is set; 0 if it isn't; -1 if element is not a legal offset (ie if it's outside the bounds of the bitfield). </dd></dl>
 
-<p>References <a class="el" href="struct_b_f_buf.html#be406d7ef31ddd9f46750c60e82264da">BFBuf::field</a>.</p>
+<p>References <a class="el" href="bitfields_8c.html#fe9f2098291462ba91508ce136a7f126">BaseTypeBits</a>, and <a class="el" href="struct_b_f_buf.html#be406d7ef31ddd9f46750c60e82264da">BFBuf::field</a>.</p>
 
 <p>Referenced by <a class="el" href="ranges_8h.html#0e580152c4bc78d99ac20ea3445c9181">delete_intervals()</a>, <a class="el" href="eval_8c.html#bcf01813cbf1161269761c3d6a2dc239">matchfirstpattern()</a>, and <a class="el" href="ranges_8h.html#07b912b75ffdca85b0e961a6fdb313c4">RangeSetop()</a>.</p>
 
@@ -316,6 +367,8 @@
 </div>
 <div class="memdoc">
 
+<p>
+Gets the number of bits set to 1 in the given Bitfield. 
 <p>
 
 <p>References <a class="el" href="struct_b_f_buf.html#ba6696ae0a592f8980adf0e7f40ce8f9">BFBuf::nr_bits_set</a>.</p>
@@ -341,6 +394,9 @@
 <div class="memdoc">
 
 <p>
+Sets an entire Bitfield (ie sets all bits to 1, all bytes to 0xff). 
+<p>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>False if passed a NULL pointer; otherwise true. </dd></dl>
 
 <p>References <a class="el" href="struct_b_f_buf.html#3e18e5ab1201e205ce88c473a2f4bf99">BFBuf::bytes</a>, <a class="el" href="struct_b_f_buf.html#3c5df9c474b82fd6fbb560987c2492c8">BFBuf::elements</a>, <a class="el" href="struct_b_f_buf.html#be406d7ef31ddd9f46750c60e82264da">BFBuf::field</a>, and <a class="el" href="struct_b_f_buf.html#ba6696ae0a592f8980adf0e7f40ce8f9">BFBuf::nr_bits_set</a>.</p>
 
@@ -374,8 +430,19 @@
 <div class="memdoc">
 
 <p>
+Sets a bit in a Bitfield to 1. 
+<p>
+The number of bits set is increased by 1 iff the setting of the specified bit has resulted in a change in the bitfield.<p>
+If the offset specified does not exist within this Bitfield, the function returns false (plus an error message is printed). Otherwise it returns true.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>Bitfield</em>&nbsp;</td><td>The Bitfield object to work with. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>element</em>&nbsp;</td><td>The offset of the bit to set. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>Boolean (see description). </dd></dl>
 
-<p>References <a class="el" href="struct_b_f_buf.html#be406d7ef31ddd9f46750c60e82264da">BFBuf::field</a>, and <a class="el" href="struct_b_f_buf.html#ba6696ae0a592f8980adf0e7f40ce8f9">BFBuf::nr_bits_set</a>.</p>
+<p>References <a class="el" href="bitfields_8c.html#fe9f2098291462ba91508ce136a7f126">BaseTypeBits</a>, <a class="el" href="struct_b_f_buf.html#be406d7ef31ddd9f46750c60e82264da">BFBuf::field</a>, and <a class="el" href="struct_b_f_buf.html#ba6696ae0a592f8980adf0e7f40ce8f9">BFBuf::nr_bits_set</a>.</p>
 
 <p>Referenced by <a class="el" href="parse__actions_8h.html#c4a1a3059f49c902206ded175e91c2d8">do_delete_lines()</a>, <a class="el" href="parse__actions_8h.html#4496bd424ac57e01410f15563f12fe13">do_delete_lines_num()</a>, <a class="el" href="parse__actions_8h.html#2d2735c622403fc1509ad9273e2cf368">do_reduce()</a>, <a class="el" href="parse__actions_8h.html#2aaabbb6bcc4e5210745065baaaf715c">do_StandardQuery()</a>, and <a class="el" href="eval_8c.html#bcf01813cbf1161269761c3d6a2dc239">matchfirstpattern()</a>.</p>
 
@@ -407,15 +474,26 @@
 <div class="memdoc">
 
 <p>
+Switches the value of the specified bit in a Bitfield. 
+<p>
+The number of set bits is either incremented or decremented, as appropriate.<p>
+If the offset specified does not exist within this Bitfield, the function returns false (plus an error message is printed). Otherwise it returns true.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>Bitfield</em>&nbsp;</td><td>The Bitfield to work with. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>element</em>&nbsp;</td><td>Offset of the bit to flip. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>Boolean (see description). </dd></dl>
 
-<p>References <a class="el" href="struct_b_f_buf.html#be406d7ef31ddd9f46750c60e82264da">BFBuf::field</a>, and <a class="el" href="struct_b_f_buf.html#ba6696ae0a592f8980adf0e7f40ce8f9">BFBuf::nr_bits_set</a>.</p>
+<p>References <a class="el" href="bitfields_8c.html#fe9f2098291462ba91508ce136a7f126">BaseTypeBits</a>, <a class="el" href="struct_b_f_buf.html#be406d7ef31ddd9f46750c60e82264da">BFBuf::field</a>, and <a class="el" href="struct_b_f_buf.html#ba6696ae0a592f8980adf0e7f40ce8f9">BFBuf::nr_bits_set</a>.</p>
 
 <p>Referenced by <a class="el" href="ranges_8h.html#78b58ed6800e15c907fb6f0a5da0ea67">copy_intervals()</a>.</p>
 
 </div>
 </div><p>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Mon Sep 14 01:53:37 2009 for CWB by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Thu Sep 17 01:41:01 2009 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

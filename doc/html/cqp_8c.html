@@ -48,6 +48,7 @@
 <ul>
 <li>int <a class="el" href="cqp_8c.html#847a2de5c1c28c9d7055a2b89ed7dad7">yyparse</a> (void)
 <li>void <a class="el" href="cqp_8c.html#b657ddef65d43cc3ab8dfc2cad0ac5b8">yyrestart</a> (FILE *input_file)
+<li>static void <a class="el" href="cqp_8c.html#92701d8f60df8dd491de169a8a59a4f3">sigINT_signal_handler</a> (int signum)
 <li>void <a class="el" href="cqp_8c.html#bc72b12c7959ec9a5b3aa5269e4f7063">install_signal_handler</a> (void)
 <li>void <a class="el" href="cqp_8c.html#d2da99fc9f3075623960a8364a6c9fec">cqp_randomize</a> (void)
 <li>int <a class="el" href="cqp_8c.html#313990999a7a7c5275682411e9b58c89">initialize_cqp</a> (int argc, char **argv)
@@ -221,7 +222,7 @@
 
 <p>
 
-<p>References <a class="el" href="output_8c.html#c523a4b34d2f925e027d8f433de703c9">cqpmessage()</a>, <a class="el" href="cqp_8h.html#0468a49be67766bbb6399dca8289dc79">signal_handler_is_installed</a>, and <a class="el" href="output_8h.html#9c2eeea9cd09fb001747ef4cc99399a448f2bb70fceb692a2dedd8cea496c44b">Warning</a>.</p>
+<p>References <a class="el" href="output_8c.html#c523a4b34d2f925e027d8f433de703c9">cqpmessage()</a>, <a class="el" href="cqp_8c.html#92701d8f60df8dd491de169a8a59a4f3">sigINT_signal_handler()</a>, <a class="el" href="cqp_8h.html#0468a49be67766bbb6399dca8289dc79">signal_handler_is_installed</a>, and <a class="el" href="output_8h.html#9c2eeea9cd09fb001747ef4cc99399a448f2bb70fceb692a2dedd8cea496c44b">Warning</a>.</p>
 
 <p>Referenced by <a class="el" href="eval_8c.html#6b88f677ea68fdf529f6588033930492">check_alignment_constraints()</a>, <a class="el" href="groups_8c.html#f2a9b2c57eae7adc352b65db3e9d5443">ComputeGroupInternally()</a>, <a class="el" href="targets_8h.html#d74275fdc8c9a0aba0b5df529254c7c6">evaluate_subset()</a>, <a class="el" href="targets_8h.html#8b35d277644a38526a9dd897fe1866f0">evaluate_target()</a>, <a class="el" href="llquery_8c.html#0ddf1224851353fc92bfbff6f499fa97">main()</a>, <a class="el" href="eval_8c.html#6d83579b3075256f14a62888a2e4b284">simulate_dfa()</a>, <a class="el" href="ranges_8h.html#af5f006cef0ac7c1fdb5c9d55558c11a">SortSubcorpus()</a>, and <a class="el" href="ranges_8h.html#816771441eaa5f9006f4187f9d0b99b4">SortSubcorpusRandomize()</a>.</p>
 
@@ -246,6 +247,30 @@
 <p>
 
 <p>References <a class="el" href="cqp_8c.html#2a9765e1178800b29156efd08a3b526e">interruptCallbackHook</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="92701d8f60df8dd491de169a8a59a4f3"></a><!-- doxytag: member="cqp.c::sigINT_signal_handler" ref="92701d8f60df8dd491de169a8a59a4f3" args="(int signum)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void sigINT_signal_handler           </td>
+          <td>(</td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>signum</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+<p>References <a class="el" href="cqp_8h.html#7bb3c47930435c0d1da71fbc5107e981">EvaluationIsRunning</a>, and <a class="el" href="cqp_8h.html#0468a49be67766bbb6399dca8289dc79">signal_handler_is_installed</a>.</p>
+
+<p>Referenced by <a class="el" href="cqp_8h.html#bc72b12c7959ec9a5b3aa5269e4f7063">install_signal_handler()</a>.</p>
 
 </div>
 </div><p>
@@ -431,7 +456,7 @@
 </div>
 </div><p>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Mon Sep 14 01:53:37 2009 for CWB by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Thu Sep 17 01:41:01 2009 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

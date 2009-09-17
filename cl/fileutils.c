@@ -24,28 +24,32 @@
 #include "fileutils.h"
 
 
-off_t file_length(char *filename)
+off_t
+file_length(char *filename)
 {
   struct stat stat_buf;
   if(stat(filename, &stat_buf) == EOF) return(EOF);
   else return(stat_buf.st_size);
 }
 
-off_t fd_file_length(FILE *fd)
+off_t
+fd_file_length(FILE *fd)
 {
   struct stat stat_buf;
   if (fstat(fileno(fd), &stat_buf) == EOF) return(EOF);
   else return(stat_buf.st_size);
 }
 
-off_t fi_file_length(int fileno)
+off_t
+fi_file_length(int fileno)
 {
   struct stat stat_buf;
   if(fstat(fileno, &stat_buf) == EOF) return(EOF);
   else return(stat_buf.st_size);
 }
 
-long fprobe(char *fname)
+long
+fprobe(char *fname)
 {
   struct stat stat_buf;
   

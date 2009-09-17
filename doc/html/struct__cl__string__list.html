@@ -23,16 +23,22 @@
   </div>
 </div>
 <div class="contents">
-<h1>_cl_string_list Struct Reference</h1><!-- doxytag: class="_cl_string_list" --><code>#include &lt;list.h&gt;</code>
+<h1>_cl_string_list Struct Reference</h1><!-- doxytag: class="_cl_string_list" -->Underlying structure for the cl_string_list object.  
+<a href="#_details">More...</a>
+<p>
+<code>#include &lt;list.h&gt;</code>
 <p>
 <h2>Data Fields</h2>
 <ul>
 <li>int <a class="el" href="struct__cl__string__list.html#439227feff9d7f55384e8780cfc2eb82">size</a>
-<li>int <a class="el" href="struct__cl__string__list.html#115235fc25fdf1c03d856bd072b6cead">allocated</a>
-<li>int <a class="el" href="struct__cl__string__list.html#e942cf7841b482b48babe57494b1c2d9">lumpsize</a>
-<li>char ** <a class="el" href="struct__cl__string__list.html#6b121cb8ec17d1734645f705377f63df">data</a>
-</ul>
-<hr><h2>Field Documentation</h2>
+<dl class="el"><dd class="mdescRight">number of elements  <a href="#439227feff9d7f55384e8780cfc2eb82"></a><br></dl><li>int <a class="el" href="struct__cl__string__list.html#115235fc25fdf1c03d856bd072b6cead">allocated</a>
+<dl class="el"><dd class="mdescRight">number of elements, for which space has been allocated  <a href="#115235fc25fdf1c03d856bd072b6cead"></a><br></dl><li>int <a class="el" href="struct__cl__string__list.html#e942cf7841b482b48babe57494b1c2d9">lumpsize</a>
+<dl class="el"><dd class="mdescRight">lump size by which list is reallocated  <a href="#e942cf7841b482b48babe57494b1c2d9"></a><br></dl><li>char ** <a class="el" href="struct__cl__string__list.html#6b121cb8ec17d1734645f705377f63df">data</a>
+<dl class="el"><dd class="mdescRight">pointer to the data  <a href="#6b121cb8ec17d1734645f705377f63df"></a><br></dl></ul>
+<hr><a name="_details"></a><h2>Detailed Description</h2>
+Underlying structure for the cl_string_list object. 
+<p>
+Note -- the data in this object is ONLY an "array" of pointers-to-char. The strings themselves are stored elsewhere. <hr><h2>Field Documentation</h2>
 <a class="anchor" name="115235fc25fdf1c03d856bd072b6cead"></a><!-- doxytag: member="_cl_string_list::allocated" ref="115235fc25fdf1c03d856bd072b6cead" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -44,6 +50,8 @@
 </div>
 <div class="memdoc">
 
+<p>
+number of elements, for which space has been allocated 
 <p>
 
 <p>Referenced by <a class="el" href="list_8c.html#3ddaa979e97ca8e1feb6ab92ecb589df">cl_new_string_list()</a>, and <a class="el" href="list_8c.html#c2c687324983ff852165e42c90104cb3">cl_string_list_set()</a>.</p>
@@ -62,6 +70,8 @@
 <div class="memdoc">
 
 <p>
+pointer to the data 
+<p>
 
 <p>Referenced by <a class="el" href="list_8c.html#29821a3153a5aec8029f2c9f3c548a07">cl_delete_string_list()</a>, <a class="el" href="list_8c.html#bb285311228e30767102e0d821e63644">cl_free_string_list()</a>, <a class="el" href="list_8c.html#3ddaa979e97ca8e1feb6ab92ecb589df">cl_new_string_list()</a>, <a class="el" href="list_8c.html#34bf9985ab4b45d40d82c6224e93d155">cl_string_list_get()</a>, <a class="el" href="list_8c.html#42de57219db6b73e81a37610b5651ff6">cl_string_list_qsort()</a>, and <a class="el" href="list_8c.html#c2c687324983ff852165e42c90104cb3">cl_string_list_set()</a>.</p>
 
@@ -78,6 +88,8 @@
 </div>
 <div class="memdoc">
 
+<p>
+lump size by which list is reallocated 
 <p>
 
 <p>Referenced by <a class="el" href="list_8c.html#3ddaa979e97ca8e1feb6ab92ecb589df">cl_new_string_list()</a>, <a class="el" href="list_8c.html#16ad727b330f2fbad3d0f7bea783b8fd">cl_string_list_lumpsize()</a>, and <a class="el" href="list_8c.html#c2c687324983ff852165e42c90104cb3">cl_string_list_set()</a>.</p>
@@ -96,6 +108,8 @@
 <div class="memdoc">
 
 <p>
+number of elements 
+<p>
 
 <p>Referenced by <a class="el" href="list_8c.html#bb285311228e30767102e0d821e63644">cl_free_string_list()</a>, <a class="el" href="list_8c.html#3ddaa979e97ca8e1feb6ab92ecb589df">cl_new_string_list()</a>, <a class="el" href="list_8c.html#b6fbfc379ef8e7d8195f79c53fbf94d0">cl_string_list_append()</a>, <a class="el" href="list_8c.html#34bf9985ab4b45d40d82c6224e93d155">cl_string_list_get()</a>, <a class="el" href="list_8c.html#42de57219db6b73e81a37610b5651ff6">cl_string_list_qsort()</a>, <a class="el" href="list_8c.html#c2c687324983ff852165e42c90104cb3">cl_string_list_set()</a>, and <a class="el" href="list_8c.html#1957504511cba402e45a9d987c771408">cl_string_list_size()</a>.</p>
 
@@ -104,7 +118,7 @@
 <hr>The documentation for this struct was generated from the following file:<ul>
 <li>cl/<a class="el" href="list_8h.html">list.h</a></ul>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Mon Sep 14 01:53:38 2009 for CWB by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Thu Sep 17 01:41:01 2009 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

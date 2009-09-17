@@ -21,6 +21,17 @@
 
 #include "binsert.h"
 
+/**
+ * Memory reallocation threshold for binserting.
+ *
+ * This threshold applies to "tables" manipulated with binsert_g(). When
+ * the memory for these "tables" is allocated/reallocated, this is done
+ * in increments of REALLOC_THRESHOLD elements. So in theory reallocation
+ * will not be need more than once every REALLOC_THRESHOLD times the
+ * binsert_g() function is called.
+ *
+ * @see binsert_g
+ */
 #define REALLOC_THRESHOLD 16
 
 
@@ -33,11 +44,38 @@
 /* #endif /\* ifdef __svr4__ *\/ */
 
 
-void *binsert_g(const void *key,
-                void **base,
-                size_t *nel,
-                size_t size,
-                int (*compar)(const  void  *,  const  void *))
+
+/**
+ *
+ * Inserts an element into the table of elements at base.
+ *
+ * If base is NULL, a new "table" is created, and a single
+ * element copied into it.
+ *
+ * The memory of this table of elements will be reallocated
+ * if necessary.
+ *
+ * How to call this function:
+ *
+ *  (void) binsert_g(&nr,
+ *                   (void **)&Table,
+ *                   &Nr_Elements,
+ *                   sizeof(int),
+ *                   intcompare);
+ *
+ * @param key     Pointer to the element to add
+ * @param base    Location of pointer to the table
+ * @param nel     Number of elements (will be incremented by this function)
+ * @param size    The size of each element in the table.
+ * @param compar  Comparison function (returns int, takes two pointers as arguments)
+ * @return        Address of the (new) element
+ */
+void *
+binsert_g(const void *key,
+          void **base,
+          size_t *nel,
+          size_t size,
+          int (*compar)(const  void  *,  const  void *))
 {
   int low, high, found, mid, comp;
   
@@ -87,9 +125,7 @@ void *binsert_g(const void *key,
 
       if (*nel % REALLOC_THRESHOLD == 0) {
 
-        (*base) = (void *)cl_realloc(*base,
-                                  size * (*nel +
-                                          REALLOC_THRESHOLD));
+        (*base) = (void *)cl_realloc(*base, size * (*nel + REALLOC_THRESHOLD) );
       }
 
       /* shift the elements from the insertion position to the right */
@@ -108,12 +144,4 @@ void *binsert_g(const void *key,
   }
 }
 
-/* call:
 
-    (void) binsert_g(&nr,
-                     (void **)&Table,
-                     &Nr_Elements,
-                     sizeof(int),
-                     intcompare);
-
-*/

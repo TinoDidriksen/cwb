@@ -28,15 +28,15 @@
 <h2>Functions</h2>
 <ul>
 <li>void <a class="el" href="globals_8c.html#4159ccd1820e8585dcc97d1f32826db7">cl_set_debug_level</a> (int level)
-<li>void <a class="el" href="globals_8c.html#35e6406545412a8882e6f50526707047">cl_set_optimize</a> (int <a class="el" href="structstate.html">state</a>)
-<li>void <a class="el" href="globals_8c.html#3197560aacd773338425252b01c60f3a">cl_set_memory_limit</a> (int limit)
-</ul>
+<dl class="el"><dd class="mdescRight">Sets the debug level configuration variable.  <a href="#4159ccd1820e8585dcc97d1f32826db7"></a><br></dl><li>void <a class="el" href="globals_8c.html#35e6406545412a8882e6f50526707047">cl_set_optimize</a> (int <a class="el" href="structstate.html">state</a>)
+<dl class="el"><dd class="mdescRight">Turns optimization on or off.  <a href="#35e6406545412a8882e6f50526707047"></a><br></dl><li>void <a class="el" href="globals_8c.html#3197560aacd773338425252b01c60f3a">cl_set_memory_limit</a> (int limit)
+<dl class="el"><dd class="mdescRight">Sets the memory limit.  <a href="#3197560aacd773338425252b01c60f3a"></a><br></dl></ul>
 <h2>Variables</h2>
 <ul>
 <li>int <a class="el" href="globals_8c.html#5c4290325b240eac5fe1542a8743286a">cl_debug</a> = 0
-<li>int <a class="el" href="globals_8c.html#783947bd6a04f6ad65c3d25f95a80b9a">cl_optimize</a> = 0
-<li>size_t <a class="el" href="globals_8c.html#8c066560b8ca7c38e328d918b7dca009">cl_memory_limit</a> = 0
-</ul>
+<dl class="el"><dd class="mdescRight">global configuration variable: debug level.  <a href="#5c4290325b240eac5fe1542a8743286a"></a><br></dl><li>int <a class="el" href="globals_8c.html#783947bd6a04f6ad65c3d25f95a80b9a">cl_optimize</a> = 0
+<dl class="el"><dd class="mdescRight">global configuration variable: optimisation.  <a href="#783947bd6a04f6ad65c3d25f95a80b9a"></a><br></dl><li>size_t <a class="el" href="globals_8c.html#8c066560b8ca7c38e328d918b7dca009">cl_memory_limit</a> = 0
+<dl class="el"><dd class="mdescRight">global configuration variable: memory limit.  <a href="#8c066560b8ca7c38e328d918b7dca009"></a><br></dl></ul>
 <hr><h2>Function Documentation</h2>
 <a class="anchor" name="4159ccd1820e8585dcc97d1f32826db7"></a><!-- doxytag: member="globals.c::cl_set_debug_level" ref="4159ccd1820e8585dcc97d1f32826db7" args="(int level)" -->
 <div class="memitem">
@@ -55,6 +55,9 @@
 <div class="memdoc">
 
 <p>
+Sets the debug level configuration variable. 
+<p>
+<dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="globals_8h.html#5c4290325b240eac5fe1542a8743286a" title="global configuration variable: debug level.">cl_debug</a> </dd></dl>
 
 <p>References <a class="el" href="globals_8c.html#5c4290325b240eac5fe1542a8743286a">cl_debug</a>.</p>
 
@@ -79,6 +82,9 @@
 <div class="memdoc">
 
 <p>
+Sets the memory limit. 
+<p>
+NOTE name of parameter differs here and in <a class="el" href="cl_8h.html">cl.h</a> -- TODO <dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="globals_8h.html#8c066560b8ca7c38e328d918b7dca009" title="global configuration variable: memory limit.">cl_memory_limit</a> </dd></dl>
 
 <p>References <a class="el" href="globals_8c.html#8c066560b8ca7c38e328d918b7dca009">cl_memory_limit</a>.</p>
 
@@ -103,6 +109,14 @@
 <div class="memdoc">
 
 <p>
+Turns optimization on or off. 
+<p>
+<dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="globals_8h.html#783947bd6a04f6ad65c3d25f95a80b9a" title="global configuration variable: optimisation.">cl_optimize</a> </dd></dl>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em><a class="el" href="structstate.html">state</a></em>&nbsp;</td><td>Boolean (true turns it on, false turns it off). </td></tr>
+  </table>
+</dl>
 
 <p>References <a class="el" href="globals_8c.html#783947bd6a04f6ad65c3d25f95a80b9a">cl_optimize</a>.</p>
 
@@ -123,7 +137,10 @@
 <div class="memdoc">
 
 <p>
-
+global configuration variable: debug level. 
+<p>
+Controls how many debug messages are printed.<p>
+0 = none (default), 1 = some, 2 = heavy 
 <p>Referenced by <a class="el" href="lexhash_8c.html#b0c83bcda2f4b258d99d41dcfef1dd30">cl_lexhash_check_grow()</a>, <a class="el" href="regopt_8c.html#2c4607eb8e094b7699062df8eb744058">cl_new_regex()</a>, <a class="el" href="regopt_8c.html#b312a681f0a8c861a08f9d26a3f4ab95">cl_regopt_analyse()</a>, <a class="el" href="globals_8c.html#4159ccd1820e8585dcc97d1f32826db7">cl_set_debug_level()</a>, <a class="el" href="cl_8h.html#19c764c027474dcfd9c4c8815d50dbf3">collect_matching_ids()</a>, <a class="el" href="makecomps_8h.html#b8f0ec6caf733eae459326a9c0483608">creat_rev_corpus()</a>, <a class="el" href="attributes_8h.html#7cf9d15574a7e905ee4fcd34c8f2f68f">create_component()</a>, and <a class="el" href="regopt_8c.html#1b1785e702fe108639b79a3fbf6ed84f">make_jump_table()</a>.</p>
 
 </div>
@@ -140,7 +157,10 @@
 <div class="memdoc">
 
 <p>
-
+global configuration variable: memory limit. 
+<p>
+In megabytes; some functions will try to keep to this limit; 0 or less turns the limit off.<p>
+(ensure memory limit &gt; 2GB is correctly converted to byte size or number of ints) 
 <p>Referenced by <a class="el" href="globals_8c.html#3197560aacd773338425252b01c60f3a">cl_set_memory_limit()</a>, and <a class="el" href="makecomps_8h.html#b8f0ec6caf733eae459326a9c0483608">creat_rev_corpus()</a>.</p>
 
 </div>
@@ -157,13 +177,15 @@
 <div class="memdoc">
 
 <p>
-
+global configuration variable: optimisation. 
+<p>
+0 = off, 1 = on (untested / expensive optimisations) 
 <p>Referenced by <a class="el" href="globals_8c.html#35e6406545412a8882e6f50526707047">cl_set_optimize()</a>.</p>
 
 </div>
 </div><p>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Mon Sep 14 01:53:37 2009 for CWB by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Thu Sep 17 01:41:01 2009 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

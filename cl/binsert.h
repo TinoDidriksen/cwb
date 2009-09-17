@@ -15,7 +15,7 @@
  *  WWW at http://www.gnu.org/copyleft/gpl.html).
  */
 
-#if !defined(_BINSERT_H_)
+#ifndef _BINSERT_H_
 #define _BINSERT_H_
 
 void *binsert_g(const void *key,

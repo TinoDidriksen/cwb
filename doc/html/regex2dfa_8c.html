@@ -111,6 +111,9 @@
 </ul>
 <h2>Functions</h2>
 <ul>
+<li>static int <a class="el" href="regex2dfa_8c.html#bb03850a8ac96371276164681d7f9865">GET</a> (void)
+<li>static void <a class="el" href="regex2dfa_8c.html#8903a293346bb080e1e8445051d3aa6d">UNGET</a> (int Ch)
+<li>static void <a class="el" href="regex2dfa_8c.html#a6e5d4c6f7c7c222f0a8f31e1950a0e1">ERROR</a> (char *Format,...)
 <li><a class="el" href="regex2dfa_8c.html#85e55e51529e83620c77e05854041f8c">Lexical</a> <a class="el" href="regex2dfa_8c.html#5241ab804487d705a2d196269abc4fd5">LEX</a> (void)
 <li>void * <a class="el" href="regex2dfa_8c.html#01b2aff7068366c448834355a0de88e5">Allocate</a> (unsigned Bytes)
 <li>void * <a class="el" href="regex2dfa_8c.html#59a03c6c0148d8bb164bdae60fc9122a">Reallocate</a> (void *X, unsigned Bytes)
@@ -146,6 +149,7 @@
 <li>int <a class="el" href="regex2dfa_8c.html#95f481fe07bc4fa4fddcc9186fc80ece">IMax</a>
 <li>char * <a class="el" href="regex2dfa_8c.html#561e28f7d2c546a733a55f8c6cb650c8">Action</a> [7]
 <li>char * <a class="el" href="regex2dfa_8c.html#59cecbf88b195c287c24994a7eadeb1d">LastW</a>
+<li>static char <a class="el" href="regex2dfa_8c.html#42ca09c22dae9f5935837fe1bd30eecb">ChArr</a> [MAX_CHAR]
 <li>char * <a class="el" href="regex2dfa_8c.html#08595cb23823da1d8ad37a3056e08e08">ChP</a>
 <li>int <a class="el" href="regex2dfa_8c.html#209b6053ea2d1b3f488d4014b5c326b2">LINE</a>
 <li>int <a class="el" href="regex2dfa_8c.html#a7c6445759d2f6ed16fb2f0cdfdafe53">ERRORS</a>
@@ -230,6 +234,8 @@
 <div class="memdoc">
 
 <p>
+
+<p>Referenced by <a class="el" href="regex2dfa_8c.html#a6e5d4c6f7c7c222f0a8f31e1950a0e1">ERROR()</a>.</p>
 
 </div>
 </div><p>
@@ -707,6 +713,39 @@
 
 </div>
 </div><p>
+<a class="anchor" name="a6e5d4c6f7c7c222f0a8f31e1950a0e1"></a><!-- doxytag: member="regex2dfa.c::ERROR" ref="a6e5d4c6f7c7c222f0a8f31e1950a0e1" args="(char *Format,...)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void ERROR           </td>
+          <td>(</td>
+          <td class="paramtype">char *&nbsp;</td>
+          <td class="paramname"> <em>Format</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&nbsp;</td>
+          <td class="paramname"> <em>...</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+<p>References <a class="el" href="regex2dfa_8c.html#a7c6445759d2f6ed16fb2f0cdfdafe53">ERRORS</a>, <a class="el" href="regex2dfa_8c.html#209b6053ea2d1b3f488d4014b5c326b2">LINE</a>, and <a class="el" href="regex2dfa_8c.html#ee6f4b0b74820d727dd8fba4f5efa061">MAX_ERRORS</a>.</p>
+
+<p>Referenced by <a class="el" href="regex2dfa_8c.html#5241ab804487d705a2d196269abc4fd5">LEX()</a>, <a class="el" href="regex2dfa_8c.html#bdcca4fd4a2fb73d22de1e1be17141d8">Parse()</a>, and <a class="el" href="regex2dfa_8c.html#408542da0dbfe158bea4aa31c401e4ba">PUSH()</a>.</p>
+
+</div>
+</div><p>
 <a class="anchor" name="1784bd4a21538796cff0bb6e08a17aa9"></a><!-- doxytag: member="regex2dfa.c::FormState" ref="1784bd4a21538796cff0bb6e08a17aa9" args="(int Q)" -->
 <div class="memitem">
 <div class="memproto">
@@ -755,6 +794,30 @@
 
 </div>
 </div><p>
+<a class="anchor" name="bb03850a8ac96371276164681d7f9865"></a><!-- doxytag: member="regex2dfa.c::GET" ref="bb03850a8ac96371276164681d7f9865" args="(void)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">static int GET           </td>
+          <td>(</td>
+          <td class="paramtype">void&nbsp;</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+<p>References <a class="el" href="regex2dfa_8c.html#78d6c2a3f41a4485d1019c35d0232710">currpos</a>, and <a class="el" href="cqp_8h.html#73e30a4cafb3e8b359d93c3f5c4bc986">searchstr</a>.</p>
+
+<p>Referenced by <a class="el" href="regex2dfa_8c.html#5241ab804487d705a2d196269abc4fd5">LEX()</a>.</p>
+
+</div>
+</div><p>
 <a class="anchor" name="6bad0ab1a08bc253f829b23abe41cc56"></a><!-- doxytag: member="regex2dfa.c::Hash" ref="6bad0ab1a08bc253f829b23abe41cc56" args="(char *S)" -->
 <div class="memitem">
 <div class="memproto">
@@ -793,7 +856,7 @@
 
 <p>
 
-<p>References <a class="el" href="regex2dfa_8c.html#08595cb23823da1d8ad37a3056e08e08">ChP</a>, <a class="el" href="regex2dfa_8c.html#78d6c2a3f41a4485d1019c35d0232710">currpos</a>, <a class="el" href="regex2dfa_8c.html#4373711e5505d0ea5066f50e27b3d074">EquMax</a>, <a class="el" href="regex2dfa_8c.html#5ad7f9fa560db288b64854a4080e6486">Equs</a>, <a class="el" href="regex2dfa_8c.html#a7c6445759d2f6ed16fb2f0cdfdafe53">ERRORS</a>, <a class="el" href="regex2dfa_8c.html#114495fc26a75af8f8e5be047b176131">ETab</a>, <a class="el" href="regex2dfa_8c.html#ab1b90f59dc5a2902b083c30abd7ff36">HASH_MAX</a>, <a class="el" href="regex2dfa_8c.html#209b6053ea2d1b3f488d4014b5c326b2">LINE</a>, <a class="el" href="regex2dfa_8c.html#170755e30c36be4904106b7bb279b1ec">NN</a>, <a class="el" href="regex2dfa_8c.html#b260a491c6fc19739138894ab7deff0d">Ss</a>, <a class="el" href="regex2dfa_8c.html#80bffaf26394cc5144152dbfa4c03219">XMax</a>, <a class="el" href="regex2dfa_8c.html#d16b38e7643b781aea9d0d5ab790092d">Xs</a>, and <a class="el" href="regex2dfa_8c.html#3ec799bc6b92e0401d3078ddb17d651d">XStack</a>.</p>
+<p>References <a class="el" href="regex2dfa_8c.html#42ca09c22dae9f5935837fe1bd30eecb">ChArr</a>, <a class="el" href="regex2dfa_8c.html#08595cb23823da1d8ad37a3056e08e08">ChP</a>, <a class="el" href="regex2dfa_8c.html#78d6c2a3f41a4485d1019c35d0232710">currpos</a>, <a class="el" href="regex2dfa_8c.html#4373711e5505d0ea5066f50e27b3d074">EquMax</a>, <a class="el" href="regex2dfa_8c.html#5ad7f9fa560db288b64854a4080e6486">Equs</a>, <a class="el" href="regex2dfa_8c.html#a7c6445759d2f6ed16fb2f0cdfdafe53">ERRORS</a>, <a class="el" href="regex2dfa_8c.html#114495fc26a75af8f8e5be047b176131">ETab</a>, <a class="el" href="regex2dfa_8c.html#ab1b90f59dc5a2902b083c30abd7ff36">HASH_MAX</a>, <a class="el" href="regex2dfa_8c.html#209b6053ea2d1b3f488d4014b5c326b2">LINE</a>, <a class="el" href="regex2dfa_8c.html#170755e30c36be4904106b7bb279b1ec">NN</a>, <a class="el" href="regex2dfa_8c.html#b260a491c6fc19739138894ab7deff0d">Ss</a>, <a class="el" href="regex2dfa_8c.html#80bffaf26394cc5144152dbfa4c03219">XMax</a>, <a class="el" href="regex2dfa_8c.html#d16b38e7643b781aea9d0d5ab790092d">Xs</a>, and <a class="el" href="regex2dfa_8c.html#3ec799bc6b92e0401d3078ddb17d651d">XStack</a>.</p>
 
 <p>Referenced by <a class="el" href="regex2dfa_8h.html#69e30286442eee48a3350d6da9bcd4d8">regex2dfa()</a>.</p>
 
@@ -841,7 +904,7 @@
 
 <p>
 
-<p>References <a class="el" href="regex2dfa_8c.html#85e55e51529e83620c77e05854041f8c689453c75f0779596967f2b603658198">BarT</a>, <a class="el" href="regex2dfa_8c.html#08595cb23823da1d8ad37a3056e08e08">ChP</a>, <a class="el" href="regex2dfa_8c.html#85e55e51529e83620c77e05854041f8c6cf3bdec5b12231825594f4451549771">CommaT</a>, <a class="el" href="regex2dfa_8c.html#85e55e51529e83620c77e05854041f8ca0952bd57cd8829df916b88a3fd1907e">EndT</a>, <a class="el" href="regex2dfa_8c.html#85e55e51529e83620c77e05854041f8c5eec64443af31930009eda225ba0ede1">EqualT</a>, <a class="el" href="regex2dfa_8c.html#85e55e51529e83620c77e05854041f8c0dcaad4253931166f4951fc26cc72304">IdenT</a>, <a class="el" href="regex2dfa_8c.html#59cecbf88b195c287c24994a7eadeb1d">LastW</a>, <a class="el" href="regex2dfa_8c.html#85e55e51529e83620c77e05854041f8ccb1cfa887906873d63c9c24dc3efbfc1">LBrT</a>, <a class="el" href="regex2dfa_8c.html#85e55e51529e83620c77e05854041f8c0326dc54f2dc055b7c82b693b9015721">LParT</a>, <a class="el" href="regex2dfa_8c.html#82acb32225c05e9aa4c524c40bc5852a">MAX_CHAR</a>, <a class="el" href="regex2dfa_8c.html#85e55e51529e83620c77e05854041f8c33046f06443d5a96d2bdd1df60e2eb8c">OneT</a>, <a class="el" href="regex2dfa_8c.html#85e55e51529e83620c77e05854041f8cef9d5c7615ed0cf50672bfde604d1ada">PlusT</a>, <a class="el" href="regex2dfa_8c.html#85e55e51529e83620c77e05854041f8cafb4e9258d4791bb89e6411061e4b96b">RBrT</a>, <a class="el" href="regex2dfa_8c.html#85e55e51529e83620c77e05854041f8c20f835ff5843eaf67b995455680a22aa">RParT</a>, <a class="el" href="regex2dfa_8c.html#85e55e51529e83620c77e05854041f8c8a8429dbaac8201695570c271df348be">StarT</a>, and <a class="el" href="regex2dfa_8c.html#85e55e51529e83620c77e05854041f8c1157804c77f8b3bf80bb9b73553d4d12">ZeroT</a>.</p>
+<p>References <a class="el" href="regex2dfa_8c.html#85e55e51529e83620c77e05854041f8c689453c75f0779596967f2b603658198">BarT</a>, <a class="el" href="regex2dfa_8c.html#42ca09c22dae9f5935837fe1bd30eecb">ChArr</a>, <a class="el" href="regex2dfa_8c.html#08595cb23823da1d8ad37a3056e08e08">ChP</a>, <a class="el" href="regex2dfa_8c.html#85e55e51529e83620c77e05854041f8c6cf3bdec5b12231825594f4451549771">CommaT</a>, <a class="el" href="regex2dfa_8c.html#85e55e51529e83620c77e05854041f8ca0952bd57cd8829df916b88a3fd1907e">EndT</a>, <a class="el" href="regex2dfa_8c.html#85e55e51529e83620c77e05854041f8c5eec64443af31930009eda225ba0ede1">EqualT</a>, <a class="el" href="regex2dfa_8c.html#a6e5d4c6f7c7c222f0a8f31e1950a0e1">ERROR()</a>, <a class="el" href="regex2dfa_8c.html#bb03850a8ac96371276164681d7f9865">GET()</a>, <a class="el" href="regex2dfa_8c.html#85e55e51529e83620c77e05854041f8c0dcaad4253931166f4951fc26cc72304">IdenT</a>, <a class="el" href="regex2dfa_8c.html#59cecbf88b195c287c24994a7eadeb1d">LastW</a>, <a class="el" href="regex2dfa_8c.html#85e55e51529e83620c77e05854041f8ccb1cfa887906873d63c9c24dc3efbfc1">LBrT</a>, <a class="el" href="regex2dfa_8c.html#85e55e51529e83620c77e05854041f8c0326dc54f2dc055b7c82b693b9015721">LParT</a>, <a class="el" href="regex2dfa_8c.html#82acb32225c05e9aa4c524c40bc5852a">MAX_CHAR</a>, <a class="el" href="regex2dfa_8c.html#85e55e51529e83620c77e05854041f8c33046f06443d5a96d2bdd1df60e2eb8c">OneT</a>, <a class="el" href="regex2dfa_8c.html#85e55e51529e83620c77e05854041f8cef9d5c7615ed0cf50672bfde604d1ada">PlusT</a>, <a class="el" href="regex2dfa_8c.html#85e55e51529e83620c77e05854041f8cafb4e9258d4791bb89e6411061e4b96b">RBrT</a>, <a class="el" href="regex2dfa_8c.html#85e55e51529e83620c77e05854041f8c20f835ff5843eaf67b995455680a22aa">RParT</a>, <a class="el" href="regex2dfa_8c.html#85e55e51529e83620c77e05854041f8c8a8429dbaac8201695570c271df348be">StarT</a>, <a class="el" href="regex2dfa_8c.html#8903a293346bb080e1e8445051d3aa6d">UNGET()</a>, and <a class="el" href="regex2dfa_8c.html#85e55e51529e83620c77e05854041f8c1157804c77f8b3bf80bb9b73553d4d12">ZeroT</a>.</p>
 
 <p>Referenced by <a class="el" href="regex2dfa_8c.html#bdcca4fd4a2fb73d22de1e1be17141d8">Parse()</a>.</p>
 
@@ -952,7 +1015,7 @@
 
 <p>
 
-<p>References <a class="el" href="regex2dfa_8c.html#561e28f7d2c546a733a55f8c6cb650c8">Action</a>, <a class="el" href="regex2dfa_8c.html#caf25879c0ef2805e354bdfe64a33f53865555c9f2e0458a7078486aa1b3254f">AND</a>, <a class="el" href="regex2dfa_8c.html#596bacb68a080d7ff2ec635c3a3ad8f88082313d780e0436f515057c62b055b7">AndX</a>, <a class="el" href="regex2dfa_8c.html#caf25879c0ef2805e354bdfe64a33f53a7db066a95277c0ad6aedf5eb9879072">EQU</a>, <a class="el" href="regex2dfa_8c.html#85e55e51529e83620c77e05854041f8c5eec64443af31930009eda225ba0ede1">EqualT</a>, <a class="el" href="regex2dfa_8c.html#85e55e51529e83620c77e05854041f8c0dcaad4253931166f4951fc26cc72304">IdenT</a>, <a class="el" href="regex2dfa_8c.html#59cecbf88b195c287c24994a7eadeb1d">LastW</a>, <a class="el" href="regex2dfa_8c.html#85e55e51529e83620c77e05854041f8ccb1cfa887906873d63c9c24dc3efbfc1">LBrT</a>, <a class="el" href="regex2dfa_8c.html#5241ab804487d705a2d196269abc4fd5">LEX()</a>, <a class="el" href="regex2dfa_8c.html#6ed0508c2a6d62b74d1f15523f531553">LookUp()</a>, <a class="el" href="regex2dfa_8c.html#85e55e51529e83620c77e05854041f8c0326dc54f2dc055b7c82b693b9015721">LParT</a>, <a class="el" href="regex2dfa_8c.html#39875b8f99c45b1cdb767af2b00e7dde">MakeExp()</a>, <a class="el" href="regex2dfa_8c.html#85e55e51529e83620c77e05854041f8c33046f06443d5a96d2bdd1df60e2eb8c">OneT</a>, <a class="el" href="regex2dfa_8c.html#596bacb68a080d7ff2ec635c3a3ad8f8631c6aaf86fb1d620716a5700aedbe8d">OneX</a>, <a class="el" href="regex2dfa_8c.html#caf25879c0ef2805e354bdfe64a33f53fbd0f14f73cfbbf6b15ca1b4418a6209">OPT</a>, <a class="el" href="regex2dfa_8c.html#596bacb68a080d7ff2ec635c3a3ad8f8d06fc8ab18343fcdfde42b5a9d441afc">OptX</a>, <a class="el" href="regex2dfa_8c.html#caf25879c0ef2805e354bdfe64a33f5396727447c0ad447987df1c6415aef074">OR</a>, <a class="el" href="regex2dfa_8c.html#596bacb68a080d7ff2ec635c3a3ad8f8b317a36f4776939cba804563669ea54c">OrX</a>, <a class="el" href="regex2dfa_8c.html#caf25879c0ef2805e354bdfe64a33f53757f5788c17d7ed4b90b65476ac0fc4b">PAR</a>, <a class="el" href="regex2dfa_8c.html#596bacb68a080d7ff2ec635c3a3ad8f8623c970eb0ee28f35d28ed8f60378a9b">PlusX</a>, <a class="el" href="regex2dfa_8c.html#2106695e949772f765546777ef34690e">POP</a>, <a class="el" href="regex2dfa_8c.html#408542da0dbfe158bea4aa31c401e4ba">PUSH()</a>, <a class="el" href="regex2dfa_8c.html#caf25879c0ef2805e354bdfe64a33f53eaa16db28c9626eefe199d718901e291">RULE</a>, <a class="el" href="regex2dfa_8c.html#596bacb68a080d7ff2ec635c3a3ad8f863f49312ea0b86e6aaf46ddc75f52eb0">StarX</a>, <a class="el" href="regex2dfa_8c.html#81d9e475b256d59dec2074d8df383214">Store()</a>, <a class="el" href="regex2dfa_8c.html#596bacb68a080d7ff2ec635c3a3ad8f8730fa278d3988c92b330ea6cb843a422">SymX</a>, <a class="el" href="regex2dfa_8c.html#fc0eef637f1016e8786e45e106a4881e">TOP</a>, <a class="el" href="regex2dfa_8c.html#85e55e51529e83620c77e05854041f8c1157804c77f8b3bf80bb9b73553d4d12">ZeroT</a>, and <a class="el" href="regex2dfa_8c.html#596bacb68a080d7ff2ec635c3a3ad8f8544e1a7313e13a0df9528420b6250247">ZeroX</a>.</p>
+<p>References <a class="el" href="regex2dfa_8c.html#561e28f7d2c546a733a55f8c6cb650c8">Action</a>, <a class="el" href="regex2dfa_8c.html#caf25879c0ef2805e354bdfe64a33f53865555c9f2e0458a7078486aa1b3254f">AND</a>, <a class="el" href="regex2dfa_8c.html#596bacb68a080d7ff2ec635c3a3ad8f88082313d780e0436f515057c62b055b7">AndX</a>, <a class="el" href="regex2dfa_8c.html#caf25879c0ef2805e354bdfe64a33f53a7db066a95277c0ad6aedf5eb9879072">EQU</a>, <a class="el" href="regex2dfa_8c.html#85e55e51529e83620c77e05854041f8c5eec64443af31930009eda225ba0ede1">EqualT</a>, <a class="el" href="regex2dfa_8c.html#a6e5d4c6f7c7c222f0a8f31e1950a0e1">ERROR()</a>, <a class="el" href="regex2dfa_8c.html#85e55e51529e83620c77e05854041f8c0dcaad4253931166f4951fc26cc72304">IdenT</a>, <a class="el" href="regex2dfa_8c.html#59cecbf88b195c287c24994a7eadeb1d">LastW</a>, <a class="el" href="regex2dfa_8c.html#85e55e51529e83620c77e05854041f8ccb1cfa887906873d63c9c24dc3efbfc1">LBrT</a>, <a class="el" href="regex2dfa_8c.html#5241ab804487d705a2d196269abc4fd5">LEX()</a>, <a class="el" href="regex2dfa_8c.html#6ed0508c2a6d62b74d1f15523f531553">LookUp()</a>, <a class="el" href="regex2dfa_8c.html#85e55e51529e83620c77e05854041f8c0326dc54f2dc055b7c82b693b9015721">LParT</a>, <a class="el" href="regex2dfa_8c.html#39875b8f99c45b1cdb767af2b00e7dde">MakeExp()</a>, <a class="el" href="regex2dfa_8c.html#85e55e51529e83620c77e05854041f8c33046f06443d5a96d2bdd1df60e2eb8c">OneT</a>, <a class="el" href="regex2dfa_8c.html#596bacb68a080d7ff2ec635c3a3ad8f8631c6aaf86fb1d620716a5700aedbe8d">OneX</a>, <a class="el" href="regex2dfa_8c.html#caf25879c0ef2805e354bdfe64a33f53fbd0f14f73cfbbf6b15ca1b4418a6209">OPT</a>, <a class="el" href="regex2dfa_8c.html#596bacb68a080d7ff2ec635c3a3ad8f8d06fc8ab18343fcdfde42b5a9d441afc">OptX</a>, <a class="el" href="regex2dfa_8c.html#caf25879c0ef2805e354bdfe64a33f5396727447c0ad447987df1c6415aef074">OR</a>, <a class="el" href="regex2dfa_8c.html#596bacb68a080d7ff2ec635c3a3ad8f8b317a36f4776939cba804563669ea54c">OrX</a>, <a class="el" href="regex2dfa_8c.html#caf25879c0ef2805e354bdfe64a33f53757f5788c17d7ed4b90b65476ac0fc4b">PAR</a>, <a class="el" href="regex2dfa_8c.html#596bacb68a080d7ff2ec635c3a3ad8f8623c970eb0ee28f35d28ed8f60378a9b">PlusX</a>, <a class="el" href="regex2dfa_8c.html#2106695e949772f765546777ef34690e">POP</a>, <a class="el" href="regex2dfa_8c.html#408542da0dbfe158bea4aa31c401e4ba">PUSH()</a>, <a class="el" href="regex2dfa_8c.html#caf25879c0ef2805e354bdfe64a33f53eaa16db28c9626eefe199d718901e291">RULE</a>, <a class="el" href="regex2dfa_8c.html#596bacb68a080d7ff2ec635c3a3ad8f863f49312ea0b86e6aaf46ddc75f52eb0">StarX</a>, <a class="el" href="regex2dfa_8c.html#81d9e475b256d59dec2074d8df383214">Store()</a>, <a class="el" href="regex2dfa_8c.html#596bacb68a080d7ff2ec635c3a3ad8f8730fa278d3988c92b330ea6cb843a422">SymX</a>, <a class="el" href="regex2dfa_8c.html#fc0eef637f1016e8786e45e106a4881e">TOP</a>, <a class="el" href="regex2dfa_8c.html#85e55e51529e83620c77e05854041f8c1157804c77f8b3bf80bb9b73553d4d12">ZeroT</a>, and <a class="el" href="regex2dfa_8c.html#596bacb68a080d7ff2ec635c3a3ad8f8544e1a7313e13a0df9528420b6250247">ZeroX</a>.</p>
 
 <p>Referenced by <a class="el" href="regex2dfa_8h.html#69e30286442eee48a3350d6da9bcd4d8">regex2dfa()</a>.</p>
 
@@ -1009,7 +1072,7 @@
 
 <p>
 
-<p>References <a class="el" href="struct_stack_card.html#ddc5298160c08b52aebfc4f44ab6e37c">StackCard::Q</a>, <a class="el" href="regex2dfa_8c.html#27b296fccb4da1e9cfcf1f9c810e619e">STACK_MAX</a>, and <a class="el" href="struct_stack_card.html#8547d474504a85a4db9b59d6abd21204">StackCard::Tag</a>.</p>
+<p>References <a class="el" href="regex2dfa_8c.html#a6e5d4c6f7c7c222f0a8f31e1950a0e1">ERROR()</a>, <a class="el" href="struct_stack_card.html#ddc5298160c08b52aebfc4f44ab6e37c">StackCard::Q</a>, <a class="el" href="regex2dfa_8c.html#27b296fccb4da1e9cfcf1f9c810e619e">STACK_MAX</a>, and <a class="el" href="struct_stack_card.html#8547d474504a85a4db9b59d6abd21204">StackCard::Tag</a>.</p>
 
 <p>Referenced by <a class="el" href="regex2dfa_8c.html#bdcca4fd4a2fb73d22de1e1be17141d8">Parse()</a>.</p>
 
@@ -1162,6 +1225,30 @@
 
 </div>
 </div><p>
+<a class="anchor" name="8903a293346bb080e1e8445051d3aa6d"></a><!-- doxytag: member="regex2dfa.c::UNGET" ref="8903a293346bb080e1e8445051d3aa6d" args="(int Ch)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void UNGET           </td>
+          <td>(</td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>Ch</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+<p>References <a class="el" href="regex2dfa_8c.html#78d6c2a3f41a4485d1019c35d0232710">currpos</a>.</p>
+
+<p>Referenced by <a class="el" href="regex2dfa_8c.html#5241ab804487d705a2d196269abc4fd5">LEX()</a>.</p>
+
+</div>
+</div><p>
 <a class="anchor" name="426c1001e607d31fe758b9723c8b87a3"></a><!-- doxytag: member="regex2dfa.c::WriteStates" ref="426c1001e607d31fe758b9723c8b87a3" args="(void)" -->
 <div class="memitem">
 <div class="memproto">
@@ -1214,6 +1301,23 @@
 
 </div>
 </div><p>
+<a class="anchor" name="42ca09c22dae9f5935837fe1bd30eecb"></a><!-- doxytag: member="regex2dfa.c::ChArr" ref="42ca09c22dae9f5935837fe1bd30eecb" args="[MAX_CHAR]" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">char <a class="el" href="regex2dfa_8c.html#42ca09c22dae9f5935837fe1bd30eecb">ChArr</a>[MAX_CHAR]<code> [static]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+<p>Referenced by <a class="el" href="regex2dfa_8c.html#2858154e2009b0e6e616f313177762bc">init()</a>, and <a class="el" href="regex2dfa_8c.html#5241ab804487d705a2d196269abc4fd5">LEX()</a>.</p>
+
+</div>
+</div><p>
 <a class="anchor" name="08595cb23823da1d8ad37a3056e08e08"></a><!-- doxytag: member="regex2dfa.c::ChP" ref="08595cb23823da1d8ad37a3056e08e08" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -1244,7 +1348,7 @@
 
 <p>
 
-<p>Referenced by <a class="el" href="regex2dfa_8c.html#2858154e2009b0e6e616f313177762bc">init()</a>.</p>
+<p>Referenced by <a class="el" href="regex2dfa_8c.html#bb03850a8ac96371276164681d7f9865">GET()</a>, <a class="el" href="regex2dfa_8c.html#2858154e2009b0e6e616f313177762bc">init()</a>, and <a class="el" href="regex2dfa_8c.html#8903a293346bb080e1e8445051d3aa6d">UNGET()</a>.</p>
 
 </div>
 </div><p>
@@ -1327,7 +1431,7 @@
 
 <p>
 
-<p>Referenced by <a class="el" href="regex2dfa_8c.html#2858154e2009b0e6e616f313177762bc">init()</a>, and <a class="el" href="regex2dfa_8h.html#69e30286442eee48a3350d6da9bcd4d8">regex2dfa()</a>.</p>
+<p>Referenced by <a class="el" href="regex2dfa_8c.html#a6e5d4c6f7c7c222f0a8f31e1950a0e1">ERROR()</a>, <a class="el" href="regex2dfa_8c.html#2858154e2009b0e6e616f313177762bc">init()</a>, and <a class="el" href="regex2dfa_8h.html#69e30286442eee48a3350d6da9bcd4d8">regex2dfa()</a>.</p>
 
 </div>
 </div><p>
@@ -1504,7 +1608,7 @@
 
 <p>
 
-<p>Referenced by <a class="el" href="regex2dfa_8c.html#2858154e2009b0e6e616f313177762bc">init()</a>.</p>
+<p>Referenced by <a class="el" href="regex2dfa_8c.html#a6e5d4c6f7c7c222f0a8f31e1950a0e1">ERROR()</a>, and <a class="el" href="regex2dfa_8c.html#2858154e2009b0e6e616f313177762bc">init()</a>.</p>
 
 </div>
 </div><p>
@@ -1637,7 +1741,7 @@
 </div>
 </div><p>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Mon Sep 14 01:53:37 2009 for CWB by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Thu Sep 17 01:41:01 2009 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

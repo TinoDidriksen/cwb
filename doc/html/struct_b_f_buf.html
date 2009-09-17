@@ -23,16 +23,20 @@
   </div>
 </div>
 <div class="contents">
-<h1>BFBuf Struct Reference</h1><!-- doxytag: class="BFBuf" --><code>#include &lt;bitfields.h&gt;</code>
+<h1>BFBuf Struct Reference</h1><!-- doxytag: class="BFBuf" -->The Bitfield object.  
+<a href="#_details">More...</a>
+<p>
+<code>#include &lt;bitfields.h&gt;</code>
 <p>
 <h2>Data Fields</h2>
 <ul>
 <li>int <a class="el" href="struct_b_f_buf.html#3c5df9c474b82fd6fbb560987c2492c8">elements</a>
-<li>int <a class="el" href="struct_b_f_buf.html#3e18e5ab1201e205ce88c473a2f4bf99">bytes</a>
-<li>int <a class="el" href="struct_b_f_buf.html#ba6696ae0a592f8980adf0e7f40ce8f9">nr_bits_set</a>
-<li><a class="el" href="bitfields_8h.html#4dd4ca04618ab319a08ff7cb48d02653">BFBaseType</a> * <a class="el" href="struct_b_f_buf.html#be406d7ef31ddd9f46750c60e82264da">field</a>
-</ul>
-<hr><h2>Field Documentation</h2>
+<dl class="el"><dd class="mdescRight">The number of bits in the bitfield.  <a href="#3c5df9c474b82fd6fbb560987c2492c8"></a><br></dl><li>int <a class="el" href="struct_b_f_buf.html#3e18e5ab1201e205ce88c473a2f4bf99">bytes</a>
+<dl class="el"><dd class="mdescRight">The number of bytes the bitfield occupies.  <a href="#3e18e5ab1201e205ce88c473a2f4bf99"></a><br></dl><li>int <a class="el" href="struct_b_f_buf.html#ba6696ae0a592f8980adf0e7f40ce8f9">nr_bits_set</a>
+<dl class="el"><dd class="mdescRight">The number of bits whose value has been assigned.  <a href="#ba6696ae0a592f8980adf0e7f40ce8f9"></a><br></dl><li><a class="el" href="bitfields_8h.html#4dd4ca04618ab319a08ff7cb48d02653">BFBaseType</a> * <a class="el" href="struct_b_f_buf.html#be406d7ef31ddd9f46750c60e82264da">field</a>
+<dl class="el"><dd class="mdescRight">the bitfield data itself.  <a href="#be406d7ef31ddd9f46750c60e82264da"></a><br></dl></ul>
+<hr><a name="_details"></a><h2>Detailed Description</h2>
+The Bitfield object. <hr><h2>Field Documentation</h2>
 <a class="anchor" name="3e18e5ab1201e205ce88c473a2f4bf99"></a><!-- doxytag: member="BFBuf::bytes" ref="3e18e5ab1201e205ce88c473a2f4bf99" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -44,6 +48,8 @@
 </div>
 <div class="memdoc">
 
+<p>
+The number of bytes the bitfield occupies. 
 <p>
 
 <p>Referenced by <a class="el" href="bitfields_8h.html#83e4e6a455897377f9cc3f119777d7d2">bf_compare()</a>, <a class="el" href="bitfields_8h.html#6ef99585813d224acd33676d08870f95">bf_equal()</a>, <a class="el" href="bitfields_8h.html#e5979492fae86ce526453a18700b9a3c">clear_all_bits()</a>, <a class="el" href="bitfields_8h.html#681c6d96bd90ad1a9815aa3473524edd">copy_bitfield()</a>, <a class="el" href="bitfields_8h.html#22dc84a6d194440c86a2ddba08a08ba3">create_bitfield()</a>, and <a class="el" href="bitfields_8h.html#15f5f583c9a272cc32a1114249d5aa5b">set_all_bits()</a>.</p>
@@ -62,6 +68,8 @@
 <div class="memdoc">
 
 <p>
+The number of bits in the bitfield. 
+<p>
 
 <p>Referenced by <a class="el" href="bitfields_8h.html#83e4e6a455897377f9cc3f119777d7d2">bf_compare()</a>, <a class="el" href="bitfields_8h.html#6ef99585813d224acd33676d08870f95">bf_equal()</a>, <a class="el" href="bitfields_8h.html#681c6d96bd90ad1a9815aa3473524edd">copy_bitfield()</a>, <a class="el" href="ranges_8h.html#78b58ed6800e15c907fb6f0a5da0ea67">copy_intervals()</a>, <a class="el" href="bitfields_8h.html#22dc84a6d194440c86a2ddba08a08ba3">create_bitfield()</a>, <a class="el" href="ranges_8h.html#0e580152c4bc78d99ac20ea3445c9181">delete_intervals()</a>, and <a class="el" href="bitfields_8h.html#15f5f583c9a272cc32a1114249d5aa5b">set_all_bits()</a>.</p>
 
@@ -79,7 +87,9 @@
 <div class="memdoc">
 
 <p>
-
+the bitfield data itself. 
+<p>
+All elements initialised to 0. 
 <p>Referenced by <a class="el" href="bitfields_8h.html#83e4e6a455897377f9cc3f119777d7d2">bf_compare()</a>, <a class="el" href="bitfields_8h.html#6ef99585813d224acd33676d08870f95">bf_equal()</a>, <a class="el" href="bitfields_8h.html#e5979492fae86ce526453a18700b9a3c">clear_all_bits()</a>, <a class="el" href="bitfields_8h.html#d3061818aa08b4bf624cf4778246b701">clear_bit()</a>, <a class="el" href="bitfields_8h.html#681c6d96bd90ad1a9815aa3473524edd">copy_bitfield()</a>, <a class="el" href="bitfields_8h.html#22dc84a6d194440c86a2ddba08a08ba3">create_bitfield()</a>, <a class="el" href="bitfields_8h.html#d210c275b3c58c3b52a48803326ddc54">get_bit()</a>, <a class="el" href="bitfields_8h.html#15f5f583c9a272cc32a1114249d5aa5b">set_all_bits()</a>, <a class="el" href="bitfields_8h.html#24b556c73d8ad4d838638735965f8915">set_bit()</a>, and <a class="el" href="bitfields_8h.html#552f58f2765709031479a1a51b918fe3">toggle_bit()</a>.</p>
 
 </div>
@@ -96,7 +106,9 @@
 <div class="memdoc">
 
 <p>
-
+The number of bits whose value has been assigned. 
+<p>
+Initialised to 0. 
 <p>Referenced by <a class="el" href="bitfields_8h.html#e5979492fae86ce526453a18700b9a3c">clear_all_bits()</a>, <a class="el" href="bitfields_8h.html#d3061818aa08b4bf624cf4778246b701">clear_bit()</a>, <a class="el" href="bitfields_8h.html#681c6d96bd90ad1a9815aa3473524edd">copy_bitfield()</a>, <a class="el" href="bitfields_8h.html#22dc84a6d194440c86a2ddba08a08ba3">create_bitfield()</a>, <a class="el" href="bitfields_8h.html#0a574f8eaf5b71f90da69c3582135a26">nr_bits_set()</a>, <a class="el" href="bitfields_8h.html#15f5f583c9a272cc32a1114249d5aa5b">set_all_bits()</a>, <a class="el" href="bitfields_8h.html#24b556c73d8ad4d838638735965f8915">set_bit()</a>, and <a class="el" href="bitfields_8h.html#552f58f2765709031479a1a51b918fe3">toggle_bit()</a>.</p>
 
 </div>
@@ -104,7 +116,7 @@
 <hr>The documentation for this struct was generated from the following file:<ul>
 <li>cl/<a class="el" href="bitfields_8h.html">bitfields.h</a></ul>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Mon Sep 14 01:53:38 2009 for CWB by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Thu Sep 17 01:41:01 2009 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

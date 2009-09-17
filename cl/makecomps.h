@@ -22,19 +22,13 @@
 
 #include "attributes.h"
 
-/* note: these functions aren't guaranteed to load the component after creating it! */
-/* (in fact, creat_rev_corpus() would run out of address space if it tried that on a large corpus) */
 
-/* create a sort index */
 int creat_sort_lexicon(Component *lexsrt);
 
-/* create frequency table */
 int creat_freqs(Component *lex);
 
-/* create index for reversed corpus */
-int creat_rev_corpus_idx(Component *component);
-
-/* create reversed corpus */
 int creat_rev_corpus(Component *component);
+
+int creat_rev_corpus_idx(Component *component);
 
 #endif

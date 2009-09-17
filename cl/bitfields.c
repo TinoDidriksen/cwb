@@ -23,10 +23,24 @@
 
 #include "bitfields.h"
 
+/**
+ * Size of the actual field of a Bitfield (in bytes).
+ */
 static int BaseTypeSize = sizeof(BFBaseType);
+/**
+ * Size of the actual field of a Bitfield (in bits).
+ */
 static int BaseTypeBits = sizeof(BFBaseType) * CHAR_BIT;
 
-Bitfield create_bitfield(int nr_of_elements)
+
+/**
+ * Create a new Bitfield object.
+ *
+ * @param nr_of_elements  The number of bits the field should contain.
+ * @return                The new Bitfield object.
+ */
+Bitfield
+create_bitfield(int nr_of_elements)
 {
   int full_cells;
 
@@ -47,7 +61,18 @@ Bitfield create_bitfield(int nr_of_elements)
   return bf;
 }
 
-Bitfield copy_bitfield(Bitfield source)
+
+/**
+ * Copies a Bitfield.
+ *
+ * Creates a new bitfield object whihc is an exact duplicate of
+ * the source Bitfield.
+ *
+ * @param source  The Bitfield to copy
+ * @return        The duplicate Bitfield (or NULL if it was passed NULL).
+ */
+Bitfield
+copy_bitfield(Bitfield source)
 {
   if (source) {
     Bitfield target = create_bitfield(source->elements);
@@ -63,7 +88,13 @@ Bitfield copy_bitfield(Bitfield source)
     return NULL;
 }
 
-int destroy_bitfield(Bitfield *bptr)
+/**
+ * Deletes a bitfield object.
+ *
+ * @return  Always 1.
+ */
+int
+destroy_bitfield(Bitfield *bptr)
 {
   assert(bptr);
 
@@ -78,6 +109,21 @@ int destroy_bitfield(Bitfield *bptr)
   return 1;
 }
 
+/**
+ * Sets a bit in a Bitfield to 1.
+ *
+ * The number of bits set is increased by 1 iff the setting
+ * of the specified bit has resulted in a change in the
+ * bitfield.
+ *
+ * If the offset specified does not exist within this Bitfield,
+ * the function returns false (plus an error message is printed).
+ * Otherwise it returns true.
+ *
+ * @param Bitfield  The Bitfield object to work with.
+ * @param element   The offset of the bit to set.
+ * @return          Boolean (see description).
+ */
 int set_bit(Bitfield bitfield, int element)
 {
   if ((bitfield != NULL) && (element < bitfield->elements)) {
@@ -88,6 +134,7 @@ int set_bit(Bitfield bitfield, int element)
 
     if (bitfield->field[element/BaseTypeBits] != v1)
       bitfield->nr_bits_set++;
+
     return 1;
   }
   else {
@@ -96,7 +143,23 @@ int set_bit(Bitfield bitfield, int element)
   }
 }
 
-int clear_bit(Bitfield bitfield, int element)
+/**
+ * Sets a bit in a Bitfield to 0 (clears it).
+ *
+ * The number of bits set is decreased by 1 iff the clearing
+ * of the specified bit has resulted in a change in the
+ * bitfield.
+ *
+ * If the offset specified does not exist within this Bitfield,
+ * the function returns false (plus an error message is printed).
+ * Otherwise it returns true.
+ *
+ * @param Bitfield  The Bitfield object to work with.
+ * @param element   The offset of the bit to set.
+ * @return          Boolean (see description).
+ */
+int
+clear_bit(Bitfield bitfield, int element)
 {
   if ((bitfield != NULL) && (element < bitfield->elements)) {
 
@@ -115,6 +178,11 @@ int clear_bit(Bitfield bitfield, int element)
   }
 }
 
+/**
+ * Clears an entire Bitfield (ie sets all bits to 0).
+ *
+ * @return  False if passed a NULL pointer; otherwise true.
+ */
 int clear_all_bits(Bitfield bitfield)
 {
   if ((bitfield != NULL)) {
@@ -126,7 +194,13 @@ int clear_all_bits(Bitfield bitfield)
     return 0;
 }
 
-int set_all_bits(Bitfield bitfield)
+/**
+ * Sets an entire Bitfield (ie sets all bits to 1, all bytes to 0xff).
+ *
+ * @return  False if passed a NULL pointer; otherwise true.
+ */
+int
+set_all_bits(Bitfield bitfield)
 {
   if ((bitfield != NULL)) {
     memset((char *)bitfield->field, 0xff, bitfield->bytes);
@@ -137,7 +211,17 @@ int set_all_bits(Bitfield bitfield)
     return 0;
 }
 
-int get_bit(Bitfield bitfield, int element)
+/**
+ * Gets the value of the bit at the specified offset in the Bitfield.
+ *
+ * @param Bitfield  The Bitfield to work with.
+ * @param element   Offset of the desired bit.
+ * @return          1 if the bit is set; 0 if it isn't; -1 if
+ *                  element is not a legal offset (ie if it's
+ *                  outside the bounds of the bitfield).
+ */
+int
+get_bit(Bitfield bitfield, int element)
 {
   if ((bitfield != NULL) && (element < bitfield->elements))
     return 
@@ -151,7 +235,22 @@ int get_bit(Bitfield bitfield, int element)
   }
 }
 
-int toggle_bit(Bitfield bitfield, int element)
+/**
+ * Switches the value of the specified bit in a Bitfield.
+ *
+ * The number of set bits is either incremented or decremented,
+ * as appropriate.
+ *
+ * If the offset specified does not exist within this Bitfield,
+ * the function returns false (plus an error message is printed).
+ * Otherwise it returns true.
+ *
+ * @param Bitfield  The Bitfield to work with.
+ * @param element   Offset of the bit to flip.
+ * @return          Boolean (see description).
+ */
+int
+toggle_bit(Bitfield bitfield, int element)
 {
   if ((bitfield != NULL) && (element < bitfield->elements)) {
 
@@ -170,9 +269,16 @@ int toggle_bit(Bitfield bitfield, int element)
   }
 }
 
-/* ---------------------------------------------------------------------- */
 
-int bf_equal(Bitfield bf1, Bitfield bf2) 
+/**
+ * Checks two Bitfield objects for equality of all bits.
+ *
+ * The Bitfields compared must have the same number of elements!
+ *
+ * @return Boolean: false if the two bitfields are different, true if they are the same.
+ */
+int
+bf_equal(Bitfield bf1, Bitfield bf2)
 {
   int i, items, last_item_bits_used, mask;
 
@@ -195,7 +301,17 @@ int bf_equal(Bitfield bf1, Bitfield bf2)
   return 1;
 }
 
-int bf_compare(Bitfield bf1, Bitfield bf2) 
+
+/**
+ * Compares two Bitfield objects.
+ *
+ * Comparison is done from the start of the bitfield onwards.
+ * The Bitfields compared must have the same number of elements!
+ *
+ * @return  0 if the two are the same; 1 if bf1 is less; -1 if bf2 is less.
+ */
+int
+bf_compare(Bitfield bf1, Bitfield bf2)
 {
   int i, items, last_item_bits_used, mask;
 
@@ -228,6 +344,10 @@ int bf_compare(Bitfield bf1, Bitfield bf2)
   return 0;
 }
 
+
+/**
+ * Gets the number of bits set to 1 in the given Bitfield.
+ */
 int nr_bits_set(Bitfield bitfield)
 {
   return bitfield->nr_bits_set;

@@ -33,28 +33,38 @@
 
 /* global configuration variables */
 
-extern int cl_debug;		/* 0 = none, 1 = some, 2 = heavy */
-
-extern int cl_optimize;		/* 0 = off, 1 = on  (untested / expensive optimisations) */
-
-extern size_t cl_memory_limit;	/* in megabytes (0 = off); some functions will try to keep to this limit */
+extern int cl_debug;
+extern int cl_optimize;
+extern size_t cl_memory_limit;
 
 /* default registry settings */
 #if (!defined(REGISTRY_DEFAULT_PATH))
+/**
+ * The default path assumed for the location of the corpus registry.
+ */
 #define REGISTRY_DEFAULT_PATH  "/corpora/c1/registry"
 #endif
 
 #if (!defined(REGISTRY_ENVVAR))
+/**
+ * The Unix environment variable from which the value of the registry will be taken.
+ */
 #define REGISTRY_ENVVAR        "CORPUS_REGISTRY"
 #endif
 
-/* this is the length of temporary strings which are allocated with a fixed size ... better make it large */
+/**
+ *  this is the length of temporary strings which are allocated with a fixed size ... better make it large
+ */
 #define MAX_LINE_LENGTH        4096
 
-/* this is the length of fixed-size buffers for names and identifiers */
+/**
+ *  this is the length of fixed-size buffers for names and identifiers
+ */
 #define MAX_IDENTIFIER_LENGTH  1024
 
-
+/**
+ * Macro which exits the program when a "to do" point is hit.
+ */
 #define TODO {(void)fprintf(stderr,"TODO point reached: file \"%s\", line %d\n", \
 			    __FILE__, \
 			    __LINE__); \

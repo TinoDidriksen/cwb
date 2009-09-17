@@ -127,7 +127,8 @@ unsigned char cp1251_nocase_tab[256] = {
 /* cp-1251 (ASCII + cyrillic) diacritic-stripping is just the identity mapping */
 
 
-/****
+/*
+***
 unsigned char ascii_nocase_tab[256] = {
     0,  
     1,  2,  3,  4,  5,  6,  7,  8,  9, 10,
@@ -161,7 +162,8 @@ unsigned char ascii_nocase_tab[256] = {
 };
 ****/
 
-/****
+/*
+***
 unsigned char binary_nocase_tab[256] = {
     0,  
     1,  2,  3,  4,  5,  6,  7,  8,  9, 10,

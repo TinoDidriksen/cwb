@@ -48,7 +48,9 @@
 </ul>
 <h2>Functions</h2>
 <ul>
+<li>static int <a class="el" href="groups_8c.html#0a2c07fd6518017e68b5464696d88dd6">compare_by_freq</a> (const void *p1, const void *p2)
 <li>int <a class="el" href="groups_8c.html#2a53c8d6910d524970bdb62bec267298">sum_freqs</a> (<a class="el" href="struct__id__cnt__mapping.html">ID_Count_Mapping</a> *buffer, int bufsize, int cutoff_f)
+<li>static int <a class="el" href="groups_8c.html#6b215a40225ba01f9709fb54faed5e7f">compare_st_cells</a> (const void *p1, const void *p2)
 <li>int <a class="el" href="groups_8c.html#7e13fc9876a7a186bfa8690653991fbe">get_group_id</a> (<a class="el" href="struct__grouptable.html">Group</a> *group, int i, int target)
 <li>char * <a class="el" href="groups_8c.html#4a3455ceda70032b48a75c24f9064512">Group_id2str</a> (<a class="el" href="struct__grouptable.html">Group</a> *group, int id, int target)
 <li><a class="el" href="struct__grouptable.html">Group</a> * <a class="el" href="groups_8c.html#f2a9b2c57eae7adc352b65db3e9d5443">ComputeGroupInternally</a> (<a class="el" href="struct__grouptable.html">Group</a> *group)
@@ -142,6 +144,68 @@
 </div>
 </div><p>
 <hr><h2>Function Documentation</h2>
+<a class="anchor" name="0a2c07fd6518017e68b5464696d88dd6"></a><!-- doxytag: member="groups.c::compare_by_freq" ref="0a2c07fd6518017e68b5464696d88dd6" args="(const void *p1, const void *p2)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">static int compare_by_freq           </td>
+          <td>(</td>
+          <td class="paramtype">const void *&nbsp;</td>
+          <td class="paramname"> <em>p1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const void *&nbsp;</td>
+          <td class="paramname"> <em>p2</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+<p>Referenced by <a class="el" href="groups_8c.html#2a53c8d6910d524970bdb62bec267298">sum_freqs()</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="6b215a40225ba01f9709fb54faed5e7f"></a><!-- doxytag: member="groups.c::compare_st_cells" ref="6b215a40225ba01f9709fb54faed5e7f" args="(const void *p1, const void *p2)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">static int compare_st_cells           </td>
+          <td>(</td>
+          <td class="paramtype">const void *&nbsp;</td>
+          <td class="paramname"> <em>p1</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const void *&nbsp;</td>
+          <td class="paramname"> <em>p2</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+<p>Referenced by <a class="el" href="groups_8c.html#f2a9b2c57eae7adc352b65db3e9d5443">ComputeGroupInternally()</a>.</p>
+
+</div>
+</div><p>
 <a class="anchor" name="1e8f0dbf75269530b413a3aff966d326"></a><!-- doxytag: member="groups.c::compute_grouping" ref="1e8f0dbf75269530b413a3aff966d326" args="(CorpusList *cl, FieldType source_field, int source_offset, char *source_attr_name, FieldType target_field, int target_offset, char *target_attr_name, int cutoff_freq)" -->
 <div class="memitem">
 <div class="memproto">
@@ -253,7 +317,7 @@
 
 <p>
 
-<p>References <a class="el" href="binsert_8c.html#8e88957097a213a2bf28f0e9bf5804c5">binsert_g()</a>, <a class="el" href="cl_8h.html#7480d6ea66599014088f218912ddb89f">cl_realloc()</a>, <a class="el" href="struct__grouptable.html#7182b661c61614464e669f95f786a309">_grouptable::count_cells</a>, <a class="el" href="options_8h.html#c77cbe1636407b6a256fc41b86bcae61655c30a6f8af6ca3bac5588e72b7e489">cqp</a>, <a class="el" href="output_8c.html#c523a4b34d2f925e027d8f433de703c9">cqpmessage()</a>, <a class="el" href="struct__grouptable.html#c8151f65d27bd2e0906148b834a5f20d">_grouptable::cutoff_frequency</a>, <a class="el" href="cqp_8h.html#7bb3c47930435c0d1da71fbc5107e981">EvaluationIsRunning</a>, <a class="el" href="groups_8c.html#74cca697a80bcc3362945f9b6dd1f3d7">free_group()</a>, <a class="el" href="struct__id__cnt__mapping.html#e0d22272b68e75d19ac0b80c01f806b6">_id_cnt_mapping::freq</a>, <a class="el" href="groups_8c.html#7e13fc9876a7a186bfa8690653991fbe">get_group_id()</a>, <a class="el" href="cqp_8c.html#bc72b12c7959ec9a5b3aa5269e4f7063">install_signal_handler()</a>, <a class="el" href="struct__grouptable.html#5b6c6bc044d8d41a8321f463b5b2cf2b">_grouptable::my_corpus</a>, <a class="el" href="eval_8h.html#3e09e32a43ebd8c07c825457913f32f2dac7a9c6feeb30eb07feb677d5f49bbb">node</a>, <a class="el" href="struct__grouptable.html#a6e3b6f5feb3d1004ca3803fb6bfa6dd">_grouptable::nr_cells</a>, <a class="el" href="options_8h.html#c565e289b478056adf8644dbbceea911">progress_bar</a>, <a class="el" href="macros_8c.html#3340add05af2ca6dc75f920be9172e9f">progress_bar_clear_line()</a>, <a class="el" href="macros_8c.html#3af5a7f8953b6e5b320f8a21400c5dc4">progress_bar_percentage()</a>, <a class="el" href="struct__id__cnt__mapping.html#339d22b3e442946380f98ed19e320db2">_id_cnt_mapping::s</a>, <a class="el" href="structcl.html#439227feff9d7f55384e8780cfc2eb82">cl::size</a>, <a class="el" href="groups_8c.html#2a53c8d6910d524970bdb62bec267298">sum_freqs()</a>, <a class="el" href="struct__id__cnt__mapping.html#c310d9181e916ba43604099aee272c71">_id_cnt_mapping::t</a>, <a class="el" href="output_8h.html#9c2eeea9cd09fb001747ef4cc99399a448f2bb70fceb692a2dedd8cea496c44b">Warning</a>, and <a class="el" href="options_8h.html#d53e63bcd94f1ad540b16323bedf63e7">which_app</a>.</p>
+<p>References <a class="el" href="binsert_8c.html#8e88957097a213a2bf28f0e9bf5804c5">binsert_g()</a>, <a class="el" href="cl_8h.html#7480d6ea66599014088f218912ddb89f">cl_realloc()</a>, <a class="el" href="groups_8c.html#6b215a40225ba01f9709fb54faed5e7f">compare_st_cells()</a>, <a class="el" href="struct__grouptable.html#7182b661c61614464e669f95f786a309">_grouptable::count_cells</a>, <a class="el" href="options_8h.html#c77cbe1636407b6a256fc41b86bcae61655c30a6f8af6ca3bac5588e72b7e489">cqp</a>, <a class="el" href="output_8c.html#c523a4b34d2f925e027d8f433de703c9">cqpmessage()</a>, <a class="el" href="struct__grouptable.html#c8151f65d27bd2e0906148b834a5f20d">_grouptable::cutoff_frequency</a>, <a class="el" href="cqp_8h.html#7bb3c47930435c0d1da71fbc5107e981">EvaluationIsRunning</a>, <a class="el" href="groups_8c.html#74cca697a80bcc3362945f9b6dd1f3d7">free_group()</a>, <a class="el" href="struct__id__cnt__mapping.html#e0d22272b68e75d19ac0b80c01f806b6">_id_cnt_mapping::freq</a>, <a class="el" href="groups_8c.html#7e13fc9876a7a186bfa8690653991fbe">get_group_id()</a>, <a class="el" href="cqp_8c.html#bc72b12c7959ec9a5b3aa5269e4f7063">install_signal_handler()</a>, <a class="el" href="struct__grouptable.html#5b6c6bc044d8d41a8321f463b5b2cf2b">_grouptable::my_corpus</a>, <a class="el" href="eval_8h.html#3e09e32a43ebd8c07c825457913f32f2dac7a9c6feeb30eb07feb677d5f49bbb">node</a>, <a class="el" href="struct__grouptable.html#a6e3b6f5feb3d1004ca3803fb6bfa6dd">_grouptable::nr_cells</a>, <a class="el" href="options_8h.html#c565e289b478056adf8644dbbceea911">progress_bar</a>, <a class="el" href="macros_8c.html#3340add05af2ca6dc75f920be9172e9f">progress_bar_clear_line()</a>, <a class="el" href="macros_8c.html#3af5a7f8953b6e5b320f8a21400c5dc4">progress_bar_percentage()</a>, <a class="el" href="struct__id__cnt__mapping.html#339d22b3e442946380f98ed19e320db2">_id_cnt_mapping::s</a>, <a class="el" href="structcl.html#439227feff9d7f55384e8780cfc2eb82">cl::size</a>, <a class="el" href="groups_8c.html#2a53c8d6910d524970bdb62bec267298">sum_freqs()</a>, <a class="el" href="struct__id__cnt__mapping.html#c310d9181e916ba43604099aee272c71">_id_cnt_mapping::t</a>, <a class="el" href="output_8h.html#9c2eeea9cd09fb001747ef4cc99399a448f2bb70fceb692a2dedd8cea496c44b">Warning</a>, and <a class="el" href="options_8h.html#d53e63bcd94f1ad540b16323bedf63e7">which_app</a>.</p>
 
 <p>Referenced by <a class="el" href="groups_8h.html#1e8f0dbf75269530b413a3aff966d326">compute_grouping()</a>.</p>
 
@@ -433,14 +497,14 @@
 
 <p>
 
-<p>References <a class="el" href="struct__id__cnt__mapping.html#e0d22272b68e75d19ac0b80c01f806b6">_id_cnt_mapping::freq</a>, <a class="el" href="options_8h.html#c565e289b478056adf8644dbbceea911">progress_bar</a>, <a class="el" href="macros_8c.html#4954aafaf8b8180d0846f011414d2add">progress_bar_message()</a>, <a class="el" href="macros_8c.html#3af5a7f8953b6e5b320f8a21400c5dc4">progress_bar_percentage()</a>, <a class="el" href="struct__id__cnt__mapping.html#339d22b3e442946380f98ed19e320db2">_id_cnt_mapping::s</a>, and <a class="el" href="struct__id__cnt__mapping.html#c310d9181e916ba43604099aee272c71">_id_cnt_mapping::t</a>.</p>
+<p>References <a class="el" href="groups_8c.html#0a2c07fd6518017e68b5464696d88dd6">compare_by_freq()</a>, <a class="el" href="struct__id__cnt__mapping.html#e0d22272b68e75d19ac0b80c01f806b6">_id_cnt_mapping::freq</a>, <a class="el" href="options_8h.html#c565e289b478056adf8644dbbceea911">progress_bar</a>, <a class="el" href="macros_8c.html#4954aafaf8b8180d0846f011414d2add">progress_bar_message()</a>, <a class="el" href="macros_8c.html#3af5a7f8953b6e5b320f8a21400c5dc4">progress_bar_percentage()</a>, <a class="el" href="struct__id__cnt__mapping.html#339d22b3e442946380f98ed19e320db2">_id_cnt_mapping::s</a>, and <a class="el" href="struct__id__cnt__mapping.html#c310d9181e916ba43604099aee272c71">_id_cnt_mapping::t</a>.</p>
 
 <p>Referenced by <a class="el" href="groups_8c.html#f2a9b2c57eae7adc352b65db3e9d5443">ComputeGroupInternally()</a>.</p>
 
 </div>
 </div><p>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Mon Sep 14 01:53:37 2009 for CWB by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Thu Sep 17 01:41:01 2009 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

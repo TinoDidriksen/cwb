@@ -25,12 +25,17 @@
 
 typedef unsigned char BFBaseType;
 
+/**
+ * The Bitfield object.
+ */
 typedef struct {
-  int elements;
-  int bytes;
-  int nr_bits_set;
-  BFBaseType *field;
+  int elements;         /**< The number of bits in the bitfield */
+  int bytes;            /**< The number of bytes the bitfield occupies */
+  int nr_bits_set;      /**< The number of bits whose value has been assigned. Initialised to 0. */
+  BFBaseType *field;    /**< the bitfield data itself. All elements initialised to 0. */
 } BFBuf, *Bitfield;
+
+
 
 Bitfield create_bitfield(int nr_of_elements);
 

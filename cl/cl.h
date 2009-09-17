@@ -24,6 +24,8 @@
 /*
  *  declaration of opaque object structures,
  *  and definition of public objects, enums, and constants
+ *
+ *  (The underlying structures are defined elsewhere.)
  */
 typedef struct TCorpus Corpus;
 typedef union _Attribute Attribute;
@@ -50,6 +52,9 @@ typedef struct TCorpusProperty {
   struct TCorpusProperty *next;
 } *CorpusProperty;
 
+/**
+ * Identifier for a character set supported by CWB.
+ */
 typedef enum ECorpusCharset {
   ascii,
   /* planned support for ISO-8859-* charsets */
@@ -61,7 +66,7 @@ typedef enum ECorpusCharset {
   latin7, latin8, latin9,
   /* hoped-for support for UTF-8 charset */
   utf8,
-  /* everthing else is 'unknown' .. client apps should check the corresponding property value */
+  /* everything else is 'unknown' .. client apps should check the corresponding property value */
   unknown_charset
 } CorpusCharset;
 
@@ -72,10 +77,10 @@ typedef enum ECorpusCharset {
 #define CL_DYN_STRING_SIZE 2048
 
 /**
- *  full definition of DynCallResult structure (needed to allocate space for dynamic function arguments)
+ *  The DynCallResult object (needed to allocate space for dynamic function arguments)
  */
 typedef struct _DCR {
-  int type;                        /* ATTAT_x */
+  int type;              /**< Type of DynCallResult, indicated by one of the  ATTAT_x macro constants*/
   union {
     int intres;
     char *charres;
@@ -84,9 +89,12 @@ typedef struct _DCR {
       Attribute *attr;
       int token_id;
     } parefres;
-  } value;
-  /* buffer for dynamic strings returned by function calls */
-  /* NB: this imposes a hard limit on the size of dynamic strings !!*/
+  } value;               /**< value of the result: can be in, string, float, or p-attribute reference */
+  /**
+   * buffer for dynamic strings returned by function calls
+   * NB: this imposes a hard limit on the size of dynamic strings !!
+   * @see CL_DYN_STRING_SIZE
+   */
   char dynamic_string_buffer[CL_DYN_STRING_SIZE]; 
 } DynCallResult;
 
@@ -122,28 +130,29 @@ typedef struct _DCR {
 /* 
  *  error handling (error values and related functions) 
  */
-#define CDA_OK           0        /* everything fine */
-#define CDA_ENULLATT    -1        /* NULL passed as attribute argument */
-#define CDA_EATTTYPE    -2        /* function was called on illegal attribute */
-#define CDA_EIDORNG     -3        /* id out of range */
-#define CDA_EPOSORNG    -4        /* position out of range */
-#define CDA_EIDXORNG    -5        /* index out of range */
-#define CDA_ENOSTRING   -6        /* no such string encoded */
-#define CDA_EPATTERN    -7        /* illegal pattern */
-#define CDA_ESTRUC      -8        /* no structure at position */
-#define CDA_EALIGN      -9        /* no alignment at position */
-#define CDA_EREMOTE     -10        /* error in remote access */
-#define CDA_ENODATA     -11        /* can't load/create necessary data */
-#define CDA_EARGS       -12        /* error in arguments for dynamic call */
-#define CDA_ENOMEM      -13        /* memory fault [unused] */
-#define CDA_EOTHER        -14        /* other error */
-#define CDA_ENYI        -15        /* not yet implemented */
-#define CDA_EBADREGEX   -16     /* bad regular expression */
-#define CDA_EFSETINV    -17     /* invalid feature set format */
-#define CDA_EBUFFER     -18     /* buffer overflow (hard-coded internal buffer sizes) */
-#define CDA_EINTERNAL   -19     /* internal data consistency error (really bad) */
+#define CDA_OK           0        /**< everything fine */
+#define CDA_ENULLATT    -1        /**< NULL passed as attribute argument */
+#define CDA_EATTTYPE    -2        /**< function was called on illegal attribute */
+#define CDA_EIDORNG     -3        /**< id out of range */
+#define CDA_EPOSORNG    -4        /**< position out of range */
+#define CDA_EIDXORNG    -5        /**< index out of range */
+#define CDA_ENOSTRING   -6        /**< no such string encoded */
+#define CDA_EPATTERN    -7        /**< illegal pattern */
+#define CDA_ESTRUC      -8        /**< no structure at position */
+#define CDA_EALIGN      -9        /**< no alignment at position */
+#define CDA_EREMOTE     -10       /**< error in remote access */
+#define CDA_ENODATA     -11       /**< can't load/create necessary data */
+#define CDA_EARGS       -12       /**< error in arguments for dynamic call */
+#define CDA_ENOMEM      -13       /**< memory fault [unused] */
+#define CDA_EOTHER      -14       /**< other error */
+#define CDA_ENYI        -15       /**< not yet implemented */
+#define CDA_EBADREGEX   -16       /**< bad regular expression */
+#define CDA_EFSETINV    -17       /**< invalid feature set format */
+#define CDA_EBUFFER     -18       /**< buffer overflow (hard-coded internal buffer sizes) */
+#define CDA_EINTERNAL   -19       /**< internal data consistency error (really bad) */
 
-extern int cderrno;                /* is set after access */
+extern int cderrno;
+
 void cdperror(char *message);        /* prints out error string */
 char *cdperror_string(int error_num); /* returns error string */
 
@@ -158,12 +167,13 @@ void *cl_calloc(size_t nr_of_elements, size_t element_size);
 void *cl_realloc(void *block, size_t bytes);
 char *cl_strdup(char *string);
 /* for completeness, the 'safe deallocation' macro cl_free() is also included */
-#define cl_free(p) do { if ((p) != NULL) { free(p); p = NULL; } } while (0) /* the do {...} while (0) should be safe in 'bare' if..then..else blocks */
+#define cl_free(p) do { if ((p) != NULL) { free(p); p = NULL; } } while (0)
+/* the do {...} while (0) should be safe in 'bare' if..then..else blocks */
 
 /*
  *  some CL utility functions
  */
-/* CL internal string comparison (uses signed char on all platforms) */
+
 int cl_strcmp(char *s1, char *s2);
 
 /* string normalization features used by CL regexes and CQP (modify input string!) */
@@ -195,8 +205,8 @@ void cl_set_rng_state(unsigned int i1, unsigned int i2);
 unsigned int cl_random(void);
 double cl_runif(void);
 
-/*
- *  the cl_lexhash class (lexicon hashes, with IDs and frequency counts)
+/**
+ *  The cl_lexhash class (lexicon hashes, with IDs and frequency counts)
  */
 typedef struct _cl_lexhash *cl_lexhash;
 typedef struct _cl_lexhash_entry {
@@ -227,18 +237,21 @@ cl_lexhash_entry
 cl_lexhash_find(cl_lexhash lh, char *token);                  /* returns pointer to entry, NULL if not in hash */
 int cl_lexhash_id(cl_lexhash lh, char *token);                /* returns ID of <token>, -1 if not in hash */
 int cl_lexhash_freq(cl_lexhash lh, char *token);              /* returns frequency of <token>, 0 if not in hash */
-int cl_lexhash_del(cl_lexhash lh, char *token);                      /* deletes <token> from hash & returns its frequency */
+int cl_lexhash_del(cl_lexhash lh, char *token);               /* deletes <token> from hash & returns its frequency */
 int cl_lexhash_size(cl_lexhash lh);                           /* returns number of tokens stored in lexhash */
 
 
-/*
- *  automatically growing lists of integers and strings (just what you always need ...)
+/**
+ * automatically growing list of integers (just what you always need ...)
  */
-typedef struct _cl_int_list    *cl_int_list; /* opaque object structures */
+typedef struct _cl_int_list    *cl_int_list;
+/**
+ * automatically growing list of strings (just what you always need ...)
+ */
 typedef struct _cl_string_list *cl_string_list;
 
 cl_int_list cl_new_int_list(void);                           /* create int list object */
-void cl_delete_int_list(cl_int_list l);                      /* delete object */
+void cl_delete_int_list(cl_int_list l);                      /* delete int list object */
 void cl_int_list_lumpsize(cl_int_list l, int s);             /* memory for the list is allocated in "lumps", default size is 64 entries */
 int cl_int_list_size(cl_int_list l);                         /* current size of list */
 int cl_int_list_get(cl_int_list l, int n);                   /* get value of n-th element in list (0 if out of range) */
@@ -247,7 +260,7 @@ void cl_int_list_append(cl_int_list l, int val);             /* append element t
 void cl_int_list_qsort(cl_int_list l);                       /* sort list (ascending order) */
 
 cl_string_list cl_new_string_list(void);                     /* create string list object */
-void cl_delete_string_list(cl_string_list l);                /* delete object */
+void cl_delete_string_list(cl_string_list l);                /* delete string list object */
 void cl_free_string_list(cl_string_list l);                  /* free() all strings in list (use with care!) */
 void cl_string_list_lumpsize(cl_string_list l, int s);       /* memory for the list is allocated in "lumps", default size is 64 entries */
 int cl_string_list_size(cl_string_list l);                   /* current size of list */
@@ -260,9 +273,11 @@ void cl_string_list_qsort(cl_string_list l);                 /* sort list (using
 /* 
  *  global CL configuration options 
  */
-void cl_set_debug_level(int level);  /* 0 = none (default), 1 = some, 2 = all */
-void cl_set_optimize(int state);     /* 0 = off, 1 = on */
+void cl_set_debug_level(int level);       /* 0 = none (default), 1 = some, 2 = all */
+void cl_set_optimize(int state);          /* 0 = off, 1 = on */
 void cl_set_memory_limit(int megabytes);  /* 0 or less turns limit off */
+
+
 
 /*
  *  CL corpus and attribute 'methods' -- the CL core library
@@ -399,7 +414,8 @@ int cumulative_id_frequency(Attribute *attribute,
                             int *ids,
                             int number_of_ids);
 
-/* collect_matches:
+/**
+ * collect_matches:
  *
  * this one returns an (ordered) list of corpus positions which matches
  * one of the ids given in the list ids. The table is allocated
@@ -423,7 +439,8 @@ int cumulative_id_frequency(Attribute *attribute,
  * WARNING: CURRENTLY UNIMPLEMENTED
  *
  * REMEMBER: this monster returns a list of corpus indices, not a list
- * of ids. */
+ * of ids.
+ */
 
 int *collect_matches(Attribute *attribute,
 

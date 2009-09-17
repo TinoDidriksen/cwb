@@ -46,7 +46,7 @@
 <ul>
 <li>#define <a class="el" href="cdaccess_8c.html#64c71ee8ceeb924235006e59e9915fc4">COMPRESS_DEBUG</a>&nbsp;&nbsp;&nbsp;0
 <li>#define <a class="el" href="cdaccess_8c.html#764796354d59769c4402a8a37dac7e24">check_arg</a>(arg, atyp, rval)
-</ul>
+<dl class="el"><dd class="mdescRight">Checks an Attribute passed as a function argument for usability in that function.  <a href="#764796354d59769c4402a8a37dac7e24"></a><br></dl></ul>
 <h2>Typedefs</h2>
 <ul>
 <li>typedef struct <br class="typebreak">
@@ -55,19 +55,19 @@
 <h2>Functions</h2>
 <ul>
 <li>int <a class="el" href="cdaccess_8c.html#bf5768f9ef1a1fda1d35becaf9053927">cl_strcmp</a> (char *<a class="el" href="cwb-align_8c.html#ac99deaca25373d974a3efbdf554f837">s1</a>, char *<a class="el" href="cwb-align_8c.html#6e160b1019fe31e82941efd8de8076d4">s2</a>)
-<li>char * <a class="el" href="cdaccess_8c.html#8ac6eea4775338bda7be76722186aae5">cdperror_string</a> (int errno)
-<li>void <a class="el" href="cdaccess_8c.html#fda8febb5dbef0056da18adc857f06e7">cdperror</a> (char *message)
-<li>char * <a class="el" href="cdaccess_8c.html#5ca2ad7f5f01418b8b8e30850601a0ff">get_string_of_id</a> (<a class="el" href="union___attribute.html">Attribute</a> *attribute, int id)
-<li>int <a class="el" href="cdaccess_8c.html#9f57508affc8a0eec51174ed6ab4090f">get_id_of_string</a> (<a class="el" href="union___attribute.html">Attribute</a> *attribute, char *id_string)
-<li>int <a class="el" href="cdaccess_8c.html#f27d8b6bed091e14530ef78550079d92">get_id_string_len</a> (<a class="el" href="union___attribute.html">Attribute</a> *attribute, int id)
-<li>int <a class="el" href="cdaccess_8c.html#7445b84e0d0f4ad25189ceca3d5bac37">get_id_from_sortidx</a> (<a class="el" href="union___attribute.html">Attribute</a> *attribute, int sort_index_position)
-<li>int <a class="el" href="cdaccess_8c.html#4472dd78bb50bf7e7920f9d2b7f462cf">get_sortidxpos_of_id</a> (<a class="el" href="union___attribute.html">Attribute</a> *attribute, int id)
-<li>int <a class="el" href="cdaccess_8c.html#88d43b7acddcbfed513938f3d10e2ebf">item_sequence_is_compressed</a> (<a class="el" href="union___attribute.html">Attribute</a> *attribute)
-<li>int <a class="el" href="cdaccess_8c.html#626282e6f3705c3d580392268dcf3259">inverted_file_is_compressed</a> (<a class="el" href="union___attribute.html">Attribute</a> *attribute)
-<li>int <a class="el" href="cdaccess_8c.html#d9ad7716f44fe9a9a20a0099a1bfd192">get_attribute_size</a> (<a class="el" href="union___attribute.html">Attribute</a> *attribute)
-<li>int <a class="el" href="cdaccess_8c.html#910e9b60981819f62f4186421c817062">get_id_range</a> (<a class="el" href="union___attribute.html">Attribute</a> *attribute)
-<li>int <a class="el" href="cdaccess_8c.html#210d82140f7e2d596b1e753d7662e323">get_id_frequency</a> (<a class="el" href="union___attribute.html">Attribute</a> *attribute, int id)
-<li>int * <a class="el" href="cdaccess_8c.html#443d11045572d4bd47a91403a5d6ea6e">get_positions</a> (<a class="el" href="union___attribute.html">Attribute</a> *attribute, int id, int *freq, int *restrictor_list, int restrictor_list_size)
+<dl class="el"><dd class="mdescRight">CL internal string comparison (uses signed char on all platforms).  <a href="#bf5768f9ef1a1fda1d35becaf9053927"></a><br></dl><li>char * <a class="el" href="cdaccess_8c.html#8ac6eea4775338bda7be76722186aae5">cdperror_string</a> (int errno)
+<dl class="el"><dd class="mdescRight">Gets a string describing the error identified by an error number.  <a href="#8ac6eea4775338bda7be76722186aae5"></a><br></dl><li>void <a class="el" href="cdaccess_8c.html#fda8febb5dbef0056da18adc857f06e7">cdperror</a> (char *message)
+<dl class="el"><dd class="mdescRight">Prints an error message, together with a string identifying the current error number.  <a href="#fda8febb5dbef0056da18adc857f06e7"></a><br></dl><li>char * <a class="el" href="cdaccess_8c.html#5ca2ad7f5f01418b8b8e30850601a0ff">get_string_of_id</a> (<a class="el" href="union___attribute.html">Attribute</a> *attribute, int id)
+<dl class="el"><dd class="mdescRight">Gets the string that corresponds to the specified <a class="el" href="structitem.html">item</a> on the given P-attribute.  <a href="#5ca2ad7f5f01418b8b8e30850601a0ff"></a><br></dl><li>int <a class="el" href="cdaccess_8c.html#9f57508affc8a0eec51174ed6ab4090f">get_id_of_string</a> (<a class="el" href="union___attribute.html">Attribute</a> *attribute, char *id_string)
+<dl class="el"><dd class="mdescRight">Gets the ID code that corresponds to the specified string on the given P-attribute.  <a href="#9f57508affc8a0eec51174ed6ab4090f"></a><br></dl><li>int <a class="el" href="cdaccess_8c.html#f27d8b6bed091e14530ef78550079d92">get_id_string_len</a> (<a class="el" href="union___attribute.html">Attribute</a> *attribute, int id)
+<dl class="el"><dd class="mdescRight">Calculates the length of the string that corresponds to the specified <a class="el" href="structitem.html">item</a> on the given P-attribute.  <a href="#f27d8b6bed091e14530ef78550079d92"></a><br></dl><li>int <a class="el" href="cdaccess_8c.html#7445b84e0d0f4ad25189ceca3d5bac37">get_id_from_sortidx</a> (<a class="el" href="union___attribute.html">Attribute</a> *attribute, int sort_index_position)
+<dl class="el"><dd class="mdescRight">Gets the ID code of the <a class="el" href="structitem.html">item</a> at the specified position in the Attribute's sorted wordlist index.  <a href="#7445b84e0d0f4ad25189ceca3d5bac37"></a><br></dl><li>int <a class="el" href="cdaccess_8c.html#4472dd78bb50bf7e7920f9d2b7f462cf">get_sortidxpos_of_id</a> (<a class="el" href="union___attribute.html">Attribute</a> *attribute, int id)
+<dl class="el"><dd class="mdescRight">Gets the position in the Attribute's sorted wordlist index of the <a class="el" href="structitem.html">item</a> with the specified ID code.  <a href="#4472dd78bb50bf7e7920f9d2b7f462cf"></a><br></dl><li>int <a class="el" href="cdaccess_8c.html#88d43b7acddcbfed513938f3d10e2ebf">item_sequence_is_compressed</a> (<a class="el" href="union___attribute.html">Attribute</a> *attribute)
+<dl class="el"><dd class="mdescRight">Checks whether the <a class="el" href="structitem.html">item</a> sequence of the given P-attribute is compressed.  <a href="#88d43b7acddcbfed513938f3d10e2ebf"></a><br></dl><li>int <a class="el" href="cdaccess_8c.html#626282e6f3705c3d580392268dcf3259">inverted_file_is_compressed</a> (<a class="el" href="union___attribute.html">Attribute</a> *attribute)
+<dl class="el"><dd class="mdescRight">Check whether the index (inverted file) of the given P-attribute is compressed.  <a href="#626282e6f3705c3d580392268dcf3259"></a><br></dl><li>int <a class="el" href="cdaccess_8c.html#d9ad7716f44fe9a9a20a0099a1bfd192">get_attribute_size</a> (<a class="el" href="union___attribute.html">Attribute</a> *attribute)
+<dl class="el"><dd class="mdescRight">Gets the maximum position on this P-attribute (ie the size of the attribute).  <a href="#d9ad7716f44fe9a9a20a0099a1bfd192"></a><br></dl><li>int <a class="el" href="cdaccess_8c.html#910e9b60981819f62f4186421c817062">get_id_range</a> (<a class="el" href="union___attribute.html">Attribute</a> *attribute)
+<dl class="el"><dd class="mdescRight">Gets the maximum id on this P-attribute (ie the range of the attribute's ID codes).  <a href="#910e9b60981819f62f4186421c817062"></a><br></dl><li>int <a class="el" href="cdaccess_8c.html#210d82140f7e2d596b1e753d7662e323">get_id_frequency</a> (<a class="el" href="union___attribute.html">Attribute</a> *attribute, int id)
+<dl class="el"><dd class="mdescRight">Gets the frequency of an <a class="el" href="structitem.html">item</a> on this attribute.  <a href="#210d82140f7e2d596b1e753d7662e323"></a><br></dl><li>int * <a class="el" href="cdaccess_8c.html#443d11045572d4bd47a91403a5d6ea6e">get_positions</a> (<a class="el" href="union___attribute.html">Attribute</a> *attribute, int id, int *freq, int *restrictor_list, int restrictor_list_size)
 <li><a class="el" href="struct__position__stream__rec__.html">PositionStream</a> <a class="el" href="cdaccess_8c.html#a372426dde27af039ba968901f0fd688">OpenPositionStream</a> (<a class="el" href="union___attribute.html">Attribute</a> *attribute, int id)
 <li>int <a class="el" href="cdaccess_8c.html#569df594fc6cb73db7f005b5d4bf3461">ClosePositionStream</a> (<a class="el" href="struct__position__stream__rec__.html">PositionStream</a> *ps)
 <li>int <a class="el" href="cdaccess_8c.html#e7e4237e5b60d779a70ed496e242cf01">ReadPositionStream</a> (<a class="el" href="struct__position__stream__rec__.html">PositionStream</a> ps, int *buffer, int buffer_size)
@@ -76,8 +76,9 @@
 <li>char * <a class="el" href="cdaccess_8c.html#274b1c4ee8563017a11ff141188350e6">get_id_info</a> (<a class="el" href="union___attribute.html">Attribute</a> *attribute, int index, int *freq, int *slen)
 <li>int * <a class="el" href="cdaccess_8c.html#021d6691cc5bf65c707a9f6a45189051">collect_matching_ids</a> (<a class="el" href="union___attribute.html">Attribute</a> *attribute, char *pattern, int flags, int *number_of_matches)
 <li>int <a class="el" href="cdaccess_8c.html#130c6abb7b6e214835b9863062048e52">cumulative_id_frequency</a> (<a class="el" href="union___attribute.html">Attribute</a> *attribute, int *word_ids, int number_of_words)
+<li>static int <a class="el" href="cdaccess_8c.html#e98330ef3e5bb8dc3b997f5b8c83415e">intcompare</a> (const void *i, const void *j)
 <li>int * <a class="el" href="cdaccess_8c.html#ff57f08ef96ce1781b739cf4b54268a9">collect_matches</a> (<a class="el" href="union___attribute.html">Attribute</a> *attribute, int *word_ids, int number_of_words, int <a class="el" href="cwb-lexdecode_8c.html#e6f74965045002e0bca5d50407561314">sort</a>, int *size_of_table, int *restrictor_list, int restrictor_list_size)
-<li>int * <a class="el" href="cdaccess_8c.html#1d9737a589d80cab0d7f510442c685e1">get_previous_mark</a> (int *data, int size, int position)
+<dl class="el"><dd class="mdescRight">collect_matches:  <a href="#ff57f08ef96ce1781b739cf4b54268a9"></a><br></dl><li>int * <a class="el" href="cdaccess_8c.html#1d9737a589d80cab0d7f510442c685e1">get_previous_mark</a> (int *data, int size, int position)
 <li>int <a class="el" href="cdaccess_8c.html#b9dfb6cb8218e98068496f9dccd17243">cl_cpos2struc</a> (<a class="el" href="union___attribute.html">Attribute</a> *a, int cpos)
 <li>int <a class="el" href="cdaccess_8c.html#be849dbff1f75208a19965f3f84d8347">cl_cpos2boundary</a> (<a class="el" href="union___attribute.html">Attribute</a> *a, int cpos)
 <li>int <a class="el" href="cdaccess_8c.html#95ec41c7bd08fce95418a10c0d5c2da2">cl_max_struc</a> (<a class="el" href="union___attribute.html">Attribute</a> *a)
@@ -97,12 +98,12 @@
 <li>int <a class="el" href="cdaccess_8c.html#ddbf0e574a3e8e68431b86ffd7cac8ad">cl_cpos2alg</a> (<a class="el" href="union___attribute.html">Attribute</a> *attribute, int cpos)
 <li>int <a class="el" href="cdaccess_8c.html#5e8f82bb50cbb95415de2af1e910e1ff">cl_alg2cpos</a> (<a class="el" href="union___attribute.html">Attribute</a> *attribute, int alg, int *source_region_start, int *source_region_end, int *target_region_start, int *target_region_end)
 <li>int <a class="el" href="cdaccess_8c.html#118ad9f02aecfc1301027d8fc591b23a">call_dynamic_attribute</a> (<a class="el" href="union___attribute.html">Attribute</a> *attribute, <a class="el" href="struct___d_c_r.html">DynCallResult</a> *dcr, <a class="el" href="struct___d_c_r.html">DynCallResult</a> *args, int nr_args)
-<li>int <a class="el" href="cdaccess_8c.html#8126faa6d13288a59d17c8d8494de099">nr_of_arguments</a> (<a class="el" href="union___attribute.html">Attribute</a> *attribute)
-<dl class="el"><dd class="mdescRight">Count the number of arguments on the attribute's dynamic argument list.  <a href="#8126faa6d13288a59d17c8d8494de099"></a><br></dl></ul>
+<dl class="el"><dd class="mdescRight">Attribute access function for dynamic attributes.  <a href="#118ad9f02aecfc1301027d8fc591b23a"></a><br></dl><li>int <a class="el" href="cdaccess_8c.html#8126faa6d13288a59d17c8d8494de099">nr_of_arguments</a> (<a class="el" href="union___attribute.html">Attribute</a> *attribute)
+<dl class="el"><dd class="mdescRight">Count the number of arguments on an attribute's dynamic argument list.  <a href="#8126faa6d13288a59d17c8d8494de099"></a><br></dl></ul>
 <h2>Variables</h2>
 <ul>
 <li>int <a class="el" href="cdaccess_8c.html#19cdf6dd32b5379c47e316fc514b2f09">cderrno</a>
-</ul>
+<dl class="el"><dd class="mdescRight">Error number for CL: is set after access.  <a href="#19cdf6dd32b5379c47e316fc514b2f09"></a><br></dl></ul>
 <hr><h2>Define Documentation</h2>
 <a class="anchor" name="764796354d59769c4402a8a37dac7e24"></a><!-- doxytag: member="cdaccess.c::check_arg" ref="764796354d59769c4402a8a37dac7e24" args="(arg, atyp, rval)" -->
 <div class="memitem">
@@ -128,12 +129,16 @@
 
 <p>
 <b>Value:</b><div class="fragment"><pre class="fragment"><span class="keywordflow">if</span> (arg == NULL) { \
-  <a class="code" href="cdaccess_8c.html#19cdf6dd32b5379c47e316fc514b2f09">cderrno</a> = <a class="code" href="cl_8h.html#65b146b17c915a67ebc0199cc3b2242c">CDA_ENULLATT</a>; <span class="keywordflow">return</span> rval; \
+  <a class="code" href="cdaccess_8c.html#19cdf6dd32b5379c47e316fc514b2f09" title="Error number for CL: is set after access.">cderrno</a> = <a class="code" href="cl_8h.html#65b146b17c915a67ebc0199cc3b2242c" title="NULL passed as attribute argument.">CDA_ENULLATT</a>; <span class="keywordflow">return</span> rval; \
 } \
 <span class="keywordflow">else</span> <span class="keywordflow">if</span> (arg-&gt;type != atyp) { \
-  <a class="code" href="cdaccess_8c.html#19cdf6dd32b5379c47e316fc514b2f09">cderrno</a> = <a class="code" href="cl_8h.html#45ec05d36167d9c6e5074febf7f0ffd4">CDA_EATTTYPE</a>; <span class="keywordflow">return</span> rval; \
+  <a class="code" href="cdaccess_8c.html#19cdf6dd32b5379c47e316fc514b2f09" title="Error number for CL: is set after access.">cderrno</a> = <a class="code" href="cl_8h.html#45ec05d36167d9c6e5074febf7f0ffd4" title="function was called on illegal attribute">CDA_EATTTYPE</a>; <span class="keywordflow">return</span> rval; \
 }
-</pre></div>
+</pre></div>Checks an Attribute passed as a function argument for usability in that function. 
+<p>
+(a) arg must not be NULL.<p>
+(b) arg type has to be the type specified in atyp.<p>
+If these conditions are not specified, the function returns rval. 
 <p>Referenced by <a class="el" href="cl_8h.html#118ad9f02aecfc1301027d8fc591b23a">call_dynamic_attribute()</a>, <a class="el" href="cl_8h.html#08d8f0bacd829441074c569dc723d0f0">cl_has_extended_alignment()</a>, <a class="el" href="cl_8h.html#a5e937c206920436456d58958dd99efd">collect_matches()</a>, <a class="el" href="cl_8h.html#19c764c027474dcfd9c4c8815d50dbf3">collect_matching_ids()</a>, <a class="el" href="cl_8h.html#ca3f87d3f6eafabff6188fd222957237">cumulative_id_frequency()</a>, <a class="el" href="cl_8h.html#1d4135d2d4da1305ba8fc28ba3a23690">get_alg_attribute()</a>, <a class="el" href="cl_8h.html#d9ad7716f44fe9a9a20a0099a1bfd192">get_attribute_size()</a>, <a class="el" href="cl_8h.html#42e77e5222b7f4731e0b94f855ced4d3">get_bounds_of_nth_struc()</a>, <a class="el" href="cl_8h.html#655947caaf34b27c4bd5641a012d6c56">get_id_at_position()</a>, <a class="el" href="cl_8h.html#210d82140f7e2d596b1e753d7662e323">get_id_frequency()</a>, <a class="el" href="cl_8h.html#7445b84e0d0f4ad25189ceca3d5bac37">get_id_from_sortidx()</a>, <a class="el" href="cl_8h.html#274b1c4ee8563017a11ff141188350e6">get_id_info()</a>, <a class="el" href="cl_8h.html#9f57508affc8a0eec51174ed6ab4090f">get_id_of_string()</a>, <a class="el" href="cl_8h.html#910e9b60981819f62f4186421c817062">get_id_range()</a>, <a class="el" href="cl_8h.html#f27d8b6bed091e14530ef78550079d92">get_id_string_len()</a>, <a class="el" href="cl_8h.html#27c31473a381561831cc85f3f64f845f">get_nr_of_strucs()</a>, <a class="el" href="cl_8h.html#6ffcf8e9b02a9b9126fc4233f0232519">get_num_of_struc()</a>, <a class="el" href="cl_8h.html#443d11045572d4bd47a91403a5d6ea6e">get_positions()</a>, <a class="el" href="cl_8h.html#4472dd78bb50bf7e7920f9d2b7f462cf">get_sortidxpos_of_id()</a>, <a class="el" href="cl_8h.html#63e7c6e881070c9c8de17d193481d6f8">get_string_at_position()</a>, <a class="el" href="cl_8h.html#5ca2ad7f5f01418b8b8e30850601a0ff">get_string_of_id()</a>, <a class="el" href="cl_8h.html#69a592cef24694a51a28b4277f03dd8b">get_struc_attribute()</a>, <a class="el" href="cl_8h.html#626282e6f3705c3d580392268dcf3259">inverted_file_is_compressed()</a>, <a class="el" href="cl_8h.html#88d43b7acddcbfed513938f3d10e2ebf">item_sequence_is_compressed()</a>, <a class="el" href="cl_8h.html#8126faa6d13288a59d17c8d8494de099">nr_of_arguments()</a>, <a class="el" href="cl_8h.html#a372426dde27af039ba968901f0fd688">OpenPositionStream()</a>, <a class="el" href="cl_8h.html#db7eed641b83fdfa9801b4bbf0fb88b5">structure_has_values()</a>, and <a class="el" href="cl_8h.html#b692d583fecd3fccc32dcbe9a1d0cef6">structure_value()</a>.</p>
 
 </div>
@@ -210,6 +215,16 @@
 <div class="memdoc">
 
 <p>
+Attribute access function for dynamic attributes. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>attribute</em>&nbsp;</td><td>The (dynamic) attribute in question. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>dcr</em>&nbsp;</td><td>Location for the result (*int or *char). </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>args</em>&nbsp;</td><td>Location of the parameters (of *int or *char). </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>Boolean: True for all OK, false for error. </dd></dl>
 
 <p>References <a class="el" href="struct_dynamic___attribute.html#1f3e6ee316e4a0bda520b620b05194ec">Dynamic_Attribute::arglist</a>, <a class="el" href="cl_8h.html#2c160b428bf385a597f51dcfaa38d9cc">ATT_DYN</a>, <a class="el" href="cl_8h.html#43ba9604062648696f65d3227fee02a6">ATTAT_FLOAT</a>, <a class="el" href="cl_8h.html#8afc9ead2ac64d5c1659c8eed41c0ec6">ATTAT_INT</a>, <a class="el" href="cl_8h.html#0684eb3cf6877f3455cbc492624b2e7e">ATTAT_NONE</a>, <a class="el" href="cl_8h.html#68e9660f2717ebe3586aeb3f4ee4cc15">ATTAT_PAREF</a>, <a class="el" href="cl_8h.html#bc045d0047308c6eb000a3ae68f018e2">ATTAT_POS</a>, <a class="el" href="cl_8h.html#a709ce27c2fe20647bf8a47a808fba8f">ATTAT_STRING</a>, <a class="el" href="cl_8h.html#ce54d1851d841e59d40f887e6046e320">ATTAT_VAR</a>, <a class="el" href="struct_dynamic___attribute.html#dff903bb8c3d7f906a4d308594114a34">Dynamic_Attribute::call</a>, <a class="el" href="cl_8h.html#21237261bf475ae59404729ec2562913">CDA_EARGS</a>, <a class="el" href="cl_8h.html#1fa2e2ab47bd2c689b68a78bdac22028">CDA_OK</a>, <a class="el" href="cdaccess_8c.html#19cdf6dd32b5379c47e316fc514b2f09">cderrno</a>, <a class="el" href="struct___d_c_r.html#ed280317dcbdff54b4551a9d3f8143b8">_DCR::charres</a>, <a class="el" href="cdaccess_8c.html#764796354d59769c4402a8a37dac7e24">check_arg</a>, <a class="el" href="cl_8h.html#6647d75d1d69c7d25447da514b7e4682">cl_strdup()</a>, <a class="el" href="union___attribute.html#74f8d07f045cdfbd5e3bc4e732adb983">_Attribute::dyn</a>, <a class="el" href="cwb-encode_8c.html#3654b5eb0d17fed9fc1f1dee818ad49f">error()</a>, <a class="el" href="struct___d_c_r.html#81932566160a1d624e8d49bcc4702b56">_DCR::floatres</a>, <a class="el" href="struct___d_c_r.html#301b87715f22d861c1729f6a14d5dbf3">_DCR::intres</a>, <a class="el" href="struct___dyn_arg.html#6be7615c881f11aadad5c6dea634316d">_DynArg::next</a>, <a class="el" href="struct_dynamic___attribute.html#4be699527cc53d602c9a568bf536dd04">Dynamic_Attribute::res_type</a>, <a class="el" href="struct___d_c_r.html#c765329451135abec74c45e1897abf26">_DCR::type</a>, <a class="el" href="struct___dyn_arg.html#c765329451135abec74c45e1897abf26">_DynArg::type</a>, and <a class="el" href="struct___d_c_r.html#ed98da7341d30a5ac42210954a5dee43">_DCR::value</a>.</p>
 
@@ -233,6 +248,8 @@
 </div>
 <div class="memdoc">
 
+<p>
+Prints an error message, together with a string identifying the current error number. 
 <p>
 
 <p>References <a class="el" href="cdaccess_8c.html#19cdf6dd32b5379c47e316fc514b2f09">cderrno</a>, and <a class="el" href="cdaccess_8c.html#8ac6eea4775338bda7be76722186aae5">cdperror_string()</a>.</p>
@@ -258,6 +275,13 @@
 <div class="memdoc">
 
 <p>
+Gets a string describing the error identified by an error number. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>errno</em>&nbsp;</td><td>Error number integer (a CDA_* constant as defined in <a class="el" href="cl_8h.html">cl.h</a>) </td></tr>
+  </table>
+</dl>
 
 <p>References <a class="el" href="cl_8h.html#eaee18dc0eafc039c82041c6021de4ec">CDA_EALIGN</a>, <a class="el" href="cl_8h.html#21237261bf475ae59404729ec2562913">CDA_EARGS</a>, <a class="el" href="cl_8h.html#45ec05d36167d9c6e5074febf7f0ffd4">CDA_EATTTYPE</a>, <a class="el" href="cl_8h.html#f731838e4fa831743c660972c8499a14">CDA_EBADREGEX</a>, <a class="el" href="cl_8h.html#248a0b0ee797db59e9e6b6077c6a81ca">CDA_EBUFFER</a>, <a class="el" href="cl_8h.html#ede9087e6156e4d179f2dfaf1b797634">CDA_EFSETINV</a>, <a class="el" href="cl_8h.html#76e3e27719997ebe2286ff6d48fbe5e1">CDA_EIDORNG</a>, <a class="el" href="cl_8h.html#d3310b2e10e15119787af15ce486dc32">CDA_EIDXORNG</a>, <a class="el" href="cl_8h.html#64e74e8d1f9dcf9eb16ca7ef420585b0">CDA_EINTERNAL</a>, <a class="el" href="cl_8h.html#94695de40ed57b9b359981bf6ff78aae">CDA_ENODATA</a>, <a class="el" href="cl_8h.html#29f9b0a4c4ab87c36c99f64dd910e746">CDA_ENOMEM</a>, <a class="el" href="cl_8h.html#385d59919cdc18e84687190d90919573">CDA_ENOSTRING</a>, <a class="el" href="cl_8h.html#65b146b17c915a67ebc0199cc3b2242c">CDA_ENULLATT</a>, <a class="el" href="cl_8h.html#ca889146671ed37b818c9e204df2cceb">CDA_ENYI</a>, <a class="el" href="cl_8h.html#02fcf2c107d5524fdf465b2ff5154261">CDA_EOTHER</a>, <a class="el" href="cl_8h.html#66bc833cda7fe83964ed1da1aa4aef70">CDA_EPATTERN</a>, <a class="el" href="cl_8h.html#81d0d94deccef135f4d9caaa6fc6b045">CDA_EPOSORNG</a>, <a class="el" href="cl_8h.html#dcff55760fa4417845c2a93c0558d942">CDA_EREMOTE</a>, <a class="el" href="cl_8h.html#354fb6ffecc7afc27e9b92164891b05f">CDA_ESTRUC</a>, and <a class="el" href="cl_8h.html#1fa2e2ab47bd2c689b68a78bdac22028">CDA_OK</a>.</p>
 
@@ -517,8 +541,10 @@
 <div class="memdoc">
 
 <p>
+CL internal string comparison (uses signed char on all platforms). 
+<p>
 
-<p>Referenced by <a class="el" href="cl_8h.html#ec47eb49595bea417dc17dd8dbf7b371">cl_set_intersection()</a>, <a class="el" href="list_8c.html#63fcff634b03116516b1b775b539b312">cl_string_list_strcmp()</a>, and <a class="el" href="cl_8h.html#9f57508affc8a0eec51174ed6ab4090f">get_id_of_string()</a>.</p>
+<p>Referenced by <a class="el" href="cl_8h.html#ec47eb49595bea417dc17dd8dbf7b371">cl_set_intersection()</a>, <a class="el" href="list_8c.html#63fcff634b03116516b1b775b539b312">cl_string_list_strcmp()</a>, <a class="el" href="cl_8h.html#9f57508affc8a0eec51174ed6ab4090f">get_id_of_string()</a>, and <a class="el" href="makecomps_8c.html#694ad50419b995799b7d76b939bc83fb">scompare()</a>.</p>
 
 </div>
 </div><p>
@@ -560,13 +586,13 @@
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int *&nbsp;</td>
-          <td class="paramname"> <em>word_ids</em>, </td>
+          <td class="paramname"> <em>ids</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>number_of_words</em>, </td>
+          <td class="paramname"> <em>number_of_ids</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -602,8 +628,13 @@
 <div class="memdoc">
 
 <p>
-
-<p>References <a class="el" href="cl_8h.html#3b60fdde6a7c8fbc535efaf526dbcb78">ATT_POS</a>, <a class="el" href="cl_8h.html#76e3e27719997ebe2286ff6d48fbe5e1">CDA_EIDORNG</a>, <a class="el" href="cl_8h.html#94695de40ed57b9b359981bf6ff78aae">CDA_ENODATA</a>, <a class="el" href="cl_8h.html#1fa2e2ab47bd2c689b68a78bdac22028">CDA_OK</a>, <a class="el" href="cdaccess_8c.html#19cdf6dd32b5379c47e316fc514b2f09">cderrno</a>, <a class="el" href="cdaccess_8c.html#764796354d59769c4402a8a37dac7e24">check_arg</a>, <a class="el" href="cl_8h.html#4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="attributes_8h.html#990b084a9fbbdb7ea6b9defb1073706af52112f16873388dbf8eda057059fc7b">CompLexiconIdx</a>, <a class="el" href="cdaccess_8c.html#130c6abb7b6e214835b9863062048e52">cumulative_id_frequency()</a>, <a class="el" href="attributes_8c.html#4810d7a6ab0920ad1af05e2095cc1841">ensure_component()</a>, <a class="el" href="cdaccess_8c.html#443d11045572d4bd47a91403a5d6ea6e">get_positions()</a>, and <a class="el" href="struct_t_component.html#439227feff9d7f55384e8780cfc2eb82">TComponent::size</a>.</p>
+collect_matches: 
+<p>
+this one returns an (ordered) list of corpus positions which matches one of the ids given in the list ids. The table is allocated with malloc, so free it when you don't need any more. The table is returned, its size is returned in size_of_table. This size is, of course, the same like the cumulative id frequency of the ids.<p>
+BEWARE: when the id list is rather big or there are high-frequent ids in the id list (for example, after a call to collect_matching_ids with the pattern ".*") this will give a copy of the corpus (for which the memory probably won't suffice!!! It is therefore a good idea to call cumulative_id_frequeny before and to introduce some kind of bias.<p>
+restrictor_list is a list of integer pairs [a,b] which means that the returned value only contains positions which fall within at least one of these intervals. The list must be sorted by the start positions, and secondarily by b. restrictor_list_size is the number of integers in this list, NOT THE NUMBER OF PAIRS. WARNING: CURRENTLY UNIMPLEMENTED<p>
+REMEMBER: this monster returns a list of corpus indices, not a list of ids. 
+<p>References <a class="el" href="cl_8h.html#3b60fdde6a7c8fbc535efaf526dbcb78">ATT_POS</a>, <a class="el" href="cl_8h.html#76e3e27719997ebe2286ff6d48fbe5e1">CDA_EIDORNG</a>, <a class="el" href="cl_8h.html#94695de40ed57b9b359981bf6ff78aae">CDA_ENODATA</a>, <a class="el" href="cl_8h.html#1fa2e2ab47bd2c689b68a78bdac22028">CDA_OK</a>, <a class="el" href="cdaccess_8c.html#19cdf6dd32b5379c47e316fc514b2f09">cderrno</a>, <a class="el" href="cdaccess_8c.html#764796354d59769c4402a8a37dac7e24">check_arg</a>, <a class="el" href="cl_8h.html#4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="attributes_8h.html#990b084a9fbbdb7ea6b9defb1073706af52112f16873388dbf8eda057059fc7b">CompLexiconIdx</a>, <a class="el" href="cdaccess_8c.html#130c6abb7b6e214835b9863062048e52">cumulative_id_frequency()</a>, <a class="el" href="attributes_8c.html#4810d7a6ab0920ad1af05e2095cc1841">ensure_component()</a>, <a class="el" href="cdaccess_8c.html#443d11045572d4bd47a91403a5d6ea6e">get_positions()</a>, <a class="el" href="cdaccess_8c.html#e98330ef3e5bb8dc3b997f5b8c83415e">intcompare()</a>, and <a class="el" href="struct_t_component.html#439227feff9d7f55384e8780cfc2eb82">TComponent::size</a>.</p>
 
 <p>Referenced by <a class="el" href="eval_8c.html#adbbf692b029374646a9baf9b53e2a90">calculate_initial_matchlist_1()</a>, <a class="el" href="eval_8c.html#8b5cec215ec2857925194e627ead0184">get_corpus_positions()</a>, and <a class="el" href="eval_8c.html#31c86ea932365a90b02b4af7462f4196">get_matched_corpus_positions()</a>.</p>
 
@@ -802,6 +833,12 @@
 <div class="memdoc">
 
 <p>
+Gets the maximum position on this P-attribute (ie the size of the attribute). 
+<p>
+The result of this function is equal to the number of tokens in the attribute.<p>
+If the attribute's <a class="el" href="structitem.html">item</a> sequence is compressed, this is read from the attribute's Huffman code descriptor block.<p>
+Otherwise, it is read from the size member of the Attribute's CompCorpus component.<p>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>The maximum corpus position, or an error code (if less than 0) </dd></dl>
 
 <p>References <a class="el" href="cl_8h.html#3b60fdde6a7c8fbc535efaf526dbcb78">ATT_POS</a>, <a class="el" href="cl_8h.html#94695de40ed57b9b359981bf6ff78aae">CDA_ENODATA</a>, <a class="el" href="cl_8h.html#1fa2e2ab47bd2c689b68a78bdac22028">CDA_OK</a>, <a class="el" href="cdaccess_8c.html#19cdf6dd32b5379c47e316fc514b2f09">cderrno</a>, <a class="el" href="cdaccess_8c.html#764796354d59769c4402a8a37dac7e24">check_arg</a>, <a class="el" href="attributes_8h.html#990b084a9fbbdb7ea6b9defb1073706ae677bd26f25dc9576f68a05761d28a97">CompCorpus</a>, <a class="el" href="attributes_8h.html#990b084a9fbbdb7ea6b9defb1073706a565fcc9fb22842508e150068cfb10959">CompHuffCodes</a>, <a class="el" href="cwb-compress-rdx_8c.html#ca3a1fb765418f9b9b1d74051aa88667">corpus</a>, <a class="el" href="attributes_8c.html#4810d7a6ab0920ad1af05e2095cc1841">ensure_component()</a>, <a class="el" href="struct_p_o_s___attribute.html#993514973b43412ed5067e6cadb313d3">POS_Attribute::hc</a>, <a class="el" href="cdaccess_8c.html#88d43b7acddcbfed513938f3d10e2ebf">item_sequence_is_compressed()</a>, <a class="el" href="struct__huffman__code__descriptor.html#9f59b34b1f25fe00023291b678246bcc">_huffman_code_descriptor::length</a>, <a class="el" href="union___attribute.html#0810c9dd46344cdbe5887f16094eb72e">_Attribute::pos</a>, and <a class="el" href="struct_t_component.html#439227feff9d7f55384e8780cfc2eb82">TComponent::size</a>.</p>
 
@@ -952,6 +989,14 @@
 <div class="memdoc">
 
 <p>
+Gets the frequency of an <a class="el" href="structitem.html">item</a> on this attribute. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>id</em>&nbsp;</td><td>Identifier of an <a class="el" href="structitem.html">item</a> on this attribute. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>The frequency count of the <a class="el" href="structitem.html">item</a> specified by id, or an error code (if less than 0) </dd></dl>
 
 <p>References <a class="el" href="cl_8h.html#3b60fdde6a7c8fbc535efaf526dbcb78">ATT_POS</a>, <a class="el" href="cl_8h.html#d3310b2e10e15119787af15ce486dc32">CDA_EIDXORNG</a>, <a class="el" href="cl_8h.html#94695de40ed57b9b359981bf6ff78aae">CDA_ENODATA</a>, <a class="el" href="cl_8h.html#1fa2e2ab47bd2c689b68a78bdac22028">CDA_OK</a>, <a class="el" href="cdaccess_8c.html#19cdf6dd32b5379c47e316fc514b2f09">cderrno</a>, <a class="el" href="cdaccess_8c.html#764796354d59769c4402a8a37dac7e24">check_arg</a>, <a class="el" href="attributes_8h.html#990b084a9fbbdb7ea6b9defb1073706ac60289f7444e30489e456ca3e924cda7">CompCorpusFreqs</a>, <a class="el" href="struct_t_mblob.html#c103627c1ad15cbec2f22d0abe6d54b6">TMblob::data</a>, <a class="el" href="struct_t_component.html#77096a9034bc2a42ed99c36e2038c61e">TComponent::data</a>, and <a class="el" href="attributes_8c.html#4810d7a6ab0920ad1af05e2095cc1841">ensure_component()</a>.</p>
 
@@ -985,6 +1030,16 @@
 <div class="memdoc">
 
 <p>
+Gets the ID code of the <a class="el" href="structitem.html">item</a> at the specified position in the Attribute's sorted wordlist index. 
+<p>
+<dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="cl_8h.html#4472dd78bb50bf7e7920f9d2b7f462cf" title="Gets the position in the Attribute&#39;s sorted wordlist index of the item with the...">get_sortidxpos_of_id</a> </dd></dl>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>attribute</em>&nbsp;</td><td>The (positional) Attribute whose index is to be searched. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>sort_index_position</em>&nbsp;</td><td>The offset in the index where the ID code is to be found. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>Either the integer ID, or an error code (if less than 0) </dd></dl>
 
 <p>References <a class="el" href="cl_8h.html#3b60fdde6a7c8fbc535efaf526dbcb78">ATT_POS</a>, <a class="el" href="cl_8h.html#d3310b2e10e15119787af15ce486dc32">CDA_EIDXORNG</a>, <a class="el" href="cl_8h.html#94695de40ed57b9b359981bf6ff78aae">CDA_ENODATA</a>, <a class="el" href="cl_8h.html#1fa2e2ab47bd2c689b68a78bdac22028">CDA_OK</a>, <a class="el" href="cdaccess_8c.html#19cdf6dd32b5379c47e316fc514b2f09">cderrno</a>, <a class="el" href="cdaccess_8c.html#764796354d59769c4402a8a37dac7e24">check_arg</a>, <a class="el" href="attributes_8h.html#990b084a9fbbdb7ea6b9defb1073706aa761f7ed50e57b77398f8a8449f1c171">CompLexiconSrt</a>, <a class="el" href="struct_t_mblob.html#c103627c1ad15cbec2f22d0abe6d54b6">TMblob::data</a>, <a class="el" href="struct_t_component.html#77096a9034bc2a42ed99c36e2038c61e">TComponent::data</a>, and <a class="el" href="attributes_8c.html#4810d7a6ab0920ad1af05e2095cc1841">ensure_component()</a>.</p>
 
@@ -1063,6 +1118,15 @@
 <div class="memdoc">
 
 <p>
+Gets the ID code that corresponds to the specified string on the given P-attribute. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>attribute</em>&nbsp;</td><td>The (positional) Attribute to look the string up on </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>id_string</em>&nbsp;</td><td>The string of an <a class="el" href="structitem.html">item</a> on this attribute </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>Either the integer ID of the <a class="el" href="structitem.html">item</a>, or an error code (if less than 0) </dd></dl>
 
 <p>References <a class="el" href="cl_8h.html#3b60fdde6a7c8fbc535efaf526dbcb78">ATT_POS</a>, <a class="el" href="cl_8h.html#94695de40ed57b9b359981bf6ff78aae">CDA_ENODATA</a>, <a class="el" href="cl_8h.html#385d59919cdc18e84687190d90919573">CDA_ENOSTRING</a>, <a class="el" href="cl_8h.html#02fcf2c107d5524fdf465b2ff5154261">CDA_EOTHER</a>, <a class="el" href="cl_8h.html#1fa2e2ab47bd2c689b68a78bdac22028">CDA_OK</a>, <a class="el" href="cdaccess_8c.html#19cdf6dd32b5379c47e316fc514b2f09">cderrno</a>, <a class="el" href="cdaccess_8c.html#764796354d59769c4402a8a37dac7e24">check_arg</a>, <a class="el" href="cdaccess_8c.html#bf5768f9ef1a1fda1d35becaf9053927">cl_strcmp()</a>, <a class="el" href="attributes_8h.html#990b084a9fbbdb7ea6b9defb1073706ab5444166aabdc0b22d7cc573b04fa0b4">CompLexicon</a>, <a class="el" href="attributes_8h.html#990b084a9fbbdb7ea6b9defb1073706af52112f16873388dbf8eda057059fc7b">CompLexiconIdx</a>, <a class="el" href="attributes_8h.html#990b084a9fbbdb7ea6b9defb1073706aa761f7ed50e57b77398f8a8449f1c171">CompLexiconSrt</a>, <a class="el" href="struct_t_mblob.html#c103627c1ad15cbec2f22d0abe6d54b6">TMblob::data</a>, <a class="el" href="struct_t_component.html#77096a9034bc2a42ed99c36e2038c61e">TComponent::data</a>, <a class="el" href="attributes_8c.html#4810d7a6ab0920ad1af05e2095cc1841">ensure_component()</a>, and <a class="el" href="struct_t_component.html#439227feff9d7f55384e8780cfc2eb82">TComponent::size</a>.</p>
 
@@ -1087,6 +1151,11 @@
 <div class="memdoc">
 
 <p>
+Gets the maximum id on this P-attribute (ie the range of the attribute's ID codes). 
+<p>
+The result of this function is equal to the number of types in this attribute.<p>
+<dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="cl_8h.html#d9ad7716f44fe9a9a20a0099a1bfd192" title="Gets the maximum position on this P-attribute (ie the size of the attribute).">get_attribute_size</a></dd></dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>The maximum Id, or an error code (if less than 0) </dd></dl>
 
 <p>References <a class="el" href="cl_8h.html#3b60fdde6a7c8fbc535efaf526dbcb78">ATT_POS</a>, <a class="el" href="cl_8h.html#94695de40ed57b9b359981bf6ff78aae">CDA_ENODATA</a>, <a class="el" href="cl_8h.html#1fa2e2ab47bd2c689b68a78bdac22028">CDA_OK</a>, <a class="el" href="cdaccess_8c.html#19cdf6dd32b5379c47e316fc514b2f09">cderrno</a>, <a class="el" href="cdaccess_8c.html#764796354d59769c4402a8a37dac7e24">check_arg</a>, <a class="el" href="attributes_8h.html#990b084a9fbbdb7ea6b9defb1073706af52112f16873388dbf8eda057059fc7b">CompLexiconIdx</a>, <a class="el" href="attributes_8c.html#4810d7a6ab0920ad1af05e2095cc1841">ensure_component()</a>, and <a class="el" href="struct_t_component.html#439227feff9d7f55384e8780cfc2eb82">TComponent::size</a>.</p>
 
@@ -1120,6 +1189,15 @@
 <div class="memdoc">
 
 <p>
+Calculates the length of the string that corresponds to the specified <a class="el" href="structitem.html">item</a> on the given P-attribute. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>attribute</em>&nbsp;</td><td>The (positional) Attribute to look up the <a class="el" href="structitem.html">item</a> on </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>id</em>&nbsp;</td><td>Identifier of an <a class="el" href="structitem.html">item</a> on this attribute. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>The length of the string, or a CDA_ error code </dd></dl>
 
 <p>References <a class="el" href="cl_8h.html#3b60fdde6a7c8fbc535efaf526dbcb78">ATT_POS</a>, <a class="el" href="cl_8h.html#76e3e27719997ebe2286ff6d48fbe5e1">CDA_EIDORNG</a>, <a class="el" href="cl_8h.html#94695de40ed57b9b359981bf6ff78aae">CDA_ENODATA</a>, <a class="el" href="cl_8h.html#02fcf2c107d5524fdf465b2ff5154261">CDA_EOTHER</a>, <a class="el" href="cl_8h.html#1fa2e2ab47bd2c689b68a78bdac22028">CDA_OK</a>, <a class="el" href="cdaccess_8c.html#19cdf6dd32b5379c47e316fc514b2f09">cderrno</a>, <a class="el" href="cdaccess_8c.html#764796354d59769c4402a8a37dac7e24">check_arg</a>, <a class="el" href="attributes_8h.html#990b084a9fbbdb7ea6b9defb1073706af52112f16873388dbf8eda057059fc7b">CompLexiconIdx</a>, <a class="el" href="struct_t_mblob.html#c103627c1ad15cbec2f22d0abe6d54b6">TMblob::data</a>, <a class="el" href="struct_t_component.html#77096a9034bc2a42ed99c36e2038c61e">TComponent::data</a>, <a class="el" href="attributes_8c.html#4810d7a6ab0920ad1af05e2095cc1841">ensure_component()</a>, <a class="el" href="cdaccess_8c.html#5ca2ad7f5f01418b8b8e30850601a0ff">get_string_of_id()</a>, and <a class="el" href="struct_t_component.html#439227feff9d7f55384e8780cfc2eb82">TComponent::size</a>.</p>
 
@@ -1313,6 +1391,17 @@
 <div class="memdoc">
 
 <p>
+Gets the position in the Attribute's sorted wordlist index of the <a class="el" href="structitem.html">item</a> with the specified ID code. 
+<p>
+This function is NOT YET IMPLEMENTED.<p>
+<dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="cl_8h.html#7445b84e0d0f4ad25189ceca3d5bac37" title="Gets the ID code of the item at the specified position in the Attribute&#39;s sorted...">get_id_from_sortidx</a> </dd></dl>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>attribute</em>&nbsp;</td><td>The (positional) Attribute whose index is to be searched </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>id</em>&nbsp;</td><td>Identifier of an <a class="el" href="structitem.html">item</a> on this attribute. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>The offset of that <a class="el" href="structitem.html">item</a> in the sorted wordlist index. </dd></dl>
 
 <p>References <a class="el" href="cl_8h.html#3b60fdde6a7c8fbc535efaf526dbcb78">ATT_POS</a>, <a class="el" href="cl_8h.html#94695de40ed57b9b359981bf6ff78aae">CDA_ENODATA</a>, <a class="el" href="cl_8h.html#ca889146671ed37b818c9e204df2cceb">CDA_ENYI</a>, <a class="el" href="cl_8h.html#1fa2e2ab47bd2c689b68a78bdac22028">CDA_OK</a>, <a class="el" href="cdaccess_8c.html#19cdf6dd32b5379c47e316fc514b2f09">cderrno</a>, <a class="el" href="cdaccess_8c.html#764796354d59769c4402a8a37dac7e24">check_arg</a>, <a class="el" href="attributes_8h.html#990b084a9fbbdb7ea6b9defb1073706aa761f7ed50e57b77398f8a8449f1c171">CompLexiconSrt</a>, and <a class="el" href="attributes_8c.html#4810d7a6ab0920ad1af05e2095cc1841">ensure_component()</a>.</p>
 
@@ -1377,6 +1466,15 @@
 <div class="memdoc">
 
 <p>
+Gets the string that corresponds to the specified <a class="el" href="structitem.html">item</a> on the given P-attribute. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>attribute</em>&nbsp;</td><td>The Attribute to look the <a class="el" href="structitem.html">item</a> up on </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>id</em>&nbsp;</td><td>Identifier of an <a class="el" href="structitem.html">item</a> on this attribute. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>The string, or NULL if there is an error </dd></dl>
 
 <p>References <a class="el" href="cl_8h.html#3b60fdde6a7c8fbc535efaf526dbcb78">ATT_POS</a>, <a class="el" href="cl_8h.html#76e3e27719997ebe2286ff6d48fbe5e1">CDA_EIDORNG</a>, <a class="el" href="cl_8h.html#94695de40ed57b9b359981bf6ff78aae">CDA_ENODATA</a>, <a class="el" href="cl_8h.html#1fa2e2ab47bd2c689b68a78bdac22028">CDA_OK</a>, <a class="el" href="cdaccess_8c.html#19cdf6dd32b5379c47e316fc514b2f09">cderrno</a>, <a class="el" href="cdaccess_8c.html#764796354d59769c4402a8a37dac7e24">check_arg</a>, <a class="el" href="attributes_8h.html#990b084a9fbbdb7ea6b9defb1073706ab5444166aabdc0b22d7cc573b04fa0b4">CompLexicon</a>, <a class="el" href="attributes_8h.html#990b084a9fbbdb7ea6b9defb1073706af52112f16873388dbf8eda057059fc7b">CompLexiconIdx</a>, <a class="el" href="struct_t_mblob.html#c103627c1ad15cbec2f22d0abe6d54b6">TMblob::data</a>, <a class="el" href="struct_t_component.html#77096a9034bc2a42ed99c36e2038c61e">TComponent::data</a>, <a class="el" href="attributes_8c.html#4810d7a6ab0920ad1af05e2095cc1841">ensure_component()</a>, and <a class="el" href="struct_t_component.html#439227feff9d7f55384e8780cfc2eb82">TComponent::size</a>.</p>
 
@@ -1429,6 +1527,37 @@
 
 </div>
 </div><p>
+<a class="anchor" name="e98330ef3e5bb8dc3b997f5b8c83415e"></a><!-- doxytag: member="cdaccess.c::intcompare" ref="e98330ef3e5bb8dc3b997f5b8c83415e" args="(const void *i, const void *j)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">static int intcompare           </td>
+          <td>(</td>
+          <td class="paramtype">const void *&nbsp;</td>
+          <td class="paramname"> <em>i</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const void *&nbsp;</td>
+          <td class="paramname"> <em>j</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+<p>Referenced by <a class="el" href="cl_8h.html#a5e937c206920436456d58958dd99efd">collect_matches()</a>, <a class="el" href="eval_8h.html#1c6b9087d4b9c61e2be81a7a68e174cc">eval_bool()</a>, <a class="el" href="variables_8h.html#2d9b75bc6795dc3ee9da28f948ccb9d7">GetVariableItems()</a>, <a class="el" href="class-mapping_8h.html#7ddcb6ebe3b51160fde9fe15ee052538">member_of_class_i()</a>, and <a class="el" href="class-mapping_8h.html#416d19ddd272a2c289369bc44f18b282">read_mapping()</a>.</p>
+
+</div>
+</div><p>
 <a class="anchor" name="626282e6f3705c3d580392268dcf3259"></a><!-- doxytag: member="cdaccess.c::inverted_file_is_compressed" ref="626282e6f3705c3d580392268dcf3259" args="(Attribute *attribute)" -->
 <div class="memitem">
 <div class="memproto">
@@ -1446,6 +1575,10 @@
 <div class="memdoc">
 
 <p>
+Check whether the index (inverted file) of the given P-attribute is compressed. 
+<p>
+See comments in body of function for what counts as "compressed".<p>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>Boolean. </dd></dl>
 
 <p>References <a class="el" href="cl_8h.html#3b60fdde6a7c8fbc535efaf526dbcb78">ATT_POS</a>, <a class="el" href="cdaccess_8c.html#19cdf6dd32b5379c47e316fc514b2f09">cderrno</a>, <a class="el" href="cdaccess_8c.html#764796354d59769c4402a8a37dac7e24">check_arg</a>, <a class="el" href="attributes_8h.html#990b084a9fbbdb7ea6b9defb1073706a7a654786f29519738cec784c0f9cff56">CompCompRF</a>, <a class="el" href="attributes_8h.html#990b084a9fbbdb7ea6b9defb1073706a3f60160cecf0b2ca33619d7d60a4b151">CompCompRFX</a>, <a class="el" href="attributes_8c.html#c3ec2e49297359f383ec893991a1c31e">component_state()</a>, <a class="el" href="attributes_8h.html#c10aa9d039808185e4c1756539499c1c1c6dff6971a4f581f4f6d9c1e1627ea7">ComponentLoaded</a>, <a class="el" href="attributes_8h.html#c10aa9d039808185e4c1756539499c1ce8e627f408bd654c25f2814ac9ad4507">ComponentUnloaded</a>, <a class="el" href="attributes_8h.html#990b084a9fbbdb7ea6b9defb1073706aef0fbb5f21771ec8e21535861fec655d">CompRevCorpus</a>, and <a class="el" href="attributes_8h.html#990b084a9fbbdb7ea6b9defb1073706a470b24f5e73b6d9909a95584fe563930">CompRevCorpusIdx</a>.</p>
 
@@ -1470,6 +1603,10 @@
 <div class="memdoc">
 
 <p>
+Checks whether the <a class="el" href="structitem.html">item</a> sequence of the given P-attribute is compressed. 
+<p>
+See comments in body of function for what counts as "compressed".<p>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>Boolean. </dd></dl>
 
 <p>References <a class="el" href="cl_8h.html#3b60fdde6a7c8fbc535efaf526dbcb78">ATT_POS</a>, <a class="el" href="cdaccess_8c.html#19cdf6dd32b5379c47e316fc514b2f09">cderrno</a>, <a class="el" href="cdaccess_8c.html#764796354d59769c4402a8a37dac7e24">check_arg</a>, <a class="el" href="attributes_8h.html#990b084a9fbbdb7ea6b9defb1073706ae677bd26f25dc9576f68a05761d28a97">CompCorpus</a>, <a class="el" href="attributes_8h.html#990b084a9fbbdb7ea6b9defb1073706a565fcc9fb22842508e150068cfb10959">CompHuffCodes</a>, <a class="el" href="attributes_8h.html#990b084a9fbbdb7ea6b9defb1073706ae0962e9c40590a00e2ae0f07d16f8aa3">CompHuffSeq</a>, <a class="el" href="attributes_8h.html#990b084a9fbbdb7ea6b9defb1073706af0da4a26a4454b6f8728aa27040ffde9">CompHuffSync</a>, <a class="el" href="attributes_8c.html#c3ec2e49297359f383ec893991a1c31e">component_state()</a>, <a class="el" href="attributes_8h.html#c10aa9d039808185e4c1756539499c1c1c6dff6971a4f581f4f6d9c1e1627ea7">ComponentLoaded</a>, <a class="el" href="attributes_8h.html#c10aa9d039808185e4c1756539499c1ce8e627f408bd654c25f2814ac9ad4507">ComponentUnloaded</a>, <a class="el" href="struct_p_o_s___attribute.html#993514973b43412ed5067e6cadb313d3">POS_Attribute::hc</a>, and <a class="el" href="union___attribute.html#0810c9dd46344cdbe5887f16094eb72e">_Attribute::pos</a>.</p>
 
@@ -1494,14 +1631,14 @@
 <div class="memdoc">
 
 <p>
-Count the number of arguments on the attribute's dynamic argument list. 
+Count the number of arguments on an attribute's dynamic argument list. 
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>attribute</em>&nbsp;</td><td>pointer to the Attribute object to analyse </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>attribute</em>&nbsp;</td><td>pointer to the Attribute object to analyse; it must be a dynamic attribute. </td></tr>
   </table>
 </dl>
-<dl class="return" compact><dt><b>Returns:</b></dt><dd>int specifying the number of arguments; a negative integer is returned if for any argument on dyn.arglist, the type is equal to ATTAT_VAR </dd></dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>integer specifying the number of arguments; a negative integer is returned if for any argument on dyn.arglist, the type is equal to ATTAT_VAR </dd></dl>
 
 <p>References <a class="el" href="struct_dynamic___attribute.html#1f3e6ee316e4a0bda520b620b05194ec">Dynamic_Attribute::arglist</a>, <a class="el" href="cl_8h.html#2c160b428bf385a597f51dcfaa38d9cc">ATT_DYN</a>, <a class="el" href="cl_8h.html#ce54d1851d841e59d40f887e6046e320">ATTAT_VAR</a>, <a class="el" href="cl_8h.html#1fa2e2ab47bd2c689b68a78bdac22028">CDA_OK</a>, <a class="el" href="cdaccess_8c.html#19cdf6dd32b5379c47e316fc514b2f09">cderrno</a>, <a class="el" href="cdaccess_8c.html#764796354d59769c4402a8a37dac7e24">check_arg</a>, <a class="el" href="union___attribute.html#74f8d07f045cdfbd5e3bc4e732adb983">_Attribute::dyn</a>, <a class="el" href="struct___dyn_arg.html#6be7615c881f11aadad5c6dea634316d">_DynArg::next</a>, and <a class="el" href="struct___dyn_arg.html#c765329451135abec74c45e1897abf26">_DynArg::type</a>.</p>
 
@@ -1713,13 +1850,15 @@ Count the number of arguments on the attribute's dynamic argument list.
 <div class="memdoc">
 
 <p>
+Error number for CL: is set after access. 
+<p>
 
 <p>Referenced by <a class="el" href="cl_8h.html#118ad9f02aecfc1301027d8fc591b23a">call_dynamic_attribute()</a>, <a class="el" href="builtins_8h.html#58b600ee9f8c217ac9a71d26ad0c59e1">call_predefined_function()</a>, <a class="el" href="cl_8h.html#fda8febb5dbef0056da18adc857f06e7">cdperror()</a>, <a class="el" href="eval_8c.html#6b88f677ea68fdf529f6588033930492">check_alignment_constraints()</a>, <a class="el" href="cl_8h.html#5e8f82bb50cbb95415de2af1e910e1ff">cl_alg2cpos()</a>, <a class="el" href="cl_8h.html#ddbf0e574a3e8e68431b86ffd7cac8ad">cl_cpos2alg()</a>, <a class="el" href="cl_8h.html#be849dbff1f75208a19965f3f84d8347">cl_cpos2boundary()</a>, <a class="el" href="cl_8h.html#b9dfb6cb8218e98068496f9dccd17243">cl_cpos2struc()</a>, <a class="el" href="cl_8h.html#08d8f0bacd829441074c569dc723d0f0">cl_has_extended_alignment()</a>, <a class="el" href="cl_8h.html#8e1d05d565a13c56790b5dd35d144d49">cl_make_set()</a>, <a class="el" href="cl_8h.html#87171a8a06237fe4024730d2363b9f8b">cl_max_alg()</a>, <a class="el" href="cl_8h.html#95ec41c7bd08fce95418a10c0d5c2da2">cl_max_struc()</a>, <a class="el" href="regopt_8c.html#2c4607eb8e094b7699062df8eb744058">cl_new_regex()</a>, <a class="el" href="cl_8h.html#ec47eb49595bea417dc17dd8dbf7b371">cl_set_intersection()</a>, <a class="el" href="cl_8h.html#72b2d3b0eedaf37bf41d89d5409ce4a7">cl_set_size()</a>, <a class="el" href="cl_8h.html#a5e937c206920436456d58958dd99efd">collect_matches()</a>, <a class="el" href="cl_8h.html#19c764c027474dcfd9c4c8815d50dbf3">collect_matching_ids()</a>, <a class="el" href="cwb-compress-rdx_8c.html#da27dd0455655c13cd8dca8259eefbfb">compress_reversed_index()</a>, <a class="el" href="cwb-huffcode_8c.html#80203248d1441475e98106bf8f8ea6ec">compute_code_lengths()</a>, <a class="el" href="cl_8h.html#ca3f87d3f6eafabff6188fd222957237">cumulative_id_frequency()</a>, <a class="el" href="cwb-huffcode_8c.html#774e9c4cc2dd18b1e82c4db3cc464395">decode_check_huff()</a>, <a class="el" href="cwb-compress-rdx_8c.html#6e572abf235d74b194d259cb97476a28">decompress_check_reversed_index()</a>, <a class="el" href="cqpserver_8c.html#85ad05f24457be0cc6d5fa24d42d7689">do_cqi_cl_regex2id()</a>, <a class="el" href="cwb-lexdecode_8c.html#21e71f17ac00f605db9328ae3148978c">do_show()</a>, <a class="el" href="corpmanag_8c.html#bc4b504862b3c36cb40aa76dd8200395">ensure_corpus_size()</a>, <a class="el" href="eval_8h.html#1c6b9087d4b9c61e2be81a7a68e174cc">eval_bool()</a>, <a class="el" href="cl_8h.html#1d4135d2d4da1305ba8fc28ba3a23690">get_alg_attribute()</a>, <a class="el" href="cl_8h.html#d9ad7716f44fe9a9a20a0099a1bfd192">get_attribute_size()</a>, <a class="el" href="cl_8h.html#42e77e5222b7f4731e0b94f855ced4d3">get_bounds_of_nth_struc()</a>, <a class="el" href="eval_8c.html#8b5cec215ec2857925194e627ead0184">get_corpus_positions()</a>, <a class="el" href="cl_8h.html#655947caaf34b27c4bd5641a012d6c56">get_id_at_position()</a>, <a class="el" href="cl_8h.html#210d82140f7e2d596b1e753d7662e323">get_id_frequency()</a>, <a class="el" href="cl_8h.html#7445b84e0d0f4ad25189ceca3d5bac37">get_id_from_sortidx()</a>, <a class="el" href="cl_8h.html#274b1c4ee8563017a11ff141188350e6">get_id_info()</a>, <a class="el" href="cl_8h.html#9f57508affc8a0eec51174ed6ab4090f">get_id_of_string()</a>, <a class="el" href="cl_8h.html#910e9b60981819f62f4186421c817062">get_id_range()</a>, <a class="el" href="cl_8h.html#f27d8b6bed091e14530ef78550079d92">get_id_string_len()</a>, <a class="el" href="eval_8c.html#ead01bf924ccdd541a9018bf1d72730e">get_leaf_value()</a>, <a class="el" href="cl_8h.html#27c31473a381561831cc85f3f64f845f">get_nr_of_strucs()</a>, <a class="el" href="cl_8h.html#6ffcf8e9b02a9b9126fc4233f0232519">get_num_of_struc()</a>, <a class="el" href="concordance_8h.html#4155e7ddef475f76f6d066ff49afb011">get_position_values()</a>, <a class="el" href="cl_8h.html#443d11045572d4bd47a91403a5d6ea6e">get_positions()</a>, <a class="el" href="cl_8h.html#4472dd78bb50bf7e7920f9d2b7f462cf">get_sortidxpos_of_id()</a>, <a class="el" href="cl_8h.html#63e7c6e881070c9c8de17d193481d6f8">get_string_at_position()</a>, <a class="el" href="cl_8h.html#5ca2ad7f5f01418b8b8e30850601a0ff">get_string_of_id()</a>, <a class="el" href="cl_8h.html#69a592cef24694a51a28b4277f03dd8b">get_struc_attribute()</a>, <a class="el" href="cl_8h.html#626282e6f3705c3d580392268dcf3259">inverted_file_is_compressed()</a>, <a class="el" href="cl_8h.html#88d43b7acddcbfed513938f3d10e2ebf">item_sequence_is_compressed()</a>, <a class="el" href="class-mapping_8h.html#36e096ce9d4d6d12ae6db314cf82f460">map_token_to_class_number()</a>, <a class="el" href="eval_8c.html#d49aedc126aa9ab11de81b6c5d62db6a">meet_mu()</a>, <a class="el" href="class-mapping_8h.html#02edad94ebf884e3325157440785e4b3">member_of_class_s()</a>, <a class="el" href="cl_8h.html#8126faa6d13288a59d17c8d8494de099">nr_of_arguments()</a>, <a class="el" href="cl_8h.html#a372426dde27af039ba968901f0fd688">OpenPositionStream()</a>, <a class="el" href="parse__actions_8c.html#f171dda31157fe9e0f1a31f8ce2d687f">OptimizeStringConstraint()</a>, <a class="el" href="cwb-lexdecode_8c.html#cf9dabb3c45c8b01f22903e4c2526976">print_info()</a>, <a class="el" href="class-mapping_8h.html#416d19ddd272a2c289369bc44f18b282">read_mapping()</a>, <a class="el" href="cqpserver_8c.html#143133e4b241fce2d89d02743fa1ee77">send_cl_error()</a>, <a class="el" href="matchlist_8h.html#ceac8bbec1e489f033a2bee302b1b193">Setop()</a>, <a class="el" href="cwb-decode_8c.html#e319baa29bcce4fc1184bda24e29f12f">show_position_values()</a>, <a class="el" href="cl_8h.html#db7eed641b83fdfa9801b4bbf0fb88b5">structure_has_values()</a>, and <a class="el" href="cl_8h.html#b692d583fecd3fccc32dcbe9a1d0cef6">structure_value()</a>.</p>
 
 </div>
 </div><p>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Mon Sep 14 01:53:37 2009 for CWB by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Thu Sep 17 01:41:01 2009 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

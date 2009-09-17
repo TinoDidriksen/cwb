@@ -34,26 +34,47 @@
 
 #define BUFSIZE 0x10000
 
+/* seems not ever to be used? */
 char errmsg[MAX_LINE_LENGTH];
 
 
 
 /* ------------------------------------------------------------ SORTED LEXICONS */
 
+
 static MemBlob *SortLexicon;
 static MemBlob *SortIndex;
 
-/* this is the way qsort(..) is meant to be used: give it void*
-   and cast them to the actual type in the compare function;
-   the definition below conforms to ANSI and POSIX standards according to the LDP */
+
+/**
+ * Sorts two lexicon entries using cl_strcmp.
+ *
+ * This function is for use with qsort().
+ */
 static int scompare(const void *idx1, const void *idx2)
 {
+  /* this is the way qsort(..) is meant to be used: give it void*
+     and cast them to the actual type in the compare function;
+     the definition below conforms to ANSI and POSIX standards according to the LDP */
   return
-    cl_strcmp((char *)SortLexicon->data + ntohl(SortIndex->data[*(int *)idx1]),
-	      (char *)SortLexicon->data + ntohl(SortIndex->data[*(int *)idx2]));
+    cl_strcmp((char *) SortLexicon->data + ntohl(SortIndex->data[*(int *)idx1]),
+              (char *) SortLexicon->data + ntohl(SortIndex->data[*(int *)idx2]));
 }
 
-int creat_sort_lexicon(Component *lexsrt)
+
+/* note, the following functions are documented in attributes.c (a general overview)
+ * in the context of the create_component() function that calls them */
+
+/* note: these functions aren't guaranteed to load the component after creating it! */
+/* (in fact, creat_rev_corpus() would run out of address space if it tried that on a large corpus) */
+
+/**
+ * creates a sort index.
+ *
+ * @see create_component
+ */
+int
+creat_sort_lexicon(Component *lexsrt)
 {
   int i;
 
@@ -93,7 +114,7 @@ int creat_sort_lexicon(Component *lexsrt)
 
   /* now sort the area */
 
-  SortLexicon = &(lex->data);		/* for the comparison function */
+  SortLexicon = &(lex->data);                /* for the comparison function */
   SortIndex = &(lexidx->data);
 
   qsort(lexsrt->data.data, lexsrt->size, sizeof(int), scompare);
@@ -114,7 +135,13 @@ int creat_sort_lexicon(Component *lexsrt)
 }
 
 
-int creat_freqs(Component *freqs)
+/**
+ * creates frequency table
+ *
+ * @see create_component
+ */
+int
+creat_freqs(Component *freqs)
 {
   FILE *fd;
   int mc_buf[BUFSIZE];
@@ -162,9 +189,9 @@ int creat_freqs(Component *freqs)
     for ( k = 0; k < i; k++) {
       ptr = ntohl(mc_buf[k]);
       if ((ptr >= 0) && (ptr < freqs->size))
-	freqs->data.data[ptr]++;
+        freqs->data.data[ptr]++;
       else
-	fprintf(stderr, ";;; makecomps:creat_freqs(): WARNING: index %d out of range\n", ptr);
+        fprintf(stderr, ";;; makecomps:creat_freqs(): WARNING: index %d out of range\n", ptr);
     }
   } while (i == BUFSIZE);
   fclose(fd);
@@ -187,8 +214,15 @@ int creat_freqs(Component *freqs)
     return 0;
 }
 
+
+/**
+ * creates reversed corpus
+ *
+ * @see create_component
+ */
 int
-creat_rev_corpus(Component *revcorp) {
+creat_rev_corpus(Component *revcorp)
+{
 
   Component *freqs;
   int cpos = 0, f, id, ints_written, pass;
@@ -197,11 +231,11 @@ creat_rev_corpus(Component *revcorp) {
   int primus, secundus, lexsize, buf_used;
   int *buffer;
   size_t bufsize;
-  int **ptab;			/* pointers into <buffer> */
+  int **ptab;                        /* pointers into <buffer> */
   int *ptr;
 
   FILE *revcorp_fd;
-  Attribute *attr;		/* the attribute we're working on */
+  Attribute *attr;                /* the attribute we're working on */
 
   /* this function should only be invoked by the makeall tool (via create_component()),
      which must make sure that the lexicon and (possibly) compressed token stream have been
@@ -211,7 +245,7 @@ creat_rev_corpus(Component *revcorp) {
   assert(revcorp->path != NULL);
   assert(revcorp->data.data == NULL); /* so REVCORP is unloaded */
 
-  attr = revcorp->attribute;	/* need the attribute handle to use CL functions */
+  attr = revcorp->attribute;        /* need the attribute handle to use CL functions */
 
   /* get the frequency table to compute offsets and fill buffer */
   freqs = ensure_component(attr, CompCorpusFreqs, 1);
@@ -219,7 +253,7 @@ creat_rev_corpus(Component *revcorp) {
   assert(freqs != NULL);
   assert(freqs->corpus == revcorp->corpus); /* gotta be kidding ... */
 
-  lexsize = cl_max_id(attr);	/* this is the number of lexicon entries for this attribute */
+  lexsize = cl_max_id(attr);        /* this is the number of lexicon entries for this attribute */
   ptab = (int **) cl_malloc(sizeof(int *) * lexsize); /* table of pointers into <buffer> */
 
   /* determine REVCORP size (== number of tokens) */
@@ -228,7 +262,7 @@ creat_rev_corpus(Component *revcorp) {
   /* allocate buffer of required size, or maximum allowed by cl_memory_limit */
   bufsize = (cl_memory_limit > 0) ? cl_memory_limit * (256 * 1024) : datasize; /* 1MB == 256k INTs */
   if (datasize < bufsize) {
-    bufsize = datasize;		/* shrink buffer if full size isn't needed */
+    bufsize = datasize;                /* shrink buffer if full size isn't needed */
   }
   buffer = cl_malloc(4 * bufsize); /* allocate buffer */
 
@@ -250,21 +284,22 @@ creat_rev_corpus(Component *revcorp) {
   }
 
   primus = 0;
-  ints_written = 0;		/* check data sizes (written to file VS. corpus size VS. processed */
-  pass = 0;			/* count pass for debugging output */
+  ints_written = 0;                /* check data sizes (written to file VS. corpus size VS. processed */
+  pass = 0;                        /* count pass for debugging output */
   while (primus < lexsize) {
 
     /* see how many IDs fit into the buffer in one pass */
-    buf_used = 0;		/* how many buffer entries are used */
-    for (secundus = primus + 1; secundus < lexsize; secundus++) {	/* increment secundus to fit as many IDs as possible into the buffer for this pass */
+    buf_used = 0;                /* how many buffer entries are used */
+    for (secundus = primus + 1; secundus < lexsize; secundus++) {
+      /* increment secundus to fit as many IDs as possible into the buffer for this pass */
       f = cl_id2freq(attr, secundus);
       if (buf_used + f > bufsize) {
-	secundus--;
-	break;
+        secundus--;
+        break;
       }
       else {
-	ptab[secundus] = buffer + buf_used; /* pointer to first occurrence of lex. ID <secundus> in <buffer> */
-	buf_used += f;
+        ptab[secundus] = buffer + buf_used; /* pointer to first occurrence of lex. ID <secundus> in <buffer> */
+        buf_used += f;
       }
     }
 
@@ -275,14 +310,14 @@ creat_rev_corpus(Component *revcorp) {
     }
 
     for (cpos = 0; cpos < datasize; cpos++) {
-      id = cl_cpos2id(attr, cpos);	  /* lex. ID of token found at <cpos> */
+      id = cl_cpos2id(attr, cpos);          /* lex. ID of token found at <cpos> */
       assert((id >= 0) && (id < lexsize) && "Lexicon ID out of range. Abort.");
       if (id == primus) {
-	NwriteInt(cpos, revcorp_fd); /* converts to network byte order */
-	ints_written++;
+        NwriteInt(cpos, revcorp_fd); /* converts to network byte order */
+        ints_written++;
       }
       else if ((id > primus) && (id <= secundus)) {
-	*(ptab[id]++) = cpos;	/* store occurrence in buffer and update pointer */
+        *(ptab[id]++) = cpos;        /* store occurrence in buffer and update pointer */
       }
     }
 
@@ -291,8 +326,8 @@ creat_rev_corpus(Component *revcorp) {
     for (id = primus + 1; id < secundus; id++) {
       ptr += cl_id2freq(attr, id);
       if (ptr != ptab[id]) {
-	fprintf(stderr, "Pointer inconsistency for id=%d. Aborting.\n", id);
-	exit(1);
+        fprintf(stderr, "Pointer inconsistency for id=%d. Aborting.\n", id);
+        exit(1);
       }
     }
 
@@ -325,7 +360,14 @@ creat_rev_corpus(Component *revcorp) {
   return pass;
 }
 
-int creat_rev_corpus_idx(Component *revcidx)
+
+/**
+ * creates index for reversed corpus
+ *
+ * @see create_component
+ */
+int
+creat_rev_corpus_idx(Component *revcidx)
 {
   Component *freqs;
 

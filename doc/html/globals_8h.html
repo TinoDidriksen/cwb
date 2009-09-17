@@ -34,17 +34,17 @@
 <h2>Defines</h2>
 <ul>
 <li>#define <a class="el" href="globals_8h.html#c392b52df688734d343a5acc32fb6b87">REGISTRY_DEFAULT_PATH</a>&nbsp;&nbsp;&nbsp;&quot;/corpora/c1/<a class="el" href="options_8h.html#b6be6986e1a07fc76b7a5a77aa7cc43b">registry</a>&quot;
-<li>#define <a class="el" href="globals_8h.html#7cb97950b921d5fd5ea7bc1b5f8dafdb">REGISTRY_ENVVAR</a>&nbsp;&nbsp;&nbsp;&quot;CORPUS_REGISTRY&quot;
-<li>#define <a class="el" href="globals_8h.html#f0f2173e3b202ddf5756531b4471dcb2">MAX_LINE_LENGTH</a>&nbsp;&nbsp;&nbsp;4096
-<li>#define <a class="el" href="globals_8h.html#3d5a3c317dcfbb56869875ed4a91ddcc">MAX_IDENTIFIER_LENGTH</a>&nbsp;&nbsp;&nbsp;1024
-<li>#define <a class="el" href="globals_8h.html#c610b33ec571920dfe1c0f5d93f60516">TODO</a>
-</ul>
+<dl class="el"><dd class="mdescRight">The default path assumed for the location of the corpus registry.  <a href="#c392b52df688734d343a5acc32fb6b87"></a><br></dl><li>#define <a class="el" href="globals_8h.html#7cb97950b921d5fd5ea7bc1b5f8dafdb">REGISTRY_ENVVAR</a>&nbsp;&nbsp;&nbsp;&quot;CORPUS_REGISTRY&quot;
+<dl class="el"><dd class="mdescRight">The Unix environment variable from which the value of the registry will be taken.  <a href="#7cb97950b921d5fd5ea7bc1b5f8dafdb"></a><br></dl><li>#define <a class="el" href="globals_8h.html#f0f2173e3b202ddf5756531b4471dcb2">MAX_LINE_LENGTH</a>&nbsp;&nbsp;&nbsp;4096
+<dl class="el"><dd class="mdescRight">this is the length of temporary strings which are allocated with a fixed size .  <a href="#f0f2173e3b202ddf5756531b4471dcb2"></a><br></dl><li>#define <a class="el" href="globals_8h.html#3d5a3c317dcfbb56869875ed4a91ddcc">MAX_IDENTIFIER_LENGTH</a>&nbsp;&nbsp;&nbsp;1024
+<dl class="el"><dd class="mdescRight">this is the length of fixed-size buffers for names and identifiers  <a href="#3d5a3c317dcfbb56869875ed4a91ddcc"></a><br></dl><li>#define <a class="el" href="globals_8h.html#c610b33ec571920dfe1c0f5d93f60516">TODO</a>
+<dl class="el"><dd class="mdescRight">Macro which exits the program when a "to do" point is hit.  <a href="#c610b33ec571920dfe1c0f5d93f60516"></a><br></dl></ul>
 <h2>Variables</h2>
 <ul>
 <li>int <a class="el" href="globals_8h.html#5c4290325b240eac5fe1542a8743286a">cl_debug</a>
-<li>int <a class="el" href="globals_8h.html#783947bd6a04f6ad65c3d25f95a80b9a">cl_optimize</a>
-<li>size_t <a class="el" href="globals_8h.html#8c066560b8ca7c38e328d918b7dca009">cl_memory_limit</a>
-</ul>
+<dl class="el"><dd class="mdescRight">global configuration variable: debug level.  <a href="#5c4290325b240eac5fe1542a8743286a"></a><br></dl><li>int <a class="el" href="globals_8h.html#783947bd6a04f6ad65c3d25f95a80b9a">cl_optimize</a>
+<dl class="el"><dd class="mdescRight">global configuration variable: optimisation.  <a href="#783947bd6a04f6ad65c3d25f95a80b9a"></a><br></dl><li>size_t <a class="el" href="globals_8h.html#8c066560b8ca7c38e328d918b7dca009">cl_memory_limit</a>
+<dl class="el"><dd class="mdescRight">global configuration variable: memory limit.  <a href="#8c066560b8ca7c38e328d918b7dca009"></a><br></dl></ul>
 <hr><h2>Define Documentation</h2>
 <a class="anchor" name="3d5a3c317dcfbb56869875ed4a91ddcc"></a><!-- doxytag: member="globals.h::MAX_IDENTIFIER_LENGTH" ref="3d5a3c317dcfbb56869875ed4a91ddcc" args="" -->
 <div class="memitem">
@@ -57,6 +57,8 @@
 </div>
 <div class="memdoc">
 
+<p>
+this is the length of fixed-size buffers for names and identifiers 
 <p>
 
 </div>
@@ -73,7 +75,9 @@
 <div class="memdoc">
 
 <p>
-
+this is the length of temporary strings which are allocated with a fixed size . 
+<p>
+.. better make it large 
 <p>Referenced by <a class="el" href="cwb-scan-corpus_8c.html#fc8b08c47e1422ae98e8bed30103ff1e">add_key()</a>, <a class="el" href="cwb-encode_8c.html#f99342049f0c726b2e1223b1f5c7feab">addline()</a>, <a class="el" href="regopt_8c.html#2c4607eb8e094b7699062df8eb744058">cl_new_regex()</a>, <a class="el" href="cwb-encode_8c.html#b80a63938c6804f9600afdf8ccb6bfc0">close_range()</a>, <a class="el" href="attributes_8h.html#f6fc50d4c50b0538882db38df7751e0d">component_full_name()</a>, <a class="el" href="cwb-huffcode_8c.html#80203248d1441475e98106bf8f8ea6ec">compute_code_lengths()</a>, <a class="el" href="cwb-encode_8c.html#24c98c7fc24344b98cf63c129d68d066">declare_range()</a>, <a class="el" href="cwb-encode_8c.html#715be4b1e2130e65d5911a14aa355bfb">declare_wattr()</a>, <a class="el" href="cwb-huffcode_8c.html#774e9c4cc2dd18b1e82c4db3cc464395">decode_check_huff()</a>, <a class="el" href="parse__actions_8h.html#4d494e76da98d09f20a77d1dfb9b7fd2">do_undump()</a>, <a class="el" href="corpus_8c.html#e4b2cca2b7b9b49c52b63430577051ad">find_corpus_registry()</a>, <a class="el" href="cwb-encode_8c.html#93576300c2436fa82a9800671ff48794">get_input_line()</a>, <a class="el" href="concordance_8h.html#4155e7ddef475f76f6d066ff49afb011">get_position_values()</a>, <a class="el" href="concordance_8h.html#ba8d69816c73dbe53c5ab08281bcecf4">get_print_attribute_values()</a>, <a class="el" href="html-print_8h.html#3a3d2485a7ee857b6d3cc72c2382e33b">html_convert_string()</a>, <a class="el" href="latex-print_8h.html#0d135cc5969970dcd810adff8e728ccb">latex_convert_string()</a>, <a class="el" href="cwb-decode_8c.html#0ed6494b0edce9f87ee21a9d38b08523">lisp_string()</a>, <a class="el" href="corpmanag_8c.html#a57f32e05db80db43f0f9e8b97bcf08d">load_corpusnames()</a>, <a class="el" href="cwb-s-encode_8c.html#3c04138a5bfe5d72780bb7e82a18e627">main()</a>, <a class="el" href="cwb-s-encode_8c.html#b2929450457ff7b240510be66a7ffdbd">open_range()</a>, <a class="el" href="cwb-atoi_8c.html#b962e7334345b3df7856935c0ddfb9c3">process_fd()</a>, <a class="el" href="sgml-print_8c.html#e461ecfa6db231a8544a70a40b65f457">sgml_convert_string()</a>, <a class="el" href="regopt_8c.html#397a8686e22c556c60ed1eaec5da19da">update_grain_buffer()</a>, and <a class="el" href="cwb-decode_8c.html#b71db87d9e68160272bec013ccefff40">xml_string()</a>.</p>
 
 </div>
@@ -89,6 +93,8 @@
 </div>
 <div class="memdoc">
 
+<p>
+The default path assumed for the location of the corpus registry. 
 <p>
 
 <p>Referenced by <a class="el" href="corpus_8c.html#4d7cb8811357af41ee0c95d6a3ce3b65">central_corpus_directory()</a>.</p>
@@ -106,6 +112,8 @@
 </div>
 <div class="memdoc">
 
+<p>
+The Unix environment variable from which the value of the registry will be taken. 
 <p>
 
 <p>Referenced by <a class="el" href="corpus_8c.html#4d7cb8811357af41ee0c95d6a3ce3b65">central_corpus_directory()</a>.</p>
@@ -128,7 +136,9 @@
           __FILE__, \
           __LINE__); \
           exit(1);}
-</pre></div>
+</pre></div>Macro which exits the program when a "to do" point is hit. 
+<p>
+
 </div>
 </div><p>
 <hr><h2>Variable Documentation</h2>
@@ -144,7 +154,10 @@
 <div class="memdoc">
 
 <p>
-
+global configuration variable: debug level. 
+<p>
+Controls how many debug messages are printed.<p>
+0 = none (default), 1 = some, 2 = heavy 
 <p>Referenced by <a class="el" href="lexhash_8c.html#b0c83bcda2f4b258d99d41dcfef1dd30">cl_lexhash_check_grow()</a>, <a class="el" href="regopt_8c.html#2c4607eb8e094b7699062df8eb744058">cl_new_regex()</a>, <a class="el" href="regopt_8c.html#b312a681f0a8c861a08f9d26a3f4ab95">cl_regopt_analyse()</a>, <a class="el" href="globals_8c.html#4159ccd1820e8585dcc97d1f32826db7">cl_set_debug_level()</a>, <a class="el" href="cl_8h.html#19c764c027474dcfd9c4c8815d50dbf3">collect_matching_ids()</a>, <a class="el" href="makecomps_8h.html#b8f0ec6caf733eae459326a9c0483608">creat_rev_corpus()</a>, <a class="el" href="attributes_8h.html#7cf9d15574a7e905ee4fcd34c8f2f68f">create_component()</a>, and <a class="el" href="regopt_8c.html#1b1785e702fe108639b79a3fbf6ed84f">make_jump_table()</a>.</p>
 
 </div>
@@ -161,7 +174,10 @@
 <div class="memdoc">
 
 <p>
-
+global configuration variable: memory limit. 
+<p>
+In megabytes; some functions will try to keep to this limit; 0 or less turns the limit off.<p>
+(ensure memory limit &gt; 2GB is correctly converted to byte size or number of ints) 
 <p>Referenced by <a class="el" href="globals_8c.html#3197560aacd773338425252b01c60f3a">cl_set_memory_limit()</a>, and <a class="el" href="makecomps_8h.html#b8f0ec6caf733eae459326a9c0483608">creat_rev_corpus()</a>.</p>
 
 </div>
@@ -178,13 +194,15 @@
 <div class="memdoc">
 
 <p>
-
+global configuration variable: optimisation. 
+<p>
+0 = off, 1 = on (untested / expensive optimisations) 
 <p>Referenced by <a class="el" href="globals_8c.html#35e6406545412a8882e6f50526707047">cl_set_optimize()</a>.</p>
 
 </div>
 </div><p>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Mon Sep 14 01:53:37 2009 for CWB by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Thu Sep 17 01:41:01 2009 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

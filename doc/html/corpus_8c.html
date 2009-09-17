@@ -72,7 +72,8 @@
 <li><a class="el" href="struct_t_corpus.html">Corpus</a> * <a class="el" href="corpus_8c.html#327a2334a34b9be8f75bcb5d9537a0da">loaded_corpora</a> = NULL
 <dl class="el"><dd class="mdescRight">Head of a linked list of loaded corpora (global variable).  <a href="#327a2334a34b9be8f75bcb5d9537a0da"></a><br></dl><li>char * <a class="el" href="corpus_8c.html#da4573d717d73336f342e8b6a83e03aa">cregin_path</a> = &quot;&quot;
 <dl class="el"><dd class="mdescRight">full path of registry file currently being parsed  <a href="#da4573d717d73336f342e8b6a83e03aa"></a><br></dl><li>char * <a class="el" href="corpus_8c.html#43fea1a843ca9acc56fe021a28ec9452">cregin_name</a> = &quot;&quot;
-<dl class="el"><dd class="mdescRight">name of registry file currently being parsed  <a href="#43fea1a843ca9acc56fe021a28ec9452"></a><br></dl><li><a class="el" href="struct__charset__spec.html">charset_spec</a> <a class="el" href="corpus_8c.html#dcf052209f22ab8c104507ba1847de37">charset_names</a> []
+<dl class="el"><dd class="mdescRight">name of registry file currently being parsed  <a href="#43fea1a843ca9acc56fe021a28ec9452"></a><br></dl><li>static char * <a class="el" href="corpus_8c.html#e6ef637d7447e7a251e9130f21b8adac">regdir</a> = NULL
+<dl class="el"><dd class="mdescRight">The default registry directory.  <a href="#e6ef637d7447e7a251e9130f21b8adac"></a><br></dl><li><a class="el" href="struct__charset__spec.html">charset_spec</a> <a class="el" href="corpus_8c.html#dcf052209f22ab8c104507ba1847de37">charset_names</a> []
 <dl class="el"><dd class="mdescRight">a list of charset names as strings linked to CorpusCharset objects  <a href="#dcf052209f22ab8c104507ba1847de37"></a><br></dl></ul>
 <hr><h2>Typedef Documentation</h2>
 <a class="anchor" name="5fe44c397eafaa1719f2c820982230c9"></a><!-- doxytag: member="corpus.c::charset_spec" ref="5fe44c397eafaa1719f2c820982230c9" args="" -->
@@ -157,7 +158,7 @@ If the property is already defined, ignore and warn. If the property is 'charset
 Gets a string containing the path of the default registry directory. 
 <p>
 
-<p>References <a class="el" href="globals_8h.html#c392b52df688734d343a5acc32fb6b87">REGISTRY_DEFAULT_PATH</a>, and <a class="el" href="globals_8h.html#7cb97950b921d5fd5ea7bc1b5f8dafdb">REGISTRY_ENVVAR</a>.</p>
+<p>References <a class="el" href="corpus_8c.html#e6ef637d7447e7a251e9130f21b8adac">regdir</a>, <a class="el" href="globals_8h.html#c392b52df688734d343a5acc32fb6b87">REGISTRY_DEFAULT_PATH</a>, and <a class="el" href="globals_8h.html#7cb97950b921d5fd5ea7bc1b5f8dafdb">REGISTRY_ENVVAR</a>.</p>
 
 <p>Referenced by <a class="el" href="corpmanag_8c.html#a57f32e05db80db43f0f9e8b97bcf08d">load_corpusnames()</a>, <a class="el" href="cwb-compress-rdx_8c.html#3c04138a5bfe5d72780bb7e82a18e627">main()</a>, and <a class="el" href="corpus_8c.html#84eb9130d44b1b40bd3bfe5a94f777d9">setup_corpus()</a>.</p>
 
@@ -831,8 +832,27 @@ Head of a linked list of loaded corpora (global variable).
 list of loaded corpus handles (for memory manager) 
 </div>
 </div><p>
+<a class="anchor" name="e6ef637d7447e7a251e9130f21b8adac"></a><!-- doxytag: member="corpus.c::regdir" ref="e6ef637d7447e7a251e9130f21b8adac" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">char* <a class="el" href="corpus_8c.html#e6ef637d7447e7a251e9130f21b8adac">regdir</a> = NULL<code> [static]</code>          </td>
+        </tr>
+      </table>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Mon Sep 14 01:53:37 2009 for CWB by&nbsp;
+<div class="memdoc">
+
+<p>
+The default registry directory. 
+<p>
+
+<p>Referenced by <a class="el" href="corpus_8c.html#4d7cb8811357af41ee0c95d6a3ce3b65">central_corpus_directory()</a>.</p>
+
+</div>
+</div><p>
+</div>
+<hr size="1"><address style="text-align: right;"><small>Generated on Thu Sep 17 01:41:01 2009 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>
