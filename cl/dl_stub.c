@@ -16,7 +16,8 @@
  */
 
 
-/*
+/**
+ * @file
  * Stub interface to dynamic linker routines
  * that SunOS uses but didn't ship with 4.1. (nor with Solaris 2.6 :oP )
  *

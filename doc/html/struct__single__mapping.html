@@ -23,15 +23,22 @@
   </div>
 </div>
 <div class="contents">
-<h1>_single_mapping Struct Reference</h1><!-- doxytag: class="_single_mapping" --><code>#include &lt;class-mapping.h&gt;</code>
+<h1>_single_mapping Struct Reference</h1><!-- doxytag: class="_single_mapping" -->The SingleMapping object.  
+<a href="#_details">More...</a>
+<p>
+<code>#include &lt;class-mapping.h&gt;</code>
 <p>
 <h2>Data Fields</h2>
 <ul>
 <li>char * <a class="el" href="struct__single__mapping.html#ae3d1a72a2baf650faf76ec98669051e">class_name</a>
-<li>int <a class="el" href="struct__single__mapping.html#4c0ead051f33f313ff37088c4385e5d1">nr_tokens</a>
-<li>int * <a class="el" href="struct__single__mapping.html#c78a8ead2257bccdecab1b3fc3330171">tokens</a>
-</ul>
-<hr><h2>Field Documentation</h2>
+<dl class="el"><dd class="mdescRight">this object's class name  <a href="#ae3d1a72a2baf650faf76ec98669051e"></a><br></dl><li>int <a class="el" href="struct__single__mapping.html#4c0ead051f33f313ff37088c4385e5d1">nr_tokens</a>
+<dl class="el"><dd class="mdescRight">the number of tokens which this object owns  <a href="#4c0ead051f33f313ff37088c4385e5d1"></a><br></dl><li>int * <a class="el" href="struct__single__mapping.html#c78a8ead2257bccdecab1b3fc3330171">tokens</a>
+<dl class="el"><dd class="mdescRight">the tokens themselves  <a href="#c78a8ead2257bccdecab1b3fc3330171"></a><br></dl></ul>
+<hr><a name="_details"></a><h2>Detailed Description</h2>
+The SingleMapping object. 
+<p>
+This object represents a simple many-to-one mapping between one "class" and a number of different tokens (represented by integer ID codes).<p>
+The tokens are values that occur on a particular attribute in a particular corpus. (Note: positional attributes, not other types!) [?? -- is this correct? -- AH] <hr><h2>Field Documentation</h2>
 <a class="anchor" name="ae3d1a72a2baf650faf76ec98669051e"></a><!-- doxytag: member="_single_mapping::class_name" ref="ae3d1a72a2baf650faf76ec98669051e" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -43,6 +50,8 @@
 </div>
 <div class="memdoc">
 
+<p>
+this object's class name 
 <p>
 
 <p>Referenced by <a class="el" href="class-mapping_8h.html#a7f31b566dac41f6a76ee17a7e5631c2">find_mapping()</a>, <a class="el" href="class-mapping_8h.html#54c2e194b218d440667818b9208cc625">print_mapping()</a>, and <a class="el" href="class-mapping_8h.html#416d19ddd272a2c289369bc44f18b282">read_mapping()</a>.</p>
@@ -61,6 +70,8 @@
 <div class="memdoc">
 
 <p>
+the number of tokens which this object owns 
+<p>
 
 <p>Referenced by <a class="el" href="class-mapping_8h.html#48ab4b422206cb01acf3af65b406b066">map_class_to_tokens()</a>, <a class="el" href="class-mapping_8h.html#9f8049fce882556dfe74793da50db652">number_of_tokens()</a>, <a class="el" href="class-mapping_8h.html#54c2e194b218d440667818b9208cc625">print_mapping()</a>, and <a class="el" href="class-mapping_8h.html#416d19ddd272a2c289369bc44f18b282">read_mapping()</a>.</p>
 
@@ -78,6 +89,8 @@
 <div class="memdoc">
 
 <p>
+the tokens themselves 
+<p>
 
 <p>Referenced by <a class="el" href="class-mapping_8h.html#48ab4b422206cb01acf3af65b406b066">map_class_to_tokens()</a>, <a class="el" href="class-mapping_8h.html#54c2e194b218d440667818b9208cc625">print_mapping()</a>, and <a class="el" href="class-mapping_8h.html#416d19ddd272a2c289369bc44f18b282">read_mapping()</a>.</p>
 
@@ -86,7 +99,7 @@
 <hr>The documentation for this struct was generated from the following file:<ul>
 <li>cl/<a class="el" href="class-mapping_8h.html">class-mapping.h</a></ul>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Thu Sep 17 01:41:01 2009 for CWB by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Thu Sep 17 23:45:31 2009 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

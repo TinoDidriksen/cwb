@@ -27,9 +27,9 @@
 <h1>hash.c File Reference</h1><h2>Functions</h2>
 <ul>
 <li>int <a class="el" href="hash_8c.html#d6740255386952216cb75d813243a3ea">is_prime</a> (int n)
-<li>int <a class="el" href="hash_8c.html#6bb4d75c3e8354cff3efd98002335877">find_prime</a> (int n)
-<li>unsigned int <a class="el" href="hash_8c.html#c7b0e59697b408e515f7dd9b3d62b024">hash_string</a> (char *string)
-<li>unsigned int <a class="el" href="hash_8c.html#37683969abedbf579c31190194875e87">hash_macro</a> (char *macro_name, unsigned int args)
+<dl class="el"><dd class="mdescRight">returns True iff n is a prime  <a href="#d6740255386952216cb75d813243a3ea"></a><br></dl><li>int <a class="el" href="hash_8c.html#6bb4d75c3e8354cff3efd98002335877">find_prime</a> (int n)
+<dl class="el"><dd class="mdescRight">returns smallest prime &gt;= n  <a href="#6bb4d75c3e8354cff3efd98002335877"></a><br></dl><li>unsigned int <a class="el" href="hash_8c.html#c7b0e59697b408e515f7dd9b3d62b024">hash_string</a> (char *string)
+<dl class="el"><dd class="mdescRight">computes 32bit hash value for string &lt;s&gt;  <a href="#c7b0e59697b408e515f7dd9b3d62b024"></a><br></dl><li>unsigned int <a class="el" href="hash_8c.html#37683969abedbf579c31190194875e87">hash_macro</a> (char *macro_name, unsigned int args)
 </ul>
 <hr><h2>Function Documentation</h2>
 <a class="anchor" name="6bb4d75c3e8354cff3efd98002335877"></a><!-- doxytag: member="hash.c::find_prime" ref="6bb4d75c3e8354cff3efd98002335877" args="(int n)" -->
@@ -48,6 +48,8 @@
 </div>
 <div class="memdoc">
 
+<p>
+returns smallest prime &gt;= n 
 <p>
 
 <p>References <a class="el" href="lexhash_8c.html#d6740255386952216cb75d813243a3ea">is_prime()</a>.</p>
@@ -102,6 +104,8 @@
 <div class="memdoc">
 
 <p>
+computes 32bit hash value for string &lt;s&gt; 
+<p>
 
 </div>
 </div><p>
@@ -122,11 +126,13 @@
 <div class="memdoc">
 
 <p>
+returns True iff n is a prime 
+<p>
 
 </div>
 </div><p>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Thu Sep 17 01:41:01 2009 for CWB by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Thu Sep 17 23:45:31 2009 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

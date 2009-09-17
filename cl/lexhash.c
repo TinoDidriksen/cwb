@@ -36,6 +36,7 @@
  * basic utility functions
  */
 
+/** returns True iff n is a prime */
 int 
 is_prime(int n) {
   int i;
@@ -45,6 +46,7 @@ is_prime(int n) {
   return 1;
 }
 
+/** returns smallest prime >= n */
 int 
 find_prime(int n) {
   for( ; n > 0 ; n++)           /* will exit on int overflow */
@@ -53,6 +55,7 @@ find_prime(int n) {
   return 0;
 }
 
+/** computes 32bit hash value for string <s> */
 unsigned int 
 hash_string(char *string) {
   unsigned char *s = (unsigned char *)string;
@@ -73,16 +76,19 @@ hash_string(char *string) {
 typedef void (*cl_lexhash_cleanup_func)(cl_lexhash_entry);
 
 /* typedef struct _cl_lexhash *cl_lexhash; in <cl.h> */
+/**
+ * Underlying structure for the cl_lexhash object.
+ */
 struct _cl_lexhash {
-  cl_lexhash_entry *table;      /* list of buckets, each one being a pointer to a list of entries */
-  unsigned int buckets;         /* number of buckets in list */
-  int next_id;                  /* ID that will be assigned to next new entry */
-  int entries;                  /* current number of entries in hash */
-  cl_lexhash_cleanup_func cleanup_func; /* callback function used when deleting entries (see <cl.h>) */
-  int performance_counter;      /* variables used for estimating hash performance (avg no of comparisons) */
+  cl_lexhash_entry *table;      /**< list of buckets, each one being a pointer to a list of entries */
+  unsigned int buckets;         /**< number of buckets in list */
+  int next_id;                  /**< ID that will be assigned to next new entry */
+  int entries;                  /**< current number of entries in this hash */
+  cl_lexhash_cleanup_func cleanup_func; /**< callback function used when deleting entries (see cl.h) */
+  int performance_counter;      /**< variables used for estimating hash performance (avg no of comparisons) */
   int comparisons;
   double last_performance;
-  int auto_grow;                /* whether to expand hash automatically */
+  int auto_grow;                /**< boolean: whether to expand hash automatically */
 };
 
 
@@ -91,7 +97,8 @@ struct _cl_lexhash {
  */
 
 cl_lexhash 
-cl_new_lexhash(int buckets) {
+cl_new_lexhash(int buckets)
+{
   cl_lexhash hash;
   
   if (buckets <= 0) buckets = DEFAULT_NR_OF_BUCKETS;
@@ -113,7 +120,8 @@ cl_new_lexhash(int buckets) {
    <deallocate cl_lexhash_entry object and its key string>
    */
 void
-cl_delete_lexhash_entry(cl_lexhash hash, cl_lexhash_entry entry) {
+cl_delete_lexhash_entry(cl_lexhash hash, cl_lexhash_entry entry)
+{
   if (hash != NULL) {
     /* if necessary, let cleanup callback delete objects associated with the data field */
     if (hash->cleanup_func != NULL) {
@@ -125,7 +133,8 @@ cl_delete_lexhash_entry(cl_lexhash hash, cl_lexhash_entry entry) {
 }
 
 void 
-cl_delete_lexhash(cl_lexhash hash) {
+cl_delete_lexhash(cl_lexhash hash)
+{
   int i;
   cl_lexhash_entry entry, temp;
   
@@ -144,13 +153,15 @@ cl_delete_lexhash(cl_lexhash hash) {
 }                        
 
 void
-cl_lexhash_set_cleanup_function(cl_lexhash hash, cl_lexhash_cleanup_func func) {
+cl_lexhash_set_cleanup_function(cl_lexhash hash, cl_lexhash_cleanup_func func)
+{
   if (hash != NULL)
     hash->cleanup_func = func;
 }
 
 void
-cl_lexhash_auto_grow(cl_lexhash hash, int flag) {
+cl_lexhash_auto_grow(cl_lexhash hash, int flag)
+{
   if (hash != NULL)
     hash->auto_grow = flag;
 }
@@ -162,7 +173,8 @@ cl_lexhash_auto_grow(cl_lexhash hash, int flag) {
    [note: this function also implements the hashing algorithm and must be consistent with cl_lexhash_find_i()]
 */
 int
-cl_lexhash_check_grow(cl_lexhash hash) {
+cl_lexhash_check_grow(cl_lexhash hash)
+{
   double fill_rate = ((double) hash->entries) / hash->buckets;
   cl_lexhash temp;
   cl_lexhash_entry entry, next;
@@ -215,7 +227,8 @@ cl_lexhash_check_grow(cl_lexhash hash) {
    [this function hides the hashing algorithm details from the rest of the lexhash implementation] 
 */
 cl_lexhash_entry
-cl_lexhash_find_i(cl_lexhash hash, char *token, unsigned int *ret_offset) {
+cl_lexhash_find_i(cl_lexhash hash, char *token, unsigned int *ret_offset)
+{
   unsigned int offset;
   cl_lexhash_entry entry;
 
@@ -240,12 +253,14 @@ cl_lexhash_find_i(cl_lexhash hash, char *token, unsigned int *ret_offset) {
 }
 
 cl_lexhash_entry
-cl_lexhash_find(cl_lexhash hash, char *token) {
+cl_lexhash_find(cl_lexhash hash, char *token)
+{
   return cl_lexhash_find_i(hash, token, NULL);
 }
 
 cl_lexhash_entry
-cl_lexhash_add(cl_lexhash hash, char *token) {
+cl_lexhash_add(cl_lexhash hash, char *token)
+{
   cl_lexhash_entry entry, insert_point;
   unsigned int offset;
   
@@ -281,7 +296,8 @@ cl_lexhash_add(cl_lexhash hash, char *token) {
 }
 
 int 
-cl_lexhash_id(cl_lexhash hash, char *token) {
+cl_lexhash_id(cl_lexhash hash, char *token)
+{
   cl_lexhash_entry entry;
 
   entry = cl_lexhash_find_i(hash, token, NULL);
@@ -289,7 +305,8 @@ cl_lexhash_id(cl_lexhash hash, char *token) {
 } 
 
 int 
-cl_lexhash_freq(cl_lexhash hash, char *token) {
+cl_lexhash_freq(cl_lexhash hash, char *token)
+{
   cl_lexhash_entry entry;
 
   entry = cl_lexhash_find_i(hash, token, NULL);
@@ -297,7 +314,8 @@ cl_lexhash_freq(cl_lexhash hash, char *token) {
 } 
 
 int 
-cl_lexhash_del(cl_lexhash hash, char *token) {
+cl_lexhash_del(cl_lexhash hash, char *token)
+{
   cl_lexhash_entry entry, previous;
   unsigned int offset, f;
 
@@ -323,7 +341,8 @@ cl_lexhash_del(cl_lexhash hash, char *token) {
 }
 
 int 
-cl_lexhash_size(cl_lexhash hash) {
+cl_lexhash_size(cl_lexhash hash)
+{
   cl_lexhash_entry entry;
   int i, size = 0;
 

@@ -30,7 +30,7 @@
 <h2>Data Structures</h2>
 <ul>
 <li>struct <a class="el" href="struct__cl__lexhash.html">_cl_lexhash</a>
-</ul>
+<dl class="el"><dd class="mdescRight">Underlying structure for the cl_lexhash object.  <a href="struct__cl__lexhash.html#_details">More...</a><br></dl></ul>
 <h2>Defines</h2>
 <ul>
 <li>#define <a class="el" href="lexhash_8c.html#a6f810c5bcfe8eaba4aa5d527bafb9cf">DEFAULT_NR_OF_BUCKETS</a>&nbsp;&nbsp;&nbsp;250000
@@ -44,9 +44,9 @@
 <h2>Functions</h2>
 <ul>
 <li>int <a class="el" href="lexhash_8c.html#d6740255386952216cb75d813243a3ea">is_prime</a> (int n)
-<li>int <a class="el" href="lexhash_8c.html#6bb4d75c3e8354cff3efd98002335877">find_prime</a> (int n)
-<li>unsigned int <a class="el" href="lexhash_8c.html#c7b0e59697b408e515f7dd9b3d62b024">hash_string</a> (char *string)
-<li><a class="el" href="struct__cl__lexhash.html">cl_lexhash</a> <a class="el" href="lexhash_8c.html#44f2692c5af7f16fc46640e31c7ae192">cl_new_lexhash</a> (int buckets)
+<dl class="el"><dd class="mdescRight">returns True iff n is a prime  <a href="#d6740255386952216cb75d813243a3ea"></a><br></dl><li>int <a class="el" href="lexhash_8c.html#6bb4d75c3e8354cff3efd98002335877">find_prime</a> (int n)
+<dl class="el"><dd class="mdescRight">returns smallest prime &gt;= n  <a href="#6bb4d75c3e8354cff3efd98002335877"></a><br></dl><li>unsigned int <a class="el" href="lexhash_8c.html#c7b0e59697b408e515f7dd9b3d62b024">hash_string</a> (char *string)
+<dl class="el"><dd class="mdescRight">computes 32bit hash value for string &lt;s&gt;  <a href="#c7b0e59697b408e515f7dd9b3d62b024"></a><br></dl><li><a class="el" href="struct__cl__lexhash.html">cl_lexhash</a> <a class="el" href="lexhash_8c.html#44f2692c5af7f16fc46640e31c7ae192">cl_new_lexhash</a> (int buckets)
 <li>void <a class="el" href="lexhash_8c.html#a86b95ad85c13af5a6879bd7a6c0da0e">cl_delete_lexhash_entry</a> (<a class="el" href="struct__cl__lexhash.html">cl_lexhash</a> hash, <a class="el" href="struct__cl__lexhash__entry.html">cl_lexhash_entry</a> entry)
 <li>void <a class="el" href="lexhash_8c.html#79cff65dc33eac71c64d68c0ca085259">cl_delete_lexhash</a> (<a class="el" href="struct__cl__lexhash.html">cl_lexhash</a> hash)
 <li>void <a class="el" href="lexhash_8c.html#5b6c6f31923d6d5038067753b93f234f">cl_lexhash_set_cleanup_function</a> (<a class="el" href="struct__cl__lexhash.html">cl_lexhash</a> hash, <a class="el" href="lexhash_8c.html#9cf68d16ee9092cf807d1620de957c3a">cl_lexhash_cleanup_func</a> func)
@@ -537,6 +537,8 @@
 <div class="memdoc">
 
 <p>
+returns smallest prime &gt;= n 
+<p>
 
 <p>Referenced by <a class="el" href="lexhash_8c.html#44f2692c5af7f16fc46640e31c7ae192">cl_new_lexhash()</a>, <a class="el" href="cwb-scan-corpus_8c.html#0ddf1224851353fc92bfbff6f499fa97">main()</a>, <a class="el" href="server_8h.html#6f81c046570703b84676139d556f53ad">make_attribute_hash()</a>, and <a class="el" href="macro_8c.html#603effb8b3d1fa34860f313311e1dcef">MakeMacroHash()</a>.</p>
 
@@ -558,6 +560,8 @@
 </div>
 <div class="memdoc">
 
+<p>
+computes 32bit hash value for string &lt;s&gt; 
 <p>
 
 <p>Referenced by <a class="el" href="server_8c.html#e08e9f05d751077e190df68c373fdcfc">att_hash_lookup()</a>, <a class="el" href="lexhash_8c.html#b0c83bcda2f4b258d99d41dcfef1dd30">cl_lexhash_check_grow()</a>, and <a class="el" href="lexhash_8c.html#7afb45b7d798d20514dd22f2c8d1f8f1">cl_lexhash_find_i()</a>.</p>
@@ -581,13 +585,15 @@
 <div class="memdoc">
 
 <p>
+returns True iff n is a prime 
+<p>
 
 <p>Referenced by <a class="el" href="hash_8h.html#6bb4d75c3e8354cff3efd98002335877">find_prime()</a>.</p>
 
 </div>
 </div><p>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Thu Sep 17 01:41:01 2009 for CWB by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Thu Sep 17 23:45:31 2009 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

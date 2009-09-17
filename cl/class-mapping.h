@@ -22,38 +22,60 @@
 #include "corpus.h"
 #include "attributes.h"
 
-/* simple many-to-one mapping */
 
 
-/* -------------------- read mapping file */
-
-
-
+/**
+ * The SingleMapping object.
+ *
+ * This object represents a simple many-to-one mapping between one "class" and
+ * a number of different tokens (represented by integer ID codes).
+ *
+ * The tokens are values that occur on a particular attribute in a particular
+ * corpus. (Note: positional attributes, not other types!)
+ * [?? -- is this correct? -- AH]
+ */
 typedef struct _single_mapping {
-  char *class_name;             /* my class name */
-  int nr_tokens;                /* the number of tokens which I own */
-  int *tokens;                  /* the tokens themselves */
+  char *class_name;             /**< this object's class name */
+  int nr_tokens;                /**< the number of tokens which this object owns */
+  int *tokens;                  /**< the tokens themselves */
 } SingleMappingRecord, 
     *SingleMapping;
 
-
+/**
+ * The Mapping object.
+ *
+ * A Mapping consists of a bundle of SingleMappings. Each SingleMapping represents
+ * a class within the mapping, and each class maps to a number of different tokens
+ * on a particular p-attribute in a particular corpus.
+ *
+ * Classes are mutually exclusive, i.e. a single token cannot be a member
+ * of more than one class in the same Mapping.
+ *
+ * NB: "Mapping" is the pointer (class); MappingRecord is the underlying structure.
+ *
+ * @see SingleMapping
+ */
 typedef struct _mapping {
-  Corpus *corpus;               /* the corpus I'm valid in */
-  Attribute *attribute;         /* the attribute I'm valid for */
-  char *mapping_name;           /* my name */
-  int nr_classes;               /* the number of mappings */
-  SingleMappingRecord *classes; /* the mappings themselves */
+  Corpus *corpus;               /**< the corpus this Mapping is valid in */
+  Attribute *attribute;         /**< the attribute this object is valid for */
+  char *mapping_name;           /**< this Mapping's name */
+  int nr_classes;               /**< the number of single mappings currently in this Mapping */
+  SingleMappingRecord *classes; /**< the mappings themselves */
 } MappingRecord, *Mapping;
+
+
+
+
 
 
 /* -------------------- create/destruct mappings */
 
 Mapping
-read_mapping(Corpus *corpus,    /* the corpus for which I'm valid */
-             char *attr_name,   /* the attribute for which I'm valid */
-             char *file_name,   /* the filename of the map spec */
-             char **error_string); /* a char * (not char[]), 
-                                    * set to an error string or NULL if ok */
+read_mapping(Corpus *corpus,
+             char *attr_name,
+             char *file_name,
+             char **error_string);
+
 
 int
 drop_mapping(Mapping *map);
@@ -76,9 +98,6 @@ map_id_to_class_number(Mapping map,
                        int id);
 
 /* -------------------- class -> {tokens} */
-
-/* returns pointer to token IDs (don't free!), and number of tokens in
- * nr_tokens */
 
 int *
 map_class_to_tokens(SingleMapping map,

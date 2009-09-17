@@ -24,7 +24,10 @@
   </div>
 </div>
 <div class="contents">
-<h1>dl_stub.c File Reference</h1><h2>Functions</h2>
+<h1>dl_stub.c File Reference</h1>Stub interface to dynamic linker routines that SunOS uses but didn't ship with 4.1.  
+<a href="#_details">More...</a>
+<p>
+<h2>Functions</h2>
 <ul>
 <li>void * <a class="el" href="dl__stub_8c.html#64b21cb08adba0d6e5410751468c4b6e">dlopen</a> ()
 <li>void * <a class="el" href="dl__stub_8c.html#2f6d78f87f089f548037b19e04f7a475">dlsym</a> ()
@@ -35,7 +38,12 @@
 <li>int <a class="el" href="dl__stub_8c.html#57cfbc6317cfe1baa251ec48f729541e">_dlclose</a> ()
 <li>char * <a class="el" href="dl__stub_8c.html#d2acb73cc3ba1467efe409b34031e09f">_dlerror</a> ()
 </ul>
-<hr><h2>Function Documentation</h2>
+<hr><a name="_details"></a><h2>Detailed Description</h2>
+Stub interface to dynamic linker routines that SunOS uses but didn't ship with 4.1. 
+<p>
+(nor with Solaris 2.6 :oP )<p>
+The C library routine wcstombs in SunOS 4.1 tries to dynamically load some routines using the dlsym interface, described in dlsym(3x). Unfortunately SunOS 4.1 does not include the necessary library, libdl.<p>
+(borrowed from the MIT X11R5 distribution) <hr><h2>Function Documentation</h2>
 <a class="anchor" name="57cfbc6317cfe1baa251ec48f729541e"></a><!-- doxytag: member="dl_stub.c::_dlclose" ref="57cfbc6317cfe1baa251ec48f729541e" args="()" -->
 <div class="memitem">
 <div class="memproto">
@@ -189,7 +197,7 @@
 </div>
 </div><p>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Thu Sep 17 01:41:01 2009 for CWB by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Thu Sep 17 23:45:31 2009 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

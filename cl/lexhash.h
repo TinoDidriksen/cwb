@@ -25,9 +25,9 @@
 #include "cl.h"
 
 /* some utility functions which can be re-used for other hash tables */
-int is_prime(int n);                                          /* returns True iff <n> is a prime */
-int find_prime(int n);                                        /* returns smallest prime >= n */
-unsigned int hash_string(char *s);                            /* compute 32bit hash value for string <s> */
+int is_prime(int n);
+int find_prime(int n);
+unsigned int hash_string(char *s);
 
 
 

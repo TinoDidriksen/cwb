@@ -23,19 +23,23 @@
   </div>
 </div>
 <div class="contents">
-<h1>_cl_lexhash Struct Reference</h1><!-- doxytag: class="_cl_lexhash" --><h2>Data Fields</h2>
+<h1>_cl_lexhash Struct Reference</h1><!-- doxytag: class="_cl_lexhash" -->Underlying structure for the cl_lexhash object.  
+<a href="#_details">More...</a>
+<p>
+<h2>Data Fields</h2>
 <ul>
 <li><a class="el" href="struct__cl__lexhash__entry.html">cl_lexhash_entry</a> * <a class="el" href="struct__cl__lexhash.html#d0daa1068fff9eb5bb9e11e7ab4f2b1e">table</a>
-<li>unsigned int <a class="el" href="struct__cl__lexhash.html#edff83072c3ab4f3719e66edc63610d8">buckets</a>
-<li>int <a class="el" href="struct__cl__lexhash.html#1512c88bd8da4ca8a0e54b3ed62f758c">next_id</a>
-<li>int <a class="el" href="struct__cl__lexhash.html#05de9d2e9fdfcc8bf932ca13b95ede29">entries</a>
-<li><a class="el" href="lexhash_8c.html#9cf68d16ee9092cf807d1620de957c3a">cl_lexhash_cleanup_func</a> <a class="el" href="struct__cl__lexhash.html#34fa040454883b11c906b5127080e586">cleanup_func</a>
-<li>int <a class="el" href="struct__cl__lexhash.html#43e64deb897346963994a5f2957a0e12">performance_counter</a>
-<li>int <a class="el" href="struct__cl__lexhash.html#ad08dd1b691e8c7d1411d8f24e53ecd0">comparisons</a>
+<dl class="el"><dd class="mdescRight">list of buckets, each one being a pointer to a list of entries  <a href="#d0daa1068fff9eb5bb9e11e7ab4f2b1e"></a><br></dl><li>unsigned int <a class="el" href="struct__cl__lexhash.html#edff83072c3ab4f3719e66edc63610d8">buckets</a>
+<dl class="el"><dd class="mdescRight">number of buckets in list  <a href="#edff83072c3ab4f3719e66edc63610d8"></a><br></dl><li>int <a class="el" href="struct__cl__lexhash.html#1512c88bd8da4ca8a0e54b3ed62f758c">next_id</a>
+<dl class="el"><dd class="mdescRight">ID that will be assigned to next new entry.  <a href="#1512c88bd8da4ca8a0e54b3ed62f758c"></a><br></dl><li>int <a class="el" href="struct__cl__lexhash.html#05de9d2e9fdfcc8bf932ca13b95ede29">entries</a>
+<dl class="el"><dd class="mdescRight">current number of entries in this hash  <a href="#05de9d2e9fdfcc8bf932ca13b95ede29"></a><br></dl><li><a class="el" href="lexhash_8c.html#9cf68d16ee9092cf807d1620de957c3a">cl_lexhash_cleanup_func</a> <a class="el" href="struct__cl__lexhash.html#34fa040454883b11c906b5127080e586">cleanup_func</a>
+<dl class="el"><dd class="mdescRight">callback function used when deleting entries (see <a class="el" href="cl_8h.html">cl.h</a>)  <a href="#34fa040454883b11c906b5127080e586"></a><br></dl><li>int <a class="el" href="struct__cl__lexhash.html#43e64deb897346963994a5f2957a0e12">performance_counter</a>
+<dl class="el"><dd class="mdescRight">variables used for estimating hash performance (avg no of comparisons)  <a href="#43e64deb897346963994a5f2957a0e12"></a><br></dl><li>int <a class="el" href="struct__cl__lexhash.html#ad08dd1b691e8c7d1411d8f24e53ecd0">comparisons</a>
 <li>double <a class="el" href="struct__cl__lexhash.html#4f81948d6e23cc76a0f3c5dc18a34677">last_performance</a>
 <li>int <a class="el" href="struct__cl__lexhash.html#c3cf5e46d2c8377c553d7e583884511d">auto_grow</a>
-</ul>
-<hr><h2>Field Documentation</h2>
+<dl class="el"><dd class="mdescRight">boolean: whether to expand hash automatically  <a href="#c3cf5e46d2c8377c553d7e583884511d"></a><br></dl></ul>
+<hr><a name="_details"></a><h2>Detailed Description</h2>
+Underlying structure for the cl_lexhash object. <hr><h2>Field Documentation</h2>
 <a class="anchor" name="c3cf5e46d2c8377c553d7e583884511d"></a><!-- doxytag: member="_cl_lexhash::auto_grow" ref="c3cf5e46d2c8377c553d7e583884511d" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -47,6 +51,8 @@
 </div>
 <div class="memdoc">
 
+<p>
+boolean: whether to expand hash automatically 
 <p>
 
 <p>Referenced by <a class="el" href="lexhash_8c.html#2b0094a802868b6f907460cc3fa3e69d">cl_lexhash_auto_grow()</a>, <a class="el" href="lexhash_8c.html#b0c83bcda2f4b258d99d41dcfef1dd30">cl_lexhash_check_grow()</a>, and <a class="el" href="lexhash_8c.html#44f2692c5af7f16fc46640e31c7ae192">cl_new_lexhash()</a>.</p>
@@ -65,6 +71,8 @@
 <div class="memdoc">
 
 <p>
+number of buckets in list 
+<p>
 
 <p>Referenced by <a class="el" href="lexhash_8c.html#79cff65dc33eac71c64d68c0ca085259">cl_delete_lexhash()</a>, <a class="el" href="lexhash_8c.html#b0c83bcda2f4b258d99d41dcfef1dd30">cl_lexhash_check_grow()</a>, <a class="el" href="lexhash_8c.html#7afb45b7d798d20514dd22f2c8d1f8f1">cl_lexhash_find_i()</a>, <a class="el" href="lexhash_8c.html#bab373e5a4e2dd99dec63b13fc37faed">cl_lexhash_size()</a>, and <a class="el" href="lexhash_8c.html#44f2692c5af7f16fc46640e31c7ae192">cl_new_lexhash()</a>.</p>
 
@@ -81,6 +89,8 @@
 </div>
 <div class="memdoc">
 
+<p>
+callback function used when deleting entries (see <a class="el" href="cl_8h.html">cl.h</a>) 
 <p>
 
 <p>Referenced by <a class="el" href="lexhash_8c.html#a86b95ad85c13af5a6879bd7a6c0da0e">cl_delete_lexhash_entry()</a>, <a class="el" href="lexhash_8c.html#5b6c6f31923d6d5038067753b93f234f">cl_lexhash_set_cleanup_function()</a>, and <a class="el" href="lexhash_8c.html#44f2692c5af7f16fc46640e31c7ae192">cl_new_lexhash()</a>.</p>
@@ -116,6 +126,8 @@
 <div class="memdoc">
 
 <p>
+current number of entries in this hash 
+<p>
 
 <p>Referenced by <a class="el" href="lexhash_8c.html#4a0eb190bffe4ca27d93a2248aa63d9b">cl_lexhash_add()</a>, <a class="el" href="lexhash_8c.html#b0c83bcda2f4b258d99d41dcfef1dd30">cl_lexhash_check_grow()</a>, <a class="el" href="lexhash_8c.html#51838f1751d9079cd17b9c35955d3fff">cl_lexhash_del()</a>, and <a class="el" href="lexhash_8c.html#44f2692c5af7f16fc46640e31c7ae192">cl_new_lexhash()</a>.</p>
 
@@ -150,6 +162,8 @@
 <div class="memdoc">
 
 <p>
+ID that will be assigned to next new entry. 
+<p>
 
 <p>Referenced by <a class="el" href="lexhash_8c.html#4a0eb190bffe4ca27d93a2248aa63d9b">cl_lexhash_add()</a>, and <a class="el" href="lexhash_8c.html#44f2692c5af7f16fc46640e31c7ae192">cl_new_lexhash()</a>.</p>
 
@@ -166,6 +180,8 @@
 </div>
 <div class="memdoc">
 
+<p>
+variables used for estimating hash performance (avg no of comparisons) 
 <p>
 
 <p>Referenced by <a class="el" href="lexhash_8c.html#7afb45b7d798d20514dd22f2c8d1f8f1">cl_lexhash_find_i()</a>, and <a class="el" href="lexhash_8c.html#44f2692c5af7f16fc46640e31c7ae192">cl_new_lexhash()</a>.</p>
@@ -184,6 +200,8 @@
 <div class="memdoc">
 
 <p>
+list of buckets, each one being a pointer to a list of entries 
+<p>
 
 <p>Referenced by <a class="el" href="lexhash_8c.html#79cff65dc33eac71c64d68c0ca085259">cl_delete_lexhash()</a>, <a class="el" href="lexhash_8c.html#4a0eb190bffe4ca27d93a2248aa63d9b">cl_lexhash_add()</a>, <a class="el" href="lexhash_8c.html#b0c83bcda2f4b258d99d41dcfef1dd30">cl_lexhash_check_grow()</a>, <a class="el" href="lexhash_8c.html#51838f1751d9079cd17b9c35955d3fff">cl_lexhash_del()</a>, <a class="el" href="lexhash_8c.html#7afb45b7d798d20514dd22f2c8d1f8f1">cl_lexhash_find_i()</a>, <a class="el" href="lexhash_8c.html#bab373e5a4e2dd99dec63b13fc37faed">cl_lexhash_size()</a>, and <a class="el" href="lexhash_8c.html#44f2692c5af7f16fc46640e31c7ae192">cl_new_lexhash()</a>.</p>
 
@@ -192,7 +210,7 @@
 <hr>The documentation for this struct was generated from the following file:<ul>
 <li>cl/<a class="el" href="lexhash_8c.html">lexhash.c</a></ul>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Thu Sep 17 01:41:01 2009 for CWB by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Thu Sep 17 23:45:31 2009 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

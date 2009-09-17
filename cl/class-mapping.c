@@ -23,7 +23,9 @@
 
 #include "class-mapping.h"
 
-
+/**
+ * The token that identifies a "name" line in a mapping file.
+ */
 #define NAME_TOKEN "#name "
 
 /* ---------------------------------------- prototypes */
@@ -33,9 +35,18 @@ drop_single_mapping(SingleMapping *smap);
 
 /* ---------------------------------------- functions */
 
+/**
+ * increment for memory reallocation of classes in a SingleMapping
+ */
 #define CLASS_REALLOC_THRESHOLD 16
+/**
+ * increment for memory reallocation of tokens in a SingleMapping
+ */
 #define TOKEN_REALLOC_THRESHOLD 16
 
+
+
+/* note this DUPLICATES intcompare in cdaccess.c where it is also static... */
 static
 int 
 intcompare(const void *i, const void *j)
@@ -43,11 +54,31 @@ intcompare(const void *i, const void *j)
   return(*(int *)i - *(int *)j);
 }
 
+
+/**
+ * Creates a Mapping from a file.
+ *
+ * Each line in the file results in a SingleMapping (unless it begins in #,
+ * in which case it either indicates the name of the mapping or is a comment).
+ *
+ * Within a single line, the first white-space delimited token represents
+ * the name of the class, and the other tokens are attribute values.
+ *
+ * Any parse failure in the file will stop the entire Mapping-creation process
+ * and result in NULL being returned.
+ *
+ * @param corpus        The corpus for which the Mapping is valid (pointer).
+ * @param attribute     The attribute for which the Mapping is valid (pointer).
+ * @param file_name     The filename of the map spec.
+ * @param error_string  A char * (not char[]), which is set to an error
+ *                      string, or to NULL if all is OK.
+ * @return              The resulting Mapping object, or NULL in case of error.
+ */
 Mapping
 read_mapping(Corpus *corpus,
-	     char *attr_name,
-	     char *file_name,
-	     char **error_string)
+             char *attr_name,
+             char *file_name,
+             char **error_string)
 {
   FILE *fd;
   Attribute *attr;
@@ -90,35 +121,40 @@ read_mapping(Corpus *corpus,
     drop_mapping(&m);
   }
 
-  while (m &&
-	 fgets(s, 1024, fd) != NULL) {
+  while ( m  &&  fgets(s, 1024, fd) != NULL ) {
 
     if (s[0] && s[strlen(s)-1] == '\n')
       s[strlen(s)-1] = '\0';
 
+    /* NB. The following if-else takes up all the rest of this while-loop. */
     if (s[0] == '#') {
 
+      /* lines beginning with # */
+
+      /* if this line begins with the NAME_TOKEN... */
       if (strncasecmp(s, NAME_TOKEN, strlen(NAME_TOKEN)) == 0) {
 
-	/* set the name */
+        /* set the name */
 
-	if (m->mapping_name) {
-	  *error_string = "Multiple mapping names declared";
-	  drop_mapping(&m);
-	}
-	else if (!s[strlen(NAME_TOKEN)]) {
-	  *error_string = "Error in #NAME declaration";
-	  drop_mapping(&m);
-	}
-	else {
-	  m->mapping_name = cl_strdup(s + strlen(NAME_TOKEN));
-	}
+        if (m->mapping_name) {
+          *error_string = "Multiple mapping names declared";
+          drop_mapping(&m);
+        }
+        else if (!s[strlen(NAME_TOKEN)]) {
+          *error_string = "Error in #NAME declaration";
+          drop_mapping(&m);
+        }
+        else {
+          m->mapping_name = cl_strdup(s + strlen(NAME_TOKEN));
+        }
       }
 
-      /* everything else beginning with # is a comment */
+      /* everything else beginning with # is a comment  (and can thus be ignored) */
 
     }
     else if (s[0]) {
+
+      /* lines NOT beginning with # */
 
       /* make new single mapping */
 
@@ -129,121 +165,122 @@ read_mapping(Corpus *corpus,
 
       if (token) {
 
-	/* first token is class name, rest are attribute values */
+        /* first token is class name, rest are attribute values */
 
-	/* test: class 'token' already defined? */
-	if (find_mapping(m, token) != NULL) {
-	  *error_string = "Class defined twice";
-	  drop_mapping(&m);
-	  break;
-	}
+        /* test: class 'token' already defined? */
+        if (find_mapping(m, token) != NULL) {
+          *error_string = "Class defined twice";
+          drop_mapping(&m);
+          break;
+        }
 
-	/* create new class */
+        /* create new class */
 
-	if (m->nr_classes == 0) {
-	  m->classes = 
-	    (SingleMappingRecord *)
-	    cl_malloc(sizeof(SingleMappingRecord) * CLASS_REALLOC_THRESHOLD);
-	}
-	else if (m->nr_classes % CLASS_REALLOC_THRESHOLD == 0) {
-	  m->classes = 
-	    (SingleMappingRecord *)
-	    cl_realloc(m->classes, 
-		    sizeof(SingleMappingRecord) * 
-		    (m->nr_classes + CLASS_REALLOC_THRESHOLD));
-	}
+        if (m->nr_classes == 0) {
+          m->classes =
+            (SingleMappingRecord *)
+            cl_malloc(sizeof(SingleMappingRecord) * CLASS_REALLOC_THRESHOLD);
+        }
+        else if (m->nr_classes % CLASS_REALLOC_THRESHOLD == 0) {
+          m->classes =
+            (SingleMappingRecord *)
+            cl_realloc(m->classes,
+                    sizeof(SingleMappingRecord) *
+                    (m->nr_classes + CLASS_REALLOC_THRESHOLD));
+        }
+        /* else there is enough memory for this new class already! */
 
-	if (m->classes == NULL) {
-	  *error_string = "Memory allocation failure";
-	  drop_mapping(&m);
-	}
-	else {
-	  m->classes[m->nr_classes].class_name = cl_strdup(token);
-	  m->classes[m->nr_classes].nr_tokens = 0;
-	  m->classes[m->nr_classes].tokens = NULL;
+        if (m->classes == NULL) {
+          *error_string = "Memory allocation failure";
+          drop_mapping(&m);
+        }
+        else {
+          m->classes[m->nr_classes].class_name = cl_strdup(token);
+          m->classes[m->nr_classes].nr_tokens = 0;
+          m->classes[m->nr_classes].tokens = NULL;
 
-	  this_class = &(m->classes[m->nr_classes]);
-	}
+          this_class = &(m->classes[m->nr_classes]);
+        }
 
-	/* create single mappings */
+        /* create single mappings : loop through remaining tokens on this line */
 
-	while (m && 
-	       (token = strtok(NULL, " \t\n"))) {
+        while (m &&
+               (token = strtok(NULL, " \t\n"))) {
 
-	  int id;
+          int id;
 
-	  /* test: token member of attribute values of my attribute? */
+          /* test: token member of attribute values of my attribute? */
 
-	  id = get_id_of_string(attr, token);
+          id = get_id_of_string(attr, token);
 
-	  if (id < 0 || cderrno != CDA_OK) {
-	    *error_string = "token not member of attribute";
-	    drop_mapping(&m);
-	    break;
-	  }
-	  
-	  /* test: token already member of any class? */
-	  
-	  if (map_token_to_class(m, token) != NULL) {
-	    *error_string = "token member of several classes";
-	    drop_mapping(&m);
-	    break;
-	  }
-	  else if (this_class->tokens) {
-	    int i;
+          if (id < 0 || cderrno != CDA_OK) {
+            *error_string = "token not member of attribute";
+            drop_mapping(&m);
+            break;
+          }
 
-	    for (i = 0; i < this_class->nr_tokens; i++)
-	      if (this_class->tokens[i] == id) {
-		*error_string = "token member of several classes";
-		drop_mapping(&m);
-		break;
-	      }
-	  }
+          /* test: token already member of any class? */
 
-	  /* put token id into this mapping */
+          if (map_token_to_class(m, token) != NULL) {
+            *error_string = "token member of several classes";
+            drop_mapping(&m);
+            break;
+          }
+          else if (this_class->tokens) {
+            int i;
 
-	  if (m) {
+            for (i = 0; i < this_class->nr_tokens; i++)
+              if (this_class->tokens[i] == id) {
+                *error_string = "token member of several classes";
+                drop_mapping(&m);
+                break;
+              }
+          }
 
-	    if (this_class->nr_tokens == 0) {
-	      this_class->tokens = 
-		(int *)
-		cl_malloc(sizeof(int) * TOKEN_REALLOC_THRESHOLD);
-	    }
-	    else if (this_class->nr_tokens % TOKEN_REALLOC_THRESHOLD == 0) {
+          /* having passed all the tests, put token id into this mapping */
 
-	      this_class->tokens = 
-		(int *)
-		cl_realloc(this_class->tokens, 
-			sizeof(int) * (this_class->nr_tokens + 
-				       TOKEN_REALLOC_THRESHOLD));
-	    }
-	    
-	    if (this_class->tokens == NULL) {
-	      *error_string = "Memory allocation failure";
-	      drop_mapping(&m);
-	    }
-	    else {
-	      this_class->tokens[this_class->nr_tokens] = id;
-	      this_class->nr_tokens++;
-	    }
-	  }
-	}
+          if (m) {
 
-	if (m) {
+            if (this_class->nr_tokens == 0) {
+              this_class->tokens =
+                (int *)
+                cl_malloc(sizeof(int) * TOKEN_REALLOC_THRESHOLD);
+            }
+            else if (this_class->nr_tokens % TOKEN_REALLOC_THRESHOLD == 0) {
 
-	  m->nr_classes++;
-	  
-	  /* sort token IDs in increasing order */
+              this_class->tokens =
+                (int *)
+                cl_realloc(this_class->tokens,
+                        sizeof(int) * (this_class->nr_tokens +
+                                       TOKEN_REALLOC_THRESHOLD));
+            }
 
-	  qsort(this_class->tokens, 
-		this_class->nr_tokens,
-		sizeof(int),
-		intcompare);
+            if (this_class->tokens == NULL) {
+              *error_string = "Memory allocation failure";
+              drop_mapping(&m);
+            }
+            else {
+              this_class->tokens[this_class->nr_tokens] = id;
+              this_class->nr_tokens++;
+            }
+          }
+        } /* endwhile (loop for each token on a line) */
 
-	}
+        if (m) {
+
+          m->nr_classes++;
+
+          /* sort token IDs in increasing order */
+
+          qsort(this_class->tokens,
+                this_class->nr_tokens,
+                sizeof(int),
+                intcompare);
+
+        }
       }
     }
-  }
+  } /* endwhile (main loop for each line in the mapping file */
 
   fclose(fd);
 
@@ -251,6 +288,12 @@ read_mapping(Corpus *corpus,
 }
 
 
+/**
+ * Deletes a SingleMapping object.
+ *
+ * @param smap  Address of the object to delete.
+ * @return      Always 1.
+ */
 int
 drop_single_mapping(SingleMapping *smap)
 {
@@ -264,6 +307,13 @@ drop_single_mapping(SingleMapping *smap)
   return 1;
 }
 
+
+/**
+ * Deletes a Mapping object.
+ *
+ * @param map  Address of the object to delete.
+ * @return     Always 1.
+ */
 int
 drop_mapping(Mapping *map)
 {
@@ -279,6 +329,9 @@ drop_mapping(Mapping *map)
   return 1;
 }
 
+/**
+ * Writes a description of a Mapping object to STDERR.
+ */
 void
 print_mapping(Mapping map)
 {
@@ -288,18 +341,18 @@ print_mapping(Mapping map)
 
   fprintf(stderr, "Name:  %s\n", map->mapping_name);
   fprintf(stderr, "Valid: %s/%s\n", 
-	  map->corpus->registry_name,
-	  map->attribute->any.name);
+          map->corpus->registry_name,
+          map->attribute->any.name);
   fprintf(stderr, "NrCls: %d\n", 
-	  map->nr_classes);
+          map->nr_classes);
 
   for (cp = 0; cp < map->nr_classes; cp++) {
     fprintf(stderr, "%5d/%s with %d members: \n", 
-	    cp, map->classes[cp].class_name, map->classes[cp].nr_tokens);
+            cp, map->classes[cp].class_name, map->classes[cp].nr_tokens);
     for (tp = 0; tp < map->classes[cp].nr_tokens; tp++) {
       fprintf(stderr, "\t%d/%s", 
-	      map->classes[cp].tokens[tp], 
-	      get_string_of_id(map->attribute, map->classes[cp].tokens[tp]));
+              map->classes[cp].tokens[tp],
+              get_string_of_id(map->attribute, map->classes[cp].tokens[tp]));
     }
     fprintf(stderr, "\n");
   }
@@ -310,9 +363,17 @@ print_mapping(Mapping map)
 
 /* -------------------- token -> class */
 
+/**
+ * Gets the SingleMapping that contains a particular token in the given Mapping.
+ *
+ * @param map    The Mapping to look in.
+ * @param token  The token to look for, identified by string.
+ * @return       The SingleMapping representing the class that contains that
+ *               token (or NULL if the token was not found).
+ */
 SingleMapping
 map_token_to_class(Mapping map, 
-		   char *token)
+                   char *token)
 {
   int class_num;
 
@@ -322,9 +383,18 @@ map_token_to_class(Mapping map,
     return NULL;
 }
 
+/**
+ * Gets the number of the class that contains a particular token in the given Mapping.
+ *
+ * @param map    The Mapping to look in.
+ * @param token  The token to look for, identified by string.
+ * @return       The "class number" of the class containing the token (i.e. an
+ *               index in the Mapping's "array" of SingleMappings) or -1 if the
+ *               token was not found.
+ */
 int
 map_token_to_class_number(Mapping map, 
-			  char *token)
+                          char *token)
 {
   int id;
 
@@ -336,9 +406,18 @@ map_token_to_class_number(Mapping map,
   return -1;
 }
 
+/**
+ * Gets the number of the class that contains a particular token in the given Mapping.
+ *
+ * @param map  The Mapping to look in.
+ * @param id   The token to look for, identified by its integer ID.
+ * @return     The "class number" of the class containing the token (i.e. an
+ *             index in the Mapping's "array" of SingleMappings) or -1 if the
+ *             token was not found.
+ */
 int
 map_id_to_class_number(Mapping map, 
-		       int id)
+                       int id)
 {
   int smp;
 
@@ -350,12 +429,18 @@ map_id_to_class_number(Mapping map,
 
 /* -------------------- class -> {tokens} */
 
-/* returns pointer to token IDs of this class (don't free!), and
- * number of tokens in nr_tokens */
 
+/**
+ * Gets the location of the token IDs in this class.
+ *
+ * @param nr_tokens  Address of an integer, which will be set
+ *                   to the number of tokens in this class.
+ * @return           A pointer to the token IDs of this class
+ *                   (don't free this!!)
+ */
 int *
 map_class_to_tokens(SingleMapping map,
-		    int *nr_tokens)
+                    int *nr_tokens)
 {
   *nr_tokens = map->nr_tokens;
   return map->tokens;
@@ -364,12 +449,22 @@ map_class_to_tokens(SingleMapping map,
 
 /* -------------------- utils */
 
+/**
+ * Gets the number of classes possessed by this Mapping.
+ */
 int
 number_of_classes(Mapping map)
 {
   return map->nr_classes;
 }
 
+/**
+ * Find a class within this mapping.
+ *
+ * @param name  The class to look for.
+ * @return      The SingleMapping containing the class which
+ *              has the name "name".
+ */
 SingleMapping
 find_mapping(Mapping map, char *name)
 {
@@ -382,6 +477,9 @@ find_mapping(Mapping map, char *name)
   return NULL;
 }
 
+/**
+ * Gets the number of tokens possessed by this Mapping.
+ */
 int
 number_of_tokens(SingleMapping map)
 {
@@ -390,10 +488,21 @@ number_of_tokens(SingleMapping map)
 
 /* -------------------- predicates */
 
+/**
+ * Checks whether a token is a member of a class in a Mapping.
+ *
+ * The token is identified by its
+ *
+ * @see member_of_class_i
+ * @param map    The mapping to look in.
+ * @param class  The class to check.
+ * @param token  The token to look for (identified by its actual string).
+ * @return       Boolean.
+ */
 int
 member_of_class_s(Mapping map, 
-		  SingleMapping class, 
-		  char *token)
+                  SingleMapping class,
+                  char *token)
 {
   int id;
 
@@ -405,16 +514,25 @@ member_of_class_s(Mapping map,
     return member_of_class_i(map, class, id);
 }
 
+/**
+ * Checks whether a token is a member of a class in a Mapping.
+ *
+ * @see member_of_class_s
+ * @param map    The mapping to look in.
+ * @param class  The class to check.
+ * @param token  The token to look for (identified by its integer ID).
+ * @return       Boolean.
+ */
 int
 member_of_class_i(Mapping map, 
-		  SingleMapping class, 
-		  int id)
+                  SingleMapping class,
+                  int id)
 {
   if (bsearch(&id, 
-	      class->tokens, 
-	      class->nr_tokens, 
-	      sizeof(int), 
-	      intcompare) != NULL)
+              class->tokens,
+              class->nr_tokens,
+              sizeof(int),
+              intcompare) != NULL)
     return 1;
   else
     return 0;
