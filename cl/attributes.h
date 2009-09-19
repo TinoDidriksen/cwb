@@ -187,7 +187,8 @@ typedef struct {
 
 typedef struct {
   COMMON_ATTR_FIELDS;
-  int has_attribute_values;
+  int has_attribute_values;         /**< boolean: whether or not instances of this s-attribute can have values
+                                         @see structure_has_values */
 } Struc_Attribute;
 
 typedef struct {

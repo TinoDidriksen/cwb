@@ -24,18 +24,44 @@
 #include <stdlib.h>
 #include <string.h>
 
+/** magic number of the subcropus file format */
 #define SUBCORPMAGIC 36193928
 
+/** Boolean: controls whether a "registry" header in the subcorpus file gets printed or not */
 int print_header = 1;
 
-int file_length(FILE *fd)
+/**
+ * Gets the size of the file.
+ *
+ * @param fd  File handle.
+ * @return    The size of the file, from stat().
+ */
+int
+file_length(FILE *fd)
 {
   struct stat stat_buf;
-  if(fstat(fileno(fd), &stat_buf) == EOF) return(EOF);
-  else return(stat_buf.st_size);
+  if(fstat(fileno(fd), &stat_buf) == EOF)
+    return(EOF);
+  else
+    return(stat_buf.st_size);
 }
 
-int show_subcorpus_info(FILE *fd)
+/**
+ * Reads a subcorpus file and prints information about it to STDOUT.
+ *
+ * "Subcorpus file" here means (a) it begins with the subcorpus magic number;
+ * (b)then there is a "registry" area terminated by '\0'; (c) then there
+ * may be the size of the subcorpus; (d) then there are a whole load of
+ * start-end range integer pairs, to the end of the file.
+ *
+ * The registry is printed iff print_header. The start-end pairs
+ * are printed on tab-delimited lines, one line per pair.
+ *
+ * @param fd  File pointer.
+ * @return    Boolean: true for all OK, false for problem.
+ */
+int
+show_subcorpus_info(FILE *fd)
 {
   char        *field;
   char        *p;
@@ -79,7 +105,7 @@ int show_subcorpus_info(FILE *fd)
       registry = (char *)p;
       
       while (*p)
-	p++;
+        p++;
       /* skip the '\0' character */
       p++;
 
@@ -88,36 +114,36 @@ int show_subcorpus_info(FILE *fd)
       
       /* advance p to the end of the 2nd string */
       while (*p)
-	p++;
+        p++;
       /* skip the '\0' character */
       p++;
       
       /* the length is divisible by 4 -- advance p over the additional '\0' characters */
       while ((p - field) % 4)
-	p++;
+        p++;
 
       if (magic == SUBCORPMAGIC) {
-	size = (len - (p - field)) / (2 * sizeof(int));
+        size = (len - (p - field)) / (2 * sizeof(int));
       }
       else {
-	memcpy(&size, p, sizeof(int));
-	p += sizeof(int);
-	fprintf(stderr, "Note: new subcorpus format\n");
+        memcpy(&size, p, sizeof(int));
+        p += sizeof(int);
+        fprintf(stderr, "Note: new subcorpus format\n");
       }
 
       if (print_header) {
-	  
-	printf("REGISTRY %s\n", registry);
-	printf("O_NAME   %s\n", o_name);
-	printf("SIZE     %d\n", size);
-	
+
+        printf("REGISTRY %s\n", registry);
+        printf("O_NAME   %s\n", o_name);
+        printf("SIZE     %d\n", size);
+
       }
-	
+
       range = (struct range_t *) p;
-	
+
       for (j = 0; j < size; j++)
-	printf("%d\t%d\n",
-	       range[j].start, range[j].end);
+        printf("%d\t%d\n",
+               range[j].start, range[j].end);
     }
     else {
       fprintf(stderr, "Magic number incorrect\n");
@@ -133,7 +159,18 @@ int show_subcorpus_info(FILE *fd)
 }
 
 
-int main(int argc, char **argv)
+/* *************** *\
+ *      MAIN()     *
+\* *************** */
+
+/**
+ * Main function for cwb-decode-nqrfile.
+ *
+ * @param argc   Number of command-line arguments.
+ * @param argv   Command-line arguments.
+ */
+int
+main(int argc, char **argv)
 {
   int i;
   FILE *fd;
@@ -148,19 +185,19 @@ int main(int argc, char **argv)
       /* treat arg as sc-name */
 
       if (strcmp(argv[i], "-") == 0) {
-	if (!show_subcorpus_info(stdin))
-	  exit(1);
+        if (!show_subcorpus_info(stdin))
+          exit(1);
       }
       else {
-	if ((fd = fopen(argv[i], "r")) == NULL) {
-	  perror(argv[i]);
-	  exit(1);
-	}
-	else {
-	  if (!show_subcorpus_info(fd))
-	    exit(1);
-	  fclose(fd);
-	}
+        if ((fd = fopen(argv[i], "r")) == NULL) {
+          perror(argv[i]);
+          exit(1);
+        }
+        else {
+          if (!show_subcorpus_info(fd))
+            exit(1);
+          fclose(fd);
+        }
       }
     }
   }

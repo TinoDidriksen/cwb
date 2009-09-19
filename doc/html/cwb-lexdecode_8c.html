@@ -34,16 +34,16 @@
 <ul>
 <li>void <a class="el" href="cwb-lexdecode_8c.html#cf9dabb3c45c8b01f22903e4c2526976">print_info</a> (<a class="el" href="union___attribute.html">Attribute</a> *attr, int id, char *fallback_s)
 <li>void <a class="el" href="cwb-lexdecode_8c.html#21e71f17ac00f605db9328ae3148978c">do_show</a> (char *attr_name, char *rx, int rx_flags)
-<li>void <a class="el" href="cwb-lexdecode_8c.html#2ef30c42cbc289d899a8be5d2d8f77d0">usage</a> ()
-<li>int <a class="el" href="cwb-lexdecode_8c.html#3c04138a5bfe5d72780bb7e82a18e627">main</a> (int argc, char **argv)
-</ul>
+<dl class="el"><dd class="mdescRight">This is the business end of the cwb-lexdecode program.  <a href="#21e71f17ac00f605db9328ae3148978c"></a><br></dl><li>void <a class="el" href="cwb-lexdecode_8c.html#e8605e2b78cd4a81b6c6b5c30cb7366a">usage</a> (void)
+<dl class="el"><dd class="mdescRight">Prints a message describing how to use the program to STDERR and then exits.  <a href="#e8605e2b78cd4a81b6c6b5c30cb7366a"></a><br></dl><li>int <a class="el" href="cwb-lexdecode_8c.html#3c04138a5bfe5d72780bb7e82a18e627">main</a> (int argc, char **argv)
+<dl class="el"><dd class="mdescRight">Main function for cwb-lexdecode.  <a href="#3c04138a5bfe5d72780bb7e82a18e627"></a><br></dl></ul>
 <h2>Variables</h2>
 <ul>
 <li>char * <a class="el" href="cwb-lexdecode_8c.html#b9e1449fd00c98428516f0b41eddcb10">progname</a>
-<li>int <a class="el" href="cwb-lexdecode_8c.html#0d436040cf97c6cef4e0c5b63b52dddc">print_nr</a> = 0
-<li>int <a class="el" href="cwb-lexdecode_8c.html#c850b1f526c8892e790857467ad7ae64">print_freqs</a> = 0
-<li>int <a class="el" href="cwb-lexdecode_8c.html#5f15b0fef741093d2dd0bf2f7e5a7469">print_len</a> = 0
-<li>int <a class="el" href="cwb-lexdecode_8c.html#e6f74965045002e0bca5d50407561314">sort</a> = 0
+<dl class="el"><dd class="mdescRight">String set to the name of this program.  <a href="#b9e1449fd00c98428516f0b41eddcb10"></a><br></dl><li>int <a class="el" href="cwb-lexdecode_8c.html#0d436040cf97c6cef4e0c5b63b52dddc">print_nr</a> = 0
+<dl class="el"><dd class="mdescRight">boolean: flag whether we should print line numbers  <a href="#0d436040cf97c6cef4e0c5b63b52dddc"></a><br></dl><li>int <a class="el" href="cwb-lexdecode_8c.html#c850b1f526c8892e790857467ad7ae64">print_freqs</a> = 0
+<dl class="el"><dd class="mdescRight">boolean: print the frequencies of the words?  <a href="#c850b1f526c8892e790857467ad7ae64"></a><br></dl><li>int <a class="el" href="cwb-lexdecode_8c.html#5f15b0fef741093d2dd0bf2f7e5a7469">print_len</a> = 0
+<dl class="el"><dd class="mdescRight">boolean: print the word lenghts?  <a href="#5f15b0fef741093d2dd0bf2f7e5a7469"></a><br></dl><li>int <a class="el" href="cwb-lexdecode_8c.html#e6f74965045002e0bca5d50407561314">sort</a> = 0
 <li>int <a class="el" href="cwb-lexdecode_8c.html#4ad3b1a3f0f0ee98378ddd28381fba15">input_are_numbers</a> = 0
 <li>int <a class="el" href="cwb-lexdecode_8c.html#c36d157c4d0ee0037e8322886d72a701">show_size_only</a> = 0
 <li>int <a class="el" href="cwb-lexdecode_8c.html#4271d02d7b39132da64775afecb297ba">freq_0_if_unknown</a> = 0
@@ -84,6 +84,8 @@
 <div class="memdoc">
 
 <p>
+This is the business end of the cwb-lexdecode program. 
+<p>
 
 <p>References <a class="el" href="cl_8h.html#3b60fdde6a7c8fbc535efaf526dbcb78">ATT_POS</a>, <a class="el" href="cl_8h.html#1fa2e2ab47bd2c689b68a78bdac22028">CDA_OK</a>, <a class="el" href="cdaccess_8c.html#19cdf6dd32b5379c47e316fc514b2f09">cderrno</a>, <a class="el" href="cdaccess_8c.html#fda8febb5dbef0056da18adc857f06e7">cdperror()</a>, <a class="el" href="cl_8h.html#9ddd8ad3587dae86ae12bbb7156f3983">cl_max_cpos</a>, <a class="el" href="cl_8h.html#d2cb0116d085615487584ef5525eda90">cl_max_id</a>, <a class="el" href="cl_8h.html#e9e879605cdbdafc2a8939ae590b6aa0">cl_new_attribute</a>, <a class="el" href="cl_8h.html#95af63d7509ad6eac536b9a3ecb7037c">cl_regex2id</a>, <a class="el" href="cl_8h.html#2f930d35fe0c08c57816d799a28e0bf6">cl_str2id</a>, <a class="el" href="cwb-compress-rdx_8c.html#0360462590048e1a217c595d8ec3ad5b">corpus_id</a>, <a class="el" href="cwb-lexdecode_8c.html#4271d02d7b39132da64775afecb297ba">freq_0_if_unknown</a>, <a class="el" href="cdaccess_8c.html#7445b84e0d0f4ad25189ceca3d5bac37">get_id_from_sortidx()</a>, <a class="el" href="cwb-lexdecode_8c.html#4ad3b1a3f0f0ee98378ddd28381fba15">input_are_numbers</a>, <a class="el" href="cwb-encode_8c.html#15a5d6b696ef70e18d81da62bba55285">input_fd</a>, <a class="el" href="cwb-lexdecode_8c.html#8d01b74eac291eef6efa6f9d9857cd77">input_filename</a>, <a class="el" href="cwb-lexdecode_8c.html#cf9dabb3c45c8b01f22903e4c2526976">print_info()</a>, <a class="el" href="options_8h.html#b9e1449fd00c98428516f0b41eddcb10">progname</a>, <a class="el" href="cwb-lexdecode_8c.html#c36d157c4d0ee0037e8322886d72a701">show_size_only</a>, and <a class="el" href="cwb-lexdecode_8c.html#e6f74965045002e0bca5d50407561314">sort</a>.</p>
 
@@ -117,6 +119,14 @@
 <div class="memdoc">
 
 <p>
+Main function for cwb-lexdecode. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>argc</em>&nbsp;</td><td>Number of command-line arguments. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>argv</em>&nbsp;</td><td>Command-line arguments. </td></tr>
+  </table>
+</dl>
 
 <p>References <a class="el" href="cl_8h.html#4d7cb8811357af41ee0c95d6a3ce3b65">central_corpus_directory()</a>, <a class="el" href="cl_8h.html#59b77d2995445ce672ade06b8898dd85">cl_delete_corpus</a>, <a class="el" href="cl_8h.html#2686895a6ca77424686c19bb2fb718bf">cl_new_corpus</a>, <a class="el" href="cl_8h.html#35e6406545412a8882e6f50526707047">cl_set_optimize()</a>, <a class="el" href="cwb-compress-rdx_8c.html#0360462590048e1a217c595d8ec3ad5b">corpus_id</a>, <a class="el" href="attributes_8h.html#0f022cbfe7890834b65ea9542eb4f50c">DEFAULT_ATT_NAME</a>, <a class="el" href="cwb-lexdecode_8c.html#21e71f17ac00f605db9328ae3148978c">do_show()</a>, <a class="el" href="cwb-lexdecode_8c.html#4271d02d7b39132da64775afecb297ba">freq_0_if_unknown</a>, <a class="el" href="cl_8h.html#1f397c74f7f8ba3952858c70eb19d082">IGNORE_CASE</a>, <a class="el" href="cl_8h.html#2e9f85ae8ad88191c60cf4269b9ab296">IGNORE_DIAC</a>, <a class="el" href="cwb-lexdecode_8c.html#4ad3b1a3f0f0ee98378ddd28381fba15">input_are_numbers</a>, <a class="el" href="cwb-lexdecode_8c.html#8d01b74eac291eef6efa6f9d9857cd77">input_filename</a>, <a class="el" href="cwb-lexdecode_8c.html#c850b1f526c8892e790857467ad7ae64">print_freqs</a>, <a class="el" href="cwb-lexdecode_8c.html#5f15b0fef741093d2dd0bf2f7e5a7469">print_len</a>, <a class="el" href="cwb-lexdecode_8c.html#0d436040cf97c6cef4e0c5b63b52dddc">print_nr</a>, <a class="el" href="options_8h.html#b9e1449fd00c98428516f0b41eddcb10">progname</a>, <a class="el" href="cwb-align_8c.html#9008cc92c9f9b4e6f09d0886e865c657">registry_directory</a>, <a class="el" href="cwb-lexdecode_8c.html#c36d157c4d0ee0037e8322886d72a701">show_size_only</a>, <a class="el" href="cwb-lexdecode_8c.html#e6f74965045002e0bca5d50407561314">sort</a>, and <a class="el" href="cwb-compress-rdx_8c.html#c896e7e59472ff8e2d14ac44f0e23634">usage()</a>.</p>
 
@@ -161,7 +171,7 @@
 
 </div>
 </div><p>
-<a class="anchor" name="2ef30c42cbc289d899a8be5d2d8f77d0"></a><!-- doxytag: member="cwb&#45;lexdecode.c::usage" ref="2ef30c42cbc289d899a8be5d2d8f77d0" args="()" -->
+<a class="anchor" name="e8605e2b78cd4a81b6c6b5c30cb7366a"></a><!-- doxytag: member="cwb&#45;lexdecode.c::usage" ref="e8605e2b78cd4a81b6c6b5c30cb7366a" args="(void)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -177,6 +187,8 @@
 </div>
 <div class="memdoc">
 
+<p>
+Prints a message describing how to use the program to STDERR and then exits. 
 <p>
 
 <p>References <a class="el" href="options_8h.html#b9e1449fd00c98428516f0b41eddcb10">progname</a>.</p>
@@ -277,6 +289,8 @@
 <div class="memdoc">
 
 <p>
+boolean: print the frequencies of the words? 
+<p>
 
 <p>Referenced by <a class="el" href="cwb-lexdecode_8c.html#3c04138a5bfe5d72780bb7e82a18e627">main()</a>, and <a class="el" href="cwb-lexdecode_8c.html#cf9dabb3c45c8b01f22903e4c2526976">print_info()</a>.</p>
 
@@ -293,6 +307,8 @@
 </div>
 <div class="memdoc">
 
+<p>
+boolean: print the word lenghts? 
 <p>
 
 <p>Referenced by <a class="el" href="cwb-lexdecode_8c.html#3c04138a5bfe5d72780bb7e82a18e627">main()</a>, and <a class="el" href="cwb-lexdecode_8c.html#cf9dabb3c45c8b01f22903e4c2526976">print_info()</a>.</p>
@@ -311,6 +327,8 @@
 <div class="memdoc">
 
 <p>
+boolean: flag whether we should print line numbers 
+<p>
 
 <p>Referenced by <a class="el" href="cwb-lexdecode_8c.html#3c04138a5bfe5d72780bb7e82a18e627">main()</a>, and <a class="el" href="cwb-lexdecode_8c.html#cf9dabb3c45c8b01f22903e4c2526976">print_info()</a>.</p>
 
@@ -327,6 +345,8 @@
 </div>
 <div class="memdoc">
 
+<p>
+String set to the name of this program. 
 <p>
 
 </div>
@@ -366,7 +386,7 @@
 </div>
 </div><p>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Thu Sep 17 23:45:31 2009 for CWB by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Sat Sep 19 20:28:33 2009 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

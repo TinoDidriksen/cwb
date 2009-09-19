@@ -29,6 +29,8 @@
 
 /* ALL function prototypes now in <cl.h> */
 
+/* so this file can ultimately be removed */
+
 
 #endif
 

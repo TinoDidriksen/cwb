@@ -164,7 +164,7 @@
 <span class="keywordtype">int</span> attr_number;            \
 <span class="keywordtype">char</span> *path;                                \
  \
-<span class="keyword">struct </span><a class="code" href="struct_t_corpus.html" title="Contains information on a loaded corpus.">TCorpus</a> *mother;                  \
+<span class="keyword">struct </span><a class="code" href="struct_t_corpus.html" title="Underlying structure for the Corpus class.">TCorpus</a> *mother;                  \
 <a class="code" href="struct_t_component.html" title="The Component object.">Component</a> *components[<a class="code" href="attributes_8h.html#990b084a9fbbdb7ea6b9defb1073706ac4f7754486fe4989910af6681f2442ad" title="MUST BE THE LAST ELEMENT OF THIS ENUM -- it is used for limiting loops on component...">CompLast</a>]       \
 </pre></div>Members found in ALL the different types of Attribute object. 
 <p>
@@ -242,7 +242,7 @@ The Component object.
 <p>
 A "component" is one of the data-chunks on disk that make up a CWB corpus. Each corpus attribute (of whatever kind) consists of an array (vector) of components, along with some other fields dependent on what type of attribute it is.<p>
 <dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="attributes_8h.html#aee7c3fb398ea6347d7189ef39481ce9" title="ComponentID: index for the array of components in each Attribute object.">ComponentID</a> <p>
-<a class="el" href="cl_8h.html#2208213b2f6ba9c8a702b3c592086496">Attribute</a> <p>
+<a class="el" href="cl_8h.html#2208213b2f6ba9c8a702b3c592086496" title="The Attribute object: an entire segment of a corpus (of any flavour; s, p etc).">Attribute</a> <p>
 <a class="el" href="union___attribute.html" title="The Attribute object.">_Attribute</a> </dd></dl>
 
 </div>
@@ -1175,7 +1175,7 @@ NEVER CALL THIS!! ONLY USED WHILE PARSING A REGISTRY ENTRY!!!!<p>
 </div>
 </div><p>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Thu Sep 17 23:45:31 2009 for CWB by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Sat Sep 19 20:28:33 2009 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

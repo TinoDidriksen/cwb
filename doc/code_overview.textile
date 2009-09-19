@@ -57,6 +57,7 @@ h4. cl/bitio.h ; cl/bitio.c
 h4. cl/cdaccess.h ; cl/cdaccess.c
 
 * The functions here are the "attribute access functions" part of the CL API
+* This is, so to speak, the business end of the CL -- the bit that actually finds things in the (various bits of the) corpus
 * all functions are exported (i.e. in @cl.h@)
 * _depends on_: globals; endian; macros; attributes; special-chars; bitio; compression; regopt
 

@@ -23,21 +23,28 @@
   </div>
 </div>
 <div class="contents">
-<h1>_CL_Regex Struct Reference</h1><!-- doxytag: class="_CL_Regex" --><code>#include &lt;regopt.h&gt;</code>
+<h1>_CL_Regex Struct Reference</h1><!-- doxytag: class="_CL_Regex" -->Underlying structure for CL_Regex object.  
+<a href="#_details">More...</a>
+<p>
+<code>#include &lt;regopt.h&gt;</code>
 <p>
 <h2>Data Fields</h2>
 <ul>
 <li>regex_t <a class="el" href="struct___c_l___regex.html#2da1a7e0dbf0dbe41ff361876bf52235">buffer</a>
-<li><a class="el" href="cl_8h.html#3502421ae8eac74673133702852dde32">CorpusCharset</a> <a class="el" href="struct___c_l___regex.html#b7d33183c58d7df43cc5602b9c842b37">charset</a>
-<li>int <a class="el" href="struct___c_l___regex.html#c8bf36fe0577cba66bccda3a6f7e80a4">flags</a>
-<li>char * <a class="el" href="struct___c_l___regex.html#b156ef2ac4fd5ff10d99ae66a846b4c2">iso_string</a>
-<li>int <a class="el" href="struct___c_l___regex.html#809c37615b266e2fdd396ac191b9a93c">grains</a>
-<li>int <a class="el" href="struct___c_l___regex.html#6f097fa6018c5b24ea16507555185feb">grain_len</a>
+<dl class="el"><dd class="mdescRight">buffer for the actual regex (POSIX)  <a href="#2da1a7e0dbf0dbe41ff361876bf52235"></a><br></dl><li><a class="el" href="cl_8h.html#3502421ae8eac74673133702852dde32">CorpusCharset</a> <a class="el" href="struct___c_l___regex.html#b7d33183c58d7df43cc5602b9c842b37">charset</a>
+<dl class="el"><dd class="mdescRight">the character set in use for this regex  <a href="#b7d33183c58d7df43cc5602b9c842b37"></a><br></dl><li>int <a class="el" href="struct___c_l___regex.html#c8bf36fe0577cba66bccda3a6f7e80a4">flags</a>
+<dl class="el"><dd class="mdescRight">flags for this regex: can be IGNORE_CASE and/or IGNORE_DIAC  <a href="#c8bf36fe0577cba66bccda3a6f7e80a4"></a><br></dl><li>char * <a class="el" href="struct___c_l___regex.html#b156ef2ac4fd5ff10d99ae66a846b4c2">iso_string</a>
+<dl class="el"><dd class="mdescRight">a buffer of size MAX_LINE_LENGTH used for normalisation by <a class="el" href="cl_8h.html#7a9d3816260f385cf56e15839c518cee" title="Matches a regular expression against a string.">cl_regex_match()</a>  <a href="#b156ef2ac4fd5ff10d99ae66a846b4c2"></a><br></dl><li>int <a class="el" href="struct___c_l___regex.html#809c37615b266e2fdd396ac191b9a93c">grains</a>
+<dl class="el"><dd class="mdescRight">number of grains (0 = not optimised).  <a href="#809c37615b266e2fdd396ac191b9a93c"></a><br></dl><li>int <a class="el" href="struct___c_l___regex.html#6f097fa6018c5b24ea16507555185feb">grain_len</a>
 <li>char * <a class="el" href="struct___c_l___regex.html#343da7a5241d5dd4042b632f9c39006e">grain</a> [MAX_GRAINS]
 <li>int <a class="el" href="struct___c_l___regex.html#4e3ccc6f2ec66b18f80763c9101dc2a7">anchor_start</a>
 <li>int <a class="el" href="struct___c_l___regex.html#93e5ad5e0410fdbd7c65a09793a14cb6">anchor_end</a>
 <li>int <a class="el" href="struct___c_l___regex.html#9da424d392549ca48c495ad456441139">jumptable</a> [256]
 </ul>
+<hr><a name="_details"></a><h2>Detailed Description</h2>
+Underlying structure for CL_Regex object. 
+<p>
+<dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="regopt_8c.html" title="The CL_Regex object, and the CL Regular Expression Optimiser.">regopt.c</a> </dd></dl>
 <hr><h2>Field Documentation</h2>
 <a class="anchor" name="93e5ad5e0410fdbd7c65a09793a14cb6"></a><!-- doxytag: member="_CL_Regex::anchor_end" ref="93e5ad5e0410fdbd7c65a09793a14cb6" args="" -->
 <div class="memitem">
@@ -51,6 +58,7 @@
 <div class="memdoc">
 
 <p>
+<dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="regopt_8c.html#eea8fcadfd245bf518d90e45c825d518" title="Boolean: whether grains are anchored at end of string.">cl_regopt_anchor_end</a> </dd></dl>
 
 <p>Referenced by <a class="el" href="regopt_8c.html#2c4607eb8e094b7699062df8eb744058">cl_new_regex()</a>, <a class="el" href="regopt_8c.html#7a9d3816260f385cf56e15839c518cee">cl_regex_match()</a>, and <a class="el" href="cl_8h.html#19c764c027474dcfd9c4c8815d50dbf3">collect_matching_ids()</a>.</p>
 
@@ -68,6 +76,7 @@
 <div class="memdoc">
 
 <p>
+<dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="regopt_8c.html#44d3ff55dc4223346a2c4f9c4f4cd30f" title="Boolean: whether grains are anchored at beginning of string.">cl_regopt_anchor_start</a> </dd></dl>
 
 <p>Referenced by <a class="el" href="regopt_8c.html#2c4607eb8e094b7699062df8eb744058">cl_new_regex()</a>, <a class="el" href="regopt_8c.html#7a9d3816260f385cf56e15839c518cee">cl_regex_match()</a>, and <a class="el" href="cl_8h.html#19c764c027474dcfd9c4c8815d50dbf3">collect_matching_ids()</a>.</p>
 
@@ -84,6 +93,8 @@
 </div>
 <div class="memdoc">
 
+<p>
+buffer for the actual regex (POSIX) 
 <p>
 
 <p>Referenced by <a class="el" href="regopt_8c.html#b18bf7e3faf1265c2d987ecc6ba6ab0f">cl_delete_regex()</a>, <a class="el" href="regopt_8c.html#2c4607eb8e094b7699062df8eb744058">cl_new_regex()</a>, <a class="el" href="regopt_8c.html#7a9d3816260f385cf56e15839c518cee">cl_regex_match()</a>, and <a class="el" href="cl_8h.html#19c764c027474dcfd9c4c8815d50dbf3">collect_matching_ids()</a>.</p>
@@ -102,6 +113,8 @@
 <div class="memdoc">
 
 <p>
+the character set in use for this regex 
+<p>
 
 <p>Referenced by <a class="el" href="regopt_8c.html#2c4607eb8e094b7699062df8eb744058">cl_new_regex()</a>.</p>
 
@@ -118,6 +131,8 @@
 </div>
 <div class="memdoc">
 
+<p>
+flags for this regex: can be IGNORE_CASE and/or IGNORE_DIAC 
 <p>
 
 <p>Referenced by <a class="el" href="regopt_8c.html#2c4607eb8e094b7699062df8eb744058">cl_new_regex()</a>, <a class="el" href="regopt_8c.html#7a9d3816260f385cf56e15839c518cee">cl_regex_match()</a>, and <a class="el" href="cl_8h.html#19c764c027474dcfd9c4c8815d50dbf3">collect_matching_ids()</a>.</p>
@@ -136,6 +151,7 @@
 <div class="memdoc">
 
 <p>
+<dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="regopt_8c.html#17c41125f23920984f3734380cab57c4" title="list of &#39;grains&#39; (any matching string must contain one of these)">cl_regopt_grain</a> </dd></dl>
 
 <p>Referenced by <a class="el" href="regopt_8c.html#b18bf7e3faf1265c2d987ecc6ba6ab0f">cl_delete_regex()</a>, <a class="el" href="regopt_8c.html#2c4607eb8e094b7699062df8eb744058">cl_new_regex()</a>, <a class="el" href="regopt_8c.html#7a9d3816260f385cf56e15839c518cee">cl_regex_match()</a>, and <a class="el" href="cl_8h.html#19c764c027474dcfd9c4c8815d50dbf3">collect_matching_ids()</a>.</p>
 
@@ -153,6 +169,7 @@
 <div class="memdoc">
 
 <p>
+<dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="regopt_8c.html#65b125ab93c3082f07ff0d7635350079" title="all the grains have the same length">cl_regopt_grain_len</a> </dd></dl>
 
 <p>Referenced by <a class="el" href="regopt_8c.html#2c4607eb8e094b7699062df8eb744058">cl_new_regex()</a>, <a class="el" href="regopt_8c.html#7a9d3816260f385cf56e15839c518cee">cl_regex_match()</a>, <a class="el" href="regopt_8c.html#268fbea810e17003de65334cbceafbca">cl_regex_optimised()</a>, and <a class="el" href="cl_8h.html#19c764c027474dcfd9c4c8815d50dbf3">collect_matching_ids()</a>.</p>
 
@@ -170,6 +187,9 @@
 <div class="memdoc">
 
 <p>
+number of grains (0 = not optimised). 
+<p>
+<dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="regopt_8c.html#c4527918221c359efeb1d01fb10a1a93" title="number of grains">cl_regopt_grains</a> </dd></dl>
 
 <p>Referenced by <a class="el" href="regopt_8c.html#b18bf7e3faf1265c2d987ecc6ba6ab0f">cl_delete_regex()</a>, <a class="el" href="regopt_8c.html#2c4607eb8e094b7699062df8eb744058">cl_new_regex()</a>, <a class="el" href="regopt_8c.html#7a9d3816260f385cf56e15839c518cee">cl_regex_match()</a>, <a class="el" href="regopt_8c.html#268fbea810e17003de65334cbceafbca">cl_regex_optimised()</a>, and <a class="el" href="cl_8h.html#19c764c027474dcfd9c4c8815d50dbf3">collect_matching_ids()</a>.</p>
 
@@ -186,6 +206,8 @@
 </div>
 <div class="memdoc">
 
+<p>
+a buffer of size MAX_LINE_LENGTH used for normalisation by <a class="el" href="cl_8h.html#7a9d3816260f385cf56e15839c518cee" title="Matches a regular expression against a string.">cl_regex_match()</a> 
 <p>
 
 <p>Referenced by <a class="el" href="regopt_8c.html#b18bf7e3faf1265c2d987ecc6ba6ab0f">cl_delete_regex()</a>, <a class="el" href="regopt_8c.html#2c4607eb8e094b7699062df8eb744058">cl_new_regex()</a>, <a class="el" href="regopt_8c.html#7a9d3816260f385cf56e15839c518cee">cl_regex_match()</a>, and <a class="el" href="cl_8h.html#19c764c027474dcfd9c4c8815d50dbf3">collect_matching_ids()</a>.</p>
@@ -204,6 +226,8 @@
 <div class="memdoc">
 
 <p>
+<dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="regopt_8c.html#200be31d923ac49fe9d9ab5f9963eb77" title="A jump table for Boyer-Moore search algorithm; use _unsigned_ char as index;.">cl_regopt_jumptable</a> <p>
+<a class="el" href="regopt_8c.html#1b1785e702fe108639b79a3fbf6ed84f" title="Computes a jump table for Boyer-Moore searches.">make_jump_table</a> </dd></dl>
 
 <p>Referenced by <a class="el" href="regopt_8c.html#2c4607eb8e094b7699062df8eb744058">cl_new_regex()</a>, <a class="el" href="regopt_8c.html#7a9d3816260f385cf56e15839c518cee">cl_regex_match()</a>, and <a class="el" href="cl_8h.html#19c764c027474dcfd9c4c8815d50dbf3">collect_matching_ids()</a>.</p>
 
@@ -212,7 +236,7 @@
 <hr>The documentation for this struct was generated from the following file:<ul>
 <li>cl/<a class="el" href="regopt_8h.html">regopt.h</a></ul>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Thu Sep 17 23:45:31 2009 for CWB by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Sat Sep 19 20:28:33 2009 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

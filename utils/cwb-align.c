@@ -256,10 +256,16 @@ do_alignment(FMS fms, int if1, int il1, int if2, int il2, FILE *outfile) {
 
 
 
-/*****************\
-***    MAIN()   ***
-\*****************/
+/* *************** *\
+ *      MAIN()     *
+\* *************** */
 
+/**
+ * Main function for cwb-align.
+ *
+ * @param argc   Number of command-line arguments.
+ * @param argv   Command-line arguments.
+ */
 int
 main(int argc, char *argv[]) {
   int argindex;                 /* index of first argument in argv[] */

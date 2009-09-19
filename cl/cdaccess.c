@@ -33,10 +33,14 @@
 
 #include "cdaccess.h"
 
+/**
+ * If COMPRESS_DEBUG is set to a positive integer, get_id_at_position() will
+ * print debugging messages. (2 prints more than 1!)
+ */
 #define COMPRESS_DEBUG 0
 
 /**
- * Error number for CL: is set after access
+ * Error number for CL: is set after access to any of various corpus-data-access functions.
  */
 int cderrno;
 
@@ -594,8 +598,10 @@ get_id_range(Attribute *attribute)
 /**
  * Gets the frequency of an item on this attribute.
  *
- * @param id  Identifier of an item on this attribute.
- * @return    The frequency count of the item specified by id, or an error code (if less than 0)
+ * @param attribute  The P-attribute to look on
+ * @param id         Identifier of an item on this attribute.
+ * @return           The frequency count of the item specified
+ *                   by id, or an error code (if less than 0)
  */
 int
 get_id_frequency(Attribute *attribute, int id)
@@ -625,7 +631,37 @@ get_id_frequency(Attribute *attribute, int id)
 
 /* ============================================================ */
 
-int *get_positions(Attribute *attribute, int id, int *freq, int *restrictor_list, int restrictor_list_size)
+
+/**
+ * Gets all the corpus positions where the specified item is
+ * found on the given P-attribute.
+ *
+ * The restrictor list is a set of ranges in which instances of
+ * the item MUST occur to be collected by this function. If no
+ * restrictor list is specified (i.e. restrictor_list is NULL),
+ * then ALL corpus positions where the item occurs are returned.
+ *
+ * This restrictor list has the form of a list of ranges {start,end}
+ * of size restrictor_list_size, that is, the number of ints in
+ * this area is 2 * restrictor_list_size!!!
+ *
+ * @param attribute             The P-attribute to look on.
+ * @param id                    The id of the item to look
+ *                              for.
+ * @param freq                  The frequency of the specified
+ *                              item is written here. This will
+ *                              be 0 in the case of errors.
+ * @param restrictor_list       A list of pairs of integers
+ *                              specifying ranges {start,end}
+ *                              in the corpus
+ * @param restrictor_list_size  The number of PAIRS of ints in
+ *                              the restrictor list.
+ * @return                      Pointer to the list of corpus
+ *                              positions; or NULL in case of
+ *                              error.
+ */
+int *
+get_positions(Attribute *attribute, int id, int *freq, int *restrictor_list, int restrictor_list_size)
 {
   Component *revcorp, *revcidx;
   int *buffer;
@@ -663,7 +699,7 @@ int *get_positions(Attribute *attribute, int id, int *freq, int *restrictor_list
   }
 
 
-  /* there are no items in a PA with freq 0 - we don't have to
+  /* there are no items in a P-Attribute with freq 0 - we don't have to
      catch that special case. */
 
 
@@ -800,37 +836,63 @@ int *get_positions(Attribute *attribute, int id, int *freq, int *restrictor_list
 
   }
 
-    cderrno = CDA_OK;
-    return buffer;
+  cderrno = CDA_OK;
+  return buffer;
 
   assert("Not reached" && 0);
   return NULL;
 }
 
 
+
+
+
+
+
+
 /* ---------------------------------------- stream-like reading */
 
+
+
+/**
+ * Underlying structure for the PositionStream object.
+ *
+ * PositionStreams are used for accessing Attributes.
+ * Each one represents a stream of corpus positions,
+ * representing positions where a given item occurs.
+ *
+ */
 typedef struct _position_stream_rec_ {
-  Attribute *attribute;
-  int id;
-  int id_freq;                  /* id frequency */
-  int nr_items;                 /* how many items delivered so far */
+  Attribute *attribute;         /**< The Attribute on which this PositionStream has been opened. */
+  int id;                       /**< The item whose positions this PositionStream's will read */
+  int id_freq;                  /**< id frequency (ie frequency of the item in question);
+                                     maximum number of positions that can be read */
+  int nr_items;                 /**< how many items delivered so far */
 
-  int is_compressed;            /* attribute REVCORP is compressed? */
+  int is_compressed;            /**< Boolean: attribute REVCORP is compressed? */
 
-  /* for compressed streams */
+  /** for compressed streams, the stream is a BStream object rather than just a pointer. */
   BStream bs;
-  int b;
-  int last_pos;
+  int b;                        /**< relevent for compressed streams */
+  int last_pos;                 /**< relevent for compressed streams */
 
-  /* for uncompressed streams */
+  /** pointer to base of stream for uncompressed streams. */
   int *base;
 
 } PositionStreamRecord;
 
-/* -------------------- */
 
 
+
+
+/**
+ * Creates a new PositionStream object.
+ *
+ * @param attribute  The P-attribute to open the position stream on
+ * @param id         The id that the new PositionStream will have.
+ *                   This the id of an item on the specified attribute.
+ * @return           The new object, or NULL in case of problem.
+ */
 PositionStream
 OpenPositionStream(Attribute *attribute,
                    int id)
@@ -915,6 +977,9 @@ OpenPositionStream(Attribute *attribute,
   return ps;
 }
 
+/**
+ * Deletes a PositionStream object.
+ */
 int
 ClosePositionStream(PositionStream *ps)
 {
@@ -940,6 +1005,17 @@ ClosePositionStream(PositionStream *ps)
   return 1;
 }
 
+/**
+ * Reads corpus positions from a position stream to a buffer.
+ *
+ * @param ps           The position stream to read.
+ * @param buffer       Location to put the resulting item positions.
+ * @param buffer_size  Maximum number of item positions to read.
+ *                     (Fewer will be read if fewer are available).
+ * @return             The number of item positions that have been
+ *                     read. This may be less than buffer_size (and
+ *                     will be 0 if there are no instances of this item left).
+ */
 int
 ReadPositionStream(PositionStream ps,
                    int *buffer,
@@ -950,7 +1026,7 @@ ReadPositionStream(PositionStream ps,
   assert(ps);
   assert(buffer);
 
-  /* gib 0 zurueck, wenn wir schon >= freq items gelesen haben */
+  /* return 0 if we have already read >= freq items */
 
   if (ps->nr_items >= ps->id_freq)
     return 0;
@@ -988,7 +1064,8 @@ ReadPositionStream(PositionStream ps,
 
     ps->nr_items += items_to_read;
 
-    { /* convert network byte order to native integers */
+    {
+      /* convert network byte order to native integers */
       int i;
       for (i = 0; i < items_to_read; i++)
         buffer[i] = ntohl(buffer[i]);
@@ -999,8 +1076,23 @@ ReadPositionStream(PositionStream ps,
   return items_to_read;
 }
 
-/* ---------------------------------------------------------------------- */
 
+
+
+
+
+
+
+/**
+ * Gets the integer ID of the item at the specified
+ * position on the given p-attribute.
+ *
+ * @param attribute  The P-attribute to look on.
+ * @param position   The corpus position to look at.
+ * @return           The id of the item at that position
+ *                   on this attribute, OR a negative value
+ *                   if there is an error.
+ */
 int
 get_id_at_position(Attribute *attribute, int position)
 {
@@ -1141,6 +1233,16 @@ get_id_at_position(Attribute *attribute, int position)
 }
 
 
+/**
+ * Gets the string of the item at the specified
+ * position on the given p-attribute.
+ *
+ * @param attribute  The P-attribute to look on.
+ * @param position   The corpus position to look at.
+ * @return           The string of the item at that position
+ *                   on this attribute, OR NULL
+ *                   if there is an error.
+ */
 char *
 get_string_at_position(Attribute *attribute, int position)
 {
@@ -1156,9 +1258,30 @@ get_string_at_position(Attribute *attribute, int position)
 }
 
 
+
+
+
 /* ========== some high-level constructs */
 
-char *get_id_info(Attribute *attribute, int index, int *freq, int *slen)
+/**
+ * Gets the string of the item with the specified
+ * ID on the given p-attribute.
+ *
+ * As well as returning the string, other information
+ * about the item is inserted into locations specified
+ * by other parameters.
+ *
+ * @param attribute  The P-attribute to look on.
+ * @param index      The ID of the item to look at.
+ * @param freq       Will be set to the frequency of the item.
+ * @param slen       Will be set to the string-length of the
+ *                   item.
+ * @return           The string of the item at that position
+ *                   on this attribute, OR NULL
+ *                   if there is an error.
+ */
+char *
+get_id_info(Attribute *attribute, int index, int *freq, int *slen)
 {
   check_arg(attribute, ATT_POS, NULL);
 
@@ -1175,12 +1298,22 @@ char *get_id_info(Attribute *attribute, int index, int *freq, int *slen)
 
 
 
-/* collect_matching_word_ids:
+/**
+ * Gets a list of the ids of those items on a given Attribute that
+ * match a particular regular-expression pattern.
  *
- * Returns a pointer to a sequence of ints of size number_of_matches. The list
- * is alloced with malloc, so do a free() when you don't need it any more.  
+ * The pattern is interpreted with the CL regex engine, q.v.
+ *
+ * The function returns a pointer to a sequence of ints of size number_of_matches. The list
+ * is allocated with malloc(), so do a cl_free() when you don't need it any more.
+ *
+ * @see cl_new_regex
+ * @param attribute          The p-attribute to look on.
+ * @param pattern            String containing the pattern against which to match each item on the attribute
+ * @param flags              Flags for the regular expression system via cl_new_regex.
+ * @param number_of_matches  This is set to the number of item ids found, i.e. the size of the returned buffer.
+ * @return                   A pointer to the list of item ids.
  */
-
 int *
 collect_matching_ids(Attribute *attribute, char *pattern, int flags, int *number_of_matches)
 {
@@ -1191,12 +1324,13 @@ collect_matching_ids(Attribute *attribute, char *pattern, int flags, int *number
 
   int *table;                   /* list of matching IDs */
   int match_count;              /* count matches in local variable while scanning */
+
   /* note that it would also be possible to use a Bitfield <bitfield.h>, but this custom implementation is somewhat more efficient */
   unsigned char *bitmap = NULL; /* use bitmap while scanning lexicon to reduce memory footprint and avoid large realloc() */
   int bitmap_size;              /* size of allocated bitmap in bytes */
   int bitmap_offset;            /* current bitmap offset (in bytes) */
   unsigned char bitmap_mask;    /* current bitmap offset (within-byte part, as bit mask) */
-  /* might move bitmap to static variable and re-allocate only when necessary */
+  /* TODO might move bitmap to static variable and re-allocate only when necessary ... */
   
   int regex_result, idx, i, len, lexsize;
   int optimised, grain_match, grain_hits;
@@ -1353,6 +1487,20 @@ collect_matching_ids(Attribute *attribute, char *pattern, int flags, int *number
 }
 
 
+/**
+ * Calculates the total frequency of all items on a list of item IDs.
+ *
+ * This function returns the sum of the word frequencies of words,
+ * which is an array of word_ids with length number_of_words.
+ *
+ * The result is therefore the number of corpus positions which
+ * match one of the words.
+ *
+ * @param attribute        P-attribute on which these items are found.
+ * @param word_ids         An array of item IDs.
+ * @param number_of_words  Length of the word_ids array.
+ * @return                 Sum of all the frequencies; less than 0 for an error.
+ */
 
 int cumulative_id_frequency(Attribute *attribute,
                             int *word_ids,
@@ -1385,20 +1533,66 @@ int cumulative_id_frequency(Attribute *attribute,
 /* this is the way qsort(..) is meant to be used: give it void* args
    and cast them to the actual type in the compare function;
    this definition conforms to ANSI and POSIX standards according to the LDP */
+/** internal function for use with qsort */
 static int intcompare(const void *i, const void *j)
 { return(*(int *)i - *(int *)j); }
 
-int *collect_matches(Attribute *attribute,
-                     
-                     int *word_ids,       /* a list of word_ids */
-                     int number_of_words, /* the length of this list */
-                     
-                     int sort,            /* return sorted list? */
-                     
-                     int *size_of_table,  /* the size of the allocated table */
-                     
-                     int *restrictor_list,
-                     int restrictor_list_size)
+
+/**
+ * Gets a list of corpus positions matching a list of ids.
+ *
+ *
+ * This function returns an (ordered) list of all corpus positions which
+ * matches one of the ids given in the list of ids. The table is allocated
+ * with malloc, so free it when you don't need any more.
+ *
+ * The list itself is returned; its size is placed in size_of_table.
+ * This size is, of course, the same as the cumulative id frequency
+ * of the ids (because each corpus position matching one of the ids
+ * is added into the list).
+ *
+ * BEWARE: when the id list is rather big or there are highly-frequent
+ * ids in the id list (for example, after a call to collect_matching_ids
+ * with the pattern ".*") this will give a copy of the corpus -- for
+ * which you probably don't have enough memory!!! It is therefore a good
+ * idea to call cumulative_id_frequency before and to introduce some
+ * kind of bias.
+ *
+ * A note on the last two parameters, which are currently unused:
+ * restrictor_list is a list of integer pairs [a,b] which means that
+ * the returned value only contains positions which fall within at
+ * least one of these intervals. The list must be sorted by the start
+ * positions, and secondarily by b. restrictor_list_size is the number of
+ * integers in this list, NOT THE NUMBER OF PAIRS.
+ * WARNING: CURRENTLY UNIMPLEMENTED
+ * {NB -- this descrtiption of restrictor_list_size DOESN'T MATCH
+ * the one for get_positions(), which this function calls...
+ *
+ * REMEMBER: this monster returns a list of corpus indices, not a list
+ * of ids.
+ *
+ * @see collect_matching_ids
+ * @see get_positions
+ *
+ * @param attribute             The P-attribute we are looking in
+ * @param word_ids              A list of item ids (i.e. id codes for
+ *                              items on this attribute).
+ * @param number_of_words       The length of this list.
+ * @param sort                  boolean: return sorted list?
+ * @param size_of_table         The size of the allocated table will be
+ *                              placed here.
+ * @param restrictor_list       See function description.
+ * @param restrictor_list_size  See function description.
+ * @return                      Pointer to the list of corpus positions.
+ */
+int *
+collect_matches(Attribute *attribute,
+                int *word_ids,
+                int number_of_words,
+                int sort,
+                int *size_of_table,
+                int *restrictor_list,
+                int restrictor_list_size)
 {
   int size, k, p, word_id, freq;
 
@@ -1423,10 +1617,9 @@ int *collect_matches(Attribute *attribute,
   }
 
   if (size > 0) {
-      
+
     table = (int *)cl_malloc(size * sizeof(int));
-    /* error handling removed because of cl_malloc() */
-      
+
     p = 0;
 
     for (k = 0; k < number_of_words; k++) {
@@ -1472,9 +1665,28 @@ int *collect_matches(Attribute *attribute,
   return NULL;
 }
 
+
+
 /* ================================================== UTILITY FUNCTIONS */
 
-int *get_previous_mark(int *data, int size, int position)
+/**
+ * Gets a pointer to the location where a structure is stored.
+ *
+ * The structure (instance of an s-attribute) that is found
+ * is the one in which the specified corpus position occurs.
+ *
+ * Non-exported function.
+ *
+ * @param data      "data.data" member of an s-attribute
+ * @param size      "size" member of the same s-attribute
+ * @param position  The corpus position to look for.
+ * @return          Pointer to the integers in data where
+ *                  the start point of the structure at this
+ *                  corpus position can be found. NULL if
+ *                  not found.
+ */
+int *
+get_previous_mark(int *data, int size, int position)
 {
   int nr;
 
@@ -1519,9 +1731,19 @@ int *get_previous_mark(int *data, int size, int position)
 
 /* ================================================== STRUCTURAL ATTRIBUTES */
 
-/* new style functions with normalised behaviour */
+/* first, some new style functions with normalised behaviour */
 
-int cl_cpos2struc(Attribute *a, int cpos) { /* normalised to standard return value behaviour */
+/**
+ * Gets the ID number of a structure (instance of an s-attribute)
+ * that is found at the given corpus position.
+ *
+ * @param a      The s-attribute on which to search.
+ * @param cpos   The corpus position to look for.
+ * @return       The number of the structure that is found.
+ */
+int
+cl_cpos2struc(Attribute *a, int cpos) {
+  /* normalised to standard return value behaviour */
   int struc = -1;
   if (get_num_of_struc(a, cpos, &struc))
     return struc;
@@ -1529,7 +1751,29 @@ int cl_cpos2struc(Attribute *a, int cpos) { /* normalised to standard return val
     return cderrno;
 }
 
-int cl_cpos2boundary(Attribute *a, int cpos) {  /* convenience function: within region or at boundary? */
+/**
+ * Compares the location of a corpus position to
+ * the regions of an s-attribute.
+ *
+ * This determines whether the specified corpus position
+ * is within a region (i.e. a structure, an instance of
+ * that s-attribute) on the given s-attribute; and/or on
+ * a boundary; or outside a region.
+ *
+ * @see STRUC_INSIDE
+ * @see STRUC_LBOUND
+ * @see STRUC_RBOUND
+ *
+ * @param a      The s-attribute on which to search.
+ * @param cpos   The corpus position to look for.
+ * @return       0 if this position is outside a region;
+ *               some combination of flags if it is within
+ *               a region or on a bound; or a negative
+ *               number (error code) in case of error.
+ */
+int
+cl_cpos2boundary(Attribute *a, int cpos) {
+  /* convenience function: within region or at boundary? */
   int start = -1, end = -1;
   if (cl_cpos2struc2cpos(a, cpos, &start, &end)) {
     int flags = STRUC_INSIDE;
@@ -1546,7 +1790,20 @@ int cl_cpos2boundary(Attribute *a, int cpos) {  /* convenience function: within 
     return cderrno; /* some error occurred */
 }
 
-int cl_max_struc(Attribute *a) { /* normalised to standard return value behaviour */
+
+/**
+ * Gets the maximum for this S-attribute (ie the size of the
+ * S-attribute).
+ *
+ * The result of this function is equal to the number of instances
+ * of this s-attribute in the corpus.
+ *
+ * @a       The s-attribute to evaluate.
+ * @return  The maximum corpus position, or an error code (if less than 0)
+ */
+int
+cl_max_struc(Attribute *a) {
+  /* normalised to standard return value behaviour */
   int nr = -1;
   if (get_nr_of_strucs(a, &nr)) 
     return nr;
@@ -1555,11 +1812,23 @@ int cl_max_struc(Attribute *a) { /* normalised to standard return value behaviou
 }
 
 
-
-int get_struc_attribute(Attribute *attribute, 
-                        int position,
-                        int *struc_start,
-                        int *struc_end)
+/**
+ * Gets the start and end positions of the instance of the given S-attribute
+ * found at the specified corpus position.
+ *
+ * This function finds one particular instance of the S-attribute, and assigns
+ * its start and end points to the locations given as arguments.
+ *
+ * @param attribute    The s-attribute to search.
+ * @param position     The corpus position to search for.
+ * @param struc_start  Location for the start position of the instance.
+ * @param struc_end    Location for the end position of the instance.
+ */
+int
+get_struc_attribute(Attribute *attribute,
+                    int position,
+                    int *struc_start,
+                    int *struc_end)
 {
   Component *struc_data;
   
@@ -1578,9 +1847,9 @@ int get_struc_attribute(Attribute *attribute,
   }
 
   val = get_previous_mark(struc_data->data.data,
-                            struc_data->size,
-                            position);
-    
+                          struc_data->size,
+                          position);
+
   if (val != NULL) {
     *struc_start = ntohl(*val);
     *struc_end   = ntohl(*(val + 1));
@@ -1596,10 +1865,24 @@ int get_struc_attribute(Attribute *attribute,
   return 0;
 }
 
-
-int get_num_of_struc(Attribute *attribute,
-                     int position,
-                     int *struc_num)
+/**
+ * Gets the ID number of a structure (instance of an s-attribute)
+ * that is found at the given corpus position.
+ *
+ * Depracated function: use cl_cpos2struc.
+ *
+ * @see cl_cpos2struc
+ *
+ * @param attribute  The s-attribute on which to search.
+ * @param position   The corpus position to look for.
+ * @param struc_num  Location where the number of the structure that
+ *                   is found will be put.
+ * @return           Boolean: true for all OK, false for error.
+ */
+int
+get_num_of_struc(Attribute *attribute,
+                 int position,
+                 int *struc_num)
 {
 
   Component *struc_data;
@@ -1616,7 +1899,7 @@ int get_num_of_struc(Attribute *attribute,
   
   val = get_previous_mark(struc_data->data.data,
                           struc_data->size,
-                            position);
+                          position);
     
   if (val != NULL) {
     *struc_num = (val - struc_data->data.data)/2;
@@ -1632,11 +1915,23 @@ int get_num_of_struc(Attribute *attribute,
   return 0;
 }
 
-
-int get_bounds_of_nth_struc(Attribute *attribute,
-                            int struc_num,
-                            int *struc_start,
-                            int *struc_end)
+/**
+ * Retrieves the start-and-end corpus positions of a specified structure
+ * of the given s-attribute type.
+ *
+ * @param attribute    An s-attribute.
+ * @param struc_num    The instance of that s-attribute to retrieve
+ *                     (i.e. the struc_num'th instance of this s-attribute
+ *                     in the corpus).
+ * @param struc_start  Location to put the starting corpus position.
+ * @param struc_end    Location to put the ending corpus position.
+ * @return             boolean: true for all OK, 0 for problem
+ */
+int
+get_bounds_of_nth_struc(Attribute *attribute,
+                        int struc_num,
+                        int *struc_start,
+                        int *struc_end)
 {
 
   Component *struc_data;
@@ -1665,9 +1960,19 @@ int get_bounds_of_nth_struc(Attribute *attribute,
   return 0;
 }
 
-
-int get_nr_of_strucs(Attribute *attribute,
-                     int *nr_strucs)
+/**
+ * Gets the number of instances of an s-attribute in the corpus.
+ *
+ * Depracated: use cl_max_struc instead.
+ *
+ * @see cl_max_struc.
+ *
+ * @param attribute    The s-attribute to count.
+ * @param nr_strucs    The number of instances is put here.
+ * @return             boolean: true for all OK, false for problem.
+ */
+int
+get_nr_of_strucs(Attribute *attribute, int *nr_strucs)
 {
   Component *struc_data;
 
@@ -1688,6 +1993,11 @@ int get_nr_of_strucs(Attribute *attribute,
   return 0;
 }
 
+/**
+ * Checks whether this s-attribute has attribute values.
+ *
+ * @return Boolean.
+ */
 int 
 structure_has_values(Attribute *attribute) {
 
@@ -1713,19 +2023,41 @@ structure_has_values(Attribute *attribute) {
   return attribute->struc.has_attribute_values;
 }
 
-/* does not strdup(), so don't free returned char * */
 
-int s_v_comp(const void *v1, const void *v2)
+
+/**
+ * A non-exported function used by structure_value
+ */
+int
+s_v_comp(const void *v1, const void *v2)
 {
   return ntohl(*((int *)v1)) - ntohl(*((int *)v2));
 }
 
-char *structure_value(Attribute *attribute, int struc_num)
+
+/**
+ * Gets the value that is associated with the specified instance
+ * of the given s-attribute.
+ *
+ * @param attribute  An S-attribute.
+ * @param struc_num  ID of the structure whose value is wanted
+ *                   (ie, function gets value of struc_num'th
+ *                   instance of this s-attribute)
+ * @return           A string; or NULL in case of error. Note that
+ *                   this string is a pointer to the depths of the
+ *                   Attribute object itself, as this function does
+ *                   not strdup() its result -- so don't free this
+ *                   return value!
+ *
+ */
+char *
+structure_value(Attribute *attribute, int struc_num)
 {
   check_arg(attribute, ATT_STRUC, NULL);
 
   if (structure_has_values(attribute) && (cderrno == CDA_OK)) {
 
+    /* local structure */
     typedef struct _idx_el { 
       int id;
       int offset;
@@ -1774,7 +2106,18 @@ char *structure_value(Attribute *attribute, int struc_num)
     return NULL;
 }
 
-char *structure_value_at_position(Attribute *struc, int position)
+
+/**
+ * Gets the value associated with the instance of the given s-attribute
+ * that occurs at the specified corpus position.
+ *
+ * @param struc     The s-attribute to search through.
+ * @param position  The corpus position being queried.
+ * @return          The value of the instance of the s-attribute,
+ *                  or NULL for error.
+ */
+char *
+structure_value_at_position(Attribute *struc, int position)
 {
   int snum = -1;
   
@@ -1785,9 +2128,34 @@ char *structure_value_at_position(Attribute *struc, int position)
     return structure_value(struc, snum);
 }
 
+
+
+
+
 /* ================================================== ALIGNMENT ATTRIBUTES */
 
-int get_alignment(int *data, int size, int position)   /* ALIGN component */
+/**
+ * Gets the id number of the alignment at the specified corpus position.
+ *
+ * For use with non-extended alignments. Requires members of the ALIGN
+ * component as arguments.
+ *
+ * Not an exported function!
+ *
+ * {Query:am I correct that "position" here means a cpos?? -- AH}
+ * {If I'm not, other docblocks in cdaccess also have errors}
+ *
+ * @see cl_cpos2alg
+ * @see get_extended_alignment
+ *
+ * @param data      The data member of a CompAlignData component.
+ * @param size      The size member of the same CompAlignData component.
+ * @param position  The corpus position to look at.
+ * @return          The id of the alignment at this corpus position,
+ *                  or -1 for error.
+ */
+int
+get_alignment(int *data, int size, int position)   /* ALIGN component */
 {
   int nr;
   int mid, high, low, comp;
@@ -1833,7 +2201,26 @@ int get_alignment(int *data, int size, int position)   /* ALIGN component */
   return -1;
 }
 
-int get_extended_alignment(int *data, int size, int position)   /* XALIGN component */
+/**
+ * Gets the id number of the alignment at the specified corpus position.
+ *
+ * For use with extended alignments. Requires members of the XALIGN
+ * component as arguments.
+ *
+ * Not an exported function!
+ *
+ *
+ * @see cl_cpos2alg
+ * @see get_alignment
+ *
+ * @param data      The data member of a CompXAlignData component.
+ * @param size      The size member of the same CompXAlignData component.
+ * @param position  The corpus position to look at.
+ * @return          The id of the alignment at this corpus position,
+ *                  or -1 for error.
+ */
+int
+get_extended_alignment(int *data, int size, int position)   /* XALIGN component */
 {
   int nr;
   int mid, high, low, start, end;
@@ -1880,12 +2267,30 @@ int get_extended_alignment(int *data, int size, int position)   /* XALIGN compon
 }
 
 
-int get_alg_attribute(Attribute *attribute, /* accesses alignment attribute */
-                      int position, 
-                      int *source_corpus_start,
-                      int *source_corpus_end,
-                      int *aligned_corpus_start,
-                      int *aligned_corpus_end)
+/**
+ * Gets the corpus positions of an alignment on the given align-attribute.
+ *
+ * This is for old-style alignments only: it doesn't (can't) deal with
+ * extended alignments. Depracated: use cl_alg2cpos instead (but note its
+ * parameters are not identical).
+ *
+ * @see cl_alg2cpos.
+ *
+ * @param attribute             The align-attribute to look on.
+ * @param position              The corpus position {??} of the alignment whose positions are wanted.
+ * @param source_corpus_start   Location to put source corpus start position.
+ * @param source_corpus_end     Location to put source corpus end position.
+ * @param aligned_corpus_start  Location to put target corpus start position.
+ * @param aligned_corpus_end    Location to put target corpus end position.
+ * @return                      Boolean: true = all OK, false = problem.
+ */
+int
+get_alg_attribute(Attribute *attribute, /* accesses alignment attribute */
+                  int position,
+                  int *source_corpus_start,
+                  int *source_corpus_end,
+                  int *aligned_corpus_start,
+                  int *aligned_corpus_end)
 {
   int *val;
   int alg;                      /* nr of alignment region */
@@ -1935,7 +2340,16 @@ int get_alg_attribute(Attribute *attribute, /* accesses alignment attribute */
   return 0;
 }
 
-int cl_has_extended_alignment(Attribute *attribute) {
+/**
+ * Checks whether an attribute's XALIGN component exists,
+ * that is, whether or not it has extended alignment.
+ *
+ * @param attribute  An align-attribute.
+ * @return           Boolean.
+ */
+int
+cl_has_extended_alignment(Attribute *attribute)
+{
   ComponentState xalign;
 
   check_arg(attribute, ATT_ALIGN, cderrno);
@@ -1948,82 +2362,117 @@ int cl_has_extended_alignment(Attribute *attribute) {
   }
 }
 
-/* extended alignment functions use new-style prototypes */
-int cl_max_alg(Attribute *attribute) 
+
+/**
+ * Gets the id number of alignments on this align-attribute
+ *
+ * This is equal to the maximum alignment on this attribute.
+ *
+ * @param attribute  An align-attribute.
+ * @return           The number of alignments on this attribute.
+ */
+int
+cl_max_alg(Attribute *attribute)
 {
   Component *align_data;
 
-  if (! cl_has_extended_alignment(attribute)) /* subsumes check_arg() */
-    {
-      align_data = ensure_component(attribute, CompAlignData, 0);
-      if (align_data == NULL) {
-        cderrno = CDA_ENODATA;
-        return cderrno;
-      }
-      cderrno = CDA_OK;
-      return (align_data->size / 2) - 1; /* last alignment boundary doesn't correspond to region */
+  /* call to cl_has_extended_alignment subsumes check_arg() */
+  if (! cl_has_extended_alignment(attribute)) {
+    align_data = ensure_component(attribute, CompAlignData, 0);
+    if (align_data == NULL) {
+      cderrno = CDA_ENODATA;
+      return cderrno;
     }
-  else
-    {
-      align_data = ensure_component(attribute, CompXAlignData, 0);
-      if (align_data == NULL) {
-        cderrno = CDA_ENODATA;
-        return cderrno;
-      }
-      cderrno = CDA_OK;
-      return (align_data->size / 4);
+    cderrno = CDA_OK;
+    return (align_data->size / 2) - 1; /* last alignment boundary doesn't correspond to region */
+  }
+  else {
+    align_data = ensure_component(attribute, CompXAlignData, 0);
+    if (align_data == NULL) {
+      cderrno = CDA_ENODATA;
+      return cderrno;
     }
+    cderrno = CDA_OK;
+    return (align_data->size / 4);
+  }
 }
 
-int cl_cpos2alg(Attribute *attribute, int cpos)
+/**
+ * Gets the id number of the alignment at the specified corpus position.
+ *
+ * @param attribute  The align-attribute to look on.
+ * @param cpos       The corpus position to look at.
+ * @return           The id number of the alignment at this position,
+ *                   or a negative int error code.
+ */
+int
+cl_cpos2alg(Attribute *attribute, int cpos)
 {
   int alg;
   Component *align_data;
 
-  if (! cl_has_extended_alignment(attribute)) /* subsumes check_arg() */
-    {
-      align_data = ensure_component(attribute, CompAlignData, 0);
-      if (align_data == NULL) {
-        cderrno = CDA_ENODATA;
-        return cderrno;
-      }
-      alg = get_alignment(align_data->data.data, 
-                          align_data->size,
-                          cpos);
-      if (alg >= 0) {
-        cderrno = CDA_OK;
-        return alg;
-      }
-      else {
-        cderrno = CDA_EPOSORNG; /* old alignment files don't allow gaps -> index error */
-        return cderrno;
-      }
+
+  /* call to cl_has_extended_alignment subsumes check_arg() */
+  if (! cl_has_extended_alignment(attribute)) {
+    align_data = ensure_component(attribute, CompAlignData, 0);
+    if (align_data == NULL) {
+      cderrno = CDA_ENODATA;
+      return cderrno;
     }
-  else
-    {
-      align_data = ensure_component(attribute, CompXAlignData, 0);
-      if (align_data == NULL) {
-        cderrno = CDA_ENODATA;
-        return cderrno;
-      }
-      alg = get_extended_alignment(align_data->data.data, 
-                                   align_data->size,
-                                   cpos);
-      if (alg >= 0) {
-        cderrno = CDA_OK;
-        return alg;
-      }
-      else {
-        cderrno = CDA_EALIGN;
-        return alg;               /* not a real error (just an "exception" condition) */
-      }
+    alg = get_alignment(align_data->data.data,
+                        align_data->size,
+                        cpos);
+    if (alg >= 0) {
+      cderrno = CDA_OK;
+      return alg;
     }
+    else {
+      cderrno = CDA_EPOSORNG; /* old alignment files don't allow gaps -> index error */
+      return cderrno;
+    }
+  }
+  else {
+    align_data = ensure_component(attribute, CompXAlignData, 0);
+    if (align_data == NULL) {
+      cderrno = CDA_ENODATA;
+      return cderrno;
+    }
+    alg = get_extended_alignment(align_data->data.data,
+                                 align_data->size,
+                                 cpos);
+    if (alg >= 0) {
+      cderrno = CDA_OK;
+      return alg;
+    }
+    else {
+      cderrno = CDA_EALIGN;
+      return alg;               /* not a real error (just an "exception" condition) */
+    }
+  }
 }
 
-  
-int cl_alg2cpos(Attribute *attribute, int alg,
-                int *source_region_start, int *source_region_end,
-                int *target_region_start, int *target_region_end)
+
+/**
+ * Gets the corpus positions of an alignment on the given align-attribute.
+ *
+ * Note that four corpus positions are retrieved, into the addresses
+ * given as parameters.
+ *
+ * @param attribute            The align-attribute to look on.
+ * @param alg                  The ID of the alignment whose positions are wanted.
+ * @param source_region_start  Location to put source corpus start position.
+ * @param source_region_end    Location to put source corpus end position.
+ * @param target_region_start  Location to put target corpus start position.
+ * @param target_region_end    Location to put target corpus end position.
+ * @return                     Boolean: true = all OK, false = problem.
+ */
+int
+cl_alg2cpos(Attribute *attribute,
+            int alg,
+            int *source_region_start,
+            int *source_region_end,
+            int *target_region_start,
+            int *target_region_end)
 {
   int *val, size;
   Component *align_data;
@@ -2032,61 +2481,61 @@ int cl_alg2cpos(Attribute *attribute, int alg,
   *target_region_start = -1;
   *source_region_end = -1;
   *target_region_end = -1;
-  if (! cl_has_extended_alignment(attribute)) /* subsumes check_arg() */
-    {
-      align_data = ensure_component(attribute, CompAlignData, 0);
-      if (align_data == NULL) {
-        cderrno = CDA_ENODATA;
-        return 0;
-      }
-      size = (align_data->size / 2) - 1; /* last alignment boundary doesn't correspond to region */
-      if ((alg < 0) || (alg >= size)) {
-        cderrno = CDA_EIDXORNG;
-        return 0;
-      }
-      val = align_data->data.data + (alg * 2);
-      *source_region_start  = ntohl(val[0]);
-      *target_region_start = ntohl(val[1]);
-      *source_region_end  = ntohl(val[2]) - 1;
-      *target_region_end = ntohl(val[3]) - 1;
-      cderrno = CDA_OK;
-      return 1;
+
+  /* call to cl_has_extended_alignment subsumes check_arg() */
+  if (! cl_has_extended_alignment(attribute)) {
+    align_data = ensure_component(attribute, CompAlignData, 0);
+    if (align_data == NULL) {
+      cderrno = CDA_ENODATA;
+      return 0;
     }
-  else 
-    {
-      align_data = ensure_component(attribute, CompXAlignData, 0);
-      if (align_data == NULL) {
-        cderrno = CDA_ENODATA;
-        return 0;
-      }
-      size = align_data->size / 4;
-      if ((alg < 0) || (alg >= size)) {
-        cderrno = CDA_EIDXORNG;
-        return 0;
-      }
-      val = align_data->data.data + (alg * 4);
-      *source_region_start  = ntohl(val[0]);
-      *source_region_end    = ntohl(val[1]);
-      *target_region_start = ntohl(val[2]);
-      *target_region_end   = ntohl(val[3]);
-      cderrno = CDA_OK;
-      return 1;
+    size = (align_data->size / 2) - 1; /* last alignment boundary doesn't correspond to region */
+    if ((alg < 0) || (alg >= size)) {
+      cderrno = CDA_EIDXORNG;
+      return 0;
     }
+    val = align_data->data.data + (alg * 2);
+    *source_region_start  = ntohl(val[0]);
+    *target_region_start = ntohl(val[1]);
+    *source_region_end  = ntohl(val[2]) - 1;
+    *target_region_end = ntohl(val[3]) - 1;
+    cderrno = CDA_OK;
+    return 1;
+  }
+  else  {
+    align_data = ensure_component(attribute, CompXAlignData, 0);
+    if (align_data == NULL) {
+      cderrno = CDA_ENODATA;
+      return 0;
+    }
+    size = align_data->size / 4;
+    if ((alg < 0) || (alg >= size)) {
+      cderrno = CDA_EIDXORNG;
+      return 0;
+    }
+    val = align_data->data.data + (alg * 4);
+    *source_region_start  = ntohl(val[0]);
+    *source_region_end    = ntohl(val[1]);
+    *target_region_start = ntohl(val[2]);
+    *target_region_end   = ntohl(val[3]);
+    cderrno = CDA_OK;
+    return 1;
+  }
 }
 
 
 
 /* ================================================== DYNAMIC ATTRIBUTES */
 
-/* ...: parameters  and structure
- * which gets the result
- */
 /**
- * Attribute access function for dynamic attributes.
+ * Calls a dynamic attribute.
+ *
+ * This is the attribute access function for dynamic attributes.
  *
  * @param attribute  The (dynamic) attribute in question.
  * @param dcr        Location for the result (*int or *char).
  * @param args       Location of the parameters (of *int or *char).
+ * @param nr_args    Number of parameters.
  * @return           Boolean: True for all OK, false for error.
  */
 int

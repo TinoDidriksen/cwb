@@ -21,7 +21,18 @@
 #include <stdlib.h>
 #include <assert.h>
 
-BARdesc BAR_new(int N, int M, int W) {
+
+/**
+ * Creates an N-by-M bar with beam width W.
+ *
+ * @param N    First dimension size of new matrix (see BARdesc).
+ * @param M    Second dimension size of new matrix (see BARdesc).
+ * @param W    Beam width size of new matrix (see BARdesc).
+ * @return     The new BARdesc object.
+ */
+BARdesc
+BAR_new(int N, int M, int W)
+{
   BARdesc BAR;
   int i;
   int size, vsize;
@@ -50,7 +61,19 @@ BARdesc BAR_new(int N, int M, int W) {
   return(BAR);
 }
 
-void BAR_reinit(BARdesc BAR, int N, int M, int W) {
+/**
+ * Changes the size of a BAR (erasing the contents of the BAR).
+ *
+ * @see BARdesc
+ *
+ * @param BAR  The BAR to resize.
+ * @param N    First dimension new size of matrix (see BARdesc).
+ * @param M    Second dimension new size of matrix (see BARdesc).
+ * @param W    Beam width new size of matrix (see BARdesc).
+   */
+void
+BAR_reinit(BARdesc BAR, int N, int M, int W)
+{
   int i;
   int size, vsize;
 
@@ -83,7 +106,14 @@ void BAR_reinit(BARdesc BAR, int N, int M, int W) {
   }
 }
 
-void BAR_delete(BARdesc BAR) {
+/**
+ * Destroys a BAR.
+ *
+ * @param BAR Descriptor of the BAR to destroy.
+ */
+void
+BAR_delete(BARdesc BAR)
+{
   assert(BAR);
   free(BAR->data);	
   free(BAR->d_block_start_x);
@@ -91,7 +121,28 @@ void BAR_delete(BARdesc BAR) {
   free(BAR);
 }
 
-void BAR_write(BARdesc BAR, int x, int y, int i) {
+/**
+ * Sets an element of a BAR.
+ *
+ * Usage:
+ *
+ * BAR_write(BAR, x, y, i);
+ *
+ * sets A(x,y) = i.
+ *
+ * - if (x,y) is outside matrix or beam range, the function call is ignored.
+ * - if d_(x+y) hasn't been accessed before, the block_start_x value is set to x.
+ *
+ * @param BAR     BAR descriptor
+   @param x       matrix x coordinate
+ * @param y       matrix y coordinate
+ * @param i       value to set it to
+ *
+
+ */
+void
+BAR_write(BARdesc BAR, int x, int y, int i)
+{
   int *p, *p1;
   if (((unsigned)x < BAR->x_size) && ((unsigned)y < BAR->y_size)) { /* fast bounds check */
     int d = x + y;
@@ -107,13 +158,32 @@ void BAR_write(BARdesc BAR, int x, int y, int i) {
       /* set value if within beam range */
       int dx = x - BAR->d_block_start_x[d];
       if ((unsigned)dx < BAR->beam_width) {
-	BAR->d_block_data[d][dx] = i;
+        BAR->d_block_data[d][dx] = i;
       }
     }
   }
 }
 
-int BAR_read(BARdesc BAR, int x, int y) {
+/**
+ * Reads from a BAR.
+ *
+ * Usage:
+ *
+ * i = A(x,y)
+ *
+ * is expressed as
+ *
+ * i = BAR_read(BAR, x, y);
+ *
+ * @param BAR     BAR descriptor
+   @param x       matrix x coordinate
+ * @param y       matrix y coordinate
+   @return        the value of A(x,y);  if (x,y) is
+                  outside matrix or beam range, returns 0.
+   */
+int
+BAR_read(BARdesc BAR, int x, int y)
+{
   if (((unsigned)x < BAR->x_size) && ((unsigned)y < BAR->y_size)) {
     int d = x + y;
     int x_start = BAR->d_block_start_x[d];

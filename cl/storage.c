@@ -30,6 +30,10 @@
 #include "storage.h"
 
 
+/**
+ * Flags used in calls to mmap.
+ * @see mmapfile
+ */
 #if defined(__FreeBSD__)
 #define MMAPFLAGS  MAP_FILE | MAP_PRIVATE
 #elif defined(__svr4__)
@@ -44,6 +48,15 @@
 
 /* ============================================================ */
 
+/**
+ * Writes an integer to file, converting to network byte order.
+ *
+ * Other than the byte order conversion, this is the same as
+ * fwrite(&val, sizeof(int), 1, fd) .
+ *
+ * @param val  The integer to write.
+ * @param fd   File handle to write to.
+ */
 void
 NwriteInt(int val, FILE *fd)
 {
@@ -55,6 +68,15 @@ NwriteInt(int val, FILE *fd)
   }
 }
 
+/**
+ * Reads an integer from file, converting from network byte order.
+ *
+ * This function does all the error checking for you, and will abort
+ * the program if the int cannot be read.
+ *
+ * @param val  Location to put the resulting int.
+ * @param fd   File handle to read from
+ */
 void
 NreadInt(int *val, FILE *fd)
 {
@@ -66,6 +88,17 @@ NreadInt(int *val, FILE *fd)
   *val = ntohl(word);
 }
 
+
+/**
+ * Writes an array of integers to file, converting to network byte order.
+ *
+ * Other than the byte order conversion, this is the same as
+ * fwrite(vals, sizeof(int), nr_vals, fd) .
+ *
+ * @param vals     Pointer to the location of the block of integers to write.
+ * @param nr_vals  Number of integers to write.
+ * @param fd       File handle to write to.
+ */
 void
 NwriteInts(int *vals, int nr_vals, FILE *fd)
 {
@@ -81,6 +114,16 @@ NwriteInts(int *vals, int nr_vals, FILE *fd)
   }
 }
 
+/**
+ * Reads an array of integers from file, converting from network byte order.
+ *
+ * This function does all the error checking for you, and will abort
+ * the program if the requested number of ints cannot be read.
+ *
+ * @param vals     Pointer to location to put the resulting array of ints.
+ * @param nr_vals  Number of integers to read.
+ * @param fd       File handle to read from
+ */
 void
 NreadInts(int *vals, int nr_vals, FILE *fd)
 {
@@ -99,7 +142,13 @@ NreadInts(int *vals, int nr_vals, FILE *fd)
 
 /* ============================================================ */
 
-/* put the blob back into its virginal state */
+
+/**
+ * Clears all fields in a MemBlob, regardless of their usage,
+ * and puts the blob back to its virginal state.
+ *
+ * Note that it doesn't free blob->data - just sets it to NULL.
+ */
 void
 init_mblob(MemBlob *blob)
 {
@@ -117,7 +166,18 @@ init_mblob(MemBlob *blob)
   blob->offset = 0;
 }
 
-/* malloc() blob of requested size; if clear_blob is set, inits with zero bytes */
+/**
+ * Allocates memory for a blob of the requested size.
+ *
+ * A block of memory holding nr_items of size item_size is created
+ * in the specified MemBlob.
+ *
+ * @param blob        The MemBlob in which to place the memory.
+ * @param nr_items    The number of items the MemBlob is to hold as data.
+ * @param item_size   The size of one item.
+ * @param clear_blob  boolean: if true, all bytes in the data space will be initialised to 0
+ * @return            boolean: true 1 if OK, false on error
+ */
 int
 alloc_mblob(MemBlob *blob, int nr_items, int item_size, int clear_blob)
 {
@@ -156,7 +216,11 @@ alloc_mblob(MemBlob *blob, int nr_items, int item_size, int clear_blob)
 }
 
 
-/* free allocated blob */
+/**
+ * Frees the memory used by a MemBlob.
+ *
+ * This works regardless of the method used to allocate the blob.
+ */
 void 
 mfree(MemBlob *blob)
 {
@@ -195,10 +259,23 @@ mfree(MemBlob *blob)
   
 }
 
-/* return the contents of file in filename as a pointer to a memory area.
- * len_ptr (return value) is the number of bytes the pointer points to.
- * "mode" is either "r" or "w", nothing else. If mode is "r", len_ptr is
- * taken as an input parameter (*len_ptr bytes are allocated)
+
+
+
+
+
+/**
+ * Maps a file into memory in either read or write mode.
+ *
+ * @param filename  Name of the file to map.
+ * @param len_ptr   The number of bytes the returned pointer points to.
+ * @param mode      Can be either "r" or "w", nothing else. If mode is "r",
+ *                  len_ptr is taken as an input parameter (*len_ptr bytes
+ *                  are allocated)
+ *                  {NB I copied this from existing notes but surely shouldn't
+ *                  the last comment apply if mode is "w" not "r"? -- AH}
+ * @return          The contents of file in filename as a pointer to a
+ *                  memory area.
  */
 caddr_t 
 mmapfile(char *filename, size_t *len_ptr, char *mode)
@@ -277,6 +354,15 @@ mmapfile(char *filename, size_t *len_ptr, char *mode)
   return space;
 }
 
+
+/**
+ * Maps a file into memory.
+ *
+ * This function does virtually the same as mmapfile (same parameters, same return
+ * value), but the memory is taken with malloc(3), not with mmap(2).
+ *
+ * @see mmapfile
+ */
 caddr_t
 mallocfile(char *filename, size_t *len_ptr, char *mode)
 {
@@ -355,6 +441,23 @@ mallocfile(char *filename, size_t *len_ptr, char *mode)
 }
 
 
+/**
+ * Reads the contents of a file into memory represented by blob.
+ *
+ * You can choose the memory allocation method - MMAPPED is faster, but
+ * writeable areas of memory should be taken with care. MALLOCED is
+ * slower (and far more space consuming), but writing data into malloced
+ * memory is no problem.
+ *
+ * @param filename           The file to read in.
+ * @param allocation_method  MMAPPED or MALLOCED (see function description)
+ * @param item_size          This is used for MemBlob access methods, it
+ *                           is simply copied into the MemBlob data
+ *                           structure.
+ * @param blob               The MemBlob to read the file into. It must not
+ *                           be in use -- the fields are overwritten.
+ * @return                   0 on failure, 1 if everything went fine.
+ */
 int
 read_file_into_blob(char *filename,
                     int allocation_method,
@@ -394,6 +497,17 @@ read_file_into_blob(char *filename,
 }
 
 
+
+/**
+ * Writes the data stored in a blob to file.
+ *
+
+ * @param filename           The file to write to.
+ * @param blob               The MemBlob to write to file.
+ * @param convert_to_nbo     boolean: if true, data is converted to
+ *                           network byte order before it's written.
+ * @return                   0 on failure, 1 if everything went fine.
+ */
 int
 write_file_from_blob(char *filename,
                      MemBlob *blob,

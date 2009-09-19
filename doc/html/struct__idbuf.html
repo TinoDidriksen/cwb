@@ -23,7 +23,7 @@
   </div>
 </div>
 <div class="contents">
-<h1>_idbuf Struct Reference</h1><!-- doxytag: class="_idbuf" -->Entry in linked list of strings containing ID codes.  
+<h1>_idbuf Struct Reference</h1><!-- doxytag: class="_idbuf" -->Underlying structure for the IDList class.  
 <a href="#_details">More...</a>
 <p>
 <code>#include &lt;corpus.h&gt;</code>
@@ -31,10 +31,12 @@
 <h2>Data Fields</h2>
 <ul>
 <li>char * <a class="el" href="struct__idbuf.html#ed1cfb225a5fb77461e7972691e68a72">string</a>
-<li><a class="el" href="struct__idbuf.html">IDList</a> <a class="el" href="struct__idbuf.html#2f7fb77427a558f1deedce6006b23454">next</a>
-</ul>
+<dl class="el"><dd class="mdescRight">the username, groupname or hostname  <a href="#ed1cfb225a5fb77461e7972691e68a72"></a><br></dl><li><a class="el" href="struct__idbuf.html">IDList</a> <a class="el" href="struct__idbuf.html#2f7fb77427a558f1deedce6006b23454">next</a>
+<dl class="el"><dd class="mdescRight">link to next entry in the linked list  <a href="#2f7fb77427a558f1deedce6006b23454"></a><br></dl></ul>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
-Entry in linked list of strings containing ID codes. <hr><h2>Field Documentation</h2>
+Underlying structure for the IDList class. 
+<p>
+<hr><h2>Field Documentation</h2>
 <a class="anchor" name="2f7fb77427a558f1deedce6006b23454"></a><!-- doxytag: member="_idbuf::next" ref="2f7fb77427a558f1deedce6006b23454" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -46,6 +48,8 @@ Entry in linked list of strings containing ID codes. <hr><h2>Field Documentation
 </div>
 <div class="memdoc">
 
+<p>
+link to next entry in the linked list 
 <p>
 
 <p>Referenced by <a class="el" href="corpus_8c.html#e70a858159cb5d38fd3259648b343eb3">check_access_conditions()</a>, <a class="el" href="corpus_8h.html#e779332ae5e89e614575239c7c3e4bd4">FreeIDList()</a>, and <a class="el" href="corpus_8h.html#3796931ad775036a92a370de8b53bc4d">memberIDList()</a>.</p>
@@ -64,6 +68,8 @@ Entry in linked list of strings containing ID codes. <hr><h2>Field Documentation
 <div class="memdoc">
 
 <p>
+the username, groupname or hostname 
+<p>
 
 <p>Referenced by <a class="el" href="corpus_8c.html#e70a858159cb5d38fd3259648b343eb3">check_access_conditions()</a>, <a class="el" href="corpus_8h.html#e779332ae5e89e614575239c7c3e4bd4">FreeIDList()</a>, and <a class="el" href="corpus_8h.html#3796931ad775036a92a370de8b53bc4d">memberIDList()</a>.</p>
 
@@ -72,7 +78,7 @@ Entry in linked list of strings containing ID codes. <hr><h2>Field Documentation
 <hr>The documentation for this struct was generated from the following file:<ul>
 <li>cl/<a class="el" href="corpus_8h.html">corpus.h</a></ul>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Thu Sep 17 23:45:31 2009 for CWB by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Sat Sep 19 20:28:33 2009 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

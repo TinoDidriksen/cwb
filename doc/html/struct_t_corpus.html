@@ -23,7 +23,7 @@
   </div>
 </div>
 <div class="contents">
-<h1>TCorpus Struct Reference</h1><!-- doxytag: class="TCorpus" -->Contains information on a loaded corpus.  
+<h1>TCorpus Struct Reference</h1><!-- doxytag: class="TCorpus" -->Underlying structure for the Corpus class.  
 <a href="#_details">More...</a>
 <p>
 <code>#include &lt;corpus.h&gt;</code>
@@ -36,18 +36,20 @@
 <dl class="el"><dd class="mdescRight">the ``home directory'' of the corpus  <a href="#44196e6a5696d10442c29e639437196e"></a><br></dl><li>char * <a class="el" href="struct_t_corpus.html#9f25be44cbb4c737b8bfc7f94c1ff6d1">info_file</a>
 <dl class="el"><dd class="mdescRight">the path of the info file of the corpus  <a href="#9f25be44cbb4c737b8bfc7f94c1ff6d1"></a><br></dl><li><a class="el" href="cl_8h.html#3502421ae8eac74673133702852dde32">CorpusCharset</a> <a class="el" href="struct_t_corpus.html#b7d33183c58d7df43cc5602b9c842b37">charset</a>
 <dl class="el"><dd class="mdescRight">a special corpus property: internal support for 'latin1' to 'latin9' planned  <a href="#b7d33183c58d7df43cc5602b9c842b37"></a><br></dl><li><a class="el" href="struct_t_corpus_property.html">CorpusProperty</a> <a class="el" href="struct_t_corpus.html#1e19a624b45265cd91082d959f6055d8">properties</a>
-<li>char * <a class="el" href="struct_t_corpus.html#37e28e0e6cea644b9e65a1b7980d7934">admin</a>
-<li><a class="el" href="struct__idbuf.html">IDList</a> <a class="el" href="struct_t_corpus.html#eca16b764f325a0ace5e7c7865271070">groupAccessList</a>
-<li><a class="el" href="struct__idbuf.html">IDList</a> <a class="el" href="struct_t_corpus.html#c771eb92304afb01bd985218cdca5a81">userAccessList</a>
-<li><a class="el" href="struct__idbuf.html">IDList</a> <a class="el" href="struct_t_corpus.html#5a7bf37ff60c036f5bd7a9c60d77a8a1">hostAccessList</a>
+<dl class="el"><dd class="mdescRight">head of a linked list of CorpusProperty object.  <a href="#1e19a624b45265cd91082d959f6055d8"></a><br></dl><li>char * <a class="el" href="struct_t_corpus.html#37e28e0e6cea644b9e65a1b7980d7934">admin</a>
+<dl class="el"><dd class="mdescRight">{doesn't seem to be used?}  <a href="#37e28e0e6cea644b9e65a1b7980d7934"></a><br></dl><li><a class="el" href="struct__idbuf.html">IDList</a> <a class="el" href="struct_t_corpus.html#eca16b764f325a0ace5e7c7865271070">groupAccessList</a>
+<dl class="el"><dd class="mdescRight">List of groups allowed to access this corpus (can be NULL).  <a href="#eca16b764f325a0ace5e7c7865271070"></a><br></dl><li><a class="el" href="struct__idbuf.html">IDList</a> <a class="el" href="struct_t_corpus.html#c771eb92304afb01bd985218cdca5a81">userAccessList</a>
+<dl class="el"><dd class="mdescRight">List of users allowed to access this corpus (can be NULL).  <a href="#c771eb92304afb01bd985218cdca5a81"></a><br></dl><li><a class="el" href="struct__idbuf.html">IDList</a> <a class="el" href="struct_t_corpus.html#5a7bf37ff60c036f5bd7a9c60d77a8a1">hostAccessList</a>
 <li>char * <a class="el" href="struct_t_corpus.html#1151e3383439ca5d8096811a09b42823">registry_dir</a>
-<li>char * <a class="el" href="struct_t_corpus.html#ba368bab230678d58be125f5b732cc25">registry_name</a>
-<li>int <a class="el" href="struct_t_corpus.html#53389315db3bcac8c56751dcabe1a3f6">nr_of_loads</a>
+<dl class="el"><dd class="mdescRight">Directory where this corpus's registry file is located.  <a href="#1151e3383439ca5d8096811a09b42823"></a><br></dl><li>char * <a class="el" href="struct_t_corpus.html#ba368bab230678d58be125f5b732cc25">registry_name</a>
+<dl class="el"><dd class="mdescRight">the cwb-name of this corpus  <a href="#ba368bab230678d58be125f5b732cc25"></a><br></dl><li>int <a class="el" href="struct_t_corpus.html#53389315db3bcac8c56751dcabe1a3f6">nr_of_loads</a>
 <dl class="el"><dd class="mdescRight">the number of setup_corpus ops  <a href="#53389315db3bcac8c56751dcabe1a3f6"></a><br></dl><li>union <a class="el" href="union___attribute.html">_Attribute</a> * <a class="el" href="struct_t_corpus.html#97504befdc17001f29ab2a0aa50d5c1f">attributes</a>
 <dl class="el"><dd class="mdescRight">the list of attributes  <a href="#97504befdc17001f29ab2a0aa50d5c1f"></a><br></dl><li>struct <a class="el" href="struct_t_corpus.html">TCorpus</a> * <a class="el" href="struct_t_corpus.html#c457df8bdae957932046725f5e9d30a2">next</a>
 <dl class="el"><dd class="mdescRight">next entry in a linked-list of loaded corpora  <a href="#c457df8bdae957932046725f5e9d30a2"></a><br></dl></ul>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
-Contains information on a loaded corpus. <hr><h2>Field Documentation</h2>
+Underlying structure for the Corpus class. 
+<p>
+<hr><h2>Field Documentation</h2>
 <a class="anchor" name="37e28e0e6cea644b9e65a1b7980d7934"></a><!-- doxytag: member="TCorpus::admin" ref="37e28e0e6cea644b9e65a1b7980d7934" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -59,6 +61,8 @@ Contains information on a loaded corpus. <hr><h2>Field Documentation</h2>
 </div>
 <div class="memdoc">
 
+<p>
+{doesn't seem to be used?} 
 <p>
 
 <p>Referenced by <a class="el" href="corpus_8c.html#1c317981d288c9d0964017ada173b2b4">drop_corpus()</a>.</p>
@@ -114,6 +118,8 @@ a special corpus property: internal support for 'latin1' to 'latin9' planned
 </div>
 <div class="memdoc">
 
+<p>
+List of groups allowed to access this corpus (can be NULL). 
 <p>
 
 <p>Referenced by <a class="el" href="corpus_8c.html#e70a858159cb5d38fd3259648b343eb3">check_access_conditions()</a>, and <a class="el" href="corpus_8c.html#1c317981d288c9d0964017ada173b2b4">drop_corpus()</a>.</p>
@@ -263,6 +269,8 @@ the ``home directory'' of the corpus
 <div class="memdoc">
 
 <p>
+head of a linked list of CorpusProperty object. 
+<p>
 
 <p>Referenced by <a class="el" href="corpus_8h.html#5492efc3742070f65be1b0bcbead995a">add_corpus_property()</a>, and <a class="el" href="corpus_8c.html#e43900bdcfa4f9f973b210b8750889ad">cl_first_corpus_property()</a>.</p>
 
@@ -279,6 +287,8 @@ the ``home directory'' of the corpus
 </div>
 <div class="memdoc">
 
+<p>
+Directory where this corpus's registry file is located. 
 <p>
 
 <p>Referenced by <a class="el" href="cwb-huffcode_8c.html#80203248d1441475e98106bf8f8ea6ec">compute_code_lengths()</a>, <a class="el" href="corpus_8c.html#5703da86de0749c60df13c9f6bc96c54">describe_corpus()</a>, <a class="el" href="corpus_8c.html#1c317981d288c9d0964017ada173b2b4">drop_corpus()</a>, <a class="el" href="corpus_8c.html#2e8c6f04bb423451ab68782fdd5da158">find_corpus()</a>, <a class="el" href="corpmanag_8c.html#6971e7cc89868423f1044529eb3047da">GetSystemCorpus()</a>, <a class="el" href="cwb-makeall_8c.html#3c04138a5bfe5d72780bb7e82a18e627">main()</a>, <a class="el" href="corpus_8c.html#84eb9130d44b1b40bd3bfe5a94f777d9">setup_corpus()</a>, and <a class="el" href="cwb-describe-corpus_8c.html#6bb69eaa9b2be3b65d29bae2ca476b3a">show_basic_info()</a>.</p>
@@ -297,6 +307,8 @@ the ``home directory'' of the corpus
 <div class="memdoc">
 
 <p>
+the cwb-name of this corpus 
+<p>
 
 <p>Referenced by <a class="el" href="ascii-print_8h.html#8123c01d1c35c99c5cbadae6e308c3f1">ascii_print_corpus_header()</a>, <a class="el" href="cwb-huffcode_8c.html#80203248d1441475e98106bf8f8ea6ec">compute_code_lengths()</a>, <a class="el" href="print-modes_8h.html#b5b5d03178d7a663b414ffcb3150528a">ComputePrintStructures()</a>, <a class="el" href="corpus_8c.html#5703da86de0749c60df13c9f6bc96c54">describe_corpus()</a>, <a class="el" href="corpus_8c.html#1c317981d288c9d0964017ada173b2b4">drop_corpus()</a>, <a class="el" href="corpus_8c.html#2e8c6f04bb423451ab68782fdd5da158">find_corpus()</a>, <a class="el" href="html-print_8h.html#799e515f2c4fb96a0b58a0ba5939dfcf">html_print_corpus_header()</a>, <a class="el" href="latex-print_8h.html#251ac665d07f564a944fc1a514fb80a3">latex_print_corpus_header()</a>, <a class="el" href="parse__actions_8h.html#58e2b0f6dcef9f88c8ca38e1b2840246">prepare_AlignmentConstraints()</a>, <a class="el" href="class-mapping_8h.html#54c2e194b218d440667818b9208cc625">print_mapping()</a>, <a class="el" href="corpus_8c.html#84eb9130d44b1b40bd3bfe5a94f777d9">setup_corpus()</a>, <a class="el" href="sgml-print_8h.html#e39f54ccae1c1c5088f5e12ac8b07565">sgml_print_corpus_header()</a>, <a class="el" href="cwb-describe-corpus_8c.html#6bb69eaa9b2be3b65d29bae2ca476b3a">show_basic_info()</a>, and <a class="el" href="variables_8h.html#e6e743183feb09fe2d9fc4b95f2fde0d">VerifyVariable()</a>.</p>
 
@@ -314,6 +326,8 @@ the ``home directory'' of the corpus
 <div class="memdoc">
 
 <p>
+List of users allowed to access this corpus (can be NULL). 
+<p>
 
 <p>Referenced by <a class="el" href="corpus_8c.html#e70a858159cb5d38fd3259648b343eb3">check_access_conditions()</a>, and <a class="el" href="corpus_8c.html#1c317981d288c9d0964017ada173b2b4">drop_corpus()</a>.</p>
 
@@ -322,7 +336,7 @@ the ``home directory'' of the corpus
 <hr>The documentation for this struct was generated from the following file:<ul>
 <li>cl/<a class="el" href="corpus_8h.html">corpus.h</a></ul>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Thu Sep 17 23:45:31 2009 for CWB by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Sat Sep 19 20:28:33 2009 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

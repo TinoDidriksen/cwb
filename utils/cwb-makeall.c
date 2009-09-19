@@ -247,7 +247,16 @@ usage() {
 
 
 
+/* *************** *\
+ *      MAIN()     *
+\* *************** */
 
+/**
+ * Main function for cwb-makeall.
+ *
+ * @param argc   Number of command-line arguments.
+ * @param argv   Command-line arguments.
+ */
 int
 main(int argc, char **argv) {
 

@@ -24,11 +24,18 @@
 #include "compression.h"
 
 
-/* doesn't seem to exist outside Solaris, so we define it here */
+/** doesn't seem to exist outside Solaris, so we define it here */
 #define log2(x) (log(x)/log(2.0))
 
-
-int compute_ba(int ft, int corpus_size)
+/**
+ * {I have no idea what this does -- AH}
+ *
+ * @param ft          ??
+ * @param corpus_size ??
+ * @return            ??
+ */
+int
+compute_ba(int ft, int corpus_size)
 {
   double p;
   int pa;
@@ -48,8 +55,16 @@ int compute_ba(int ft, int corpus_size)
  * Version with Alistair Moffat's comments worked in 
  * Tue Jan 24 10:07:12 1995 (oli)
  */
-
-int write_golomb_code(int x, int b, BFile *bf)
+/**
+ * Writes an integer to a Golomb-coded bit-file-buffer.
+ *
+ * @param x   Integer to write
+ * @param b   ???
+ * @param bf  The bit-file to read from.
+ * @return    Always 1.
+ */
+int
+write_golomb_code(int x, int b, BFile *bf)
 {
   int q, res, lb, ub, nr_sc, i;
 
@@ -84,6 +99,13 @@ int write_golomb_code(int x, int b, BFile *bf)
   return 1;
 }
 
+/**
+ * Reads an integer from a Golomb-coded bit-file-buffer.
+ *
+ * @param b   ???
+ * @param bf  The bit-filem to read from.
+ * @return    The integer that is read.
+ */
 int read_golomb_code_bf(int b, BFile *bf)
 {
   int q, i, nr_sc, lb, ub;
@@ -124,7 +146,16 @@ int read_golomb_code_bf(int b, BFile *bf)
   return r + q * b;
 }
 
-int read_golomb_code_bs(int b, BStream *bs)
+
+/**
+ * Reads an integer from a Golomb-coded bitstream.
+ *
+ * @param b   ???
+ * @param bs  The bitstream to read from.
+ * @return    The integer that is read.
+ */
+int
+read_golomb_code_bs(int b, BStream *bs)
 {
   int q, i, nr_sc, lb, ub;
 

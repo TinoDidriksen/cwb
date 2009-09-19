@@ -35,8 +35,8 @@
 <h2>Functions</h2>
 <ul>
 <li>void <a class="el" href="cwb-itoa_8c.html#b962e7334345b3df7856935c0ddfb9c3">process_fd</a> (FILE *fd)
-<li>int <a class="el" href="cwb-itoa_8c.html#3c04138a5bfe5d72780bb7e82a18e627">main</a> (int argc, char **argv)
-</ul>
+<dl class="el"><dd class="mdescRight">Reads one integer at a time from a stream and prints a decimal representation of it on STDOUT; strings representing ints are split by newlines.  <a href="#b962e7334345b3df7856935c0ddfb9c3"></a><br></dl><li>int <a class="el" href="cwb-itoa_8c.html#3c04138a5bfe5d72780bb7e82a18e627">main</a> (int argc, char **argv)
+<dl class="el"><dd class="mdescRight">Main function for cwb-itoa.  <a href="#3c04138a5bfe5d72780bb7e82a18e627"></a><br></dl></ul>
 <h2>Variables</h2>
 <ul>
 <li>int <a class="el" href="cwb-itoa_8c.html#c06ece0fe50e0dfc3431c1a02ce4c397">little_endian</a> = 0
@@ -85,6 +85,14 @@
 <div class="memdoc">
 
 <p>
+Main function for cwb-itoa. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>argc</em>&nbsp;</td><td>Number of command-line arguments. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>argv</em>&nbsp;</td><td>Command-line arguments. </td></tr>
+  </table>
+</dl>
 
 <p>References <a class="el" href="cwb-atoi_8c.html#c06ece0fe50e0dfc3431c1a02ce4c397">little_endian</a>, <a class="el" href="cwb-atoi_8c.html#b962e7334345b3df7856935c0ddfb9c3">process_fd()</a>, and <a class="el" href="options_8h.html#b9e1449fd00c98428516f0b41eddcb10">progname</a>.</p>
 
@@ -107,6 +115,13 @@
 <div class="memdoc">
 
 <p>
+Reads one integer at a time from a stream and prints a decimal representation of it on STDOUT; strings representing ints are split by newlines. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>fd</em>&nbsp;</td><td>The file handle. </td></tr>
+  </table>
+</dl>
 
 <p>References <a class="el" href="cwb-itoa_8c.html#2993e80915962c80bdbd46c0f8d554b3">buf</a>, <a class="el" href="makecomps_8c.html#eca034f67218340ecb2261a22c2f3dcd">BUFSIZE</a>, <a class="el" href="endian_8c.html#33af4badd26ec8c4e16dfd07c3baca42">cl_bswap32()</a>, and <a class="el" href="cwb-atoi_8c.html#c06ece0fe50e0dfc3431c1a02ce4c397">little_endian</a>.</p>
 
@@ -146,7 +161,7 @@
 </div>
 </div><p>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Thu Sep 17 23:45:31 2009 for CWB by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Sat Sep 19 20:28:33 2009 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

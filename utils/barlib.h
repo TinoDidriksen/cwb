@@ -15,34 +15,37 @@
  *  WWW at http://www.gnu.org/copyleft/gpl.html).
  */
 
-/* The Beamed Array Library implements storage for the kind of sparse matrix required
-   by beam search methods in dynamic programming. A Beamed Array is a N,M-matrix
-
-        A(x,y) ;  x = 0 ... N-1, y = 0 ... M-1
-
-   of integer values, where each right/down diagonal 
-
-        d_k := { (x,y) | x + y = k } 
-
-   contains a single contiguous block of at most W (potentially) nonzero elements. The
-   position of this block on a given diagonal is determined by the first write access to
-   that diagonal. It is assumed that the first element written is the leftmost one, i.e.
-   setting A(x,y)=1 will define the block on d_(x+y) to be 
-
-        {(x,y), (x+1,y-1), ... , (x+W-1, y+W-1)}
-
-	*/
 
 
-/* BAR descriptor data type */
+/**
+ * The BARdesc object: a BAR (Beamed Array) descriptor.
+ *
+ * The Beamed Array Library implements storage for the kind of sparse matrix required
+ * by beam search methods in dynamic programming. A Beamed Array is a N,M-matrix
+ *
+ *      A(x,y) ;  x = 0 ... N-1, y = 0 ... M-1
+ *
+ * of integer values, where each right/down diagonal
+ *
+ *      d_k := { (x,y) | x + y = k }
+ *
+ * contains a single contiguous block of at most W (potentially) nonzero elements. The
+ * position of this block on a given diagonal is determined by the first write access to
+ * that diagonal. It is assumed that the first element written is the leftmost one, i.e.
+ * setting A(x,y)=1 will define the block on d_(x+y) to be
+ *
+ *      {(x,y), (x+1,y-1), ... , (x+W-1, y+W-1)}
+ *
+ *
+ */
 typedef struct _BARdesc {
-  unsigned int x_size, y_size, d_size;	/* matrix dimensions: N, M, N+M */
-  unsigned int beam_width;     	/* beam width W */
-  int *d_block_start_x;		/* vector of diagonal block start points (x coordinate) */
-  int **d_block_data;		/* list of vectors containing diagonal block data */
-  int *data;			/* pointer to data space */
-  int vector_size;		/* size of allocated arrays */
-  int data_size;		/* used by BAR_reinit() to know if it needs to reallocate memory */
+  unsigned int x_size, y_size, d_size; /**< matrix dimensions: N, M, N+M */
+  unsigned int beam_width;             /**< beam width W */
+  int *d_block_start_x;                /**< vector of diagonal block start points (x coordinate) */
+  int **d_block_data;                  /**< list of vectors containing diagonal block data */
+  int *data;                           /**< pointer to data space */
+  int vector_size;                     /**< size of allocated arrays */
+  int data_size;                       /**< used by BAR_reinit() to know if it needs to reallocate memory */
 } *BARdesc;
 
 /* create N,M-BAR with beam width W

@@ -27,33 +27,31 @@
  *
  *  (The underlying structures are defined elsewhere.)
  */
-typedef struct TCorpus Corpus;
-typedef union _Attribute Attribute;
-typedef struct _position_stream_rec_ *PositionStream;
-typedef struct _CL_Regex *CL_Regex;
-typedef struct _CL_BitVec *CL_BitVec;
+typedef struct TCorpus Corpus;                        /**< The Corpus object: contains information on a loaded corpus. */
+typedef union _Attribute Attribute;                   /**< The Attribute object: an entire segment of a corpus (of any flavour; s, p etc). */
+typedef struct _position_stream_rec_ *PositionStream; /**< The PositionStream object: gives stream-like reading of an Attribute. */
+typedef struct _CL_Regex *CL_Regex;                   /**< The CL_Regex object: an optimised regular expression. */
+typedef struct _CL_BitVec *CL_BitVec;                 /**< The CL_BitVec object: doesn't seem to exist {???-- AH}. */
 
 /**
- * Underlying structure for the CorpusProperty object-pointer type.
- * The structure takes the form of a linked-list entry.
+ * The CorpusProperty object.
+ *
+ * The underlying structure takes the form of a linked-list entry.
+ *
+ * Each Corpus object has, as one of its members, the head entry
+ * on a list of CorpusProperties.
  */
 typedef struct TCorpusProperty {
-  /**
-   * A string specifying the property in question.
-   */
+  /** A string specifying the property in question. */
   char *property;
-  /**
-   * A string containing the value of the property in question.
-   */
+  /** A string containing the value of the property in question. */
   char *value;
-  /**
-   * Pointer to the next entry in the linked list.
-   */
+  /** Pointer to the next entry in the linked list. */
   struct TCorpusProperty *next;
 } *CorpusProperty;
 
 /**
- * Identifier for a character set supported by CWB.
+ * Identifier for one of the character sets supported by CWB.
  */
 typedef enum ECorpusCharset {
   ascii,
@@ -100,12 +98,18 @@ typedef struct _DCR {
 
 /* attribute types */
 #define ATT_NONE       0
+/** Positional attributes, ie streams of word tokens, word tags - any "column" that has a value at every corpus position. */
 #define ATT_POS        (1<<0)
+/** Structural attributes, ie a set of SGML/XML-ish "regions" in the corpus delimited by the same SGML/XML tag */
 #define ATT_STRUC      (1<<1)
+/** Alignment attributes, ie a set of zones of alignment between a source and target corpus */
 #define ATT_ALIGN      (1<<2)
+/** Dynamic attributes, ?? */
 #define ATT_DYN        (1<<6)
 
-#define ATT_ALL        ATT_POS   | ATT_STRUC | ATT_ALIGN | ATT_DYN 
+/** shorthand for "all types of attribute" */
+#define ATT_ALL        ATT_POS   | ATT_STRUC | ATT_ALIGN | ATT_DYN
+/** shorthand for "all types of attribute except dynamic" */
 #define ATT_REAL       ATT_POS   | ATT_STRUC | ATT_ALIGN 
 
 /* result and argument types of dynamic attributes */
@@ -118,19 +122,33 @@ typedef struct _DCR {
 #define ATTAT_PAREF   6
 
 /* regular expression flags for cl_regex2id */
+/**
+ * Flag ignore-case in regular expression matching.
+ * @see cl_regex2id
+ */
 #define IGNORE_CASE 1
+/**
+ * Flag ignore-diacritics in regular expression matching.
+ * @see cl_regex2id
+ */
 #define IGNORE_DIAC 2
+/**
+ * Flag for: don't use regular expression matching - match as a literal string.
+ * Not used in the CL but in use in CQP.
+ */
 #define IGNORE_REGEX 4
 
 /* flags set in return values of cl_cpos2boundary() function */
-#define STRUC_INSIDE 1
-#define STRUC_LBOUND 2
-#define STRUC_RBOUND 4
+#define STRUC_INSIDE 1  /**< cl_cpos2boundary() return flag: specified position is WITHIN a region of this s-attribute */
+#define STRUC_LBOUND 2  /**< cl_cpos2boundary() return flag: specified position is AT THE START BOUNDARY OF a region of this s-attribute */
+#define STRUC_RBOUND 4  /**< cl_cpos2boundary() return flag: specified position is AT THE END BOUNDARY OF a region of this s-attribute */
+
+
 
 /* 
  *  error handling (error values and related functions) 
  */
-#define CDA_OK           0        /**< everything fine */
+#define CDA_OK           0        /**< everything fine; error values all less than 0 */
 #define CDA_ENULLATT    -1        /**< NULL passed as attribute argument */
 #define CDA_EATTTYPE    -2        /**< function was called on illegal attribute */
 #define CDA_EIDORNG     -3        /**< id out of range */
@@ -153,22 +171,32 @@ typedef struct _DCR {
 
 extern int cderrno;
 
-void cdperror(char *message);        /* prints out error string */
-char *cdperror_string(int error_num); /* returns error string */
+/* these are old-style-API prototypes... */
+void cdperror(char *message);
+char *cdperror_string(int error_num);
+
+
 
 /*
- *  easy memory management functions
- */
-/* use the following memory allocation functions instead of malloc(), calloc(), realloc(), strdup() 
- * in your own programs to invoke the CL's memory manager when necessay 
+ * easy memory management functions
+ *
+ * use the following memory allocation functions instead of malloc(), calloc(), realloc(), strdup()
+ * in your own programs to invoke the CL's memory manager when necessary
  */
 void *cl_malloc(size_t bytes);
 void *cl_calloc(size_t nr_of_elements, size_t element_size);
 void *cl_realloc(void *block, size_t bytes);
 char *cl_strdup(char *string);
-/* for completeness, the 'safe deallocation' macro cl_free() is also included */
+/**
+ * Safely frees memory.
+ *
+ * @see cl_malloc
+ * @param p  Pointer to memory to be freed.
+ */
 #define cl_free(p) do { if ((p) != NULL) { free(p); p = NULL; } } while (0)
 /* the do {...} while (0) should be safe in 'bare' if..then..else blocks */
+
+
 
 /*
  *  some CL utility functions
@@ -181,6 +209,7 @@ void cl_string_canonical(char *s, int flags);  /* modifies string <s> in place; 
 char *cl_string_latex2iso(char *str, char *result, int target_len); 
 /* <result> points to buffer of appropriate size; auto-allocated if NULL; 
    str == result is explicitly allowed; conveniently returns <result> */
+
 unsigned char *cl_string_maptable(CorpusCharset charset /*ignored*/, int flags);
 /* returns pointer to static mapping table for given flags (IGNORE_CASE and IGNORE_DIAC) and character set */
 
@@ -189,13 +218,17 @@ char *cl_make_set(char *s, int split);
 int cl_set_size(char *s);
 int cl_set_intersection(char *result, const char *s1, const char *s2);
 
+
+
 /* CL front-end to POSIX regular expressions with CL semantics (always matches entire string);
    implements case-/diacritic-insensitive matching and optimisations */
 CL_Regex cl_new_regex(char *regex, int flags, CorpusCharset charset /*ignored*/);
 int cl_regex_optimised(CL_Regex rx); /* 0 = not optimised; otherwise, value indicates level of optimisation */
 int cl_regex_match(CL_Regex rx, char *str); /* automatically uses normalisation flags from constructor; returns True when regex matches */
 void cl_delete_regex(CL_Regex rx);
-extern char cl_regex_error[];        /* contains regex compilation error after cl_new_regex() failed  */
+extern char cl_regex_error[];
+
+
 
 /* built-in random number generator (RNG) */
 void cl_set_seed(unsigned int seed);
@@ -205,40 +238,61 @@ void cl_set_rng_state(unsigned int i1, unsigned int i2);
 unsigned int cl_random(void);
 double cl_runif(void);
 
+
+
 /**
  *  The cl_lexhash class (lexicon hashes, with IDs and frequency counts)
+ *
+ *  A "lexicon hash" links strings to integers. Each cl_lexhash object
+ *  represents an entire table of such things; individual string-to-int
+ *  links are represented by cl_lexhash_entry objects.
+ *
+ *  Within the cl_lexhash, the entries are grouped into buckets. A
+ *  bucket is the term for a "slot" on the hash table. The linked-list
+ *  in a given bucket represent all the different string-keys that map
+ *  to one particular index value.
+ *
+ *  Each entry contains the key itself (for search-and-retrieval),
+ *  the frequency of that type (incremented when a token is added that
+ *  is already in the lexhash), an ID integer, plus a bundle of "data"
+ *  associated with that string.
+ *
+ *  These lexicon hashes are used, notably, in the encoding of corpora
+ *  to CWB-index-format.
  */
 typedef struct _cl_lexhash *cl_lexhash;
+/**
+ * Underlying structure for the cl_lexhash_entry class.
+ */
 typedef struct _cl_lexhash_entry {
-  char *key;                        /* hash key == token */
-  unsigned int freq;
-  int id;
-  /* data fields: use as entry->data.integer, entry->data.numeric, ... */
+  char *key;                        /**< hash key == token */
+  unsigned int freq;                /**< frequency of this type */
+  int id;                           /**< the id code of this type */
+  /**
+   * This entry's data fields.
+   * Use as entry->data.integer, entry->data.numeric, ...
+   */
   struct _cl_lexhash_entry_data {
     int integer;
     double numeric;
     void *pointer;
   } data;
-  struct _cl_lexhash_entry *next;
+  struct _cl_lexhash_entry *next;   /**< next entry on the linked-list (ie in the bucket) */
 } *cl_lexhash_entry;
 
-
-cl_lexhash cl_new_lexhash(int buckets);                       /* create lexhash object with <buckets> buckets (0 -> default size)*/
-void cl_delete_lexhash(cl_lexhash lh);                        /* delete object */
+/*
+ * ... and ... its API!!
+ */
+cl_lexhash cl_new_lexhash(int buckets);
+void cl_delete_lexhash(cl_lexhash lh);
 void cl_lexhash_set_cleanup_function(cl_lexhash lh, void (*func)(cl_lexhash_entry));
-/* cleanup function is called with cl_lexhash_entry arg and should delete any objects assocated with the entry's data field */
 void cl_lexhash_auto_grow(cl_lexhash lh, int flag);
-/* whether lexhash is allowed to grow automatically to avoid performance degradation (switched on by default) */
-
-cl_lexhash_entry
-cl_lexhash_add(cl_lexhash lh, char *token);                   /* inserts copy of <token> into hash, with auto-assigned id;
-                                                                 returns pointer to (new or existing) entry */
-cl_lexhash_entry
-cl_lexhash_find(cl_lexhash lh, char *token);                  /* returns pointer to entry, NULL if not in hash */
-int cl_lexhash_id(cl_lexhash lh, char *token);                /* returns ID of <token>, -1 if not in hash */
-int cl_lexhash_freq(cl_lexhash lh, char *token);              /* returns frequency of <token>, 0 if not in hash */
-int cl_lexhash_del(cl_lexhash lh, char *token);               /* deletes <token> from hash & returns its frequency */
-int cl_lexhash_size(cl_lexhash lh);                           /* returns number of tokens stored in lexhash */
+cl_lexhash_entry cl_lexhash_add(cl_lexhash lh, char *token);
+cl_lexhash_entry cl_lexhash_find(cl_lexhash lh, char *token);
+int cl_lexhash_id(cl_lexhash lh, char *token);
+int cl_lexhash_freq(cl_lexhash lh, char *token);
+int cl_lexhash_del(cl_lexhash lh, char *token);
+int cl_lexhash_size(cl_lexhash lh);
 
 
 /**
@@ -332,6 +386,10 @@ int cl_alg2cpos(Attribute *attribute, int alg,
                 int *source_region_start, int *source_region_end,
                 int *target_region_start, int *target_region_end);
 
+
+
+
+
 /*
  * Old-style API for the core CL functions -- deprecated as of v3.0
  */
@@ -375,10 +433,7 @@ int get_id_range(Attribute *attribute);
 
 /* attribute access functions: token sequence & index (positional attributes) */
 int get_id_frequency(Attribute *attribute, int id);
-/* the restrictor list is a list of ranges <start,end> of size
-   restrictor_list_size, that is, the number of ints in this 
-   area is 2 * restrictor_list_size!!!
-   */
+
 int *get_positions(Attribute *attribute, 
                    int id,
                    int *freq,
@@ -393,64 +448,23 @@ char *get_string_at_position(Attribute *attribute, int position);
 char *get_id_info(Attribute *attribute,
                   int index, int *freq, int *slen);
 
-/* collect_matching_ids:
- *
- * Returns a pointer to a sequence of ints of size number_of_matches. The list
- * is alloced with malloc, so do a free() when you don't need it any more.  
- */
+
 int *collect_matching_ids(Attribute *attribute, 
                           char *pattern,
                           int canonicalize,
                           int *number_of_matches);
-/* cumulative_id_frequency:
- *
- * returns the sum of the word frequencies of words, which
- * is an array of word_ids with length number_of_words.
- * It therefore is the number of corpus positions which 
- * match one of the words.
- */
 
 int cumulative_id_frequency(Attribute *attribute,
                             int *ids,
                             int number_of_ids);
 
-/**
- * collect_matches:
- *
- * this one returns an (ordered) list of corpus positions which matches
- * one of the ids given in the list ids. The table is allocated
- * with malloc, so free it when you don't need any more. 
- * The table is returned, its size is returned in size_of_table.
- * This size is, of course, the same like the cumulative id frequency
- * of the ids.
- *
- * BEWARE: when the id list is rather big or there are high-frequent
- * ids in the id list (for example, after a call to collect_matching_ids 
- * with the pattern ".*") this will give a copy of the corpus (for which 
- * the memory probably won't suffice!!! It is therefore a good idea to 
- * call cumulative_id_frequeny before and to introduce some kind of 
- * bias.
- *
- * restrictor_list is a list of integer pairs [a,b] which means that
- * the returned value only contains positions which fall within at
- * least one of these intervals. The list must be sorted by the start
- * positions, and secondarily by b. restrictor_list_size is the number of
- * integers in this list, NOT THE NUMBER OF PAIRS.
- * WARNING: CURRENTLY UNIMPLEMENTED
- *
- * REMEMBER: this monster returns a list of corpus indices, not a list
- * of ids.
- */
+
 
 int *collect_matches(Attribute *attribute,
-
-                     int *ids,                  /* a list of word_ids */
-                     int number_of_ids,   /* the length of this list */
-
-                     int sort,                  /* return sorted list? */
-
-                     int *size_of_table,  /* the size of the allocated table */
-
+                     int *ids,
+                     int number_of_ids,
+                     int sort,
+                     int *size_of_table,
                      int *restrictor_list,
                      int restrictor_list_size);
 
@@ -470,7 +484,6 @@ int get_bounds_of_nth_struc(Attribute *attribute,
 int get_nr_of_strucs(Attribute *attribute,
                      int *nr_strucs);
 int structure_has_values(Attribute *attribute);
-/* does not strdup(), so don't free returned char * */
 char *structure_value(Attribute *attribute, int struc_num);
 char *structure_value_at_position(Attribute *attribute, int position);
 

@@ -21,10 +21,15 @@
 #include "../cl/attributes.h"
 #include "../cl/macros.h"
 
+/** String set to the name of this program. */
 char *progname = NULL;
 
+/**
+ * Prints a message describing how to use the program to STDERR and then exits.
+ */
 void
-usage(void) {
+usage(void)
+{
   fprintf(stderr, "\n");
   fprintf(stderr, "Usage:  %s [flags] <corpus> [<corpus> ...] \n", progname);
   fprintf(stderr, "Options:\n");
@@ -36,8 +41,18 @@ usage(void) {
   exit(2);
 }
 
+/**
+ * Prints the names of attributes in a corpus to STDOUT.
+ *
+ * Only one type of attribute is analysed.
+ *
+ * @param corpus  The corpus to analyse.
+ * @param type    The type of attribute to show. This should be
+ *                one of the constants in cl.h (ATT_POS etc.)
+ */
 void
-show_attribute_names (Corpus *corpus, int type) {
+show_attribute_names (Corpus *corpus, int type)
+{
   Attribute *a;
 
   start_indented_list(64, 16, 6); /* indent by 6 chars */
@@ -50,8 +65,17 @@ show_attribute_names (Corpus *corpus, int type) {
   printf("\n\n");
 }
 
+/**
+ * Prints basic information about a corpus to STDOUT.
+ *
+ * @param corpus                The corpus to report on.
+ * @param with_attribute_names  Boolean: iff true, the counts of each type of attribute
+ *                              are followed by a list of attribute names.
+ *
+ */
 void
-show_basic_info (Corpus *corpus, int with_attribute_names) {
+show_basic_info (Corpus *corpus, int with_attribute_names)
+{
   Attribute *word, *a;
   int p_atts = 0, s_atts = 0, a_atts = 0;
   int size;
@@ -93,8 +117,19 @@ show_basic_info (Corpus *corpus, int with_attribute_names) {
   printf("\n");
 }
 
+/**
+ * Prints statistical information about a corpus to STDOUT.
+ *
+ * Each corpus attribute gets info printed about it:
+ * tokens and types for a P-attribute, number of instances
+ * of regions for an S-attribute, number of alignment
+ * blocks for an A-attribute.
+ *
+ * @param corpus  The corpus to analyse.
+ */
 void 
-show_statistics (Corpus *corpus) {
+show_statistics (Corpus *corpus)
+{
   Attribute *a;
   int tokens, types, regions, blocks;
 
@@ -141,9 +176,21 @@ show_statistics (Corpus *corpus) {
   printf("\n");
 }
 
+/* *************** *\
+ *      MAIN()     *
+\* *************** */
 
+/**
+ * Main function for cwb-describe-corpus.
+ *
+ * Prints information about an indexed corpus to STDOUT.
+ *
+ * @param argc   Number of command-line arguments.
+ * @param argv   Command-line arguments.
+ */
 int
-main(int argc, char **argv) {
+main(int argc, char **argv)
+{
   int i;
   Corpus *corpus;
 

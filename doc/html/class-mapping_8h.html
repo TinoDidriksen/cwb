@@ -188,6 +188,7 @@ Find a class within this mapping.
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>map</em>&nbsp;</td><td>The Mapping to look in. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>name</em>&nbsp;</td><td>The class to look for. </td></tr>
   </table>
 </dl>
@@ -229,6 +230,7 @@ Gets the location of the token IDs in this class.
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>map</em>&nbsp;</td><td>The SingleMapping representing the class in question. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>nr_tokens</em>&nbsp;</td><td>Address of an integer, which will be set to the number of tokens in this class. </td></tr>
   </table>
 </dl>
@@ -403,7 +405,7 @@ Checks whether a token is a member of a class in a Mapping.
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>map</em>&nbsp;</td><td>The mapping to look in. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>class</em>&nbsp;</td><td>The class to check. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>token</em>&nbsp;</td><td>The token to look for (identified by its integer ID). </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>id</em>&nbsp;</td><td>The token to look for (identified by its integer ID). </td></tr>
   </table>
 </dl>
 <dl class="return" compact><dt><b>Returns:</b></dt><dd>Boolean. </dd></dl>
@@ -581,7 +583,7 @@ Any parse failure in the file will stop the entire Mapping-creation process and 
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>corpus</em>&nbsp;</td><td>The corpus for which the Mapping is valid (pointer). </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>attribute</em>&nbsp;</td><td>The attribute for which the Mapping is valid (pointer). </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>attr_name</em>&nbsp;</td><td>String naming the attribute for which the mapping is valid. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>file_name</em>&nbsp;</td><td>The filename of the map spec. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>error_string</em>&nbsp;</td><td>A char * (not char[]), which is set to an error string, or to NULL if all is OK. </td></tr>
   </table>
@@ -593,7 +595,7 @@ Any parse failure in the file will stop the entire Mapping-creation process and 
 </div>
 </div><p>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Thu Sep 17 23:45:31 2009 for CWB by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Sat Sep 19 20:28:33 2009 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

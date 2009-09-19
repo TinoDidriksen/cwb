@@ -36,22 +36,22 @@
 <h2>Defines</h2>
 <ul>
 <li>#define <a class="el" href="storage_8c.html#aad8e28484789922774889477f999bc3">MMAPFLAGS</a>&nbsp;&nbsp;&nbsp;MAP_PRIVATE
-<li>#define <a class="el" href="storage_8c.html#db02dd67632057f0069fd37976d35257">MMAP_EMPTY_LEN</a>&nbsp;&nbsp;&nbsp;8
+<dl class="el"><dd class="mdescRight">Flags used in calls to mmap.  <a href="#aad8e28484789922774889477f999bc3"></a><br></dl><li>#define <a class="el" href="storage_8c.html#db02dd67632057f0069fd37976d35257">MMAP_EMPTY_LEN</a>&nbsp;&nbsp;&nbsp;8
 </ul>
 <h2>Functions</h2>
 <ul>
 <li>void <a class="el" href="storage_8c.html#8b3939b07c9383d22e90973183f655ef">NwriteInt</a> (int val, FILE *fd)
-<li>void <a class="el" href="storage_8c.html#11a571a2e287661539d648ba088c6dca">NreadInt</a> (int *val, FILE *fd)
-<li>void <a class="el" href="storage_8c.html#7cc3100c6cd4e193dafb9d26dd295894">NwriteInts</a> (int *vals, int nr_vals, FILE *fd)
-<li>void <a class="el" href="storage_8c.html#4b732e45200867dc9fd9713586423eed">NreadInts</a> (int *vals, int nr_vals, FILE *fd)
-<li>void <a class="el" href="storage_8c.html#bd08ed2afff7e65784899692560e52ff">init_mblob</a> (<a class="el" href="struct_t_mblob.html">MemBlob</a> *blob)
-<li>int <a class="el" href="storage_8c.html#2c4c793bee0dd47e6f5fb822ba3beb09">alloc_mblob</a> (<a class="el" href="struct_t_mblob.html">MemBlob</a> *blob, int nr_items, int item_size, int clear_blob)
-<li>void <a class="el" href="storage_8c.html#0d3b251b78d2332acd80b689d5c34f9c">mfree</a> (<a class="el" href="struct_t_mblob.html">MemBlob</a> *blob)
-<li>caddr_t <a class="el" href="storage_8c.html#bb67e02392a8adfbb6c9459cfa1456b5">mmapfile</a> (char *filename, size_t *len_ptr, char *<a class="el" href="cwb-decode_8c.html#1ea5d0cb93f22f7d0fdf804bd68c3326">mode</a>)
-<li>caddr_t <a class="el" href="storage_8c.html#ddba8fd8fb04e0f369de95d5b01f7bae">mallocfile</a> (char *filename, size_t *len_ptr, char *<a class="el" href="cwb-decode_8c.html#1ea5d0cb93f22f7d0fdf804bd68c3326">mode</a>)
-<li>int <a class="el" href="storage_8c.html#cf00578b9d6a59479d67d5f9af4a3bc1">read_file_into_blob</a> (char *filename, int allocation_method, int item_size, <a class="el" href="struct_t_mblob.html">MemBlob</a> *blob)
-<li>int <a class="el" href="storage_8c.html#219f66e99db0e44c297ac22be8a4e44e">write_file_from_blob</a> (char *filename, <a class="el" href="struct_t_mblob.html">MemBlob</a> *blob, int convert_to_nbo)
-</ul>
+<dl class="el"><dd class="mdescRight">Writes an integer to file, converting to network byte order.  <a href="#8b3939b07c9383d22e90973183f655ef"></a><br></dl><li>void <a class="el" href="storage_8c.html#11a571a2e287661539d648ba088c6dca">NreadInt</a> (int *val, FILE *fd)
+<dl class="el"><dd class="mdescRight">Reads an integer from file, converting from network byte order.  <a href="#11a571a2e287661539d648ba088c6dca"></a><br></dl><li>void <a class="el" href="storage_8c.html#7cc3100c6cd4e193dafb9d26dd295894">NwriteInts</a> (int *vals, int nr_vals, FILE *fd)
+<dl class="el"><dd class="mdescRight">Writes an array of integers to file, converting to network byte order.  <a href="#7cc3100c6cd4e193dafb9d26dd295894"></a><br></dl><li>void <a class="el" href="storage_8c.html#4b732e45200867dc9fd9713586423eed">NreadInts</a> (int *vals, int nr_vals, FILE *fd)
+<dl class="el"><dd class="mdescRight">Reads an array of integers from file, converting from network byte order.  <a href="#4b732e45200867dc9fd9713586423eed"></a><br></dl><li>void <a class="el" href="storage_8c.html#bd08ed2afff7e65784899692560e52ff">init_mblob</a> (<a class="el" href="struct_t_mblob.html">MemBlob</a> *blob)
+<dl class="el"><dd class="mdescRight">Clears all fields in a MemBlob, regardless of their usage, and puts the blob back to its virginal <a class="el" href="structstate.html">state</a>.  <a href="#bd08ed2afff7e65784899692560e52ff"></a><br></dl><li>int <a class="el" href="storage_8c.html#2c4c793bee0dd47e6f5fb822ba3beb09">alloc_mblob</a> (<a class="el" href="struct_t_mblob.html">MemBlob</a> *blob, int nr_items, int item_size, int clear_blob)
+<dl class="el"><dd class="mdescRight">Allocates memory for a blob of the requested size.  <a href="#2c4c793bee0dd47e6f5fb822ba3beb09"></a><br></dl><li>void <a class="el" href="storage_8c.html#0d3b251b78d2332acd80b689d5c34f9c">mfree</a> (<a class="el" href="struct_t_mblob.html">MemBlob</a> *blob)
+<dl class="el"><dd class="mdescRight">Frees the memory used by a MemBlob.  <a href="#0d3b251b78d2332acd80b689d5c34f9c"></a><br></dl><li>caddr_t <a class="el" href="storage_8c.html#bb67e02392a8adfbb6c9459cfa1456b5">mmapfile</a> (char *filename, size_t *len_ptr, char *<a class="el" href="cwb-decode_8c.html#1ea5d0cb93f22f7d0fdf804bd68c3326">mode</a>)
+<dl class="el"><dd class="mdescRight">Maps a file into memory in either read or write mode.  <a href="#bb67e02392a8adfbb6c9459cfa1456b5"></a><br></dl><li>caddr_t <a class="el" href="storage_8c.html#ddba8fd8fb04e0f369de95d5b01f7bae">mallocfile</a> (char *filename, size_t *len_ptr, char *<a class="el" href="cwb-decode_8c.html#1ea5d0cb93f22f7d0fdf804bd68c3326">mode</a>)
+<dl class="el"><dd class="mdescRight">Maps a file into memory.  <a href="#ddba8fd8fb04e0f369de95d5b01f7bae"></a><br></dl><li>int <a class="el" href="storage_8c.html#cf00578b9d6a59479d67d5f9af4a3bc1">read_file_into_blob</a> (char *filename, int allocation_method, int item_size, <a class="el" href="struct_t_mblob.html">MemBlob</a> *blob)
+<dl class="el"><dd class="mdescRight">Reads the contents of a file into memory represented by blob.  <a href="#cf00578b9d6a59479d67d5f9af4a3bc1"></a><br></dl><li>int <a class="el" href="storage_8c.html#219f66e99db0e44c297ac22be8a4e44e">write_file_from_blob</a> (char *filename, <a class="el" href="struct_t_mblob.html">MemBlob</a> *blob, int convert_to_nbo)
+<dl class="el"><dd class="mdescRight">Writes the data stored in a blob to file.  <a href="#219f66e99db0e44c297ac22be8a4e44e"></a><br></dl></ul>
 <hr><h2>Define Documentation</h2>
 <a class="anchor" name="db02dd67632057f0069fd37976d35257"></a><!-- doxytag: member="storage.c::MMAP_EMPTY_LEN" ref="db02dd67632057f0069fd37976d35257" args="" -->
 <div class="memitem">
@@ -82,6 +82,9 @@
 <div class="memdoc">
 
 <p>
+Flags used in calls to mmap. 
+<p>
+<dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="storage_8h.html#bb67e02392a8adfbb6c9459cfa1456b5" title="Maps a file into memory in either read or write mode.">mmapfile</a> </dd></dl>
 
 <p>Referenced by <a class="el" href="storage_8h.html#bb67e02392a8adfbb6c9459cfa1456b5">mmapfile()</a>.</p>
 
@@ -126,6 +129,18 @@
 <div class="memdoc">
 
 <p>
+Allocates memory for a blob of the requested size. 
+<p>
+A block of memory holding nr_items of size item_size is created in the specified MemBlob.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>blob</em>&nbsp;</td><td>The MemBlob in which to place the memory. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>nr_items</em>&nbsp;</td><td>The number of items the MemBlob is to hold as data. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>item_size</em>&nbsp;</td><td>The size of one <a class="el" href="structitem.html">item</a>. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>clear_blob</em>&nbsp;</td><td>boolean: if true, all bytes in the data space will be initialised to 0 </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>boolean: true 1 if OK, false on error </dd></dl>
 
 <p>References <a class="el" href="struct_t_mblob.html#28d16dd145de3866e4a568a677a792bc">TMblob::allocation_method</a>, <a class="el" href="struct_t_mblob.html#aece488ae3f9f67f9991b0c90fd12369">TMblob::changed</a>, <a class="el" href="cl_8h.html#5b756594ae431fd5ec0ffbdc77db1e64">cl_calloc()</a>, <a class="el" href="cl_8h.html#4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="struct_t_mblob.html#c103627c1ad15cbec2f22d0abe6d54b6">TMblob::data</a>, <a class="el" href="struct_t_mblob.html#e96bbe3347b319ee7bdbd1f2e2ba9f5b">TMblob::fname</a>, <a class="el" href="struct_t_mblob.html#0df6c6444a7221a507d4d1aa6e501df2">TMblob::fsize</a>, <a class="el" href="struct_t_mblob.html#b8f5dcd7fe4b5fe9926cd865f13e726a">TMblob::item_size</a>, <a class="el" href="storage_8h.html#3d77ecaa188da35830eaf6083156ac26">MALLOCED</a>, <a class="el" href="struct_t_mblob.html#8f132feee9de66d32fafd0c5921879d4">TMblob::nr_items</a>, <a class="el" href="struct_t_mblob.html#d5f0842c40c7e46344fd8df70187fa0f">TMblob::offset</a>, <a class="el" href="struct_t_mblob.html#854352f53b148adc24983a58a1866d66">TMblob::size</a>, <a class="el" href="storage_8h.html#e4bd4dcc79eefdf41258b6ddf09133f3">SIZE_BIT</a>, and <a class="el" href="struct_t_mblob.html#6628e52a23f7d43175e90b02c7574d21">TMblob::writeable</a>.</p>
 
@@ -148,7 +163,9 @@
 <div class="memdoc">
 
 <p>
-
+Clears all fields in a MemBlob, regardless of their usage, and puts the blob back to its virginal <a class="el" href="structstate.html">state</a>. 
+<p>
+Note that it doesn't free blob-&gt;data - just sets it to NULL. 
 <p>References <a class="el" href="struct_t_mblob.html#28d16dd145de3866e4a568a677a792bc">TMblob::allocation_method</a>, <a class="el" href="struct_t_mblob.html#aece488ae3f9f67f9991b0c90fd12369">TMblob::changed</a>, <a class="el" href="struct_t_mblob.html#c103627c1ad15cbec2f22d0abe6d54b6">TMblob::data</a>, <a class="el" href="struct_t_mblob.html#e96bbe3347b319ee7bdbd1f2e2ba9f5b">TMblob::fname</a>, <a class="el" href="struct_t_mblob.html#0df6c6444a7221a507d4d1aa6e501df2">TMblob::fsize</a>, <a class="el" href="struct_t_mblob.html#b8f5dcd7fe4b5fe9926cd865f13e726a">TMblob::item_size</a>, <a class="el" href="struct_t_mblob.html#8f132feee9de66d32fafd0c5921879d4">TMblob::nr_items</a>, <a class="el" href="struct_t_mblob.html#d5f0842c40c7e46344fd8df70187fa0f">TMblob::offset</a>, <a class="el" href="struct_t_mblob.html#854352f53b148adc24983a58a1866d66">TMblob::size</a>, <a class="el" href="storage_8h.html#109e0c82e06d546fecf0948e2643966e">UNALLOCATED</a>, and <a class="el" href="struct_t_mblob.html#6628e52a23f7d43175e90b02c7574d21">TMblob::writeable</a>.</p>
 
 <p>Referenced by <a class="el" href="attributes_8h.html#6112b6e959cfebc27d71663b0dacc792">declare_component()</a>, and <a class="el" href="storage_8h.html#0d3b251b78d2332acd80b689d5c34f9c">mfree()</a>.</p>
@@ -187,6 +204,10 @@
 <div class="memdoc">
 
 <p>
+Maps a file into memory. 
+<p>
+This function does virtually the same as mmapfile (same parameters, same return value), but the memory is taken with malloc(3), not with mmap(2).<p>
+<dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="storage_8h.html#bb67e02392a8adfbb6c9459cfa1456b5" title="Maps a file into memory in either read or write mode.">mmapfile</a> </dd></dl>
 
 <p>References <a class="el" href="cl_8h.html#4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>.</p>
 
@@ -211,7 +232,9 @@
 <div class="memdoc">
 
 <p>
-
+Frees the memory used by a MemBlob. 
+<p>
+This works regardless of the method used to allocate the blob. 
 <p>References <a class="el" href="struct_t_mblob.html#28d16dd145de3866e4a568a677a792bc">TMblob::allocation_method</a>, <a class="el" href="struct_t_mblob.html#c103627c1ad15cbec2f22d0abe6d54b6">TMblob::data</a>, <a class="el" href="struct_t_mblob.html#e96bbe3347b319ee7bdbd1f2e2ba9f5b">TMblob::fname</a>, <a class="el" href="storage_8c.html#bd08ed2afff7e65784899692560e52ff">init_mblob()</a>, <a class="el" href="storage_8h.html#3d77ecaa188da35830eaf6083156ac26">MALLOCED</a>, <a class="el" href="storage_8c.html#db02dd67632057f0069fd37976d35257">MMAP_EMPTY_LEN</a>, <a class="el" href="storage_8h.html#936529f6dfde2cd2c61c66179ea2e886">MMAPPED</a>, <a class="el" href="storage_8h.html#d9d4db533e1336118938ba7e0d1af6de">PAGED</a>, <a class="el" href="struct_t_mblob.html#854352f53b148adc24983a58a1866d66">TMblob::size</a>, and <a class="el" href="storage_8h.html#109e0c82e06d546fecf0948e2643966e">UNALLOCATED</a>.</p>
 
 <p>Referenced by <a class="el" href="attributes_8h.html#94c161c4abbff9e70c7598aef8d23cbd">comp_drop_component()</a>.</p>
@@ -250,6 +273,16 @@
 <div class="memdoc">
 
 <p>
+Maps a file into memory in either read or write mode. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>filename</em>&nbsp;</td><td>Name of the file to map. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>len_ptr</em>&nbsp;</td><td>The number of bytes the returned pointer points to. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>mode</em>&nbsp;</td><td>Can be either "r" or "w", nothing else. If mode is "r", len_ptr is taken as an input parameter (*len_ptr bytes are allocated) {NB I copied this from existing notes but surely shouldn't the last comment apply if mode is "w" not "r"? -- AH} </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>The contents of file in filename as a pointer to a memory area. </dd></dl>
 
 <p>References <a class="el" href="storage_8c.html#db02dd67632057f0069fd37976d35257">MMAP_EMPTY_LEN</a>, and <a class="el" href="storage_8c.html#aad8e28484789922774889477f999bc3">MMAPFLAGS</a>.</p>
 
@@ -283,6 +316,15 @@
 <div class="memdoc">
 
 <p>
+Reads an integer from file, converting from network byte order. 
+<p>
+This function does all the error checking for you, and will abort the program if the int cannot be read.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>val</em>&nbsp;</td><td>Location to put the resulting int. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>fd</em>&nbsp;</td><td>File handle to read from </td></tr>
+  </table>
+</dl>
 
 <p>References <a class="el" href="eval_8h.html#93fe6fe1a66a9de33bb160f0c3e1895409c37d051e7e4b3f3a7e8e75dca15912">word</a>.</p>
 
@@ -322,6 +364,16 @@
 <div class="memdoc">
 
 <p>
+Reads an array of integers from file, converting from network byte order. 
+<p>
+This function does all the error checking for you, and will abort the program if the requested number of ints cannot be read.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>vals</em>&nbsp;</td><td>Pointer to location to put the resulting array of ints. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>nr_vals</em>&nbsp;</td><td>Number of integers to read. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>fd</em>&nbsp;</td><td>File handle to read from </td></tr>
+  </table>
+</dl>
 
 <p>References <a class="el" href="eval_8h.html#93fe6fe1a66a9de33bb160f0c3e1895409c37d051e7e4b3f3a7e8e75dca15912">word</a>.</p>
 
@@ -355,6 +407,15 @@
 <div class="memdoc">
 
 <p>
+Writes an integer to file, converting to network byte order. 
+<p>
+Other than the byte order conversion, this is the same as fwrite(&amp;val, sizeof(int), 1, fd) .<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>val</em>&nbsp;</td><td>The integer to write. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>fd</em>&nbsp;</td><td>File handle to write to. </td></tr>
+  </table>
+</dl>
 
 <p>References <a class="el" href="eval_8h.html#93fe6fe1a66a9de33bb160f0c3e1895409c37d051e7e4b3f3a7e8e75dca15912">word</a>.</p>
 
@@ -394,6 +455,16 @@
 <div class="memdoc">
 
 <p>
+Writes an array of integers to file, converting to network byte order. 
+<p>
+Other than the byte order conversion, this is the same as fwrite(vals, sizeof(int), nr_vals, fd) .<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>vals</em>&nbsp;</td><td>Pointer to the location of the block of integers to write. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>nr_vals</em>&nbsp;</td><td>Number of integers to write. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>fd</em>&nbsp;</td><td>File handle to write to. </td></tr>
+  </table>
+</dl>
 
 <p>References <a class="el" href="eval_8h.html#93fe6fe1a66a9de33bb160f0c3e1895409c37d051e7e4b3f3a7e8e75dca15912">word</a>.</p>
 
@@ -439,6 +510,18 @@
 <div class="memdoc">
 
 <p>
+Reads the contents of a file into memory represented by blob. 
+<p>
+You can choose the memory allocation method - MMAPPED is faster, but writeable areas of memory should be taken with care. MALLOCED is slower (and far more space consuming), but writing data into malloced memory is no problem.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>filename</em>&nbsp;</td><td>The file to read in. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>allocation_method</em>&nbsp;</td><td>MMAPPED or MALLOCED (see function description) </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>item_size</em>&nbsp;</td><td>This is used for MemBlob access methods, it is simply copied into the MemBlob data structure. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>blob</em>&nbsp;</td><td>The MemBlob to read the file into. It must not be in use -- the fields are overwritten. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>0 on failure, 1 if everything went fine. </dd></dl>
 
 <p>References <a class="el" href="struct_t_mblob.html#28d16dd145de3866e4a568a677a792bc">TMblob::allocation_method</a>, <a class="el" href="struct_t_mblob.html#aece488ae3f9f67f9991b0c90fd12369">TMblob::changed</a>, <a class="el" href="struct_t_mblob.html#c103627c1ad15cbec2f22d0abe6d54b6">TMblob::data</a>, <a class="el" href="struct_t_mblob.html#b8f5dcd7fe4b5fe9926cd865f13e726a">TMblob::item_size</a>, <a class="el" href="storage_8h.html#3d77ecaa188da35830eaf6083156ac26">MALLOCED</a>, <a class="el" href="storage_8c.html#ddba8fd8fb04e0f369de95d5b01f7bae">mallocfile()</a>, <a class="el" href="storage_8c.html#bb67e02392a8adfbb6c9459cfa1456b5">mmapfile()</a>, <a class="el" href="storage_8h.html#936529f6dfde2cd2c61c66179ea2e886">MMAPPED</a>, <a class="el" href="struct_t_mblob.html#8f132feee9de66d32fafd0c5921879d4">TMblob::nr_items</a>, <a class="el" href="struct_t_mblob.html#854352f53b148adc24983a58a1866d66">TMblob::size</a>, <a class="el" href="storage_8h.html#e4bd4dcc79eefdf41258b6ddf09133f3">SIZE_BIT</a>, <a class="el" href="storage_8h.html#109e0c82e06d546fecf0948e2643966e">UNALLOCATED</a>, and <a class="el" href="struct_t_mblob.html#6628e52a23f7d43175e90b02c7574d21">TMblob::writeable</a>.</p>
 
@@ -478,6 +561,16 @@
 <div class="memdoc">
 
 <p>
+Writes the data stored in a blob to file. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>filename</em>&nbsp;</td><td>The file to write to. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>blob</em>&nbsp;</td><td>The MemBlob to write to file. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>convert_to_nbo</em>&nbsp;</td><td>boolean: if true, data is converted to network byte order before it's written. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>0 on failure, 1 if everything went fine. </dd></dl>
 
 <p>References <a class="el" href="struct_t_mblob.html#28d16dd145de3866e4a568a677a792bc">TMblob::allocation_method</a>, <a class="el" href="struct_t_mblob.html#aece488ae3f9f67f9991b0c90fd12369">TMblob::changed</a>, <a class="el" href="struct_t_mblob.html#c103627c1ad15cbec2f22d0abe6d54b6">TMblob::data</a>, <a class="el" href="storage_8h.html#3d77ecaa188da35830eaf6083156ac26">MALLOCED</a>, <a class="el" href="storage_8h.html#936529f6dfde2cd2c61c66179ea2e886">MMAPPED</a>, <a class="el" href="storage_8c.html#7cc3100c6cd4e193dafb9d26dd295894">NwriteInts()</a>, <a class="el" href="struct_t_mblob.html#854352f53b148adc24983a58a1866d66">TMblob::size</a>, and <a class="el" href="storage_8h.html#109e0c82e06d546fecf0948e2643966e">UNALLOCATED</a>.</p>
 
@@ -486,7 +579,7 @@
 </div>
 </div><p>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Thu Sep 17 23:45:31 2009 for CWB by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Sat Sep 19 20:28:33 2009 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

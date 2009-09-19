@@ -41,10 +41,10 @@
 #define UNDEF_VALUE "__UNDEF__"
 #define FIELDSEPS  "\t\n"
 
-/* max. number of s-attributes (-> could change this to implementation as a linked list) */
+/** max number of s-attributes (-> could change this to implementation as a linked list) */
 #define MAXRANGES 1024
 
-/* nr of buckets of lexhashes used for checking duplicate errors (undeclared element and attribute names in XML tags) */
+/** nr of buckets of lexhashes used for checking duplicate errors (undeclared element and attribute names in XML tags) */
 #define REP_CHECK_LEXHASH_SIZE 1000
 
 /* if we have XML tags with attributes, input lines can become pretty long (but there's basically just a single buffer) */
@@ -138,8 +138,10 @@ int wattr_ptr = 0;
 
 /* ---------------------------------------------------------------------- */
 
-/* lookup hash for undeclared s-attributes and s-attributes declared with -S that 
-   have annotations (which will be ignored), so warnings are issued only once */
+/**
+ * lookup hash for undeclared s-attributes and s-attributes declared with -S that
+ * have annotations (which will be ignored), so warnings are issued only once
+ */
 cl_lexhash undeclared_sattrs = NULL; 
 
 /* ---------------------------------------------------------------------- */
@@ -238,7 +240,8 @@ decode_entities(char *s) {
 #include <sys/time.h>
 
 void
-printtime(FILE *stream, char *msg) {
+printtime(FILE *stream, char *msg)
+{
   time_t now;
 
   (void) time(&now);
@@ -250,7 +253,8 @@ printtime(FILE *stream, char *msg) {
 /* ======================================== print usage message and exit */
 
 void 
-usage() {
+usage()
+{
   fprintf(stderr, "\n");
   fprintf(stderr, "Usage:  %s -f <file> [options] -d <dir> [attribute declarations]\n", progname);
   fprintf(stderr, "        ... | %s [options] -d <dir> [attribute declarations]\n\n", progname);
@@ -1431,11 +1435,16 @@ quote_file_path(char *path) {
   return(quoted_path);
 }
 
-/*
- *  main program
- */
+/* *************** *\
+ *      MAIN()     *
+\* *************** */
 
-     
+/**
+ * Main function for cwb-encode.
+ *
+ * @param argc   Number of command-line arguments.
+ * @param argv   Command-line arguments.
+ */
 int 
 main(int argc, char **argv) {
   int i, j, k, rng, handled;

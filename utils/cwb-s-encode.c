@@ -644,8 +644,15 @@ write_region_to_disk(int start, int end, char *annot) {
 
 
 
-/*
- *  MAIN PROGRAM
+/* *************** *\
+ *      MAIN()     *
+\* *************** */
+
+/**
+ * Main function for cwb-s-encode.
+ *
+ * @param argc   Number of command-line arguments.
+ * @param argv   Command-line arguments.
  */
 int
 main(int argc, char **argv)

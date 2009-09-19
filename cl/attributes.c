@@ -36,11 +36,11 @@
  * FLAGS controlling how ensure_component() behaves.
  *******************************************************************
 
- * when ENSURE_COMPONENT_EXITS is defined, ensure_component will exit
+ * if ENSURE_COMPONENT_EXITS is defined, ensure_component will exit
  * when the component can't be created or loaded.
  *
 
- * when ALLOW_COMPONENT_CREATION is defined, components may be created
+ * if ALLOW_COMPONENT_CREATION is defined, components may be created
  * on the fly by ensure_component.
  */
 
@@ -141,7 +141,7 @@ find_cid_name(char *name)
  * This function returns a pointer to an element of the global, static
  * Component_Field_Specs array.
  *
- * @param name  The ComponentID for the component field to be looked up.
+ * @param id    The ComponentID for the component field to be looked up.
  * @return      Pointer to the desired specification, or NULL if not found.
  * @see         Component_Field_Specs
  */

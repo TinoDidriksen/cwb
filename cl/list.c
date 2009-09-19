@@ -91,7 +91,8 @@ cl_int_list_size(cl_int_list l) {
 /**
  * Retrieves an element from a cl_int_list object.
  *
- * @param n  The element to retrieve
+ * @param l  The list to search.
+ * @param n  The element to retrieve.
  * @return   The n'th integer on the list, or 0 if there
  *           is no n'th integer.
  */
@@ -225,7 +226,8 @@ cl_string_list_size(cl_string_list l) {
 /**
  * Retrieves an element from a cl_string_list object.
  *
- * @param n  The element to retrieve
+ * @param l  The list to search.
+ * @param n  The element to retrieve.
  * @return   The n'th string on the list, or NULL if there
  *           is no n'th string.
  */

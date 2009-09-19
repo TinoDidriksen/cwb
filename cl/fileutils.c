@@ -24,14 +24,30 @@
 #include "fileutils.h"
 
 
+/**
+ * Gets the size of the specified file; returns EOF for error.
+ *
+ * @param filename  The file to size up.
+ * @return          Size of file in bytes.
+ */
 off_t
 file_length(char *filename)
 {
   struct stat stat_buf;
-  if(stat(filename, &stat_buf) == EOF) return(EOF);
-  else return(stat_buf.st_size);
+  if(stat(filename, &stat_buf) == EOF)
+    return(EOF);
+  else
+    return(stat_buf.st_size);
 }
 
+/**
+ * Gets the size of the specified file; returns EOF for error.
+ *
+ * As file_length, but the file is specified by file handle, not name.
+ *
+ * @param fd  The file to size up.
+ * @return    Size of file in bytes.
+ */
 off_t
 fd_file_length(FILE *fd)
 {
@@ -40,14 +56,35 @@ fd_file_length(FILE *fd)
   else return(stat_buf.st_size);
 }
 
+/**
+ * Gets the size of the specified file; returns EOF for error.
+ *
+ * As file_length, but the file is specified by number, not name.
+ *
+ * @see file_length
+ * @param fileno  The file to size up.
+ * @return        Size of file in bytes.
+ */
 off_t
 fi_file_length(int fileno)
 {
   struct stat stat_buf;
-  if(fstat(fileno, &stat_buf) == EOF) return(EOF);
-  else return(stat_buf.st_size);
+  if(fstat(fileno, &stat_buf) == EOF)
+    return(EOF);
+  else
+    return(stat_buf.st_size);
 }
 
+/**
+ * Gets the size of the specified file; returns EOF for error.
+ *
+ * Duplicates functionality of file_length, but return is long
+ * instead of off_t.
+ *
+ * @see file_length
+ * @param fname  The file to size up.
+ * @return       Size of file in bytes.
+ */
 long
 fprobe(char *fname)
 {
@@ -62,6 +99,13 @@ fprobe(char *fname)
     return stat_buf.st_size;
 }
 
+
+/**
+ * Checks whether the specified path indicates a directory.
+ *
+ * @param path  Path to check.
+ * @return      Boolean. (Also false if there's an error.)
+ */
 int
 is_directory(char *path)
 {
@@ -75,6 +119,12 @@ is_directory(char *path)
   }
 }
 
+/**
+ * Checks whether the specified path indicates a regular file.
+ *
+ * @param path  Path to check.
+ * @return      Boolean. (Also false if there's an error.)
+ */
 int
 is_file(char *path)
 {
@@ -88,6 +138,12 @@ is_file(char *path)
   }
 }
 
+/**
+ * Checks whether the specified path indicates a link.
+ *
+ * @param path  Path to check.
+ * @return      Boolean. (Also false if there's an error.)
+ */
 int
 is_link(char *path)
 {

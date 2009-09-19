@@ -29,25 +29,74 @@
 <h2>Data Structures</h2>
 <ul>
 <li>struct <a class="el" href="struct__idbuf.html">_idbuf</a>
-<dl class="el"><dd class="mdescRight">Entry in linked list of strings containing ID codes.  <a href="struct__idbuf.html#_details">More...</a><br></dl><li>struct <a class="el" href="struct_t_corpus.html">TCorpus</a>
-<dl class="el"><dd class="mdescRight">Contains information on a loaded corpus.  <a href="struct_t_corpus.html#_details">More...</a><br></dl></ul>
+<dl class="el"><dd class="mdescRight">Underlying structure for the IDList class.  <a href="struct__idbuf.html#_details">More...</a><br></dl><li>struct <a class="el" href="struct_t_corpus.html">TCorpus</a>
+<dl class="el"><dd class="mdescRight">Underlying structure for the Corpus class.  <a href="struct_t_corpus.html#_details">More...</a><br></dl></ul>
+<h2>Defines</h2>
+<ul>
+<li>#define <a class="el" href="corpus_8h.html#ca3a32454bd4b16aecdcdae6f04446fe">IDList_delete</a>(l)&nbsp;&nbsp;&nbsp;FreeIDList(l)
+<li>#define <a class="el" href="corpus_8h.html#24085d6c6f45c69f775605bcaadcee16">IDList_check_member</a>(l, s)&nbsp;&nbsp;&nbsp;memberIDList(s, l)
+</ul>
 <h2>Typedefs</h2>
 <ul>
 <li>typedef struct <a class="el" href="struct__idbuf.html">_idbuf</a> * <a class="el" href="corpus_8h.html#bd35944e9c0ab0f6359ff00084d817a2">IDList</a>
-<li>typedef struct <a class="el" href="struct__idbuf.html">_idbuf</a> <a class="el" href="corpus_8h.html#9263ac0aaf01791b279ac94f1b2574e2">IDBuf</a>
-<dl class="el"><dd class="mdescRight">Entry in linked list of strings containing ID codes.  <a href="#9263ac0aaf01791b279ac94f1b2574e2"></a><br></dl></ul>
+<dl class="el"><dd class="mdescRight">The IDList class: entries in linked lists of identifier strings.  <a href="#bd35944e9c0ab0f6359ff00084d817a2"></a><br></dl><li>typedef struct <a class="el" href="struct__idbuf.html">_idbuf</a> <a class="el" href="corpus_8h.html#9263ac0aaf01791b279ac94f1b2574e2">IDBuf</a>
+<dl class="el"><dd class="mdescRight">Underlying structure for the IDList class.  <a href="#9263ac0aaf01791b279ac94f1b2574e2"></a><br></dl></ul>
 <h2>Functions</h2>
 <ul>
 <li>void <a class="el" href="corpus_8h.html#e779332ae5e89e614575239c7c3e4bd4">FreeIDList</a> (<a class="el" href="struct__idbuf.html">IDList</a> *list)
-<li>int <a class="el" href="corpus_8h.html#3796931ad775036a92a370de8b53bc4d">memberIDList</a> (char *s, <a class="el" href="struct__idbuf.html">IDList</a> l)
-<li>void <a class="el" href="corpus_8h.html#5492efc3742070f65be1b0bcbead995a">add_corpus_property</a> (<a class="el" href="struct_t_corpus.html">Corpus</a> *<a class="el" href="cwb-s-encode_8c.html#ca3a1fb765418f9b9b1d74051aa88667">corpus</a>, char *property, char *value)
+<dl class="el"><dd class="mdescRight">Deletes an IDList object, and sets the argument pointer to NULL.  <a href="#e779332ae5e89e614575239c7c3e4bd4"></a><br></dl><li>int <a class="el" href="corpus_8h.html#3796931ad775036a92a370de8b53bc4d">memberIDList</a> (char *s, <a class="el" href="struct__idbuf.html">IDList</a> l)
+<dl class="el"><dd class="mdescRight">Checks whether the specified string occurs in the given IDList.  <a href="#3796931ad775036a92a370de8b53bc4d"></a><br></dl><li>void <a class="el" href="corpus_8h.html#5492efc3742070f65be1b0bcbead995a">add_corpus_property</a> (<a class="el" href="struct_t_corpus.html">Corpus</a> *<a class="el" href="cwb-s-encode_8c.html#ca3a1fb765418f9b9b1d74051aa88667">corpus</a>, char *property, char *value)
 <dl class="el"><dd class="mdescRight">Adds a property to the list of corpus properties.  <a href="#5492efc3742070f65be1b0bcbead995a"></a><br></dl></ul>
 <h2>Variables</h2>
 <ul>
 <li>char * <a class="el" href="corpus_8h.html#da4573d717d73336f342e8b6a83e03aa">cregin_path</a>
-<dl class="el"><dd class="mdescRight">full path of registry file currently being parsed  <a href="#da4573d717d73336f342e8b6a83e03aa"></a><br></dl><li>char * <a class="el" href="corpus_8h.html#43fea1a843ca9acc56fe021a28ec9452">cregin_name</a>
-<dl class="el"><dd class="mdescRight">name of registry file currently being parsed  <a href="#43fea1a843ca9acc56fe021a28ec9452"></a><br></dl><li><a class="el" href="struct_t_corpus.html">Corpus</a> * <a class="el" href="corpus_8h.html#327a2334a34b9be8f75bcb5d9537a0da">loaded_corpora</a>
-<dl class="el"><dd class="mdescRight">list of loaded corpus handles (for memory manager)  <a href="#327a2334a34b9be8f75bcb5d9537a0da"></a><br></dl></ul>
+<dl class="el"><dd class="mdescRight">Full path of the registry file currently being parsed (for registry parser error messages).  <a href="#da4573d717d73336f342e8b6a83e03aa"></a><br></dl><li>char * <a class="el" href="corpus_8h.html#43fea1a843ca9acc56fe021a28ec9452">cregin_name</a>
+<dl class="el"><dd class="mdescRight">The name of registry file currently being parsed (for registry parser error messages).  <a href="#43fea1a843ca9acc56fe021a28ec9452"></a><br></dl><li><a class="el" href="struct_t_corpus.html">Corpus</a> * <a class="el" href="corpus_8h.html#327a2334a34b9be8f75bcb5d9537a0da">loaded_corpora</a>
+<dl class="el"><dd class="mdescRight">Head of a linked list of loaded corpus handles (for memory manager).  <a href="#327a2334a34b9be8f75bcb5d9537a0da"></a><br></dl></ul>
+<hr><h2>Define Documentation</h2>
+<a class="anchor" name="24085d6c6f45c69f775605bcaadcee16"></a><!-- doxytag: member="corpus.h::IDList_check_member" ref="24085d6c6f45c69f775605bcaadcee16" args="(l, s)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define IDList_check_member          </td>
+          <td>(</td>
+          <td class="paramtype">l,         <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">s&nbsp;</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td>&nbsp;&nbsp;&nbsp;memberIDList(s, l)</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="ca3a32454bd4b16aecdcdae6f04446fe"></a><!-- doxytag: member="corpus.h::IDList_delete" ref="ca3a32454bd4b16aecdcdae6f04446fe" args="(l)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define IDList_delete          </td>
+          <td>(</td>
+          <td class="paramtype">l&nbsp;</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td>&nbsp;&nbsp;&nbsp;FreeIDList(l)</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
 <hr><h2>Typedef Documentation</h2>
 <a class="anchor" name="9263ac0aaf01791b279ac94f1b2574e2"></a><!-- doxytag: member="corpus.h::IDBuf" ref="9263ac0aaf01791b279ac94f1b2574e2" args="" -->
 <div class="memitem">
@@ -61,7 +110,7 @@
 <div class="memdoc">
 
 <p>
-Entry in linked list of strings containing ID codes. 
+Underlying structure for the IDList class. 
 <p>
 
 </div>
@@ -78,7 +127,11 @@ Entry in linked list of strings containing ID codes.
 <div class="memdoc">
 
 <p>
-
+The IDList class: entries in linked lists of identifier strings. 
+<p>
+These identifier strings can be usernames, groupnames or hostnames and are used to restrict access to particular corpora.<p>
+Note that IDLists are added to Corpus objects by the registry parser.<p>
+NOT to be confused with "idlist" in the sense of <a class="el" href="cl_8h.html#6eba3870f37b2eb87912505b9299726b">cl_idlist2cpos()</a>. 
 </div>
 </div><p>
 <hr><h2>Function Documentation</h2>
@@ -146,6 +199,13 @@ If the property is already defined, ignore and warn. If the property is 'charset
 <div class="memdoc">
 
 <p>
+Deletes an IDList object, and sets the argument pointer to NULL. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>list</em>&nbsp;</td><td>IDList to delete. </td></tr>
+  </table>
+</dl>
 
 <p>References <a class="el" href="cl_8h.html#9e15a3c725711d9effd623b2f3e225be">cl_free</a>, <a class="el" href="struct__idbuf.html#2f7fb77427a558f1deedce6006b23454">_idbuf::next</a>, and <a class="el" href="struct__idbuf.html#ed1cfb225a5fb77461e7972691e68a72">_idbuf::string</a>.</p>
 
@@ -179,6 +239,15 @@ If the property is already defined, ignore and warn. If the property is 'charset
 <div class="memdoc">
 
 <p>
+Checks whether the specified string occurs in the given IDList. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>s</em>&nbsp;</td><td>The username, groupname, or hostname to look for. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>l</em>&nbsp;</td><td>The IDList to search. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>Boolean: true if s is a member of the list, else false. </dd></dl>
 
 <p>References <a class="el" href="struct__idbuf.html#2f7fb77427a558f1deedce6006b23454">_idbuf::next</a>, and <a class="el" href="struct__idbuf.html#ed1cfb225a5fb77461e7972691e68a72">_idbuf::string</a>.</p>
 
@@ -199,8 +268,9 @@ If the property is already defined, ignore and warn. If the property is 'charset
 <div class="memdoc">
 
 <p>
-name of registry file currently being parsed 
+The name of registry file currently being parsed (for registry parser error messages). 
 <p>
+<dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="corpus_8c.html#29be981b1574bcfe5dc4c5966b180975" title="Parse a corpus registry file.">cregparse</a> </dd></dl>
 
 <p>Referenced by <a class="el" href="corpus_8h.html#5492efc3742070f65be1b0bcbead995a">add_corpus_property()</a>, and <a class="el" href="corpus_8c.html#84eb9130d44b1b40bd3bfe5a94f777d9">setup_corpus()</a>.</p>
 
@@ -218,8 +288,9 @@ name of registry file currently being parsed
 <div class="memdoc">
 
 <p>
-full path of registry file currently being parsed 
+Full path of the registry file currently being parsed (for registry parser error messages). 
 <p>
+<dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="corpus_8c.html#29be981b1574bcfe5dc4c5966b180975" title="Parse a corpus registry file.">cregparse</a> </dd></dl>
 
 <p>Referenced by <a class="el" href="corpus_8h.html#5492efc3742070f65be1b0bcbead995a">add_corpus_property()</a>, and <a class="el" href="corpus_8c.html#84eb9130d44b1b40bd3bfe5a94f777d9">setup_corpus()</a>.</p>
 
@@ -237,13 +308,13 @@ full path of registry file currently being parsed
 <div class="memdoc">
 
 <p>
-list of loaded corpus handles (for memory manager) 
+Head of a linked list of loaded corpus handles (for memory manager). 
 <p>
 
 </div>
 </div><p>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Thu Sep 17 23:45:31 2009 for CWB by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Sat Sep 19 20:28:33 2009 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

@@ -35,12 +35,12 @@
 <h2>Functions</h2>
 <ul>
 <li>void <a class="el" href="cwb-atoi_8c.html#b962e7334345b3df7856935c0ddfb9c3">process_fd</a> (FILE *fd)
-<li>int <a class="el" href="cwb-atoi_8c.html#3c04138a5bfe5d72780bb7e82a18e627">main</a> (int argc, char **argv)
-</ul>
+<dl class="el"><dd class="mdescRight">Reads from a stream one integer-representing string per line, and writes the corresponding integer to STDOUT.  <a href="#b962e7334345b3df7856935c0ddfb9c3"></a><br></dl><li>int <a class="el" href="cwb-atoi_8c.html#3c04138a5bfe5d72780bb7e82a18e627">main</a> (int argc, char **argv)
+<dl class="el"><dd class="mdescRight">Main function for cwb-atoi.  <a href="#3c04138a5bfe5d72780bb7e82a18e627"></a><br></dl></ul>
 <h2>Variables</h2>
 <ul>
 <li>int <a class="el" href="cwb-atoi_8c.html#c06ece0fe50e0dfc3431c1a02ce4c397">little_endian</a> = 0
-</ul>
+<dl class="el"><dd class="mdescRight">boolean: is the byte-order little-endian?  <a href="#c06ece0fe50e0dfc3431c1a02ce4c397"></a><br></dl></ul>
 <hr><h2>Define Documentation</h2>
 <a class="anchor" name="f0f2173e3b202ddf5756531b4471dcb2"></a><!-- doxytag: member="cwb&#45;atoi.c::MAX_LINE_LENGTH" ref="f0f2173e3b202ddf5756531b4471dcb2" args="" -->
 <div class="memitem">
@@ -84,6 +84,14 @@
 <div class="memdoc">
 
 <p>
+Main function for cwb-atoi. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>argc</em>&nbsp;</td><td>Number of command-line arguments. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>argv</em>&nbsp;</td><td>Command-line arguments. </td></tr>
+  </table>
+</dl>
 
 <p>References <a class="el" href="cwb-atoi_8c.html#c06ece0fe50e0dfc3431c1a02ce4c397">little_endian</a>, <a class="el" href="cwb-atoi_8c.html#b962e7334345b3df7856935c0ddfb9c3">process_fd()</a>, and <a class="el" href="options_8h.html#b9e1449fd00c98428516f0b41eddcb10">progname</a>.</p>
 
@@ -106,6 +114,13 @@
 <div class="memdoc">
 
 <p>
+Reads from a stream one integer-representing string per line, and writes the corresponding integer to STDOUT. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>fd</em>&nbsp;</td><td>The file handle. </td></tr>
+  </table>
+</dl>
 
 <p>References <a class="el" href="cwb-itoa_8c.html#2993e80915962c80bdbd46c0f8d554b3">buf</a>, <a class="el" href="endian_8c.html#33af4badd26ec8c4e16dfd07c3baca42">cl_bswap32()</a>, <a class="el" href="cwb-atoi_8c.html#c06ece0fe50e0dfc3431c1a02ce4c397">little_endian</a>, and <a class="el" href="globals_8h.html#f0f2173e3b202ddf5756531b4471dcb2">MAX_LINE_LENGTH</a>.</p>
 
@@ -126,13 +141,15 @@
 <div class="memdoc">
 
 <p>
-
+boolean: is the byte-order little-endian? 
+<p>
+CWB default format is 4-byte big-endian = network 
 <p>Referenced by <a class="el" href="cwb-atoi_8c.html#3c04138a5bfe5d72780bb7e82a18e627">main()</a>, and <a class="el" href="cwb-atoi_8c.html#b962e7334345b3df7856935c0ddfb9c3">process_fd()</a>.</p>
 
 </div>
 </div><p>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Thu Sep 17 23:45:31 2009 for CWB by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Sat Sep 19 20:28:33 2009 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

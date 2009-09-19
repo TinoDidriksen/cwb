@@ -120,7 +120,7 @@ destroy_bitfield(Bitfield *bptr)
  * the function returns false (plus an error message is printed).
  * Otherwise it returns true.
  *
- * @param Bitfield  The Bitfield object to work with.
+ * @param bitfield  The Bitfield object to work with.
  * @param element   The offset of the bit to set.
  * @return          Boolean (see description).
  */
@@ -154,7 +154,7 @@ int set_bit(Bitfield bitfield, int element)
  * the function returns false (plus an error message is printed).
  * Otherwise it returns true.
  *
- * @param Bitfield  The Bitfield object to work with.
+ * @param bitfield  The Bitfield object to work with.
  * @param element   The offset of the bit to set.
  * @return          Boolean (see description).
  */
@@ -214,7 +214,7 @@ set_all_bits(Bitfield bitfield)
 /**
  * Gets the value of the bit at the specified offset in the Bitfield.
  *
- * @param Bitfield  The Bitfield to work with.
+ * @param bitfield  The Bitfield to work with.
  * @param element   Offset of the desired bit.
  * @return          1 if the bit is set; 0 if it isn't; -1 if
  *                  element is not a legal offset (ie if it's
@@ -245,7 +245,7 @@ get_bit(Bitfield bitfield, int element)
  * the function returns false (plus an error message is printed).
  * Otherwise it returns true.
  *
- * @param Bitfield  The Bitfield to work with.
+ * @param bitfield  The Bitfield to work with.
  * @param element   Offset of the bit to flip.
  * @return          Boolean (see description).
  */

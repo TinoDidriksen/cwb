@@ -34,32 +34,32 @@
 <h2>Defines</h2>
 <ul>
 <li>#define <a class="el" href="lexhash_8c.html#a6f810c5bcfe8eaba4aa5d527bafb9cf">DEFAULT_NR_OF_BUCKETS</a>&nbsp;&nbsp;&nbsp;250000
-<li>#define <a class="el" href="lexhash_8c.html#f62ae8c142d859bd44a8c60c2d2cef3f">PERFORMANCE_COUNT</a>&nbsp;&nbsp;&nbsp;1000
-<li>#define <a class="el" href="lexhash_8c.html#d27dac711f9de482cf13dfc917f5f9d7">DEFAULT_PERFORMANCE_LIMIT</a>&nbsp;&nbsp;&nbsp;10
-</ul>
+<dl class="el"><dd class="mdescRight">Defines the default number of buckets in a lexhash.  <a href="#a6f810c5bcfe8eaba4aa5d527bafb9cf"></a><br></dl><li>#define <a class="el" href="lexhash_8c.html#f62ae8c142d859bd44a8c60c2d2cef3f">PERFORMANCE_COUNT</a>&nbsp;&nbsp;&nbsp;1000
+<dl class="el"><dd class="mdescRight">The update interval for hash performance estimation.  <a href="#f62ae8c142d859bd44a8c60c2d2cef3f"></a><br></dl><li>#define <a class="el" href="lexhash_8c.html#d27dac711f9de482cf13dfc917f5f9d7">DEFAULT_PERFORMANCE_LIMIT</a>&nbsp;&nbsp;&nbsp;10
+<dl class="el"><dd class="mdescRight">The default value for the performance limit (avg no of comparisons) before the hash is expanded.  <a href="#d27dac711f9de482cf13dfc917f5f9d7"></a><br></dl></ul>
 <h2>Typedefs</h2>
 <ul>
 <li>typedef void(* <a class="el" href="lexhash_8c.html#9cf68d16ee9092cf807d1620de957c3a">cl_lexhash_cleanup_func</a> )(<a class="el" href="struct__cl__lexhash__entry.html">cl_lexhash_entry</a>)
-</ul>
+<dl class="el"><dd class="mdescRight">A function pointer type defining functions that can be used as the "cleanup" for a deleted cl_lexhash_entry.  <a href="#9cf68d16ee9092cf807d1620de957c3a"></a><br></dl></ul>
 <h2>Functions</h2>
 <ul>
 <li>int <a class="el" href="lexhash_8c.html#d6740255386952216cb75d813243a3ea">is_prime</a> (int n)
-<dl class="el"><dd class="mdescRight">returns True iff n is a prime  <a href="#d6740255386952216cb75d813243a3ea"></a><br></dl><li>int <a class="el" href="lexhash_8c.html#6bb4d75c3e8354cff3efd98002335877">find_prime</a> (int n)
-<dl class="el"><dd class="mdescRight">returns smallest prime &gt;= n  <a href="#6bb4d75c3e8354cff3efd98002335877"></a><br></dl><li>unsigned int <a class="el" href="lexhash_8c.html#c7b0e59697b408e515f7dd9b3d62b024">hash_string</a> (char *string)
-<dl class="el"><dd class="mdescRight">computes 32bit hash value for string &lt;s&gt;  <a href="#c7b0e59697b408e515f7dd9b3d62b024"></a><br></dl><li><a class="el" href="struct__cl__lexhash.html">cl_lexhash</a> <a class="el" href="lexhash_8c.html#44f2692c5af7f16fc46640e31c7ae192">cl_new_lexhash</a> (int buckets)
-<li>void <a class="el" href="lexhash_8c.html#a86b95ad85c13af5a6879bd7a6c0da0e">cl_delete_lexhash_entry</a> (<a class="el" href="struct__cl__lexhash.html">cl_lexhash</a> hash, <a class="el" href="struct__cl__lexhash__entry.html">cl_lexhash_entry</a> entry)
-<li>void <a class="el" href="lexhash_8c.html#79cff65dc33eac71c64d68c0ca085259">cl_delete_lexhash</a> (<a class="el" href="struct__cl__lexhash.html">cl_lexhash</a> hash)
-<li>void <a class="el" href="lexhash_8c.html#5b6c6f31923d6d5038067753b93f234f">cl_lexhash_set_cleanup_function</a> (<a class="el" href="struct__cl__lexhash.html">cl_lexhash</a> hash, <a class="el" href="lexhash_8c.html#9cf68d16ee9092cf807d1620de957c3a">cl_lexhash_cleanup_func</a> func)
-<li>void <a class="el" href="lexhash_8c.html#2b0094a802868b6f907460cc3fa3e69d">cl_lexhash_auto_grow</a> (<a class="el" href="struct__cl__lexhash.html">cl_lexhash</a> hash, int flag)
-<li>int <a class="el" href="lexhash_8c.html#b0c83bcda2f4b258d99d41dcfef1dd30">cl_lexhash_check_grow</a> (<a class="el" href="struct__cl__lexhash.html">cl_lexhash</a> hash)
-<li><a class="el" href="struct__cl__lexhash__entry.html">cl_lexhash_entry</a> <a class="el" href="lexhash_8c.html#7afb45b7d798d20514dd22f2c8d1f8f1">cl_lexhash_find_i</a> (<a class="el" href="struct__cl__lexhash.html">cl_lexhash</a> hash, char *token, unsigned int *ret_offset)
-<li><a class="el" href="struct__cl__lexhash__entry.html">cl_lexhash_entry</a> <a class="el" href="lexhash_8c.html#dfe47c1ca6be1ba4fa1586aad18f07d5">cl_lexhash_find</a> (<a class="el" href="struct__cl__lexhash.html">cl_lexhash</a> hash, char *token)
-<li><a class="el" href="struct__cl__lexhash__entry.html">cl_lexhash_entry</a> <a class="el" href="lexhash_8c.html#4a0eb190bffe4ca27d93a2248aa63d9b">cl_lexhash_add</a> (<a class="el" href="struct__cl__lexhash.html">cl_lexhash</a> hash, char *token)
-<li>int <a class="el" href="lexhash_8c.html#ae0563fa62a9c58eca14ea76576d0d68">cl_lexhash_id</a> (<a class="el" href="struct__cl__lexhash.html">cl_lexhash</a> hash, char *token)
-<li>int <a class="el" href="lexhash_8c.html#a6ad8b1b54ae4f1e24a4fe1aa16679d8">cl_lexhash_freq</a> (<a class="el" href="struct__cl__lexhash.html">cl_lexhash</a> hash, char *token)
-<li>int <a class="el" href="lexhash_8c.html#51838f1751d9079cd17b9c35955d3fff">cl_lexhash_del</a> (<a class="el" href="struct__cl__lexhash.html">cl_lexhash</a> hash, char *token)
-<li>int <a class="el" href="lexhash_8c.html#bab373e5a4e2dd99dec63b13fc37faed">cl_lexhash_size</a> (<a class="el" href="struct__cl__lexhash.html">cl_lexhash</a> hash)
-</ul>
+<dl class="el"><dd class="mdescRight">Returns True iff n is a prime.  <a href="#d6740255386952216cb75d813243a3ea"></a><br></dl><li>int <a class="el" href="lexhash_8c.html#6bb4d75c3e8354cff3efd98002335877">find_prime</a> (int n)
+<dl class="el"><dd class="mdescRight">Returns smallest prime &gt;= n.  <a href="#6bb4d75c3e8354cff3efd98002335877"></a><br></dl><li>unsigned int <a class="el" href="lexhash_8c.html#c7b0e59697b408e515f7dd9b3d62b024">hash_string</a> (char *string)
+<dl class="el"><dd class="mdescRight">Computes 32bit hash value for string.  <a href="#c7b0e59697b408e515f7dd9b3d62b024"></a><br></dl><li><a class="el" href="struct__cl__lexhash.html">cl_lexhash</a> <a class="el" href="lexhash_8c.html#44f2692c5af7f16fc46640e31c7ae192">cl_new_lexhash</a> (int buckets)
+<dl class="el"><dd class="mdescRight">Creates a new cl_lexhash object.  <a href="#44f2692c5af7f16fc46640e31c7ae192"></a><br></dl><li>void <a class="el" href="lexhash_8c.html#a86b95ad85c13af5a6879bd7a6c0da0e">cl_delete_lexhash_entry</a> (<a class="el" href="struct__cl__lexhash.html">cl_lexhash</a> hash, <a class="el" href="struct__cl__lexhash__entry.html">cl_lexhash_entry</a> entry)
+<dl class="el"><dd class="mdescRight">Deallocates a cl_lexhash_entry object and its key string.  <a href="#a86b95ad85c13af5a6879bd7a6c0da0e"></a><br></dl><li>void <a class="el" href="lexhash_8c.html#79cff65dc33eac71c64d68c0ca085259">cl_delete_lexhash</a> (<a class="el" href="struct__cl__lexhash.html">cl_lexhash</a> hash)
+<dl class="el"><dd class="mdescRight">Deletes a cl_lexhash object.  <a href="#79cff65dc33eac71c64d68c0ca085259"></a><br></dl><li>void <a class="el" href="lexhash_8c.html#5b6c6f31923d6d5038067753b93f234f">cl_lexhash_set_cleanup_function</a> (<a class="el" href="struct__cl__lexhash.html">cl_lexhash</a> hash, <a class="el" href="lexhash_8c.html#9cf68d16ee9092cf807d1620de957c3a">cl_lexhash_cleanup_func</a> func)
+<dl class="el"><dd class="mdescRight">Sets the cleanup function for a cl_lexhash.  <a href="#5b6c6f31923d6d5038067753b93f234f"></a><br></dl><li>void <a class="el" href="lexhash_8c.html#2b0094a802868b6f907460cc3fa3e69d">cl_lexhash_auto_grow</a> (<a class="el" href="struct__cl__lexhash.html">cl_lexhash</a> hash, int flag)
+<dl class="el"><dd class="mdescRight">Turns a cl_lexhash's ability to autogrow on or off.  <a href="#2b0094a802868b6f907460cc3fa3e69d"></a><br></dl><li>int <a class="el" href="lexhash_8c.html#b0c83bcda2f4b258d99d41dcfef1dd30">cl_lexhash_check_grow</a> (<a class="el" href="struct__cl__lexhash.html">cl_lexhash</a> hash)
+<dl class="el"><dd class="mdescRight">Grows a lexhash table, increasing the number of buckets, if necessary.  <a href="#b0c83bcda2f4b258d99d41dcfef1dd30"></a><br></dl><li><a class="el" href="struct__cl__lexhash__entry.html">cl_lexhash_entry</a> <a class="el" href="lexhash_8c.html#7afb45b7d798d20514dd22f2c8d1f8f1">cl_lexhash_find_i</a> (<a class="el" href="struct__cl__lexhash.html">cl_lexhash</a> hash, char *token, unsigned int *ret_offset)
+<dl class="el"><dd class="mdescRight">Finds the entry corresponding to a particular string in a cl_lexhash.  <a href="#7afb45b7d798d20514dd22f2c8d1f8f1"></a><br></dl><li><a class="el" href="struct__cl__lexhash__entry.html">cl_lexhash_entry</a> <a class="el" href="lexhash_8c.html#dfe47c1ca6be1ba4fa1586aad18f07d5">cl_lexhash_find</a> (<a class="el" href="struct__cl__lexhash.html">cl_lexhash</a> hash, char *token)
+<dl class="el"><dd class="mdescRight">Finds the entry corresponding to a particular string within a cl_lexhash.  <a href="#dfe47c1ca6be1ba4fa1586aad18f07d5"></a><br></dl><li><a class="el" href="struct__cl__lexhash__entry.html">cl_lexhash_entry</a> <a class="el" href="lexhash_8c.html#4a0eb190bffe4ca27d93a2248aa63d9b">cl_lexhash_add</a> (<a class="el" href="struct__cl__lexhash.html">cl_lexhash</a> hash, char *token)
+<dl class="el"><dd class="mdescRight">Adds a token to a cl_lexhash table.  <a href="#4a0eb190bffe4ca27d93a2248aa63d9b"></a><br></dl><li>int <a class="el" href="lexhash_8c.html#ae0563fa62a9c58eca14ea76576d0d68">cl_lexhash_id</a> (<a class="el" href="struct__cl__lexhash.html">cl_lexhash</a> hash, char *token)
+<dl class="el"><dd class="mdescRight">Gets the ID of a particular string within a lexhash.  <a href="#ae0563fa62a9c58eca14ea76576d0d68"></a><br></dl><li>int <a class="el" href="lexhash_8c.html#a6ad8b1b54ae4f1e24a4fe1aa16679d8">cl_lexhash_freq</a> (<a class="el" href="struct__cl__lexhash.html">cl_lexhash</a> hash, char *token)
+<dl class="el"><dd class="mdescRight">Gets the frequency of a particular string within a lexhash.  <a href="#a6ad8b1b54ae4f1e24a4fe1aa16679d8"></a><br></dl><li>int <a class="el" href="lexhash_8c.html#51838f1751d9079cd17b9c35955d3fff">cl_lexhash_del</a> (<a class="el" href="struct__cl__lexhash.html">cl_lexhash</a> hash, char *token)
+<dl class="el"><dd class="mdescRight">Deletes a string from a hash.  <a href="#51838f1751d9079cd17b9c35955d3fff"></a><br></dl><li>int <a class="el" href="lexhash_8c.html#bab373e5a4e2dd99dec63b13fc37faed">cl_lexhash_size</a> (<a class="el" href="struct__cl__lexhash.html">cl_lexhash</a> hash)
+<dl class="el"><dd class="mdescRight">Gets the number of different strings stored in a lexhash.  <a href="#bab373e5a4e2dd99dec63b13fc37faed"></a><br></dl></ul>
 <hr><h2>Define Documentation</h2>
 <a class="anchor" name="a6f810c5bcfe8eaba4aa5d527bafb9cf"></a><!-- doxytag: member="lexhash.c::DEFAULT_NR_OF_BUCKETS" ref="a6f810c5bcfe8eaba4aa5d527bafb9cf" args="" -->
 <div class="memitem">
@@ -72,6 +72,8 @@
 </div>
 <div class="memdoc">
 
+<p>
+Defines the default number of buckets in a lexhash. 
 <p>
 
 <p>Referenced by <a class="el" href="lexhash_8c.html#44f2692c5af7f16fc46640e31c7ae192">cl_new_lexhash()</a>.</p>
@@ -90,6 +92,8 @@
 <div class="memdoc">
 
 <p>
+The default value for the performance limit (avg no of comparisons) before the hash is expanded. 
+<p>
 
 <p>Referenced by <a class="el" href="lexhash_8c.html#b0c83bcda2f4b258d99d41dcfef1dd30">cl_lexhash_check_grow()</a>.</p>
 
@@ -106,6 +110,8 @@
 </div>
 <div class="memdoc">
 
+<p>
+The update interval for hash performance estimation. 
 <p>
 
 <p>Referenced by <a class="el" href="lexhash_8c.html#b0c83bcda2f4b258d99d41dcfef1dd30">cl_lexhash_check_grow()</a>, <a class="el" href="lexhash_8c.html#7afb45b7d798d20514dd22f2c8d1f8f1">cl_lexhash_find_i()</a>, and <a class="el" href="lexhash_8c.html#44f2692c5af7f16fc46640e31c7ae192">cl_new_lexhash()</a>.</p>
@@ -125,6 +131,9 @@
 <div class="memdoc">
 
 <p>
+A function pointer type defining functions that can be used as the "cleanup" for a deleted cl_lexhash_entry. 
+<p>
+<dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="lexhash_8c.html#5b6c6f31923d6d5038067753b93f234f" title="Sets the cleanup function for a cl_lexhash.">cl_lexhash_set_cleanup_function</a> </dd></dl>
 
 </div>
 </div><p>
@@ -146,6 +155,14 @@
 <div class="memdoc">
 
 <p>
+Deletes a cl_lexhash object. 
+<p>
+This deletes all the entries in all the buckets in the lexhash, plus the cl_lexhash itself.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>hash</em>&nbsp;</td><td>The cl_lexhash to delete. </td></tr>
+  </table>
+</dl>
 
 <p>References <a class="el" href="struct__cl__lexhash.html#edff83072c3ab4f3719e66edc63610d8">_cl_lexhash::buckets</a>, <a class="el" href="lexhash_8c.html#a86b95ad85c13af5a6879bd7a6c0da0e">cl_delete_lexhash_entry()</a>, <a class="el" href="cl_8h.html#9e15a3c725711d9effd623b2f3e225be">cl_free</a>, <a class="el" href="struct__cl__lexhash__entry.html#4cd53665f36adf07de9ffb12731a6681">_cl_lexhash_entry::next</a>, and <a class="el" href="struct__cl__lexhash.html#d0daa1068fff9eb5bb9e11e7ab4f2b1e">_cl_lexhash::table</a>.</p>
 
@@ -179,6 +196,18 @@
 <div class="memdoc">
 
 <p>
+Deallocates a cl_lexhash_entry object and its key string. 
+<p>
+Also, the cleanup function is run on the entry.<p>
+Usage: cl_delete_lexhash_entry(lexhash, entry);<p>
+This is a non-exported function.<p>
+<dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="lexhash_8c.html#5b6c6f31923d6d5038067753b93f234f" title="Sets the cleanup function for a cl_lexhash.">cl_lexhash_set_cleanup_function</a> </dd></dl>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>hash</em>&nbsp;</td><td>The lexhash this entry belongs to (needed to locate the cleanup function, if any). </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>entry</em>&nbsp;</td><td>The entry to delete. </td></tr>
+  </table>
+</dl>
 
 <p>References <a class="el" href="cl_8h.html#9e15a3c725711d9effd623b2f3e225be">cl_free</a>, <a class="el" href="struct__cl__lexhash.html#34fa040454883b11c906b5127080e586">_cl_lexhash::cleanup_func</a>, and <a class="el" href="struct__cl__lexhash__entry.html#5892a9181e6a332f84d27aecd41dcd12">_cl_lexhash_entry::key</a>.</p>
 
@@ -212,6 +241,17 @@
 <div class="memdoc">
 
 <p>
+Adds a token to a cl_lexhash table. 
+<p>
+If the string is already in the hash, its frequency count is increased by 1.<p>
+Otherwise, a new entry is created, with an auto-assigned ID; note that the string is duplicated, so the original string that is passed to this function does not need ot be kept in memory.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>hash</em>&nbsp;</td><td>The hash table to add to. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>token</em>&nbsp;</td><td>The string to add. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>A pointer to a (new or existing) entry </dd></dl>
 
 <p>References <a class="el" href="lexhash_8c.html#7afb45b7d798d20514dd22f2c8d1f8f1">cl_lexhash_find_i()</a>, <a class="el" href="cl_8h.html#4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="cl_8h.html#6647d75d1d69c7d25447da514b7e4682">cl_strdup()</a>, <a class="el" href="struct__cl__lexhash__entry.html#22cfc15110f0fbe32289d1946195400b">_cl_lexhash_entry::data</a>, <a class="el" href="struct__cl__lexhash.html#05de9d2e9fdfcc8bf932ca13b95ede29">_cl_lexhash::entries</a>, <a class="el" href="struct__cl__lexhash__entry.html#da8140e33c3fd1e2eceba4c71f0e9ded">_cl_lexhash_entry::freq</a>, <a class="el" href="struct__cl__lexhash__entry.html#7441ef0865bcb3db9b8064dd7375c1ea">_cl_lexhash_entry::id</a>, <a class="el" href="struct__cl__lexhash__entry_1_1__cl__lexhash__entry__data.html#dece183191b0e700e039e59101e06105">_cl_lexhash_entry::_cl_lexhash_entry_data::integer</a>, <a class="el" href="struct__cl__lexhash__entry.html#5892a9181e6a332f84d27aecd41dcd12">_cl_lexhash_entry::key</a>, <a class="el" href="struct__cl__lexhash__entry.html#4cd53665f36adf07de9ffb12731a6681">_cl_lexhash_entry::next</a>, <a class="el" href="struct__cl__lexhash.html#1512c88bd8da4ca8a0e54b3ed62f758c">_cl_lexhash::next_id</a>, <a class="el" href="struct__cl__lexhash__entry_1_1__cl__lexhash__entry__data.html#b1452a99cdc447426bebe58208125847">_cl_lexhash_entry::_cl_lexhash_entry_data::numeric</a>, <a class="el" href="struct__cl__lexhash__entry_1_1__cl__lexhash__entry__data.html#bc7cbbec1f024bd23164936bd765b06d">_cl_lexhash_entry::_cl_lexhash_entry_data::pointer</a>, and <a class="el" href="struct__cl__lexhash.html#d0daa1068fff9eb5bb9e11e7ab4f2b1e">_cl_lexhash::table</a>.</p>
 
@@ -245,6 +285,17 @@
 <div class="memdoc">
 
 <p>
+Turns a cl_lexhash's ability to autogrow on or off. 
+<p>
+When this setting is switched on, the lexhash will grow automatically to avoid performance degradation.<p>
+Note the default value for this setting is SWITCHED ON.<p>
+<dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="lexhash_8c.html#b0c83bcda2f4b258d99d41dcfef1dd30" title="Grows a lexhash table, increasing the number of buckets, if necessary.">cl_lexhash_check_grow</a> </dd></dl>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>hash</em>&nbsp;</td><td>The hash that will be affected. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>flag</em>&nbsp;</td><td>New value for autogrow setting: boolean where true is on and false is off. </td></tr>
+  </table>
+</dl>
 
 <p>References <a class="el" href="struct__cl__lexhash.html#c3cf5e46d2c8377c553d7e583884511d">_cl_lexhash::auto_grow</a>.</p>
 
@@ -267,6 +318,18 @@
 <div class="memdoc">
 
 <p>
+Grows a lexhash table, increasing the number of buckets, if necessary. 
+<p>
+This function checks whether growing the hash is necessary by updating the performance estimate. If it is above the threshold, and auto_grow is enabled, then the hashes is expanded by increasing the number of buckets, such that the average fill rate is 1 (i.e. 1 lexhash_entry per bucket, 1 lexhash index == 1 key-string ... on average). This gives the hash better performance and makes it capable of absorbing more keys.<p>
+Note: this function also implements the hashing algorithm and must be consistent with <a class="el" href="lexhash_8c.html#7afb45b7d798d20514dd22f2c8d1f8f1" title="Finds the entry corresponding to a particular string in a cl_lexhash.">cl_lexhash_find_i()</a>.<p>
+Usage: expanded = <a class="el" href="lexhash_8c.html#b0c83bcda2f4b258d99d41dcfef1dd30" title="Grows a lexhash table, increasing the number of buckets, if necessary.">cl_lexhash_check_grow(cl_lexhash hash)</a>;<p>
+This is a non-exported function.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>hash</em>&nbsp;</td><td>The lexhash to autogrow. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>Always 0. </dd></dl>
 
 <p>References <a class="el" href="struct__cl__lexhash.html#c3cf5e46d2c8377c553d7e583884511d">_cl_lexhash::auto_grow</a>, <a class="el" href="struct__cl__lexhash.html#edff83072c3ab4f3719e66edc63610d8">_cl_lexhash::buckets</a>, <a class="el" href="globals_8c.html#5c4290325b240eac5fe1542a8743286a">cl_debug</a>, <a class="el" href="cl_8h.html#9e15a3c725711d9effd623b2f3e225be">cl_free</a>, <a class="el" href="cl_8h.html#44f2692c5af7f16fc46640e31c7ae192">cl_new_lexhash()</a>, <a class="el" href="struct__cl__lexhash.html#ad08dd1b691e8c7d1411d8f24e53ecd0">_cl_lexhash::comparisons</a>, <a class="el" href="lexhash_8c.html#d27dac711f9de482cf13dfc917f5f9d7">DEFAULT_PERFORMANCE_LIMIT</a>, <a class="el" href="struct__cl__lexhash.html#05de9d2e9fdfcc8bf932ca13b95ede29">_cl_lexhash::entries</a>, <a class="el" href="lexhash_8c.html#c7b0e59697b408e515f7dd9b3d62b024">hash_string()</a>, <a class="el" href="struct__cl__lexhash__entry.html#5892a9181e6a332f84d27aecd41dcd12">_cl_lexhash_entry::key</a>, <a class="el" href="struct__cl__lexhash.html#4f81948d6e23cc76a0f3c5dc18a34677">_cl_lexhash::last_performance</a>, <a class="el" href="struct__cl__lexhash__entry.html#4cd53665f36adf07de9ffb12731a6681">_cl_lexhash_entry::next</a>, <a class="el" href="lexhash_8c.html#f62ae8c142d859bd44a8c60c2d2cef3f">PERFORMANCE_COUNT</a>, and <a class="el" href="struct__cl__lexhash.html#d0daa1068fff9eb5bb9e11e7ab4f2b1e">_cl_lexhash::table</a>.</p>
 
@@ -300,6 +363,16 @@
 <div class="memdoc">
 
 <p>
+Deletes a string from a hash. 
+<p>
+The entry corresponding to the specified string is removed from the lexhash. If the string is not in the lexhash to begin with, no action is taken.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>hash</em>&nbsp;</td><td>The hash to alter. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>token</em>&nbsp;</td><td>The string to remove. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>The frequency of the deleted entry. </dd></dl>
 
 <p>References <a class="el" href="lexhash_8c.html#a86b95ad85c13af5a6879bd7a6c0da0e">cl_delete_lexhash_entry()</a>, <a class="el" href="lexhash_8c.html#7afb45b7d798d20514dd22f2c8d1f8f1">cl_lexhash_find_i()</a>, <a class="el" href="struct__cl__lexhash.html#05de9d2e9fdfcc8bf932ca13b95ede29">_cl_lexhash::entries</a>, <a class="el" href="struct__cl__lexhash__entry.html#da8140e33c3fd1e2eceba4c71f0e9ded">_cl_lexhash_entry::freq</a>, <a class="el" href="struct__cl__lexhash__entry.html#4cd53665f36adf07de9ffb12731a6681">_cl_lexhash_entry::next</a>, and <a class="el" href="struct__cl__lexhash.html#d0daa1068fff9eb5bb9e11e7ab4f2b1e">_cl_lexhash::table</a>.</p>
 
@@ -331,6 +404,15 @@
 <div class="memdoc">
 
 <p>
+Finds the entry corresponding to a particular string within a cl_lexhash. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>hash</em>&nbsp;</td><td>The hash to search. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>token</em>&nbsp;</td><td>The key-string to look for. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>The entry that is found (or NULL if the string is not in the hash). </dd></dl>
 
 <p>References <a class="el" href="lexhash_8c.html#7afb45b7d798d20514dd22f2c8d1f8f1">cl_lexhash_find_i()</a>.</p>
 
@@ -370,6 +452,20 @@
 <div class="memdoc">
 
 <p>
+Finds the entry corresponding to a particular string in a cl_lexhash. 
+<p>
+This function is the same as <a class="el" href="cl_8h.html#40ecd11b83d5d4e90a47dbbc448de7e2" title="Finds the entry corresponding to a particular string within a cl_lexhash.">cl_lexhash_find()</a>, but *ret_offset is set to the hashtable offset computed for token (i.e. the index of the bucket within the hashtable), unless *ret_offset == NULL.<p>
+Note that this function hides the hashing algorithm details from the rest of the lexhash implementation.<p>
+Usage: entry = <a class="el" href="lexhash_8c.html#7afb45b7d798d20514dd22f2c8d1f8f1" title="Finds the entry corresponding to a particular string in a cl_lexhash.">cl_lexhash_find_i(cl_lexhash hash, char *token, unsigned int *ret_offset)</a>;<p>
+This is a non-exported function.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>hash</em>&nbsp;</td><td>The hash to search. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>token</em>&nbsp;</td><td>The key-string to look for. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>ret_offset</em>&nbsp;</td><td>This integer address will be filled with the token's hashtable offset. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>The entry that is found (or NULL if the string is not in the hash). </dd></dl>
 
 <p>References <a class="el" href="struct__cl__lexhash.html#edff83072c3ab4f3719e66edc63610d8">_cl_lexhash::buckets</a>, <a class="el" href="lexhash_8c.html#b0c83bcda2f4b258d99d41dcfef1dd30">cl_lexhash_check_grow()</a>, <a class="el" href="struct__cl__lexhash.html#ad08dd1b691e8c7d1411d8f24e53ecd0">_cl_lexhash::comparisons</a>, <a class="el" href="lexhash_8c.html#c7b0e59697b408e515f7dd9b3d62b024">hash_string()</a>, <a class="el" href="struct__cl__lexhash__entry.html#5892a9181e6a332f84d27aecd41dcd12">_cl_lexhash_entry::key</a>, <a class="el" href="struct__cl__lexhash__entry.html#4cd53665f36adf07de9ffb12731a6681">_cl_lexhash_entry::next</a>, <a class="el" href="lexhash_8c.html#f62ae8c142d859bd44a8c60c2d2cef3f">PERFORMANCE_COUNT</a>, <a class="el" href="struct__cl__lexhash.html#43e64deb897346963994a5f2957a0e12">_cl_lexhash::performance_counter</a>, and <a class="el" href="struct__cl__lexhash.html#d0daa1068fff9eb5bb9e11e7ab4f2b1e">_cl_lexhash::table</a>.</p>
 
@@ -403,6 +499,15 @@
 <div class="memdoc">
 
 <p>
+Gets the frequency of a particular string within a lexhash. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>hash</em>&nbsp;</td><td>The hash to look in. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>token</em>&nbsp;</td><td>The string to look for. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>The frrequency of that string, or 0 if the string is not in the hash (whgich is, of course, actually its frequency). </dd></dl>
 
 <p>References <a class="el" href="lexhash_8c.html#7afb45b7d798d20514dd22f2c8d1f8f1">cl_lexhash_find_i()</a>, and <a class="el" href="struct__cl__lexhash__entry.html#da8140e33c3fd1e2eceba4c71f0e9ded">_cl_lexhash_entry::freq</a>.</p>
 
@@ -436,6 +541,16 @@
 <div class="memdoc">
 
 <p>
+Gets the ID of a particular string within a lexhash. 
+<p>
+Note this is the ID integer that identifies THAT PARTICULAR STRING, not the hash value of that string - which only identifies the bucket the string is found in!<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>hash</em>&nbsp;</td><td>The hash to look in. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>token</em>&nbsp;</td><td>The string to look for. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>The ID code of that string, or -1 if the string is not in the hash. </dd></dl>
 
 <p>References <a class="el" href="lexhash_8c.html#7afb45b7d798d20514dd22f2c8d1f8f1">cl_lexhash_find_i()</a>, and <a class="el" href="struct__cl__lexhash__entry.html#7441ef0865bcb3db9b8064dd7375c1ea">_cl_lexhash_entry::id</a>.</p>
 
@@ -469,6 +584,16 @@
 <div class="memdoc">
 
 <p>
+Sets the cleanup function for a cl_lexhash. 
+<p>
+The cleanup function is called with a cl_lexhash_entry argument; it should delete any objects assocated with the entry's data field.<p>
+The cleanup function is initially set to NULL, i.e. run no function.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>hash</em>&nbsp;</td><td>The cl_lexhash to work with. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>func</em>&nbsp;</td><td>Pointer to the function to use for cleanup. </td></tr>
+  </table>
+</dl>
 
 <p>References <a class="el" href="struct__cl__lexhash.html#34fa040454883b11c906b5127080e586">_cl_lexhash::cleanup_func</a>.</p>
 
@@ -491,6 +616,14 @@
 <div class="memdoc">
 
 <p>
+Gets the number of different strings stored in a lexhash. 
+<p>
+This returns the total number of entries in all the bucket linked-lists in the whole hashtable.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>hash</em>&nbsp;</td><td>The hash to size up. </td></tr>
+  </table>
+</dl>
 
 <p>References <a class="el" href="struct__cl__lexhash.html#edff83072c3ab4f3719e66edc63610d8">_cl_lexhash::buckets</a>, <a class="el" href="struct__cl__lexhash__entry.html#4cd53665f36adf07de9ffb12731a6681">_cl_lexhash_entry::next</a>, and <a class="el" href="struct__cl__lexhash.html#d0daa1068fff9eb5bb9e11e7ab4f2b1e">_cl_lexhash::table</a>.</p>
 
@@ -513,6 +646,14 @@
 <div class="memdoc">
 
 <p>
+Creates a new cl_lexhash object. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>buckets</em>&nbsp;</td><td>The number of buckets in the newly-created cl_lexhash; set to 0 to use the default number of buckets. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>The new cl_lexhash. </dd></dl>
 
 <p>References <a class="el" href="struct__cl__lexhash.html#c3cf5e46d2c8377c553d7e583884511d">_cl_lexhash::auto_grow</a>, <a class="el" href="struct__cl__lexhash.html#edff83072c3ab4f3719e66edc63610d8">_cl_lexhash::buckets</a>, <a class="el" href="cl_8h.html#5b756594ae431fd5ec0ffbdc77db1e64">cl_calloc()</a>, <a class="el" href="cl_8h.html#4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="struct__cl__lexhash.html#34fa040454883b11c906b5127080e586">_cl_lexhash::cleanup_func</a>, <a class="el" href="struct__cl__lexhash.html#ad08dd1b691e8c7d1411d8f24e53ecd0">_cl_lexhash::comparisons</a>, <a class="el" href="lexhash_8c.html#a6f810c5bcfe8eaba4aa5d527bafb9cf">DEFAULT_NR_OF_BUCKETS</a>, <a class="el" href="struct__cl__lexhash.html#05de9d2e9fdfcc8bf932ca13b95ede29">_cl_lexhash::entries</a>, <a class="el" href="lexhash_8c.html#6bb4d75c3e8354cff3efd98002335877">find_prime()</a>, <a class="el" href="struct__cl__lexhash.html#4f81948d6e23cc76a0f3c5dc18a34677">_cl_lexhash::last_performance</a>, <a class="el" href="struct__cl__lexhash.html#1512c88bd8da4ca8a0e54b3ed62f758c">_cl_lexhash::next_id</a>, <a class="el" href="lexhash_8c.html#f62ae8c142d859bd44a8c60c2d2cef3f">PERFORMANCE_COUNT</a>, <a class="el" href="struct__cl__lexhash.html#43e64deb897346963994a5f2957a0e12">_cl_lexhash::performance_counter</a>, and <a class="el" href="struct__cl__lexhash.html#d0daa1068fff9eb5bb9e11e7ab4f2b1e">_cl_lexhash::table</a>.</p>
 
@@ -537,7 +678,7 @@
 <div class="memdoc">
 
 <p>
-returns smallest prime &gt;= n 
+Returns smallest prime &gt;= n. 
 <p>
 
 <p>Referenced by <a class="el" href="lexhash_8c.html#44f2692c5af7f16fc46640e31c7ae192">cl_new_lexhash()</a>, <a class="el" href="cwb-scan-corpus_8c.html#0ddf1224851353fc92bfbff6f499fa97">main()</a>, <a class="el" href="server_8h.html#6f81c046570703b84676139d556f53ad">make_attribute_hash()</a>, and <a class="el" href="macro_8c.html#603effb8b3d1fa34860f313311e1dcef">MakeMacroHash()</a>.</p>
@@ -561,7 +702,7 @@ returns smallest prime &gt;= n
 <div class="memdoc">
 
 <p>
-computes 32bit hash value for string &lt;s&gt; 
+Computes 32bit hash value for string. 
 <p>
 
 <p>Referenced by <a class="el" href="server_8c.html#e08e9f05d751077e190df68c373fdcfc">att_hash_lookup()</a>, <a class="el" href="lexhash_8c.html#b0c83bcda2f4b258d99d41dcfef1dd30">cl_lexhash_check_grow()</a>, and <a class="el" href="lexhash_8c.html#7afb45b7d798d20514dd22f2c8d1f8f1">cl_lexhash_find_i()</a>.</p>
@@ -585,7 +726,7 @@ computes 32bit hash value for string &lt;s&gt;
 <div class="memdoc">
 
 <p>
-returns True iff n is a prime 
+Returns True iff n is a prime. 
 <p>
 
 <p>Referenced by <a class="el" href="hash_8h.html#6bb4d75c3e8354cff3efd98002335877">find_prime()</a>.</p>
@@ -593,7 +734,7 @@ returns True iff n is a prime
 </div>
 </div><p>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Thu Sep 17 23:45:31 2009 for CWB by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Sat Sep 19 20:28:33 2009 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

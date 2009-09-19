@@ -22,7 +22,12 @@
 #include "special-chars.h"
 
 
-/* translate latin-1 characters to lowercase */
+/**
+ * Table which translates latin-1 characters to lowercase.
+ *
+ * Use cl_string_maptable to access.
+ * @see cl_string_maptable
+ */
 unsigned char latin1_nocase_tab[256] = {
     0,  
     1,  2,  3,  4,  5,  6,  7,  8,  9, 10,
@@ -57,8 +62,14 @@ unsigned char latin1_nocase_tab[256] = {
   251,252,253,254,255
 };
 
-/* translate latin-1 characters with diacritics to
-     their [A-Za-z] "equivalents", including ß->s, þ->t  */
+/**
+ * Table which translates latin-1 characters
+ * with diacritics to their [A-Za-z] "equivalents",
+ * including ß->s, þ->t
+ *
+ * Use cl_string_maptable to access.
+ * @see cl_string_maptable
+ */
 unsigned char latin1_nodiac_tab[256] = {
     0,  
     1,  2,  3,  4,  5,  6,  7,  8,  9, 10,
@@ -91,7 +102,13 @@ unsigned char latin1_nodiac_tab[256] = {
   117,117,121,116,121
 };
 
-/* translate cp-1251 (ASCII + cyrillic) characters to lowercase */
+/**
+ * Table which translates cp-1251 (ASCII +
+ * cyrillic) characters to lowercase
+ *
+ * Use cl_string_maptable to access.
+ * @see cl_string_maptable
+ */
 unsigned char cp1251_nocase_tab[256] = {
     0,  
     1,  2,  3,  4,  5,  6,  7,  8,  9, 10,
@@ -198,14 +215,41 @@ unsigned char binary_nocase_tab[256] = {
 
 
 /* composite tables that can automatically be generated */
-unsigned char latin1_identity_tab[256];      /* no flags -> identity mapping */
+
+/**
+ * Table with identity mapping of latin-1 characters
+ * (no flags)
+ *
+ * Use cl_string_maptable to access.
+ * @see cl_string_maptable
+ */
+unsigned char latin1_identity_tab[256];
 int latin1_identity_tab_init = 0;
-unsigned char latin1_nocase_nodiac_tab[256]; /* %cd */
+
+/**
+ * Table with mapping for the %cd flag for latin-1
+ * (no case, no diacritics).
+ *
+ * Use cl_string_maptable to access.
+ * @see cl_string_maptable
+ */
+unsigned char latin1_nocase_nodiac_tab[256];
 int latin1_nocase_nodiac_tab_init = 0;
 /* this approach will be simplified and generalised to other charsets */
 
+
+
+/**
+ * Gets a specified character mapping table for use in regular expressions.
+ *
+ * @param charset  The character set of this corpus. Currently ignored.
+ * @param flags    The flags that specify which table is required.
+ *                 Can be IGNORE_CASE and/or IGNORE_DIAC.
+ * @return         Pointer to the appropriate mapping table.
+ */
 unsigned char *
-cl_string_maptable(CorpusCharset charset /*ignored*/, int flags) {
+cl_string_maptable(CorpusCharset charset /*ignored*/, int flags)
+{
   int icase = (flags & IGNORE_CASE) != 0;
   int idiac = (flags & IGNORE_DIAC) != 0;
   int i;
@@ -239,6 +283,18 @@ cl_string_maptable(CorpusCharset charset /*ignored*/, int flags) {
 }
 
 
+/**
+ * Converts a string to canonical form.
+ *
+ * The "canonical form" of a string is for use in comparisons where
+ * case-insensitivity and/or diacritic insensitivity is desired.
+ *
+ * Note that the string s is modified in place.
+ *
+ * @param s        The string (must be Latin-1!)
+ * @param flags    The flags that specify which conversions are required.
+ *                 Can be IGNORE_CASE and/or IGNORE_DIAC.
+ */
 void 
 cl_string_canonical(char *s, int flags)
 {
@@ -255,16 +311,35 @@ cl_string_canonical(char *s, int flags)
 
 
 
-/* Syntax:
-   \"[AaOoUus..] --> corresponding ISO 8859-1 character
-   \<octal>      --> ISO 8859-1 character
+/*
  */
 
+/**
+ * Converts strings with latex-style blackslash escapes
+ * for accented characters to ISO-8859-1 (Latin-1).
+ *
+ * Syntax:
+ *
+ * \"[AaOoUus..] --> corresponding ISO 8859-1 character
+ *
+ * \{octal}      --> ISO 8859-1 character
+ *
+ * @param str         The string to convert.
+ * @param result      The location to put the altered string (which
+ *                    should be shorter, or at least no longer than,
+ *                    the input string. If this parameter is NULL,
+ *                    space is automatically allocated for the output.
+ *                    result is allowed to be the same as str.
+ * @param target_len  The maximum length of the target string. If
+ *                    result is NULL, then this is set automatically.
+ * @return            Pointer to the altered string (if result was NULL
+ *                    you need to catch this and free it when no longer
+ *                    needed).
+ */
 char 
 *cl_string_latex2iso(char *str, char *result, int target_len)
 {
   /* the positions in the source and target strings */
-
   int src_pos = 0;
   int target_pos = 0;
   int i;
@@ -272,7 +347,9 @@ char
   char c;
   int val;
 
+/** @see cl_string_latex2iso */
 #define popc(s,p) s[p++]
+/** @see cl_string_latex2iso */
 #define pushc(s,c,p,m) s[p++] = c; if (p>=m) goto endloop;
 
   if (result == NULL) {
@@ -301,7 +378,7 @@ char
         }
         pushc(result, (char) (val % 256), target_pos, target_len);
       }
-      else if (c == '"') {
+      else if (c == '"') {     /* diaresis / umlaut */
         switch ( c = popc(str, src_pos) ) {
         case 'A': pushc(result, 'Ä', target_pos, target_len); break;
         case 'E': pushc(result, 'Ë', target_pos, target_len); break;
@@ -400,7 +477,7 @@ char
         }
         c = popc(str, src_pos);
       }
-      else /* print both */ {
+      else /* copy both */ {
         pushc(result, '\\', target_pos, target_len);
         pushc(result, c, target_pos, target_len);
         c = popc(str, src_pos);
@@ -408,7 +485,7 @@ char
     }
   }
   
- endloop:
+endloop:
   result[target_pos] = '\0';
 
   return result;

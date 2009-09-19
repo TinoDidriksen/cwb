@@ -27,12 +27,15 @@
 #include "feature_maps.h"
 #include "barlib.h"
 
- 
+/** the top of the range of char_map's outputs @see char_map */
 int char_map_range=0;
+/** a character map for accented characters. */
 unsigned char char_map[256];
 
+/** initialises char_mpa, qv @see char_map */
 void
-init_char_map() {
+init_char_map()
+{
   int i;
   unsigned char *map=char_map;
   unsigned char 
@@ -82,11 +85,28 @@ init_char_map() {
 
 */
 
-
+/**
+ * Creates feature maps for a source/target corpus pair.
+ *
+ * Example usage:
+ *
+ * FMS = create_feature_maps(config_data, nr_of_config_lines, source_word, target_word, source_s, target_s);
+ *
+ * @param config              pointer to a list of strings representing the feature map configuration.
+ * @param config_lines        the number of configuration items stored in config_data.
+ * @param w_attr1             The p-attribute in the first corpus to link.
+ * @param w_attr2             The p-attribute in the second corpus to link.
+ * @param s_attr1             The s-attribute in the first corpus to link.
+ * @param s_attr2             The s-attribute in the second corpus to link.
+ * @return                    the new FMS object.
+ */
 FMS
-create_feature_maps(char **config, int config_lines,
-                    Attribute *w_attr1, Attribute *w_attr2,
-                    Attribute *s_attr1, Attribute *s_attr2
+create_feature_maps(char **config,
+                    int config_lines,
+                    Attribute *w_attr1,
+                    Attribute *w_attr2,
+                    Attribute *s_attr1,
+                    Attribute *s_attr2
                     ) 
 {
   FMS r;
@@ -455,10 +475,27 @@ create_feature_maps(char **config, int config_lines,
 }
 
 
-
+/**
+ *
+ * Sim = feature_match(FMS, source_first, source_last, target_first, target_last);
+ *
+ * Compute similarity measure for source and target regions, where *_first and *_last
+ * specify the index of the first and last sentence in a region.
+ *
+ * @param fms  The feature map
+ * @param f1   Index of first sentence in source region.
+ * @param l1   Index of last sentence in source region
+ * @param f2   Index of first sentence in target region.
+ * @param l2   Index of last sentence in target region.
+ * @return     The similarity measure.
+ */
 int
 feature_match(feature_maps_t* fms, 
-              int f1, int l1, int f2, int l2){
+              int f1,
+              int l1,
+              int f2,
+              int l2)
+{
 
   int *fcount;
   int match, j, i, id, *f;
@@ -521,6 +558,9 @@ feature_match(feature_maps_t* fms,
 }
 
 
+/**
+ * Feature count vector handling (used internally by feature_match).
+ */
 int *
 get_fvector(FMS fms){
   int * res;
@@ -539,8 +579,14 @@ get_fvector(FMS fms){
 
 };
 
+/**
+ * Inserts a new vstack_t at the start of the vstack member of the given FMS.
+ *
+ * {That's what it looks like it does, not sure how the function name fits with that... ???? - AH}
+ */
 void
-release_fvector(int *fvector, FMS fms){
+release_fvector(int *fvector, FMS fms)
+{
   vstack_t *new;
   
   new=(vstack_t*)malloc(sizeof(vstack_t)); assert(new);
@@ -550,8 +596,17 @@ release_fvector(int *fvector, FMS fms){
 }
 
 
+/**
+ * Prints a message about the vector stack of the given FMS.
+ *
+ * If it finds a non-zero-count, it prints a message to STDERR.
+ * If it doesn't, it prints a message to STDOUT with the count of feature vectors.
+ *
+ * @param fms  The FMS to check.
+ */
 void
-check_fvectors(FMS fms) {
+check_fvectors(FMS fms)
+{
 
   int i, n;
   vstack_t * agenda;
@@ -574,8 +629,21 @@ check_fvectors(FMS fms) {
 }
 
 
+/**
+ * Prints the features in an FMS to STDOUT.
+ *
+ * Usage: show_feature(FMS, 1/2, "word");
+ *
+ * This will print all features listed in FMS for the token "word"; "word" is looked up in the
+ * source corpus if the 2nd argument == 1, and in the target corpus otherwise.
+ *
+ * @param fms    The FMS to print from.
+ * @param which  Which corpus to look up? (See function description)
+ * @param word   The token to look up.
+ */
 void
-show_features(FMS fms, int which, char* word) {
+show_features(FMS fms, int which, char* word)
+{
   int id, *f;
   Attribute *att;
   int **w2f;
@@ -594,28 +662,61 @@ show_features(FMS fms, int which, char* word) {
 
 
 
-/* 
-   best_path does a beamed dynamic programming search for the best path 
-   aligning the sentence regions (f1,l1) in the source corpus and (f2,l2) 
-   in the target corpus. 
-   allowed alignments are 1:0 0:1 1:1 2:1 1:2.
-
-   results are returned in the vectors <out1>, <out2> and <out_quality>, 
-   which contain <steps> valid entries each. memory allocated for the return 
-   vectors is managed by best_path() and must not be freed by the caller.
+/**
+ * Finds the best alignment path for the given regions of sentences in source and
+ * target corpus.
+ *
+ * This function does a beamed dynamic programming search for the best path
+ * aligning the sentence regions (f1,l1) in the source corpus and (f2,l2)
+ * in the target corpus.
+ *
+ * Allowed alignments are 1:0 0:1 1:1 2:1 1:2.
+ *
+ * The results are returned in the vectors out1 and out2,
+ * which each contain a number of valid entries (alignment points) equal to {steps}.
+ *
+ * Alignment points are given as sentence numbers and
+ * correspond to the start points of the sentences. At the end-of-region alignment
+ * point, sentence numbers will be l1 + 1 and l2 + 1, which must be considered by
+ * the caller if l1 (or l2) is the last sentence in the corpus!
+ *
+ * The similarity measures of aligned regions are returned in the vector out_quality.
+ *
+ * Memory allocated for the return vectors (out1, out2, out_quality) is managed by best_path() and
+ * must not be freed by the caller. Calling best_path()  overwrites
+ * the results of the previous search.
+ *
+ * Example usage:
+ *
+ * best_path(FMS, f1, l1, f2, l2, beam_width, 0/1,
+ *           &steps, &out1, &out2, &out_quality);
+ *
+ * @param fms          The FMS to use.
+ * @param f1           Index of first sentence in source region.
+ * @param l1           Index of last sentence in source region
+ * @param f2           Index of first sentence in target region.
+ * @param l2           Index of last sentence in target region.
+ * @param beam_width   Parameter for the beam search.
+ * @param verbose      Boolean: iff true, prints progress messages on STDOUT.
+ * @param steps        Put output here (see function description).
+ * @param out1         Put output here (see function description).
+ * @param out2         Put output here (see function description).
+ * @param out_quality  Put output here (see function description).
  */
-
 void
 best_path(FMS fms,
-          int f1, int l1,
-          int f2, int l2,
+          int f1,
+          int l1,
+          int f2,
+          int l2,
           int beam_width,       /* beam search */
           int verbose,          /* print progress info on stdout ? */
           /* output */
           int *steps,
           int **out1,
           int **out2,
-          int **out_quality) {
+          int **out_quality)
+{
 
   BARdesc quality, next_x, next_y;
   

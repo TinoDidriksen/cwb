@@ -68,7 +68,7 @@ intcompare(const void *i, const void *j)
  * and result in NULL being returned.
  *
  * @param corpus        The corpus for which the Mapping is valid (pointer).
- * @param attribute     The attribute for which the Mapping is valid (pointer).
+ * @param attr_name     String naming the attribute for which the mapping is valid.
  * @param file_name     The filename of the map spec.
  * @param error_string  A char * (not char[]), which is set to an error
  *                      string, or to NULL if all is OK.
@@ -433,6 +433,8 @@ map_id_to_class_number(Mapping map,
 /**
  * Gets the location of the token IDs in this class.
  *
+ * @param map        The SingleMapping representing the class
+ *                   in question.
  * @param nr_tokens  Address of an integer, which will be set
  *                   to the number of tokens in this class.
  * @return           A pointer to the token IDs of this class
@@ -461,6 +463,7 @@ number_of_classes(Mapping map)
 /**
  * Find a class within this mapping.
  *
+ * @param map   The Mapping to look in.
  * @param name  The class to look for.
  * @return      The SingleMapping containing the class which
  *              has the name "name".
@@ -520,7 +523,7 @@ member_of_class_s(Mapping map,
  * @see member_of_class_s
  * @param map    The mapping to look in.
  * @param class  The class to check.
- * @param token  The token to look for (identified by its integer ID).
+ * @param id     The token to look for (identified by its integer ID).
  * @return       Boolean.
  */
 int

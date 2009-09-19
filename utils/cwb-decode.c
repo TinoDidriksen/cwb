@@ -733,7 +733,18 @@ show_position_values(int start_position, int end_position, Attribute *context) {
 }
 
 
-int main(int argc, char **argv)
+/* *************** *\
+ *      MAIN()     *
+\* *************** */
+
+/**
+ * Main function for cwb-decode.
+ *
+ * @param argc   Number of command-line arguments.
+ * @param argv   Command-line arguments.
+ */
+int
+main(int argc, char **argv)
 {
   Attribute *attr;
   Attribute *context = NULL;

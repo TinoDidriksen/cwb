@@ -453,6 +453,18 @@ cleanup(int error_code) {
   exit(error_code);
 }
 
+
+
+/* *************** *\
+ *      MAIN()     *
+\* *************** */
+
+/**
+ * Main function for cwb-compress-rdx.
+ *
+ * @param argc   Number of command-line arguments.
+ * @param argv   Command-line arguments.
+ */
 int
 main(int argc, char **argv) {
   char *registry_directory = NULL;

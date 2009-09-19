@@ -22,47 +22,61 @@
 
 #include "storage.h"                      /* gets sys/types.h for caddr_t */
 
-/* ---------------------------------------------------------------------- */
 
-typedef struct _idbuf *IDList;
 
 /**
- * Entry in linked list of strings containing ID codes
+ * The IDList class: entries in linked lists of identifier strings.
+ *
+ * These identifier strings can be usernames, groupnames or hostnames
+ * and are used to restrict access to particular corpora.
+ *
+ * Note that IDLists are added to Corpus objects by the registry parser.
+ *
+ * NOT to be confused with "idlist" in the sense of cl_idlist2cpos().
  */
+typedef struct _idbuf *IDList;
+
+/** Underlying structure for the IDList class. */
 typedef struct _idbuf {
-  char *string;
-  IDList next;
+  char *string; /**<the username, groupname or hostname */
+  IDList next;  /**<link to next entry in the linked list */
 } IDBuf;
 
-void FreeIDList(IDList *list);
 
+
+void FreeIDList(IDList *list);
 int memberIDList(char *s, IDList l);
+
+/* a new-style API for idlists */
+#define IDList_delete(l) FreeIDList(l)
+#define IDList_check_member(l, s) memberIDList(s, l) /* parameter order standardised for objects */
+
+
+
 
 /* ---------------------------------------------------------------------- */
 
 /* typedef struct TCorpus Corpus; now in <cl.h> */
-/**
- * Contains information on a loaded corpus.
- *
- */
+
+/** Underlying structure for the Corpus class. */
 struct TCorpus {
 
-  char *id;          /**< a unique ID (i.e., the registry name identifying the corpus to the CWB) */
-  char *name;        /**< the full name of the corpus (descriptive, for information only) */
-  char *path;        /**< the ``home directory'' of the corpus  */
-  char *info_file;   /**< the path of the info file of the corpus */
+  char *id;                        /**< a unique ID (i.e., the registry name identifying the corpus to the CWB) */
+  char *name;                      /**< the full name of the corpus (descriptive, for information only) */
+  char *path;                      /**< the ``home directory'' of the corpus  */
+  char *info_file;                 /**< the path of the info file of the corpus */
 
   CorpusCharset charset;           /**< a special corpus property: internal support for 'latin1' to 'latin9' planned */
-  CorpusProperty properties;
+  CorpusProperty properties;       /**< head of a linked list of CorpusProperty object. */
 
-  char *admin;
+  char *admin;                     /**< {doesn't seem to be used?} */
 
-  IDList groupAccessList;
-  IDList userAccessList;
+  IDList groupAccessList;          /**< List of groups allowed to access this corpus (can be NULL) */
+  IDList userAccessList;           /**< List of users allowed to access this corpus (can be NULL) */
   IDList hostAccessList;
   
-  char *registry_dir;
-  char *registry_name;
+  char *registry_dir;              /**< Directory where this corpus's registry file is located */
+  char *registry_name;             /**< the cwb-name of this corpus */
 
   int nr_of_loads;                 /**< the number of setup_corpus ops */
 
@@ -74,12 +88,12 @@ struct TCorpus {
 
 /* ---------------------------------------------------------------------- */
 
-extern char *cregin_path;    /**< full path of registry file currently being parsed */
-extern char *cregin_name;    /**< name of registry file currently being parsed */
+extern char *cregin_path;
+extern char *cregin_name;
 
 /* ---------------------------------------------------------------------- */
 
-extern Corpus *loaded_corpora;    /**< list of loaded corpus handles (for memory manager) */
+extern Corpus *loaded_corpora;
 
 /* ---------------------------------------------------------------------- */
 

@@ -447,8 +447,19 @@ get_next_range(int *start, int *end) {
   }
 }
 
+/* *************** *\
+ *      MAIN()     *
+\* *************** */
+
+/**
+ * Main function for cwb-scan-corpus.
+ *
+ * @param argc   Number of command-line arguments.
+ * @param argv   Command-line arguments.
+ */
 int
-main (int argc, char *argv[]) {
+main (int argc, char *argv[])
+{
   int argind;			/* index of first (non-option) argument in argv[] */
   int Csize = 0;		/* corpus size (= number of tokens) */
   Attribute *word;		/* need default p-attribute to compute corpus size */

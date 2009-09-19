@@ -29,13 +29,13 @@
 <h2>Functions</h2>
 <ul>
 <li>off_t <a class="el" href="fileutils_8h.html#2c12da91ca3bc84c8fe066451b33d098">file_length</a> (char *filename)
-<li>off_t <a class="el" href="fileutils_8h.html#31bb47fcd34414684e836a214d179679">fd_file_length</a> (FILE *fd)
-<li>off_t <a class="el" href="fileutils_8h.html#a8be5ea98470f9a9059d32e31fd553b6">fi_file_length</a> (int fileno)
-<li>long <a class="el" href="fileutils_8h.html#07770dcc42bc82960bae979c8e58c909">fprobe</a> (char *fname)
-<li>int <a class="el" href="fileutils_8h.html#fc17c7f5a19c7e9a7e66df3bec4c7341">is_directory</a> (char *path)
-<li>int <a class="el" href="fileutils_8h.html#bb6bc42840ec53d56d734378e8403099">is_file</a> (char *path)
-<li>int <a class="el" href="fileutils_8h.html#2d0f3f9840d10b4b9c23a8b13b32be69">is_link</a> (char *path)
-</ul>
+<dl class="el"><dd class="mdescRight">Gets the size of the specified file; returns EOF for error.  <a href="#2c12da91ca3bc84c8fe066451b33d098"></a><br></dl><li>off_t <a class="el" href="fileutils_8h.html#31bb47fcd34414684e836a214d179679">fd_file_length</a> (FILE *fd)
+<dl class="el"><dd class="mdescRight">Gets the size of the specified file; returns EOF for error.  <a href="#31bb47fcd34414684e836a214d179679"></a><br></dl><li>off_t <a class="el" href="fileutils_8h.html#a8be5ea98470f9a9059d32e31fd553b6">fi_file_length</a> (int fileno)
+<dl class="el"><dd class="mdescRight">Gets the size of the specified file; returns EOF for error.  <a href="#a8be5ea98470f9a9059d32e31fd553b6"></a><br></dl><li>long <a class="el" href="fileutils_8h.html#07770dcc42bc82960bae979c8e58c909">fprobe</a> (char *fname)
+<dl class="el"><dd class="mdescRight">Gets the size of the specified file; returns EOF for error.  <a href="#07770dcc42bc82960bae979c8e58c909"></a><br></dl><li>int <a class="el" href="fileutils_8h.html#fc17c7f5a19c7e9a7e66df3bec4c7341">is_directory</a> (char *path)
+<dl class="el"><dd class="mdescRight">Checks whether the specified path indicates a directory.  <a href="#fc17c7f5a19c7e9a7e66df3bec4c7341"></a><br></dl><li>int <a class="el" href="fileutils_8h.html#bb6bc42840ec53d56d734378e8403099">is_file</a> (char *path)
+<dl class="el"><dd class="mdescRight">Checks whether the specified path indicates a regular file.  <a href="#bb6bc42840ec53d56d734378e8403099"></a><br></dl><li>int <a class="el" href="fileutils_8h.html#2d0f3f9840d10b4b9c23a8b13b32be69">is_link</a> (char *path)
+<dl class="el"><dd class="mdescRight">Checks whether the specified path indicates a link.  <a href="#2d0f3f9840d10b4b9c23a8b13b32be69"></a><br></dl></ul>
 <hr><h2>Function Documentation</h2>
 <a class="anchor" name="31bb47fcd34414684e836a214d179679"></a><!-- doxytag: member="fileutils.h::fd_file_length" ref="31bb47fcd34414684e836a214d179679" args="(FILE *fd)" -->
 <div class="memitem">
@@ -54,6 +54,15 @@
 <div class="memdoc">
 
 <p>
+Gets the size of the specified file; returns EOF for error. 
+<p>
+As file_length, but the file is specified by file handle, not name.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>fd</em>&nbsp;</td><td>The file to size up. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>Size of file in bytes. </dd></dl>
 
 </div>
 </div><p>
@@ -74,6 +83,16 @@
 <div class="memdoc">
 
 <p>
+Gets the size of the specified file; returns EOF for error. 
+<p>
+As file_length, but the file is specified by number, not name.<p>
+<dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="cwb-decode-nqrfile_8c.html#068bd27cf55a3720a248da29c87df910" title="Gets the size of the file.">file_length</a> </dd></dl>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>fileno</em>&nbsp;</td><td>The file to size up. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>Size of file in bytes. </dd></dl>
 
 </div>
 </div><p>
@@ -94,6 +113,14 @@
 <div class="memdoc">
 
 <p>
+Gets the size of the specified file; returns EOF for error. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>filename</em>&nbsp;</td><td>The file to size up. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>Size of file in bytes. </dd></dl>
 
 <p>Referenced by <a class="el" href="corpmanag_8c.html#5bd617c344c791d4cea751a4e043f2e3">attach_subcorpus()</a>, <a class="el" href="attributes_8c.html#ec021892b5def062d520b8ff65e26c0e">comp_component_state()</a>, and <a class="el" href="cwb-decode-nqrfile_8c.html#f701eb9e70d033003bf4915fbddecbd0">show_subcorpus_info()</a>.</p>
 
@@ -116,6 +143,16 @@
 <div class="memdoc">
 
 <p>
+Gets the size of the specified file; returns EOF for error. 
+<p>
+Duplicates functionality of file_length, but return is long instead of off_t.<p>
+<dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="cwb-decode-nqrfile_8c.html#068bd27cf55a3720a248da29c87df910" title="Gets the size of the file.">file_length</a> </dd></dl>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>fname</em>&nbsp;</td><td>The file to size up. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>Size of file in bytes. </dd></dl>
 
 </div>
 </div><p>
@@ -136,6 +173,14 @@
 <div class="memdoc">
 
 <p>
+Checks whether the specified path indicates a directory. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>path</em>&nbsp;</td><td>Path to check. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>Boolean. (Also false if there's an error.) </dd></dl>
 
 <p>Referenced by <a class="el" href="cwb-makeall_8c.html#bad1d7a018ccde243f906aa915c03734">do_attribute()</a>.</p>
 
@@ -158,6 +203,14 @@
 <div class="memdoc">
 
 <p>
+Checks whether the specified path indicates a regular file. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>path</em>&nbsp;</td><td>Path to check. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>Boolean. (Also false if there's an error.) </dd></dl>
 
 </div>
 </div><p>
@@ -178,11 +231,19 @@
 <div class="memdoc">
 
 <p>
+Checks whether the specified path indicates a link. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>path</em>&nbsp;</td><td>Path to check. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>Boolean. (Also false if there's an error.) </dd></dl>
 
 </div>
 </div><p>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Thu Sep 17 23:45:31 2009 for CWB by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Sat Sep 19 20:28:33 2009 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

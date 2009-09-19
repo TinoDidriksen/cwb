@@ -23,11 +23,22 @@
 /* byte order handling taken from Corpus Library */
 #include "../cl/endian.h"
 
-int little_endian = 0;	/* CWB default format is 4-byte big-endian = network */
+/**
+ * boolean: is the byte-order little-endian?
+ *
+ * CWB default format is 4-byte big-endian = network
+ */
+int little_endian = 0;
 
 
 #define MAX_LINE_LENGTH 1024
 
+/**
+ * Reads from a stream one integer-representing string per line,
+ * and writes the corresponding integer to STDOUT.
+ *
+  * @param fd  The file handle.
+ */
 void
 process_fd(FILE *fd)
 {
@@ -42,6 +53,12 @@ process_fd(FILE *fd)
   }
 }
 
+/**
+ * Main function for cwb-atoi.
+ *
+ * @param argc   Number of command-line arguments.
+ * @param argv   Command-line arguments.
+ */
 int
 main(int argc, char **argv)
 {

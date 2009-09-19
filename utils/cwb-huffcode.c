@@ -841,6 +841,16 @@ usage(char *msg, int error_code) {
   exit(error_code);
 }
 
+/* *************** *\
+ *      MAIN()     *
+\* *************** */
+
+/**
+ * Main function for cwb-huffcode.
+ *
+ * @param argc   Number of command-line arguments.
+ * @param argv   Command-line arguments.
+ */
 int 
 main(int argc, char **argv) {
   char *registry_directory = NULL;

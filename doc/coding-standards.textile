@@ -59,10 +59,10 @@ h2. Commenting
 
 h2. Doxygen Javadoc-style API comments
 
-* CWB uses the Doxygen system for generating HTML documentation of the functions, structures and global variables in the C source and header files.
+* CWB uses the Doxygen system for generating HTML documentation of the macros, functions, structures and global variables in the C source and header files.
 **See http://www.doxygen.nl
 * Only a _a subset of_ the Doxygen comment syntax is used in CWB:
-** Use Javadoc syntax, _not_ any of the other syntaxes supported by Doxygen
+** Use Javadoc-style syntax, _not_ any of the other syntaxes supported by Doxygen
 ** For each documented item, give a _brief description_ (compulsory) and a _detailed description_ (optional).
 *** The brief description is the first sentence of the documenting comment, followed by a blank line
 *** The detailed description follows, across as many lines as necessary
@@ -70,5 +70,8 @@ h2. Doxygen Javadoc-style API comments
 ** Structures and functions are always _preceded_ directly by their documentation.
 ** Members of structures can be documented on the same line using the abbreviated syntax with < (see file of examples)
 ** For functions, it is the definition that should be documented, not the protype.
+** Other possible tags: &#64;see for a crossref; &#64;file to document the contents of an entire file.
+* Open-angled brackets cannot be used in documentation comments - they will be interpreted as HTML tag openers.
+** Use an lt-entity instead, or just use curly braces. 
 * Examples are given in the file @API-documentation-examples@.
 

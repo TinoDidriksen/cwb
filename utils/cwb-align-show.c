@@ -262,11 +262,18 @@ print_next_region(FILE *f) {
 
 
 
-/*****************\
-***    MAIN()   ***
-\*****************/
+/* *************** *\
+ *      MAIN()     *
+\* *************** */
 
-int main(int argc, char** argv)
+/**
+ * Main function for cwb-align-show.
+ *
+ * @param argc   Number of command-line arguments.
+ * @param argv   Command-line arguments.
+ */
+int
+main(int argc, char** argv)
 {
   int argindex;			/* index of first argument in argv[] */
   char line[4096];		/* input buffer for .align file */

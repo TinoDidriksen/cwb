@@ -22,7 +22,12 @@
 
 char *progname;
 
-void usage() {
+/**
+ * Prints a message describing how to use the program to STDERR and then exits.
+ */
+void
+usage(void)
+{
   fprintf(stderr,
           "\n"
           "Usage: %s [options] corpus-id -S <att>\n\n"
@@ -39,8 +44,23 @@ void usage() {
   exit(1);
 }
 
+
+/* *************** *\
+ *      MAIN()     *
+\* *************** */
+
+/**
+ * Main function for cwb-s-decode.
+ *
+ * Prints information about each region in a given s-attribute in a
+ * specified corpus to STDOUT, optionally with their annotation values.
+ *
+ * @param argc   Number of command-line arguments.
+ * @param argv   Command-line arguments.
+ */
 int
-main(int argc, char **argv) {
+main(int argc, char **argv)
+{
   char *registry_directory = NULL;
   char *corpus_id = NULL;
   char *attr_name = NULL;
@@ -61,7 +81,7 @@ main(int argc, char **argv) {
   progname = argv[0];
 
   /* parse arguments */
-  while ((c = getopt(argc, argv, "+r:nvh")) != EOF)
+  while ((c = getopt(argc, argv, "+r:nvh")) != EOF) {
     switch (c) {
 
     /* r: registry directory */
@@ -89,6 +109,7 @@ main(int argc, char **argv) {
       break;
 
     }
+  } /* endwhile: options */
 
   /* expect three arguments: <corpus> -S <attribute> */
   if (argc <= (optind + 2))

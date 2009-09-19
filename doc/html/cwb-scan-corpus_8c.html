@@ -45,8 +45,8 @@
 <li>void <a class="el" href="cwb-scan-corpus_8c.html#2ef30c42cbc289d899a8be5d2d8f77d0">usage</a> ()
 <li>int <a class="el" href="cwb-scan-corpus_8c.html#533d8ed350c93589b514cc9b2d7ec4e6">parse_options</a> (int argc, char *argv[])
 <li>int <a class="el" href="cwb-scan-corpus_8c.html#d6740255386952216cb75d813243a3ea">is_prime</a> (int n)
-<dl class="el"><dd class="mdescRight">returns True iff n is a prime  <a href="#d6740255386952216cb75d813243a3ea"></a><br></dl><li>int <a class="el" href="cwb-scan-corpus_8c.html#6bb4d75c3e8354cff3efd98002335877">find_prime</a> (int n)
-<dl class="el"><dd class="mdescRight">returns smallest prime &gt;= n  <a href="#6bb4d75c3e8354cff3efd98002335877"></a><br></dl><li>unsigned int <a class="el" href="cwb-scan-corpus_8c.html#c017885161aa74a27032053ae723f47d">hash_index</a> (int N, int *tuple)
+<dl class="el"><dd class="mdescRight">Returns True iff n is a prime.  <a href="#d6740255386952216cb75d813243a3ea"></a><br></dl><li>int <a class="el" href="cwb-scan-corpus_8c.html#6bb4d75c3e8354cff3efd98002335877">find_prime</a> (int n)
+<dl class="el"><dd class="mdescRight">Returns smallest prime &gt;= n.  <a href="#6bb4d75c3e8354cff3efd98002335877"></a><br></dl><li>unsigned int <a class="el" href="cwb-scan-corpus_8c.html#c017885161aa74a27032053ae723f47d">hash_index</a> (int N, int *tuple)
 <li>int <a class="el" href="cwb-scan-corpus_8c.html#72dd77d2c2548160807c9db106ae9dd2">tuples_eq</a> (int N, int *t1, int *t2)
 <li><a class="el" href="struct__hash__entry.html">HashEntry</a> <a class="el" href="cwb-scan-corpus_8c.html#c5a4421e429785c0b7a85185612e8ecf">hash_find</a> (int *tuple, int *R_index)
 <li>void <a class="el" href="cwb-scan-corpus_8c.html#9e44f8ee16add21125bfc4956588a40f">hash_add</a> (int *tuple, int f)
@@ -55,7 +55,7 @@
 <li>void <a class="el" href="cwb-scan-corpus_8c.html#fc8b08c47e1422ae98e8bed30103ff1e">add_key</a> (char *key)
 <li>int <a class="el" href="cwb-scan-corpus_8c.html#0bd5ce6ea72cb4064addfcc9a02ac3b5">get_next_range</a> (int *start, int *end)
 <li>int <a class="el" href="cwb-scan-corpus_8c.html#0ddf1224851353fc92bfbff6f499fa97">main</a> (int argc, char *argv[])
-</ul>
+<dl class="el"><dd class="mdescRight">Main function for cwb-scan-corpus.  <a href="#0ddf1224851353fc92bfbff6f499fa97"></a><br></dl></ul>
 <h2>Variables</h2>
 <ul>
 <li>struct <a class="el" href="struct___hash.html">_Hash</a> <a class="el" href="cwb-scan-corpus_8c.html#cd0df70578d8633182bc33a50bdf6f01">Hash</a>
@@ -166,7 +166,7 @@
 <div class="memdoc">
 
 <p>
-returns smallest prime &gt;= n 
+Returns smallest prime &gt;= n. 
 <p>
 
 <p>References <a class="el" href="lexhash_8c.html#d6740255386952216cb75d813243a3ea">is_prime()</a>.</p>
@@ -342,7 +342,7 @@ returns smallest prime &gt;= n
 <div class="memdoc">
 
 <p>
-returns True iff n is a prime 
+Returns True iff n is a prime. 
 <p>
 
 </div>
@@ -397,6 +397,14 @@ returns True iff n is a prime
 <div class="memdoc">
 
 <p>
+Main function for cwb-scan-corpus. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>argc</em>&nbsp;</td><td>Number of command-line arguments. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>argv</em>&nbsp;</td><td>Command-line arguments. </td></tr>
+  </table>
+</dl>
 
 <p>References <a class="el" href="cwb-scan-corpus_8c.html#fc8b08c47e1422ae98e8bed30103ff1e">add_key()</a>, <a class="el" href="struct___hash.html#af6ab2f24f0995a7208242ce03f1faa1">_Hash::att</a>, <a class="el" href="cl_8h.html#3b60fdde6a7c8fbc535efaf526dbcb78">ATT_POS</a>, <a class="el" href="struct___hash.html#8ae05bec6635c6f8626bf633c5de3835">_Hash::buckets</a>, <a class="el" href="cwb-scan-corpus_8c.html#9c44b741349dc84e48e21837fa322be7">check_words</a>, <a class="el" href="cl_8h.html#5b756594ae431fd5ec0ffbdc77db1e64">cl_calloc()</a>, <a class="el" href="cl_8h.html#7cda948947206ea1125104c8d527ac31">cl_cpos2id</a>, <a class="el" href="cl_8h.html#9aa8c5c3f3ad63b5b99e30b983828335">cl_id2str</a>, <a class="el" href="cl_8h.html#4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="cl_8h.html#9ddd8ad3587dae86ae12bbb7156f3983">cl_max_cpos</a>, <a class="el" href="cl_8h.html#d2cb0116d085615487584ef5525eda90">cl_max_id</a>, <a class="el" href="cdaccess_8c.html#95ec41c7bd08fce95418a10c0d5c2da2">cl_max_struc()</a>, <a class="el" href="cl_8h.html#e9e879605cdbdafc2a8939ae590b6aa0">cl_new_attribute</a>, <a class="el" href="cl_8h.html#2686895a6ca77424686c19bb2fb718bf">cl_new_corpus</a>, <a class="el" href="cl_8h.html#7a9d3816260f385cf56e15839c518cee">cl_regex_match()</a>, <a class="el" href="cl_8h.html#6abae3b6b39350df13cfe97acc1f0a30">cl_standard_registry</a>, <a class="el" href="cl_8h.html#8678f27c2150dc7bcd6f51b50f7a9468">cl_struc2cpos</a>, <a class="el" href="cl_8h.html#6289b80950775678d6ba26718802830f">cl_struc2str</a>, <a class="el" href="struct___hash.html#096971fd413a68289795cca7ae1e95c4">_Hash::constraint_ok</a>, <a class="el" href="cwb-scan-corpus_8c.html#9ed20e8c2af270abe60e5d957f9b944b">corpname</a>, <a class="el" href="struct___hash.html#4245cab8f55bafd36e26dd0a341f878c">_Hash::current_struc</a>, <a class="el" href="cwb-scan-corpus_8c.html#1cedd019093bcd63081d113e73ae348e">DEFAULT_BUCKETS</a>, <a class="el" href="struct___hash.html#0dd259d86ea516b90d9789ba1548c29b">_Hash::end_cpos</a>, <a class="el" href="lexhash_8c.html#6bb4d75c3e8354cff3efd98002335877">find_prime()</a>, <a class="el" href="struct__hash__entry.html#e0d22272b68e75d19ac0b80c01f806b6">_hash_entry::freq</a>, <a class="el" href="struct___hash.html#9fa36e6039694dfd1382466f42ce66f8">_Hash::frequency</a>, <a class="el" href="cwb-scan-corpus_8c.html#852cca2eda063ea0ea7e399b4065174c">frequency_att</a>, <a class="el" href="cwb-scan-corpus_8c.html#37cdd0e0fdf3b36ff38f39ae8cde5faf">frequency_threshold</a>, <a class="el" href="struct___hash.html#13e90a388ef0d76975e0d30185d4d814">_Hash::frequency_values</a>, <a class="el" href="cwb-scan-corpus_8c.html#0bd5ce6ea72cb4064addfcc9a02ac3b5">get_next_range()</a>, <a class="el" href="cwb-scan-corpus_8c.html#3b8ce181bef9b6c58551a2f7dcc647f1">global_end</a>, <a class="el" href="cwb-scan-corpus_8c.html#ab89ba09a25f6937d0f2ea3e65182a19">global_start</a>, <a class="el" href="cwb-scan-corpus_8c.html#cd0df70578d8633182bc33a50bdf6f01">Hash</a>, <a class="el" href="cwb-scan-corpus_8c.html#9e44f8ee16add21125bfc4956588a40f">hash_add()</a>, <a class="el" href="struct___hash.html#c91e02d17602c7185935a20fceaf5cf4">_Hash::id_list</a>, <a class="el" href="struct___hash.html#5a99bb985f1fb5f8afa97b73882d5cd1">_Hash::id_list_size</a>, <a class="el" href="struct___hash.html#318d1298ce3968c42295f20d585f89bb">_Hash::is_constraint</a>, <a class="el" href="cwb-scan-corpus_8c.html#d40d04a47016bc8bc1aa8cbd182cdd69">is_regular()</a>, <a class="el" href="struct___hash.html#03e51bbe5203568b7daeae718239b4a0">_Hash::is_structural</a>, <a class="el" href="struct___hash.html#2689c4b3931025b79053532a5f1b0a85">_Hash::K</a>, <a class="el" href="globals_8h.html#f0f2173e3b202ddf5756531b4471dcb2">MAX_LINE_LENGTH</a>, <a class="el" href="cwb-scan-corpus_8c.html#4885d311d80994fd106f44c07cec9cc4">MAX_N</a>, <a class="el" href="struct___hash.html#5f13b0907ef9484099415aff30745e95">_Hash::max_offset</a>, <a class="el" href="struct___hash.html#7722c8ecbb62d99aee7ce68b1752f337">_Hash::N</a>, <a class="el" href="struct__hash__entry.html#6acb29cbd01a818d1a327b4cf57a502b">_hash_entry::next</a>, <a class="el" href="struct___hash.html#8aa7374967f204dfae0b46fd98e301f9">_Hash::offset</a>, <a class="el" href="cwb-scan-corpus_8c.html#4d59733effad59b54bbd4e5d6016c538">output_file</a>, <a class="el" href="options_8c.html#3b63ff1af997333f51cad78bf921732a">parse_options()</a>, <a class="el" href="options_8h.html#b9e1449fd00c98428516f0b41eddcb10">progname</a>, <a class="el" href="cwb-scan-corpus_8c.html#55602ca214fb365e8deef9a73c8442e7">quiet</a>, <a class="el" href="cwb-scan-corpus_8c.html#8a60853713c55aa8ebf0904b3c26690d">ranges_fh</a>, <a class="el" href="cwb-scan-corpus_8c.html#187a588249b531d66f0435b4f9858ec0">ranges_file</a>, <a class="el" href="cwb-scan-corpus_8c.html#5f073f0f01b14ca3b4ebd353ba487861">reg_dir</a>, <a class="el" href="struct___hash.html#4af1ec508bf5099699d7d1e358bbdcf5">_Hash::regex</a>, <a class="el" href="struct___hash.html#1f2f933cd7247e1eabf62369436d1390">_Hash::source_base</a>, <a class="el" href="struct___hash.html#7b5390980c7b5eb3afbb365b93ddb769">_Hash::start_cpos</a>, <a class="el" href="struct___hash.html#dbb9bfe891de5c93dcea870a3209d13b">_Hash::table</a>, <a class="el" href="struct__hash__entry.html#28dcdb3b4936a0999c96f645d0436a83">_hash_entry::tuple</a>, <a class="el" href="cwb-compress-rdx_8c.html#c896e7e59472ff8e2d14ac44f0e23634">usage()</a>, <a class="el" href="struct___hash.html#0576607974f4c06f8031128c0754b9ca">_Hash::virtual_id</a>, and <a class="el" href="eval_8h.html#93fe6fe1a66a9de33bb160f0c3e1895409c37d051e7e4b3f3a7e8e75dca15912">word</a>.</p>
 
@@ -730,7 +738,7 @@ returns True iff n is a prime
 </div>
 </div><p>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Thu Sep 17 23:45:31 2009 for CWB by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Sat Sep 19 20:28:33 2009 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

@@ -31,8 +31,14 @@ int little_endian = 0;  /* CWB default format is 4-byte big-endian = network */
 
 int buf[BUFSIZE];
 
-
-void process_fd(FILE *fd)
+/**
+ * Reads one integer at a time from a stream and prints a decimal representation
+ * of it on STDOUT; strings representing ints are split by newlines.
+ *
+ * @param fd  The file handle.
+ */
+void
+process_fd(FILE *fd)
 {
   int N, k, i;
 
@@ -50,7 +56,18 @@ void process_fd(FILE *fd)
   } while (N == BUFSIZE);
 }
 
-int main(int argc, char **argv)
+/* *************** *\
+ *      MAIN()     *
+\* *************** */
+
+/**
+ * Main function for cwb-itoa.
+ *
+ * @param argc   Number of command-line arguments.
+ * @param argv   Command-line arguments.
+ */
+int
+main(int argc, char **argv)
 {
   FILE *fd;
   int i;

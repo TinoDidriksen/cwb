@@ -128,10 +128,16 @@ parse_args(int ac, char *av[], int min_args) {
 
 
 
-/*****************\
-***    MAIN()   ***
-\*****************/
+/* *************** *\
+ *      MAIN()     *
+\* *************** */
 
+/**
+ * Main function for cwb-align-encode.
+ *
+ * @param argc   Number of command-line arguments.
+ * @param argv   Command-line arguments.
+ */
 int
 main(int argc, char *argv[]) {
   int argindex;			/* index of first argument in argv[] */

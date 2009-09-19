@@ -23,19 +23,25 @@
   </div>
 </div>
 <div class="contents">
-<h1>_position_stream_rec_ Struct Reference</h1><!-- doxytag: class="_position_stream_rec_" --><h2>Data Fields</h2>
+<h1>_position_stream_rec_ Struct Reference</h1><!-- doxytag: class="_position_stream_rec_" -->Underlying structure for the PositionStream object.  
+<a href="#_details">More...</a>
+<p>
+<h2>Data Fields</h2>
 <ul>
 <li><a class="el" href="union___attribute.html">Attribute</a> * <a class="el" href="struct__position__stream__rec__.html#a6941092bf1c0d49260bc71e63e5ef41">attribute</a>
-<li>int <a class="el" href="struct__position__stream__rec__.html#7441ef0865bcb3db9b8064dd7375c1ea">id</a>
-<li>int <a class="el" href="struct__position__stream__rec__.html#8d6d765b10db18cb76703f30bcb23824">id_freq</a>
-<li>int <a class="el" href="struct__position__stream__rec__.html#6d5513ad0df2259dcd11f09d7c5487d7">nr_items</a>
-<li>int <a class="el" href="struct__position__stream__rec__.html#0909fc131205ef83e65e58c2b509abd6">is_compressed</a>
-<li><a class="el" href="struct__bstreambuf.html">BStream</a> <a class="el" href="struct__position__stream__rec__.html#15810f1742cd26dec8cedb16be0dd491">bs</a>
-<li>int <a class="el" href="struct__position__stream__rec__.html#148e3876077787926724625411d6e7a9">b</a>
-<li>int <a class="el" href="struct__position__stream__rec__.html#cbd08537ee7f241b3e5f36cef6a5af9e">last_pos</a>
-<li>int * <a class="el" href="struct__position__stream__rec__.html#4015213f1363674b898680b20e217b4e">base</a>
-</ul>
-<hr><h2>Field Documentation</h2>
+<dl class="el"><dd class="mdescRight">The Attribute on which this PositionStream has been opened.  <a href="#a6941092bf1c0d49260bc71e63e5ef41"></a><br></dl><li>int <a class="el" href="struct__position__stream__rec__.html#7441ef0865bcb3db9b8064dd7375c1ea">id</a>
+<dl class="el"><dd class="mdescRight">The <a class="el" href="structitem.html">item</a> whose positions this PositionStream's will read.  <a href="#7441ef0865bcb3db9b8064dd7375c1ea"></a><br></dl><li>int <a class="el" href="struct__position__stream__rec__.html#8d6d765b10db18cb76703f30bcb23824">id_freq</a>
+<dl class="el"><dd class="mdescRight">id frequency (ie frequency of the <a class="el" href="structitem.html">item</a> in question); maximum number of positions that can be read  <a href="#8d6d765b10db18cb76703f30bcb23824"></a><br></dl><li>int <a class="el" href="struct__position__stream__rec__.html#6d5513ad0df2259dcd11f09d7c5487d7">nr_items</a>
+<dl class="el"><dd class="mdescRight">how many items delivered so far  <a href="#6d5513ad0df2259dcd11f09d7c5487d7"></a><br></dl><li>int <a class="el" href="struct__position__stream__rec__.html#0909fc131205ef83e65e58c2b509abd6">is_compressed</a>
+<dl class="el"><dd class="mdescRight">Boolean: attribute REVCORP is compressed?  <a href="#0909fc131205ef83e65e58c2b509abd6"></a><br></dl><li><a class="el" href="struct__bstreambuf.html">BStream</a> <a class="el" href="struct__position__stream__rec__.html#15810f1742cd26dec8cedb16be0dd491">bs</a>
+<dl class="el"><dd class="mdescRight">for compressed streams, the stream is a BStream object rather than just a pointer.  <a href="#15810f1742cd26dec8cedb16be0dd491"></a><br></dl><li>int <a class="el" href="struct__position__stream__rec__.html#148e3876077787926724625411d6e7a9">b</a>
+<dl class="el"><dd class="mdescRight">relevent for compressed streams  <a href="#148e3876077787926724625411d6e7a9"></a><br></dl><li>int <a class="el" href="struct__position__stream__rec__.html#cbd08537ee7f241b3e5f36cef6a5af9e">last_pos</a>
+<dl class="el"><dd class="mdescRight">relevent for compressed streams  <a href="#cbd08537ee7f241b3e5f36cef6a5af9e"></a><br></dl><li>int * <a class="el" href="struct__position__stream__rec__.html#4015213f1363674b898680b20e217b4e">base</a>
+<dl class="el"><dd class="mdescRight">pointer to base of stream for uncompressed streams.  <a href="#4015213f1363674b898680b20e217b4e"></a><br></dl></ul>
+<hr><a name="_details"></a><h2>Detailed Description</h2>
+Underlying structure for the PositionStream object. 
+<p>
+PositionStreams are used for accessing Attributes. Each one represents a stream of corpus positions, representing positions where a given <a class="el" href="structitem.html">item</a> occurs. <hr><h2>Field Documentation</h2>
 <a class="anchor" name="a6941092bf1c0d49260bc71e63e5ef41"></a><!-- doxytag: member="_position_stream_rec_::attribute" ref="a6941092bf1c0d49260bc71e63e5ef41" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -47,6 +53,8 @@
 </div>
 <div class="memdoc">
 
+<p>
+The Attribute on which this PositionStream has been opened. 
 <p>
 
 <p>Referenced by <a class="el" href="cl_8h.html#a372426dde27af039ba968901f0fd688">OpenPositionStream()</a>.</p>
@@ -65,6 +73,8 @@
 <div class="memdoc">
 
 <p>
+relevent for compressed streams 
+<p>
 
 <p>Referenced by <a class="el" href="cl_8h.html#a372426dde27af039ba968901f0fd688">OpenPositionStream()</a>, and <a class="el" href="cl_8h.html#e7e4237e5b60d779a70ed496e242cf01">ReadPositionStream()</a>.</p>
 
@@ -81,6 +91,8 @@
 </div>
 <div class="memdoc">
 
+<p>
+pointer to base of stream for uncompressed streams. 
 <p>
 
 <p>Referenced by <a class="el" href="cl_8h.html#a372426dde27af039ba968901f0fd688">OpenPositionStream()</a>, and <a class="el" href="cl_8h.html#e7e4237e5b60d779a70ed496e242cf01">ReadPositionStream()</a>.</p>
@@ -99,6 +111,8 @@
 <div class="memdoc">
 
 <p>
+for compressed streams, the stream is a BStream object rather than just a pointer. 
+<p>
 
 <p>Referenced by <a class="el" href="cl_8h.html#a372426dde27af039ba968901f0fd688">OpenPositionStream()</a>, and <a class="el" href="cl_8h.html#e7e4237e5b60d779a70ed496e242cf01">ReadPositionStream()</a>.</p>
 
@@ -115,6 +129,8 @@
 </div>
 <div class="memdoc">
 
+<p>
+The <a class="el" href="structitem.html">item</a> whose positions this PositionStream's will read. 
 <p>
 
 <p>Referenced by <a class="el" href="cl_8h.html#a372426dde27af039ba968901f0fd688">OpenPositionStream()</a>.</p>
@@ -133,6 +149,8 @@
 <div class="memdoc">
 
 <p>
+id frequency (ie frequency of the <a class="el" href="structitem.html">item</a> in question); maximum number of positions that can be read 
+<p>
 
 <p>Referenced by <a class="el" href="cl_8h.html#a372426dde27af039ba968901f0fd688">OpenPositionStream()</a>, and <a class="el" href="cl_8h.html#e7e4237e5b60d779a70ed496e242cf01">ReadPositionStream()</a>.</p>
 
@@ -149,6 +167,8 @@
 </div>
 <div class="memdoc">
 
+<p>
+Boolean: attribute REVCORP is compressed? 
 <p>
 
 <p>Referenced by <a class="el" href="cl_8h.html#a372426dde27af039ba968901f0fd688">OpenPositionStream()</a>, and <a class="el" href="cl_8h.html#e7e4237e5b60d779a70ed496e242cf01">ReadPositionStream()</a>.</p>
@@ -167,6 +187,8 @@
 <div class="memdoc">
 
 <p>
+relevent for compressed streams 
+<p>
 
 <p>Referenced by <a class="el" href="cl_8h.html#a372426dde27af039ba968901f0fd688">OpenPositionStream()</a>, and <a class="el" href="cl_8h.html#e7e4237e5b60d779a70ed496e242cf01">ReadPositionStream()</a>.</p>
 
@@ -184,6 +206,8 @@
 <div class="memdoc">
 
 <p>
+how many items delivered so far 
+<p>
 
 <p>Referenced by <a class="el" href="cl_8h.html#a372426dde27af039ba968901f0fd688">OpenPositionStream()</a>, and <a class="el" href="cl_8h.html#e7e4237e5b60d779a70ed496e242cf01">ReadPositionStream()</a>.</p>
 
@@ -192,7 +216,7 @@
 <hr>The documentation for this struct was generated from the following file:<ul>
 <li>cl/<a class="el" href="cdaccess_8c.html">cdaccess.c</a></ul>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Thu Sep 17 23:45:31 2009 for CWB by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Sat Sep 19 20:28:33 2009 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

@@ -24,12 +24,12 @@
 #include "../cl/attributes.h"
 #include "../cl/macros.h"
 
-
+/** String set to the name of this program. */
 char *progname;
 
-int print_nr = 0;     /* flag whether we should print line numbers */
-int print_freqs = 0;  /* print the frequencies of the words? */
-int print_len = 0;    /* print the word lenghts */
+int print_nr = 0;     /**< boolean: flag whether we should print line numbers */
+int print_freqs = 0;  /**< boolean: print the frequencies of the words? */
+int print_len = 0;    /**< boolean: print the word lenghts? */
 int sort = 0;
 int input_are_numbers = 0;
 int show_size_only = 0;
@@ -42,7 +42,8 @@ char *input_filename = NULL;
 /* ---------------------------------------------------------------------- */
 
 void
-print_info(Attribute *attr, int id, char *fallback_s) {
+print_info(Attribute *attr, int id, char *fallback_s)
+{
   char *lemma;
   int freq, slen;
 
@@ -69,9 +70,13 @@ print_info(Attribute *attr, int id, char *fallback_s) {
   printf("%s\n", lemma ? lemma : fallback_s);
 }
 
-
+/**
+ *
+ * This is the business end of the cwb-lexdecode program.
+ */
 void
-do_show(char *attr_name, char *rx, int rx_flags) {
+do_show(char *attr_name, char *rx, int rx_flags)
+{
   int i, k, len, size;
   int attr_size;
 
@@ -177,7 +182,13 @@ do_show(char *attr_name, char *rx, int rx_flags) {
   } /* ends: without -S option */
 }
 
-void usage() {
+
+/**
+ * Prints a message describing how to use the program to STDERR and then exits.
+ */
+void
+usage(void)
+{
   fprintf(stderr, "\n");
   fprintf(stderr, "Usage:  %s [options] <corpus>\n\n", progname);
   fprintf(stderr, "Prints the lexicon (or part of it) of a positional attribute on stdout,\n");
@@ -202,6 +213,17 @@ void usage() {
   exit(2);
 }
 
+
+/* *************** *\
+ *      MAIN()     *
+\* *************** */
+
+/**
+ * Main function for cwb-lexdecode.
+ *
+ * @param argc   Number of command-line arguments.
+ * @param argv   Command-line arguments.
+ */
 int
 main(int argc, char **argv) {
   char *registry_directory = NULL;
