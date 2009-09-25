@@ -20,22 +20,28 @@
 #include <unistd.h>
 
 #include "../cl/cl.h"
-#include "../cl/storage.h"	/* for NwriteInt() function */
-#include "../cl/attributes.h"	/* for component_full_name() function */
+#include "../cl/storage.h"           /* for NwriteInt() function */
+#include "../cl/attributes.h"        /* for component_full_name() function */
 
 /* global variables */
+
+/** Name of the program (from the shell) */
 char *progname = "";
 
-int compatibility = 0;		/* create .alg file for backward compatibility ? */
-char *registry_dir = NULL;	/* CL registry directory */
-int reverse = 0;		/* encode inverse alignment? */
-char *data_dir = NULL;		/* where to store encoded alignment attribute */
-int data_dir_from_corpus = 0;	/* determine data directory from registry entry? */
-int verbose = 0;		/* print some information about what files are created */
+int compatibility = 0;                /**< create .alg file for backward compatibility ? */
+char *registry_dir = NULL;            /**< CL registry directory */
+int reverse = 0;                      /**< encode inverse alignment? */
+char *data_dir = NULL;                /**< where to store encoded alignment attribute */
+int data_dir_from_corpus = 0;         /**< determine data directory from registry entry? */
+int verbose = 0;                      /**< print some information about what files are created */
 
-/* print_usage() */
+
+/**
+ * Prints a message describing how to use the program to STDERR and then exits.
+ */
 void
-print_usage(void) {
+print_usage(void)
+{
   fprintf(stderr, "\n");
   fprintf(stderr, "Usage: %s [options] <aligment file>\n\n", progname);
   fprintf(stderr, "\n");
@@ -56,11 +62,24 @@ print_usage(void) {
 /* note: must specify either -d or -D option */
 
 
-/* optindex = parse_args(argc, argv, required_arguments); */
+
+/**
+ * Parses the program's commandline arguments.
+ *
+ * Usage:
+ * optindex = parse_args(argc, argv, required_arguments);
+ *
+ * @param ac        The program's argc
+ * @param av        The program's argv
+ * @param min_args  Minimum number of arguments to be parsed.
+ * @return          The value of optind after parsing,
+ *                  ie the index of the first argument in argv[]
+ */
 int
-parse_args(int ac, char *av[], int min_args) {
-  extern int optind;		/* getopt() interface */
-  extern char *optarg;		/* getopt() interface */
+parse_args(int ac, char *av[], int min_args)
+{
+  extern int optind;                  /* getopt() interface */
+  extern char *optarg;                /* getopt() interface */
   int c;
 
   while ((c = getopt(ac, av, "hd:DCRr:v")) != EOF)
@@ -68,10 +87,10 @@ parse_args(int ac, char *av[], int min_args) {
       /* -d: data directory */
     case 'd':
       if (data_dir == NULL)
-	data_dir = optarg;
+        data_dir = optarg;
       else {
-	fprintf(stderr, "%s: -d option used twice\n", progname);
-	exit(2);
+        fprintf(stderr, "%s: -d option used twice\n", progname);
+        exit(2);
       }
       break;
       /* -D: use data directory of source corpus */
@@ -89,10 +108,10 @@ parse_args(int ac, char *av[], int min_args) {
       /* -r: registry directory */
     case 'r':
       if (registry_dir == NULL)
-	registry_dir = optarg;
+        registry_dir = optarg;
       else {
-	fprintf(stderr, "%s: -r option used twice\n", progname);
-	exit(2);
+        fprintf(stderr, "%s: -r option used twice\n", progname);
+        exit(2);
       }
       break;
       /* -v: verbose */
@@ -108,7 +127,7 @@ parse_args(int ac, char *av[], int min_args) {
     }
 
   if (ac - optind != min_args)
-     print_usage();		/* no optional arguments in this case */
+     print_usage();                /* no optional arguments in this case */
 
   if ((data_dir == NULL) && (! data_dir_from_corpus)) {
     fprintf(stderr, "%s: either -d or -D must be specified\n", progname);
@@ -122,7 +141,7 @@ parse_args(int ac, char *av[], int min_args) {
     exit(1);
   }
 
-  return(optind);		/* return index of first argument in argv[] */
+  return(optind);                /* return index of first argument in argv[] */
 }
 
 
@@ -139,27 +158,28 @@ parse_args(int ac, char *av[], int min_args) {
  * @param argv   Command-line arguments.
  */
 int
-main(int argc, char *argv[]) {
-  int argindex;			/* index of first argument in argv[] */
+main(int argc, char *argv[])
+{
+  int argindex;                         /* index of first argument in argv[] */
 
-  char *align_name = NULL;	/* name of the .align file */
-  FILE *af = NULL;		/* alignment file handle */
-  int af_is_pipe;		/* need to know whether to call fclose() or pclose() */
-  char alx_name[4096], alg_name[4096]; /* full pathnames of .alx and optional .alg file */
-  FILE *alx=NULL, *alg=NULL;	/* file handles for .alx and optional .alg file */
+  char *align_name = NULL;              /* name of the .align file */
+  FILE *af = NULL;                      /* alignment file handle */
+  int af_is_pipe;                       /* need to know whether to call fclose() or pclose() */
+  char alx_name[4096], alg_name[4096];  /* full pathnames of .alx and optional .alg file */
+  FILE *alx=NULL, *alg=NULL;            /* file handles for .alx and optional .alg file */
 
-  char line[4096];		/* one line of input from <infile> */
+  char line[4096];                      /* one line of input from <infile> */
 
   char corpus1_name[1024], corpus2_name[1024], s1_name[1024], s2_name[1024];
-  Corpus *corpus1, *corpus2;	/* corpus handles */
-  Attribute *w1, *w2;		/* attribute handles for 'word' attributes; used to determine corpus size */
-  int size1, size2;		/* size of source & target corpus */
+  Corpus *corpus1, *corpus2;            /* corpus handles */
+  Attribute *w1, *w2;                   /* attribute handles for 'word' attributes; used to determine corpus size */
+  int size1, size2;                     /* size of source & target corpus */
 
-  Corpus *source_corpus;	/* encode alignment in this corpus (depends on -R flag, important for -D option) */
-  char *source_corpus_name;	/* just for error messages */
-  char *attribute_name;		/* name of alignment attribute (depends on -R flag, must be lowercase) */
+  Corpus *source_corpus;                /* encode alignment in this corpus (depends on -R flag, important for -D option) */
+  char *source_corpus_name;             /* just for error messages */
+  char *attribute_name;                 /* name of alignment attribute (depends on -R flag, must be lowercase) */
 
-  int f1,l1,f2,l2;		/* alignment regions */
+  int f1,l1,f2,l2;                      /* alignment regions */
   int current1, current2;
   int mark, n_0_1, n_1_0;
 
@@ -252,7 +272,7 @@ main(int argc, char *argv[]) {
 
     if (alignment == NULL) {
       fprintf(stderr, "%s: alignment attribute %s.%s not declared in registry file\n",
-	      progname, source_corpus_name, attribute_name);
+              progname, source_corpus_name, attribute_name);
       exit(1);
     }
     comp_pathname = component_full_name(alignment, CompXAlignData, NULL);
@@ -264,8 +284,8 @@ main(int argc, char *argv[]) {
     if (compatibility) {
       comp_pathname = component_full_name(alignment, CompAlignData, NULL);
       if (comp_pathname == NULL) {
-	fprintf(stderr, "%s: can't determine pathname for .alg file (internal error)\n", progname);
-	exit(1);
+        fprintf(stderr, "%s: can't determine pathname for .alg file (internal error)\n", progname);
+        exit(1);
       }
       strcpy(alg_name, comp_pathname);
     }
@@ -300,12 +320,12 @@ main(int argc, char *argv[]) {
 
   /* main encoding loop */
   f1 = f2 = l1 = l2 = 0;
-  mark = -1;			/* check that regions occur in ascending order */
-  current1 = current2 = -1;	/* for compatibility mode */
-  n_0_1 = n_1_0 = 0;		/* number of 0:1 and 1:0 alignments, which are skipped */
+  mark = -1;                        /* check that regions occur in ascending order */
+  current1 = current2 = -1;         /* for compatibility mode */
+  n_0_1 = n_1_0 = 0;                /* number of 0:1 and 1:0 alignments, which are skipped */
   while (! feof(af)) {
     if (NULL == fgets(line, 4096, af))
-      break;			/* end of file (or read error, which we choose to ignore) */
+      break;                        /* end of file (or read error, which we choose to ignore) */
     if (4 != sscanf(line, "%d %d %d %d", &f1, &l1, &f2, &l2)) {
       fprintf(stderr, "%s: input format error: %s", progname, line);
       exit(1);
@@ -342,14 +362,14 @@ main(int argc, char *argv[]) {
       /* source and target regions of .alg file must be contiguous; store start points only; */
       /* hence we must collapse crossing alignments into one larger region (I know that's bullshit) */
       if ((f1 > current1) && (f2 > current2)) {
-	if (reverse) {
-	  NwriteInt(f2, alg); NwriteInt(f1, alg);
-	}
-	else {
-	  NwriteInt(f1, alg); NwriteInt(f2, alg);
-	}
-	current1 = f1;
-	current2 = f2;
+        if (reverse) {
+          NwriteInt(f2, alg); NwriteInt(f1, alg);
+        }
+        else {
+          NwriteInt(f1, alg); NwriteInt(f2, alg);
+        }
+        current1 = f1;
+        current2 = f2;
       }
     }
   }

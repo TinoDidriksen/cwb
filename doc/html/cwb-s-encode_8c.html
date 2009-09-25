@@ -74,7 +74,7 @@
 <li>void <a class="el" href="cwb-s-encode_8c.html#b2929450457ff7b240510be66a7ffdbd">open_range</a> (void)
 <li>void <a class="el" href="cwb-s-encode_8c.html#8c17bfc44258ded87aef006065d81803">close_range</a> (void)
 <li>void <a class="el" href="cwb-s-encode_8c.html#0318e97f40679e849d9259e5edb4dfce">parse_options</a> (int argc, char **argv)
-<li>void <a class="el" href="cwb-s-encode_8c.html#c5af382b8e183eeafb5671e7f33619bd">write_region_to_disk</a> (int start, int end, char *annot)
+<dl class="el"><dd class="mdescRight">Parses program options and sets global variables.  <a href="#0318e97f40679e849d9259e5edb4dfce"></a><br></dl><li>void <a class="el" href="cwb-s-encode_8c.html#c5af382b8e183eeafb5671e7f33619bd">write_region_to_disk</a> (int start, int end, char *annot)
 <li>int <a class="el" href="cwb-s-encode_8c.html#3c04138a5bfe5d72780bb7e82a18e627">main</a> (int argc, char **argv)
 <dl class="el"><dd class="mdescRight">Main function for cwb-s-encode.  <a href="#3c04138a5bfe5d72780bb7e82a18e627"></a><br></dl></ul>
 <h2>Variables</h2>
@@ -422,6 +422,14 @@ Main function for cwb-s-encode.
 <div class="memdoc">
 
 <p>
+Parses program options and sets global variables. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>argc</em>&nbsp;</td><td>argc - passed from <a class="el" href="cqpserver_8c.html#0ddf1224851353fc92bfbff6f499fa97">main()</a> </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>argv</em>&nbsp;</td><td>argv - passed from <a class="el" href="cqpserver_8c.html#0ddf1224851353fc92bfbff6f499fa97">main()</a> </td></tr>
+  </table>
+</dl>
 
 <p>References <a class="el" href="cwb-s-encode_8c.html#ea6cb9df1a9a5552a38bdd163a15f84e">add_to_existing</a>, <a class="el" href="cl_8h.html#2686895a6ca77424686c19bb2fb718bf">cl_new_corpus</a>, <a class="el" href="cwb-compress-rdx_8c.html#c3e1795766a80ec63b157951b4b9a7d4">debug</a>, <a class="el" href="cwb-encode_8c.html#24c98c7fc24344b98cf63c129d68d066">declare_range()</a>, <a class="el" href="cwb-encode_8c.html#8eadc6730ef4fbdae87a20414b789faf">directory</a>, <a class="el" href="cwb-s-encode_8c.html#1d6a5242139200aaa955588acf9a6010">in_memory</a>, <a class="el" href="struct_range.html#5ac083a645d964373f022d03df4849c8">Range::name</a>, <a class="el" href="options_8h.html#b6be6986e1a07fc76b7a5a77aa7cc43b">registry</a>, <a class="el" href="cwb-s-encode_8c.html#94798fdadfbf49a7c658ace669a1d3104999345dfb96ac99ae28a836305b1bf9">set_any</a>, <a class="el" href="cwb-s-encode_8c.html#98c765d283883dcb529f6059f3bded4b">set_att</a>, <a class="el" href="cwb-s-encode_8c.html#9cdf89a4e98f37e877bff8ead279aa1d">set_syntax_strict</a>, <a class="el" href="options_8h.html#582e2ef9670c974c00e00ad10af0e629">silent</a>, <a class="el" href="cwb-s-encode_8c.html#23a915acdf42841433fd21dbdd48989d">strip_blanks_in_values</a>, <a class="el" href="cwb-s-encode_8c.html#6bbbb0963299134a3c610fe69d0f74c9">text_fd</a>, and <a class="el" href="cwb-compress-rdx_8c.html#c896e7e59472ff8e2d14ac44f0e23634">usage()</a>.</p>
 
@@ -901,7 +909,7 @@ Main function for cwb-s-encode.
 </div>
 </div><p>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Sat Sep 19 20:28:33 2009 for CWB by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Fri Sep 25 21:50:32 2009 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

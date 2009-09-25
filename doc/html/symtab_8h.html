@@ -27,22 +27,22 @@
 <h1>symtab.h File Reference</h1><h2>Data Structures</h2>
 <ul>
 <li>struct <a class="el" href="struct__label__entry.html">_label_entry</a>
-<li>struct <a class="el" href="struct__symbol__table.html">_symbol_table</a>
-<li>struct <a class="el" href="struct___ref_tab.html">_RefTab</a>
-</ul>
+<dl class="el"><dd class="mdescRight">LabelEntry: the <a class="el" href="structsymbol.html">symbol</a> tables are made up of two linked lists of.  <a href="struct__label__entry.html#_details">More...</a><br></dl><li>struct <a class="el" href="struct__symbol__table.html">_symbol_table</a>
+<dl class="el"><dd class="mdescRight">The SymbolTable object.  <a href="struct__symbol__table.html#_details">More...</a><br></dl><li>struct <a class="el" href="struct___ref_tab.html">_RefTab</a>
+<dl class="el"><dd class="mdescRight">The REfTab object (represents a reference table).  <a href="struct___ref_tab.html#_details">More...</a><br></dl></ul>
 <h2>Defines</h2>
 <ul>
 <li>#define <a class="el" href="symtab_8h.html#2d56f7ced81c60d6486eb1e9716500f7">LAB_DEFINED</a>&nbsp;&nbsp;&nbsp;1
-<li>#define <a class="el" href="symtab_8h.html#b2866faf1a8020f22d4d2fb7677459dd">LAB_USED</a>&nbsp;&nbsp;&nbsp;2
-<li>#define <a class="el" href="symtab_8h.html#60a89751fe754c94dd58042f02dfc984">LAB_SPECIAL</a>&nbsp;&nbsp;&nbsp;4
-<li>#define <a class="el" href="symtab_8h.html#6312218a29837109d7bb90732a7a8c9b">LAB_RDAT</a>&nbsp;&nbsp;&nbsp;8
-</ul>
+<dl class="el"><dd class="mdescRight">whether label has been defined or is defined by this call  <a href="#2d56f7ced81c60d6486eb1e9716500f7"></a><br></dl><li>#define <a class="el" href="symtab_8h.html#b2866faf1a8020f22d4d2fb7677459dd">LAB_USED</a>&nbsp;&nbsp;&nbsp;2
+<dl class="el"><dd class="mdescRight">whether label has been used (i.e.  <a href="#b2866faf1a8020f22d4d2fb7677459dd"></a><br></dl><li>#define <a class="el" href="symtab_8h.html#60a89751fe754c94dd58042f02dfc984">LAB_SPECIAL</a>&nbsp;&nbsp;&nbsp;4
+<dl class="el"><dd class="mdescRight">special labels must not be set/modified by user; defined/used consistency isn't checked for special labels  <a href="#60a89751fe754c94dd58042f02dfc984"></a><br></dl><li>#define <a class="el" href="symtab_8h.html#6312218a29837109d7bb90732a7a8c9b">LAB_RDAT</a>&nbsp;&nbsp;&nbsp;8
+<dl class="el"><dd class="mdescRight">name space #2 used for s-attribute region boundaries by query engine  <a href="#6312218a29837109d7bb90732a7a8c9b"></a><br></dl></ul>
 <h2>Typedefs</h2>
 <ul>
 <li>typedef struct <a class="el" href="struct__label__entry.html">_label_entry</a> * <a class="el" href="symtab_8h.html#95de6b9dd1e2e79a37b1f8d0afd43cc0">LabelEntry</a>
-<li>typedef struct <a class="el" href="struct__symbol__table.html">_symbol_table</a> * <a class="el" href="symtab_8h.html#50610abb6e169ccc726f016e3b65de25">SymbolTable</a>
-<li>typedef struct <a class="el" href="struct___ref_tab.html">_RefTab</a> * <a class="el" href="symtab_8h.html#cfee968f4884e3c77498faaf223dc011">RefTab</a>
-</ul>
+<dl class="el"><dd class="mdescRight">LabelEntry: the <a class="el" href="structsymbol.html">symbol</a> tables are made up of two linked lists of.  <a href="#95de6b9dd1e2e79a37b1f8d0afd43cc0"></a><br></dl><li>typedef struct <a class="el" href="struct__symbol__table.html">_symbol_table</a> * <a class="el" href="symtab_8h.html#50610abb6e169ccc726f016e3b65de25">SymbolTable</a>
+<dl class="el"><dd class="mdescRight">The SymbolTable object.  <a href="#50610abb6e169ccc726f016e3b65de25"></a><br></dl><li>typedef struct <a class="el" href="struct___ref_tab.html">_RefTab</a> * <a class="el" href="symtab_8h.html#cfee968f4884e3c77498faaf223dc011">RefTab</a>
+<dl class="el"><dd class="mdescRight">The REfTab object (represents a reference table).  <a href="#cfee968f4884e3c77498faaf223dc011"></a><br></dl></ul>
 <h2>Functions</h2>
 <ul>
 <li><a class="el" href="struct__symbol__table.html">SymbolTable</a> <a class="el" href="symtab_8h.html#94e8385f5fd60d94b2081b0fdb24cce0">new_symbol_table</a> ()
@@ -61,7 +61,7 @@
 <li>void <a class="el" href="symtab_8h.html#90a9d5b7a04a2f7fba3864df76d49760">set_reftab</a> (<a class="el" href="struct___ref_tab.html">RefTab</a> rt, int index, int value)
 <li>int <a class="el" href="symtab_8h.html#626f8764b931a695b6f1b93c029c5026">get_reftab</a> (<a class="el" href="struct___ref_tab.html">RefTab</a> rt, int index, int cpos)
 <li>void <a class="el" href="symtab_8h.html#58fb972b7977dfdbcb513bf607e5bbcd">print_label_values</a> (<a class="el" href="struct__symbol__table.html">SymbolTable</a> st, <a class="el" href="struct___ref_tab.html">RefTab</a> rt, int cpos)
-</ul>
+<dl class="el"><dd class="mdescRight">Prints the current label values (for debugging).  <a href="#58fb972b7977dfdbcb513bf607e5bbcd"></a><br></dl></ul>
 <hr><h2>Define Documentation</h2>
 <a class="anchor" name="2d56f7ced81c60d6486eb1e9716500f7"></a><!-- doxytag: member="symtab.h::LAB_DEFINED" ref="2d56f7ced81c60d6486eb1e9716500f7" args="" -->
 <div class="memitem">
@@ -74,6 +74,8 @@
 </div>
 <div class="memdoc">
 
+<p>
+whether label has been defined or is defined by this call 
 <p>
 
 <p>Referenced by <a class="el" href="symtab_8h.html#8e90293705f1068b3cb9685cf83e594f">check_labels()</a>, <a class="el" href="parse__actions_8h.html#d4b42dd005a14bd1014115d669f993ac">do_NamedWfPattern()</a>, <a class="el" href="parse__actions_8h.html#4335ddbb14865c031041a194e182ed92">do_XMLTag()</a>, and <a class="el" href="eval_8c.html#db7ad0a24759f5f36340f8b66bb70d79">simulate()</a>.</p>
@@ -92,6 +94,8 @@
 <div class="memdoc">
 
 <p>
+name space #2 used for s-attribute region boundaries by query engine 
+<p>
 
 <p>Referenced by <a class="el" href="parse__actions_8h.html#4335ddbb14865c031041a194e182ed92">do_XMLTag()</a>, <a class="el" href="symtab_8h.html#5f268916937d60f062425639f44297aa">findlabel()</a>, <a class="el" href="symtab_8h.html#c0093e82d521c18e97808dece3977a8e">labellookup()</a>, <a class="el" href="eval_8c.html#db7ad0a24759f5f36340f8b66bb70d79">simulate()</a>, and <a class="el" href="symtab_8h.html#bc24cdf73c38ef9e57dc0c10550ecbd3">symbol_table_new_iterator()</a>.</p>
 
@@ -108,6 +112,8 @@
 </div>
 <div class="memdoc">
 
+<p>
+special labels must not be set/modified by user; defined/used consistency isn't checked for special labels 
 <p>
 
 <p>Referenced by <a class="el" href="symtab_8h.html#8e90293705f1068b3cb9685cf83e594f">check_labels()</a>, <a class="el" href="parse__actions_8h.html#53aef5872fed91559eba1f0082c41bf1">do_IDReference()</a>, <a class="el" href="parse__actions_8h.html#d25148f9894719c8dda9055e13abfa91">do_LabelReference()</a>, <a class="el" href="parse__actions_8h.html#d4b42dd005a14bd1014115d669f993ac">do_NamedWfPattern()</a>, and <a class="el" href="symtab_8h.html#c0093e82d521c18e97808dece3977a8e">labellookup()</a>.</p>
@@ -126,7 +132,9 @@
 <div class="memdoc">
 
 <p>
-
+whether label has been used (i.e. 
+<p>
+read out) or is used by this call 
 <p>Referenced by <a class="el" href="symtab_8h.html#8e90293705f1068b3cb9685cf83e594f">check_labels()</a>, <a class="el" href="parse__actions_8h.html#53aef5872fed91559eba1f0082c41bf1">do_IDReference()</a>, <a class="el" href="parse__actions_8h.html#d25148f9894719c8dda9055e13abfa91">do_LabelReference()</a>, <a class="el" href="parse__actions_8h.html#d4b42dd005a14bd1014115d669f993ac">do_NamedWfPattern()</a>, <a class="el" href="parse__actions_8h.html#4335ddbb14865c031041a194e182ed92">do_XMLTag()</a>, and <a class="el" href="eval_8c.html#db7ad0a24759f5f36340f8b66bb70d79">simulate()</a>.</p>
 
 </div>
@@ -144,6 +152,9 @@
 <div class="memdoc">
 
 <p>
+LabelEntry: the <a class="el" href="structsymbol.html">symbol</a> tables are made up of two linked lists of. 
+<p>
+<dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="symtab_8h.html#50610abb6e169ccc726f016e3b65de25" title="The SymbolTable object.">SymbolTable</a>. </dd></dl>
 
 </div>
 </div><p>
@@ -158,6 +169,8 @@
 </div>
 <div class="memdoc">
 
+<p>
+The REfTab object (represents a reference table). 
 <p>
 
 </div>
@@ -174,7 +187,10 @@
 <div class="memdoc">
 
 <p>
-
+The SymbolTable object. 
+<p>
+cqp-2.2 uses a global <a class="el" href="structsymbol.html">symbol</a> table to store label references which gives erroneous results for queries that contain optional elements. A proper treatment of labels requires each of the simulations traversing the NFA in parallel to have its own <a class="el" href="structsymbol.html">symbol</a> table. Since the actual symbols are the same for all states, it is more efficient to split the <a class="el" href="structsymbol.html">symbol</a> tables into <a class="el" href="structsymbol.html">symbol</a> lookup and the actual data. Each simulation has its own data array (which stores corpus positions), but <a class="el" href="structsymbol.html">symbol</a> lookup is shared between all simulations and returns an _index_ into the data array. If a simulation branches -- which happens at the left edge of alternatives or optional elements -- the <a class="el" href="structsymbol.html">symbol</a> data array must be duplicated.<p>
+A <a class="el" href="structsymbol.html">symbol</a> table now contains multiple namespaces (accessed by flags such as LAB_RDAT 
 </div>
 </div><p>
 <hr><h2>Function Documentation</h2>
@@ -514,6 +530,15 @@
 <div class="memdoc">
 
 <p>
+Prints the current label values (for debugging). 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>st</em>&nbsp;</td><td>The SymbolTable </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>rt</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>cpos</em>&nbsp;</td><td>The corpus position </td></tr>
+  </table>
+</dl>
 
 <p>References <a class="el" href="symtab_8c.html#626f8764b931a695b6f1b93c029c5026">get_reftab()</a>, <a class="el" href="struct__label__entry.html#5ac083a645d964373f022d03df4849c8">_label_entry::name</a>, <a class="el" href="struct__label__entry.html#16e4ff82fdfe36114b736247599d8843">_label_entry::next</a>, <a class="el" href="struct__symbol__table.html#720939920b71c9d9f9410359151d8224">_symbol_table::next_index</a>, <a class="el" href="struct__symbol__table.html#5ae84d59f2d58c07e93dd8922feaa3d0">_symbol_table::rdat</a>, <a class="el" href="struct__label__entry.html#db528a1cb1ca190150183394d082590d">_label_entry::ref</a>, <a class="el" href="struct___ref_tab.html#439227feff9d7f55384e8780cfc2eb82">_RefTab::size</a>, and <a class="el" href="struct__symbol__table.html#d60ce16127d1cd3690f7c825c3ac02a2">_symbol_table::user</a>.</p>
 
@@ -675,7 +700,7 @@
 </div>
 </div><p>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Sat Sep 19 20:28:33 2009 for CWB by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Fri Sep 25 21:50:32 2009 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

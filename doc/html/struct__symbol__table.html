@@ -23,15 +23,22 @@
   </div>
 </div>
 <div class="contents">
-<h1>_symbol_table Struct Reference</h1><!-- doxytag: class="_symbol_table" --><code>#include &lt;symtab.h&gt;</code>
+<h1>_symbol_table Struct Reference</h1><!-- doxytag: class="_symbol_table" -->The SymbolTable object.  
+<a href="#_details">More...</a>
+<p>
+<code>#include &lt;symtab.h&gt;</code>
 <p>
 <h2>Data Fields</h2>
 <ul>
 <li><a class="el" href="struct__label__entry.html">LabelEntry</a> <a class="el" href="struct__symbol__table.html#d60ce16127d1cd3690f7c825c3ac02a2">user</a>
-<li><a class="el" href="struct__label__entry.html">LabelEntry</a> <a class="el" href="struct__symbol__table.html#5ae84d59f2d58c07e93dd8922feaa3d0">rdat</a>
-<li>int <a class="el" href="struct__symbol__table.html#720939920b71c9d9f9410359151d8224">next_index</a>
-</ul>
-<hr><h2>Field Documentation</h2>
+<dl class="el"><dd class="mdescRight">user namespace  <a href="#d60ce16127d1cd3690f7c825c3ac02a2"></a><br></dl><li><a class="el" href="struct__label__entry.html">LabelEntry</a> <a class="el" href="struct__symbol__table.html#5ae84d59f2d58c07e93dd8922feaa3d0">rdat</a>
+<dl class="el"><dd class="mdescRight">namespace for LAB_RDAT labels  <a href="#5ae84d59f2d58c07e93dd8922feaa3d0"></a><br></dl><li>int <a class="el" href="struct__symbol__table.html#720939920b71c9d9f9410359151d8224">next_index</a>
+<dl class="el"><dd class="mdescRight">next free reference table index  <a href="#720939920b71c9d9f9410359151d8224"></a><br></dl></ul>
+<hr><a name="_details"></a><h2>Detailed Description</h2>
+The SymbolTable object. 
+<p>
+cqp-2.2 uses a global <a class="el" href="structsymbol.html">symbol</a> table to store label references which gives erroneous results for queries that contain optional elements. A proper treatment of labels requires each of the simulations traversing the NFA in parallel to have its own <a class="el" href="structsymbol.html">symbol</a> table. Since the actual symbols are the same for all states, it is more efficient to split the <a class="el" href="structsymbol.html">symbol</a> tables into <a class="el" href="structsymbol.html">symbol</a> lookup and the actual data. Each simulation has its own data array (which stores corpus positions), but <a class="el" href="structsymbol.html">symbol</a> lookup is shared between all simulations and returns an _index_ into the data array. If a simulation branches -- which happens at the left edge of alternatives or optional elements -- the <a class="el" href="structsymbol.html">symbol</a> data array must be duplicated.<p>
+A <a class="el" href="structsymbol.html">symbol</a> table now contains multiple namespaces (accessed by flags such as LAB_RDAT <hr><h2>Field Documentation</h2>
 <a class="anchor" name="720939920b71c9d9f9410359151d8224"></a><!-- doxytag: member="_symbol_table::next_index" ref="720939920b71c9d9f9410359151d8224" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -43,6 +50,8 @@
 </div>
 <div class="memdoc">
 
+<p>
+next free reference table index 
 <p>
 
 <p>Referenced by <a class="el" href="symtab_8h.html#c0093e82d521c18e97808dece3977a8e">labellookup()</a>, <a class="el" href="symtab_8h.html#6ae8b59e9ea13b28c1a979173668228c">new_reftab()</a>, <a class="el" href="symtab_8h.html#94e8385f5fd60d94b2081b0fdb24cce0">new_symbol_table()</a>, and <a class="el" href="symtab_8h.html#58fb972b7977dfdbcb513bf607e5bbcd">print_label_values()</a>.</p>
@@ -61,6 +70,8 @@
 <div class="memdoc">
 
 <p>
+namespace for LAB_RDAT labels 
+<p>
 
 <p>Referenced by <a class="el" href="symtab_8h.html#88f028926f1ee3949b53176f8fb52503">delete_symbol_table()</a>, <a class="el" href="symtab_8h.html#5f268916937d60f062425639f44297aa">findlabel()</a>, <a class="el" href="symtab_8h.html#c0093e82d521c18e97808dece3977a8e">labellookup()</a>, <a class="el" href="symtab_8h.html#94e8385f5fd60d94b2081b0fdb24cce0">new_symbol_table()</a>, <a class="el" href="symtab_8h.html#58fb972b7977dfdbcb513bf607e5bbcd">print_label_values()</a>, <a class="el" href="symtab_8h.html#efe6c8a249a4c4a5632c2c5981026931">print_symbol_table()</a>, and <a class="el" href="symtab_8h.html#bc24cdf73c38ef9e57dc0c10550ecbd3">symbol_table_new_iterator()</a>.</p>
 
@@ -78,6 +89,8 @@
 <div class="memdoc">
 
 <p>
+user namespace 
+<p>
 
 <p>Referenced by <a class="el" href="symtab_8h.html#8e90293705f1068b3cb9685cf83e594f">check_labels()</a>, <a class="el" href="symtab_8h.html#88f028926f1ee3949b53176f8fb52503">delete_symbol_table()</a>, <a class="el" href="symtab_8h.html#5f268916937d60f062425639f44297aa">findlabel()</a>, <a class="el" href="symtab_8h.html#c0093e82d521c18e97808dece3977a8e">labellookup()</a>, <a class="el" href="symtab_8h.html#94e8385f5fd60d94b2081b0fdb24cce0">new_symbol_table()</a>, <a class="el" href="symtab_8h.html#58fb972b7977dfdbcb513bf607e5bbcd">print_label_values()</a>, <a class="el" href="symtab_8h.html#efe6c8a249a4c4a5632c2c5981026931">print_symbol_table()</a>, and <a class="el" href="symtab_8h.html#bc24cdf73c38ef9e57dc0c10550ecbd3">symbol_table_new_iterator()</a>.</p>
 
@@ -86,7 +99,7 @@
 <hr>The documentation for this struct was generated from the following file:<ul>
 <li>cqp/<a class="el" href="symtab_8h.html">symtab.h</a></ul>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Sat Sep 19 20:28:33 2009 for CWB by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Fri Sep 25 21:50:33 2009 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

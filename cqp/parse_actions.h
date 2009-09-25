@@ -31,11 +31,11 @@
 #include "ranges.h"
 
 /* constants used in the grammar */
-#define OP_EQUAL    0		/* = */
-#define OP_NOT      1		/* != or 'not' */
-#define OP_NOT_MASK 0xfe	/* mask used to reset OP_NOT bit */
-#define OP_CONTAINS 2		/* contains */
-#define OP_MATCHES  4		/* matches */
+#define OP_EQUAL    0                /**< grammar constant: = */
+#define OP_NOT      1                /**< grammar constant: != or 'not' */
+#define OP_NOT_MASK 0xfe             /**< grammar constant: mask used to reset OP_NOT bit */
+#define OP_CONTAINS 2                /**< grammar constant: contains */
+#define OP_MATCHES  4                /**< grammar constant: matches */
 
 
 extern int generate_code;
@@ -61,16 +61,13 @@ extern int sslen;
 
 /* ======================================== PARSER ACTIONS */
 
-void
-addHistoryLine(void);
+void addHistoryLine(void);
 
-void 
-resetQueryBuffer(void);
+void resetQueryBuffer(void);
 
 void prepare_parse();
 
-CorpusList *
-in_CorpusCommand(char *id, CorpusList *cl);
+CorpusList *in_CorpusCommand(char *id, CorpusList *cl);
 
 void after_CorpusCommand(CorpusList *cl);
 
@@ -103,14 +100,14 @@ CorpusList *do_subset(FieldType field, Constrainttree boolt);
 void do_set_target(CorpusList *cl, FieldType goal, FieldType source);
 
 void do_set_complex_target(CorpusList *cl,
-			   FieldType goal,
-			   SearchStrategy search_strategy,
-			   Constrainttree boolt, 
-			   enum ctxtdir direction, 
-			   int number, 
-			   char *id, 
-			   FieldType field, 
-			   int inclusive);
+                           FieldType goal,
+                           SearchStrategy search_strategy,
+                           Constrainttree boolt,
+                           enum ctxtdir direction,
+                           int number,
+                           char *id,
+                           FieldType field,
+                           int inclusive);
 
 void do_sleep(int duration);
 
@@ -125,21 +122,20 @@ void do_cut(CorpusList *cl, int first, int last);
 void do_info(CorpusList *cl);
 
 void do_group(CorpusList *cl,
-	      FieldType target, int target_offset, char *t_att,
-	      FieldType source, int source_offset, char *s_att,
-	      int cut, int expand, struct Redir *redir);
+              FieldType target, int target_offset, char *t_att,
+              FieldType source, int source_offset, char *s_att,
+              int cut, int expand, struct Redir *redir);
 
 void do_group2(CorpusList *cl,
-	       FieldType target, int target_offset, char *t_att,
-	       int cut, int expand, struct Redir *r);
+               FieldType target, int target_offset, char *t_att,
+               int cut, int expand, struct Redir *r);
 
-CorpusList *
-do_StandardQuery(int cut_value, int keep_flag);
+CorpusList *do_StandardQuery(int cut_value, int keep_flag);
 
 CorpusList *do_MUQuery(Evaltree evalt, int keep_flag, int cut_value);
 
 void do_SearchPattern(Evaltree expr,
-		      Constrainttree constraint);
+                      Constrainttree constraint);
 
 /* ======================================== Regular Expressions */
 
@@ -157,111 +153,86 @@ do_XMLTag(char *s_name, int is_closing, int op, char *regex, int flags);
 
 int 
 do_NamedWfPattern(int is_target,
-		  char *label,
-		  int pat_idx);
+                  char *label,
+                  int pat_idx);
 
-int 
-do_WordformPattern(Constrainttree boolt, int lookahead);
+int do_WordformPattern(Constrainttree boolt, int lookahead);
 
-Constrainttree
-do_StringConstraint(char *s, int flags);
+Constrainttree do_StringConstraint(char *s, int flags);
 
-Constrainttree
-do_VariableReference(char *s);
+Constrainttree do_VariableReference(char *s);
 
-Constrainttree
-do_SimpleVariableReference(char *varName);
+Constrainttree do_SimpleVariableReference(char *varName);
 
 void prepare_AlignmentConstraints(char *id);
 
 /* ======================================== BOOLEAN OPS */
 
-Constrainttree
-bool_or(Constrainttree left, Constrainttree right);
+Constrainttree bool_or(Constrainttree left, Constrainttree right);
 
-Constrainttree
-bool_implies(Constrainttree left, Constrainttree right);
+Constrainttree bool_implies(Constrainttree left, Constrainttree right);
 
-Constrainttree
-bool_and(Constrainttree left, Constrainttree right);
+Constrainttree bool_and(Constrainttree left, Constrainttree right);
 
-Constrainttree
-bool_not(Constrainttree left);
+Constrainttree bool_not(Constrainttree left);
 
 Constrainttree
 do_RelExpr(Constrainttree left, 
-	   enum b_ops op, 
-	   Constrainttree right);
+           enum b_ops op,
+           Constrainttree right);
 
-Constrainttree
-do_RelExExpr(Constrainttree left);
+Constrainttree do_RelExExpr(Constrainttree left);
 
-Constrainttree
-do_LabelReference(char *label_name, int auto_delete);
+Constrainttree do_LabelReference(char *label_name, int auto_delete);
 
-Constrainttree
-do_IDReference(char *id_name, int auto_delete);
+Constrainttree do_IDReference(char *id_name, int auto_delete);
 
-Constrainttree
-do_flagged_re_variable(char *varname, int flags);
+Constrainttree do_flagged_re_variable(char *varname, int flags);
 
-Constrainttree
-do_flagged_string(char *s, int flags);
+Constrainttree do_flagged_string(char *s, int flags);
 
-Constrainttree
-do_mval_string(char *s, int op, int flags);
+Constrainttree do_mval_string(char *s, int op, int flags);
 
-Constrainttree
-FunctionCall(char *f_name, ActualParamList *apl);
+Constrainttree FunctionCall(char *f_name, ActualParamList *apl);
 
-void
-do_Description(Context *context, int nr, char *name);
+void do_Description(Context *context, int nr, char *name);
 
 Evaltree 
 do_MeetStatement(Evaltree left, 
-		 Evaltree right, 
-		 Context *context);
+                 Evaltree right,
+                 Context *context);
 
 Evaltree 
 do_UnionStatement(Evaltree left, 
-		  Evaltree right);
+                  Evaltree right);
 
 
-void
-do_StructuralContext(Context *context, char *name);
+void do_StructuralContext(Context *context, char *name);
 
 
-CorpusList *
-do_TABQuery(Evaltree patterns);
+CorpusList *do_TABQuery(Evaltree patterns);
 
 
-Evaltree
-make_first_tabular_pattern(int pattern_index, Evaltree next);
+Evaltree make_first_tabular_pattern(int pattern_index, Evaltree next);
 
 Evaltree
 add_tabular_pattern(Evaltree patterns, 
-		    Context *context, 
-		    int pattern_index);
+                    Context *context,
+                    int pattern_index);
 
-void
-do_OptDistance(Context *context, int l_bound, int u_bound);
+void do_OptDistance(Context *context, int l_bound, int u_bound);
 
 /* ======================================== Variable Settings */
 
-void
-do_PrintAllVariables();
+void do_PrintAllVariables();
 
-void
-do_PrintVariableValue(char *varName);
+void do_PrintVariableValue(char *varName);
 
-void
-do_printVariableSize(char *varName);
+void do_printVariableSize(char *varName);
 
-void
-do_SetVariableValue(char *varName, char operator, char *varValues);
+void do_SetVariableValue(char *varName, char operator, char *varValues);
 
-void
-do_AddSubVariables(char *var1Name, int add, char *var2Name);
+void do_AddSubVariables(char *var1Name, int add, char *var2Name);
 
 /* ======================================== PARSER UTILS */
 
@@ -275,8 +246,8 @@ void debug_output(void);
 
 /* timing query execution etc. (will do nothing if timing == False) */
 
-void do_start_timer(void);	/* call this to start the timer */
-void do_timing(char *msg);	/* call this to print elapsed time with msg (if timing == True) */
+void do_start_timer(void);        /* call this to start the timer */
+void do_timing(char *msg);        /* call this to print elapsed time with msg (if timing == True) */
 
 
 /* ====================================== CQP Child mode:  Size & Dump */

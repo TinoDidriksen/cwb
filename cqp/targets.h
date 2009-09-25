@@ -32,21 +32,21 @@ SearchStrategy string_to_strategy(char *s);
 int set_target(CorpusList *corp, FieldType goal, FieldType source);
 
 int evaluate_target(CorpusList *corp,          /* the corpus */
-		    FieldType goal,            /* the field to set */
-		    FieldType base,            /* where to start the search */
-		    int inclusive,             /* including or excluding the base */
-		    SearchStrategy strategy,   /* disambiguation rule: which item */
-		    Constrainttree constr,     /* the constraint */
-		    enum ctxtdir direction,    /* context direction */
-		    int units,	               /* number of units */
-		    char *attr_name);          /* name of unit */
+                    FieldType goal,            /* the field to set */
+                    FieldType base,            /* where to start the search */
+                    int inclusive,             /* including or excluding the base */
+                    SearchStrategy strategy,   /* disambiguation rule: which item */
+                    Constrainttree constr,     /* the constraint */
+                    enum ctxtdir direction,    /* context direction */
+                    int units,                 /* number of units */
+                    char *attr_name);          /* name of unit */
 
 
 
 /* destructively modifies corp */
 
 int evaluate_subset(CorpusList *corp,          /* the corpus */
-		    FieldType the_field,       /* the field to scan */
-		    Constrainttree constr);    /* the constraint proper */
+                    FieldType the_field,       /* the field to scan */
+                    Constrainttree constr);    /* the constraint proper */
 
 #endif

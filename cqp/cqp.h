@@ -20,8 +20,10 @@
 
 #define CQPRC_NAME ".cqprc"
 #define CQPMACRORC_NAME ".cqpmacros"
+/** The number of file handles CQP can store in its file-array (ie max number of nested files) @see cqp_parse_file ) */
 #define MAXCQPFILES 20
 
+/** Size of the CQP query buffer. */
 #define QUERY_BUFFER_SIZE 2048
 
 #include <stdio.h>
@@ -47,14 +49,14 @@ extern int reading_cqprc;
 /* ========== see parser.l:extendQueryBuffer() for details */
 /* ========== initialization done in parse_actions.c:prepare_parse() */
 
-extern char QueryBuffer[QUERY_BUFFER_SIZE];	/* buffer for queries */
-extern int QueryBufferP;	/* pointer into this buffer, for appending */
-extern int QueryBufferOverflow;	/* flag which signals buffer overflows */
+extern char QueryBuffer[QUERY_BUFFER_SIZE];
+extern int QueryBufferP;
+extern int QueryBufferOverflow;
 
 /* ======================================== Other global variables */
 
-char *searchstr;		/* needs to be global, unfortunately */
-int exit_cqp;			/* 1 iff exit-command was issued while parsing */
+char *searchstr;                /**< needs to be global, unfortunately */
+int exit_cqp;                   /**< 1 iff exit-command was issued while parsing */
 
 char *cqp_input_string;
 int cqp_input_string_position;
@@ -63,13 +65,16 @@ void cqp_randomize(void);
 
 int initialize_cqp(int argc, char **argv);
 
-/* !! cqp_parse_file() fclose()s fd unless it is STDOUT !! */
+
 int cqp_parse_file(FILE *fd, int exit_on_parse_errors);
 
 int cqp_parse_string(char *s);
 
 /* ====================================================================== */
 
+/**
+ * Interrupt callback functions are of this type.
+ */
 typedef void (*InterruptCheckProc)(void);
 
 int EvaluationIsRunning;

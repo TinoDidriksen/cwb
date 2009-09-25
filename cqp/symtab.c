@@ -16,6 +16,7 @@
  */
 
 
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -30,7 +31,9 @@
  * some internal helper functions 
  */
 
-void free_labellist(LabelEntry l) {
+void
+free_labellist(LabelEntry l)
+{
   LabelEntry tmp;
 
   while (l) {
@@ -49,7 +52,8 @@ void free_labellist(LabelEntry l) {
  */
 
 SymbolTable
-new_symbol_table(void) {
+new_symbol_table(void)
+{
   SymbolTable st = cl_malloc(sizeof(struct _symbol_table));
   st->user = (LabelEntry) NULL;
   st->rdat = (LabelEntry) NULL;
@@ -58,7 +62,8 @@ new_symbol_table(void) {
 }
 
 void
-delete_symbol_table(SymbolTable st) {
+delete_symbol_table(SymbolTable st)
+{
   if (st != NULL) {
     free_labellist(st->user);
     free_labellist(st->rdat);
@@ -67,7 +72,8 @@ delete_symbol_table(SymbolTable st) {
 }
 
 LabelEntry 
-findlabel(SymbolTable st, char *s, int flags) {
+findlabel(SymbolTable st, char *s, int flags)
+{
   LabelEntry l;
 
   if (flags & LAB_RDAT)
@@ -85,12 +91,13 @@ findlabel(SymbolTable st, char *s, int flags) {
 }
 
 LabelEntry 
-labellookup(SymbolTable st, char *s, int flags, int create) {
+labellookup(SymbolTable st, char *s, int flags, int create)
+{
   LabelEntry l;
   int user_namespace, this_label, is_special;
   
   if ((l = findlabel(st, s, flags)) != NULL) {
-    l->flags |= flags;		/* add flags from this call */
+    l->flags |= flags;                /* add flags from this call */
     return l;
   }
 
@@ -135,24 +142,26 @@ labellookup(SymbolTable st, char *s, int flags, int create) {
 }
 
 void 
-droplabel(SymbolTable st, LabelEntry l) {
+droplabel(SymbolTable st, LabelEntry l)
+{
   assert(0 && "droplabel(): function not implemented");
 }
 
 int 
-check_labels(SymbolTable st) {
+check_labels(SymbolTable st)
+{
   LabelEntry l = st->user;
   int result = 1;
 
   while (l != NULL) {
     if (! (l->flags & LAB_SPECIAL)) {
       if (! (l->flags & LAB_USED)) {
-	cqpmessage(Warning, "Label %s defined but not used", l->name);
-	result = 0;
+        cqpmessage(Warning, "Label %s defined but not used", l->name);
+        result = 0;
       }
       if (! (l->flags & LAB_DEFINED)) {
-	cqpmessage(Warning, "Label %s used but not defined", l->name);
-	result++;
+        cqpmessage(Warning, "Label %s used but not defined", l->name);
+        result++;
       }
     }
     l = l->next;
@@ -161,7 +170,8 @@ check_labels(SymbolTable st) {
 }
 
 void 
-print_symbol_table(SymbolTable st) {
+print_symbol_table(SymbolTable st)
+{
   LabelEntry l;
   char *namespace;
   int i;
@@ -184,14 +194,15 @@ print_symbol_table(SymbolTable st) {
     }
     while (l != NULL) {
       fprintf(stderr, "\t%s\t%s(flags: %d)  ->  RefTab[%d]\n",
-	      namespace, l->name, l->flags, l->ref);
+              namespace, l->name, l->flags, l->ref);
       l = l->next;
     }
   }
 }
 
 LabelEntry 
-symbol_table_new_iterator(SymbolTable st, int flags) {
+symbol_table_new_iterator(SymbolTable st, int flags)
+{
   int user_namespace = (flags & LAB_RDAT) ? 0 : 1;
   LabelEntry lab;
   
@@ -207,14 +218,15 @@ symbol_table_new_iterator(SymbolTable st, int flags) {
 }
 
 LabelEntry 
-symbol_table_iterator(LabelEntry prev, int flags) {
+symbol_table_iterator(LabelEntry prev, int flags)
+{
   if (prev == NULL) 
     return NULL;
   else {
     prev = prev->next;
     while (prev != NULL) {
       if ((prev->flags & flags) == flags) 
-	break;
+        break;
       prev = prev->next;
     }
     return prev;
@@ -229,7 +241,8 @@ symbol_table_iterator(LabelEntry prev, int flags) {
  */
 
 RefTab 
-new_reftab(SymbolTable st) {
+new_reftab(SymbolTable st)
+{
   RefTab rt;
 
   rt = (RefTab) cl_malloc(sizeof(struct _RefTab));
@@ -240,7 +253,8 @@ new_reftab(SymbolTable st) {
 }
 
 void 
-delete_reftab(RefTab rt) {
+delete_reftab(RefTab rt)
+{
   if (rt) {
     if (rt->data) free(rt->data);
     free(rt);
@@ -248,7 +262,8 @@ delete_reftab(RefTab rt) {
 }
 
 void 
-dup_reftab(RefTab rt1, RefTab rt2) {
+dup_reftab(RefTab rt1, RefTab rt2)
+{
   assert(rt1);
   assert(rt2);
   if (rt1->size != rt2->size) {
@@ -259,15 +274,18 @@ dup_reftab(RefTab rt1, RefTab rt2) {
 }
 
 void 
-reset_reftab(RefTab rt) {
+reset_reftab(RefTab rt)
+{
   int i;
   
   assert(rt);
   for (i = 0; i < rt->size; i++) rt->data[i] = -1;
 }
 
+/* set references (cpos value in get_reftab is returned for 'this' label (_), set to -1 if n/a) */
 void 
-set_reftab(RefTab rt, int index, int value) {
+set_reftab(RefTab rt, int index, int value)
+{
   if (rt != NULL) {
     if ((index < 0) || (index >= rt->size)) {
       cqpmessage(Error, "RefTab index #%d not in range 0 .. %d", index, rt->size - 1);
@@ -279,11 +297,13 @@ set_reftab(RefTab rt, int index, int value) {
   }
 }
 
+/* read references (cpos value in get_reftab is returned for 'this' label (_), set to -1 if n/a) */
 int 
-get_reftab(RefTab rt, int index, int cpos) {
+get_reftab(RefTab rt, int index, int cpos)
+{
   if (index == -1)              /* -1 == 'this' label returns <cpos> value */
-    return cpos;		
-  else if (rt == NULL)		/* NULL is used for dummy reftabs */
+    return cpos;
+  else if (rt == NULL)          /* NULL is used for dummy reftabs */
     return -1;
   else if ((index < 0) || (index >= rt->size)) {
     fprintf(stderr, "get_reftab()<symtab.c>: RefTab index #%d not in range 0 .. %d", index, rt->size - 1);
@@ -293,8 +313,16 @@ get_reftab(RefTab rt, int index, int cpos) {
     return (rt->data[index]);
 }
 
+/**
+ * Prints the current label values (for debugging).
+ *
+ * @param st    The SymbolTable
+ * @param rt
+ * @param cpos  The corpus position
+ */
 void 
-print_label_values(SymbolTable st, RefTab rt, int cpos) {
+print_label_values(SymbolTable st, RefTab rt, int cpos)
+{
   LabelEntry l;
   int i;
 

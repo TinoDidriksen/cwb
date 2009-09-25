@@ -28,7 +28,7 @@
 <h2>Data Structures</h2>
 <ul>
 <li>struct <a class="el" href="struct__table.html">_table</a>
-</ul>
+<dl class="el"><dd class="mdescRight">The table object.  <a href="struct__table.html#_details">More...</a><br></dl></ul>
 <h2>Defines</h2>
 <ul>
 <li>#define <a class="el" href="table_8h.html#7cdfa50a248fa50753bc0258711073e6">_cqp_table_h_</a>
@@ -36,8 +36,8 @@
 <h2>Typedefs</h2>
 <ul>
 <li>typedef struct <a class="el" href="struct__table.html">_table</a> <a class="el" href="table_8h.html#7419111430652ab78f92d3aef88c5a76">table</a>
-<li>typedef enum <a class="el" href="table_8h.html#750b149d31df1a827edf793e9f7ede05">_table_ops</a> <a class="el" href="table_8h.html#302bc466582b06e5f635cced3fb24a10">TableOp</a>
-</ul>
+<dl class="el"><dd class="mdescRight">The table object.  <a href="#7419111430652ab78f92d3aef88c5a76"></a><br></dl><li>typedef enum <a class="el" href="table_8h.html#750b149d31df1a827edf793e9f7ede05">_table_ops</a> <a class="el" href="table_8h.html#302bc466582b06e5f635cced3fb24a10">TableOp</a>
+<dl class="el"><dd class="mdescRight">The TableOp enumeration: specifies an operation to apply to a table.  <a href="#302bc466582b06e5f635cced3fb24a10"></a><br></dl></ul>
 <h2>Enumerations</h2>
 <ul>
 <li>enum <a class="el" href="table_8h.html#750b149d31df1a827edf793e9f7ede05">_table_ops</a> { <br>
@@ -52,23 +52,23 @@
 <a class="el" href="table_8h.html#750b149d31df1a827edf793e9f7ede056be4dec1b2582e1ead9e0acd9c77914f">TUniq</a>
 <br>
  }
-</ul>
+<dl class="el"><dd class="mdescRight">The TableOp enumeration: specifies an operation to apply to a table.  <a href="table_8h.html#750b149d31df1a827edf793e9f7ede05">More...</a><br></dl></ul>
 <h2>Functions</h2>
 <ul>
 <li><a class="el" href="struct__table.html">table</a> <a class="el" href="table_8h.html#687406dcd074eae182bad4a99564b84b">new_table</a> (void)
-<li><a class="el" href="struct__table.html">table</a> <a class="el" href="table_8h.html#8d6b2189c0c7baf2a787f4edee89d8a3">new_table_from_list</a> (int *list, unsigned size)
-<li>void <a class="el" href="table_8h.html#8b8bc0728165901e42dbe4f85569721d">table_allocate</a> (<a class="el" href="struct__table.html">table</a> t, int size)
-<li>void <a class="el" href="table_8h.html#134dcb22cce57d038965512a0f22e366">delete_table</a> (<a class="el" href="struct__table.html">table</a> t)
-<li><a class="el" href="struct__table.html">table</a> <a class="el" href="table_8h.html#9b772b510ba5690dde4ae2a0baabdff1">table_duplicate</a> (<a class="el" href="struct__table.html">table</a> t)
-<li>unsigned <a class="el" href="table_8h.html#d47834b751627d540544c43e8ad19c04">table_size</a> (<a class="el" href="struct__table.html">table</a> t)
-<li>int <a class="el" href="table_8h.html#58a137aa119f3d2f7dadda1a97bd74cf">table_defined_field</a> (<a class="el" href="struct__table.html">table</a> t, <a class="el" href="corpmanag_8h.html#f1a7d1a8ccee70c4d8bc6c5302a0df0f">FieldType</a> fld)
-<li>int <a class="el" href="table_8h.html#25b2f23759fd5aa85f9d7746068dbe98">table_get</a> (<a class="el" href="struct__table.html">table</a> t, <a class="el" href="corpmanag_8h.html#f1a7d1a8ccee70c4d8bc6c5302a0df0f">FieldType</a> fld, unsigned row)
-<li>void <a class="el" href="table_8h.html#e4f389fa28d6d8a9069fbb606bbdbc6b">table_set</a> (<a class="el" href="struct__table.html">table</a> t, <a class="el" href="corpmanag_8h.html#f1a7d1a8ccee70c4d8bc6c5302a0df0f">FieldType</a> fld, unsigned row, int value)
-<li>int * <a class="el" href="table_8h.html#62fc03cce6e5beea1b2bf63e480fae04">table_get_vector</a> (<a class="el" href="struct__table.html">table</a> t, <a class="el" href="corpmanag_8h.html#f1a7d1a8ccee70c4d8bc6c5302a0df0f">FieldType</a> fld)
-<li>int * <a class="el" href="table_8h.html#e9bd0f071b1c389aac87bdce9522813f">table_get_sortidx</a> (<a class="el" href="struct__table.html">table</a> t)
-<li>int <a class="el" href="table_8h.html#cf27ba8550c44bf86f98754dc0500625">table_normalise</a> (<a class="el" href="struct__table.html">table</a> t)
-<li>int <a class="el" href="table_8h.html#8a7be3f873c08eca05741aa1f1263e3f">table_setop</a> (<a class="el" href="struct__table.html">table</a> t1, <a class="el" href="table_8h.html#302bc466582b06e5f635cced3fb24a10">TableOp</a> op, <a class="el" href="struct__table.html">table</a> t2)
-</ul>
+<dl class="el"><dd class="mdescRight">create and initialise new table (setting size and allocation to zero)  <a href="#687406dcd074eae182bad4a99564b84b"></a><br></dl><li><a class="el" href="struct__table.html">table</a> <a class="el" href="table_8h.html#8d6b2189c0c7baf2a787f4edee89d8a3">new_table_from_list</a> (int *list, unsigned size)
+<dl class="el"><dd class="mdescRight">initialise new table inserting {list} as match column (sets <a class="el" href="struct__table.html#245260f6f74972558f61b85227df5aae" title="all fields have the same size (or are NULL)">table.size</a> = <a class="el" href="struct__table.html#ae05df022273e49645af2f128855428b" title="number of cells allocated for all non-NULL fields">table.allocated</a> = size)  <a href="#8d6b2189c0c7baf2a787f4edee89d8a3"></a><br></dl><li>void <a class="el" href="table_8h.html#8b8bc0728165901e42dbe4f85569721d">table_allocate</a> (<a class="el" href="struct__table.html">table</a> t, int size)
+<dl class="el"><dd class="mdescRight">extend allocated space to exactly {size} rows (must be &gt;= <a class="el" href="struct__table.html#245260f6f74972558f61b85227df5aae" title="all fields have the same size (or are NULL)">table.size</a>)  <a href="#8b8bc0728165901e42dbe4f85569721d"></a><br></dl><li>void <a class="el" href="table_8h.html#134dcb22cce57d038965512a0f22e366">delete_table</a> (<a class="el" href="struct__table.html">table</a> t)
+<dl class="el"><dd class="mdescRight">destroy table object (deallocate all data)  <a href="#134dcb22cce57d038965512a0f22e366"></a><br></dl><li><a class="el" href="struct__table.html">table</a> <a class="el" href="table_8h.html#9b772b510ba5690dde4ae2a0baabdff1">table_duplicate</a> (<a class="el" href="struct__table.html">table</a> t)
+<dl class="el"><dd class="mdescRight">make exact copy of table t  <a href="#9b772b510ba5690dde4ae2a0baabdff1"></a><br></dl><li>unsigned <a class="el" href="table_8h.html#d47834b751627d540544c43e8ad19c04">table_size</a> (<a class="el" href="struct__table.html">table</a> t)
+<dl class="el"><dd class="mdescRight">current size of table; encapsulates variable <a class="el" href="struct__table.html#245260f6f74972558f61b85227df5aae" title="all fields have the same size (or are NULL)">table.size</a>  <a href="#d47834b751627d540544c43e8ad19c04"></a><br></dl><li>int <a class="el" href="table_8h.html#58a137aa119f3d2f7dadda1a97bd74cf">table_defined_field</a> (<a class="el" href="struct__table.html">table</a> t, <a class="el" href="corpmanag_8h.html#f1a7d1a8ccee70c4d8bc6c5302a0df0f">FieldType</a> fld)
+<dl class="el"><dd class="mdescRight">returns True if {fld} column is defined (i.e.  <a href="#58a137aa119f3d2f7dadda1a97bd74cf"></a><br></dl><li>int <a class="el" href="table_8h.html#25b2f23759fd5aa85f9d7746068dbe98">table_get</a> (<a class="el" href="struct__table.html">table</a> t, <a class="el" href="corpmanag_8h.html#f1a7d1a8ccee70c4d8bc6c5302a0df0f">FieldType</a> fld, unsigned row)
+<dl class="el"><dd class="mdescRight">get value of {row}th entry in {fld} column; returns -1 if column is NULL or row is out of range  <a href="#25b2f23759fd5aa85f9d7746068dbe98"></a><br></dl><li>void <a class="el" href="table_8h.html#e4f389fa28d6d8a9069fbb606bbdbc6b">table_set</a> (<a class="el" href="struct__table.html">table</a> t, <a class="el" href="corpmanag_8h.html#f1a7d1a8ccee70c4d8bc6c5302a0df0f">FieldType</a> fld, unsigned row, int value)
+<dl class="el"><dd class="mdescRight">Sets {row}th entry in {fld} column to {value}; automatically allocates and extends columns.  <a href="#e4f389fa28d6d8a9069fbb606bbdbc6b"></a><br></dl><li>int * <a class="el" href="table_8h.html#62fc03cce6e5beea1b2bf63e480fae04">table_get_vector</a> (<a class="el" href="struct__table.html">table</a> t, <a class="el" href="corpmanag_8h.html#f1a7d1a8ccee70c4d8bc6c5302a0df0f">FieldType</a> fld)
+<dl class="el"><dd class="mdescRight">Gets a pointer to int vector representing column {fld} for direct access; note that sortidx is ignored!  <a href="#62fc03cce6e5beea1b2bf63e480fae04"></a><br></dl><li>int * <a class="el" href="table_8h.html#e9bd0f071b1c389aac87bdce9522813f">table_get_sortidx</a> (<a class="el" href="struct__table.html">table</a> t)
+<dl class="el"><dd class="mdescRight">Gets a pointer to sort index as int vector; returns NULL if table is unsorted.  <a href="#e9bd0f071b1c389aac87bdce9522813f"></a><br></dl><li>int <a class="el" href="table_8h.html#cf27ba8550c44bf86f98754dc0500625">table_normalise</a> (<a class="el" href="struct__table.html">table</a> t)
+<dl class="el"><dd class="mdescRight">delete rows where match=-1 or matchend=-1, as well as duplicates; then sort by corpus position; returns True iff successful; note that both the MatchField and the MatchEndField column must be defined  <a href="#cf27ba8550c44bf86f98754dc0500625"></a><br></dl><li>int <a class="el" href="table_8h.html#8a7be3f873c08eca05741aa1f1263e3f">table_setop</a> (<a class="el" href="struct__table.html">table</a> t1, <a class="el" href="table_8h.html#302bc466582b06e5f635cced3fb24a10">TableOp</a> op, <a class="el" href="struct__table.html">table</a> t2)
+<dl class="el"><dd class="mdescRight">execute unary or binary operation {op}; result is stored in {t1}; returns True iff successful  <a href="#8a7be3f873c08eca05741aa1f1263e3f"></a><br></dl></ul>
 <hr><h2>Define Documentation</h2>
 <a class="anchor" name="7cdfa50a248fa50753bc0258711073e6"></a><!-- doxytag: member="table.h::_cqp_table_h_" ref="7cdfa50a248fa50753bc0258711073e6" args="" -->
 <div class="memitem">
@@ -98,7 +98,10 @@
 <div class="memdoc">
 
 <p>
-
+The table object. 
+<p>
+Tables are used to store query results, i.e. subcorpora with optional target fields.<p>
+All fields (Match, MatchEnd, and the various Target fields) are treated uniformly as the columns of a table: {<a class="el" href="struct__table.html#7cd397f8337150907346514f8e1725db" title="table made of NoField columns = individually allocated integer lists">table.field</a>[MatchField]}, {<a class="el" href="struct__table.html#7cd397f8337150907346514f8e1725db" title="table made of NoField columns = individually allocated integer lists">table.field</a>[MatchEndField]}, ... {<a class="el" href="struct__table.html#245260f6f74972558f61b85227df5aae" title="all fields have the same size (or are NULL)">table.size</a>} is the number of rows (i.e. the number of cells in each column). Each column may be undefined, i.e. NULL. Rows where the MatchField column equals -1 are understood as 'deleted' rows. To allow tables to grow automatically, the number of allocated rows {<a class="el" href="struct__table.html#ae05df022273e49645af2f128855428b" title="number of cells allocated for all non-NULL fields">table.allocated</a>} may be greater than {<a class="el" href="struct__table.html#245260f6f74972558f61b85227df5aae" title="all fields have the same size (or are NULL)">table.size</a>}. All columns must be allocated to the same size. 
 </div>
 </div><p>
 <a class="anchor" name="302bc466582b06e5f635cced3fb24a10"></a><!-- doxytag: member="table.h::TableOp" ref="302bc466582b06e5f635cced3fb24a10" args="" -->
@@ -113,7 +116,10 @@
 <div class="memdoc">
 
 <p>
-
+The TableOp enumeration: specifies an operation to apply to a table. 
+<p>
+These are used as parameters to the table_setp() function.<p>
+We may want to change these ops and/or their exact semantics; however, for a smooth migration of the query evaluation component, it is advantageous to provide precise equivalents of the "traditional" operations 
 </div>
 </div><p>
 <hr><h2>Enumeration Type Documentation</h2>
@@ -129,24 +135,27 @@
 <div class="memdoc">
 
 <p>
-<dl compact><dt><b>Enumerator: </b></dt><dd>
+The TableOp enumeration: specifies an operation to apply to a table. 
+<p>
+These are used as parameters to the table_setp() function.<p>
+We may want to change these ops and/or their exact semantics; however, for a smooth migration of the query evaluation component, it is advantageous to provide precise equivalents of the "traditional" operations <dl compact><dt><b>Enumerator: </b></dt><dd>
 <table border="0" cellspacing="2" cellpadding="0">
 <tr><td valign="top"><em><a class="anchor" name="750b149d31df1a827edf793e9f7ede05b65a04f7d1a9685afdf5db165d8e9681"></a><!-- doxytag: member="TReduce" ref="750b149d31df1a827edf793e9f7ede05b65a04f7d1a9685afdf5db165d8e9681" args="" -->TReduce</em>&nbsp;</td><td>
-</td></tr>
+(t1, TReduce, NULL) -&gt; expunge 'deleted' rows from {t1} </td></tr>
 <tr><td valign="top"><em><a class="anchor" name="750b149d31df1a827edf793e9f7ede0576b7e95c6bf2287c5d24584d2f30b0ec"></a><!-- doxytag: member="TUnion" ref="750b149d31df1a827edf793e9f7ede0576b7e95c6bf2287c5d24584d2f30b0ec" args="" -->TUnion</em>&nbsp;</td><td>
-</td></tr>
+(t1, TUnion, t2) -&gt; compute set union of tables </td></tr>
 <tr><td valign="top"><em><a class="anchor" name="750b149d31df1a827edf793e9f7ede053b625cffe64abc623e1165d3ca3e5f34"></a><!-- doxytag: member="TIntersection" ref="750b149d31df1a827edf793e9f7ede053b625cffe64abc623e1165d3ca3e5f34" args="" -->TIntersection</em>&nbsp;</td><td>
-</td></tr>
+(t1, TIntersection, t2) -&gt; compute set intersection of tables </td></tr>
 <tr><td valign="top"><em><a class="anchor" name="750b149d31df1a827edf793e9f7ede059813a8bf19943789836b49d60b875dc1"></a><!-- doxytag: member="TDifference" ref="750b149d31df1a827edf793e9f7ede059813a8bf19943789836b49d60b875dc1" args="" -->TDifference</em>&nbsp;</td><td>
-</td></tr>
+(t1, TDifference, t2) -&gt; compute set difference of tables </td></tr>
 <tr><td valign="top"><em><a class="anchor" name="750b149d31df1a827edf793e9f7ede05c9e0ecde43f21ae8b81270852104555c"></a><!-- doxytag: member="TMaximalMatches" ref="750b149d31df1a827edf793e9f7ede05c9e0ecde43f21ae8b81270852104555c" args="" -->TMaximalMatches</em>&nbsp;</td><td>
-</td></tr>
+(t1, TMaximalMatches, NULL) -&gt; used by longest_match strategy </td></tr>
 <tr><td valign="top"><em><a class="anchor" name="750b149d31df1a827edf793e9f7ede05816360ee5bd0f91d16d100d88d9ce9b8"></a><!-- doxytag: member="TLeftMaximalMatches" ref="750b149d31df1a827edf793e9f7ede05816360ee5bd0f91d16d100d88d9ce9b8" args="" -->TLeftMaximalMatches</em>&nbsp;</td><td>
-</td></tr>
+(t1, TLeftMaximalMatches, NULL) -&gt; used by shortest_match strategy </td></tr>
 <tr><td valign="top"><em><a class="anchor" name="750b149d31df1a827edf793e9f7ede05128f1f688d61418d0b53dfa264218761"></a><!-- doxytag: member="TNonOverlapping" ref="750b149d31df1a827edf793e9f7ede05128f1f688d61418d0b53dfa264218761" args="" -->TNonOverlapping</em>&nbsp;</td><td>
-</td></tr>
+(t1, TNonOverlapping, NULL) -&gt; delete overlapping matches (subqueries) </td></tr>
 <tr><td valign="top"><em><a class="anchor" name="750b149d31df1a827edf793e9f7ede056be4dec1b2582e1ead9e0acd9c77914f"></a><!-- doxytag: member="TUniq" ref="750b149d31df1a827edf793e9f7ede056be4dec1b2582e1ead9e0acd9c77914f" args="" -->TUniq</em>&nbsp;</td><td>
-</td></tr>
+(t1, TUniq, NULL) -&gt; sort table &amp; remove duplicates(by Match, MatchEnd) </td></tr>
 </table>
 </dl>
 
@@ -170,6 +179,8 @@
 <div class="memdoc">
 
 <p>
+destroy table object (deallocate all data) 
+<p>
 
 </div>
 </div><p>
@@ -189,6 +200,8 @@
 </div>
 <div class="memdoc">
 
+<p>
+create and initialise new table (setting size and allocation to zero) 
 <p>
 
 </div>
@@ -219,6 +232,8 @@
 <div class="memdoc">
 
 <p>
+initialise new table inserting {list} as match column (sets <a class="el" href="struct__table.html#245260f6f74972558f61b85227df5aae" title="all fields have the same size (or are NULL)">table.size</a> = <a class="el" href="struct__table.html#ae05df022273e49645af2f128855428b" title="number of cells allocated for all non-NULL fields">table.allocated</a> = size) 
+<p>
 
 </div>
 </div><p>
@@ -247,6 +262,8 @@
 </div>
 <div class="memdoc">
 
+<p>
+extend allocated space to exactly {size} rows (must be &gt;= <a class="el" href="struct__table.html#245260f6f74972558f61b85227df5aae" title="all fields have the same size (or are NULL)">table.size</a>) 
 <p>
 
 </div>
@@ -277,7 +294,9 @@
 <div class="memdoc">
 
 <p>
-
+returns True if {fld} column is defined (i.e. 
+<p>
+!= NULL) in table {t} 
 </div>
 </div><p>
 <a class="anchor" name="9b772b510ba5690dde4ae2a0baabdff1"></a><!-- doxytag: member="table.h::table_duplicate" ref="9b772b510ba5690dde4ae2a0baabdff1" args="(table t)" -->
@@ -296,6 +315,8 @@
 </div>
 <div class="memdoc">
 
+<p>
+make exact copy of table t 
 <p>
 
 </div>
@@ -332,6 +353,8 @@
 <div class="memdoc">
 
 <p>
+get value of {row}th entry in {fld} column; returns -1 if column is NULL or row is out of range 
+<p>
 
 </div>
 </div><p>
@@ -351,6 +374,8 @@
 </div>
 <div class="memdoc">
 
+<p>
+Gets a pointer to sort index as int vector; returns NULL if table is unsorted. 
 <p>
 
 </div>
@@ -381,6 +406,8 @@
 <div class="memdoc">
 
 <p>
+Gets a pointer to int vector representing column {fld} for direct access; note that sortidx is ignored! 
+<p>
 
 </div>
 </div><p>
@@ -400,6 +427,8 @@
 </div>
 <div class="memdoc">
 
+<p>
+delete rows where match=-1 or matchend=-1, as well as duplicates; then sort by corpus position; returns True iff successful; note that both the MatchField and the MatchEndField column must be defined 
 <p>
 
 </div>
@@ -442,6 +471,8 @@
 <div class="memdoc">
 
 <p>
+Sets {row}th entry in {fld} column to {value}; automatically allocates and extends columns. 
+<p>
 
 </div>
 </div><p>
@@ -477,6 +508,8 @@
 <div class="memdoc">
 
 <p>
+execute unary or binary operation {op}; result is stored in {t1}; returns True iff successful 
+<p>
 
 </div>
 </div><p>
@@ -497,11 +530,13 @@
 <div class="memdoc">
 
 <p>
+current size of table; encapsulates variable <a class="el" href="struct__table.html#245260f6f74972558f61b85227df5aae" title="all fields have the same size (or are NULL)">table.size</a> 
+<p>
 
 </div>
 </div><p>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Sat Sep 19 20:28:33 2009 for CWB by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Fri Sep 25 21:50:32 2009 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

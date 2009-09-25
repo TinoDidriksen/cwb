@@ -50,7 +50,7 @@
 <li>void <a class="el" href="symtab_8c.html#90a9d5b7a04a2f7fba3864df76d49760">set_reftab</a> (<a class="el" href="struct___ref_tab.html">RefTab</a> rt, int index, int value)
 <li>int <a class="el" href="symtab_8c.html#626f8764b931a695b6f1b93c029c5026">get_reftab</a> (<a class="el" href="struct___ref_tab.html">RefTab</a> rt, int index, int cpos)
 <li>void <a class="el" href="symtab_8c.html#58fb972b7977dfdbcb513bf607e5bbcd">print_label_values</a> (<a class="el" href="struct__symbol__table.html">SymbolTable</a> st, <a class="el" href="struct___ref_tab.html">RefTab</a> rt, int cpos)
-</ul>
+<dl class="el"><dd class="mdescRight">Prints the current label values (for debugging).  <a href="#58fb972b7977dfdbcb513bf607e5bbcd"></a><br></dl></ul>
 <hr><h2>Function Documentation</h2>
 <a class="anchor" name="8e90293705f1068b3cb9685cf83e594f"></a><!-- doxytag: member="symtab.c::check_labels" ref="8e90293705f1068b3cb9685cf83e594f" args="(SymbolTable st)" -->
 <div class="memitem">
@@ -413,6 +413,15 @@
 <div class="memdoc">
 
 <p>
+Prints the current label values (for debugging). 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>st</em>&nbsp;</td><td>The SymbolTable </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>rt</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>cpos</em>&nbsp;</td><td>The corpus position </td></tr>
+  </table>
+</dl>
 
 <p>References <a class="el" href="symtab_8c.html#626f8764b931a695b6f1b93c029c5026">get_reftab()</a>, <a class="el" href="struct__label__entry.html#5ac083a645d964373f022d03df4849c8">_label_entry::name</a>, <a class="el" href="struct__label__entry.html#16e4ff82fdfe36114b736247599d8843">_label_entry::next</a>, <a class="el" href="struct__symbol__table.html#720939920b71c9d9f9410359151d8224">_symbol_table::next_index</a>, <a class="el" href="struct__symbol__table.html#5ae84d59f2d58c07e93dd8922feaa3d0">_symbol_table::rdat</a>, <a class="el" href="struct__label__entry.html#db528a1cb1ca190150183394d082590d">_label_entry::ref</a>, <a class="el" href="struct___ref_tab.html#439227feff9d7f55384e8780cfc2eb82">_RefTab::size</a>, and <a class="el" href="struct__symbol__table.html#d60ce16127d1cd3690f7c825c3ac02a2">_symbol_table::user</a>.</p>
 
@@ -574,7 +583,7 @@
 </div>
 </div><p>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Sat Sep 19 20:28:33 2009 for CWB by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Fri Sep 25 21:50:32 2009 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

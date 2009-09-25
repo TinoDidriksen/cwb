@@ -59,7 +59,8 @@ SearchStrategy string_to_strategy(char *s)
 
 /* target can be any field except NoField (-> CQP dies), 
    source can be NoField, which deletes the target field (unless that's match or matchend) */
-int set_target(CorpusList *corp, FieldType t_id, FieldType s_id)
+int
+set_target(CorpusList *corp, FieldType t_id, FieldType s_id)
 {
   int i;
 
@@ -105,44 +106,44 @@ int set_target(CorpusList *corp, FieldType t_id, FieldType s_id)
 
       switch (t_id) {
       case MatchField:
-	if (corp->range == NULL) {
-	  cqpmessage(Error, "Internal error: match ranges not allocated. Abort.");
-	  return 0;
-	}
+        if (corp->range == NULL) {
+          cqpmessage(Error, "Internal error: match ranges not allocated. Abort.");
+          return 0;
+        }
 
-	for (i = 0; i < corp->size; i++) {
-	  if (corp->keywords[i] >= 0)
-	    corp->range[i].start = corp->keywords[i];
-	  if (corp->range[i].start > corp->range[i].end)
-	    corp->range[i].start = corp->range[i].end;
-	}
-	break;
+        for (i = 0; i < corp->size; i++) {
+          if (corp->keywords[i] >= 0)
+            corp->range[i].start = corp->keywords[i];
+          if (corp->range[i].start > corp->range[i].end)
+            corp->range[i].start = corp->range[i].end;
+        }
+        break;
 
       case MatchEndField:
-	if (corp->range == NULL) {
-	  cqpmessage(Error, "Internal error: match ranges not allocated. Abort.");
-	  return 0;
-	}
+        if (corp->range == NULL) {
+          cqpmessage(Error, "Internal error: match ranges not allocated. Abort.");
+          return 0;
+        }
 
-	for (i = 0; i < corp->size; i++) {
-	  if (corp->keywords[i] >= 0)
-	    corp->range[i].end   = corp->keywords[i];
-	  if (corp->range[i].end < corp->range[i].start)
-	    corp->range[i].end = corp->range[i].start;
-	}
-	break;
+        for (i = 0; i < corp->size; i++) {
+          if (corp->keywords[i] >= 0)
+            corp->range[i].end   = corp->keywords[i];
+          if (corp->range[i].end < corp->range[i].start)
+            corp->range[i].end = corp->range[i].start;
+        }
+        break;
 
       case TargetField:
-	if (corp->targets == NULL)
-	  corp->targets = (int *)cl_malloc(corp->size * sizeof(int));
-	/* bcopy(corp->keywords, corp->targets, corp->size * sizeof(int)); */
-	memcpy(corp->targets, corp->keywords, corp->size * sizeof(int));
-	break;
+        if (corp->targets == NULL)
+          corp->targets = (int *)cl_malloc(corp->size * sizeof(int));
+        /* bcopy(corp->keywords, corp->targets, corp->size * sizeof(int)); */
+        memcpy(corp->targets, corp->keywords, corp->size * sizeof(int));
+        break;
 
       case NoField:
       default:
-	assert(0 && "Can't be");
-	break;
+        assert(0 && "Can't be");
+        break;
       }
 
     }
@@ -155,44 +156,44 @@ int set_target(CorpusList *corp, FieldType t_id, FieldType s_id)
 
       switch (t_id) {
       case MatchField:
-	if (corp->range == NULL) {
-	  cqpmessage(Error, "Internal error: match ranges not allocated. Abort.");
-	  return 0;
-	}
+        if (corp->range == NULL) {
+          cqpmessage(Error, "Internal error: match ranges not allocated. Abort.");
+          return 0;
+        }
 
-	for (i = 0; i < corp->size; i++) {
-	  if (corp->targets[i] >= 0)
-	    corp->range[i].start = corp->targets[i];
-	  if (corp->range[i].start > corp->range[i].end)
-	    corp->range[i].start = corp->range[i].end;
-	}
-	break;
+        for (i = 0; i < corp->size; i++) {
+          if (corp->targets[i] >= 0)
+            corp->range[i].start = corp->targets[i];
+          if (corp->range[i].start > corp->range[i].end)
+            corp->range[i].start = corp->range[i].end;
+        }
+        break;
 
       case MatchEndField:
-	if (corp->range == NULL) {
-	  cqpmessage(Error, "Internal error: match ranges not allocated. Abort.");
-	  return 0;
-	}
+        if (corp->range == NULL) {
+          cqpmessage(Error, "Internal error: match ranges not allocated. Abort.");
+          return 0;
+        }
 
-	for (i = 0; i < corp->size; i++) {
-	  if (corp->targets[i] >= 0)
-	    corp->range[i].end   = corp->targets[i];
-	  if (corp->range[i].end < corp->range[i].start)
-	    corp->range[i].end = corp->range[i].start;
-	}
-	break;
+        for (i = 0; i < corp->size; i++) {
+          if (corp->targets[i] >= 0)
+            corp->range[i].end   = corp->targets[i];
+          if (corp->range[i].end < corp->range[i].start)
+            corp->range[i].end = corp->range[i].start;
+        }
+        break;
 
       case KeywordField:
-	if (corp->keywords == NULL)
-	  corp->keywords = (int *)cl_malloc(corp->size * sizeof(int));
-	/* bcopy(corp->targets, corp->keywords, corp->size * sizeof(int)); */
-	memcpy(corp->keywords, corp->targets, corp->size * sizeof(int));
-	break;
+        if (corp->keywords == NULL)
+          corp->keywords = (int *)cl_malloc(corp->size * sizeof(int));
+        /* bcopy(corp->targets, corp->keywords, corp->size * sizeof(int)); */
+        memcpy(corp->keywords, corp->targets, corp->size * sizeof(int));
+        break;
 
       case NoField:
       default:
-	assert(0 && "Can't be");
-	break;
+        assert(0 && "Can't be");
+        break;
       }
 
     }
@@ -203,21 +204,21 @@ int set_target(CorpusList *corp, FieldType t_id, FieldType s_id)
     switch (t_id) {
     case MatchEndField:
       for (i = 0; i < corp->size; i++)
-	corp->range[i].end = corp->range[i].start;
+        corp->range[i].end = corp->range[i].start;
       break;
 
     case KeywordField:
       if (corp->keywords == NULL)
-	corp->keywords = (int *)cl_malloc(corp->size * sizeof(int));
+        corp->keywords = (int *)cl_malloc(corp->size * sizeof(int));
       for (i = 0; i < corp->size; i++)
-	corp->keywords[i] = corp->range[i].start;
+        corp->keywords[i] = corp->range[i].start;
       break;
 
     case TargetField:
       if (corp->targets == NULL)
-	corp->targets = (int *)cl_malloc(corp->size * sizeof(int));
+        corp->targets = (int *)cl_malloc(corp->size * sizeof(int));
       for (i = 0; i < corp->size; i++)
-	corp->targets[i] = corp->range[i].start;
+        corp->targets[i] = corp->range[i].start;
       break;
 
     case NoField:
@@ -233,21 +234,21 @@ int set_target(CorpusList *corp, FieldType t_id, FieldType s_id)
     switch (t_id) {
     case MatchField:
       for (i = 0; i < corp->size; i++)
-	corp->range[i].start = corp->range[i].end;
+        corp->range[i].start = corp->range[i].end;
       break;
       
     case KeywordField:
       if (corp->keywords == NULL)
-	corp->keywords = (int *)cl_malloc(corp->size * sizeof(int));
+        corp->keywords = (int *)cl_malloc(corp->size * sizeof(int));
       for (i = 0; i < corp->size; i++)
-	corp->keywords[i] = corp->range[i].end;
+        corp->keywords[i] = corp->range[i].end;
       break;
 
     case TargetField:
       if (corp->targets == NULL)
-	corp->targets = (int *)cl_malloc(corp->size * sizeof(int));
+        corp->targets = (int *)cl_malloc(corp->size * sizeof(int));
       for (i = 0; i < corp->size; i++)
-	corp->targets[i] = corp->range[i].end;
+        corp->targets[i] = corp->range[i].end;
       break;
 
     case NoField:
@@ -263,21 +264,21 @@ int set_target(CorpusList *corp, FieldType t_id, FieldType s_id)
   }
   
   if ((t_id == MatchField) || (t_id == MatchEndField))
-    RangeSort(corp, 0);		/* re-sort corpus if match regions were modified */
+    RangeSort(corp, 0);                /* re-sort corpus if match regions were modified */
   touch_corpus(corp);
 
   return 1;
 }
 
 int evaluate_target(CorpusList *corp,          /* the corpus */
-		    FieldType t_id,            /* the field to set */
-		    FieldType base,            /* where to start the search */
-		    int inclusive,             /* including or excluding the base */
-		    SearchStrategy strategy,   /* disambiguation rule: which item */
-		    Constrainttree constr,     /* the constraint */
-		    enum ctxtdir direction,    /* context direction */
-		    int units,	               /* number of units */
-		    char *attr_name)           /* name of unit */
+                    FieldType t_id,            /* the field to set */
+                    FieldType base,            /* where to start the search */
+                    int inclusive,             /* including or excluding the base */
+                    SearchStrategy strategy,   /* disambiguation rule: which item */
+                    Constrainttree constr,     /* the constraint */
+                    enum ctxtdir direction,    /* context direction */
+                    int units,                       /* number of units */
+                    char *attr_name)           /* name of unit */
 {
   Attribute *attr;
   int *table;
@@ -329,13 +330,13 @@ int evaluate_target(CorpusList *corp,          /* the corpus */
     break;
   default:
     cqpmessage(Error, "Illegal base field (#%d) in 'set target' command.",
-	       base);
+               base);
     return 0;
   }
 
   if (units <= 0) {
     cqpmessage(Error, "Invalid search space (%d units) in 'set target' command.", 
-	       units);
+               units);
     return 0;
   }
 
@@ -362,7 +363,7 @@ int evaluate_target(CorpusList *corp,          /* the corpus */
 
   if (attr == NULL) {
     cqpmessage(Error, "Can't find attribute %s.%s",
-	       corp->mother_name, attr_name);
+               corp->mother_name, attr_name);
     return 0;
   }
 
@@ -383,8 +384,8 @@ int evaluate_target(CorpusList *corp,          /* the corpus */
     if (progress_bar) {
       new_percentage = floor(0.5 + (100.0 * line) / corp->size);
       if (new_percentage > percentage) {
-	percentage = new_percentage;
-	progress_bar_percentage(0, 0, percentage);
+        percentage = new_percentage;
+        progress_bar_percentage(0, 0, percentage);
       }
     }
 
@@ -398,32 +399,32 @@ int evaluate_target(CorpusList *corp,          /* the corpus */
 
       if ((corp->range[line].start == corp->range[line].end) || inclusive) {
 
-	if (calculate_ranges(corp,
-			     corp->range[line].start, context,
-			     &lbound, &rbound) == False) {
-	  
-	  fprintf(stderr, "Can't compute boundaries for range #%d", line);
-	  lbound = rbound = -1;
-	}
+        if (calculate_ranges(corp,
+                             corp->range[line].start, context,
+                             &lbound, &rbound) == False) {
+
+          fprintf(stderr, "Can't compute boundaries for range #%d", line);
+          lbound = rbound = -1;
+        }
       }
       else {
 
-	int dummy;
+        int dummy;
 
-	if (calculate_ranges(corp,
-			     corp->range[line].start, context,
-			     &lbound, &dummy) == False) {
-	
-	  fprintf(stderr, "Can't compute left search space boundary match #%d", line);
-	  lbound = rbound = -1;
-	}
-	else if (calculate_ranges(corp,
-				  corp->range[line].end, context,
-				  &dummy, &rbound) == False) {
-	
-	  fprintf(stderr, "Can't compute right search space boundary match #%d", line);
-	  lbound = rbound = -1;
-	}
+        if (calculate_ranges(corp,
+                             corp->range[line].start, context,
+                             &lbound, &dummy) == False) {
+
+          fprintf(stderr, "Can't compute left search space boundary match #%d", line);
+          lbound = rbound = -1;
+        }
+        else if (calculate_ranges(corp,
+                                  corp->range[line].end, context,
+                                  &dummy, &rbound) == False) {
+
+          fprintf(stderr, "Can't compute right search space boundary match #%d", line);
+          lbound = rbound = -1;
+        }
       }
       break;
 
@@ -431,16 +432,16 @@ int evaluate_target(CorpusList *corp,          /* the corpus */
       excl_start = excl_end = corp->range[line].end;
 
       if (excl_start >= 0) {
-	if (calculate_ranges(corp,
-			     corp->range[line].end, context,
-			     &lbound, &rbound) == False) {
-	
-	  fprintf(stderr, "Can't compute search space boundaries for match #%d", line);
-	  lbound = rbound = -1;
-	}
+        if (calculate_ranges(corp,
+                             corp->range[line].end, context,
+                             &lbound, &rbound) == False) {
+
+          fprintf(stderr, "Can't compute search space boundaries for match #%d", line);
+          lbound = rbound = -1;
+        }
       }
       else 
-	lbound = rbound = -1;
+        lbound = rbound = -1;
 
       break;
 
@@ -448,16 +449,16 @@ int evaluate_target(CorpusList *corp,          /* the corpus */
       excl_start = excl_end = corp->targets[line];
 
       if (excl_start >= 0) {
-	if (calculate_ranges(corp,
-			     corp->targets[line], context,
-				  &lbound, &rbound) == False) {
-	
-	  fprintf(stderr, "Can't compute search space boundaries for match #%d", line);
-	  lbound = rbound = -1;
-	}
+        if (calculate_ranges(corp,
+                             corp->targets[line], context,
+                                  &lbound, &rbound) == False) {
+
+          fprintf(stderr, "Can't compute search space boundaries for match #%d", line);
+          lbound = rbound = -1;
+        }
       }
       else 
-	lbound = rbound = -1;
+        lbound = rbound = -1;
 
       break;
 
@@ -465,16 +466,16 @@ int evaluate_target(CorpusList *corp,          /* the corpus */
       excl_start = excl_end = corp->keywords[line];
 
       if (excl_start >= 0) {
-	if (calculate_ranges(corp,
-			     corp->keywords[line], context,
-			     &lbound, &rbound) == False) {
-	
-	  fprintf(stderr, "Can't compute search space boundaries for match #%d", line);
-	  lbound = rbound = -1;
-	}
+        if (calculate_ranges(corp,
+                             corp->keywords[line], context,
+                             &lbound, &rbound) == False) {
+
+          fprintf(stderr, "Can't compute search space boundaries for match #%d", line);
+          lbound = rbound = -1;
+        }
       }
       else 
-	lbound = rbound = -1;
+        lbound = rbound = -1;
 
       break;
     default:
@@ -487,123 +488,123 @@ int evaluate_target(CorpusList *corp,          /* the corpus */
       int dist, maxdist;
 
       if (direction == left) {
-	rbound = excl_start;
-	if (strategy == SearchNearest)
-	  strategy = SearchRightmost;
-	else if (strategy == SearchFarthest)
-	  strategy = SearchLeftmost;
+        rbound = excl_start;
+        if (strategy == SearchNearest)
+          strategy = SearchRightmost;
+        else if (strategy == SearchFarthest)
+          strategy = SearchLeftmost;
       }
       else if (direction == right) {
-	lbound = excl_start;
-	if (strategy == SearchNearest)
-	  strategy = SearchLeftmost;
-	else if (strategy == SearchFarthest)
-	  strategy = SearchRightmost;
+        lbound = excl_start;
+        if (strategy == SearchNearest)
+          strategy = SearchLeftmost;
+        else if (strategy == SearchFarthest)
+          strategy = SearchRightmost;
       }
 
       switch (strategy) {
       case SearchFarthest:
 
-	maxdist = MAX(excl_start - lbound, rbound - excl_start);
-	
-	assert(maxdist >= 0);
+        maxdist = MAX(excl_start - lbound, rbound - excl_start);
 
-	for (dist = maxdist; dist >= 0; dist--) {
+        assert(maxdist >= 0);
 
-	  i = excl_start - dist;
+        for (dist = maxdist; dist >= 0; dist--) {
 
-	  if (i >= lbound && 
-	      (inclusive || (i < excl_start)))
-	    if (eval_bool(constr, NULL, i)) {
-	      table[line] = i;
-	      break;
-	    }
-	  
-	  i = excl_start + dist;
+          i = excl_start - dist;
 
-	  if (i <= rbound && 
-	      (inclusive || (i > excl_end)))
-	    if (eval_bool(constr, NULL, i)) {
-	      table[line] = i;
-	      break;
-	    }
+          if (i >= lbound &&
+              (inclusive || (i < excl_start)))
+            if (eval_bool(constr, NULL, i)) {
+              table[line] = i;
+              break;
+            }
 
-	  nr_evals++;
-	  if (nr_evals == 1000) {
-	    CheckForInterrupts();
-	    nr_evals = 0;
-	  }
-	    
-	}
-	break;
+          i = excl_start + dist;
+
+          if (i <= rbound &&
+              (inclusive || (i > excl_end)))
+            if (eval_bool(constr, NULL, i)) {
+              table[line] = i;
+              break;
+            }
+
+          nr_evals++;
+          if (nr_evals == 1000) {
+            CheckForInterrupts();
+            nr_evals = 0;
+          }
+
+        }
+        break;
 
       case SearchNearest:
 
-	maxdist = MAX(excl_start - lbound, rbound - excl_start);
-	assert(maxdist >= 0);
+        maxdist = MAX(excl_start - lbound, rbound - excl_start);
+        assert(maxdist >= 0);
 
-	for (dist = 0; dist <= maxdist; dist++) {
+        for (dist = 0; dist <= maxdist; dist++) {
 
-	  i = excl_start - dist;
+          i = excl_start - dist;
 
-	  if (i >= lbound && 
-	      (inclusive || (i < excl_start)))
-	    if (eval_bool(constr, NULL, i)) {
-	      table[line] = i;
-	      break;
-	    }
-	  
-	  i = excl_start + dist;
+          if (i >= lbound &&
+              (inclusive || (i < excl_start)))
+            if (eval_bool(constr, NULL, i)) {
+              table[line] = i;
+              break;
+            }
 
-	  if (i <= rbound && 
-	      (inclusive || (i > excl_end)))
-	    if (eval_bool(constr, NULL, i)) {
-	      table[line] = i;
-	      break;
-	    }
+          i = excl_start + dist;
 
-	  nr_evals++;
-	  if (nr_evals == 1000) {
-	    CheckForInterrupts();
-	    nr_evals = 0;
-	  }
-	    
-	}
-	break;
+          if (i <= rbound &&
+              (inclusive || (i > excl_end)))
+            if (eval_bool(constr, NULL, i)) {
+              table[line] = i;
+              break;
+            }
+
+          nr_evals++;
+          if (nr_evals == 1000) {
+            CheckForInterrupts();
+            nr_evals = 0;
+          }
+
+        }
+        break;
 
       case SearchLeftmost:
-	for (i = lbound; i <= rbound; i++)
-	  if (inclusive || (i < excl_start) || (i > excl_end)) {
-	    if (eval_bool(constr, NULL, i)) {
-	      table[line] = i;
-	      break;
-	    }
+        for (i = lbound; i <= rbound; i++)
+          if (inclusive || (i < excl_start) || (i > excl_end)) {
+            if (eval_bool(constr, NULL, i)) {
+              table[line] = i;
+              break;
+            }
 
-	    nr_evals++;
-	    if (nr_evals == 1000) {
-	      CheckForInterrupts();
-	      nr_evals = 0;
-	    }
-	  }
-	break;
+            nr_evals++;
+            if (nr_evals == 1000) {
+              CheckForInterrupts();
+              nr_evals = 0;
+            }
+          }
+        break;
 
       case SearchRightmost:
-	for (i = rbound; i >= lbound; i--)
-	  if (inclusive || (i < excl_start) || (i > excl_end)) {
-	    if (eval_bool(constr, NULL, i)) {
-	      table[line] = i;
-	      break;
-	    }
+        for (i = rbound; i >= lbound; i--)
+          if (inclusive || (i < excl_start) || (i > excl_end)) {
+            if (eval_bool(constr, NULL, i)) {
+              table[line] = i;
+              break;
+            }
 
-	    nr_evals++;
-	    if (nr_evals == 1000) {
-	      CheckForInterrupts();
-	      nr_evals = 0;
-	    }
-	  }
-	break;
+            nr_evals++;
+            if (nr_evals == 1000) {
+              CheckForInterrupts();
+              nr_evals = 0;
+            }
+          }
+        break;
       default:
-	break;
+        break;
       }
     }
   }
@@ -615,9 +616,9 @@ int evaluate_target(CorpusList *corp,          /* the corpus */
   case MatchField:
     for (i = 0; i < corp->size; i++) {
       if (table[i] >= 0) 
-	corp->range[i].start = table[i];
+        corp->range[i].start = table[i];
       if (corp->range[i].start > corp->range[i].end)
-	corp->range[i].start = corp->range[i].end;
+        corp->range[i].start = corp->range[i].end;
     }
     cl_free(table);
     break;
@@ -625,9 +626,9 @@ int evaluate_target(CorpusList *corp,          /* the corpus */
   case MatchEndField:
     for (i = 0; i < corp->size; i++) {
       if (table[i] >= 0) 
-	corp->range[i].end = table[i];
+        corp->range[i].end = table[i];
       if (corp->range[i].end < corp->range[i].start)
-	corp->range[i].end = corp->range[i].start;
+        corp->range[i].end = corp->range[i].start;
     }
     cl_free(table);
     break;
@@ -651,7 +652,7 @@ int evaluate_target(CorpusList *corp,          /* the corpus */
     progress_bar_clear_line();
 
   if ((t_id == MatchField) || (t_id == MatchEndField))
-    RangeSort(corp, 0);		/* re-sort corpus if match regions were modified */
+    RangeSort(corp, 0);                /* re-sort corpus if match regions were modified */
 
   touch_corpus(corp);  
   if (!EvaluationIsRunning) {
@@ -664,8 +665,8 @@ int evaluate_target(CorpusList *corp,          /* the corpus */
 }
 
 int evaluate_subset(CorpusList *cl, /* the corpus */
-		    FieldType the_field,       /* the field to scan */
-		    Constrainttree constr)
+                    FieldType the_field,       /* the field to scan */
+                    Constrainttree constr)
 {
   int line, position;
   int percentage, new_percentage; /* for ProgressBar */
@@ -681,8 +682,8 @@ int evaluate_subset(CorpusList *cl, /* the corpus */
     if (progress_bar) {
       new_percentage = floor(0.5 + (100.0 * line) / cl->size);
       if (new_percentage > percentage) {
-	percentage = new_percentage;
-	progress_bar_percentage(0, 0, percentage);
+        percentage = new_percentage;
+        progress_bar_percentage(0, 0, percentage);
       }
     }
 

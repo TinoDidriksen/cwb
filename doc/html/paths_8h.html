@@ -27,7 +27,7 @@
 <h1>paths.h File Reference</h1><h2>Functions</h2>
 <ul>
 <li>char * <a class="el" href="paths_8h.html#c294ea41f70977db59074c0c496aff00">get_path_component</a> (char *pathlist)
-</ul>
+<dl class="el"><dd class="mdescRight">Tokenises a string into components split by ':'.  <a href="#c294ea41f70977db59074c0c496aff00"></a><br></dl></ul>
 <hr><h2>Function Documentation</h2>
 <a class="anchor" name="c294ea41f70977db59074c0c496aff00"></a><!-- doxytag: member="paths.h::get_path_component" ref="c294ea41f70977db59074c0c496aff00" args="(char *pathlist)" -->
 <div class="memitem">
@@ -37,7 +37,7 @@
           <td class="memname">char* get_path_component           </td>
           <td>(</td>
           <td class="paramtype">char *&nbsp;</td>
-          <td class="paramname"> <em>pathlist</em>          </td>
+          <td class="paramname"> <em>s</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td></td>
         </tr>
@@ -46,6 +46,14 @@
 <div class="memdoc">
 
 <p>
+Tokenises a string into components split by ':'. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>s</em>&nbsp;</td><td>The string to tokenise; or, NULL if tokenisation has already been initialised. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>The next token from the string. </dd></dl>
 
 <p>References <a class="el" href="cwb-decode_8c.html#72e27dee31b1c4c6a504fbed29542d97">last</a>.</p>
 
@@ -54,7 +62,7 @@
 </div>
 </div><p>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Sat Sep 19 20:28:33 2009 for CWB by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Fri Sep 25 21:50:32 2009 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

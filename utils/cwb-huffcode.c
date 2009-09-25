@@ -24,7 +24,9 @@
 #include "../cl/bitio.h"
 #include "../cl/macros.h"
 
+/** Level of progress-info (inc compression protocol) message output: 0 = none. */
 int do_protocol = 0;
+/** File handle for this program's progress-info output: always stdout */
 FILE *protocol; /* " = stdout;" init moved to main() for Gnuwin32 compatibility */
 
 /* ---------------------------------------------------------------------- */
@@ -40,7 +42,15 @@ void usage(char *msg, int error_code);
 
 /* ---------------------------------------------------------------------- */
 
-void bprintf(unsigned int i, int width, FILE *stream)
+/**
+ * Prints a binary representation of an integer to a stream.
+ *
+ * @param i       Integer to print
+ * @param width   Number of bits in the integer
+ * @param stream  Where to print to.
+ */
+void
+bprintf(unsigned int i, int width, FILE *stream)
 {
   putc((width <= 31) ? ' ' : (i & 1<<31 ? '1' : '0'), stream);
   putc((width <= 30) ? ' ' : (i & 1<<30 ? '1' : '0'), stream);
@@ -83,8 +93,19 @@ void bprintf(unsigned int i, int width, FILE *stream)
 
 
 
+/**
+ * Dumps the specified heap of memory to the program output stream.
+ *
+ * @see protocol
+ * @param heap       Location of the heap to dump.
+ * @param heap_size  Number of nodes in the heap.
+ * @param node       Heap at which to begin dumping.
+ * @param indent     How many tabs to indent the start of each line.
+ *
+ */
 void 
-dump_heap(int *heap, int heap_size, int node, int indent) {
+dump_heap(int *heap, int heap_size, int node, int indent)
+{
   int i;
 
   if (node <= heap_size) {
@@ -93,32 +114,50 @@ dump_heap(int *heap, int heap_size, int node, int indent) {
       putc((i % 3) == 0 ? '|' : ' ', protocol);
     
     fprintf(protocol, "Node %d (p: %d, f: %d)\n",
-	    node, 
-	    heap[node-1], 
-	    heap[heap[node-1]]);
+            node,
+            heap[node-1],
+            heap[heap[node-1]]);
     
     dump_heap(heap, heap_size, 2 * node,     indent + 1);
     dump_heap(heap, heap_size, 2 * node + 1, indent + 1);
   }
 }
 
+/**
+ * Prints a description of the specified heap of memory to the program output stream.
+ *
+ * @see protocol
+ * @param heap       Location of the heap to print.
+ * @param heap_size  Number of nodes in the heap.
+ * @param title      Title of the heap to print.
+ */
 void 
-print_heap(int *heap, int heap_size, char *title) {
+print_heap(int *heap, int heap_size, char *title)
+{
   int node, depth;
 
   node = 1;
   depth = 0;
 
   fprintf(protocol, "\nDump of %s (size %d)\n\n",
-	  title, heap_size);
+          title, heap_size);
   
   dump_heap(heap, heap_size, 1, 0);
 
   fprintf(protocol, "");
 }
 
+
+/**
+ * Sifts the heap into order.
+ *
+ * @param heap       Location of the heap to sift.
+ * @param heap_size  Number of nodes in the heap.
+ * @param node       Node at which to begin sifting.
+ */
 static int 
-sift(int *heap, int heap_size, int node) {
+sift(int *heap, int heap_size, int node)
+{
   register int child;
   register int tmp;
 
@@ -129,7 +168,7 @@ sift(int *heap, int heap_size, int node) {
   /* we address the heap in the following manner: when we start
    * indices at 1, the left child is at 2i, and the right child is at
    * 2i+1. So we maintain this scheme and decrement just before
-   * adressing the array.
+   * addressing the array.
    *
    * left child in 2*node, right child in 2*node + 1, parent in
    * node */
@@ -137,7 +176,7 @@ sift(int *heap, int heap_size, int node) {
   while (child <= heap_size) {
  
     if ((child < heap_size) && 
-	(heap[heap[child]] < heap[heap[child-1]])) {
+        (heap[heap[child]] < heap[heap[child-1]])) {
       
       /* select right branch in heap[child+1-1] */
       
@@ -168,8 +207,16 @@ sift(int *heap, int heap_size, int node) {
   return swaps;
 }
 
+/**
+ * Writes a Huffman code descriptor to file.
+ *
+ * @param filename  Path to file where descriptor is to be saved.
+ * @param hc        Pointer to the descriptor block to save.
+ * @return          Boolean: true for all OK, false for error.
+ */
 int
-WriteHCD(char *filename, HCD *hc) {
+WriteHCD(char *filename, HCD *hc)
+{
   FILE *fd;
 
   if ((fd = fopen(filename, "w")) == NULL) {
@@ -194,8 +241,16 @@ WriteHCD(char *filename, HCD *hc) {
   }
 }
 
+/**
+ * Reads a Huffman compressed sequence from file.
+ *
+ * @param filename  Path to file where compressed sequence is saved.
+ * @param hc        Pointer to location where the sequence's descriptor block will be loaded to.
+ * @return          Boolean: true for all OK, false for error.
+ */
 int
-ReadHCD(char *filename, HCD *hc) {
+ReadHCD(char *filename, HCD *hc)
+{
   FILE *fd;
 
   if ((fd = fopen(filename, "r")) == NULL) {
@@ -218,17 +273,30 @@ ReadHCD(char *filename, HCD *hc) {
     return 1;
   }
 }
+/* should these two functions perhaps be in cl/attributes.h? (prototype of HCD is in attributes.h) or all HCD object in separate module? */
+
 
 /* ================================================== COMPRESSION */
 
+/**
+ * Compresses the token stream of a p-attribute.
+ *
+ * Three files are created: the compressed token stream, the descriptor block,
+ * and a sync file.
+ *
+ * @param attr  The attribute to compress.
+ * @param hc    Location for the resulting Huffmann code descriptor block.
+ * @param fname Base filename for the resulting files.
+ */
 int 
-compute_code_lengths(Attribute *attr, HCD *hc, char *fname) {
+compute_code_lengths(Attribute *attr, HCD *hc, char *fname)
+{
   int id, i, h;
 
   int nr_codes = 0;
 
   int *heap = NULL;
-  unsigned *codelength = NULL;	/* was char[], probably to save space; but that's unnecessary and makes gcc complain */
+  unsigned *codelength = NULL;        /* was char[], probably to save space; but that's unnecessary and makes gcc complain */
 
   int issued_codes[MAXCODELEN];
   int next_code[MAXCODELEN];
@@ -266,8 +334,8 @@ compute_code_lengths(Attribute *attr, HCD *hc, char *fname) {
 
     if ((comp = ensure_component(attr, CompCorpusFreqs, 0)) == NULL) {
       fprintf(stderr, "Computation of huffman codes needs the FREQS component.\n"
-	      "Run 'makeall -r %s -c FREQS %s %s' in order to create it.\n",
-	      corpus->registry_dir, corpus->registry_name, attr->any.name);
+              "Run 'makeall -r %s -c FREQS %s %s' in order to create it.\n",
+              corpus->registry_dir, corpus->registry_name, attr->any.name);
       exit(1);
     }
 
@@ -278,7 +346,7 @@ compute_code_lengths(Attribute *attr, HCD *hc, char *fname) {
    * pp. 335ff.
    */
 
-  hc->size = cl_max_id(attr);		/* the size of the attribute (nr of items) */
+  hc->size = cl_max_id(attr);                /* the size of the attribute (nr of items) */
   if ((hc->size <= 0) || (cderrno != CDA_OK)) {
     cdperror("(aborting) cl_max_id() failed");
     exit(1);
@@ -315,7 +383,7 @@ compute_code_lengths(Attribute *attr, HCD *hc, char *fname) {
   /* ============================== PROTOCOL ============================== */
   if (do_protocol > 0)
     fprintf(protocol, "Allocated heap with %d cells for %d items\n\n",
-	    hc->size * 2, hc->size);
+            hc->size * 2, hc->size);
   if (do_protocol > 2)
     print_heap(heap, hc->size, "After Initialization");
   /* ============================== PROTOCOL ============================== */
@@ -386,9 +454,9 @@ compute_code_lengths(Attribute *attr, HCD *hc, char *fname) {
     /* ============================== PROTOCOL ============================== */
     if (do_protocol > 3) {
       fprintf(protocol, "Removed     smallest item %d with freq %d\n",
-	      pos[0], heap[pos[0]]);
+              pos[0], heap[pos[0]]);
       fprintf(protocol, "Removed 2nd smallest item %d with freq %d\n",
-	      pos[1], heap[pos[1]]);
+              pos[1], heap[pos[1]]);
     }
     /* ============================== PROTOCOL ============================== */
 
@@ -404,7 +472,7 @@ compute_code_lengths(Attribute *attr, HCD *hc, char *fname) {
     heap[h] = h+1;
     heap[h+1] = heap[pos[0]] + heap[pos[1]]; /* accumulated freq */
     heap[pos[0]] = heap[pos[1]] = h+1; /* pointers! */
-    h++;			/* we put a new element into heap */
+    h++;                        /* we put a new element into heap */
 
     /*
      * now, swap it up until we reobtain heap integrity
@@ -418,16 +486,16 @@ compute_code_lengths(Attribute *attr, HCD *hc, char *fname) {
       parent = current >> 1;
 
       while ((parent > 0) &&
-	     (heap[heap[parent-1]] > heap[heap[current-1]])) {
-	
-	int tmp;
+             (heap[heap[parent-1]] > heap[heap[current-1]])) {
 
-	tmp = heap[parent-1];
-	heap[parent-1] = heap[current-1];
-	heap[current-1] = tmp;
+        int tmp;
 
-	current = parent;
-	parent = current >> 1;
+        tmp = heap[parent-1];
+        heap[parent-1] = heap[current-1];
+        heap[current-1] = tmp;
+
+        current = parent;
+        parent = current >> 1;
       }
     }
   }
@@ -485,7 +553,7 @@ compute_code_lengths(Attribute *attr, HCD *hc, char *fname) {
     fprintf(protocol, "Minimal code length: %3d\n", hc->min_codelen);
     fprintf(protocol, "Maximal code length: %3d\n", hc->max_codelen);
     fprintf(protocol, "Compressed code len: %10ld bits, %10ld (+1) bytes\n\n\n",
-	    sum_bits, sum_bits/8);
+            sum_bits, sum_bits/8);
 
   }
   /* ============================== PROTOCOL ============================== */
@@ -519,9 +587,9 @@ compute_code_lengths(Attribute *attr, HCD *hc, char *fname) {
       fprintf(protocol, "----------------------------------------\n");
 
       for (i = hc->min_codelen; i <= hc->max_codelen; i++) {
-	sum_codes += hc->lcount[i];
+        sum_codes += hc->lcount[i];
         fprintf(protocol, "%3d %7d  %7d  %7d\n", 
-		i, hc->lcount[i], hc->min_code[i], hc->symindex[i]);
+                i, hc->lcount[i], hc->min_code[i], hc->symindex[i]);
       }
 
       fprintf(protocol, "----------------------------------------\n");
@@ -556,23 +624,23 @@ compute_code_lengths(Attribute *attr, HCD *hc, char *fname) {
       fprintf(protocol, "\n");
       fprintf(protocol, "   Item   f(item)  CL      Bits     Code, String\n");
       fprintf(protocol, "------------------------------------"
-	      "------------------------------------\n");
+              "------------------------------------\n");
 
       for (i = 0; i < hc->size; i++) {
-	fprintf(protocol, "%7d  %7d  %3d  %10d ",
-		i, 
-		get_id_frequency(attr, i), 
-		codelength[i],
-		codelength[i] * get_id_frequency(attr, i));
+        fprintf(protocol, "%7d  %7d  %3d  %10d ",
+                i,
+                get_id_frequency(attr, i),
+                codelength[i],
+                codelength[i] * get_id_frequency(attr, i));
 
-	bprintf(heap[i], codelength[i], protocol);
+        bprintf(heap[i], codelength[i], protocol);
 
-	fprintf(protocol, "  %7d  %s\n",
-		heap[i], get_string_of_id(attr, i));
+        fprintf(protocol, "  %7d  %s\n",
+                heap[i], get_string_of_id(attr, i));
       }
 
       fprintf(protocol, "------------------------------------"
-	      "------------------------------------\n");
+              "------------------------------------\n");
     }
     /* ============================== PROTOCOL ============================== */
 
@@ -597,82 +665,82 @@ compute_code_lengths(Attribute *attr, HCD *hc, char *fname) {
       assert(corp);
 
       if (fname) {
-	path = fname;
-	
-	sprintf(hcd_path, "%s.hcd", path);
-	sprintf(huf_path, "%s.huf", path);
-	sprintf(sync_path, "%s.huf.syn", path);
+        path = fname;
+
+        sprintf(hcd_path, "%s.hcd", path);
+        sprintf(huf_path, "%s.huf", path);
+        sprintf(sync_path, "%s.huf.syn", path);
       }
       else {
-	path = component_full_name(attr, CompHuffSeq, NULL);
-	assert(path); /* additonal condition (cderrno == CDA_OK) removed, since component_full_name doesn't (re)set cderrno */
-	strcpy(huf_path, path);
+        path = component_full_name(attr, CompHuffSeq, NULL);
+        assert(path); /* additonal condition (cderrno == CDA_OK) removed, since component_full_name doesn't (re)set cderrno */
+        strcpy(huf_path, path);
 
-	path = component_full_name(attr, CompHuffCodes, NULL);
-	assert(path); /* additonal condition (cderrno == CDA_OK) removed, since component_full_name doesn't (re)set cderrno */
-	strcpy(hcd_path, path);
+        path = component_full_name(attr, CompHuffCodes, NULL);
+        assert(path); /* additonal condition (cderrno == CDA_OK) removed, since component_full_name doesn't (re)set cderrno */
+        strcpy(hcd_path, path);
 
-	path = component_full_name(attr, CompHuffSync, NULL);
-	assert(path); /* additonal condition (cderrno == CDA_OK) removed, since component_full_name doesn't (re)set cderrno */
-	strcpy(sync_path, path);
+        path = component_full_name(attr, CompHuffSync, NULL);
+        assert(path); /* additonal condition (cderrno == CDA_OK) removed, since component_full_name doesn't (re)set cderrno */
+        strcpy(sync_path, path);
 
       }
 
       printf("- writing code descriptor block to %s\n",  hcd_path);
       if (!WriteHCD(hcd_path, hc)) {
-	fprintf(stderr, "ERROR: writing %s failed. Aborted.\n", 
-		hcd_path);
-	exit(1);
+        fprintf(stderr, "ERROR: writing %s failed. Aborted.\n",
+                hcd_path);
+        exit(1);
       }
 
       printf("- writing compressed item sequence to %s\n", huf_path);
 
       if (!BFopen(huf_path, "w", &bfd)) {
-	fprintf(stderr, "ERROR: can't create file %s\n", huf_path);
-	perror(huf_path);
-	exit(1);
+        fprintf(stderr, "ERROR: can't create file %s\n", huf_path);
+        perror(huf_path);
+        exit(1);
       }
 
       printf("- writing sync (every %d tokens) to %s\n", SYNCHRONIZATION, sync_path);
 
       if ((sync = fopen(sync_path, "w")) == NULL) {
-	fprintf(stderr, "ERROR: can't create file %s\n", sync_path);
-	perror(sync_path);
-	exit(1);
+        fprintf(stderr, "ERROR: can't create file %s\n", sync_path);
+        perror(sync_path);
+        exit(1);
       }
 
       for (i = 0; i < hc->length; i++) {
 
-	/* SYNCHRONIZE */
+        /* SYNCHRONIZE */
 
-	if ((i % SYNCHRONIZATION) == 0) {
-	  if (i > 0)
-	    BFflush(&bfd);
-	  pos = BFposition(&bfd);
-	  NwriteInt(pos, sync);
-	}
+        if ((i % SYNCHRONIZATION) == 0) {
+          if (i > 0)
+            BFflush(&bfd);
+          pos = BFposition(&bfd);
+          NwriteInt(pos, sync);
+        }
 
-	id = cl_cpos2id(attr, i);
-	if ((id < 0) || (cderrno != CDA_OK)) {
-	  cdperror("(aborting) cl_cpos2id() failed");
-	  exit(1);
-	}
+        id = cl_cpos2id(attr, i);
+        if ((id < 0) || (cderrno != CDA_OK)) {
+          cdperror("(aborting) cl_cpos2id() failed");
+          exit(1);
+        }
 
-	else {
+        else {
 
-	  assert((id >= 0) && (id < hc->size) && "Internal Error");
+          assert((id >= 0) && (id < hc->size) && "Internal Error");
 
-	  cl = codelength[id];
-	  code = heap[id];
+          cl = codelength[id];
+          code = heap[id];
 
-	  if (!BFwriteWord((unsigned int)code, cl, &bfd)) {
-	    fprintf(stderr, "Error writing code for ID %d (%d, %d bits) at position %d. Aborted.\n",
-		    id, code, cl, i);
-	    exit(1);
-	  }
+          if (!BFwriteWord((unsigned int)code, cl, &bfd)) {
+            fprintf(stderr, "Error writing code for ID %d (%d, %d bits) at position %d. Aborted.\n",
+                    id, code, cl, i);
+            exit(1);
+          }
 
-	}
-	
+        }
+
       }
 
       fclose(sync);
@@ -686,12 +754,27 @@ compute_code_lengths(Attribute *attr, HCD *hc, char *fname) {
   return 1;
 }
 
+
+
 /* ================================================== DECOMPRESSION & ERROR CHECKING */
 
-/* this assumes that compute_code_lengths() has been called beforehand and made sure
-   that the _uncompressed_ token sequence is used by CL access functions */
+/* this
+    */
+
+/**
+ * Checks a huffcoded attribute for errors by decompressing it.
+ *
+ * This function assumes that compute_code_lengths() has been called
+ * beforehand and made sure that the _uncompressed_ token sequence is
+ * used by CL access functions.
+ *
+ * @param attr  The attribute to check.
+ * @param fname Base filename to use for the three compressed-attribute files.
+ *              Can be NULL, in which case the filenames in the attribute are used.
+ */
 void 
-decode_check_huff(Attribute *attr, char *fname) {
+decode_check_huff(Attribute *attr, char *fname)
+{
   BFile bfd;
   FILE *sync;
   HCD hc;
@@ -756,7 +839,7 @@ decode_check_huff(Attribute *attr, char *fname) {
   size = cl_max_cpos(attr);
   if (size != hc.length) {
     fprintf(stderr, "ERROR: wrong corpus size (%d tokens) in %s (correct size: %d)\n",
-	    hc.length, hcd_path, size);
+            hc.length, hcd_path, size);
     exit(1);
   }
 
@@ -765,13 +848,13 @@ decode_check_huff(Attribute *attr, char *fname) {
     if ((pos % SYNCHRONIZATION) == 0) {
       offset = BFposition(&bfd); /* need to get offset before flushing (because flushing fills the bit buffer and advances offset to the following byte!) */
       if (pos > 0)
-	BFflush(&bfd);
-      sync_offset = -1;		/* make sure we get an error if read below fails */
+        BFflush(&bfd);
+      sync_offset = -1;                /* make sure we get an error if read below fails */
       NreadInt(&sync_offset, sync);
       if (offset != sync_offset) {
-	fprintf(stderr, "ERROR: wrong sync offset %d (true offset %d) at cpos %d. Aborted.\n",
-		sync_offset, offset, pos);
-	exit(1);
+        fprintf(stderr, "ERROR: wrong sync offset %d (true offset %d) at cpos %d. Aborted.\n",
+                sync_offset, offset, pos);
+        exit(1);
       }
     }
 
@@ -784,12 +867,12 @@ decode_check_huff(Attribute *attr, char *fname) {
     l = 1;
     while (v < hc.min_code[l]) {
       if (!BFread(&bit, 1, &bfd)) {
-	fprintf(stderr, "ERROR reading file %s. Aborted.\n", huf_path);
-	return;
+        fprintf(stderr, "ERROR reading file %s. Aborted.\n", huf_path);
+        return;
       }
       v <<= 1;
       if (bit)
-	v++;
+        v++;
       l++;
     }
     item = hc.symbols[hc.symindex[l] + v - hc.min_code[l]];
@@ -797,7 +880,7 @@ decode_check_huff(Attribute *attr, char *fname) {
     true_item = cl_cpos2id(attr, pos);
     if (item != true_item) {
       fprintf(stderr, "ERROR: wrong token (id=%d) at cpos %d (correct id=%d). Aborted.\n",
-	      item, pos, true_item);
+              item, pos, true_item);
     }
 
   }
@@ -806,16 +889,23 @@ decode_check_huff(Attribute *attr, char *fname) {
 
   /* tell the user it's safe to delete the CORPUS component now */
   printf("!! You can delete the file <%s> now.\n",
-	 component_full_name(attr, CompCorpus, NULL));
+         component_full_name(attr, CompCorpus, NULL));
   
-  return;			/* exits on error, so there's no return value */
+  return;                        /* exits on error, so there's no return value */
 }
 
 
-/* ---------------------------------------------------------------------- */
 
+
+/**
+ * Prints a usage message and exits the program.
+ *
+ * @param msg         A message about the error.
+ * @param error_code  Value to be returned by the program when it exits.
+ */
 void 
-usage(char *msg, int error_code) {
+usage(char *msg, int error_code)
+{
   if (msg)
     fprintf(stderr, "Usage error: %s\n", msg);
   fprintf(stderr, "\n");
@@ -864,10 +954,10 @@ main(int argc, char **argv) {
   extern char *optarg;
   int c;
   
-  int i_want_to_believe = 0;	/* skip error checks? */
+  int i_want_to_believe = 0;        /* skip error checks? */
   int all_attributes = 0;
 
-  protocol = stdout;		/* 'delayed' init (see top of file) */
+  protocol = stdout;                /* 'delayed' init (see top of file) */
 
   /* ------------------------------------------------- PARSE ARGUMENTS */
 
@@ -895,10 +985,10 @@ main(int argc, char **argv) {
       /* r: registry directory */
     case 'r': 
       if (registry_directory == NULL) 
-	registry_directory = optarg;
+        registry_directory = optarg;
       else {
-	fprintf(stderr, "%s: -r option used twice\n", progname);
-	exit(2);
+        fprintf(stderr, "%s: -r option used twice\n", progname);
+        exit(2);
       }
       break;
       
@@ -941,24 +1031,24 @@ main(int argc, char **argv) {
   
   if ((corpus = cl_new_corpus(registry_directory, corpus_id)) == NULL) {
     fprintf(stderr, "Corpus %s not found in registry %s . Aborted.\n", 
-	    corpus_id,
-	    (registry_directory ? registry_directory 
-	       : central_corpus_directory()));
+            corpus_id,
+            (registry_directory ? registry_directory
+               : central_corpus_directory()));
     exit(1);
   }
 
   if (all_attributes) {
     for (attr = corpus->attributes; attr; attr = attr->any.next)
       if (attr->any.type == ATT_POS) {
-	compute_code_lengths(attr, &hc, output_fn);
-	if (! i_want_to_believe) 
-	  decode_check_huff(attr, output_fn);
+        compute_code_lengths(attr, &hc, output_fn);
+        if (! i_want_to_believe)
+          decode_check_huff(attr, output_fn);
       }
   }
   else {
     if ((attr = cl_new_attribute(corpus, attr_name, ATT_POS)) == NULL) {
       fprintf(stderr, "Attribute %s.%s doesn't exist. Aborted.\n", 
-	      corpus_id, attr_name);
+              corpus_id, attr_name);
       exit(1);
     }
     compute_code_lengths(attr, &hc, output_fn);

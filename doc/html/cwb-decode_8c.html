@@ -36,7 +36,7 @@
 <h2>Defines</h2>
 <ul>
 <li>#define <a class="el" href="cwb-decode_8c.html#34a7d47b1d3fe7b2a401f99657966a7b">MAX_ATTRS</a>&nbsp;&nbsp;&nbsp;1024
-<li>#define <a class="el" href="cwb-decode_8c.html#dec43c9afe5c0094c40258d1169d26e2">MAX_PRINT_VALUES</a>&nbsp;&nbsp;&nbsp;1024
+<dl class="el"><dd class="mdescRight">Maximum number of attributes that can be printed.  <a href="#34a7d47b1d3fe7b2a401f99657966a7b"></a><br></dl><li>#define <a class="el" href="cwb-decode_8c.html#dec43c9afe5c0094c40258d1169d26e2">MAX_PRINT_VALUES</a>&nbsp;&nbsp;&nbsp;1024
 </ul>
 <h2>Typedefs</h2>
 <ul>
@@ -57,10 +57,10 @@
 </ul>
 <h2>Functions</h2>
 <ul>
-<li>void <a class="el" href="cwb-decode_8c.html#202f198f21f92fe44c27a6492512721c">cleanup</a> (int rc)
-<li>void <a class="el" href="cwb-decode_8c.html#f80413ba5688ac7960468de778e6f12b">usage</a> (int exit_code)
-<li>int <a class="el" href="cwb-decode_8c.html#5ea55cc614294723f5f189166a290525">is_num</a> (char *s)
-<li>char * <a class="el" href="cwb-decode_8c.html#0ed6494b0edce9f87ee21a9d38b08523">lisp_string</a> (char *s)
+<li>void <a class="el" href="cwb-decode_8c.html#919b69e333b16392f3afa989c19765fa">cleanup</a> (int error_code)
+<dl class="el"><dd class="mdescRight">Cleans up memory prior to an error-prompted exit.  <a href="#919b69e333b16392f3afa989c19765fa"></a><br></dl><li>void <a class="el" href="cwb-decode_8c.html#f80413ba5688ac7960468de778e6f12b">usage</a> (int exit_code)
+<dl class="el"><dd class="mdescRight">Prints a usage message and exits the program.  <a href="#f80413ba5688ac7960468de778e6f12b"></a><br></dl><li>int <a class="el" href="cwb-decode_8c.html#5ea55cc614294723f5f189166a290525">is_num</a> (char *s)
+<dl class="el"><dd class="mdescRight">Check whether a string represents a number.  <a href="#5ea55cc614294723f5f189166a290525"></a><br></dl><li>char * <a class="el" href="cwb-decode_8c.html#0ed6494b0edce9f87ee21a9d38b08523">lisp_string</a> (char *s)
 <li>char * <a class="el" href="cwb-decode_8c.html#b71db87d9e68160272bec013ccefff40">xml_string</a> (char *s)
 <li>void <a class="el" href="cwb-decode_8c.html#4645a3249d8e4194b9eddc886ccc759f">print_xml_declaration</a> (void)
 <li>void <a class="el" href="cwb-decode_8c.html#208ca1c02f1d4343a36e6606c17fbaee">sort_s_att_regions</a> (void)
@@ -78,11 +78,11 @@
 <li>char * <a class="el" href="cwb-decode_8c.html#0360462590048e1a217c595d8ec3ad5b">corpus_id</a> = NULL
 <li><a class="el" href="struct_t_corpus.html">Corpus</a> * <a class="el" href="cwb-decode_8c.html#ca3a1fb765418f9b9b1d74051aa88667">corpus</a> = NULL
 <li><a class="el" href="union___attribute.html">ATPtr</a> <a class="el" href="cwb-decode_8c.html#f36165ba6b6a64014011bd80a702ad77">print_list</a> [MAX_ATTRS]
-<li>int <a class="el" href="cwb-decode_8c.html#57b9291b1a68436afd2693c3bf68dcc6">print_list_index</a> = 0
-<li><a class="el" href="struct_s_att_region.html">SAttRegion</a> <a class="el" href="cwb-decode_8c.html#39ef9f3fb9015ab3a6533d7f085efa1e">s_att_regions</a> [MAX_ATTRS]
+<dl class="el"><dd class="mdescRight">list of attributes selected by user for printing  <a href="#f36165ba6b6a64014011bd80a702ad77"></a><br></dl><li>int <a class="el" href="cwb-decode_8c.html#57b9291b1a68436afd2693c3bf68dcc6">print_list_index</a> = 0
+<dl class="el"><dd class="mdescRight">denotes the last attribute to be printed  <a href="#57b9291b1a68436afd2693c3bf68dcc6"></a><br></dl><li><a class="el" href="struct_s_att_region.html">SAttRegion</a> <a class="el" href="cwb-decode_8c.html#39ef9f3fb9015ab3a6533d7f085efa1e">s_att_regions</a> [MAX_ATTRS]
 <li>int <a class="el" href="cwb-decode_8c.html#e5e25fb1f0746aa35e5faa8167b43b57">sar_sort_index</a> [MAX_ATTRS]
-<li>int <a class="el" href="cwb-decode_8c.html#b6f8c360879da990ff0392572f3bf5fa">N_sar</a> = 0
-<li><a class="el" href="union___attribute.html">ATPtr</a> <a class="el" href="cwb-decode_8c.html#0c7721d2eaa9f54f55768d9b2514e577">printValues</a> [MAX_PRINT_VALUES]
+<dl class="el"><dd class="mdescRight">index used for bubble-sorting list of regions  <a href="#e5e25fb1f0746aa35e5faa8167b43b57"></a><br></dl><li>int <a class="el" href="cwb-decode_8c.html#b6f8c360879da990ff0392572f3bf5fa">N_sar</a> = 0
+<dl class="el"><dd class="mdescRight">number of regions currently in list (may change for each token printed)  <a href="#b6f8c360879da990ff0392572f3bf5fa"></a><br></dl><li><a class="el" href="union___attribute.html">ATPtr</a> <a class="el" href="cwb-decode_8c.html#0c7721d2eaa9f54f55768d9b2514e577">printValues</a> [MAX_PRINT_VALUES]
 <li>int <a class="el" href="cwb-decode_8c.html#b580315536405e5bc7e5d6453c9914e0">printValuesIndex</a> = 0
 <li>int <a class="el" href="cwb-decode_8c.html#9e8860bc46a9418756cc7b3ce481bfac">first_token</a> = 0
 <li>int <a class="el" href="cwb-decode_8c.html#72e27dee31b1c4c6a504fbed29542d97">last</a> = 0
@@ -103,6 +103,8 @@
 </div>
 <div class="memdoc">
 
+<p>
+Maximum number of attributes that can be printed. 
 <p>
 
 <p>Referenced by <a class="el" href="cwb-decode_8c.html#5be28e38d8bc087ba46da1238a5f8d1c">add_attribute()</a>.</p>
@@ -249,7 +251,7 @@
 
 </div>
 </div><p>
-<a class="anchor" name="202f198f21f92fe44c27a6492512721c"></a><!-- doxytag: member="cwb&#45;decode.c::cleanup" ref="202f198f21f92fe44c27a6492512721c" args="(int rc)" -->
+<a class="anchor" name="919b69e333b16392f3afa989c19765fa"></a><!-- doxytag: member="cwb&#45;decode.c::cleanup" ref="919b69e333b16392f3afa989c19765fa" args="(int error_code)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -257,7 +259,7 @@
           <td class="memname">void cleanup           </td>
           <td>(</td>
           <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>rc</em>          </td>
+          <td class="paramname"> <em>error_code</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td></td>
         </tr>
@@ -266,6 +268,13 @@
 <div class="memdoc">
 
 <p>
+Cleans up memory prior to an error-prompted exit. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>error_code</em>&nbsp;</td><td>Value to be returned by the program when it exits. </td></tr>
+  </table>
+</dl>
 
 <p>References <a class="el" href="cwb-compress-rdx_8c.html#304c9ed7a3d86e5f709099dfc8f152e7">debug_output</a>, and <a class="el" href="cl_8h.html#1c317981d288c9d0964017ada173b2b4">drop_corpus()</a>.</p>
 
@@ -290,6 +299,14 @@
 <div class="memdoc">
 
 <p>
+Check whether a string represents a number. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>s</em>&nbsp;</td><td>The string to check. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>Boolean: true iff s contains only digits. </dd></dl>
 
 <p>Referenced by <a class="el" href="cwb-decode_8c.html#3c04138a5bfe5d72780bb7e82a18e627">main()</a>.</p>
 
@@ -484,6 +501,13 @@ Main function for cwb-decode.
 <div class="memdoc">
 
 <p>
+Prints a usage message and exits the program. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>exit_code</em>&nbsp;</td><td>Value to be returned by the program when it exits. </td></tr>
+  </table>
+</dl>
 
 <p>References <a class="el" href="cwb-compress-rdx_8c.html#919b69e333b16392f3afa989c19765fa">cleanup()</a>, and <a class="el" href="options_8h.html#b9e1449fd00c98428516f0b41eddcb10">progname</a>.</p>
 
@@ -647,6 +671,8 @@ Main function for cwb-decode.
 <div class="memdoc">
 
 <p>
+number of regions currently in list (may change for each token printed) 
+<p>
 
 </div>
 </div><p>
@@ -662,6 +688,8 @@ Main function for cwb-decode.
 <div class="memdoc">
 
 <p>
+list of attributes selected by user for printing 
+<p>
 
 </div>
 </div><p>
@@ -676,6 +704,8 @@ Main function for cwb-decode.
 </div>
 <div class="memdoc">
 
+<p>
+denotes the last attribute to be printed 
 <p>
 
 <p>Referenced by <a class="el" href="cwb-decode_8c.html#5be28e38d8bc087ba46da1238a5f8d1c">add_attribute()</a>, <a class="el" href="cwb-decode_8c.html#e319baa29bcce4fc1184bda24e29f12f">show_position_values()</a>, and <a class="el" href="cwb-decode_8c.html#b60dec8c10f8636e9145733b0416a531">verify_print_value_list()</a>.</p>
@@ -788,6 +818,8 @@ Main function for cwb-decode.
 <div class="memdoc">
 
 <p>
+index used for bubble-sorting list of regions 
+<p>
 
 </div>
 </div><p>
@@ -809,7 +841,7 @@ Main function for cwb-decode.
 </div>
 </div><p>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Sat Sep 19 20:28:33 2009 for CWB by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Fri Sep 25 21:50:32 2009 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

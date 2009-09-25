@@ -20,7 +20,14 @@
 
 #include "paths.h"
 
-char *get_path_component(char *s)
+/**
+ * Tokenises a string into components split by ':'.
+ *
+ * @param s  The string to tokenise; or, NULL if tokenisation has already been initialised.
+ * @return   The next token from the string.
+ */
+char *
+get_path_component(char *s)
 {
   register int c;
   char *tok;

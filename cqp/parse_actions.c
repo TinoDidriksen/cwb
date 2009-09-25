@@ -54,7 +54,7 @@
 int generate_code;
 int within_gc;
 
-CYCtype last_cyc;		/* type of last corpus yielding command */
+CYCtype last_cyc;                /* type of last corpus yielding command */
 
 CorpusList *query_corpus = NULL;
 CorpusList *old_query_corpus = NULL;
@@ -90,13 +90,13 @@ addHistoryLine(void)
       FILE *fd;
 
       if (!(fd = OpenFile(cqp_history_file, "a"))) {
-	cqpmessage(Error, "Can't open history file %s\n", 
-		   cqp_history_file);
+        cqpmessage(Error, "Can't open history file %s\n",
+                   cqp_history_file);
       }
       else {
-	fputs(QueryBuffer, fd);
-	fputc('\n', fd);
-	fclose(fd);
+        fputs(QueryBuffer, fd);
+        fputc('\n', fd);
+        fclose(fd);
       }
     }
   }
@@ -138,8 +138,8 @@ in_CorpusCommand(char *id, CorpusList *cl)
     return NULL;
   else if (is_qualified(id)) {
     cqpmessage(Warning,
-	       "You can't use a qualified corpus name on the\n"
-	       "left hand side of an assignment (result in \"Last\")");
+               "You can't use a qualified corpus name on the\n"
+               "left hand side of an assignment (result in \"Last\")");
     return NULL;
   }
   else if (cl->type == SYSTEM) {
@@ -175,15 +175,15 @@ void after_CorpusCommand(CorpusList *cl)
     
     if (cl) {
       if (subquery)
-	set_current_corpus(cl, 0);
+        set_current_corpus(cl, 0);
       if (autoshow && (cl->size > 0)) {
-	catalog_corpus(cl, NULL, 0, -1, GlobalPrintMode);
+        catalog_corpus(cl, NULL, 0, -1, GlobalPrintMode);
       }
       else if (!silent)
-	printf("%d matches.%s\n",
-	       cl->size,
-	       (cl->size > 0 ? " Use 'cat' to show."
-		: ""));
+        printf("%d matches.%s\n",
+               cl->size,
+               (cl->size > 0 ? " Use 'cat' to show."
+                : ""));
     }
     query_corpus = NULL;
     
@@ -197,14 +197,14 @@ void after_CorpusCommand(CorpusList *cl)
   case SetOperation:
     if (cl) {
       if (subquery)
-	set_current_corpus(cl, 0);
+        set_current_corpus(cl, 0);
       if (autoshow && (cl->size > 0))
-	catalog_corpus(cl, NULL, 0, -1, GlobalPrintMode);
+        catalog_corpus(cl, NULL, 0, -1, GlobalPrintMode);
       else if (!silent)
-	printf("%d matches.%s\n",
-	       cl->size,
-	       (cl->size > 0 ? " Use 'cat' to show."
-		: ""));
+        printf("%d matches.%s\n",
+               cl->size,
+               (cl->size > 0 ? " Use 'cat' to show."
+                : ""));
     }
     break;
     
@@ -235,15 +235,15 @@ CorpusList *in_UnnamedCorpusCommand(CorpusList *cl)
       assert(cl->type == TEMP);
       
       if (generate_code) {
-	
-	expand_dataspace(cl);
-	
-	do_timing("Query result computed"); /* timer must be started by each query execution command */
-	
-	res = assign_temp_to_sub(cl, "Last");
+
+        expand_dataspace(cl);
+
+        do_timing("Query result computed"); /* timer must be started by each query execution command */
+
+        res = assign_temp_to_sub(cl, "Last");
       }
       else
-	res = NULL;
+        res = NULL;
       
       drop_temp_corpora();
       
@@ -257,23 +257,23 @@ CorpusList *in_UnnamedCorpusCommand(CorpusList *cl)
        */
       
       if (expansion.size > 0) {
-	
-	if (cl->type == SYSTEM) {
-	  cqpmessage(Warning,
-		     "System corpora can't be expanded");
-	  res = cl;
-	}
-	else {
-	  res = make_temp_corpus(cl, "RHS");
-	  expand_dataspace(res);
-	  res = assign_temp_to_sub(res, "Last");
-	}
+
+        if (cl->type == SYSTEM) {
+          cqpmessage(Warning,
+                     "System corpora can't be expanded");
+          res = cl;
+        }
+        else {
+          res = make_temp_corpus(cl, "RHS");
+          expand_dataspace(res);
+          res = assign_temp_to_sub(res, "Last");
+        }
       }
       else {
-	/* a simple activation without
-	 * restructuring
-	 */
-	res = cl;
+        /* a simple activation without
+         * restructuring
+         */
+        res = cl;
       }
       break;
       
@@ -300,7 +300,8 @@ CorpusList *in_UnnamedCorpusCommand(CorpusList *cl)
 
 /* ======================================== Corpus Yielding Commands */
 
-CorpusList *ActivateCorpus(CorpusList *cl)
+CorpusList *
+ActivateCorpus(CorpusList *cl)
 {
   cqpmessage(Message, "CorpusActivate: %s", cl);
   
@@ -313,25 +314,26 @@ CorpusList *ActivateCorpus(CorpusList *cl)
     
     if (query_corpus) {
       if (!next_environment()) {
-	cqpmessage(Error, "Can't allocate another evaluation environment");
-	generate_code = 0;
-	query_corpus = NULL;
+        cqpmessage(Error, "Can't allocate another evaluation environment");
+        generate_code = 0;
+        query_corpus = NULL;
       }
       else
-	CurEnv->query_corpus = query_corpus;
+        CurEnv->query_corpus = query_corpus;
     }
     last_cyc = Activation;
   }
   return cl;
 }
 
-CorpusList *after_CorpusSetExpr(CorpusList *cl)
+CorpusList *
+after_CorpusSetExpr(CorpusList *cl)
 {
   last_cyc = SetOperation;
   
   if (!next_environment()) {
     cqpmessage(Error,
-	       "Can't allocate another evaluation environment");
+               "Can't allocate another evaluation environment");
     generate_code = 0;
     CurEnv->query_corpus = NULL;
   }
@@ -373,7 +375,7 @@ void prepare_Query()
       assert(CurEnv == &(Environment[0]));
       
       query_corpus = make_temp_corpus(current_corpus,
-				      "RHS");
+                                      "RHS");
       CurEnv->query_corpus = query_corpus;
 
       /* subqueries don't work properly if the mother corpus has overlapping regions -> delete and warn */
@@ -381,7 +383,7 @@ void prepare_Query()
       RangeSetop(query_corpus, RNonOverlapping, NULL, NULL);
       after = query_corpus->size;
       if (after < before) {
-	cqpmessage(Warning, "Overlapping matches in %s:%s deleted for subquery execution.", query_corpus->mother_name, query_corpus->name);
+        cqpmessage(Warning, "Overlapping matches in %s:%s deleted for subquery execution.", query_corpus->mother_name, query_corpus->name);
       }
     }
   }
@@ -402,14 +404,14 @@ CorpusList *after_Query(CorpusList *cl)
       cl_free(cl->query_corpus);
 
       if (query_corpus)
-	cl->query_corpus = cl_strdup(query_corpus->name);
+        cl->query_corpus = cl_strdup(query_corpus->name);
 
       /* this is probably where we want to auto-execute the reduce to maximal stuff */
 
       if (QueryBuffer[0] != '\0' && 
-	  QueryBufferP > 0 && 
-	  !QueryBufferOverflow) {
-	cl->query_text = cl_strdup(QueryBuffer);
+          QueryBufferP > 0 &&
+          !QueryBufferOverflow) {
+        cl->query_text = cl_strdup(QueryBuffer);
       }
     }
     return cl;
@@ -420,7 +422,8 @@ CorpusList *after_Query(CorpusList *cl)
 
 /* ======================================== ``interactive'' commands */
 
-void do_cat(CorpusList *cl, struct Redir *r, int first, int last)
+void
+do_cat(CorpusList *cl, struct Redir *r, int first, int last)
 {
   if (cl) {
     cqpmessage(Message, "cat command: (%s)", cl->name);
@@ -428,14 +431,15 @@ void do_cat(CorpusList *cl, struct Redir *r, int first, int last)
   }
 }
 
-void do_save(CorpusList *cl, struct Redir *r)
+void
+do_save(CorpusList *cl, struct Redir *r)
 {
   if (cl) {
     if (!LOCAL_CORP_PATH)
       cqpmessage(Warning,
-		 "Can't save subcorpus ``%s'' (env. var. %s isn't set)",
-		 cl->name,
-		 DEFAULT_LOCAL_PATH_ENV_VAR);
+                 "Can't save subcorpus ``%s'' (env. var. %s isn't set)",
+                 cl->name,
+                 DEFAULT_LOCAL_PATH_ENV_VAR);
     else {
       cqpmessage(Message, "save command: %s to %s", cl->name, r->name);
       save_subcorpus(cl, r->name);
@@ -445,7 +449,8 @@ void do_save(CorpusList *cl, struct Redir *r)
 
 /* ======================================== show attribute */
 
-void do_attribute_show(char *name, int status)
+void
+do_attribute_show(char *name, int status)
 {
   AttributeInfo *ai;
 
@@ -456,36 +461,37 @@ void do_attribute_show(char *name, int status)
     CD.print_cpos = status;
   }
   else if ((strcasecmp(name, "targets") == 0) &&
-	   current_corpus && 
-	   current_corpus->corpus &&
-	   find_attribute(current_corpus->corpus, name, ATT_STRUC, NULL) == NULL) {
+           current_corpus &&
+           current_corpus->corpus &&
+           find_attribute(current_corpus->corpus, name, ATT_STRUC, NULL) == NULL) {
     show_targets = status;
   }
   else if (CD.attributes || CD.alignedCorpora) {
     if (name) {
       if ((ai = FindInAL(CD.attributes, name)))
-	ai->status = status;
+        ai->status = status;
       else if ((ai = FindInAL(CD.alignedCorpora, name)))
-	ai->status = status;
+        ai->status = status;
       else if ((ai = FindInAL(CD.strucAttributes, name)))
-	ai->status = status;
+        ai->status = status;
       else {
-	cqpmessage(Error, "No such attribute: %s", name);
-	generate_code = 0;
+        cqpmessage(Error, "No such attribute: %s", name);
+        generate_code = 0;
       }
     }
     else {
       for (ai = CD.attributes->list; ai; ai = ai->next)
-	ai->status = status;
+        ai->status = status;
       
       if (!status)
-	if ((ai = FindInAL(CD.attributes, DEFAULT_ATT_NAME)) != NULL)
-	  ai->status = 1;
+        if ((ai = FindInAL(CD.attributes, DEFAULT_ATT_NAME)) != NULL)
+          ai->status = 1;
     }
   }
 }
 
-CorpusList *do_setop(RangeSetOp op, CorpusList *c1, CorpusList *c2)
+CorpusList *
+do_setop(RangeSetOp op, CorpusList *c1, CorpusList *c2)
 {
   CorpusList *res;
 
@@ -496,8 +502,8 @@ CorpusList *do_setop(RangeSetOp op, CorpusList *c1, CorpusList *c2)
   if (c1 && c2) {
     if (c1->corpus != c2->corpus)
       cqpmessage(Warning,
-		 "Original corpora of %s (%s) and %s (%s) differ.\n",
-		 c1->name, c1->mother_name, c2->name, c2->mother_name);
+                 "Original corpora of %s (%s) and %s (%s) differ.\n",
+                 c1->name, c1->mother_name, c2->name, c2->mother_name);
     else {
       res = make_temp_corpus(c1, "RHS");
       RangeSetop(res, op, c2, NULL);
@@ -518,7 +524,7 @@ prepare_do_subset(CorpusList *cl, FieldType field)
   }
   else if (cl->size == 0) {
     cqpmessage(Warning, "The subcorpus is empty, subset operation therefore "
-	       "without any effect.");
+               "without any effect.");
     return;
   }
 
@@ -540,7 +546,7 @@ prepare_do_subset(CorpusList *cl, FieldType field)
 
   if (!field_exists) {
     cqpmessage(Error, "The <%s> anchor is not defined for this subcorpus.",
-	       field_type_to_name(field));
+               field_type_to_name(field));
     generate_code = 0;
     return;
   }
@@ -584,23 +590,23 @@ do_set_target(CorpusList *cl, FieldType goal, FieldType source)
 
 void 
 do_set_complex_target(CorpusList *cl,
-		      FieldType field_to_set,
-		      SearchStrategy strategy,
-		      Constrainttree boolt, 
-		      enum ctxtdir direction, 
-		      int number, 
-		      char *id, 
-		      FieldType field, 
-		      int inclusive)
+                      FieldType field_to_set,
+                      SearchStrategy strategy,
+                      Constrainttree boolt,
+                      enum ctxtdir direction,
+                      int number,
+                      char *id,
+                      FieldType field,
+                      int inclusive)
 {
   if (generate_code && cl != NULL) {
     /* query_corpus has been saved in old_query_corpus and set to cl by parser */
     evaluate_target(cl, 
-		    field_to_set,
-		    field,
-		    inclusive,
-		    strategy,
-		    boolt, direction, number, id);
+                    field_to_set,
+                    field,
+                    inclusive,
+                    strategy,
+                    boolt, direction, number, id);
     query_corpus = old_query_corpus; /* reset query_corpus to previous value */
     old_query_corpus = NULL;
   }
@@ -610,7 +616,16 @@ do_set_complex_target(CorpusList *cl,
     free_booltree(boolt);
 }
 
-void do_sleep(int duration)
+
+/**
+ * Puts the program to sleep.
+ *
+ * A wrapper round the standard sleep() function.
+ *
+ * @param duration  How many seconds to sleep for.
+ */
+void
+do_sleep(int duration)
 {
   if (duration > 0) {
     sleep(duration);
@@ -618,7 +633,8 @@ void do_sleep(int duration)
 }
 
 
-void do_exec(char *fname)
+void
+do_exec(char *fname)
 {
   FILE *f;
   
@@ -626,15 +642,15 @@ void do_exec(char *fname)
   
   if (1) {
     cqpmessage(Error,
-	       "The source statement is not yet supported");
+               "The source statement is not yet supported");
     generate_code = 0;
   }
   else {
     if ((f = OpenFile(fname, "r")) != NULL) {
       if (!cqp_parse_file(f, 1)) {
-	cqpmessage(Error,
-		   "Errors in exec'ed file %s\n", fname);
-	generate_code = 0;
+        cqpmessage(Error,
+                   "Errors in exec'ed file %s\n", fname);
+        generate_code = 0;
       }
     }
     else {
@@ -687,12 +703,12 @@ do_delete_lines(CorpusList *cl, FieldType f, int mode)
       break;
     case KeywordField:
       if ((positions = cl->keywords) == NULL) {
-	cqpmessage(Warning, "No keywords set for this subcorpus");
+        cqpmessage(Warning, "No keywords set for this subcorpus");
       }
       break;
     case TargetField:
       if ((positions = cl->targets) == NULL) {
-	cqpmessage(Warning, "No collocates set for this subcorpus");
+        cqpmessage(Warning, "No collocates set for this subcorpus");
       }
       break;
     default:
@@ -707,9 +723,9 @@ do_delete_lines(CorpusList *cl, FieldType f, int mode)
       assert(lines);
       
       for (i = 0; i < cl->size; i++) {
-	if (positions[i] >= 0) {
-	  (void) set_bit(lines, i);
-	}
+        if (positions[i] >= 0) {
+          (void) set_bit(lines, i);
+        }
       }
       (void) delete_intervals(cl, lines, mode);
       (void) destroy_bitfield(&lines);
@@ -732,7 +748,7 @@ do_reduce(CorpusList *cl, int number, int percent) {
   if (percent) {
     if (number <= 0 || number >= 100) {
       cqpmessage(Error, "The \"reduce to n percent\" operation\n"
-		 "requires a number between 0 and 100 (exclusive)");
+                 "requires a number between 0 and 100 (exclusive)");
       generate_code = 0;
       return;
     }
@@ -742,7 +758,7 @@ do_reduce(CorpusList *cl, int number, int percent) {
     if (number <= 0 || number >= cl->size) { 
       /* nothing to be done -- don't squeal (a general "reduce Last to 50" without checking size is quite useful) */
       /*       cqpmessage(Warning, "The \"reduce to n lines\" operation\n" */
-      /* 		 "requires a number between 0 and the subcorpus' size (exclusive)"); */
+      /*                  "requires a number between 0 and the subcorpus' size (exclusive)"); */
       return;
     }
   }
@@ -754,13 +770,13 @@ do_reduce(CorpusList *cl, int number, int percent) {
 
     /* the algorithm below uses a continuously updated selection probability 
        in order to select a random sample of size <number> without replacement */
-    size = cl->size;		/* how many matches remain to be processed  */
-    to_select = number; 	/* how many of these should be selected */
+    size = cl->size;                /* how many matches remain to be processed  */
+    to_select = number;         /* how many of these should be selected */
     while (size > 0) {
       double prob = ((double) to_select) / ((double) size); /* select current line with this probability */
       if (cl_runif() <= prob) {
-	set_bit(lines, size-1); /* current line number is size-1 */
-	to_select--;
+        set_bit(lines, size-1); /* current line number is size-1 */
+        to_select--;
       }
       size--;
     }
@@ -800,15 +816,15 @@ do_cut(CorpusList *cl, int first, int last) {
   }
   if (last < first) {
     cqpmessage(Warning, "Cut operator applied with empty range %d .. %d - result is empty.", first, last);
-    first = last = n_matches;	/* delete all matches, ensuring that index does not run out of bounds */
+    first = last = n_matches;        /* delete all matches, ensuring that index does not run out of bounds */
   }
 
   for (i = 0; i < first; i++)  {
-    cl->range[i].start = -1;	/* delete all matches before <first> */
+    cl->range[i].start = -1;        /* delete all matches before <first> */
     cl->range[i].end = -1;
   }
   for (i = last + 1; i < n_matches; i++)  {
-    cl->range[i].start = -1;	/* delete all matches after <last> */
+    cl->range[i].start = -1;        /* delete all matches after <last> */
     cl->range[i].end = -1;
   }
   
@@ -825,9 +841,9 @@ do_info(CorpusList *cl)
 
 void 
 do_group(CorpusList *cl,
-	 FieldType target, int target_offset, char *t_att,
-	 FieldType source, int source_offset, char *s_att,
-	 int cut, int expand, struct Redir *redir) 
+         FieldType target, int target_offset, char *t_att,
+         FieldType source, int source_offset, char *s_att,
+         int cut, int expand, struct Redir *redir)
 {
   Group *group;
   
@@ -842,8 +858,8 @@ do_group(CorpusList *cl,
 
 void 
 do_group2(CorpusList *cl,
-	  FieldType target, int target_offset, char *t_att,
-	  int cut, int expand, struct Redir *r) 
+          FieldType target, int target_offset, char *t_att,
+          int cut, int expand, struct Redir *r)
 {
   Group *group;
   
@@ -872,7 +888,7 @@ do_StandardQuery(int cut_value, int keep_flag)
     
     if (keep_flag == 1 && current_corpus->type != SUB) {
       cqpmessage(Warning, "``Keep Ranges'' only allowed when \n"
-		 "querying subcorpora (ignored)");
+                 "querying subcorpora (ignored)");
       keep_flag = 0;
     }
     cqp_run_query(cut_value, keep_flag);
@@ -882,31 +898,31 @@ do_StandardQuery(int cut_value, int keep_flag)
     /* the new matching strategies require post-processing of the query result */
     switch (matching_strategy) {
     case shortest_match:
-      RangeSetop(res, RMinimalMatches, NULL, NULL);	/* select shortest from several nested matches */
+      RangeSetop(res, RMinimalMatches, NULL, NULL);        /* select shortest from several nested matches */
       break;
     case standard_match:
-      RangeSetop(res, RLeftMaximalMatches, NULL, NULL);	/* reduce multiple matches created by optional query prefix */
+      RangeSetop(res, RLeftMaximalMatches, NULL, NULL);        /* reduce multiple matches created by optional query prefix */
       break;
     case longest_match:
       RangeSetop(res, RMaximalMatches, NULL, NULL);      /* select longest from several nested matches */
       break;
     case traditional:
     default:
-      break;			                        /* nothing to do here */
+      break;                                                /* nothing to do here */
     }
 
     /* if there's a cut_value, we may need to reduce the result to <cut_value> matches */
     if (cut_value > 0) {
       /* if there is more than 1 initial pattern in the query, it may have returned more than <cut_value> matches */
       if (res->size > cut_value) {
-	Bitfield lines = create_bitfield(res->size);
-	int i;
-	for (i = 0; i < cut_value; i++)
-	  set_bit(lines, i);
-	if (!delete_intervals(res, lines, UNSELECTED_LINES)) {
-	  cqpmessage(Error, "Couldn't reduce query result to first %d matches.\n", cut_value);
-	}
-	destroy_bitfield(&lines);
+        Bitfield lines = create_bitfield(res->size);
+        int i;
+        for (i = 0; i < cut_value; i++)
+          set_bit(lines, i);
+        if (!delete_intervals(res, lines, UNSELECTED_LINES)) {
+          cqpmessage(Error, "Couldn't reduce query result to first %d matches.\n", cut_value);
+        }
+        destroy_bitfield(&lines);
       }
     }
     
@@ -933,14 +949,14 @@ do_MUQuery(Evaltree evalt, int keep_flag, int cut_value)
     CurEnv->evaltree = evalt;
     
     assert((evalt->type == meet_union) || 
-	   (evalt->type == leaf));
+           (evalt->type == leaf));
     
     debug_output();
     do_start_timer();
     
     if (keep_flag == 1 && current_corpus->type != SUB) {
       cqpmessage(Warning, "``Keep Ranges'' only allowed when \n"
-		 "querying subcorpora");
+                 "querying subcorpora");
       keep_flag = 0;
     }
     
@@ -955,7 +971,7 @@ do_MUQuery(Evaltree evalt, int keep_flag, int cut_value)
 }
 
 void do_SearchPattern(Evaltree expr, /* $1 */
-		      Constrainttree constraint) /* $3 */
+                      Constrainttree constraint) /* $3 */
 {
   cqpmessage(Message, "SearchPattern");
 
@@ -971,15 +987,15 @@ void do_SearchPattern(Evaltree expr, /* $1 */
     else {
       
       searchstr = (char *)evaltree2searchstr(CurEnv->evaltree,
-					     &sslen);
+                                             &sslen);
       if (search_debug) {
-	printf("Evaltree: \n");
-	print_evaltree(eep, CurEnv->evaltree, 0);
-	printf("Search String: ``%s''\n", searchstr);
+        printf("Evaltree: \n");
+        print_evaltree(eep, CurEnv->evaltree, 0);
+        printf("Search String: ``%s''\n", searchstr);
       }
       
       if (searchstr && (searchstr[0] != '\0'))
-	regex2dfa(searchstr, &(CurEnv->dfa));
+        regex2dfa(searchstr, &(CurEnv->dfa));
       cl_free(searchstr);
     }
   }
@@ -1006,8 +1022,8 @@ reg_seq(Evaltree left, Evaltree right)
 
   if (generate_code) {
     NEW_EVALNODE(ev, re_od_concat,
-		 left, right,
-		 repeat_none, repeat_none);
+                 left, right,
+                 repeat_none, repeat_none);
     return ev;
   }
   else
@@ -1024,7 +1040,7 @@ do_AnchorPoint(FieldType field, int is_closing)
   if (generate_code) {
     if (CurEnv->MaxPatIndex == MAXPATTERNS) {
       cqpmessage(Error,
-		 "Too many patterns (max is %d)", MAXPATTERNS);
+                 "Too many patterns (max is %d)", MAXPATTERNS);
       generate_code = 0; /* YYABORT; */
     }
   }
@@ -1035,17 +1051,17 @@ do_AnchorPoint(FieldType field, int is_closing)
     switch (field) {
     case MatchField:
     case MatchEndField:
-      break;			/* ok (if query_corpus->size == 0, subquery will simply return no matches) */
+      break;                        /* ok (if query_corpus->size == 0, subquery will simply return no matches) */
     case TargetField:
       if (query_corpus->targets == NULL) {
-	cqpmessage(Error, "<target> anchor not defined in %s", query_corpus->name);
-	generate_code = 0;
+        cqpmessage(Error, "<target> anchor not defined in %s", query_corpus->name);
+        generate_code = 0;
       }
       break;
     case KeywordField:
       if (query_corpus->keywords == NULL) {
-	cqpmessage(Error, "<keyword> anchor not defined in %s", query_corpus->name);
-	generate_code = 0;
+        cqpmessage(Error, "<keyword> anchor not defined in %s", query_corpus->name);
+        generate_code = 0;
       }
     default:
       assert("Internal error in do_AnchorPoint()" && 0);
@@ -1070,7 +1086,8 @@ do_AnchorPoint(FieldType field, int is_closing)
 
 
 int 
-do_XMLTag(char *s_name, int is_closing, int op, char *regex, int flags) {
+do_XMLTag(char *s_name, int is_closing, int op, char *regex, int flags)
+{
   Attribute *attr = NULL;
   int op_type = op & OP_NOT_MASK;
   int negated = op & OP_NOT;
@@ -1081,7 +1098,7 @@ do_XMLTag(char *s_name, int is_closing, int op, char *regex, int flags) {
   if (generate_code) {
     if (CurEnv->MaxPatIndex == MAXPATTERNS) {
       cqpmessage(Error,
-		 "Too many patterns (max is %d)", MAXPATTERNS);
+                 "Too many patterns (max is %d)", MAXPATTERNS);
       generate_code = 0; /* YYABORT; */
     }
   }
@@ -1090,14 +1107,14 @@ do_XMLTag(char *s_name, int is_closing, int op, char *regex, int flags) {
     attr = cl_new_attribute(query_corpus->corpus, s_name, ATT_STRUC);
     if (attr == NULL) {
       cqpmessage(Error, "Structural attribute %s.%s does not exist.",
-		 query_corpus->name, s_name);
+                 query_corpus->name, s_name);
       generate_code = 0; /* YYABORT; */
     }
     else {
       if (regex && !cl_struc_values(attr)) {
-	cqpmessage(Error, "Structural attribute %s.%s does not have annotated values.",
-		   query_corpus->name, s_name);
-	generate_code = 0;
+        cqpmessage(Error, "Structural attribute %s.%s does not have annotated values.",
+                   query_corpus->name, s_name);
+        generate_code = 0;
       }
     }
   }
@@ -1121,47 +1138,47 @@ do_XMLTag(char *s_name, int is_closing, int op, char *regex, int flags) {
 
     /* start tag may have regex constraint on annotated values */
     if ((!is_closing) && regex) {
-      cl_string_latex2iso(regex, regex, strlen(regex));	/* interpret latex escapes */
+      cl_string_latex2iso(regex, regex, strlen(regex));        /* interpret latex escapes */
 
       if (flags == IGNORE_REGEX || 
-	  ((strcspn(regex, "[](){}.*+|?\\") == strlen(regex)) && (flags == 0) && (op_type == OP_EQUAL))) {
-	/* match as literal string -> don't compile regex */
+          ((strcspn(regex, "[](){}.*+|?\\") == strlen(regex)) && (flags == 0) && (op_type == OP_EQUAL))) {
+        /* match as literal string -> don't compile regex */
       }
       else {
-	int safe_regex = !(strchr(regex, '|') || strchr(regex, '\\')); /* see below */
-	char *conv_regex;	/* OP_CONTAINS and OP_MATCHES */
-	char *pattern;
-	CL_Regex rx;
+        int safe_regex = !(strchr(regex, '|') || strchr(regex, '\\')); /* see below */
+        char *conv_regex;        /* OP_CONTAINS and OP_MATCHES */
+        char *pattern;
+        CL_Regex rx;
 
-	if ((op_type == OP_CONTAINS) || (op_type == OP_MATCHES)) {
-	  conv_regex = mval_string_conversion(regex);
-	  pattern = cl_malloc(strlen(conv_regex) + 42); /* leave some room for the regexp wrapper */
-	  if (op_type == OP_CONTAINS) 
-	    sprintf(pattern, ".*\\|(%s)\\|.*", conv_regex);
-	  else {		/* op_type == OP_MATCHES */
-	    if (safe_regex)	/* inner regexp is 'safe' so we can omit the parentheses and thus enable optimisation */ 
-	      sprintf(pattern, "\\|(%s\\|)+", conv_regex);
-	    else
-	      sprintf(pattern, "\\|((%s)\\|)+", conv_regex);
-	  }
-	  cl_free(conv_regex);
-	}
-	else if (op_type == OP_EQUAL) {
-	  pattern = cl_strdup(regex);
-	}
-	else {			/* undefined operator */
-	  assert(0 && "do_mval_string(): illegal opcode (internal error)");
-	}
+        if ((op_type == OP_CONTAINS) || (op_type == OP_MATCHES)) {
+          conv_regex = mval_string_conversion(regex);
+          pattern = cl_malloc(strlen(conv_regex) + 42); /* leave some room for the regexp wrapper */
+          if (op_type == OP_CONTAINS)
+            sprintf(pattern, ".*\\|(%s)\\|.*", conv_regex);
+          else {                /* op_type == OP_MATCHES */
+            if (safe_regex)        /* inner regexp is 'safe' so we can omit the parentheses and thus enable optimisation */
+              sprintf(pattern, "\\|(%s\\|)+", conv_regex);
+            else
+              sprintf(pattern, "\\|((%s)\\|)+", conv_regex);
+          }
+          cl_free(conv_regex);
+        }
+        else if (op_type == OP_EQUAL) {
+          pattern = cl_strdup(regex);
+        }
+        else {                        /* undefined operator */
+          assert(0 && "do_mval_string(): illegal opcode (internal error)");
+        }
 
-	rx = cl_new_regex(pattern, flags, latin1);
-	if (rx == NULL) {
-	  cqpmessage(Error, "Illegal regular expression: %s", regex);
-	  generate_code = 0;
-	}
-	else 
-	  CurEnv->patternlist[CurEnv->MaxPatIndex].tag.rx = rx; 
-	
-	cl_free(pattern);
+        rx = cl_new_regex(pattern, flags, latin1);
+        if (rx == NULL) {
+          cqpmessage(Error, "Illegal regular expression: %s", regex);
+          generate_code = 0;
+        }
+        else
+          CurEnv->patternlist[CurEnv->MaxPatIndex].tag.rx = rx;
+
+        cl_free(pattern);
       }
       CurEnv->patternlist[CurEnv->MaxPatIndex].tag.constraint = regex; 
       CurEnv->patternlist[CurEnv->MaxPatIndex].tag.flags      = flags; 
@@ -1172,19 +1189,19 @@ do_XMLTag(char *s_name, int is_closing, int op, char *regex, int flags) {
   if (generate_code && strict_regions) {
     /* label is 'defined' by first open tag and 'used' by following close tag -> in this case, it is activated */
     LabelEntry label;
-    if (!is_closing) {		/* open tag -> 'define' label */
+    if (!is_closing) {                /* open tag -> 'define' label */
       label = labellookup(CurEnv->labels, s_name, LAB_DEFINED|LAB_RDAT, 1);
       CurEnv->patternlist[CurEnv->MaxPatIndex].tag.right_boundary = label;
     }
-    else {			/* close tag -> if label is already defined, it is 'used', i.e. activated */
+    else {                        /* close tag -> if label is already defined, it is 'used', i.e. activated */
       label = findlabel(CurEnv->labels, s_name, LAB_RDAT);
       if ((label != NULL) && (label->flags | LAB_DEFINED)) {
-	label->flags |= LAB_USED; /* activate this label for strict regions */
-	CurEnv->patternlist[CurEnv->MaxPatIndex].tag.right_boundary = label;
+        label->flags |= LAB_USED; /* activate this label for strict regions */
+        CurEnv->patternlist[CurEnv->MaxPatIndex].tag.right_boundary = label;
       }
       else {
-	/* end tag doesn't check or reset the label if it isn't preceded by a corresponding open tag */
-	/* 	  label = labellookup(CurEnv->labels, s_name+offset, LAB_RDAT, 1); */
+        /* end tag doesn't check or reset the label if it isn't preceded by a corresponding open tag */
+        /*           label = labellookup(CurEnv->labels, s_name+offset, LAB_RDAT, 1); */
       }
     }
   }
@@ -1215,9 +1232,9 @@ do_NamedWfPattern(int is_target, char *label, int pat_idx) {
       lab = labellookup(CurEnv->labels, label, LAB_DEFINED, 1);
       /* user isn't allowed to set special label */
       if (lab->flags & LAB_SPECIAL) {
-	cqpmessage(Error, "Can't set special label %s", label);
-	generate_code = 0;
-	return 0;
+        cqpmessage(Error, "Can't set special label %s", label);
+        generate_code = 0;
+        return 0;
       }
     }
     else
@@ -1228,13 +1245,13 @@ do_NamedWfPattern(int is_target, char *label, int pat_idx) {
     case Pattern:
       CurEnv->patternlist[pat_idx].con.label = lab;
       CurEnv->patternlist[pat_idx].con.is_target =
-	(is_target == 1 ? True : False);
+        (is_target == 1 ? True : False);
       break;
       
     case MatchAll:
       CurEnv->patternlist[pat_idx].matchall.label = lab;
       CurEnv->patternlist[pat_idx].matchall.is_target =
-	(is_target == 1 ? True : False);
+        (is_target == 1 ? True : False);
       
       break;
       
@@ -1247,7 +1264,7 @@ do_NamedWfPattern(int is_target, char *label, int pat_idx) {
       CurEnv->has_target_indicator = 1;
       CurEnv->target_label = labellookup(CurEnv->labels, "target", LAB_DEFINED|LAB_USED, 1);
       /* the special "target" label is never formally ``used'' in the construction of the
-	 NFA, so we declared it as both DEFINED and USED (which it will be in <eval.h>) */
+         NFA, so we declared it as both DEFINED and USED (which it will be in <eval.h>) */
     }
 
     res = pat_idx;
@@ -1265,7 +1282,7 @@ do_WordformPattern(Constrainttree boolt, int lookahead) {
   if (generate_code) {
     if (CurEnv->MaxPatIndex == MAXPATTERNS) {
       cqpmessage(Error,
-		 "Too many patterns (max is %d)", MAXPATTERNS);
+                 "Too many patterns (max is %d)", MAXPATTERNS);
       generate_code = 0;
     }
   }
@@ -1306,8 +1323,8 @@ do_WordformPattern(Constrainttree boolt, int lookahead) {
 
 Constrainttree
 OptimizeStringConstraint(Constrainttree left,
-			 enum b_ops op, 
-			 Constrainttree right)
+                         enum b_ops op,
+                         Constrainttree right)
 {
   Constrainttree c = NULL;
 
@@ -1331,96 +1348,96 @@ OptimizeStringConstraint(Constrainttree left,
       
       /* optimise regular expressions to idlists for categorical attributes (at most MAKE_IDLIST_BOUND lexicon entries) */
       if ((range > 0) && (range < MAKE_IDLIST_BOUND)) {
-	int *items;
-	int nr_items;
-	
-	items = collect_matching_ids(left->pa_ref.attr, 
-				     right->leaf.ctype.sconst, 
-				     right->leaf.canon, 
-				     &nr_items);
+        int *items;
+        int nr_items;
 
-	if (cderrno != CDA_OK) {
-	  cqpmessage(Error, "Error while collecting matching IDs of %s\n(%s)\n",
-		     right->leaf.ctype.sconst,
-		     cdperror_string(cderrno));
-	  generate_code = 0;
+        items = collect_matching_ids(left->pa_ref.attr,
+                                     right->leaf.ctype.sconst,
+                                     right->leaf.canon,
+                                     &nr_items);
 
-	  c->type = cnode;
-	  c->constnode.val = 0;
-	}
-	else if (nr_items == 0) {
-	  cl_free(items);
-	  c->type = cnode;
-	  c->constnode.val = (op == cmp_eq ? 0 : 1);
-	}
-	else if (nr_items == range) {
-	  cl_free(items);
-	  c->type = cnode;
-	  c->constnode.val = (op == cmp_eq ? 1 : 0);
-	}
-	else {
-	  c->type = id_list;
-	  c->idlist.attr = left->pa_ref.attr;
-	  c->idlist.label = left->pa_ref.label;
-	  c->idlist.delete = left->pa_ref.delete;
+        if (cderrno != CDA_OK) {
+          cqpmessage(Error, "Error while collecting matching IDs of %s\n(%s)\n",
+                     right->leaf.ctype.sconst,
+                     cdperror_string(cderrno));
+          generate_code = 0;
 
-	  c->idlist.nr_items = nr_items;
-	  c->idlist.items = items;
-	  c->idlist.negated = (op == cmp_eq ? 0 : 1);
+          c->type = cnode;
+          c->constnode.val = 0;
+        }
+        else if (nr_items == 0) {
+          cl_free(items);
+          c->type = cnode;
+          c->constnode.val = (op == cmp_eq ? 0 : 1);
+        }
+        else if (nr_items == range) {
+          cl_free(items);
+          c->type = cnode;
+          c->constnode.val = (op == cmp_eq ? 1 : 0);
+        }
+        else {
+          c->type = id_list;
+          c->idlist.attr = left->pa_ref.attr;
+          c->idlist.label = left->pa_ref.label;
+          c->idlist.delete = left->pa_ref.delete;
 
-	  /* if more than half of all IDs match, the ID list can be processed more 
-	     efficiently when it is inverted (exchanging == for != in the comparison
-	     where it is used, and vice versa); however, for sparse attributes (where
-	     the most frequent type is "no value") the inverted list might match almost
-	     all tokens in the corpus, which can be catastrophic when the ID list is
-	     used for index lookup (in query-initial position); therefore, the decision
-	     for or against negation should be based on whether the ID list matches 
-	     more than half of all tokens; for "normal" attributes, the two criteria
-	     will lead to very similar decisions anyway */
+          c->idlist.nr_items = nr_items;
+          c->idlist.items = items;
+          c->idlist.negated = (op == cmp_eq ? 0 : 1);
 
-	  /* previous condition removed: */
-	  /* 	  if (nr_items > range/2) { */
+          /* if more than half of all IDs match, the ID list can be processed more
+             efficiently when it is inverted (exchanging == for != in the comparison
+             where it is used, and vice versa); however, for sparse attributes (where
+             the most frequent type is "no value") the inverted list might match almost
+             all tokens in the corpus, which can be catastrophic when the ID list is
+             used for index lookup (in query-initial position); therefore, the decision
+             for or against negation should be based on whether the ID list matches
+             more than half of all tokens; for "normal" attributes, the two criteria
+             will lead to very similar decisions anyway */
 
-	  if (cl_idlist2freq(left->pa_ref.attr, items, nr_items) > cl_max_cpos(left->pa_ref.attr) / 2) {
-	    int i, k, pos, last_id;
-	    int *ids;
-	    
-	    ids = (int *)cl_malloc((range - nr_items) * sizeof(int));
-	    pos = 0;
-	    last_id = -1;
+          /* previous condition removed: */
+          /*           if (nr_items > range/2) { */
 
-	    for (i = 0; i < nr_items; i++) {
-	      if (last_id < 0) {
-		for (k = 0; k < items[i]; k++)
-		  ids[pos++] = k;
-	      }
-	      else {
-		for (k = last_id + 1; k < items[i]; k++)
-		  ids[pos++] = k;
-	      }
-	      last_id = items[i];
-	    }
-	    for (k = last_id + 1; k < range; k++)
-	      ids[pos++] = k;
-	    
-	    assert(pos == range - nr_items);
+          if (cl_idlist2freq(left->pa_ref.attr, items, nr_items) > cl_max_cpos(left->pa_ref.attr) / 2) {
+            int i, k, pos, last_id;
+            int *ids;
 
-	    c->idlist.nr_items = range - nr_items;
-	    c->idlist.items = ids;
-	    c->idlist.negated = !c->idlist.negated;
-	    
-	    free(items);
-	  }
-	}
-	
-	cl_free(left);
-	cl_free(right);
+            ids = (int *)cl_malloc((range - nr_items) * sizeof(int));
+            pos = 0;
+            last_id = -1;
+
+            for (i = 0; i < nr_items; i++) {
+              if (last_id < 0) {
+                for (k = 0; k < items[i]; k++)
+                  ids[pos++] = k;
+              }
+              else {
+                for (k = last_id + 1; k < items[i]; k++)
+                  ids[pos++] = k;
+              }
+              last_id = items[i];
+            }
+            for (k = last_id + 1; k < range; k++)
+              ids[pos++] = k;
+
+            assert(pos == range - nr_items);
+
+            c->idlist.nr_items = range - nr_items;
+            c->idlist.items = ids;
+            c->idlist.negated = !c->idlist.negated;
+
+            free(items);
+          }
+        }
+
+        cl_free(left);
+        cl_free(right);
       }
       else {
-	c->type = bnode;
-	c->node.op_id = op;
-	c->node.left = left;
-	c->node.right = right;
+        c->type = bnode;
+        c->node.op_id = op;
+        c->node.left = left;
+        c->node.right = right;
       }
     }
     else {
@@ -1432,31 +1449,31 @@ OptimizeStringConstraint(Constrainttree left,
       id = get_id_of_string(left->pa_ref.attr, right->leaf.ctype.sconst);
       
       if (id < 0) {
-	
-	if (catch_unknown_ids) {
-	  cqpmessage(Error, "The string ``%s'' is not in the value space of ``%s''\n",
-		     right->leaf.ctype.sconst, left->pa_ref.attr->any.name);
-	  generate_code = 0;
-	}
+
+        if (catch_unknown_ids) {
+          cqpmessage(Error, "The string ``%s'' is not in the value space of ``%s''\n",
+                     right->leaf.ctype.sconst, left->pa_ref.attr->any.name);
+          generate_code = 0;
+        }
       
-	cl_free(right);
-	cl_free(left);
-	c->type = cnode;
-	c->constnode.val = (op == cmp_eq ? 0 : 1);
-	
+        cl_free(right);
+        cl_free(left);
+        c->type = cnode;
+        c->constnode.val = (op == cmp_eq ? 0 : 1);
+
       }
       else {
-	
-	c->type = bnode;
-	c->node.op_id = op;
-	c->node.left = left;
-	c->node.right = right;
-	
-	cl_free(right->leaf.ctype.sconst);
-	
-	right->leaf.pat_type = CID;
-	right->leaf.ctype.cidconst = id;
-	
+
+        c->type = bnode;
+        c->node.op_id = op;
+        c->node.left = left;
+        c->node.right = right;
+
+        cl_free(right->leaf.ctype.sconst);
+
+        right->leaf.pat_type = CID;
+        right->leaf.ctype.cidconst = id;
+
       }
     }
   }
@@ -1475,26 +1492,26 @@ do_StringConstraint(char *s, int flags)
   if (generate_code) {
     
     if ((attr = find_attribute(query_corpus->corpus,
-			       def_unbr_attr,
-			       ATT_POS,
-			       NULL)) == NULL) {
+                               def_unbr_attr,
+                               ATT_POS,
+                               NULL)) == NULL) {
       cqpmessage(Error,
-		 "``%s'' attribute not defined for corpus ``%s'',"
-		 "\nusing ``%s''",
-		 def_unbr_attr, query_corpus->name,
-		 DEFAULT_ATT_NAME);
+                 "``%s'' attribute not defined for corpus ``%s'',"
+                 "\nusing ``%s''",
+                 def_unbr_attr, query_corpus->name,
+                 DEFAULT_ATT_NAME);
       
       (void) set_string_option_value("DefaultNonbrackAttr", DEFAULT_ATT_NAME);
       
       if ((attr = find_attribute(query_corpus->corpus,
-				 DEFAULT_ATT_NAME,
-				 ATT_POS,
-				 NULL)) == NULL) {
-	cqpmessage(Error,
-		   "``%s'' attribute not defined for corpus ``%s''",
-		   DEFAULT_ATT_NAME, query_corpus->name);
-	
-	generate_code = 0;
+                                 DEFAULT_ATT_NAME,
+                                 ATT_POS,
+                                 NULL)) == NULL) {
+        cqpmessage(Error,
+                   "``%s'' attribute not defined for corpus ``%s''",
+                   DEFAULT_ATT_NAME, query_corpus->name);
+
+        generate_code = 0;
       }
     }
   }
@@ -1548,14 +1565,14 @@ Varref2IDList(Attribute *attr, enum b_ops op, char *varName)
       node->idlist.delete = 0;
       node->idlist.negated = (op == cmp_eq ? 0 : 1);
       node->idlist.items = GetVariableItems(v, 
-					    query_corpus->corpus,
-					    attr, 
-					    &(node->idlist.nr_items));
+                                            query_corpus->corpus,
+                                            attr,
+                                            &(node->idlist.nr_items));
 
-      if (node->idlist.nr_items == 0) {	/* optimise: empty ID list -> constant */
-	node->type = cnode;
-	node->constnode.val = (op == cmp_eq ? 0 : 1); /* always FALSE for '=', always TRUE for '!=' */
-	/* NB: no need to free idlist.items, because the list is empty (NULL pointer) */
+      if (node->idlist.nr_items == 0) {        /* optimise: empty ID list -> constant */
+        node->type = cnode;
+        node->constnode.val = (op == cmp_eq ? 0 : 1); /* always FALSE for '=', always TRUE for '!=' */
+        /* NB: no need to free idlist.items, because the list is empty (NULL pointer) */
       }
 
     }
@@ -1576,26 +1593,26 @@ do_SimpleVariableReference(char *varName)
   if (generate_code) {
     
     if ((attr = find_attribute(query_corpus->corpus,
-			       def_unbr_attr,
-			       ATT_POS,
-			       NULL)) == NULL) {
+                               def_unbr_attr,
+                               ATT_POS,
+                               NULL)) == NULL) {
       cqpmessage(Error,
-		 "``%s'' attribute not defined for corpus ``%s'',"
-		 "\nusing ``%s''",
-		 def_unbr_attr, query_corpus->name,
-		 DEFAULT_ATT_NAME);
+                 "``%s'' attribute not defined for corpus ``%s'',"
+                 "\nusing ``%s''",
+                 def_unbr_attr, query_corpus->name,
+                 DEFAULT_ATT_NAME);
       
       (void) set_string_option_value("DefaultNonbrackAttr", DEFAULT_ATT_NAME);
       
       if ((attr = find_attribute(query_corpus->corpus,
-				 DEFAULT_ATT_NAME,
-				 ATT_POS,
-				 NULL)) == NULL) {
-	cqpmessage(Error,
-		   "``%s'' attribute not defined for corpus ``%s''",
-		   DEFAULT_ATT_NAME, query_corpus->name);
-	
-	generate_code = 0;
+                                 DEFAULT_ATT_NAME,
+                                 ATT_POS,
+                                 NULL)) == NULL) {
+        cqpmessage(Error,
+                   "``%s'' attribute not defined for corpus ``%s''",
+                   DEFAULT_ATT_NAME, query_corpus->name);
+
+        generate_code = 0;
       }
     }
   }
@@ -1613,26 +1630,26 @@ void prepare_AlignmentConstraints(char *id)
   
   if ((cl = findcorpus(id, SYSTEM, 0)) == NULL) {
     cqpmessage(Warning,
-	       "System corpus ``%s'' is undefined", id);
+               "System corpus ``%s'' is undefined", id);
     generate_code = 0;
   }
   else if (!access_corpus(cl)) {
     cqpmessage(Warning,
-	       "Corpus ``%s'' can't be accessed", id);
+               "Corpus ``%s'' can't be accessed", id);
     generate_code = 0;
   }
   else if ((algattr = find_attribute(Environment[0].query_corpus->corpus,
-				     cl->corpus->registry_name,
-				     ATT_ALIGN, NULL)) == NULL) {
+                                     cl->corpus->registry_name,
+                                     ATT_ALIGN, NULL)) == NULL) {
     cqpmessage(Error,
-	       "Corpus ``%s'' is not aligned to corpus ``%s''",
-	       Environment[0].query_corpus->mother_name, id);
+               "Corpus ``%s'' is not aligned to corpus ``%s''",
+               Environment[0].query_corpus->mother_name, id);
     generate_code = 0;
   }
   else if (!next_environment()) {
     cqpmessage(Error,
-	       "Can't allocate another evaluation environment"
-	       " (too many alignments)");
+               "Can't allocate another evaluation environment"
+               " (too many alignments)");
     generate_code = 0;
     query_corpus = NULL;
   }
@@ -1654,22 +1671,22 @@ bool_or(Constrainttree left, Constrainttree right)
   if (generate_code) {
     if (left->node.type == cnode) {
       if (left->constnode.val == 0) {
-	res = right;
-	free_booltree(left);
+        res = right;
+        free_booltree(left);
       }
       else {
-	res = left;
-	free_booltree(right);
+        res = left;
+        free_booltree(right);
       }
     }
     else if (right->node.type == cnode) {
       if (right->constnode.val == 0) {
-	res = left;
-	free_booltree(right);
+        res = left;
+        free_booltree(right);
       }
       else {
-	res = right;
-	free_booltree(left);
+        res = right;
+        free_booltree(left);
       }
     }
     else {
@@ -1696,23 +1713,23 @@ bool_implies(Constrainttree left, Constrainttree right)
   if (generate_code) {
     if (left->node.type == cnode) {
       if (left->constnode.val == 0) { /* LHS is FALSE -> implication always TRUE */
-	res = left;
-	res->constnode.val = 1;
-	free_booltree(right);
+        res = left;
+        res->constnode.val = 1;
+        free_booltree(right);
       }
-      else {			/* LHS is TRUE -> implication == RHS */
-	res = right;
-	free_booltree(left);
+      else {                        /* LHS is TRUE -> implication == RHS */
+        res = right;
+        free_booltree(left);
       }
     }
     else if (right->node.type == cnode) { 
       if (right->constnode.val == 0) { /* RHS is FALSE -> implication == !(LHS) */
-	res = bool_not(left);
-	free_booltree(right);
+        res = bool_not(left);
+        free_booltree(right);
       }
-      else {			/* RHS is TRUE -> implication always TRUE */
-	res = right;
-	free_booltree(left);
+      else {                        /* RHS is TRUE -> implication always TRUE */
+        res = right;
+        free_booltree(left);
       }
     }
     else {
@@ -1740,22 +1757,22 @@ bool_and(Constrainttree left, Constrainttree right)
   if (generate_code) {
     if (left->node.type == cnode) {
       if (left->constnode.val == 0) {
-	res = left;
-	free_booltree(right);
+        res = left;
+        free_booltree(right);
       }
       else {
-	res = right;
-	free_booltree(left);
+        res = right;
+        free_booltree(left);
       }
     }
     else if (right->node.type == cnode) {
       if (right->constnode.val == 0) {
-	res = right;
-	free_booltree(left);
+        res = right;
+        free_booltree(left);
       }
       else {
-	res = left;
-	free_booltree(right);
+        res = left;
+        free_booltree(right);
       }
     }
     else {
@@ -1788,8 +1805,8 @@ bool_not(Constrainttree left)
       res = left;
     }
     else if (left->type == bnode && 
-	     left->node.op_id == b_not && 
-	     left->node.right == NULL) {
+             left->node.op_id == b_not &&
+             left->node.right == NULL) {
       res = left->node.left;
       left->node.left = NULL;
       free_booltree(left);
@@ -1810,8 +1827,8 @@ bool_not(Constrainttree left)
 
 Constrainttree
 do_RelExpr(Constrainttree left, 
-	   enum b_ops op, 
-	   Constrainttree right)
+           enum b_ops op,
+           Constrainttree right)
 {
   Constrainttree res;
 
@@ -1823,21 +1840,21 @@ do_RelExpr(Constrainttree left,
 
       if (left->type == pa_ref) {
 
-	res = Varref2IDList(left->pa_ref.attr, op, right->varref.varName);
-	
-	/* be careful: res might be of type cnode, when an empty id_list has been optimised away */
-	if (res && res->type == id_list && generate_code) {
-	  res->idlist.label = left->pa_ref.label;
-	  res->idlist.delete = left->pa_ref.delete;
-	}
+        res = Varref2IDList(left->pa_ref.attr, op, right->varref.varName);
+
+        /* be careful: res might be of type cnode, when an empty id_list has been optimised away */
+        if (res && res->type == id_list && generate_code) {
+          res->idlist.label = left->pa_ref.label;
+          res->idlist.delete = left->pa_ref.delete;
+        }
       }
       else {
-	cqpmessage(Error, 
-		   "LHS of variable reference must be the name of "
-		   "a positional attribute");
-	
-	
-	generate_code = 0;
+        cqpmessage(Error,
+                   "LHS of variable reference must be the name of "
+                   "a positional attribute");
+
+
+        generate_code = 0;
       }
 
       free_booltree(left);
@@ -1917,23 +1934,23 @@ do_LabelReference(char *label_name, int auto_delete)
     
     lab = labellookup(CurEnv->labels, label_name, LAB_USED, 0);
     /*     if (!(lab->flags & LAB_SPECIAL) && !(lab->flags & LAB_DEFINED)) { */
-    if (lab == NULL) {		/* this is more like what we want: label hasn't been defined yet ('this' label is implicitly defined) */
+    if (lab == NULL) {                /* this is more like what we want: label hasn't been defined yet ('this' label is implicitly defined) */
       cqpmessage(Error, "Label ``%s'' used before it was defined", label_name);
       generate_code = 0;
     }
     else if (lab->flags & LAB_SPECIAL) {
       if (auto_delete) {
-	cqpmessage(Warning, "Cannot auto-delete special label '%s' [ignored].", label_name);
-	auto_delete = 0;
+        cqpmessage(Warning, "Cannot auto-delete special label '%s' [ignored].", label_name);
+        auto_delete = 0;
       }
     }
   }
   
   if (generate_code) {
     if ((attr = find_attribute(query_corpus->corpus,
-			       hack,
-			       ATT_POS,
-			       NULL)) != NULL) {
+                               hack,
+                               ATT_POS,
+                               NULL)) != NULL) {
       /* reference to positional attribute at label */
       NEW_BNODE(res);
       res->type = pa_ref;
@@ -1942,28 +1959,28 @@ do_LabelReference(char *label_name, int auto_delete)
       res->pa_ref.delete = auto_delete;
     }
     else if ((attr = find_attribute(query_corpus->corpus,
-				    hack,
-				    ATT_STRUC,
-				    NULL)) == NULL) {
+                                    hack,
+                                    ATT_STRUC,
+                                    NULL)) == NULL) {
       cqpmessage(Error,
-		 "Attribute ``%s'' is not defined for corpus",
-		 hack);
+                 "Attribute ``%s'' is not defined for corpus",
+                 hack);
       generate_code = 0;
     } 
     else {
       /* reference to (value of) structural attribute at label */
       if (!structure_has_values(attr)) {
-	cqpmessage(Error,
-		   "Need attribute with values (``%s'' has no values)",
-		   hack);
-	generate_code = 0;
+        cqpmessage(Error,
+                   "Need attribute with values (``%s'' has no values)",
+                   hack);
+        generate_code = 0;
       }
       else {
-	NEW_BNODE(res);
-	res->type = sa_ref;
-	res->sa_ref.attr = attr;
-	res->sa_ref.label = lab;
-	res->sa_ref.delete = auto_delete;
+        NEW_BNODE(res);
+        res->type = sa_ref;
+        res->sa_ref.attr = attr;
+        res->sa_ref.label = lab;
+        res->sa_ref.delete = auto_delete;
       }
     }
   }
@@ -1988,10 +2005,10 @@ do_IDReference(char *id_name, int auto_delete)  /* auto_delete may only be set i
   if (generate_code) {
  
     if (!within_gc &&
-	((attr = find_attribute(query_corpus->corpus,
-				id_name,
-				ATT_POS,
-				NULL)) != NULL)) {
+        ((attr = find_attribute(query_corpus->corpus,
+                                id_name,
+                                ATT_POS,
+                                NULL)) != NULL)) {
       NEW_BNODE(res);
       res->type = pa_ref;
       res->pa_ref.attr = attr;
@@ -2004,47 +2021,47 @@ do_IDReference(char *id_name, int auto_delete)  /* auto_delete may only be set i
       res->pa_ref.attr = NULL;
       res->pa_ref.label = lab;
       if ((lab->flags & LAB_SPECIAL) && auto_delete) {
-	cqpmessage(Warning, "Cannot auto-delete special label '%s' [ignored].", id_name);
-	auto_delete = 0;
+        cqpmessage(Warning, "Cannot auto-delete special label '%s' [ignored].", id_name);
+        auto_delete = 0;
       }
       res->pa_ref.delete = auto_delete;
-      auto_delete = 0;		/* we'll check that below */
+      auto_delete = 0;                /* we'll check that below */
     }
     else if ((attr = find_attribute(query_corpus->corpus,
-				    id_name,
-				    ATT_STRUC,
-				    NULL)) != NULL) {
+                                    id_name,
+                                    ATT_STRUC,
+                                    NULL)) != NULL) {
       /* Well I was wondering myself ... this is needed for references
-	 to structural attributes in function calls. The semantics of say
-	 's' is to return an INT value of 
-	   1 ... if current position is the start of a region
-	   2 ... if it's the end of a region
-	   0 ... otherwise
-	 If the current position is not within an 's' region, the whole 
-	 boolean expression where the reference occurred evals to False */
+         to structural attributes in function calls. The semantics of say
+         's' is to return an INT value of
+           1 ... if current position is the start of a region
+           2 ... if it's the end of a region
+           0 ... otherwise
+         If the current position is not within an 's' region, the whole
+         boolean expression where the reference occurred evals to False */
       
       NEW_BNODE(res);
       res->type = sa_ref;
       res->sa_ref.attr = attr;
       /* Need to set label to NULL now that we put sa_ref's to better use.
-	 A label's sa_ref now returns the value of the enclosing region */
-      res->sa_ref.label = NULL;	
+         A label's sa_ref now returns the value of the enclosing region */
+      res->sa_ref.label = NULL;
       res->sa_ref.delete = 0;
     }
     else {
       if (within_gc) {
-	cqpmessage(Error,
-		   "``%s'' is not a (qualified) label reference",
-		   id_name);
+        cqpmessage(Error,
+                   "``%s'' is not a (qualified) label reference",
+                   id_name);
       }
       else {
-	cqpmessage(Error,
-		   "``%s'' is neither a positional/structural attribute"
-		   " nor a label reference",
-		   id_name);
+        cqpmessage(Error,
+                   "``%s'' is neither a positional/structural attribute"
+                   " nor a label reference",
+                   id_name);
       }
       generate_code = 0;
-      auto_delete = 0;		/* so we won't raise another error */
+      auto_delete = 0;                /* so we won't raise another error */
       res = NULL;
     }
   }
@@ -2085,13 +2102,13 @@ do_flagged_re_variable(char *varname, int flags) {
       /* compute length of interpolated regular expression */
       length = 1;
       for (i = 0; i < N; i++) 
-	length += strlen(items[i]) + 1;
+        length += strlen(items[i]) + 1;
       s = cl_malloc(length);
       l = sprintf(s, "%s", items[0]);
-      mark = s + l;	/* <mark> points to the trailing null byte */
+      mark = s + l;        /* <mark> points to the trailing null byte */
       for (i = 1; i < N; i++) {
-	l = sprintf(mark, "|%s", items[i]);
-	mark += l;
+        l = sprintf(mark, "|%s", items[i]);
+        mark += l;
       }
       cl_free(items);
       /* now <s> contains the disjunction over all REs stored in <var> */
@@ -2120,9 +2137,9 @@ do_flagged_string(char *s, int flags)
 
     /* This gets in the way with some other functions were we'd like to
        keep it as a regexp ... it isn't very useful anyway, so ... */
-/*    if ((strcmp(s, ".*") == 0 ||	
-	 strcmp(s, ".+") == 0) &&
-	flags != IGNORE_REGEX) {
+/*    if ((strcmp(s, ".*") == 0 ||
+         strcmp(s, ".+") == 0) &&
+        flags != IGNORE_REGEX) {
       res->type = cnode;
       res->constnode.val = 1;
     }
@@ -2134,7 +2151,7 @@ do_flagged_string(char *s, int flags)
     cl_string_latex2iso(s, s, strlen(s));
     
     if (flags == IGNORE_REGEX ||
-	(strcspn(s, "[](){}.*+|?\\") == strlen(s) && flags == 0)) {
+        (strcspn(s, "[](){}.*+|?\\") == strlen(s) && flags == 0)) {
 
       res->leaf.ctype.sconst = s;
       res->leaf.pat_type = NORMAL;
@@ -2147,9 +2164,9 @@ do_flagged_string(char *s, int flags)
       res->leaf.ctype.sconst = s;
       res->leaf.rx = cl_new_regex(s, flags, latin1);
       if (res->leaf.rx == NULL) {
-	cqpmessage(Error, "Illegal regular expression: %s", s);
-	res->leaf.pat_type = NORMAL;
-	generate_code = 0;
+        cqpmessage(Error, "Illegal regular expression: %s", s);
+        res->leaf.pat_type = NORMAL;
+        generate_code = 0;
       }
     }
     /*  } */
@@ -2170,19 +2187,19 @@ mval_string_conversion(char *s)
   char *result, *p;
   int cnt = 0;
 
-  for (p = s; *p; p++)		/* count dots in <s> */
+  for (p = s; *p; p++)                /* count dots in <s> */
     if (*p == '.') cnt++;
 
-  result = cl_malloc(strlen(s) + 3*cnt + 1);	/* every '.'->'[^|]' replacement adds three characters */
+  result = cl_malloc(strlen(s) + 3*cnt + 1);        /* every '.'->'[^|]' replacement adds three characters */
   p = result;
   while (*s) {
-    if (*s == '\\') {		/* copy escaped character verbatim */
+    if (*s == '\\') {                /* copy escaped character verbatim */
       *p++ = *s++;
       if (!(*s)) {
-	cqpmessage(Error, "mval_string_conversion(): RegExp '%s' ends with escape", s);
-	generate_code = 0;
-	free(result);
-	return NULL;
+        cqpmessage(Error, "mval_string_conversion(): RegExp '%s' ends with escape", s);
+        generate_code = 0;
+        free(result);
+        return NULL;
       }
       *p++ = *s++;
     }
@@ -2194,7 +2211,7 @@ mval_string_conversion(char *s)
       *p++ = *s++;
     }
   }
-  *p = 0;			/* end of string */
+  *p = 0;                        /* end of string */
   return result;
 }
 
@@ -2225,10 +2242,10 @@ do_mval_string(char *s, int op, int flags)
       sprintf(pattern, ".*\\|(%s)\\|.*", converted_s);
       break;
     case OP_MATCHES:
-      if (safe_regexp)		/* inner regexp is 'safe' so we can omit the parentheses and thus enable optimisation */ 
-	sprintf(pattern, "\\|(%s\\|)+", converted_s);
+      if (safe_regexp)                /* inner regexp is 'safe' so we can omit the parentheses and thus enable optimisation */
+        sprintf(pattern, "\\|(%s\\|)+", converted_s);
       else
-	sprintf(pattern, "\\|((%s)\\|)+", converted_s);
+        sprintf(pattern, "\\|((%s)\\|)+", converted_s);
       break;
     default:
       /* undefined operator */
@@ -2238,7 +2255,7 @@ do_mval_string(char *s, int op, int flags)
     res = do_flagged_string(pattern, flags);
     free(converted_s);
     if (!res)
-      free(pattern);		/* the pattern is inserted into the RegExp node, do don't free it unless do_flagged_string() failed */
+      free(pattern);      /* the pattern is inserted into the RegExp node, do don't free it unless do_flagged_string() failed */
   }
   
   return res;
@@ -2254,8 +2271,7 @@ FunctionCall(char *f_name, ActualParamList *apl)
   
   res = NULL;
   
-  cqpmessage(Message, "FunctionCall: %s(...)",
-	     f_name);
+  cqpmessage(Message, "FunctionCall: %s(...)", f_name);
   
   if (generate_code) {
     
@@ -2272,24 +2288,24 @@ FunctionCall(char *f_name, ActualParamList *apl)
     if (predef >= 0) {
       
       if (len != builtin_function[predef].nr_args) {
-	generate_code = 0;
-	cqpmessage(Error,
-		   "Illegal number of arguments "
-		   "for %s (needs %d, got %d)",
-		   f_name, builtin_function[predef].nr_args, len);
+        generate_code = 0;
+        cqpmessage(Error,
+                   "Illegal number of arguments "
+                   "for %s (needs %d, got %d)",
+                   f_name, builtin_function[predef].nr_args, len);
       }
       else {
-	NEW_BNODE(res);
-	res->type = func;
-	res->func.predef = predef;
-	res->func.dynattr = NULL;
-	res->func.args = apl;
-	res->func.nr_args = len;
+        NEW_BNODE(res);
+        res->type = func;
+        res->func.predef = predef;
+        res->func.dynattr = NULL;
+        res->func.args = apl;
+        res->func.nr_args = len;
       }
     }
     else if ((attr = find_attribute(query_corpus->corpus,
-				    f_name,
-				    ATT_DYN, NULL)) != NULL) {
+                                    f_name,
+                                    ATT_DYN, NULL)) != NULL) {
       
       NEW_BNODE(res);
       res->type = func;
@@ -2301,8 +2317,8 @@ FunctionCall(char *f_name, ActualParamList *apl)
     else {
       
       cqpmessage(Error,
-		 "Function or dynamic attribute "
-		 "``%s'' is not defined", f_name);
+                 "Function or dynamic attribute "
+                 "``%s'' is not defined", f_name);
       generate_code = 0;
     }
   }
@@ -2324,7 +2340,7 @@ void do_Description(Context *context, int nr, char *name)
     
     if (nr < 0) {
       cqpmessage(Error,
-		 "Can't expand to negative size: %d", nr);
+                 "Can't expand to negative size: %d", nr);
       generate_code = 0;
     }
     else if (Environment[0].query_corpus) {
@@ -2332,27 +2348,27 @@ void do_Description(Context *context, int nr, char *name)
       context->size = nr;
       
       if ((name == NULL) ||
-	  (strcmp(name, "word") == 0) ||
-	  (strcmp(name, "words") == 0)) {
-	context->type = word;
-	context->attrib = NULL;
+          (strcmp(name, "word") == 0) ||
+          (strcmp(name, "words") == 0)) {
+        context->type = word;
+        context->attrib = NULL;
       }
       else {
-	if ((context->attrib = find_attribute(Environment[0].query_corpus->corpus,
-					name,
-					ATT_STRUC, NULL)) == NULL) {
-	  cqpmessage(Error,
-		     "Structure ``%s'' is not defined for corpus ``%s''",
-		     name, Environment[0].query_corpus->name);
-	  generate_code = 0;
-	}
-	else
-	  context->type = structure;
+        if ((context->attrib = find_attribute(Environment[0].query_corpus->corpus,
+                                        name,
+                                        ATT_STRUC, NULL)) == NULL) {
+          cqpmessage(Error,
+                     "Structure ``%s'' is not defined for corpus ``%s''",
+                     name, Environment[0].query_corpus->name);
+          generate_code = 0;
+        }
+        else
+          context->type = structure;
       }
     }
     else {
       cqpmessage(Error,
-		 "No query corpus yielded and/or accessible");
+                 "No query corpus yielded and/or accessible");
       generate_code = 0;
     }
   }
@@ -2414,11 +2430,11 @@ void do_StructuralContext(Context *context, char *name)
     context->size2 = 1;
     
     if ((context->attrib = find_attribute(query_corpus->corpus,
-				    name,
-				    ATT_STRUC, NULL)) == NULL) {
+                                    name,
+                                    ATT_STRUC, NULL)) == NULL) {
       cqpmessage(Error,
-		 "Structure ``%s'' is not defined for corpus ``%s''",
-		 name, query_corpus->corpus->id);
+                 "Structure ``%s'' is not defined for corpus ``%s''",
+                 name, query_corpus->corpus->id);
       generate_code = 0;
     }
     else
@@ -2493,7 +2509,7 @@ add_tabular_pattern(Evaltree patterns, Context *context, int pattern_index)
     
     if (patterns) {
       for (k = patterns; k->tab_el.next; k = k->tab_el.next)
-	;
+        ;
       k->tab_el.next = node;
       node = patterns;
     }
@@ -2528,6 +2544,9 @@ do_OptDistance(Context *context, int l_bound, int u_bound)
 
 /* ======================================== Variable Settings */
 
+/**
+ * Prints the setting of a single Variable as an indented list.
+ */
 void
 printSingleVariableValue(Variable v, int max_items)
 {
@@ -2541,11 +2560,11 @@ printSingleVariableValue(Variable v, int max_items)
     start_indented_list(0, 0, 0);
     for (i = 0; i < v->nr_items; i++) {
       if (i >= max_items) {
-	print_indented_list_item("...");
-	break;
+        print_indented_list_item("...");
+        break;
       }
       if (!v->items[i].free) {
-	print_indented_list_item(v->items[i].sval);
+        print_indented_list_item(v->items[i].sval);
       }
     }
     end_indented_list();
@@ -2586,7 +2605,7 @@ do_printVariableSize(char *varName)
     
     for (i = 0; i < v->nr_items; i++) {
       if (!v->items[i].free)
-	size++;
+        size++;
     }
     printf("$%s has %d entries\n", v->my_name, size);
   }
@@ -2625,22 +2644,22 @@ do_AddSubVariables(char *var1Name, int add, char *var2Name)
   
   if ((v1 = FindVariable(var1Name)) == NULL) {
     cqpmessage(Error, "Variable $%s not defined.",
-	       var1Name);
+               var1Name);
   }
   else if ((v2 = FindVariable(var2Name)) == NULL) {
     cqpmessage(Error, "Variable $%s not defined.",
-	       var2Name);
+               var2Name);
   }
   else {
     items = GetVariableStrings(v2, &N);
     if (items != NULL) {
       for (i = 0; i < N; i++) {
-	if (add) 
-	  VariableAddItem(v1, items[i]);
-	else
-	  VariableSubtractItem(v1, items[i]);
+        if (add)
+          VariableAddItem(v1, items[i]);
+        else
+          VariableSubtractItem(v1, items[i]);
       }
-      cl_free(items);		/* the actual strings point into the variable's internal representation, so don't free them */
+      cl_free(items);                /* the actual strings point into the variable's internal representation, so don't free them */
     }
     else {
       /* v2 is empty, so do nothing */
@@ -2650,7 +2669,7 @@ do_AddSubVariables(char *var1Name, int add, char *var2Name)
 
 /* ======================================== PARSER UTILS */
 
-void prepare_input()
+void prepare_input(void)
 {
   regex_string_pos = 0;
   free_environments();
@@ -2667,30 +2686,30 @@ void expand_dataspace(CorpusList *cl)
 
   if (cl == NULL)
     cqpmessage(Warning,
-	     "The selected corpus is empty.");
+             "The selected corpus is empty.");
   else if (cl->type == SYSTEM)
     cqpmessage(Warning,
-	     "You can only expand subcorpora, no system corpora (unchanged)");
+             "You can only expand subcorpora, no system corpora (unchanged)");
   else if (expansion.size > 0) {
 
     for (i = 0; i < cl->size; i++) {
       if (expansion.direction == left || expansion.direction == leftright) {
-	res = calculate_leftboundary(cl,
-				     cl->range[i].start,
-				     expansion);
-	if (res >= 0)
-	  cl->range[i].start = res;
-	else
-	  cqpmessage(Warning, "'expand' statement failed.\n");
+        res = calculate_leftboundary(cl,
+                                     cl->range[i].start,
+                                     expansion);
+        if (res >= 0)
+          cl->range[i].start = res;
+        else
+          cqpmessage(Warning, "'expand' statement failed.\n");
       }
       if (expansion.direction == right || expansion.direction == leftright) {
-	res = calculate_rightboundary(cl,
-				      cl->range[i].end,
-				      expansion);
-	if (res >= 0)
-	  cl->range[i].end = res;
-	else
-	  cqpmessage(Warning, "'expand' statement failed.\n");
+        res = calculate_rightboundary(cl,
+                                      cl->range[i].end,
+                                      expansion);
+        if (res >= 0)
+          cl->range[i].end = res;
+        else
+          cqpmessage(Warning, "'expand' statement failed.\n");
       }
     }
 
@@ -2710,7 +2729,7 @@ void push_regchr(char c)
   }
   else {
     cqpmessage(Warning,
-	     "Regex string overflow");
+             "Regex string overflow");
     regex_string[0] = '\0';
   }
 }
@@ -2726,15 +2745,26 @@ void debug_output(void)
 }
 
 
-/* local variable for timing functions */
+/** local variable for timing functions */
 struct timeval timer_start_time;
 
-void do_start_timer(void) {
+/**
+ * Starts the timer running.
+ */
+void
+do_start_timer(void)
+{
   if (timing)
     gettimeofday(&timer_start_time, NULL);
 }
 
-void do_timing(char *msg)
+/**
+ * Shows the period since the timer started running.
+ *
+ * @param msg  A message to print along with the reading from the timer.
+ */
+void
+do_timing(char *msg)
 {
   struct timeval t;
   long delta_s;
@@ -2755,31 +2785,33 @@ void do_timing(char *msg)
 
 /* ====================================== CQP Child mode:  Size & Dump */
 
-void do_size(CorpusList *cl, FieldType field) {
+void
+do_size(CorpusList *cl, FieldType field)
+{
   if (cl) {
     if (field != NoField) {
       if (field == TargetField) {
-	int count = 0, i;
-	if (cl->targets) {
-	  for (i = 0; i < cl->size; i++) {
-	    if (cl->targets[i] != -1)
-	      count++;
-	  }
-	}
-	printf("%d\n", count);
+        int count = 0, i;
+        if (cl->targets) {
+          for (i = 0; i < cl->size; i++) {
+            if (cl->targets[i] != -1)
+              count++;
+          }
+        }
+        printf("%d\n", count);
       }
       else if (field == KeywordField) {
-	int count = 0, i;
-	if (cl->keywords) {
-	  for (i = 0; i < cl->size; i++) {
-	    if (cl->keywords[i] != -1)
-	      count++;
-	  }
-	}
-	printf("%d\n", count);
+        int count = 0, i;
+        if (cl->keywords) {
+          for (i = 0; i < cl->size; i++) {
+            if (cl->keywords[i] != -1)
+              count++;
+          }
+        }
+        printf("%d\n", count);
       }
-      else {			/* must be Match or MatchEnd then */
-	printf("%d\n", cl->size);
+      else {                        /* must be Match or MatchEnd then */
+        printf("%d\n", cl->size);
       }
     }
     else {
@@ -2787,11 +2819,13 @@ void do_size(CorpusList *cl, FieldType field) {
     }
   }
   else {
-    printf("0\n");		/* undefined corpus */
+    printf("0\n");                /* undefined corpus */
   }
 }
 
-void do_dump(CorpusList *cl, int first, int last, struct Redir *rd) {
+void
+do_dump(CorpusList *cl, int first, int last, struct Redir *rd)
+{
   int i, j, f, l, target, keyword;
   Range *rg;
 
@@ -2809,16 +2843,18 @@ void do_dump(CorpusList *cl, int first, int last, struct Redir *rd) {
       keyword = (cl->keywords) ? cl->keywords[j] : -1;
       rg = cl->range + j;
       fprintf(rd->stream, "%d\t%d\t%d\t%d\n", 
-	      rg->start, rg->end, target, keyword);
+              rg->start, rg->end, target, keyword);
     }
 
     close_stream(rd);
   }
 }
 
-int do_undump(char *corpname, int extension_fields, int sort_ranges, struct InputRedir *rd) {
+int
+do_undump(char *corpname, int extension_fields, int sort_ranges, struct InputRedir *rd)
+{
   int i, size, match, matchend, target, keyword;
-  int max_cpos, mark, abort;		/* for validity checks */
+  int max_cpos, mark, abort;                /* for validity checks */
   char line[MAX_LINE_LENGTH], junk[MAX_LINE_LENGTH], mother[MAX_LINE_LENGTH];
   CorpusList *cl = current_corpus, *new = NULL;
 
@@ -2830,7 +2866,7 @@ int do_undump(char *corpname, int extension_fields, int sort_ranges, struct Inpu
     return 0;
   }
 
-  if (is_qualified(corpname)) {	/* if <corpname> is qualified, use specified mother corpus */
+  if (is_qualified(corpname)) {        /* if <corpname> is qualified, use specified mother corpus */
     corpname = split_subcorpus_name(corpname, mother); /* reset <corpname> to point to local name, copy qualifier to <mother> */
     cl = findcorpus(mother, SYSTEM, 0);
     if (cl == NULL) {
@@ -2839,19 +2875,19 @@ int do_undump(char *corpname, int extension_fields, int sort_ranges, struct Inpu
     }
   }
   else { /* otherwise, check for activated corpus for which named query result will be created */
-    if (cl == NULL) {	
+    if (cl == NULL) {
       cqpmessage(Error, "No corpus activated. Can't perform undump.");
       return 0;
     }
     
-    if (cl->type != SYSTEM) {	/* if a subcorpus is activated, find the corresponding system corpus */
+    if (cl->type != SYSTEM) {        /* if a subcorpus is activated, find the corresponding system corpus */
       CorpusList *tmp;
       
       assert(cl->mother_name != NULL);
       tmp = findcorpus(cl->mother_name, SYSTEM, 0);
       if (tmp == NULL) {
-	cqpmessage(Error, "Can't find implicitly activated corpus %s. Undump aborted.\n", cl->mother_name);
-	return 0;
+        cqpmessage(Error, "Can't find implicitly activated corpus %s. Undump aborted.\n", cl->mother_name);
+        return 0;
       }
       cl = tmp;
     } /* cl now points to the currently active system corpus */
@@ -2874,12 +2910,12 @@ int do_undump(char *corpname, int extension_fields, int sort_ranges, struct Inpu
     return 0;
   }
 
-  cl_free(new->range);		/* free previous match data (should only be one range for system corpus) */
+  cl_free(new->range);                /* free previous match data (should only be one range for system corpus) */
   cl_free(new->sortidx);
   cl_free(new->targets);
   cl_free(new->keywords);
 
-  new->size = size;		/* allocate space for required number of (match, matchend) pairs, targets, keywords */
+  new->size = size;                /* allocate space for required number of (match, matchend) pairs, targets, keywords */
   new->range = (Range *) cl_malloc(sizeof(Range) * size);
   if (extension_fields >= 1) new->targets = (int *) cl_malloc(sizeof(int) * size);
   if (extension_fields >= 2) new->keywords = (int *) cl_malloc(sizeof(int) * size);
@@ -2887,18 +2923,18 @@ int do_undump(char *corpname, int extension_fields, int sort_ranges, struct Inpu
   max_cpos = cl->mother_size - 1; /* check validity, ordering, and non-overlapping of match ranges */
   mark = -1;
   abort = 0;
-  for (i = 0; (i < size) && !abort; i++) {	/* now read one data row at a time from the undump table */
+  for (i = 0; (i < size) && !abort; i++) {        /* now read one data row at a time from the undump table */
     if (feof(rd->stream)
-	|| (!fgets(line, MAX_LINE_LENGTH, rd->stream)) /* parse input line format */
-	|| (sscanf(line, "%d %d %d %d %s", &match, &matchend, &target, &keyword, junk)
-	    != (2 + extension_fields)) 
-	) {
+        || (!fgets(line, MAX_LINE_LENGTH, rd->stream)) /* parse input line format */
+        || (sscanf(line, "%d %d %d %d %s", &match, &matchend, &target, &keyword, junk)
+            != (2 + extension_fields))
+        ) {
       cqpmessage(Error, "Format error in undump file (row #%d)", i+1);
       abort = 1;
       break;
     }
 
-    if (matchend < match) {	/* check validity of match .. matchend range */
+    if (matchend < match) {        /* check validity of match .. matchend range */
       cqpmessage(Error, "match (%d) must be <= matchend (%d) on row #%d", match, matchend, i+1);
       abort = 1;
     }
@@ -2908,7 +2944,7 @@ int do_undump(char *corpname, int extension_fields, int sort_ranges, struct Inpu
     }
     else if ((! sort_ranges) && (match <= mark)) { /* current range must start _after_ end of previous range (unless sort_ranges==1) */
       cqpmessage(Error, "matches must be sorted and non-overlapping\n\t"
-		 "match (%d) on row #%d overlaps with previous matchend (%d)", match, i+1, mark);
+                 "match (%d) on row #%d overlaps with previous matchend (%d)", match, i+1, mark);
       abort = 1;
     }
     else {
@@ -2919,24 +2955,24 @@ int do_undump(char *corpname, int extension_fields, int sort_ranges, struct Inpu
 
     if (extension_fields >= 1) { /* check validity of target position if specified */
       if (target < -1 || target > max_cpos) {
-	cqpmessage(Error, "target (%d) out of range (0 .. %d) on row #%d", target, max_cpos, i+1);
-	abort = 1;
+        cqpmessage(Error, "target (%d) out of range (0 .. %d) on row #%d", target, max_cpos, i+1);
+        abort = 1;
       }
       else
-	new->targets[i] = target;
+        new->targets[i] = target;
     }
 
     if (extension_fields >= 2) { /* check validity of keyword position if specified */
       if (keyword < -1 || keyword > max_cpos) {
-	cqpmessage(Error, "keyword (%d) out of range (0 .. %d) on row #%d", keyword, max_cpos, i+1);
-	abort = 1;
+        cqpmessage(Error, "keyword (%d) out of range (0 .. %d) on row #%d", keyword, max_cpos, i+1);
+        abort = 1;
       }
       else
-	new->keywords[i] = keyword;
+        new->keywords[i] = keyword;
     }
   }
 
-  if (abort) { 			/* when an error was detected, don't create the named query result */
+  if (abort) {                         /* when an error was detected, don't create the named query result */
     close_input_stream(rd);
     drop_temp_corpora();
     return 0;
@@ -2946,8 +2982,8 @@ int do_undump(char *corpname, int extension_fields, int sort_ranges, struct Inpu
     cqpmessage(Warning, "There may be errors in the undump data. Please check the named query result %s.\n", corpname);
   }
 
-  if (sort_ranges) { /* if ranges aren't sorted in natural order, they must be re-ordered so that CQP can work with them  */
-    RangeSort(new, 1);		/* however, a sortidx is automatically constructed to reproduce the ordering of the input file */
+  if (sort_ranges) {        /* if ranges aren't sorted in natural order, they must be re-ordered so that CQP can work with them  */
+    RangeSort(new, 1);      /* however, a sortidx is automatically constructed to reproduce the ordering of the input file */
   }
   new = assign_temp_to_sub(new, corpname); /* copy the temporary subcorpus to the requested query name */
   drop_temp_corpora();

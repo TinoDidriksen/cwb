@@ -26,7 +26,14 @@
 
 #include "attlist.h"
 
-AttributeList *NewAttributeList(int element_type)
+/**
+ * Creates a new AttributeList.
+ *
+ * @param element_type  What type of attribute is this? ATT_POS, ATT_STRUC, etc.
+ * @return              Pointer to the new AttributeList object.
+ */
+AttributeList *
+NewAttributeList(int element_type)
 {
   AttributeList *l;
 
@@ -39,7 +46,13 @@ AttributeList *NewAttributeList(int element_type)
   return l;
 }
 
-int DestroyAttributeList(AttributeList **list)
+/**
+ * Deletes an AttributeList object.
+ *
+ * @param list  Address of the pointer to the list to delete.
+ */
+int
+DestroyAttributeList(AttributeList **list)
 {
   AttributeInfo *ai;
 
@@ -73,10 +86,24 @@ int DestroyAttributeList(AttributeList **list)
   return 1;
 }
 
-AttributeInfo *AddNameToAL(AttributeList *list,
-			   char *name,
-			   int initial_status,
-			   int position)
+
+/**
+ * Adds a new AttributeInfo to an AttributeList object.
+ *
+ * @param list            The list to add to.
+ * @param name            The name of the Attribvute that this AttributeInfo refers to.
+ * @param initial_status  Initial setting for the status member of the new AttributeInfo.
+ * @param position        If this is 1, the new AttributeInfo is added at the beginning
+ *                        of the list. If it is 0, it is added at the end of the list.
+ *                        Otherwise, this specifies a particular insertion position
+ *                        (the given number of steps down the linked list).
+ * @return                A pointer to the new AttributeInfo, or NULL for error.
+ */
+AttributeInfo
+*AddNameToAL(AttributeList *list,
+             char *name,
+             int initial_status,
+             int position)
 {
   if (MemberAL(list, name))
     return NULL;
@@ -98,43 +125,43 @@ AttributeInfo *AddNameToAL(AttributeList *list,
 
       if (position == 1) {
 
-	/* insertion at beginning */
-	ai->next = list->list;
-	list->list = ai;
+        /* insertion at beginning */
+        ai->next = list->list;
+        list->list = ai;
 
       }
       else if (position == 0) {
 
-	/* insert new element at end of list */
-	
-	AttributeInfo *prev;
-	
-	prev = list->list;
-	
-	while (prev->next)
-	  prev = prev->next;
-	
-	ai->prev = prev;
-	prev->next = ai;
+        /* insert new element at end of list */
+
+        AttributeInfo *prev;
+
+        prev = list->list;
+
+        while (prev->next)
+          prev = prev->next;
+
+        ai->prev = prev;
+        prev->next = ai;
       }
       else {
 
-	/* insert new element at certain position */
-	
-	AttributeInfo *prev;
+        /* insert new element at certain position */
 
-	prev = list->list;
-	
-	while (prev->next && position > 2) {
-	  prev = prev->next;
-	  position--;
-	}
-	
-	ai->prev = prev;
-	ai->next = prev->next;
+        AttributeInfo *prev;
 
-	prev->next->prev = ai;
-	prev->next = ai;
+        prev = list->list;
+
+        while (prev->next && position > 2) {
+          prev = prev->next;
+          position--;
+        }
+
+        ai->prev = prev;
+        ai->next = prev->next;
+
+        prev->next->prev = ai;
+        prev->next = ai;
       }
     }
 
@@ -146,6 +173,15 @@ AttributeInfo *AddNameToAL(AttributeList *list,
   }
 }
 
+
+/**
+ * Deletes an AttributeInfo from the AttributeList.
+ *
+ * @param list   The list from which to delete.
+ * @param name   The name of the AttributeInfo to delete.
+ * @return       True if the attribute info was found and deleted;
+ *               otherwise false.
+ */
 int 
 RemoveNameFromAL(AttributeList *list, char *name)
 {
@@ -168,15 +204,15 @@ RemoveNameFromAL(AttributeList *list, char *name)
       /* unchain it */
 
       if (prev == NULL) {
-	/* this is first element of attribute list */
-	list->list = this->next;
-	if (this->next)
-	  this->next->prev = list->list;
+        /* this is first element of attribute list */
+        list->list = this->next;
+        if (this->next)
+          this->next->prev = list->list;
       }
       else {
-	prev->next = this->next;
-	if (this->next)
-	  this->next->prev = prev;
+        prev->next = this->next;
+        if (this->next)
+          this->next->prev = prev;
       }
 
       cl_free(this->name);
@@ -198,6 +234,19 @@ RemoveNameFromAL(AttributeList *list, char *name)
     return 0;
 }
 
+
+/**
+ * Deletes an AttributeInfo from the AttributeList.
+ *
+ * Unlike RemoveNameFromAL(), this function deletes an AttributeInfo
+ * known by its pointer, rather than one known by its name.
+ *
+ * @see RemoveNameFromAL
+ * @param list   The list from which to delete.
+ * @param this   The address (pointer) of the AttributeInfo to delete.
+ * @return       True if the attribute info was found and deleted;
+ *               otherwise false.
+ */
 int 
 Unchain(AttributeList *list, AttributeInfo *this)
 {
@@ -208,22 +257,22 @@ Unchain(AttributeList *list, AttributeInfo *this)
     if (this == list->list) {
       list->list = this->next;
       if (list->list)
-	list->list->prev = NULL;
+        list->list->prev = NULL;
     }
     else {
 
       prev = list->list;
 
       while (prev && prev->next != this)
-	prev = prev->next;
+        prev = prev->next;
 
       if (prev) {
-	prev->next = this->next;
-	if (prev->next)
-	  prev->next->prev = prev;
+        prev->next = this->next;
+        if (prev->next)
+          prev->next->prev = prev;
       }
       else
-	this = NULL;
+        this = NULL;
     }
 
     if (this) {
@@ -242,7 +291,14 @@ Unchain(AttributeList *list, AttributeInfo *this)
     return 0;
 }
 
-int NrOfElementsAL(AttributeList *list)
+/**
+ * Gets the number of entries in an AttributeList.
+ *
+ * @param list  The list to size up.
+ * @return      The number of elements in the list.
+ */
+int
+NrOfElementsAL(AttributeList *list)
 {
   int nr;
   AttributeInfo *l;
@@ -258,11 +314,29 @@ int NrOfElementsAL(AttributeList *list)
   return nr;
 }
 
-int MemberAL(AttributeList *list, char *name)
+
+/**
+ * Checks whether the AttributeList contains an entry with the given attribute name.
+ *
+ * @param list  The list to search.
+ * @param name  The name of the element to search for.
+ * @return      Boolean: true if the element is found as a member of the list.
+ */
+int
+MemberAL(AttributeList *list, char *name)
 {
   return (FindInAL(list, name) ? 1 : 0);
 }
 
+
+/**
+ * Finds an entry in an AttribvuteList.
+ *
+ * @param list  The list to search.
+ * @param name  The name of the element to search for.
+ * @return      Pointer to the AttributeInfo with the matching name,
+ *              or NULL if the name was not found.
+ */
 AttributeInfo *FindInAL(AttributeList *list, char *name)
 {
   AttributeInfo *this;
@@ -280,7 +354,14 @@ AttributeInfo *FindInAL(AttributeList *list, char *name)
     return NULL;
 }
 
-int RecomputeAL(AttributeList *list, Corpus *corpus, int init_status)
+
+/**
+ * Goes through an AttributeList, deletes entries for attributes that don't exist, and adds entries for those that do.
+ *
+ * Note that all AttributeInfo entries are linked to the actual Attribute objects by this function.
+ */
+int
+RecomputeAL(AttributeList *list, Corpus *corpus, int init_status)
 {
   /* silly implementation, but usually short lists. so what... */
 
@@ -297,19 +378,19 @@ int RecomputeAL(AttributeList *list, Corpus *corpus, int init_status)
     ai = ai->next;
 
     if (corpus == NULL ||
-	!find_attribute(corpus, this->name, list->element_type, NULL)) {
+        !find_attribute(corpus, this->name, list->element_type, NULL)) {
 
       /* unchain */
 
       if (prev) {
-	prev->next = ai;
-	if (prev->next)
-	  prev->next->prev = prev;
+        prev->next = ai;
+        if (prev->next)
+          prev->next->prev = prev;
       }
       else {
-	list->list = ai;
-	if (ai)
-	  ai->prev = NULL;
+        list->list = ai;
+        if (ai)
+          ai->prev = NULL;
       }
 
       /* free */
@@ -330,9 +411,9 @@ int RecomputeAL(AttributeList *list, Corpus *corpus, int init_status)
   if (corpus) {
     for (attr = corpus->attributes; attr; attr = attr->any.next)
       if (attr->type == list->element_type) {
-	ai = AddNameToAL(list, attr->any.name, 0, 0);
-	if (ai)
-	  ai->attribute = attr;
+        ai = AddNameToAL(list, attr->any.name, 0, 0);
+        if (ai)
+          ai->attribute = attr;
       }
   }
 
@@ -341,9 +422,22 @@ int RecomputeAL(AttributeList *list, Corpus *corpus, int init_status)
   return 1;
 }
 
-int VerifyList(AttributeList *list, 
-	       Corpus *corpus,
-	       int remove_illegal_entries)
+/**
+ * Verifies an AttributeList.
+ *
+ * Note that all AttributeInfo entries are linked to the actual Attribute objects by this function.
+ *
+ * If the relevant attribute cannot be found, the entry is deleted iff remove_illegal_entries.
+ *
+ * @param list                    The list to verify.
+ * @param corpus                  The corpus for which this list should be valid.
+ * @param remove_illegal_entries  Boolean: see function description.
+ * @return                        Boolean: true for all OK, false for error.
+ */
+int
+VerifyList(AttributeList *list,
+           Corpus *corpus,
+           int remove_illegal_entries)
 {
   int result;
   AttributeInfo *ai, *prev, *this;
@@ -359,9 +453,9 @@ int VerifyList(AttributeList *list,
   while (ai) {
 
     ai->attribute = find_attribute(corpus, 
-				   ai->name, 
-				   list->element_type,
-				   NULL);
+                                   ai->name,
+                                   list->element_type,
+                                   NULL);
 
     this = ai;
     ai = ai->next;
@@ -369,27 +463,27 @@ int VerifyList(AttributeList *list,
     if (this->attribute == NULL) {
 
       if (remove_illegal_entries) {
-	
-	if (prev == NULL) {
-	  
-	  /* delete first element */
-	  list->list = ai;
-	  if (ai)
-	    ai->prev = NULL;
-	}
-	else {
-	  /* unchain this element */
-	  prev->next = ai;
-	  if (ai)
-	    ai->prev = prev;
-	}
-	
-	cl_free(this->name);
-	free(this);
-	
+
+        if (prev == NULL) {
+
+          /* delete first element */
+          list->list = ai;
+          if (ai)
+            ai->prev = NULL;
+        }
+        else {
+          /* unchain this element */
+          prev->next = ai;
+          if (ai)
+            ai->prev = prev;
+        }
+
+        cl_free(this->name);
+        free(this);
+
       }
       else 
-	result = 0;
+        result = 0;
     }
     else
       prev = this;

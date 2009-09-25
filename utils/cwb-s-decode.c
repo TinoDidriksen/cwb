@@ -19,7 +19,7 @@
 #include "../cl/globals.h"
 #include "../cl/cl.h"
 
-
+/** Name of the program (from the shell) */
 char *progname;
 
 /**

@@ -23,23 +23,23 @@
 
 /* ======================================== Data types */
 
+/** The linked list in an AttributeList consists of these. */
 typedef struct _attrbuf {
-  char *name;			/* name of attribute */
-  Attribute *attribute;		/* structure, only valid if list_valid==1 */
-  int status;			/* user-settable, 0 on init */
+  char *name;                           /**< name of the attribute */
+  Attribute *attribute;                 /**< the relevant Attribute object, only valid if list_valid==1 */
+  int status;                           /**< This is user-settable; 0 on initialisation. */
 
-  struct _attrbuf * next;	/* chain */
-  struct _attrbuf * prev;	/* chain */
+  struct _attrbuf * next;               /**< Next in chain. */
+  struct _attrbuf * prev;               /**< Previous in chain */
 } AttributeInfo;
 
+/** The AttributeList object: holds a list of attributes */
 typedef struct _attlist {
 
-  /* holds a list of attributes */
+  int list_valid;                       /**< Are all the Attributes in this list valid? 0: check list */
+  int element_type;                     /**< One of the constants defined in attributes.h, format:ATT_x */
 
-  int list_valid;		/* 0: check list */
-  int element_type;		/* attributes.h:ATT_x */
-
-  AttributeInfo *list;		/* the list proper */
+  AttributeInfo *list;                  /**< Head of the linked list of attribute-info structures. */
 
 } AttributeList;
 
@@ -52,9 +52,9 @@ int DestroyAttributeList(AttributeList **list);
 /* ======================================== Adding and Removing */
 
 AttributeInfo *AddNameToAL(AttributeList *list,
-			   char *name,
-			   int initial_status,
-			   int position);
+                           char *name,
+                           int initial_status,
+                           int position);
 
 int RemoveNameFromAL(AttributeList *list, char *name);
 
@@ -67,8 +67,8 @@ AttributeInfo *FindInAL(AttributeList *list, char *name);
 int RecomputeAL(AttributeList *list, Corpus *corpus, int initial_status);
 
 int VerifyList(AttributeList *list, 
-	       Corpus *corpus,
-	       int remove_illegal_entries);
+               Corpus *corpus,
+               int remove_illegal_entries);
 
 /* ======================================== EOF */
 

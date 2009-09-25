@@ -370,7 +370,18 @@ void readline_main(void)
 #endif /* USE_READLINE */
 
 
-int main(int argc, char *argv[])
+/**
+ * Main function for the interactive CQP program.
+ *
+ * Doesn't do much except call the initialisation function,
+ * and then one of the loop-and-parse-input functions.
+ *
+ * @param argc  Number of commandline arguments.
+ * @param argv  Pointer to commandline arguments.
+ * @return      Return value to OS.
+ */
+int
+main(int argc, char *argv[])
 {
 
   which_app = cqp;

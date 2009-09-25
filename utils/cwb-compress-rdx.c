@@ -30,17 +30,23 @@
 
 /* ---------------------------------------------------------------------- */
 
+/** Name of the program */
 char *progname = NULL;
 
+/** CWB id of the corpus we are working on */
 char *corpus_id = NULL;
+/** Record for the corpus we are working on */
 Corpus *corpus; 
 
 void usage(char *msg, int error_code);
 void cleanup(int error_code);
 
+/** debug level */
 int debug = 0;
+/** where debug messages are to be sent to (stderr) */
 FILE *debug_output; /* " = stderr;" init moved to main() for Gnuwin32 compatibility */
 
+/** stores current position in a bit-write-file */
 int codepos = 0;
 
 #ifdef __NEVER__
@@ -81,10 +87,10 @@ void write_golomb_code_am(int x, int b, BFile *bf)
   
   if (debug)
     fprintf(debug_output, " res=%5d CL [%3d/%3d] #sc %4d "
-	    "writing %5d/%d\n",
-	    res, lb, ub, nr_sc, 
-	    (res < nr_sc) ? res : res + nr_sc,
-	    (res < nr_sc) ? lb : ub);
+            "writing %5d/%d\n",
+            res, lb, ub, nr_sc,
+            (res < nr_sc) ? res : res + nr_sc,
+            (res < nr_sc) ? lb : ub);
 
   if (res < nr_sc) {
     BFwriteWord((unsigned int)res, lb, bf);
@@ -93,7 +99,7 @@ void write_golomb_code_am(int x, int b, BFile *bf)
     BFwriteWord((unsigned int)(res + nr_sc), ub, bf);
     if (res + nr_sc >= (1 << ub))
       fprintf(stderr, "Warning: can't encode %d in %d bits\n", 
-	      res + nr_sc, ub);
+              res + nr_sc, ub);
   }
 
 }
@@ -133,7 +139,7 @@ int read_golomb_code_am(int b, BFile *bf)
 
   if (debug)
     fprintf(debug_output, "%8d:  Read r=%5d [%3d/%3d]  #sc=%4d, ",
-	    codepos, r, lb, ub, nr_sc);
+            codepos, r, lb, ub, nr_sc);
 
   if (r >= nr_sc) {
     r <<= 1;
@@ -144,7 +150,7 @@ int read_golomb_code_am(int b, BFile *bf)
 
   if (debug)
     fprintf(debug_output, "final r=%d\tgap=%d\n", 
-	    r, r+q*b);
+            r, r+q*b);
 
   return r + q * b;
 }
@@ -157,8 +163,17 @@ int read_golomb_code_am(int b, BFile *bf)
 
 /* ================================================== COMPRESSION */
 
+/**
+ * Compresses the reversed index of a p-attribute.
+ *
+ * @param attr      The attribute to compress the index of.
+ * @param output_fn Base name for the compressed RDX files to be written
+ *                  (if this is null, filenames will be taken from the
+ *                  attribute).
+ */
 void 
-compress_reversed_index(Attribute *attr, char *output_fn) {
+compress_reversed_index(Attribute *attr, char *output_fn)
+{
   char *s;
   char data_fname[1024];
   char index_fname[1024];
@@ -263,20 +278,20 @@ compress_reversed_index(Attribute *attr, char *output_fn) {
     
     if (debug)
       fprintf(debug_output, "------------------------------ ID %d (f: %d, b: %d)\n",
-	      i, element_freq, b);
+              i, element_freq, b);
     
     last_pos = 0;
     for (k = 0; k < element_freq; k++) {
       if (1 != ReadPositionStream(PStream, &new_pos, 1)) {
-	cdperror("(aborting) index read error\n");
-	cleanup(1);
+        cdperror("(aborting) index read error\n");
+        cleanup(1);
       }
       
       gap = new_pos - last_pos;
       last_pos = new_pos;
       
       if (debug)
-	fprintf(debug_output, "%8d:  gap=%4d, b=%4d\n", codepos, gap, b);
+        fprintf(debug_output, "%8d:  gap=%4d, b=%4d\n", codepos, gap, b);
       
       write_golomb_code(gap, b, &data_file);
       codepos++;
@@ -295,10 +310,23 @@ compress_reversed_index(Attribute *attr, char *output_fn) {
 
 /* ================================================== DECOMPRESSION & ERROR CHECKING */
 
-/* this assumes that compress_reversed_index() has been called beforehand and made sure
-   that the _uncompressed_ index is used by CL access functions */
+/*
+    */
+/**
+ * Checks a compressed reversed index for errors by decompressing it.
+ *
+ * This function this assumes that compress_reversed_index() has been called
+ * beforehand and made sure that the _uncompressed_ index is used by CL
+ * access functions.
+ *
+ * @param attr      The attribute to check the index of.
+ * @param output_fn Base name for the compressed RDX files to be read
+ *                  (if this is null, filename swill be taken from the
+ *                  attribute).
+ */
 void 
-decompress_check_reversed_index(Attribute *attr, char *output_fn) {
+decompress_check_reversed_index(Attribute *attr, char *output_fn)
+{
   char *s;
   char data_fname[1024];
   char index_fname[1024];
@@ -379,7 +407,7 @@ decompress_check_reversed_index(Attribute *attr, char *output_fn) {
 
     if (debug)
       fprintf(debug_output, "------------------------------ ID %d (f: %d, b: %d)\n",
-	      i, element_freq, b);
+              i, element_freq, b);
 
     pos = 0;
     for (k = 0; k < element_freq; k++) {
@@ -388,13 +416,13 @@ decompress_check_reversed_index(Attribute *attr, char *output_fn) {
       pos += gap;
 
       if (1 != ReadPositionStream(PStream, &true_pos, 1)) {
-	cdperror("(aborting) index read error\n");
-	cleanup(1);
+        cdperror("(aborting) index read error\n");
+        cleanup(1);
       }
       if (pos != true_pos) {
-	fprintf(stderr, "ERROR: wrong occurrence of token #%d at cpos %d (correct cpos: %d). Aborted.\n",
-	      i, pos, true_pos);
-	cleanup(1);
+        fprintf(stderr, "ERROR: wrong occurrence of token #%d at cpos %d (correct cpos: %d). Aborted.\n",
+              i, pos, true_pos);
+        cleanup(1);
       }
 
     }
@@ -408,9 +436,9 @@ decompress_check_reversed_index(Attribute *attr, char *output_fn) {
 
   /* tell the user it's safe to delete the REVCORP and REVCIDX components now */
   printf("!! You can delete the file <%s> now.\n",
-	 component_full_name(attr, CompRevCorpus, NULL));
+         component_full_name(attr, CompRevCorpus, NULL));
   printf("!! You can delete the file <%s> now.\n",
-	 component_full_name(attr, CompRevCorpusIdx, NULL));
+         component_full_name(attr, CompRevCorpusIdx, NULL));
   
   return;
 }
@@ -418,8 +446,15 @@ decompress_check_reversed_index(Attribute *attr, char *output_fn) {
 /* ---------------------------------------------------------------------- */
 
 
+/**
+ * Prints a usage message and exits the program.
+ *
+ * @param msg         A message about the error.
+ * @param error_code  Value to be returned by the program when it exits.
+ */
 void 
-usage(char *msg, int error_code) {
+usage(char *msg, int error_code)
+{
   if (msg)
     fprintf(stderr, "Usage error: %s\n", msg);
   fprintf(stderr, "\n");
@@ -442,6 +477,11 @@ usage(char *msg, int error_code) {
   cleanup(error_code);
 }
 
+/**
+ * Cleans up memory prior to an error-prompted exit.
+ *
+ * @param error_code  Value to be returned by the program when it exits.
+ */
 void
 cleanup(int error_code) {
   if (corpus)
@@ -478,10 +518,10 @@ main(int argc, char **argv) {
   extern char *optarg;
   int c;
 
-  int i_want_to_believe = 0;	/* skip error checks? */
+  int i_want_to_believe = 0;        /* skip error checks? */
   int all_attributes = 0;
 
-  debug_output = stderr;	/* 'delayed' init (see top of file) */
+  debug_output = stderr;        /* 'delayed' init (see top of file) */
 
   /* ------------------------------------------------- PARSE ARGUMENTS */
 
@@ -505,10 +545,10 @@ main(int argc, char **argv) {
       /* r: registry directory */
     case 'r': 
       if (registry_directory == NULL) 
-	registry_directory = optarg;
+        registry_directory = optarg;
       else {
-	fprintf(stderr, "%s: -r option used twice\n", progname);
-	cleanup(2);
+        fprintf(stderr, "%s: -r option used twice\n", progname);
+        cleanup(2);
       }
       break;
       
@@ -569,24 +609,24 @@ main(int argc, char **argv) {
 
   if ((corpus = cl_new_corpus(registry_directory, corpus_id)) == NULL) {
     fprintf(stderr, "Corpus %s not found in registry %s . Aborted.\n", 
-	    corpus_id,
-	    (registry_directory ? registry_directory 
-	     : central_corpus_directory()));
+            corpus_id,
+            (registry_directory ? registry_directory
+             : central_corpus_directory()));
     cleanup(1);
   }
 
   if (all_attributes) {
     for (attr = corpus->attributes; attr; attr = attr->any.next)
       if (attr->any.type == ATT_POS) {
-	compress_reversed_index(attr, output_fn);
-	if (! i_want_to_believe) 
-	  decompress_check_reversed_index(attr, output_fn);
+        compress_reversed_index(attr, output_fn);
+        if (! i_want_to_believe)
+          decompress_check_reversed_index(attr, output_fn);
       }
   }
   else {
     if ((attr = find_attribute(corpus, attr_name, ATT_POS, NULL)) == NULL) {
       fprintf(stderr, "Attribute %s.%s doesn't exist. Aborted.\n", 
-	      corpus_id, attr_name);
+              corpus_id, attr_name);
       cleanup(1);
     }
     compress_reversed_index(attr, output_fn);
@@ -595,5 +635,5 @@ main(int argc, char **argv) {
   }
   
   cleanup(0);
-  return 0;			/* to keep gcc from complaining */
+  return 0;                        /* to keep gcc from complaining */
 }

@@ -29,48 +29,81 @@
 
 /* global variables */
 
+/** Name of the program (from the shell) */
 char *progname;
 
+/** number of config lines in the default config */
 #define DEFAULT_CONFIG_LINES 4
-char *(default_config[DEFAULT_CONFIG_LINES]) = {
-  "-C:1",                       /* character count */
-  "-S:50:0.4",                  /* shared tokens with frequency ratio >= 1/2 */
-  "-3:3",                       /* trigrams get 3 units */
-  "-4:4"                        /* 4-grams get 2*3 + 4 = 10 units */
-};
-char **config = default_config; /* reset this to <config> part of argv[], if specified on command line */
-int config_lines = DEFAULT_CONFIG_LINES; /* number of config lines in default config */
 
-char *corpus1_name;             /* name of the source corpus */
-char *corpus2_name;             /* name of the target corpus */
-char *s_name;                   /* name of the S-attribute containing sentence boundaries */
-Corpus *corpus1, *corpus2;      /* corpus handles */
-Attribute *word1, *word2;       /* word attribute handles */
-Attribute *s1, *s2;             /* sentence attribute handles */
-Attribute *prealign1 = NULL;    /* pre-alignment attribute (source) if given */
-Attribute *prealign2 = NULL;    /* pre-alignment attribute (target) */
-int size1, size2;               /* size of corpora in sentences */
-int ws1, ws2;                   /* size in words (i.e. corpus positions) */
-int pre1 = 0, pre2 = 0;         /* number of pre-alignment regions */
+/**
+ * Set of strings containing default configuration options.
+ *
+ * Notes on interpreting the lines (in order):
+ * - character count
+ * - shared tokens with frequency ratio >= 1/2
+ * - trigrams get 3 units
+ * - 4-grams get 2*3 + 4 = 10 units
+ */
+char *(default_config[DEFAULT_CONFIG_LINES]) = {
+  "-C:1",
+  "-S:50:0.4",
+  "-3:3",
+  "-4:4"
+};
+
+/**
+ * Pointer to configuration strings.
+ *
+ * Set initially to default_config ; should be reset to the
+ * {config} part of argv[], if configuration is specified on the
+ * command line.
+ */
+char **config = default_config;
+/**
+ * Number of lines in the configuration strings array.
+ */
+int config_lines = DEFAULT_CONFIG_LINES;
+
+char *corpus1_name;             /**< name of the source corpus */
+char *corpus2_name;             /**< name of the target corpus */
+char *s_name;                   /**< name of the S-attribute containing sentence boundaries */
+Corpus *corpus1;                /**< corpus handle: source corpus */
+Corpus *corpus2;                /**< corpus handle: target corpus */
+Attribute *word1;               /**< word attribute handle: source */
+Attribute *s1;                  /**< sentence attribute handle: source */
+Attribute *word2;               /**< word attribute handle: target */
+Attribute *s2;                  /**< sentence attribute handle: target */
+Attribute *prealign1 = NULL;    /**< pre-alignment attribute (source) if given */
+Attribute *prealign2 = NULL;    /**< pre-alignment attribute (target) */
+int size2;                      /**< size of source corpus in sentences */
+int size2;                      /**< size of target corpus in sentences */
+int ws1;                        /**< size of source corpus in words (i.e. corpus positions) */
+int ws2;                        /**< size of target corpus in words (i.e. corpus positions) */
+int pre1 = 0;                   /**< number of pre-alignment regions (source corpus) */
+int pre2 = 0;                   /**< number of pre-alignment regions (target corpus) */
+
 
 /* global options */
 
-char word_name[1024] = "word";  /* name of the word attribute (default: word) */
-char outfile_name[1024] = "out.align"; /* name of the output file */
+char word_name[1024] = "word";  /**< name of the word attribute (default: word) */
+char outfile_name[1024] = "out.align"; /**< name of the output file */
 
-double split_factor = 1.2;      /* 2:2 alignment split factor */
-int beam_width = 50;            /* best path search beam width */
+double split_factor = 1.2;      /**< 2:2 alignment split factor */
+int beam_width = 50;            /**< best path search beam width */
 
-char prealign_name[1024] = "";  /* pre-alignment given by structural attribute */
-int prealign_has_values = 0;    /* if 1, regions with same ID values are pre-aligned */
-int verbose = 0;                /* some extra progress info */
+char prealign_name[1024] = "";  /**< pre-alignment given by structural attribute */
+int prealign_has_values = 0;    /**< boolean: if 1, regions with same ID values are pre-aligned */
+int verbose = 0;                /**< controls printing of some extra progress info */
 
-char *registry_directory = NULL;
+char *registry_directory = NULL; /** string containing location of the registry directory.
 
 
-/* print_usage() */
+/**
+ * Prints a message describing how to use the program to STDERR and then exits.
+ */
 void
-print_usage(void) {
+print_usage(void)
+{
   int i;
 
   fprintf(stderr, "\n");
@@ -115,9 +148,21 @@ print_usage(void) {
   exit(1);
 }
 
-/* optindex = parse_args(argc, argv, required_arguments); */
+/**
+ * Parses the program's commandline arguments.
+ *
+ * Usage:
+ * optindex = parse_args(argc, argv, required_arguments);
+ *
+ * @param ac        The program's argc
+ * @param av        The program's argv
+ * @param min_args  Minimum number of arguments to be parsed.
+ * @return          The value of optind after parsing,
+ *                  ie the index of the first argument in argv[]
+ */
 int
-parse_args(int ac, char *av[], int min_args) {
+parse_args(int ac, char *av[], int min_args)
+{
   extern int optind;            /* getopt() interface */
   extern char *optarg;          /* getopt() interface */
   int c;
@@ -190,11 +235,34 @@ parse_args(int ac, char *av[], int min_args) {
   return(optind);               /* return index of first argument in argv[] */
 }
 
-/* print_align_line(fd, f1, l1, f2, l2, quality);
+/*
    write given information to file <fd> as a .align format line
    */
+/**
+ * Prints an alignment line.
+ *
+ * This function writes the given information to the specified
+ * file handle as a .align format line.
+ *
+ * A .align line looks like this:
+ * {f1} {l1} {f2} {l2} {type} [{quality}]
+ *   eg. "140 169 137 180 1:2" means that corpus (position) ranges
+ *   [140,169] and [137,180] form a 1:2 alignment pair .
+ *
+ * Usage:
+ * print_align_line(fd, f1, l1, f2, l2, quality);
+ *
+ * @param fd       File handle to print to.
+ * @param f1       First cpos in source corpus.
+ * @param l1       Last cpos in source corpus.
+ * @param f2       First cpos in target corpus.
+ * @param l2       Last cpos in target corpus.
+ * @param quality  Quality of the alignment.
+ *
+ */
 void
-print_align_line(FILE *fd, int f1, int l1, int f2, int l2, int quality) {
+print_align_line(FILE *fd, int f1, int l1, int f2, int l2, int quality)
+{
   int step1 = l1 - f1, step2 = l2 - f2;
   int wf1, wl1, wf2, wl2, dummy;
 
@@ -208,17 +276,29 @@ print_align_line(FILE *fd, int f1, int l1, int f2, int l2, int quality) {
     cl_struc2cpos(s2, l2, &dummy, &wl2);
   else wl2 = wf2 - 1;
 
-  /* .align line: <f1> <l1> <f2> <l2> <type> [<quality>]
-     eg. "140 169 137 180 1:2" means that corpus (position) ranges
-     [140,169] and [137,180] form a 1:2 alignment pair */
+
   fprintf(fd, "%d\t%d\t%d\t%d\t%d:%d\t%d\n",
           wf1, wl1, wf2, wl2, step1, step2, quality);
 }
 
-/* steps = do_alignment(FMS, f1, l1, f2, l2, outfile);
-   run a best_path alignment on sentence regions [f1,l1]x[f2,l2] and write
-   the result to <outfile> (in .align format)
-   */
+
+/**
+ * Actually does the alignment.
+ *
+ * This function run a best_path alignment on sentence regions
+ * [f1,l1]x[f2,l2] and writes the result to {outfile}
+ * (in .align format).
+ *
+ * Usage:
+ * steps = do_alignment(FMS, f1, l1, f2, l2, outfile);
+ *
+ * @param fms      The feature map to use in best_path alignment.
+ * @param if1      First cpos in source corpus.
+ * @param il1      Last cpos in source corpus.
+ * @param if2      First cpos in target corpus.
+ * @param il2      Last cpos in target corpus.
+ * @param outfile  File handle to print the alignment lines to.
+ */
 int
 do_alignment(FMS fms, int if1, int il1, int if2, int il2, FILE *outfile) {
   int steps, *out1, *out2, *quality;    /* return values of best_path() */

@@ -15,7 +15,7 @@
  *  WWW at http://www.gnu.org/copyleft/gpl.html).
  */
 
-/**********************************************************************/
+/* ****************************************************************** */
 /* regular expression to DFA converter -- originally written by       */
 /*                                        markh@csd4.csd.uwm.edu      */
 /* Derived from the syntax:                                           */
@@ -23,7 +23,7 @@
 /* Ex = "0" | "1" | ID | "(" Ex ")" | "[" Ex "]" | Ex "+" | Ex "*" |  */
 /*       Ex Ex | Ex "|" Ex.                                           */
 /* with the usual precedence rules.                                   */
-/**********************************************************************/
+/* ****************************************************************** */
 
 #include <stdio.h>
 #include <ctype.h>
@@ -943,7 +943,8 @@ void MergeStates(void)
     }
 }
 
-void WriteStates(void) 
+void
+WriteStates(void)
 {
 
   int S, Sh, Classes, C; 
@@ -1004,7 +1005,8 @@ void free_dfa(DFA *dfa)
   dfa->Max_Input = 0;
 }
 
-void show_complete_dfa(DFA dfa)
+void
+show_complete_dfa(DFA dfa)
 {
   int i, j;
 
@@ -1026,7 +1028,8 @@ void show_complete_dfa(DFA dfa)
   }
 }
 
-void init(void)
+void
+init(void)
 {
   int i;
 
@@ -1070,7 +1073,14 @@ void init(void)
   currpos = 0;
 }
 
-void regex2dfa(char *rxs, DFA *automaton)
+/**
+ * Converts a regular expression to a DFA.
+ *
+ * @param rxs         The regular expression.
+ * @param automation  Pointer to the DFA to write to.
+ */
+void
+regex2dfa(char *rxs, DFA *automaton)
 {
   int Q, i, j;
   int S, Sh, Classes, C; 

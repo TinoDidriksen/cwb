@@ -51,31 +51,32 @@
 <li>static void <a class="el" href="cqp_8c.html#92701d8f60df8dd491de169a8a59a4f3">sigINT_signal_handler</a> (int signum)
 <li>void <a class="el" href="cqp_8c.html#bc72b12c7959ec9a5b3aa5269e4f7063">install_signal_handler</a> (void)
 <li>void <a class="el" href="cqp_8c.html#d2da99fc9f3075623960a8364a6c9fec">cqp_randomize</a> (void)
-<li>int <a class="el" href="cqp_8c.html#313990999a7a7c5275682411e9b58c89">initialize_cqp</a> (int argc, char **argv)
-<li>int <a class="el" href="cqp_8c.html#7c30de93f06347a9bc939e324afd1472">cqp_parse_file</a> (FILE *fd, int exit_on_parse_errors)
-<li>int <a class="el" href="cqp_8c.html#ec03e7fa64e8cbd8372b7a586057fc0b">cqp_parse_string</a> (char *s)
-<li>int <a class="el" href="cqp_8c.html#da0b8c6476799a6aa1bb22cb48b7ab1d">setInterruptCallback</a> (<a class="el" href="cqp_8h.html#8ecc4f9deea63ce7ebcf018b11c59673">InterruptCheckProc</a> f)
-<li>void <a class="el" href="cqp_8c.html#89535598e0344df2438777230713cb8b">CheckForInterrupts</a> ()
-</ul>
+<dl class="el"><dd class="mdescRight">Wrapper function: randomises the internal random number generator.  <a href="#d2da99fc9f3075623960a8364a6c9fec"></a><br></dl><li>int <a class="el" href="cqp_8c.html#313990999a7a7c5275682411e9b58c89">initialize_cqp</a> (int argc, char **argv)
+<dl class="el"><dd class="mdescRight">Initialises the CQP program.  <a href="#313990999a7a7c5275682411e9b58c89"></a><br></dl><li>int <a class="el" href="cqp_8c.html#7c30de93f06347a9bc939e324afd1472">cqp_parse_file</a> (FILE *fd, int exit_on_parse_errors)
+<dl class="el"><dd class="mdescRight">Parses a stream for CQP query syntax.  <a href="#7c30de93f06347a9bc939e324afd1472"></a><br></dl><li>int <a class="el" href="cqp_8c.html#ec03e7fa64e8cbd8372b7a586057fc0b">cqp_parse_string</a> (char *s)
+<dl class="el"><dd class="mdescRight">Parses a stirng for CQP query syntax.  <a href="#ec03e7fa64e8cbd8372b7a586057fc0b"></a><br></dl><li>int <a class="el" href="cqp_8c.html#da0b8c6476799a6aa1bb22cb48b7ab1d">setInterruptCallback</a> (<a class="el" href="cqp_8h.html#8ecc4f9deea63ce7ebcf018b11c59673">InterruptCheckProc</a> f)
+<dl class="el"><dd class="mdescRight">Sets the interrupt callback function.  <a href="#da0b8c6476799a6aa1bb22cb48b7ab1d"></a><br></dl><li>void <a class="el" href="cqp_8c.html#d9ad6575c276e42520539bb5b24246d7">CheckForInterrupts</a> (void)
+<dl class="el"><dd class="mdescRight">Calls the interrupt callback function, if set.  <a href="#d9ad6575c276e42520539bb5b24246d7"></a><br></dl></ul>
 <h2>Variables</h2>
 <ul>
 <li>FILE * <a class="el" href="cqp_8c.html#46af646807e0797e72b6e8945e7ea88b">yyin</a>
 <li>FILE * <a class="el" href="cqp_8c.html#52e6d6a7709b683e9a681bdabb461ab0">cqp_files</a> [MAXCQPFILES]
-<li>int <a class="el" href="cqp_8c.html#6ce71516b2d8309447ccdd714f6ae6be">cqp_file_p</a>
-<li>int <a class="el" href="cqp_8c.html#3818b52c87d9e25995878f0719a1f15e">reading_cqprc</a> = 0
+<dl class="el"><dd class="mdescRight">Array of file handles.  <a href="#52e6d6a7709b683e9a681bdabb461ab0"></a><br></dl><li>int <a class="el" href="cqp_8c.html#6ce71516b2d8309447ccdd714f6ae6be">cqp_file_p</a>
+<dl class="el"><dd class="mdescRight">index-pointer into cqp_files.  <a href="#6ce71516b2d8309447ccdd714f6ae6be"></a><br></dl><li>int <a class="el" href="cqp_8c.html#3818b52c87d9e25995878f0719a1f15e">reading_cqprc</a> = 0
 <li>char <a class="el" href="cqp_8c.html#dfbde17c16a76552596e50bd3c371382">QueryBuffer</a> [QUERY_BUFFER_SIZE]
-<li>int <a class="el" href="cqp_8c.html#c0d42ac5f8866bd18648afcc372e650c">QueryBufferP</a> = 0
-<li>int <a class="el" href="cqp_8c.html#54d95727d347da93ae0866f293f729c4">QueryBufferOverflow</a> = 0
-<li><a class="el" href="cqp_8h.html#8ecc4f9deea63ce7ebcf018b11c59673">InterruptCheckProc</a> <a class="el" href="cqp_8c.html#2a9765e1178800b29156efd08a3b526e">interruptCallbackHook</a> = NULL
-</ul>
+<dl class="el"><dd class="mdescRight">buffer for queries  <a href="#dfbde17c16a76552596e50bd3c371382"></a><br></dl><li>int <a class="el" href="cqp_8c.html#c0d42ac5f8866bd18648afcc372e650c">QueryBufferP</a> = 0
+<dl class="el"><dd class="mdescRight">pointer into this buffer, for appending  <a href="#c0d42ac5f8866bd18648afcc372e650c"></a><br></dl><li>int <a class="el" href="cqp_8c.html#54d95727d347da93ae0866f293f729c4">QueryBufferOverflow</a> = 0
+<dl class="el"><dd class="mdescRight">flag which signals buffer overflows  <a href="#54d95727d347da93ae0866f293f729c4"></a><br></dl><li><a class="el" href="cqp_8h.html#8ecc4f9deea63ce7ebcf018b11c59673">InterruptCheckProc</a> <a class="el" href="cqp_8c.html#2a9765e1178800b29156efd08a3b526e">interruptCallbackHook</a> = NULL
+<dl class="el"><dd class="mdescRight">Pointer for the interrupt callback function.  <a href="#2a9765e1178800b29156efd08a3b526e"></a><br></dl></ul>
 <hr><h2>Function Documentation</h2>
-<a class="anchor" name="89535598e0344df2438777230713cb8b"></a><!-- doxytag: member="cqp.c::CheckForInterrupts" ref="89535598e0344df2438777230713cb8b" args="()" -->
+<a class="anchor" name="d9ad6575c276e42520539bb5b24246d7"></a><!-- doxytag: member="cqp.c::CheckForInterrupts" ref="d9ad6575c276e42520539bb5b24246d7" args="(void)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void CheckForInterrupts           </td>
           <td>(</td>
+          <td class="paramtype">void&nbsp;</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
           <td></td>
@@ -84,6 +85,8 @@
 </div>
 <div class="memdoc">
 
+<p>
+Calls the interrupt callback function, if set. 
 <p>
 
 <p>References <a class="el" href="cqp_8c.html#2a9765e1178800b29156efd08a3b526e">interruptCallbackHook</a>.</p>
@@ -118,6 +121,16 @@
 <div class="memdoc">
 
 <p>
+Parses a stream for CQP query syntax. 
+<p>
+Note that <a class="el" href="cqp_8c.html#7c30de93f06347a9bc939e324afd1472" title="Parses a stream for CQP query syntax.">cqp_parse_file()</a> fclose()s fd unless it is STDOUT.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>fd</em>&nbsp;</td><td>File handle of the file to parse. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>exit_on_parse_errors</em>&nbsp;</td><td>Boolean: should CQP exit on parse errors? </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>Boolean: true = all ok, false = a problem. </dd></dl>
 
 <p>References <a class="el" href="options_8h.html#589e4b294834e4afa88f3b5f78e3ff56">child_process</a>, <a class="el" href="cqp_8c.html#6ce71516b2d8309447ccdd714f6ae6be">cqp_file_p</a>, <a class="el" href="cqp_8c.html#52e6d6a7709b683e9a681bdabb461ab0">cqp_files</a>, <a class="el" href="corpmanag_8h.html#1f1c9e6e4dec994353f8d8ee00f38faa">current_corpus</a>, <a class="el" href="cqp_8h.html#6da4fd2cde8ab5a835a44764d35cf337">exit_cqp</a>, <a class="el" href="cqp_8h.html#d5235aab566e2c8017152e458a348c6f">MAXCQPFILES</a>, <a class="el" href="structcl.html#24268424ee0678c4ff66ef929d88eed3">cl::mother_name</a>, <a class="el" href="structcl.html#5ac083a645d964373f022d03df4849c8">cl::name</a>, <a class="el" href="cwb-scan-corpus_8c.html#55602ca214fb365e8deef9a73c8442e7">quiet</a>, <a class="el" href="cqp_8c.html#3818b52c87d9e25995878f0719a1f15e">reading_cqprc</a>, <a class="el" href="options_8h.html#b8ca0c571bfb8947d2c22275d916a278">save_on_exit</a>, <a class="el" href="corpmanag_8c.html#e509346bd5e7c713d70748e9926f1cdd">save_unsaved_subcorpora()</a>, <a class="el" href="options_8h.html#582e2ef9670c974c00e00ad10af0e629">silent</a>, <a class="el" href="structcl.html#439227feff9d7f55384e8780cfc2eb82">cl::size</a>, <a class="el" href="macros_8h.html#edf9a4cdd75e574d55f252e31d2ec453">STREQ</a>, <a class="el" href="cqp_8c.html#46af646807e0797e72b6e8945e7ea88b">yyin</a>, <a class="el" href="cqp_8c.html#847a2de5c1c28c9d7055a2b89ed7dad7">yyparse()</a>, and <a class="el" href="cqp_8c.html#b657ddef65d43cc3ab8dfc2cad0ac5b8">yyrestart()</a>.</p>
 
@@ -142,6 +155,14 @@
 <div class="memdoc">
 
 <p>
+Parses a stirng for CQP query syntax. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>s</em>&nbsp;</td><td>The string to parse. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>Boolean: true = all ok, false = a problem. </dd></dl>
 
 <p>References <a class="el" href="cqp_8h.html#27d0516bdf945bd7f60c3c9b66be0145">cqp_input_string</a>, <a class="el" href="cqp_8h.html#099bf71badf39387256aa765f798e608">cqp_input_string_position</a>, <a class="el" href="output_8c.html#c523a4b34d2f925e027d8f433de703c9">cqpmessage()</a>, <a class="el" href="options_8h.html#c77cbe1636407b6a256fc41b86bcae61c22272c602812d303f7cdc75c2e3323b">cqpserver</a>, <a class="el" href="output_8h.html#9c2eeea9cd09fb001747ef4cc99399a44dfd42ec49d09d8c6555c218301cc30f">Error</a>, <a class="el" href="cqp_8h.html#6da4fd2cde8ab5a835a44764d35cf337">exit_cqp</a>, <a class="el" href="options_8h.html#d53e63bcd94f1ad540b16323bedf63e7">which_app</a>, and <a class="el" href="cqp_8c.html#847a2de5c1c28c9d7055a2b89ed7dad7">yyparse()</a>.</p>
 
@@ -166,6 +187,9 @@
 <div class="memdoc">
 
 <p>
+Wrapper function: randomises the internal random number generator. 
+<p>
+<dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="macros_8c.html#e33baa79e30f7b5efb597baa4e6898cb" title="Initialises the CL-internal random number generator from the current system time...">cl_randomize</a> </dd></dl>
 
 <p>References <a class="el" href="cl_8h.html#e33baa79e30f7b5efb597baa4e6898cb">cl_randomize()</a>.</p>
 
@@ -197,6 +221,18 @@
 <div class="memdoc">
 
 <p>
+Initialises the CQP program. 
+<p>
+This function:<ul>
+<li>initialises the global variables;</li><li>initialises the built-in random number generator;</li><li>initialises the macro database;</li><li>parses the program options;</li><li>reads the initialisation file;</li><li>reads the macro initialisation file;</li><li>and loads the default corpus, if any.</li></ul>
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>argc</em>&nbsp;</td><td>The argc from <a class="el" href="cqpserver_8c.html#0ddf1224851353fc92bfbff6f499fa97">main()</a> </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>argv</em>&nbsp;</td><td>The argv from <a class="el" href="cqpserver_8c.html#0ddf1224851353fc92bfbff6f499fa97">main()</a> </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>Always 1. </dd></dl>
 
 <p>References <a class="el" href="options_8h.html#73e78b4630e651400f3e4fc60b3969f8">batchfd</a>, <a class="el" href="options_8h.html#05c758689b70c64711a1789bff29f60c">batchmode</a>, <a class="el" href="corpmanag_8c.html#7fe1322b68023d0c8969fac787155280">check_available_corpora()</a>, <a class="el" href="options_8h.html#589e4b294834e4afa88f3b5f78e3ff56">child_process</a>, <a class="el" href="cl_8h.html#e33baa79e30f7b5efb597baa4e6898cb">cl_randomize()</a>, <a class="el" href="corpmanag_8c.html#220e504e73789733727e6565941ce2c0">corpuslist</a>, <a class="el" href="cqp_8c.html#6ce71516b2d8309447ccdd714f6ae6be">cqp_file_p</a>, <a class="el" href="options_8h.html#1a9190a61c97e5e0a98f958f04a5fdd2">cqp_init_file</a>, <a class="el" href="cqp_8c.html#7c30de93f06347a9bc939e324afd1472">cqp_parse_file()</a>, <a class="el" href="cqp_8h.html#ace00ea783224db959e89e3b99eeb27f">CQPMACRORC_NAME</a>, <a class="el" href="output_8c.html#c523a4b34d2f925e027d8f433de703c9">cqpmessage()</a>, <a class="el" href="cqp_8h.html#14cd87564d1bc606e0515cb52c6be769">CQPRC_NAME</a>, <a class="el" href="options_8h.html#c77cbe1636407b6a256fc41b86bcae61c22272c602812d303f7cdc75c2e3323b">cqpserver</a>, <a class="el" href="options_8h.html#f76965244a07bfe630d001af323482b4">default_corpus</a>, <a class="el" href="eval_8h.html#4fc26b79d5e2fea9774fdf3c7b17d1b8">eep</a>, <a class="el" href="options_8h.html#bb9f00607f69c02d395e8219f8f08b8c">enable_macros</a>, <a class="el" href="cqp_8h.html#6da4fd2cde8ab5a835a44764d35cf337">exit_cqp</a>, <a class="el" href="macro_8c.html#46c1888ead3a4dd40dff9eb80c4d7c97">init_macros()</a>, <a class="el" href="options_8h.html#3601d5ee126fa2e974a45288b7041bbd">macro_init_file</a>, <a class="el" href="options_8c.html#3b63ff1af997333f51cad78bf921732a">parse_options()</a>, <a class="el" href="options_8h.html#20ba618f37578ad21378433550516222">parser_debug</a>, <a class="el" href="cqp_8c.html#3818b52c87d9e25995878f0719a1f15e">reading_cqprc</a>, <a class="el" href="corpmanag_8c.html#9ba7a43161a1082a4db9b0f4d1a47f48">set_current_corpus_name()</a>, <a class="el" href="corpmanag_8h.html#b595f682e895370f86580c128681d88e632fa39438c1676b435ec43e6a0f9647">UNDEF</a>, <a class="el" href="output_8h.html#9c2eeea9cd09fb001747ef4cc99399a448f2bb70fceb692a2dedd8cea496c44b">Warning</a>, and <a class="el" href="options_8h.html#d53e63bcd94f1ad540b16323bedf63e7">which_app</a>.</p>
 
@@ -245,6 +281,14 @@
 <div class="memdoc">
 
 <p>
+Sets the interrupt callback function. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>f</em>&nbsp;</td><td>Pointer to the function to set as interrupt callback. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>Always 1. </dd></dl>
 
 <p>References <a class="el" href="cqp_8c.html#2a9765e1178800b29156efd08a3b526e">interruptCallbackHook</a>.</p>
 
@@ -331,6 +375,9 @@
 <div class="memdoc">
 
 <p>
+index-pointer into cqp_files. 
+<p>
+<dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="cqp_8c.html#52e6d6a7709b683e9a681bdabb461ab0" title="Array of file handles.">cqp_files</a> </dd></dl>
 
 <p>Referenced by <a class="el" href="cqp_8h.html#7c30de93f06347a9bc939e324afd1472">cqp_parse_file()</a>, and <a class="el" href="cqp_8h.html#313990999a7a7c5275682411e9b58c89">initialize_cqp()</a>.</p>
 
@@ -347,6 +394,8 @@
 </div>
 <div class="memdoc">
 
+<p>
+Array of file handles. 
 <p>
 
 <p>Referenced by <a class="el" href="cqp_8h.html#7c30de93f06347a9bc939e324afd1472">cqp_parse_file()</a>.</p>
@@ -365,6 +414,8 @@
 <div class="memdoc">
 
 <p>
+Pointer for the interrupt callback function. 
+<p>
 
 <p>Referenced by <a class="el" href="cqp_8h.html#89535598e0344df2438777230713cb8b">CheckForInterrupts()</a>, and <a class="el" href="cqp_8h.html#da0b8c6476799a6aa1bb22cb48b7ab1d">setInterruptCallback()</a>.</p>
 
@@ -381,6 +432,8 @@
 </div>
 <div class="memdoc">
 
+<p>
+buffer for queries 
 <p>
 
 <p>Referenced by <a class="el" href="parse__actions_8h.html#654e3871f21cd25d69bcdad009b89609">addHistoryLine()</a>, <a class="el" href="parse__actions_8h.html#8da739ee55e71755361e95e2480aa088">after_CorpusCommand()</a>, <a class="el" href="parse__actions_8h.html#3889058f05a543a8bdfbcd51a365c8b8">after_Query()</a>, <a class="el" href="parse__actions_8h.html#2c318fce4990e95ca39b33cc7d985a96">resetQueryBuffer()</a>, and <a class="el" href="macro_8h.html#01ff9eb9b38042da7ebaffa9f379a6d2">yy_input_char()</a>.</p>
@@ -399,6 +452,8 @@
 <div class="memdoc">
 
 <p>
+flag which signals buffer overflows 
+<p>
 
 <p>Referenced by <a class="el" href="parse__actions_8h.html#8da739ee55e71755361e95e2480aa088">after_CorpusCommand()</a>, <a class="el" href="parse__actions_8h.html#3889058f05a543a8bdfbcd51a365c8b8">after_Query()</a>, <a class="el" href="parse__actions_8h.html#2c318fce4990e95ca39b33cc7d985a96">resetQueryBuffer()</a>, and <a class="el" href="macro_8h.html#01ff9eb9b38042da7ebaffa9f379a6d2">yy_input_char()</a>.</p>
 
@@ -415,6 +470,8 @@
 </div>
 <div class="memdoc">
 
+<p>
+pointer into this buffer, for appending 
 <p>
 
 <p>Referenced by <a class="el" href="parse__actions_8h.html#3889058f05a543a8bdfbcd51a365c8b8">after_Query()</a>, <a class="el" href="parse__actions_8h.html#2c318fce4990e95ca39b33cc7d985a96">resetQueryBuffer()</a>, and <a class="el" href="macro_8h.html#01ff9eb9b38042da7ebaffa9f379a6d2">yy_input_char()</a>.</p>
@@ -456,7 +513,7 @@
 </div>
 </div><p>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Sat Sep 19 20:28:33 2009 for CWB by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Fri Sep 25 21:50:32 2009 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

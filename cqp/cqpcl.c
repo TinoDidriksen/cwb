@@ -22,7 +22,18 @@
 #include "options.h"
 
 
-int main(int argc, char *argv[])
+/**
+ * Main function for cqpcl.
+ *
+ * Exists only to call other functions, with silent set to true.
+ *
+ * @see silent
+ * @param argc  Number of commandline arguments.
+ * @param argv  Pointer to array of commandline arguments.
+ * @return      0 for all OK, other value for error.
+ */
+int
+main(int argc, char *argv[])
 {
   int i;
   extern int optind;

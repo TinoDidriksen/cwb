@@ -150,7 +150,7 @@ Main function for cwb-decode-nqrfile.
 <p>
 Reads a subcorpus file and prints information about it to STDOUT. 
 <p>
-"Subcorpus file" here means (a) it begins with the subcorpus magic number; (b)then there is a "registry" area terminated by ''; (c) then there may be the size of the subcorpus; (d) then there are a whole load of start-end range integer pairs, to the end of the file.<p>
+"Subcorpus file" here means (a) it begins with the subcorpus magic number; (b)then there is a "registry" area terminated by one or more zero bytes; (c) then there may be the size of the subcorpus; (d) then there are a whole load of start-end range integer pairs, to the end of the file.<p>
 The registry is printed iff print_header. The start-end pairs are printed on tab-delimited lines, one line per pair.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
@@ -186,7 +186,7 @@ Boolean: controls whether a "registry" header in the subcorpus file gets printed
 </div>
 </div><p>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Sat Sep 19 20:28:33 2009 for CWB by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Fri Sep 25 21:50:32 2009 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

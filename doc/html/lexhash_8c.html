@@ -166,8 +166,6 @@ This deletes all the entries in all the buckets in the lexhash, plus the cl_lexh
 
 <p>References <a class="el" href="struct__cl__lexhash.html#edff83072c3ab4f3719e66edc63610d8">_cl_lexhash::buckets</a>, <a class="el" href="lexhash_8c.html#a86b95ad85c13af5a6879bd7a6c0da0e">cl_delete_lexhash_entry()</a>, <a class="el" href="cl_8h.html#9e15a3c725711d9effd623b2f3e225be">cl_free</a>, <a class="el" href="struct__cl__lexhash__entry.html#4cd53665f36adf07de9ffb12731a6681">_cl_lexhash_entry::next</a>, and <a class="el" href="struct__cl__lexhash.html#d0daa1068fff9eb5bb9e11e7ab4f2b1e">_cl_lexhash::table</a>.</p>
 
-<p>Referenced by <a class="el" href="cwb-align_8c.html#0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
-
 </div>
 </div><p>
 <a class="anchor" name="a86b95ad85c13af5a6879bd7a6c0da0e"></a><!-- doxytag: member="lexhash.c::cl_delete_lexhash_entry" ref="a86b95ad85c13af5a6879bd7a6c0da0e" args="(cl_lexhash hash, cl_lexhash_entry entry)" -->
@@ -255,7 +253,7 @@ Otherwise, a new entry is created, with an auto-assigned ID; note that the strin
 
 <p>References <a class="el" href="lexhash_8c.html#7afb45b7d798d20514dd22f2c8d1f8f1">cl_lexhash_find_i()</a>, <a class="el" href="cl_8h.html#4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="cl_8h.html#6647d75d1d69c7d25447da514b7e4682">cl_strdup()</a>, <a class="el" href="struct__cl__lexhash__entry.html#22cfc15110f0fbe32289d1946195400b">_cl_lexhash_entry::data</a>, <a class="el" href="struct__cl__lexhash.html#05de9d2e9fdfcc8bf932ca13b95ede29">_cl_lexhash::entries</a>, <a class="el" href="struct__cl__lexhash__entry.html#da8140e33c3fd1e2eceba4c71f0e9ded">_cl_lexhash_entry::freq</a>, <a class="el" href="struct__cl__lexhash__entry.html#7441ef0865bcb3db9b8064dd7375c1ea">_cl_lexhash_entry::id</a>, <a class="el" href="struct__cl__lexhash__entry_1_1__cl__lexhash__entry__data.html#dece183191b0e700e039e59101e06105">_cl_lexhash_entry::_cl_lexhash_entry_data::integer</a>, <a class="el" href="struct__cl__lexhash__entry.html#5892a9181e6a332f84d27aecd41dcd12">_cl_lexhash_entry::key</a>, <a class="el" href="struct__cl__lexhash__entry.html#4cd53665f36adf07de9ffb12731a6681">_cl_lexhash_entry::next</a>, <a class="el" href="struct__cl__lexhash.html#1512c88bd8da4ca8a0e54b3ed62f758c">_cl_lexhash::next_id</a>, <a class="el" href="struct__cl__lexhash__entry_1_1__cl__lexhash__entry__data.html#b1452a99cdc447426bebe58208125847">_cl_lexhash_entry::_cl_lexhash_entry_data::numeric</a>, <a class="el" href="struct__cl__lexhash__entry_1_1__cl__lexhash__entry__data.html#bc7cbbec1f024bd23164936bd765b06d">_cl_lexhash_entry::_cl_lexhash_entry_data::pointer</a>, and <a class="el" href="struct__cl__lexhash.html#d0daa1068fff9eb5bb9e11e7ab4f2b1e">_cl_lexhash::table</a>.</p>
 
-<p>Referenced by <a class="el" href="cwb-encode_8c.html#f99342049f0c726b2e1223b1f5c7feab">addline()</a>, <a class="el" href="cwb-encode_8c.html#b80a63938c6804f9600afdf8ccb6bfc0">close_range()</a>, <a class="el" href="cwb-encode_8c.html#24c98c7fc24344b98cf63c129d68d066">declare_range()</a>, <a class="el" href="cwb-align_8c.html#0ddf1224851353fc92bfbff6f499fa97">main()</a>, <a class="el" href="cwb-encode_8c.html#dff58f0a1109dd9e778ba480c6b33327">open_range()</a>, and <a class="el" href="cwb-s-encode_8c.html#c5af382b8e183eeafb5671e7f33619bd">write_region_to_disk()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-encode_8c.html#f99342049f0c726b2e1223b1f5c7feab">addline()</a>, <a class="el" href="cwb-encode_8c.html#b80a63938c6804f9600afdf8ccb6bfc0">close_range()</a>, <a class="el" href="cwb-encode_8c.html#24c98c7fc24344b98cf63c129d68d066">declare_range()</a>, <a class="el" href="cwb-encode_8c.html#3c04138a5bfe5d72780bb7e82a18e627">main()</a>, <a class="el" href="cwb-encode_8c.html#dff58f0a1109dd9e778ba480c6b33327">open_range()</a>, and <a class="el" href="cwb-s-encode_8c.html#c5af382b8e183eeafb5671e7f33619bd">write_region_to_disk()</a>.</p>
 
 </div>
 </div><p>
@@ -416,7 +414,7 @@ Finds the entry corresponding to a particular string within a cl_lexhash.
 
 <p>References <a class="el" href="lexhash_8c.html#7afb45b7d798d20514dd22f2c8d1f8f1">cl_lexhash_find_i()</a>.</p>
 
-<p>Referenced by <a class="el" href="cwb-encode_8c.html#b80a63938c6804f9600afdf8ccb6bfc0">close_range()</a>, <a class="el" href="cwb-align_8c.html#0ddf1224851353fc92bfbff6f499fa97">main()</a>, <a class="el" href="cwb-encode_8c.html#dff58f0a1109dd9e778ba480c6b33327">open_range()</a>, <a class="el" href="cwb-encode_8c.html#e5c2bb32a75d86bb872cc2887476d60b">print_range_registry_line()</a>, and <a class="el" href="cwb-s-encode_8c.html#c5af382b8e183eeafb5671e7f33619bd">write_region_to_disk()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-encode_8c.html#b80a63938c6804f9600afdf8ccb6bfc0">close_range()</a>, <a class="el" href="cwb-encode_8c.html#dff58f0a1109dd9e778ba480c6b33327">open_range()</a>, <a class="el" href="cwb-encode_8c.html#e5c2bb32a75d86bb872cc2887476d60b">print_range_registry_line()</a>, and <a class="el" href="cwb-s-encode_8c.html#c5af382b8e183eeafb5671e7f33619bd">write_region_to_disk()</a>.</p>
 
 </div>
 </div><p>
@@ -657,7 +655,7 @@ Creates a new cl_lexhash object.
 
 <p>References <a class="el" href="struct__cl__lexhash.html#c3cf5e46d2c8377c553d7e583884511d">_cl_lexhash::auto_grow</a>, <a class="el" href="struct__cl__lexhash.html#edff83072c3ab4f3719e66edc63610d8">_cl_lexhash::buckets</a>, <a class="el" href="cl_8h.html#5b756594ae431fd5ec0ffbdc77db1e64">cl_calloc()</a>, <a class="el" href="cl_8h.html#4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="struct__cl__lexhash.html#34fa040454883b11c906b5127080e586">_cl_lexhash::cleanup_func</a>, <a class="el" href="struct__cl__lexhash.html#ad08dd1b691e8c7d1411d8f24e53ecd0">_cl_lexhash::comparisons</a>, <a class="el" href="lexhash_8c.html#a6f810c5bcfe8eaba4aa5d527bafb9cf">DEFAULT_NR_OF_BUCKETS</a>, <a class="el" href="struct__cl__lexhash.html#05de9d2e9fdfcc8bf932ca13b95ede29">_cl_lexhash::entries</a>, <a class="el" href="lexhash_8c.html#6bb4d75c3e8354cff3efd98002335877">find_prime()</a>, <a class="el" href="struct__cl__lexhash.html#4f81948d6e23cc76a0f3c5dc18a34677">_cl_lexhash::last_performance</a>, <a class="el" href="struct__cl__lexhash.html#1512c88bd8da4ca8a0e54b3ed62f758c">_cl_lexhash::next_id</a>, <a class="el" href="lexhash_8c.html#f62ae8c142d859bd44a8c60c2d2cef3f">PERFORMANCE_COUNT</a>, <a class="el" href="struct__cl__lexhash.html#43e64deb897346963994a5f2957a0e12">_cl_lexhash::performance_counter</a>, and <a class="el" href="struct__cl__lexhash.html#d0daa1068fff9eb5bb9e11e7ab4f2b1e">_cl_lexhash::table</a>.</p>
 
-<p>Referenced by <a class="el" href="lexhash_8c.html#b0c83bcda2f4b258d99d41dcfef1dd30">cl_lexhash_check_grow()</a>, <a class="el" href="cwb-encode_8c.html#24c98c7fc24344b98cf63c129d68d066">declare_range()</a>, <a class="el" href="cwb-encode_8c.html#715be4b1e2130e65d5911a14aa355bfb">declare_wattr()</a>, <a class="el" href="cwb-align_8c.html#0ddf1224851353fc92bfbff6f499fa97">main()</a>, and <a class="el" href="cwb-s-encode_8c.html#c5af382b8e183eeafb5671e7f33619bd">write_region_to_disk()</a>.</p>
+<p>Referenced by <a class="el" href="lexhash_8c.html#b0c83bcda2f4b258d99d41dcfef1dd30">cl_lexhash_check_grow()</a>, <a class="el" href="cwb-encode_8c.html#24c98c7fc24344b98cf63c129d68d066">declare_range()</a>, <a class="el" href="cwb-encode_8c.html#715be4b1e2130e65d5911a14aa355bfb">declare_wattr()</a>, <a class="el" href="cwb-encode_8c.html#3c04138a5bfe5d72780bb7e82a18e627">main()</a>, and <a class="el" href="cwb-s-encode_8c.html#c5af382b8e183eeafb5671e7f33619bd">write_region_to_disk()</a>.</p>
 
 </div>
 </div><p>
@@ -734,7 +732,7 @@ Returns True iff n is a prime.
 </div>
 </div><p>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Sat Sep 19 20:28:33 2009 for CWB by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Fri Sep 25 21:50:32 2009 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

@@ -29,23 +29,26 @@ Corpus *corpus = NULL;
 
 /* ---------------------------------------- */
 
+/**
+ * Maximum number of attributes that can be printed.
+ */
 #define MAX_ATTRS 1024
 
 typedef Attribute * ATPtr;
-ATPtr print_list[MAX_ATTRS];    /* list of attributes selected by user for printing */
-int print_list_index = 0;       /* denotes the last attribute to be printed */
+ATPtr print_list[MAX_ATTRS];    /**< list of attributes selected by user for printing */
+int print_list_index = 0;       /**< denotes the last attribute to be printed */
 
 /* before a token is printed, all regions of s-attributes from print_list[] which contain that token are copied to s_att_regions[],
    bubble-sorted (to enforce proper nesting while retaining the specified order as far as possible), and printed from s_att_regions[] */
 typedef struct {
-  char *name;                   /* name of the s-attribute */
+  char *name;                   /**< name of the s-attribute */
   int start;
   int end;
-  char *annot;                  /* NULL if there is no annotation */
+  char *annot;                  /**< NULL if there is no annotation */
 } SAttRegion;
 SAttRegion s_att_regions[MAX_ATTRS];
-int sar_sort_index[MAX_ATTRS];  /* index used for bubble-sorting list of regions */
-int N_sar = 0;                  /* number of regions currently in list (may change for each token printed) */
+int sar_sort_index[MAX_ATTRS];  /**< index used for bubble-sorting list of regions */
+int N_sar = 0;                  /**< number of regions currently in list (may change for each token printed) */
 
 /* ---------------------------------------- */
 
@@ -69,15 +72,26 @@ typedef enum _output_modes {
 int mode = StandardMode;
 int xml_compatible = 0;         /* EncodeMode only, selected by option -Cx */
 
+
 /* not really necessary, but we'll keep it for now -- it's cleaner anyway :o) */
+/**
+ * Cleans up memory prior to an error-prompted exit.
+ *
+ * @param error_code  Value to be returned by the program when it exits.
+ */
 void
-cleanup(int rc)
+cleanup(int error_code)
 {
   if (corpus != NULL)
     drop_corpus(corpus);
-  exit(rc);
+  exit(error_code);
 }
 
+/**
+ * Prints a usage message and exits the program.
+ *
+ * @param exit_code  Value to be returned by the program when it exits.
+ */
 void
 usage(int exit_code) {
   fprintf(stderr, "\n");
@@ -115,6 +129,12 @@ usage(int exit_code) {
   cleanup(exit_code);
 }
 
+/**
+ * Check whether a string represents a number.
+ *
+ * @param s  The string to check.
+ * @return   Boolean: true iff s contains only digits.
+ */
 int
 is_num(char *s) {
   int i;

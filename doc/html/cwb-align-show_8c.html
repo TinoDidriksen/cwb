@@ -39,35 +39,35 @@
 <h2>Functions</h2>
 <ul>
 <li>void <a class="el" href="cwb-align-show_8c.html#402ea961bfc2ffeee61e3a7c330b1559">print_help</a> (void)
-<li>void <a class="el" href="cwb-align-show_8c.html#a1187b70998f73cdb598833d6afaa30a">print_usage</a> (void)
-<li>int <a class="el" href="cwb-align-show_8c.html#06d3f055c2f30330b96d8ea5368b33a2">parse_args</a> (int ac, char *av[], int min_args)
-<li>void <a class="el" href="cwb-align-show_8c.html#7f91b9d6b546f992508f56ee389509b9">goodbye</a> (int error_level)
-<li>void <a class="el" href="cwb-align-show_8c.html#78d96bcd853ffe2d2624f5600ee3f1c4">end_of_alignment</a> (void)
-<li>void <a class="el" href="cwb-align-show_8c.html#e21f5ced23779ce9b081f09dd0763397">skip_next_region</a> (FILE *f)
-<li>void <a class="el" href="cwb-align-show_8c.html#4b7c39e82ec52fbeb9e2504e35305b84">print_next_region</a> (FILE *f)
-<li>int <a class="el" href="cwb-align-show_8c.html#3c04138a5bfe5d72780bb7e82a18e627">main</a> (int argc, char **argv)
+<dl class="el"><dd class="mdescRight">Lists interactive commands on STDERR.  <a href="#402ea961bfc2ffeee61e3a7c330b1559"></a><br></dl><li>void <a class="el" href="cwb-align-show_8c.html#a1187b70998f73cdb598833d6afaa30a">print_usage</a> (void)
+<dl class="el"><dd class="mdescRight">Prints a message describing how to use the program to STDERR and then exits.  <a href="#a1187b70998f73cdb598833d6afaa30a"></a><br></dl><li>int <a class="el" href="cwb-align-show_8c.html#06d3f055c2f30330b96d8ea5368b33a2">parse_args</a> (int ac, char *av[], int min_args)
+<dl class="el"><dd class="mdescRight">Parses the program's commandline arguments.  <a href="#06d3f055c2f30330b96d8ea5368b33a2"></a><br></dl><li>void <a class="el" href="cwb-align-show_8c.html#7f91b9d6b546f992508f56ee389509b9">goodbye</a> (int error_level)
+<dl class="el"><dd class="mdescRight">Closes the alignment file handle (if open) and exits the program.  <a href="#7f91b9d6b546f992508f56ee389509b9"></a><br></dl><li>void <a class="el" href="cwb-align-show_8c.html#78d96bcd853ffe2d2624f5600ee3f1c4">end_of_alignment</a> (void)
+<dl class="el"><dd class="mdescRight">Exits the program because the end of the .align file has been reached.  <a href="#78d96bcd853ffe2d2624f5600ee3f1c4"></a><br></dl><li>void <a class="el" href="cwb-align-show_8c.html#e21f5ced23779ce9b081f09dd0763397">skip_next_region</a> (FILE *f)
+<dl class="el"><dd class="mdescRight">Reads and discards the next alignment region from an .align file.  <a href="#e21f5ced23779ce9b081f09dd0763397"></a><br></dl><li>void <a class="el" href="cwb-align-show_8c.html#4b7c39e82ec52fbeb9e2504e35305b84">print_next_region</a> (FILE *f)
+<dl class="el"><dd class="mdescRight">Reads the next alignment region from a .align file, and displays it on STDOUT.  <a href="#4b7c39e82ec52fbeb9e2504e35305b84"></a><br></dl><li>int <a class="el" href="cwb-align-show_8c.html#3c04138a5bfe5d72780bb7e82a18e627">main</a> (int argc, char **argv)
 <dl class="el"><dd class="mdescRight">Main function for cwb-align-show.  <a href="#3c04138a5bfe5d72780bb7e82a18e627"></a><br></dl></ul>
 <h2>Variables</h2>
 <ul>
 <li>char * <a class="el" href="cwb-align-show_8c.html#b9e1449fd00c98428516f0b41eddcb10">progname</a> = &quot;&quot;
-<li>char <a class="el" href="cwb-align-show_8c.html#9aa8fde7b69fa0a8004b2b7ab6c0185c">corpus1_name</a> [1024]
-<li>char <a class="el" href="cwb-align-show_8c.html#5bb1f1f8d56854a17cb18018d2235b61">corpus2_name</a> [1024]
-<li>char <a class="el" href="cwb-align-show_8c.html#48e4d732b51d4d2fd11dd611d316fb36">s1_name</a> [1024]
-<li>char <a class="el" href="cwb-align-show_8c.html#c6f6a9ef37f362014a06c51eb236a1cf">s2_name</a> [1024]
-<li>char <a class="el" href="cwb-align-show_8c.html#d8e9d64c19879c6038f85aafd76e7ec3">word_name</a> [1024] = &quot;word&quot;
-<li><a class="el" href="struct_t_corpus.html">Corpus</a> * <a class="el" href="cwb-align-show_8c.html#03c7f632eb4e838ee774fbb207e98a9b">corpus1</a>
-<li><a class="el" href="struct_t_corpus.html">Corpus</a> * <a class="el" href="cwb-align-show_8c.html#4ecbcd905f9897db014bb17c38563d82">corpus2</a>
-<li><a class="el" href="union___attribute.html">Attribute</a> * <a class="el" href="cwb-align-show_8c.html#ac99deaca25373d974a3efbdf554f837">s1</a>
-<li><a class="el" href="union___attribute.html">Attribute</a> * <a class="el" href="cwb-align-show_8c.html#6e160b1019fe31e82941efd8de8076d4">s2</a>
-<li><a class="el" href="union___attribute.html">Attribute</a> * <a class="el" href="cwb-align-show_8c.html#b7f33d201d9141ad7f9fad51b9861fb6">w1</a>
-<li><a class="el" href="union___attribute.html">Attribute</a> * <a class="el" href="cwb-align-show_8c.html#720627d44d047e7ca2ef7270645fdae5">w2</a>
-<li>char * <a class="el" href="cwb-align-show_8c.html#1151e3383439ca5d8096811a09b42823">registry_dir</a> = NULL
-<li>char * <a class="el" href="cwb-align-show_8c.html#9abe541bb92cf77ca090be06cc99ca38">align_name</a> = &quot;&quot;
-<li>FILE * <a class="el" href="cwb-align-show_8c.html#a28eb0de3ac484ac5dbff14b81558557">af</a> = NULL
-<li>int <a class="el" href="cwb-align-show_8c.html#3f6aaeb59411d3eee2ff040a420a41fd">af_is_pipe</a>
-<li>int <a class="el" href="cwb-align-show_8c.html#e87b7290eb5f5fa4acc1daee32eb21a7">COL_WIDTH</a> = 38
-<li>int <a class="el" href="cwb-align-show_8c.html#3fc02d533c2277463ab650c65bef10e5">COL_SEP</a> = 2
-</ul>
+<dl class="el"><dd class="mdescRight">Name of the program (from the shell).  <a href="#b9e1449fd00c98428516f0b41eddcb10"></a><br></dl><li>char <a class="el" href="cwb-align-show_8c.html#9aa8fde7b69fa0a8004b2b7ab6c0185c">corpus1_name</a> [1024]
+<dl class="el"><dd class="mdescRight">name of the source corpus  <a href="#9aa8fde7b69fa0a8004b2b7ab6c0185c"></a><br></dl><li>char <a class="el" href="cwb-align-show_8c.html#5bb1f1f8d56854a17cb18018d2235b61">corpus2_name</a> [1024]
+<dl class="el"><dd class="mdescRight">name of the target corpus  <a href="#5bb1f1f8d56854a17cb18018d2235b61"></a><br></dl><li>char <a class="el" href="cwb-align-show_8c.html#48e4d732b51d4d2fd11dd611d316fb36">s1_name</a> [1024]
+<dl class="el"><dd class="mdescRight">name of the source sentence regions  <a href="#48e4d732b51d4d2fd11dd611d316fb36"></a><br></dl><li>char <a class="el" href="cwb-align-show_8c.html#c6f6a9ef37f362014a06c51eb236a1cf">s2_name</a> [1024]
+<dl class="el"><dd class="mdescRight">name of the target sentence regions  <a href="#c6f6a9ef37f362014a06c51eb236a1cf"></a><br></dl><li>char <a class="el" href="cwb-align-show_8c.html#d8e9d64c19879c6038f85aafd76e7ec3">word_name</a> [1024] = &quot;word&quot;
+<dl class="el"><dd class="mdescRight">name of the p-attribute used to display tokens (usually word)  <a href="#d8e9d64c19879c6038f85aafd76e7ec3"></a><br></dl><li><a class="el" href="struct_t_corpus.html">Corpus</a> * <a class="el" href="cwb-align-show_8c.html#03c7f632eb4e838ee774fbb207e98a9b">corpus1</a>
+<dl class="el"><dd class="mdescRight">corpus handle: source corpus  <a href="#03c7f632eb4e838ee774fbb207e98a9b"></a><br></dl><li><a class="el" href="struct_t_corpus.html">Corpus</a> * <a class="el" href="cwb-align-show_8c.html#5444b7137cd0accdad7e2acef57f48ea">corpus2</a>
+<dl class="el"><dd class="mdescRight">corpus handle: target corpus  <a href="#5444b7137cd0accdad7e2acef57f48ea"></a><br></dl><li><a class="el" href="union___attribute.html">Attribute</a> * <a class="el" href="cwb-align-show_8c.html#b7f33d201d9141ad7f9fad51b9861fb6">w1</a>
+<dl class="el"><dd class="mdescRight">{word} attribute (or whatever is selected with -P) attribute handle: source  <a href="#b7f33d201d9141ad7f9fad51b9861fb6"></a><br></dl><li><a class="el" href="union___attribute.html">Attribute</a> * <a class="el" href="cwb-align-show_8c.html#ac99deaca25373d974a3efbdf554f837">s1</a>
+<dl class="el"><dd class="mdescRight">sentence attribute handle: source  <a href="#ac99deaca25373d974a3efbdf554f837"></a><br></dl><li><a class="el" href="union___attribute.html">Attribute</a> * <a class="el" href="cwb-align-show_8c.html#d90d11b6ff8d788b7aa77dd3677b7cd3">w2</a>
+<dl class="el"><dd class="mdescRight">{word} attribute (or whatever is selected with -P) attribute handle: target  <a href="#d90d11b6ff8d788b7aa77dd3677b7cd3"></a><br></dl><li><a class="el" href="union___attribute.html">Attribute</a> * <a class="el" href="cwb-align-show_8c.html#8ea4130966a8cc8c30768629f4c42084">s2</a>
+<dl class="el"><dd class="mdescRight">sentence attribute handle: target  <a href="#8ea4130966a8cc8c30768629f4c42084"></a><br></dl><li>char * <a class="el" href="cwb-align-show_8c.html#1151e3383439ca5d8096811a09b42823">registry_dir</a> = NULL
+<dl class="el"><dd class="mdescRight">registry directory (NULL = use CL default)  <a href="#1151e3383439ca5d8096811a09b42823"></a><br></dl><li>char * <a class="el" href="cwb-align-show_8c.html#9abe541bb92cf77ca090be06cc99ca38">align_name</a> = &quot;&quot;
+<dl class="el"><dd class="mdescRight">name of the .align file  <a href="#9abe541bb92cf77ca090be06cc99ca38"></a><br></dl><li>FILE * <a class="el" href="cwb-align-show_8c.html#a28eb0de3ac484ac5dbff14b81558557">af</a> = NULL
+<dl class="el"><dd class="mdescRight">file handle .align file  <a href="#a28eb0de3ac484ac5dbff14b81558557"></a><br></dl><li>int <a class="el" href="cwb-align-show_8c.html#3f6aaeb59411d3eee2ff040a420a41fd">af_is_pipe</a>
+<dl class="el"><dd class="mdescRight">need to know whether to call fclose() or pclose()  <a href="#3f6aaeb59411d3eee2ff040a420a41fd"></a><br></dl><li>int <a class="el" href="cwb-align-show_8c.html#e87b7290eb5f5fa4acc1daee32eb21a7">COL_WIDTH</a> = 38
+<dl class="el"><dd class="mdescRight">width of a display column (one column for each language)  <a href="#e87b7290eb5f5fa4acc1daee32eb21a7"></a><br></dl><li>int <a class="el" href="cwb-align-show_8c.html#3fc02d533c2277463ab650c65bef10e5">COL_SEP</a> = 2
+<dl class="el"><dd class="mdescRight">column separator (blanks)  <a href="#3fc02d533c2277463ab650c65bef10e5"></a><br></dl></ul>
 <hr><h2>Define Documentation</h2>
 <a class="anchor" name="738553d9d3900c194807759631d7a15f"></a><!-- doxytag: member="cwb&#45;align&#45;show.c::MAX_COL_WIDTH" ref="738553d9d3900c194807759631d7a15f" args="" -->
 <div class="memitem">
@@ -155,6 +155,8 @@
 <div class="memdoc">
 
 <p>
+Exits the program because the end of the .align file has been reached. 
+<p>
 
 <p>References <a class="el" href="cwb-align-show_8c.html#7f91b9d6b546f992508f56ee389509b9">goodbye()</a>.</p>
 
@@ -179,6 +181,13 @@
 <div class="memdoc">
 
 <p>
+Closes the alignment file handle (if open) and exits the program. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>error_level</em>&nbsp;</td><td>The exit code that is returned to the OS. </td></tr>
+  </table>
+</dl>
 
 <p>References <a class="el" href="cwb-align-show_8c.html#a28eb0de3ac484ac5dbff14b81558557">af</a>, <a class="el" href="cwb-align-show_8c.html#3f6aaeb59411d3eee2ff040a420a41fd">af_is_pipe</a>, and <a class="el" href="cwb-encode_8c.html#41ebd28ef1d7c6ade45642cb6acc1039">line</a>.</p>
 
@@ -257,6 +266,17 @@ Main function for cwb-align-show.
 <div class="memdoc">
 
 <p>
+Parses the program's commandline arguments. 
+<p>
+Usage: optindex = parse_args(argc, argv, required_arguments);<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>ac</em>&nbsp;</td><td>The program's argc </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>av</em>&nbsp;</td><td>The program's argv </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>min_args</em>&nbsp;</td><td>Minimum number of arguments to be parsed. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>The value of optind after parsing, ie the index of the first argument in argv[] </dd></dl>
 
 <p>References <a class="el" href="cwb-align-show_8c.html#3fc02d533c2277463ab650c65bef10e5">COL_SEP</a>, <a class="el" href="cwb-align-show_8c.html#e87b7290eb5f5fa4acc1daee32eb21a7">COL_WIDTH</a>, <a class="el" href="cwb-align-show_8c.html#738553d9d3900c194807759631d7a15f">MAX_COL_WIDTH</a>, <a class="el" href="cwb-align-show_8c.html#3dc90da24492627311f5ddd8957a41d6">MIN_COL_WIDTH</a>, <a class="el" href="cwb-align-encode_8c.html#a1187b70998f73cdb598833d6afaa30a">print_usage()</a>, <a class="el" href="options_8h.html#b9e1449fd00c98428516f0b41eddcb10">progname</a>, <a class="el" href="cwb-align-encode_8c.html#1151e3383439ca5d8096811a09b42823">registry_dir</a>, <a class="el" href="cwb-align-show_8c.html#f70c5d48a1b292e7adc48487f6e10d27">WIDE_COL_SEP</a>, <a class="el" href="cwb-align-show_8c.html#0a4b39ca90cac0a2506e1243769540a7">WIDE_COL_WIDTH</a>, and <a class="el" href="cwb-align-show_8c.html#d8e9d64c19879c6038f85aafd76e7ec3">word_name</a>.</p>
 
@@ -278,6 +298,8 @@ Main function for cwb-align-show.
 </div>
 <div class="memdoc">
 
+<p>
+Lists interactive commands on STDERR. 
 <p>
 
 <p>References <a class="el" href="options_8h.html#b9e1449fd00c98428516f0b41eddcb10">progname</a>.</p>
@@ -303,6 +325,13 @@ Main function for cwb-align-show.
 <div class="memdoc">
 
 <p>
+Reads the next alignment region from a .align file, and displays it on STDOUT. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>f</em>&nbsp;</td><td>The file handle to read from. </td></tr>
+  </table>
+</dl>
 
 <p>References <a class="el" href="cwb-align-show_8c.html#3fc02d533c2277463ab650c65bef10e5">COL_SEP</a>, <a class="el" href="cwb-align-show_8c.html#e87b7290eb5f5fa4acc1daee32eb21a7">COL_WIDTH</a>, <a class="el" href="cwb-align-show_8c.html#78d96bcd853ffe2d2624f5600ee3f1c4">end_of_alignment()</a>, <a class="el" href="cdaccess_8c.html#63e7c6e881070c9c8de17d193481d6f8">get_string_at_position()</a>, <a class="el" href="cwb-encode_8c.html#41ebd28ef1d7c6ade45642cb6acc1039">line</a>, <a class="el" href="cwb-align-show_8c.html#738553d9d3900c194807759631d7a15f">MAX_COL_WIDTH</a>, <a class="el" href="options_8h.html#b9e1449fd00c98428516f0b41eddcb10">progname</a>, and <a class="el" href="eval_8h.html#93fe6fe1a66a9de33bb160f0c3e1895409c37d051e7e4b3f3a7e8e75dca15912">word</a>.</p>
 
@@ -327,6 +356,8 @@ Main function for cwb-align-show.
 <div class="memdoc">
 
 <p>
+Prints a message describing how to use the program to STDERR and then exits. 
+<p>
 
 <p>References <a class="el" href="cwb-align-show_8c.html#3fc02d533c2277463ab650c65bef10e5">COL_SEP</a>, <a class="el" href="cwb-align-show_8c.html#e87b7290eb5f5fa4acc1daee32eb21a7">COL_WIDTH</a>, <a class="el" href="cwb-align-show_8c.html#402ea961bfc2ffeee61e3a7c330b1559">print_help()</a>, and <a class="el" href="options_8h.html#b9e1449fd00c98428516f0b41eddcb10">progname</a>.</p>
 
@@ -349,6 +380,13 @@ Main function for cwb-align-show.
 <div class="memdoc">
 
 <p>
+Reads and discards the next alignment region from an .align file. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>f</em>&nbsp;</td><td>The file handle to read from. </td></tr>
+  </table>
+</dl>
 
 <p>References <a class="el" href="cwb-align-show_8c.html#78d96bcd853ffe2d2624f5600ee3f1c4">end_of_alignment()</a>, and <a class="el" href="cwb-encode_8c.html#41ebd28ef1d7c6ade45642cb6acc1039">line</a>.</p>
 
@@ -369,6 +407,8 @@ Main function for cwb-align-show.
 <div class="memdoc">
 
 <p>
+file handle .align file 
+<p>
 
 <p>Referenced by <a class="el" href="cwb-align-show_8c.html#7f91b9d6b546f992508f56ee389509b9">goodbye()</a>, and <a class="el" href="cwb-align-encode_8c.html#0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
 
@@ -385,6 +425,8 @@ Main function for cwb-align-show.
 </div>
 <div class="memdoc">
 
+<p>
+need to know whether to call fclose() or pclose() 
 <p>
 
 <p>Referenced by <a class="el" href="cwb-align-show_8c.html#7f91b9d6b546f992508f56ee389509b9">goodbye()</a>, and <a class="el" href="cwb-align-encode_8c.html#0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
@@ -403,6 +445,8 @@ Main function for cwb-align-show.
 <div class="memdoc">
 
 <p>
+name of the .align file 
+<p>
 
 <p>Referenced by <a class="el" href="cwb-align-encode_8c.html#0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
 
@@ -419,6 +463,8 @@ Main function for cwb-align-show.
 </div>
 <div class="memdoc">
 
+<p>
+column separator (blanks) 
 <p>
 
 <p>Referenced by <a class="el" href="cwb-align-show_8c.html#06d3f055c2f30330b96d8ea5368b33a2">parse_args()</a>, <a class="el" href="cwb-align-show_8c.html#4b7c39e82ec52fbeb9e2504e35305b84">print_next_region()</a>, and <a class="el" href="cwb-align-show_8c.html#a1187b70998f73cdb598833d6afaa30a">print_usage()</a>.</p>
@@ -437,6 +483,8 @@ Main function for cwb-align-show.
 <div class="memdoc">
 
 <p>
+width of a display column (one column for each language) 
+<p>
 
 <p>Referenced by <a class="el" href="cwb-align-show_8c.html#06d3f055c2f30330b96d8ea5368b33a2">parse_args()</a>, <a class="el" href="cwb-align-show_8c.html#4b7c39e82ec52fbeb9e2504e35305b84">print_next_region()</a>, and <a class="el" href="cwb-align-show_8c.html#a1187b70998f73cdb598833d6afaa30a">print_usage()</a>.</p>
 
@@ -453,6 +501,8 @@ Main function for cwb-align-show.
 </div>
 <div class="memdoc">
 
+<p>
+corpus handle: source corpus 
 <p>
 
 <p>Referenced by <a class="el" href="cwb-align-encode_8c.html#0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
@@ -471,22 +521,26 @@ Main function for cwb-align-show.
 <div class="memdoc">
 
 <p>
+name of the source corpus 
+<p>
 
 <p>Referenced by <a class="el" href="cwb-align-encode_8c.html#0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
 
 </div>
 </div><p>
-<a class="anchor" name="4ecbcd905f9897db014bb17c38563d82"></a><!-- doxytag: member="cwb&#45;align&#45;show.c::corpus2" ref="4ecbcd905f9897db014bb17c38563d82" args="" -->
+<a class="anchor" name="5444b7137cd0accdad7e2acef57f48ea"></a><!-- doxytag: member="cwb&#45;align&#45;show.c::corpus2" ref="5444b7137cd0accdad7e2acef57f48ea" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="struct_t_corpus.html">Corpus</a> * <a class="el" href="cwb-align_8c.html#4ecbcd905f9897db014bb17c38563d82">corpus2</a>          </td>
+          <td class="memname"><a class="el" href="struct_t_corpus.html">Corpus</a>* <a class="el" href="cwb-align_8c.html#5444b7137cd0accdad7e2acef57f48ea">corpus2</a>          </td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
+<p>
+corpus handle: target corpus 
 <p>
 
 <p>Referenced by <a class="el" href="cwb-align-encode_8c.html#0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
@@ -505,6 +559,8 @@ Main function for cwb-align-show.
 <div class="memdoc">
 
 <p>
+name of the target corpus 
+<p>
 
 <p>Referenced by <a class="el" href="cwb-align-encode_8c.html#0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
 
@@ -522,6 +578,8 @@ Main function for cwb-align-show.
 <div class="memdoc">
 
 <p>
+Name of the program (from the shell). 
+<p>
 
 </div>
 </div><p>
@@ -537,6 +595,8 @@ Main function for cwb-align-show.
 <div class="memdoc">
 
 <p>
+registry directory (NULL = use CL default) 
+<p>
 
 </div>
 </div><p>
@@ -551,6 +611,8 @@ Main function for cwb-align-show.
 </div>
 <div class="memdoc">
 
+<p>
+sentence attribute handle: source 
 <p>
 
 <p>Referenced by <a class="el" href="cqpserver_8c.html#d570d7f947ad120a8a453ecf527b2890">do_cqi_cl_alg2cpos()</a>, <a class="el" href="ranges_8c.html#895a8f15cd410712dcf51984a017b9ea">group2compare()</a>, and <a class="el" href="ranges_8c.html#b219ee0392ac5d55d43c014e9f42e044">i2compare()</a>.</p>
@@ -569,22 +631,26 @@ Main function for cwb-align-show.
 <div class="memdoc">
 
 <p>
+name of the source sentence regions 
+<p>
 
 <p>Referenced by <a class="el" href="cwb-align-encode_8c.html#0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
 
 </div>
 </div><p>
-<a class="anchor" name="6e160b1019fe31e82941efd8de8076d4"></a><!-- doxytag: member="cwb&#45;align&#45;show.c::s2" ref="6e160b1019fe31e82941efd8de8076d4" args="" -->
+<a class="anchor" name="8ea4130966a8cc8c30768629f4c42084"></a><!-- doxytag: member="cwb&#45;align&#45;show.c::s2" ref="8ea4130966a8cc8c30768629f4c42084" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="union___attribute.html">Attribute</a> * <a class="el" href="cwb-align_8c.html#6e160b1019fe31e82941efd8de8076d4">s2</a>          </td>
+          <td class="memname"><a class="el" href="union___attribute.html">Attribute</a>* <a class="el" href="cwb-align_8c.html#8ea4130966a8cc8c30768629f4c42084">s2</a>          </td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
+<p>
+sentence attribute handle: target 
 <p>
 
 <p>Referenced by <a class="el" href="cqpserver_8c.html#d570d7f947ad120a8a453ecf527b2890">do_cqi_cl_alg2cpos()</a>, <a class="el" href="ranges_8c.html#895a8f15cd410712dcf51984a017b9ea">group2compare()</a>, and <a class="el" href="ranges_8c.html#b219ee0392ac5d55d43c014e9f42e044">i2compare()</a>.</p>
@@ -603,6 +669,8 @@ Main function for cwb-align-show.
 <div class="memdoc">
 
 <p>
+name of the target sentence regions 
+<p>
 
 <p>Referenced by <a class="el" href="cwb-align-encode_8c.html#0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
 
@@ -620,22 +688,26 @@ Main function for cwb-align-show.
 <div class="memdoc">
 
 <p>
+{word} attribute (or whatever is selected with -P) attribute handle: source 
+<p>
 
 <p>Referenced by <a class="el" href="cwb-align-encode_8c.html#0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
 
 </div>
 </div><p>
-<a class="anchor" name="720627d44d047e7ca2ef7270645fdae5"></a><!-- doxytag: member="cwb&#45;align&#45;show.c::w2" ref="720627d44d047e7ca2ef7270645fdae5" args="" -->
+<a class="anchor" name="d90d11b6ff8d788b7aa77dd3677b7cd3"></a><!-- doxytag: member="cwb&#45;align&#45;show.c::w2" ref="d90d11b6ff8d788b7aa77dd3677b7cd3" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="union___attribute.html">Attribute</a> * <a class="el" href="cwb-align-show_8c.html#720627d44d047e7ca2ef7270645fdae5">w2</a>          </td>
+          <td class="memname"><a class="el" href="union___attribute.html">Attribute</a>* <a class="el" href="cwb-align-show_8c.html#d90d11b6ff8d788b7aa77dd3677b7cd3">w2</a>          </td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
+<p>
+{word} attribute (or whatever is selected with -P) attribute handle: target 
 <p>
 
 <p>Referenced by <a class="el" href="cwb-align-encode_8c.html#0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
@@ -654,13 +726,15 @@ Main function for cwb-align-show.
 <div class="memdoc">
 
 <p>
+name of the p-attribute used to display tokens (usually word) 
+<p>
 
 <p>Referenced by <a class="el" href="cwb-align-show_8c.html#3c04138a5bfe5d72780bb7e82a18e627">main()</a>, and <a class="el" href="cwb-align-show_8c.html#06d3f055c2f30330b96d8ea5368b33a2">parse_args()</a>.</p>
 
 </div>
 </div><p>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Sat Sep 19 20:28:33 2009 for CWB by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Fri Sep 25 21:50:32 2009 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

@@ -20,16 +20,22 @@
 
 #include "cqp.h"
 
+/**
+ * The DFA object.
+ *
+ * A Deterministic Finite Automaton: into which a regular expression can be converted.
+ */
 typedef struct dfa {
-  int Max_States;         /* max number of states of the current dfa.      */
-                          /* state no. 0 is the initial state.             */
-  int Max_Input;          /* max number of input chars of the current dfa. */
-  int **TransTable;       /* state transition table of the current dfa.    */
-  Boolean *Final;       /* set of final states.                          */
-  int E_State;            /* Error State -- it is introduced in order to   */
-                          /* make the dfa complete, so the state transition*/
-                          /* is a total mapping. The value of this variable*/
-                          /* is Max_States.                                */
+  int Max_States;         /**< max number of states of the current dfa.      */
+                          /**< state no. 0 is the initial state.             */
+  int Max_Input;          /**< max number of input chars of the current dfa. */
+  int **TransTable;       /**< state transition table of the current dfa.    */
+  Boolean *Final;         /**< set of final states.                          */
+  int E_State;            /**< Error State -- it is introduced in order to
+                           * make the dfa complete, so the state transition
+                           * is a total mapping. The value of this variable
+                           * is Max_States.
+                           */
 } DFA;
 
 void regex2dfa(char *rxs, DFA *dfa);

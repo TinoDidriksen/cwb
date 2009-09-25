@@ -22,13 +22,22 @@
 #include "../cl/endian.h"
 #include "../cl/fileutils.h"
 
+/** The corpus we are working on */
 Corpus *corpus;
+/** Name of this program */
 char *progname = NULL;
 
 
-/* returns TRUE iff component has already been created */
+/**
+ * Checks whether a component has already been created.
+ *
+ * @param attr  The attribute of the component to check.
+ * @param cid   The component ID of the component to check.
+ * @return      RUE iff the component has already been created.
+ */
 int
-component_ok(Attribute *attr, ComponentID cid) {
+component_ok(Attribute *attr, ComponentID cid)
+{
   ComponentState state;
 
   state = component_state(attr, cid);
@@ -44,9 +53,21 @@ component_ok(Attribute *attr, ComponentID cid) {
   }
 }
 
-/* create component if it doesn't already exist; aborts on error */
+
+/**
+ * Creates a component for the specified attribute.
+ *
+ * This function will create the component if it doesn't already exist;
+ * it aborts on error.
+ *
+ * @see create_component
+ *
+ * @param attr  The attribute of the component to create.
+ * @param cid   The component ID of the component to create.
+ */
 void
-make_component(Attribute *attr, ComponentID cid) {
+make_component(Attribute *attr, ComponentID cid)
+{
   int state;
 
   if (! component_ok(attr, cid)) {
@@ -67,12 +88,25 @@ make_component(Attribute *attr, ComponentID cid) {
 
 }
 
+
+
+/**
+ * Validates the REVCORP component of the given attribute.
+ *
+ * This function validates a REVCORP (i.e. an uncompressed index).
+ * It assumes that a lexicon, frequencies and (compressed or
+ * uncompressed) token stream are available for CL access for the
+ * given attribute.
+ *
+ * @param attr  The attribute whose REVCORP should be checked.
+ * @return      True for all OK, false for a problem.
+ */
 int
-validate_revcorp(Attribute *attr) {
-  /* validate REVCORP component (i.e. uncompressed index);
-     assumes that lexicon, frequencies and (compressed or uncompressed) token stream are available for CL access */
+validate_revcorp(Attribute *attr)
+{
+
   Component *revcorp = ensure_component(attr, CompRevCorpus, 0);
-  int *ptab;			/* table of index offsets for each lexicon entry */
+  int *ptab;                        /* table of index offsets for each lexicon entry */
   int lexsize, corpsize;
   int i, offset, cpos, id;
 
@@ -135,8 +169,19 @@ validate_revcorp(Attribute *attr) {
   return 1;
 }
 
+/**
+ * Create a given component (or all components) for an attribute.
+ *
+ * @param attr      The attribute to work on.
+ * @param cid       If this is CompLast, all components will be created.
+ *                  Otherwise, it specifies the single component that will
+ *                  be created.
+ * @param validate  boolean - if true, validate_revcorp is called to check
+ *                  the resulting revcorp.
+ */
 void
-do_attribute(Attribute *attr, ComponentID cid, int validate) {
+do_attribute(Attribute *attr, ComponentID cid, int validate)
+{
   assert(attr);
 
   if (cid == CompLast) {
@@ -146,7 +191,7 @@ do_attribute(Attribute *attr, ComponentID cid, int validate) {
     /* check whether directory for data files exists (may be misspelt in registry) */
     if (! is_directory(attr->any.path)) {
       fprintf(stderr, "WARNING. I cannot find the data directory of the '%s' attribute.\n",
-	      attr->any.name);
+              attr->any.name);
       fprintf(stderr, "WARNING  Directory: %s/ \n", attr->any.path);
       fprintf(stderr, "WARNING  Perhaps you misspelt the directory name in the registry file?\n");
     }
@@ -155,23 +200,23 @@ do_attribute(Attribute *attr, ComponentID cid, int validate) {
     if (! (component_ok(attr, CompLexicon) && component_ok(attr, CompLexiconIdx))) {
       /* if none of the components exits, we assume that the attribute will be created later & skip it */
       if (!component_ok(attr, CompLexicon) && !component_ok(attr, CompLexiconIdx) &&
-	  !component_ok(attr, CompLexiconSrt) &&
-	  !component_ok(attr, CompCorpus) && !component_ok(attr, CompCorpusFreqs) &&
-	  !component_ok(attr, CompHuffSeq) && !component_ok(attr, CompHuffCodes) &&
-	  !component_ok(attr, CompHuffSync) &&
-	  !component_ok(attr, CompRevCorpus) && !component_ok(attr, CompRevCorpusIdx) &&
-	  !component_ok(attr, CompCompRF) && !component_ok(attr, CompCompRFX))
-	{
-	  /* issue a warning message & return */
-	  printf(" ! attribute not created yet (skipped)\n");
-	  if (strcmp(attr->any.name, "word") == 0) {
-	    fprintf(stderr, "WARNING. The 'word' attribute must be created before using CQP on this corpus!\n");
-	  }
-	  return;
-	}
+          !component_ok(attr, CompLexiconSrt) &&
+          !component_ok(attr, CompCorpus) && !component_ok(attr, CompCorpusFreqs) &&
+          !component_ok(attr, CompHuffSeq) && !component_ok(attr, CompHuffCodes) &&
+          !component_ok(attr, CompHuffSync) &&
+          !component_ok(attr, CompRevCorpus) && !component_ok(attr, CompRevCorpusIdx) &&
+          !component_ok(attr, CompCompRF) && !component_ok(attr, CompCompRFX))
+        {
+          /* issue a warning message & return */
+          printf(" ! attribute not created yet (skipped)\n");
+          if (strcmp(attr->any.name, "word") == 0) {
+            fprintf(stderr, "WARNING. The 'word' attribute must be created before using CQP on this corpus!\n");
+          }
+          return;
+        }
       else {
-	fprintf(stderr, "ERROR. Lexicon is missing. You must use the 'encode' tool first!\n");
-	exit(1);
+        fprintf(stderr, "ERROR. Lexicon is missing. You must use the 'encode' tool first!\n");
+        exit(1);
       }
     }
     else {
@@ -200,14 +245,14 @@ do_attribute(Attribute *attr, ComponentID cid, int validate) {
     else {
       make_component(attr, CompRevCorpusIdx);
       if (! component_ok(attr, CompRevCorpus)) { /* need this check to avoid validation of existing revcorp  */
-	make_component(attr, CompRevCorpus);
-	if (validate) {
-	  /* validate the index, i.e. the REVCORP component we just created */
-	  if (! validate_revcorp(attr)) {
-	    fprintf(stderr, "ERROR. Validation failed.\n");
-	    exit(1);
-	  }
-	}
+        make_component(attr, CompRevCorpus);
+        if (validate) {
+          /* validate the index, i.e. the REVCORP component we just created */
+          if (! validate_revcorp(attr)) {
+            fprintf(stderr, "ERROR. Validation failed.\n");
+            exit(1);
+          }
+        }
       }
       printf(" - index        OK\n");
     }
@@ -215,20 +260,24 @@ do_attribute(Attribute *attr, ComponentID cid, int validate) {
   else {
     /* create requested component only */
     printf("Processing component %s of ATTRIBUTE %s\n",
-	   cid_name(cid), attr->any.name);
+           cid_name(cid), attr->any.name);
     make_component(attr, cid);
     if (validate && (cid == CompRevCorpus)) { /* validates even if REVCORP already existed -> useful trick for validating later */
       if (! validate_revcorp(attr)) {
-	fprintf(stderr, "ERROR. Validation failed.\n");
-	exit(1);
+        fprintf(stderr, "ERROR. Validation failed.\n");
+        exit(1);
       }
     }
   }
 
 }
 
+/**
+ * Prints a usage message and exits the program.
+ */
 void
-usage() {
+usage(void)
+{
   fprintf(stderr, "\n");
   fprintf(stderr, "Usage:  %s [options] <corpus> [<attribute> ...] \n", progname);
   fprintf(stderr, "\n");
@@ -258,8 +307,8 @@ usage() {
  * @param argv   Command-line arguments.
  */
 int
-main(int argc, char **argv) {
-
+main(int argc, char **argv)
+{
   char *attr_name;
   Attribute *attribute;
 
@@ -291,8 +340,8 @@ main(int argc, char **argv) {
     case 'r':
       if (registry_directory == NULL) registry_directory = optarg;
       else {
-	fprintf(stderr, "%s: -r option used twice\n", progname);
-	exit(2);
+        fprintf(stderr, "%s: -r option used twice\n", progname);
+        exit(2);
       }
       break;
 
@@ -344,9 +393,9 @@ main(int argc, char **argv) {
 
   if ((corpus = cl_new_corpus(registry_directory, corpus_id)) == NULL) {
     fprintf(stderr, "Corpus %s not found in registry %s . Aborted.\n",
-	    corpus_id,
-	    (registry_directory ? registry_directory
-	     : central_corpus_directory()));
+            corpus_id,
+            (registry_directory ? registry_directory
+             : central_corpus_directory()));
     exit(1);
   }
 
@@ -356,12 +405,12 @@ main(int argc, char **argv) {
   if (optind < argc) {
     for (i = optind; i < argc; i++) {
       if ((attribute = cl_new_attribute(corpus, argv[i], ATT_POS)) != NULL) {
-	do_attribute(attribute, cid, validate);
+        do_attribute(attribute, cid, validate);
       }
       else {
-	fprintf(stderr, "p-attribute %s.%s not defined. Aborted.\n",
-		corpus_id, attr_name);
-	exit(1);
+        fprintf(stderr, "p-attribute %s.%s not defined. Aborted.\n",
+                corpus_id, attr_name);
+        exit(1);
       }
     }
   }
@@ -371,7 +420,7 @@ main(int argc, char **argv) {
     }
     else {
       fprintf(stderr, "p-attribute %s.%s not defined. Aborted.\n",
-	      corpus_id, attr_name);
+              corpus_id, attr_name);
       exit(1);
     }
   }
@@ -379,14 +428,14 @@ main(int argc, char **argv) {
     /* process each p-attribute of the corpus in turn */
     for (attribute = corpus->attributes; attribute; attribute = attribute->any.next)
       if (attribute->type == ATT_POS) {
-	ComponentID my_cid;
+        ComponentID my_cid;
 
-	do_attribute(attribute, cid, validate);
-	/* now destoy all components; this makes the attribute unusable,
-	   but it is currently the only way to free allocated and memory-mapped data */
-	for (my_cid = CompDirectory; my_cid < CompLast; my_cid++) { /* ordering gleaned from attributes.h */
-	  drop_component(attribute, my_cid);
-	}
+        do_attribute(attribute, cid, validate);
+        /* now destoy all components; this makes the attribute unusable,
+           but it is currently the only way to free allocated and memory-mapped data */
+        for (my_cid = CompDirectory; my_cid < CompLast; my_cid++) { /* ordering gleaned from attributes.h */
+          drop_component(attribute, my_cid);
+        }
       }
   }
 

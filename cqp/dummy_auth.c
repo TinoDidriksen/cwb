@@ -18,8 +18,10 @@
 #include "../CQi/auth.h"
 #include "output.h"
 
-/* 
- *  dummy implementations which just print an error message
+/**
+ * @file
+ *
+ * All functions in this module are dummy implementations which just print an error message.
  */
 
 void 

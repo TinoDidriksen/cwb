@@ -16,18 +16,6 @@
  */
 
 
-/*
-
-  Input:  a list of regions (on stdin or in the file specified in the first argument
-          to the program name) with lines in the folling format:
-  <start> TAB <end> [ TAB <annotation> ]
-
-  <start> = corpus position of first token in region
-  <end> = corpus position of last token in region
-  <annotation> = annotation text (only if s-attribute was specified with -V)
-
-  Output: file <att>.rng (plus <att>.avs, <att>.avx for -V attributes)
-*/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -647,6 +635,21 @@ write_region_to_disk(int start, int end, char *annot) {
 /* *************** *\
  *      MAIN()     *
 \* *************** */
+
+
+
+/*
+
+  Input:  a list of regions (on stdin or in the file specified in the first argument
+          to the program name) with lines in the folling format:
+  <start> TAB <end> [ TAB <annotation> ]
+
+  <start> = corpus position of first token in region
+  <end> = corpus position of last token in region
+  <annotation> = annotation text (only if s-attribute was specified with -V)
+
+  Output: file <att>.rng (plus <att>.avs, <att>.avx for -V attributes)
+*/
 
 /**
  * Main function for cwb-s-encode.

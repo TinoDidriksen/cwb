@@ -32,97 +32,114 @@
 #include "../cl/lexhash.h"
 /* byte order conversion functions taken from Corpus Library */
 #include "../cl/endian.h"
+#include "../cl/attributes.h"   /* for DEFAULT_ATT_NAME */
 
 
 /* ---------------------------------------------------------------------- */
 
+/** User privileges of new files (octal format) */
 #define UMASK              0644
 
+/** Default string used as value of P-attributes when a value is missing ie if a tab-delimited field is empty */
 #define UNDEF_VALUE "__UNDEF__"
+/** Default string containing the characters that can function as field separators */
 #define FIELDSEPS  "\t\n"
 
-/** max number of s-attributes (-> could change this to implementation as a linked list) */
+/** max number of s-attributes; also max number of p-attributes (-> could change this to implementation as a linked list) */
 #define MAXRANGES 1024
 
 /** nr of buckets of lexhashes used for checking duplicate errors (undeclared element and attribute names in XML tags) */
 #define REP_CHECK_LEXHASH_SIZE 1000
 
-/* if we have XML tags with attributes, input lines can become pretty long (but there's basically just a single buffer) */
+/** Input buffer size. If we have XML tags with attributes, input lines can become pretty long
+ * (but there's basically just a single buffer)
+ */
 #define MAX_INPUT_LINE_LENGTH  65536
 
 /* implicit knowledge about CL component files naming conventions */
-#define STRUC_RNG  "%s/%s.rng"
-#define STRUC_AVX  "%s/%s.avx"
-#define STRUC_AVS  "%s/%s.avs"
-#define POS_CORPUS "%s/%s.corpus"
-#define POS_LEX    "%s/%s.lexicon"
-#define POS_LEXIDX "%s/%s.lexicon.idx"
+#define STRUC_RNG  "%s/%s.rng"            /**< CL naming convention for S-attribute RNG files */
+#define STRUC_AVX  "%s/%s.avx"            /**< CL naming convention for S-attribute AVX files */
+#define STRUC_AVS  "%s/%s.avs"            /**< CL naming convention for S-attribute AVS files */
+#define POS_CORPUS "%s/%s.corpus"         /**< CL naming convention for P-attribute Corpus files */
+#define POS_LEX    "%s/%s.lexicon"        /**< CL naming convention for P-attribute Lexicon files */
+#define POS_LEXIDX "%s/%s.lexicon.idx"    /**< CL naming convention for P-attribute Lexicon-index files */
 
 
 
 /* ---------------------------------------------------------------------- */
 
-char *field_separators = FIELDSEPS;
-char *undef_value = UNDEF_VALUE;
-int debug = 0;
-int silent = 0;
-int verbose = 0;                /* show progress (this is _not_ the opposite of silent!) */
-int xml_aware = 0;              /* substitute XML entities in p-attributes & ignore <? and <! lines */
-int skip_empty_lines = 0;
-int line = 0;                   /* corpus position currently being encoded (i.e. cpos of _next_ token) */
-int strip_blanks = 0;           /* strip leading and trailing blanks from input and token annotations */
-cl_string_list input_files = NULL; /* list of input file (-f option(s)) */
-int nr_input_files = 0;         /* number of input files (length of list after option processing) */
-int current_input_file = 0;     /* index of input file currently being processed */
-char *current_input_file_name = NULL; /* filename of current input file, for error messages */
-FILE *input_fd = NULL;          /* file handle for current input file (or pipe) */
-int input_file_is_pipe = 0;     /* so we can properly close input_fd using either fclose() or pclose() */
-int input_line = 0;             /* input line number (reset for each new file) for error messages */
-char *registry_file = NULL;     /* if set, auto-generate registry file named <registry_file>, listing declared attributes */
-char *directory = NULL;         /* corpus data directory (no longer defaults to current directory) */
+char *field_separators = FIELDSEPS;     /**< string containing the characters that can function as field separators */
+char *undef_value = UNDEF_VALUE;        /**< string used as value of P-attributes when a value is missing
+                                             ie if a tab-delimited field is empty */
+int debug = 0;                          /**< debug mode on or off? */
+int silent = 0;                         /**< hide messages */
+int verbose = 0;                        /**< show progress (this is _not_ the opposite of silent!) */
+int xml_aware = 0;                      /**< substitute XML entities in p-attributes & ignore <? and <! lines */
+int skip_empty_lines = 0;               /**< skip empty lines when encoding? */
+int line = 0;                           /**< corpus position currently being encoded (ie cpos of _next_ token) */
+int strip_blanks = 0;                   /**< strip leading and trailing blanks from input and token annotations */
+cl_string_list input_files = NULL;      /**< list of input file (-f option(s)) */
+int nr_input_files = 0;                 /**< number of input files (length of list after option processing) */
+int current_input_file = 0;             /**< index of input file currently being processed */
+char *current_input_file_name = NULL;   /**< filename of current input file, for error messages */
+FILE *input_fd = NULL;                  /**< file handle for current input file (or pipe) */
+int input_file_is_pipe = 0;             /**< so we can properly close input_fd using either fclose() or pclose() */
+int input_line = 0;                     /**< input line number (reset for each new file) for error messages */
+char *registry_file = NULL;             /**< if set, auto-generate registry file named {registry_file}, listing declared attributes */
+char *directory = NULL;                 /**< corpus data directory (no longer defaults to current directory) */
 
 
 /* ---------------------------------------------------------------------- */
 
+/**
+ * Range object: represents an S-attribute being encoded.
+ */
 typedef struct _Range {
-  char *dir;                    /* directory where this range is stored */
-  char *name;                   /* range name */
+  char *dir;                    /**< directory where this range is stored */
+  char *name;                   /**< range name */
 
-  int in_registry;              /* with "-R <reg_file>", this is set to 1 when the attribute is written to the registry (avoid duplicates) */
+  int in_registry;              /**< with "-R {reg_file}", this is set to 1 when the attribute is written to the registry
+                                     (avoid duplicates) */
 
-  int store_values;             /* flag indicating whether to store values (does _not_ automatically apply to children, see below) */
-  int feature_set;              /* stored values are feature sets => validate and normalise format */
-  int null_attribute;           /* a NULL attribute ignores all corresponding XML tags, without checking struture or annotations */
-  int automatic;                /* automatic attributes are the 'children' used for recursion and element attributes below  */
+  int store_values;             /**< flag indicating whether to store values (does _not_ automatically apply to children, see below) */
+  int feature_set;              /**< stored values are feature sets => validate and normalise format */
+  int null_attribute;           /**< a NULL attribute ignores all corresponding XML tags, without checking structure or annotations */
+  int automatic;                /**< automatic attributes are the 'children' used for recursion and element attributes below  */
 
-  FILE *fd;                     /* fd of .rng component */
-  FILE *avx;                    /* fd of .avx component (the attribute value index) */
-  FILE *avs;                    /* fd of .avs component (the attribute values) */
-  int offset;                   /* string offset for next string (in .avs component) */
+  FILE *fd;                     /**< fd of rng component */
+  FILE *avx;                    /**< fd of avx component (the attribute value index) */
+  FILE *avs;                    /**< fd of avs component (the attribute values) */
+  int offset;                   /**< string offset for next string (in avs component) */
 
-  cl_lexhash lh;                /* lexicon hash for attribute values */
+  cl_lexhash lh;                /**< lexicon hash for attribute values */
 
-  int has_children;             /* whether attribute values of XML elements are stored in s-attribute 'children' */
-  cl_lexhash el_attributes;     /* maps XML element attribute names to the appropriate s-attribute 'children' (Range *) */
-  cl_string_list el_atts_list;  /* list of declared element attribute names, required by close_range() function */
-  cl_lexhash el_undeclared_attributes; /* remember undeclared elment attributes, so warnings will be issued only once */
+  int has_children;             /**< whether attribute values of XML elements are stored in s-attribute 'children' */
+  cl_lexhash el_attributes;     /**< maps XML element attribute names to the appropriate s-attribute 'children' (Range *) */
+  cl_string_list el_atts_list;  /**< list of declared element attribute names, required by close_range() function */
+  cl_lexhash el_undeclared_attributes; /**< remembers undeclared element attributes, so warnings will be issued only once */
 
-  int max_recursion;            /* maximum auto-recursion level, 0 = no recursion (maximal regions), -1 = assume flat structure */
-  int recursion_level;          /* keeps track of level of embedding when auto-recursion is activated */
-  int element_drop_count;       /* count how many recursive subelements where dropped because of the max_recursion limit */
-  struct _Range **recursion_children;   /* (usually very short) list of s-attribute 'children' for auto-recursion; recursion_children[0] points to self! */
+  int max_recursion;            /**< maximum auto-recursion level; 0 = no recursion (maximal regions), -1 = assume flat structure */
+  int recursion_level;          /**< keeps track of level of embedding when auto-recursion is activated */
+  int element_drop_count;       /**< count how many recursive subelements were dropped because of the max_recursion limit */
+  struct _Range **recursion_children;   /**< (usually very short) list of s-attribute 'children' for auto-recursion;
+                                             recursion_children[0] points to self! */
 
-  int is_open;                  /* whether there is an open structure at the moment */
-  int start_pos;                /* if this.is_open, remember start position of current range */
-  char *annot;                  /* ... and annotation (if there is one) */
+  int is_open;                  /**< boolean: whether there is an open structure at the moment */
+  int start_pos;                /**< if this->is_open, remember start position of current range */
+  char *annot;                  /**< and annotation (if there is one) */
 
-  int num;                      /* number of current (if this.is_open) or next structure */
+  int num;                      /**< number of current (if this->is_open) or next structure */
 
 } Range;
 
+/** An array for keeping track of S-attributes being encoded. */
 Range ranges[MAXRANGES];
+/** @see ranges */
 int range_ptr = 0;
 
+/**
+ * WAttr object: represents a P-attribute being encoded.
+ */
 typedef struct {
   char *name;
   cl_lexhash lh;
@@ -133,7 +150,9 @@ typedef struct {
   FILE *corpus_fd;
 } WAttr;
 
+/** An array for keeping track of P-attributes being encoded. */
 WAttr wattrs[MAXRANGES];
+/** @see wattrs */
 int wattr_ptr = 0;
 
 /* ---------------------------------------------------------------------- */
@@ -146,16 +165,24 @@ cl_lexhash undeclared_sattrs = NULL;
 
 /* ---------------------------------------------------------------------- */
 
+/** name of the currently running program */
 char *progname = NULL;
 
-/* ---------------------------------------------------------------------- */
+
 
 /* ======================================== helper functions */
 
 
-/* replacement for strtok() function which doesn't skip empty fields */
+/**
+ * A replacement for the strtok() function which doesn't skip empty fields.
+ *
+ * @param s      The string to split.
+ * @param delim  Delimiters to use in splitting.
+ * @return       The next token from the string.
+ */
 char *
-my_strtok(register char *s, register const char *delim) {
+my_strtok(register char *s, register const char *delim)
+{
   register char *spanp;
   register int c, sc;
   char *tok;
@@ -190,8 +217,19 @@ my_strtok(register char *s, register const char *delim) {
   /* NOTREACHED */
 }
 
-/* decode pre-defined XML entities in string s; overwrites input string s; returns s for convenience;
-   (entities are &lt; &gt; &amp; &quot; &apos;) */
+/**
+ * Decode XML entities in a string.
+ *
+ * This function decodes pre-defined XML entities in string s.
+ * It overwrites the input string s and also returns s for convenience.
+ *
+ * (The entities are &amp;lt; &amp;gt; &amp;amp; &amp;quot; &amp;apos;).
+ *
+ * If passed NULL, it will not fall over - it will just pass NULL back!
+ *
+ * @param s  A string to decode.
+ * @return   The string (rewritten in situ).
+ */
 char *
 decode_entities(char *s) {
   char *read, *write;
@@ -226,7 +264,7 @@ decode_entities(char *s) {
       else {
         *(write++) = *(read++); /* simply copy char */
       }
-    }
+    } /* endwhile */
     *write = '\0';              /* terminate result string */
   }
   return s;
@@ -239,6 +277,12 @@ decode_entities(char *s) {
 #include <sys/types.h>
 #include <sys/time.h>
 
+/**
+ * Prints a message plus the current time to the specified file/stream.
+ *
+ * @param stream  Stream to print to.
+ * @param msg     Message to incorporate into the string that is printed.
+ */
 void
 printtime(FILE *stream, char *msg)
 {
@@ -250,10 +294,12 @@ printtime(FILE *stream, char *msg)
 }
 
 
-/* ======================================== print usage message and exit */
+/**
+ * Prints a usage message and exits the program.
+ */
 
 void 
-usage()
+usage(void)
 {
   fprintf(stderr, "\n");
   fprintf(stderr, "Usage:  %s -f <file> [options] -d <dir> [attribute declarations]\n", progname);
@@ -319,9 +365,13 @@ usage()
 
 /* ======================================== print error message and exit */
 
-/* print input line (and input file, if applicable) on stderr, for error messages and warnings */
+/**
+ * Prints the input line (and input file, if applicable) on STDERR,
+ * for error messages and warnings.
+ */
 void
-print_input_line(void) {
+print_input_line(void)
+{
   if ((nr_input_files > 0) && (current_input_file_name != NULL)) {
     fprintf(stderr, "file %s, line #%d", current_input_file_name, input_line);
   }
@@ -330,6 +380,13 @@ print_input_line(void) {
   }  
 }
 
+/**
+ * Prints an error message to STDERR, automatically adding a
+ * message on the location of the error in the corpus.
+ *
+ * @param format  Format-specifying string of the error message.
+ * @param ...     Additional arguments, printf-style.
+ */
 void
 error(char *format, ...) {
   va_list ap;
@@ -353,8 +410,18 @@ error(char *format, ...) {
 
 /* =================================================== processing directories of input files */
 
+/**
+ * Get a list of files in a given directory.
+ *
+ * This function only lists files with .vrt or .vrt.gz extensions,
+ * and only files identified  by POSIX stat() as "regular".
+ *
+ * @param dir  Path of directory to look in.
+ * @return     List of paths to files (*including* the directory name).
+ */
 cl_string_list
-scan_directory(char *dir) {
+scan_directory(char *dir)
+{
   DIR *dirp;
   struct dirent *dp;
   struct stat statbuf;
@@ -409,8 +476,16 @@ scan_directory(char *dir) {
 
 /* =================================================== handling s-attributes and p-attributes */
 
+/**
+ * Gets the index (in the ranges array) of a specified S-attribute.
+ *
+ * @see         ranges
+ * @param name  The S-attribute to search for.
+ * @return      Index (as integer).
+ */
 int 
-find_range(char *name) {
+find_range(char *name)
+{
   int i;
 
   for (i = 0; i < range_ptr; i++)
@@ -419,8 +494,18 @@ find_range(char *name) {
   return -1;
 }
 
+
+/**
+ * Prints registry lines for a given s-attribute, and its children,
+ * if any, to the specified file handle.
+ *
+ * @param rng            The s-attribute in question.
+ * @param fd             File handle for the registry file.
+ * @param print_comment  Boolean: if true, a comment on the original XML tags is printed.
+ */
 void
-print_range_registry_line(Range *rng, FILE *fd, int print_comment) {
+print_range_registry_line(Range *rng, FILE *fd, int print_comment)
+{
   Range *child;
   int i, n_atts;
 
@@ -481,8 +566,26 @@ print_range_registry_line(Range *rng, FILE *fd, int print_comment) {
   }
 }
 
+
+/**
+ * Creates a Range object to store a specified s-attribute
+ * (and, if appropriate, does the same for children-attributes).
+ *
+ * @param name            The string from the user specifying the name of
+ *                        this attribute, recursion and any "attributes"
+ *                        of this XML element - e.g. "text:0+id"
+ * @param directory       The directory where the CWB data files will go.
+ * @param store_values    boolean: indicates whether this s-attribute was
+ *                        specified with -V (true) or -S (false) when the
+ *                        program was invoked.
+ * @param null_attribute  boolean: this is a null attribute, i.e. an XML
+ *                        element to be ignored.
+ * @return                Pointer to the new Range object (which is a member
+ *                        of the global ranges array).
+ */
 Range *
-declare_range(char *name, char *directory, int store_values, int null_attribute) {
+declare_range(char *name, char *directory, int store_values, int null_attribute)
+{
   char buf[MAX_LINE_LENGTH];
   Range *rng;
   char *p, *rec, *ea_start, *ea;
@@ -585,7 +688,7 @@ declare_range(char *name, char *directory, int store_values, int null_attribute)
   rng->annot = NULL;
   rng->num = 0;
 
-  /* now that the range is intialised, declare its 'children' if necessary */
+  /* now that the range is initialised, declare its 'children' if necessary */
   /* recursion children */
   if (rng->max_recursion >= 0) {
     rng->recursion_children = (Range **) cl_calloc(rng->max_recursion + 1, sizeof(Range *));
@@ -643,8 +746,15 @@ declare_range(char *name, char *directory, int store_values, int null_attribute)
   return rng;
 }
 
+/**
+ * Closes a currently open instance of an S-attribute.
+ *
+ * @param rng      Pointer to the S-attribute to close.
+ * @param end_pos  The corpus position at which this instance closes.
+ */
 void
-close_range(Range *rng, int end_pos) {
+close_range(Range *rng, int end_pos)
+{
   cl_lexhash_entry entry;
   int close_this_range = 0;     /* whether we actually have to close this range (may be skipped or delegated in recursion mode) */
   int i, n_children, l;
@@ -674,7 +784,7 @@ close_range(Range *rng, int end_pos) {
       close_this_range = 1;
     }
   }
-  else {                                          /* flat structure (traditional mode) */
+  else {                        /* flat structure (traditional mode) */
     if (rng->is_open) {
       close_this_range = 1;     /* ok */
     }
@@ -732,7 +842,7 @@ close_range(Range *rng, int end_pos) {
         cl_free(rng->annot);
       }
       rng->is_open = 0;
-    }
+    }  /* endif end_pos >= start_pos */
     else {                      
       rng->is_open = 0;      /* silently ignore empty region */
       cl_free(rng->annot);
@@ -756,9 +866,20 @@ close_range(Range *rng, int end_pos) {
   return;
 }
 
-/* if rng has element attribute children, open_range() will mess around with the string annot (otherwise not) */
+
+/**
+ * Opens an instance of the given S-attribute.
+ *
+ * If rng has element attribute children, open_range() will mess around
+ * with the string annotation (otherwise not).
+ *
+ * @param rng        The S-attribute to open.
+ * @param start_pos  The corpus position at which this instance begins.
+ * @param annot      The annotation string (the XML element's att-val pairs).
+ */
 void
-open_range(Range *rng, int start_pos, char *annot) {
+open_range(Range *rng, int start_pos, char *annot)
+{
   cl_lexhash_entry entry;
   int open_this_range = 0;      /* whether we actually have to open this range (may be skipped or delegated in recursion mode) */
   int i, mark, point, n_children;
@@ -994,8 +1115,16 @@ open_range(Range *rng, int start_pos, char *annot) {
   return;
 }
 
+/**
+ * Gets the index (in wattrs) of the P-attribute with the given name.
+ *
+ * @see         wattrs
+ * @param name  The P-attribute to search for.
+ * @return      Index (as integer).
+ */
 int 
-find_wattr(char *name) {
+find_wattr(char *name)
+{
   int i;
 
   for (i = 0; i < wattr_ptr; i++)
@@ -1004,14 +1133,24 @@ find_wattr(char *name) {
   return -1;
 }
 
+
+/**
+ * Sets up a new p-attribute, including opening corpus, lex and index file handles.
+ *
+ * @param name        Identifier string of the p-attribute
+ * @param directory   Directory in which CWB data files are to be created.
+ * @param nr_buckets  Number of buckets in the lexhash of the new p-attribute (value passed to cl_new_lexhash() )
+ * @return            Always 1.
+ */
 int 
-declare_wattr(char *name, char *directory, int nr_buckets) {
+declare_wattr(char *name, char *directory, int nr_buckets)
+{
   char corname[MAX_LINE_LENGTH];
   char lexname[MAX_LINE_LENGTH];
   char idxname[MAX_LINE_LENGTH];
 
   if (name == NULL)
-    name = "word";
+    name = DEFAULT_ATT_NAME;
 
   if (directory == NULL)
     error("Error: you must specify a directory for CWB data files with the -d option");
@@ -1053,14 +1192,26 @@ declare_wattr(char *name, char *directory, int nr_buckets) {
   return 1;
 }
 
-/* ======================================== parse options and set global vars */
 
-void parse_options(int argc, char **argv) {
+
+
+
+/**
+ * Parses program options and sets global variables.
+ *
+ * @param argc  argc - passed from main()
+ * @param argv  argv - passed from main()
+ *
+ */
+
+void
+parse_options(int argc, char **argv)
+{
   int c;
   extern char *optarg;
   extern int optind;
 
-  char *prefix = "word";
+  char *prefix = DEFAULT_ATT_NAME;
 
   int number_of_buckets = 0;    /* -> use CL default unless changed with -b <n> */
   int first_attr_declared = 0;  /* whether we have already declared the default 'word' attribute (useful for "-p -") */
@@ -1246,9 +1397,14 @@ void parse_options(int argc, char **argv) {
 }
 
 
-/* process token data line */
+/**
+ * Processes a token data line.
+ *
+ * @param str  A string containing the line to process.
+ */
 void 
-addline(char *str) {
+addline(char *str)
+{
   int fc, id, l;
   char *field, *token;
   cl_lexhash_entry entry;
@@ -1326,13 +1482,28 @@ addline(char *str) {
       cl_free(token); /* string has been allocated by cl_make_set() */
 
     NwriteInt(id, wattrs[fc].corpus_fd);
-  }
+  } /* end for loop (for each column in input data...) */
 }
  
-/* read one input line into buffer (either from stdin, or from one or more input files) 
-   returns False when the last input file has been completely read, and automatically closes files */
+/**
+ * Reads one input line into the specified buffer
+ * (either from stdin, or from one or more input files).
+ *
+ * The input files are not passed to the function,
+ * but are taken form the program global variables.
+ *
+ * This function returns False when the last input file
+ * has been completely read, and automatically closes files.
+ *
+ * @param buffer   Where to load the line to.
+ * @param bufsize  Not currently used, but should be
+ *                 MAX_INPUT_LINE_LENGTH in case of future use!
+ *
+ * @return         boolean: true for all OK, false for a problem.
+ */
 int
-get_input_line(char *buffer, int bufsize) {
+get_input_line(char *buffer, int bufsize)
+{
   int ok, len;
   char command[MAX_LINE_LENGTH];
 
@@ -1394,8 +1565,20 @@ get_input_line(char *buffer, int bufsize) {
 
 /* quote path name if necessary (for HOME and INFO fields of registry file);
    always returns a newly allocated string for consistency */
+/**
+ * Add quotes and escape slashes to a path name if necessary.
+ *
+ * This is for the HOME and INFO fields of the registry file.
+ *
+ * For consistency, this function always returns a newly
+ * allocated string, regardless of whether changes have been made.
+ *
+ * @param path  String containing the path to quotify.
+ * @return      The quotified string.
+ */
 char *
-quote_file_path(char *path) {
+quote_file_path(char *path)
+{
   char *p, *q, *quoted_path;
   int need_quotes = 0;
 
@@ -1441,6 +1624,12 @@ quote_file_path(char *path) {
 
 /**
  * Main function for cwb-encode.
+ *
+ * As well as the entry point to the program, this contains
+ * the main loop for each line of the corpus to be encoded.
+ *
+ * The string of each line is sent to one of a number of
+ * different functions, depending on what is found in that string!
  *
  * @param argc   Number of command-line arguments.
  * @param argv   Command-line arguments.
@@ -1590,7 +1779,7 @@ main(int argc, char **argv) {
         line++;                 /* line is the corpus position of the next token that will be encoded */
       }
     }
-  }
+  } /* endwhile (main loop for each line) */
   if (verbose) {
     printf("%50s\r", "");       /* clear progress line */
     printf("Total size: %'d tokens (%.1fM)\n", line, ((float) line) / 1048576);

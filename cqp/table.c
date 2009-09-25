@@ -19,8 +19,10 @@
 
 #include "table.h"
 
-/* how many rows to add to table when it is automatically extended */
+/** How many rows to add to a table when it is automatically extended */
 #define TABLE_EXTEND_ROWS  1000
 
-/* just a dummy for now */
+/** @file
+ *
+ * just a dummy for now */
 

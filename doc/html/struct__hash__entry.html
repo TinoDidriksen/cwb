@@ -23,12 +23,19 @@
   </div>
 </div>
 <div class="contents">
-<h1>_hash_entry Struct Reference</h1><!-- doxytag: class="_hash_entry" --><h2>Data Fields</h2>
+<h1>_hash_entry Struct Reference</h1><!-- doxytag: class="_hash_entry" -->Structure representing hash entries.  
+<a href="#_details">More...</a>
+<p>
+<h2>Data Fields</h2>
 <ul>
 <li>int * <a class="el" href="struct__hash__entry.html#28dcdb3b4936a0999c96f645d0436a83">tuple</a>
-<li>int <a class="el" href="struct__hash__entry.html#e0d22272b68e75d19ac0b80c01f806b6">freq</a>
-<li>struct <a class="el" href="struct__hash__entry.html">_hash_entry</a> * <a class="el" href="struct__hash__entry.html#6acb29cbd01a818d1a327b4cf57a502b">next</a>
+<dl class="el"><dd class="mdescRight">K-tuple of lexicon IDs (with K == Hash.K).  <a href="#28dcdb3b4936a0999c96f645d0436a83"></a><br></dl><li>int <a class="el" href="struct__hash__entry.html#e0d22272b68e75d19ac0b80c01f806b6">freq</a>
+<dl class="el"><dd class="mdescRight">frequency of this K-tuple (so far)  <a href="#e0d22272b68e75d19ac0b80c01f806b6"></a><br></dl><li>struct <a class="el" href="struct__hash__entry.html">_hash_entry</a> * <a class="el" href="struct__hash__entry.html#6acb29cbd01a818d1a327b4cf57a502b">next</a>
 </ul>
+<hr><a name="_details"></a><h2>Detailed Description</h2>
+Structure representing hash entries. 
+<p>
+<dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="regex2dfa_8c.html#6bad0ab1a08bc253f829b23abe41cc56">Hash</a> </dd></dl>
 <hr><h2>Field Documentation</h2>
 <a class="anchor" name="e0d22272b68e75d19ac0b80c01f806b6"></a><!-- doxytag: member="_hash_entry::freq" ref="e0d22272b68e75d19ac0b80c01f806b6" args="" -->
 <div class="memitem">
@@ -41,6 +48,8 @@
 </div>
 <div class="memdoc">
 
+<p>
+frequency of this K-tuple (so far) 
 <p>
 
 <p>Referenced by <a class="el" href="cwb-scan-corpus_8c.html#9e44f8ee16add21125bfc4956588a40f">hash_add()</a>, and <a class="el" href="cwb-scan-corpus_8c.html#0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
@@ -76,6 +85,8 @@
 <div class="memdoc">
 
 <p>
+K-tuple of lexicon IDs (with K == Hash.K). 
+<p>
 
 <p>Referenced by <a class="el" href="cwb-scan-corpus_8c.html#9e44f8ee16add21125bfc4956588a40f">hash_add()</a>, <a class="el" href="cwb-scan-corpus_8c.html#c5a4421e429785c0b7a85185612e8ecf">hash_find()</a>, and <a class="el" href="cwb-scan-corpus_8c.html#0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
 
@@ -84,7 +95,7 @@
 <hr>The documentation for this struct was generated from the following file:<ul>
 <li>utils/<a class="el" href="cwb-scan-corpus_8c.html">cwb-scan-corpus.c</a></ul>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Sat Sep 19 20:28:33 2009 for CWB by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Fri Sep 25 21:50:33 2009 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

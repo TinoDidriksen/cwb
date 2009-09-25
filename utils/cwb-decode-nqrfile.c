@@ -50,8 +50,9 @@ file_length(FILE *fd)
  * Reads a subcorpus file and prints information about it to STDOUT.
  *
  * "Subcorpus file" here means (a) it begins with the subcorpus magic number;
- * (b)then there is a "registry" area terminated by '\0'; (c) then there
- * may be the size of the subcorpus; (d) then there are a whole load of
+ * (b)then there is a "registry" area terminated by one or more zero bytes;
+ * (c) then there may be the size of the subcorpus;
+ * (d) then there are a whole load of
  * start-end range integer pairs, to the end of the file.
  *
  * The registry is printed iff print_header. The start-end pairs
