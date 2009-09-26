@@ -44,10 +44,12 @@
 #define DEFAULT_EXTERNAL_GROUPING_COMMAND \
    "sort -n %s +0n +1n -2 | uniq -c | sort -n -r +1n +0rn +2n"
 
-
+/**
+ * Global array of options for CQP.
+ */
 CQPOption cqpoptions[] = {
 
-  /* Abbrev   VariableName        Type        Where to store    String- Int- Environ Side-  Option
+  /* Abbr  VariableName           Type        Where to store    String- Int- Environ Side-  Option
    *                                                            Default Def. VarName Effect Type
    * ---------------------------------------------------------------------------------------------*/
 
@@ -130,7 +132,8 @@ CQPOption cqpoptions[] = {
   { NULL, NULL,                   OptString,  NULL,               NULL, 0,  NULL, 0, 0}
 };
 
-char *expand_filename(char *fname)
+char *
+expand_filename(char *fname)
 {
   char fn[1024];
   char *home;
@@ -146,8 +149,8 @@ char *expand_filename(char *fname)
       int k;
       
       for (k = 0; home[k]; k++) {
-	fn[t] = home[k]; 
-	t++;
+        fn[t] = home[k];
+        t++;
       }
       s++;
     }
@@ -159,27 +162,27 @@ char *expand_filename(char *fname)
       char rname[128];
       char *reference;
 
-      s++;			/* skip the $ */
+      s++;                        /* skip the $ */
       
       rpos = 0;
       while (isalnum(fname[s]) || fname[s] == '_') {
-	rname[rpos++] = fname[s];
-	s++;
+        rname[rpos++] = fname[s];
+        s++;
       }
       rname[rpos] = '\0';
 
       reference = getenv(rname);
 
       if (reference == NULL) {
-	fprintf(stderr, "options: can't get value of environment variable ``%s''\n", rname);
+        fprintf(stderr, "options: can't get value of environment variable ``%s''\n", rname);
 
-	fn[t++] = '$';
-	reference = &rname[0];
+        fn[t++] = '$';
+        reference = &rname[0];
       }
       
       for (rpos = 0; reference[rpos]; rpos++) {
-	fn[t] = reference[rpos];
-	t++;
+        fn[t] = reference[rpos];
+        t++;
       }
     } 
     else {
@@ -261,7 +264,7 @@ void syntax(void)
 
 void 
 print_option_value(int opt) {
-  int show_lc_rc = 0;		/* "set context;" should also display left and right context settings */
+  int show_lc_rc = 0;                /* "set context;" should also display left and right context settings */
 
   if (cqpoptions[opt].opt_abbrev != NULL)
     printf("[%s]\t", cqpoptions[opt].opt_abbrev);
@@ -275,17 +278,17 @@ print_option_value(int opt) {
     switch (cqpoptions[opt].type) {
     case OptString:
       if (strcasecmp(cqpoptions[opt].opt_name, "PrintOptions") == 0) {
-	printf("%ctbl %chdr %cwrap %cbdr %cnum",
-	       GlobalPrintOptions.print_tabular ? '+' : '-',
-	       GlobalPrintOptions.print_header ? '+' : '-',
-	       GlobalPrintOptions.print_wrap ? '+' : '-',
-	       GlobalPrintOptions.print_border ? '+' : '-',
-	       GlobalPrintOptions.number_lines ? '+' : '-');
+        printf("%ctbl %chdr %cwrap %cbdr %cnum",
+               GlobalPrintOptions.print_tabular ? '+' : '-',
+               GlobalPrintOptions.print_header ? '+' : '-',
+               GlobalPrintOptions.print_wrap ? '+' : '-',
+               GlobalPrintOptions.print_border ? '+' : '-',
+               GlobalPrintOptions.number_lines ? '+' : '-');
       }
       else if (*((char **)cqpoptions[opt].address))
-	printf("%s", *((char **)cqpoptions[opt].address));
+        printf("%s", *((char **)cqpoptions[opt].address));
       else
-	printf("<no value>");
+        printf("<no value>");
       break;
 
     case OptBoolean: 
@@ -298,58 +301,58 @@ print_option_value(int opt) {
 
     case OptContext:
       if (strcasecmp(cqpoptions[opt].opt_name, "Context") == 0) {
-	printf("(see below)");
-	show_lc_rc = 1;
+        printf("(see below)");
+        show_lc_rc = 1;
       }
       else if (strcasecmp(cqpoptions[opt].opt_name, "LeftContext") == 0) {
-	printf("%d ", 
-	     ((ContextDescriptor *)cqpoptions[opt].address)->left_width);
+        printf("%d ",
+             ((ContextDescriptor *)cqpoptions[opt].address)->left_width);
 
-	switch (((ContextDescriptor *)cqpoptions[opt].address)->left_type) {
-	case STRUC_CONTEXT:
-	case ALIGN_CONTEXT:
-	  printf("%s", 
-		 ((ContextDescriptor *)cqpoptions[opt].address)->left_structure_name ? 
-		 ((ContextDescriptor *)cqpoptions[opt].address)->left_structure_name :
-		 "(empty?)");
-	  
-	  break;
-	case CHAR_CONTEXT:
-	  printf("characters");
-	  break;
+        switch (((ContextDescriptor *)cqpoptions[opt].address)->left_type) {
+        case STRUC_CONTEXT:
+        case ALIGN_CONTEXT:
+          printf("%s",
+                 ((ContextDescriptor *)cqpoptions[opt].address)->left_structure_name ?
+                 ((ContextDescriptor *)cqpoptions[opt].address)->left_structure_name :
+                 "(empty?)");
 
-	case WORD_CONTEXT:
-	  printf("words");
-	  break;
-	default:
-	  assert(0 && "Can't be");
-	}
+          break;
+        case CHAR_CONTEXT:
+          printf("characters");
+          break;
+
+        case WORD_CONTEXT:
+          printf("words");
+          break;
+        default:
+          assert(0 && "Can't be");
+        }
       }
       else if (strcasecmp(cqpoptions[opt].opt_name, "RightContext") == 0) {
-	printf("%d ", 
-	       ((ContextDescriptor *)cqpoptions[opt].address)->right_width);
+        printf("%d ",
+               ((ContextDescriptor *)cqpoptions[opt].address)->right_width);
 
-	switch (((ContextDescriptor *)cqpoptions[opt].address)->right_type) {
-	case STRUC_CONTEXT:
-	case ALIGN_CONTEXT:
-	  printf("%s", 
-		 ((ContextDescriptor *)cqpoptions[opt].address)->right_structure_name ? 
-		 ((ContextDescriptor *)cqpoptions[opt].address)->right_structure_name :
-		 "(empty?)");
-	  break;
-	  
-	case CHAR_CONTEXT:
-	  printf("characters");
-	  break;
-	case WORD_CONTEXT:
-	  printf("words");
-	  break;
-	default:
-	  assert(0 && "Can't be");
-	}
+        switch (((ContextDescriptor *)cqpoptions[opt].address)->right_type) {
+        case STRUC_CONTEXT:
+        case ALIGN_CONTEXT:
+          printf("%s",
+                 ((ContextDescriptor *)cqpoptions[opt].address)->right_structure_name ?
+                 ((ContextDescriptor *)cqpoptions[opt].address)->right_structure_name :
+                 "(empty?)");
+          break;
+
+        case CHAR_CONTEXT:
+          printf("characters");
+          break;
+        case WORD_CONTEXT:
+          printf("words");
+          break;
+        default:
+          assert(0 && "Can't be");
+        }
       }
       else {
-	assert (0 && "Unknown option of type OptContext ???");
+        assert (0 && "Unknown option of type OptContext ???");
       }
       break;
 
@@ -359,7 +362,7 @@ print_option_value(int opt) {
     }
 
   }
-  else {			
+  else {
     /* no address given for option -> this is only LeftContext and RightContext in
        normal mode, so refer people to the Context option */
     printf("<not bound to variable>");
@@ -385,11 +388,15 @@ void print_option_values()
   for (opt = 0; cqpoptions[opt].opt_name; opt++)
     if ((cqpoptions[opt].flags & OPTION_CQP) || (user_level >=1)) {
       if ((opt != lc_opt) && (opt != rc_opt))
-	print_option_value(opt);
+        print_option_value(opt);
     }
 }
 
-void set_default_option_values()
+/**
+ * Sets all the CQP options to their default values.
+ */
+void
+set_default_option_values(void)
 {
   int i;
   char *env;
@@ -403,35 +410,35 @@ void set_default_option_values()
       switch(cqpoptions[i].type) {
       case OptString:
 
-	*((char **)cqpoptions[i].address) = NULL;
-	/* try environment variable first */
-	if (cqpoptions[i].envvar != NULL) {
-	  env = getenv(cqpoptions[i].envvar);
-	  if (env != NULL) 
-	    *((char **)cqpoptions[i].address) = cl_strdup((char *)getenv(cqpoptions[i].envvar));
-	}
-	/* otherwise, use internal default if specified */
-	if (*((char **)cqpoptions[i].address) == NULL) {
-	  if (cqpoptions[i].cdefault)
-	    *((char **)cqpoptions[i].address) = cl_strdup(cqpoptions[i].cdefault);
-	  else 
-	    *((char **)cqpoptions[i].address) = NULL;
-	}
+        *((char **)cqpoptions[i].address) = NULL;
+        /* try environment variable first */
+        if (cqpoptions[i].envvar != NULL) {
+          env = getenv(cqpoptions[i].envvar);
+          if (env != NULL)
+            *((char **)cqpoptions[i].address) = cl_strdup((char *)getenv(cqpoptions[i].envvar));
+        }
+        /* otherwise, use internal default if specified */
+        if (*((char **)cqpoptions[i].address) == NULL) {
+          if (cqpoptions[i].cdefault)
+            *((char **)cqpoptions[i].address) = cl_strdup(cqpoptions[i].cdefault);
+          else
+            *((char **)cqpoptions[i].address) = NULL;
+        }
 
-	break;
+        break;
 
       case OptInteger:
       case OptBoolean:
 
-	if (cqpoptions[i].envvar != NULL)
-	  *((int *)cqpoptions[i].address) = (getenv(cqpoptions[i].envvar) == NULL)
-	    ? cqpoptions[i].idefault
-	    : atoi(getenv(cqpoptions[i].envvar));
-	else
-	  *((int *)cqpoptions[i].address) = cqpoptions[i].idefault;
-	break;
+        if (cqpoptions[i].envvar != NULL)
+          *((int *)cqpoptions[i].address) = (getenv(cqpoptions[i].envvar) == NULL)
+            ? cqpoptions[i].idefault
+            : atoi(getenv(cqpoptions[i].envvar));
+        else
+          *((int *)cqpoptions[i].address) = cqpoptions[i].idefault;
+        break;
       default:
-	break;
+        break;
       }
     }
   }
@@ -440,7 +447,7 @@ void set_default_option_values()
   cqp_init_file = NULL;
   macro_init_file = 0;
   inhibit_activation = 0;
-  handle_sigpipe = 1;	
+  handle_sigpipe = 1;
 
   initialize_context_descriptor(&CD);
   CD.left_width = DEFAULT_CONTEXT;
@@ -454,14 +461,14 @@ void set_default_option_values()
   ExternalSortingCommand = cl_strdup(DEFAULT_EXTERNAL_SORTING_COMMAND);
   ExternalGroupingCommand = cl_strdup(DEFAULT_EXTERNAL_GROUPING_COMMAND);
  
-  private_server = 0;		/* CQPserver options */
+  private_server = 0;                /* CQPserver options */
   server_port = 0;
   server_quit = 0;
   localhost = 0;
 
-  matching_strategy = standard_match;	/* unfortunately, this is not automatically derived from the defaults */
+  matching_strategy = standard_match;        /* unfortunately, this is not automatically derived from the defaults */
 
-  tested_pager = NULL;		/* this will be set to the PAGER command if that can be successfully run */
+  tested_pager = NULL;                /* this will be set to the PAGER command if that can be successfully run */
 
 
   /* execute some side effects for default values */
@@ -469,6 +476,18 @@ void set_default_option_values()
   cl_set_optimize(query_optimize);
 }
 
+
+/**
+ * Finds the index of an option.
+ *
+ * Return the index in the global options array of the option with name
+ * s. This should be never called from outside.
+ *
+ * @see      cqpoptions
+ * @param s  Name of the option to find.
+ * @return   Index of element in cqpoptions corresponding to the name s,
+ *           or -1 if no corresponding element was found.
+ */
 int find_option(char *s)
 {
   int i;
@@ -479,13 +498,20 @@ int find_option(char *s)
   /* if no option of given name was found, try abbrevs */
   for (i = 0; cqpoptions[i].opt_name != NULL; i++)
     if ((cqpoptions[i].opt_abbrev != NULL) 
-	&& (strcasecmp(cqpoptions[i].opt_abbrev, s) == 0))
+        && (strcasecmp(cqpoptions[i].opt_abbrev, s) == 0))
       return i;
   
   return -1;
 }
 
-void execute_side_effects(int opt)
+
+/**
+ * Carries out any "side effects" of setting an option.
+ *
+ * @param opt  The option that has just been set.
+ */
+void
+execute_side_effects(int opt)
 {
   switch (cqpoptions[opt].side_effect) {
   case 0:  /* <no side effect> */
@@ -556,7 +582,7 @@ void execute_side_effects(int opt)
     
   default:
     fprintf(stderr, "Unknown side-effect #%d invoked by option %s.\n", 
-	    cqpoptions[opt].side_effect, cqpoptions[opt].opt_name);
+            cqpoptions[opt].side_effect, cqpoptions[opt].opt_name);
     assert(0 && "Aborted. Please contact technical support.");
   }
 }
@@ -574,12 +600,12 @@ int validate_string_option_value(int opt, char *value)
       fprintf(stderr, "Validating ... %s\n", value);
     
       if ((dp = opendir(value)) != NULL) {
-	closedir(dp);
-	return 1;
+        closedir(dp);
+        return 1;
       }
       else {
-	perror(value);
-	return 0;
+        perror(value);
+        return 0;
       }
     }
     
@@ -593,12 +619,12 @@ int validate_string_option_value(int opt, char *value)
       DIR *dp;
     
       if ((dp = opendir(value)) != NULL) {
-	closedir(dp);
-	return 1;
+        closedir(dp);
+        return 1;
       }
       else {
-	perror(value);
-	return 0;
+        perror(value);
+        return 0;
       }
     }
     
@@ -616,7 +642,22 @@ int validate_integer_option_value(int opt, int value)
   return 1;
 }
 
-char *set_string_option_value(char *opt_name, char *value)
+
+/**
+ * Sets a string-valued option.
+ *
+ * An error string
+ * is returned if the type of the option does not correspond to
+ * the function which is called. Upon success, NULL is returned.
+ *
+ * set_string_option_value does NOT strdup the value!
+ *
+ * @param opt_name  The name of the option to set.
+ * @param value     Its new value.
+ * @return          NULL if all OK; otherwise a string describing the problem.
+ */
+char *
+set_string_option_value(char *opt_name, char *value)
 {
   int opt;
 
@@ -636,7 +677,7 @@ char *set_string_option_value(char *opt_name, char *value)
       free(*((char **)cqpoptions[opt].address));
 
     if (strcmp(cqpoptions[opt].opt_name, "Registry") == 0 ||
-	strcmp(cqpoptions[opt].opt_name, "LocalCorpusDirectory") == 0) {
+        strcmp(cqpoptions[opt].opt_name, "LocalCorpusDirectory") == 0) {
       *((char **)cqpoptions[opt].address) = expand_filename(value);
       free(value);
     }
@@ -650,7 +691,20 @@ char *set_string_option_value(char *opt_name, char *value)
     return "Illegal value for this option";
 }
 
-char *set_integer_option_value(char *opt_name, int value)
+
+/**
+ * Sets an integer or string-valued option.
+ *
+ * An error string
+ * is returned if the type of the option does not correspond to
+ * the function which is called. Upon success, NULL is returned.
+ *
+ * @param opt_name  The name of the option to set.
+ * @param value     Its new value.
+ * @return          NULL if all OK; otherwise a string describing the problem.
+ */
+char *
+set_integer_option_value(char *opt_name, int value)
 {
   int opt;
 
@@ -671,7 +725,18 @@ char *set_integer_option_value(char *opt_name, int value)
     return "Illegal value for this option";
 }
 
-char *set_context_option_value(char *opt_name, char *sval, int ival)
+
+/* these two set integer or string-valued options. An error string
+ * is returned if the type of the option does not correspond to
+ * the function which is called. Upon success, NULL is returned.
+ *
+ * @param opt_name  The name of the option to set.
+ * @param sval      String value.
+ * @param ival      Integer value.
+ * @return          NULL if all OK; otherwise a string describing the problem.
+ */
+char *
+set_context_option_value(char *opt_name, char *sval, int ival)
 {
   int opt;
 
@@ -684,48 +749,48 @@ char *set_context_option_value(char *opt_name, char *sval, int ival)
   else if (cqpoptions[opt].type == OptContext) {
 
     if (sval == NULL ||
-	strcasecmp(sval, "character") == 0 ||
-	strcasecmp(sval, "char") == 0 ||
-	strcasecmp(sval, "chars") == 0 ||
-	strcasecmp(sval, "characters") == 0)
+        strcasecmp(sval, "character") == 0 ||
+        strcasecmp(sval, "char") == 0 ||
+        strcasecmp(sval, "chars") == 0 ||
+        strcasecmp(sval, "characters") == 0)
       context_type = CHAR_CONTEXT;
     else if (strcasecmp(sval, "word") == 0 ||
-	     strcasecmp(sval, "words") == 0)
+             strcasecmp(sval, "words") == 0)
       context_type = WORD_CONTEXT;
     else
       context_type = STRUC_CONTEXT;
 
     if ((strcasecmp(opt_name, "LeftContext") == 0)
-	|| (strcasecmp(opt_name, "lc") == 0)) {
+        || (strcasecmp(opt_name, "lc") == 0)) {
 
       CD.left_structure = NULL;
       CD.left_type = context_type;
       CD.left_width = ival;
       cl_free(CD.left_structure_name);
       if (context_type == STRUC_CONTEXT) {
-	CD.left_structure_name = cl_strdup(sval);
+        CD.left_structure_name = cl_strdup(sval);
       }
     }
     else if ((strcasecmp(opt_name, "RightContext") == 0)
-	     || (strcasecmp(opt_name, "rc") == 0)) {
+             || (strcasecmp(opt_name, "rc") == 0)) {
 
       CD.right_structure = NULL;
       CD.right_type = context_type;
       CD.right_width = ival;
       cl_free(CD.right_structure_name);
       if (context_type == STRUC_CONTEXT) {
-	CD.right_structure_name = cl_strdup(sval);
+        CD.right_structure_name = cl_strdup(sval);
       }
     }
     else if ((strcasecmp(opt_name, "Context") == 0)
-	     || (strcasecmp(opt_name, "c") == 0)) {
+             || (strcasecmp(opt_name, "c") == 0)) {
       
       CD.left_structure = NULL;
       CD.left_type = context_type;
       CD.left_width = ival;
       cl_free(CD.left_structure_name);
       if (context_type == STRUC_CONTEXT) {
-	CD.left_structure_name = cl_strdup(sval);
+        CD.left_structure_name = cl_strdup(sval);
       }
       
       CD.right_structure = NULL;
@@ -733,7 +798,7 @@ char *set_context_option_value(char *opt_name, char *sval, int ival)
       CD.right_width = ival;
       cl_free(CD.right_structure_name);
       if (context_type == STRUC_CONTEXT) {
-	CD.right_structure_name = cl_strdup(sval);
+        CD.right_structure_name = cl_strdup(sval);
       }
     }
     else
@@ -748,7 +813,14 @@ char *set_context_option_value(char *opt_name, char *sval, int ival)
    return "Illegal value for this option";
 }
 
-void parse_options(int ac, char *av[]) 
+/**
+ * Parses program options and sets their default values.
+ *
+ * @param ac  The program's argc.
+ * @param av  The program's argv.
+ */
+void
+parse_options(int ac, char *av[])
 {
   extern char *optarg;
   /* optind and opterr unused, so don't declare them to keep gcc from complaining */
@@ -757,7 +829,7 @@ void parse_options(int ac, char *av[])
 
   int c;
   int opt;
-  char *valid_options = "";	/* set these depending on application */
+  char *valid_options = "";        /* set these depending on application */
 
   insecure = 0;
 
@@ -796,7 +868,7 @@ void parse_options(int ac, char *av[])
     valid_options = "+1b:d:D:FhI:l:LmM:P:qr:Svx";
     break;
   default:
-    syntax();			/* this will display the 'unknown application' message */
+    syntax();                        /* this will display the 'unknown application' message */
   }
 
   while ((c = getopt(ac, av, valid_options)) != EOF)
@@ -828,8 +900,8 @@ void parse_options(int ac, char *av[])
 
     case 'E':
       if ((query_string = getenv(optarg)) == NULL) {
-	fprintf(stderr, "Environment variable %s has no value, exiting\n", optarg);
-	exit(1);
+        fprintf(stderr, "Environment variable %s has no value, exiting\n", optarg);
+        exit(1);
       }
       break;
 
@@ -850,45 +922,45 @@ void parse_options(int ac, char *av[])
       break;
 
     case 'm':
-      enable_macros = 0;	/* -m = DISABLE macros */
+      enable_macros = 0;        /* -m = DISABLE macros */
 
     case 'M':
       macro_init_file = optarg;
       break;
 
     case 'P':
-      if (which_app == cqpserver)	/* this option used in different ways by cqp & cqpserver */
-	server_port = atoi(optarg);
+      if (which_app == cqpserver)        /* this option used in different ways by cqp & cqpserver */
+        server_port = atoi(optarg);
       else
-	pager = cl_strdup(optarg);
+        pager = cl_strdup(optarg);
       break;
 
     case 'd':
       if (!silent) {
 
-	opt = find_option(optarg);
-	
-	if ((opt >= 0) && (cqpoptions[opt].type == OptBoolean)) {
-	  /* TOGGLE the default value */
-	  *((int *)cqpoptions[opt].address) = cqpoptions[opt].idefault ? 0 : 1;
-	  execute_side_effects(opt);
-	}
-	else if (strcmp(optarg, "ALL") == 0) {
-	  /* set the debug values */
-	  verbose_parser = show_symtab = show_gconstraints = 
-	    show_evaltree = show_patlist = show_dfa = show_compdfa =
-	    symtab_debug = parser_debug = eval_debug = 
-	    initial_matchlist_debug = debug_simulation =
-	    search_debug = macro_debug = activate_cl_debug =
-	    server_debug = server_log = snoop = True;
-	  /* execute side effect for CLDebug option */
-	  cl_set_debug_level(activate_cl_debug);
-	}
-	else {
-	  fprintf(stderr, "Invalid debug mode: -d %s\nType '%s -h' for more information.\n",
-		  optarg, progname);
-	  exit(1);
-	}
+        opt = find_option(optarg);
+
+        if ((opt >= 0) && (cqpoptions[opt].type == OptBoolean)) {
+          /* TOGGLE the default value */
+          *((int *)cqpoptions[opt].address) = cqpoptions[opt].idefault ? 0 : 1;
+          execute_side_effects(opt);
+        }
+        else if (strcmp(optarg, "ALL") == 0) {
+          /* set the debug values */
+          verbose_parser = show_symtab = show_gconstraints =
+            show_evaltree = show_patlist = show_dfa = show_compdfa =
+            symtab_debug = parser_debug = eval_debug =
+            initial_matchlist_debug = debug_simulation =
+            search_debug = macro_debug = activate_cl_debug =
+            server_debug = server_log = snoop = True;
+          /* execute side effect for CLDebug option */
+          cl_set_debug_level(activate_cl_debug);
+        }
+        else {
+          fprintf(stderr, "Invalid debug mode: -d %s\nType '%s -h' for more information.\n",
+                  optarg, progname);
+          exit(1);
+        }
       }
       break;
     case 'h':
@@ -903,9 +975,9 @@ void parse_options(int ac, char *av[])
       break;
     case 'S':
       if (handle_sigpipe)
-	handle_sigpipe = 0;
+        handle_sigpipe = 0;
       else 
-	handle_sigpipe++;
+        handle_sigpipe++;
       break;
 
     case 'W':
@@ -914,10 +986,10 @@ void parse_options(int ac, char *av[])
       break;
 
     case 'L':
-      if (which_app == cqpserver)	/* used in different ways by cqpserver & cqp/cqpcl */
-	localhost++;			/* takes no arg with cqpserver */
+      if (which_app == cqpserver)        /* used in different ways by cqpserver & cqp/cqpcl */
+        localhost++;                        /* takes no arg with cqpserver */
       else 
-	CD.left_width = atoi(optarg);
+        CD.left_width = atoi(optarg);
       break;
 
     case 'R':
@@ -931,8 +1003,8 @@ void parse_options(int ac, char *av[])
     case 'i':
       silent = rangeoutput = True;
       verbose_parser = show_symtab = show_gconstraints = 
-	show_evaltree = show_patlist = 
-	symtab_debug = parser_debug = eval_debug = search_debug = False;
+        show_evaltree = show_patlist =
+        symtab_debug = parser_debug = eval_debug = search_debug = False;
       break;
       
     case 'c':
@@ -949,20 +1021,20 @@ void parse_options(int ac, char *av[])
     case 'f':
       silent = batchmode = True;
       verbose_parser = show_symtab = show_gconstraints = 
-	show_dfa = show_compdfa =
-	show_evaltree = show_patlist = 
-	symtab_debug = parser_debug = eval_debug = search_debug = False;
+        show_dfa = show_compdfa =
+        show_evaltree = show_patlist =
+        symtab_debug = parser_debug = eval_debug = search_debug = False;
       if (strcmp(optarg, "-") == 0) 
-	batchfd = stdin;
+        batchfd = stdin;
       else if ((batchfd = OpenFile(optarg, "r")) == NULL) {
-	perror(optarg);
-	exit(1);
+        perror(optarg);
+        exit(1);
       }
       break;
     default:
 
       fprintf(stderr, "Invalid option. Type '%s -h' for more information.\n",
-	      progname);
+              progname);
       exit(1);
       break;
     }

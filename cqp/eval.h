@@ -39,134 +39,160 @@
  */
 
 
+/**
+ * Labels a boolean operation.
+ */
+enum b_ops { b_and,      /**< boolean and operator           */
+             b_or,       /**< boolean or operator            */
+             b_implies,  /**< boolean implication (->) operator */
+             b_not,      /**< boolean negation               */
 
-enum b_ops { b_and,      /* boolean and operator           */
-             b_or,       /* boolean or operator            */
-             b_implies,  /* boolean implication (->) operator */
-             b_not,      /* boolean negation               */
+             cmp_gt,     /**< compare: greater than          */
+             cmp_lt,     /**< compare: less than             */
+             cmp_get,    /**< compare: greater or equal than */
+             cmp_let,    /**< compare: less or equal than    */
+             cmp_eq,     /**< compare: equal                 */
+             cmp_neq,    /**< compare: not equal             */
 
-             cmp_gt,     /* compare: greater than          */
-             cmp_lt,     /* compare: less than             */
-             cmp_get,    /* compare: greater or equal than */
-             cmp_let,    /* compare: less or equal than    */
-             cmp_eq,     /* compare: equal                 */
-             cmp_neq,    /* compare: not equal             */
-
-             cmp_ex      /* is value present? bool exprs   */
+             cmp_ex      /**< is value present? bool exprs   */
            };
 
 
+/**
+ * Labels the type of a {what??}.
+ */
 enum wf_type { NORMAL, REGEXP, CID };
 
-enum bnodetype { bnode,		/* boolean evaluation node            */
-		 cnode,		/* constant node                      */
-		 func,		/* function call                      */
-		 sbound,	/* structure boundary (open or close) */
-		 pa_ref,	/* reference to positional attribute  */
-		 sa_ref,	/* reference to structural attribute  */
+/**
+ * Labels the type of a boolean node.
+ */
+enum bnodetype { bnode,                 /**< boolean evaluation node            */
+                 cnode,                 /**< constant node                      */
+                 func,                  /**< function call                      */
+                 sbound,                /**< structure boundary (open or close) */
+                 pa_ref,                /**< reference to positional attribute  */
+                 sa_ref,                /**< reference to structural attribute  */
 
-		 string_leaf,	/* string constant */
-		 int_leaf,	/* integer constant */
-		 float_leaf,	/* float constant */
+                 string_leaf,           /**< string constant */
+                 int_leaf,              /**< integer constant */
+                 float_leaf,            /**< float constant */
 
-		 id_list,	/* list of IDs */
-		 var_ref	/* variable reference */
-	       };
+                 id_list,               /**< list of IDs */
+                 var_ref                /**< variable reference */
+               };
 
+/**
+ * Union of structures underlying the Constraint / Constrainttree objects.
+ *
+ * Each Constraint is a node in the Constrainttree.
+ */
 typedef union c_tree {
 
+  /** The type of this particular node.
+   * Allows the type member of the other structures within the union to be accessed. */
   enum bnodetype type;
 
-  /* "standard" operand node in the evaluation tree, type is "bnode" */
+  /** "standard" operand node in the evaluation tree; type is "bnode" */
   struct {
-    enum bnodetype type;
-    enum b_ops     op_id;      /* id no. of the bool operator   */
-    union c_tree  *left,       /* points to the first operand   */
-                  *right;      /* points to the second operand, */
-			       /* if present                    */
+    enum bnodetype type;                  /**< must be bnode                     */
+    enum b_ops     op_id;                 /**< identifier of the bool operator   */
+    union c_tree  *left,                  /**< points to the first operand       */
+                  *right;                 /**< points to the second operand,
+                                               if present                        */
   }                node;
 
-  /* "constant" node in the evaluation tree                     */
+  /** "constant" node in the evaluation tree                     */
   struct {
-    enum bnodetype type;
-    int            val;        /* 1 or 0 for true or false      */
+    enum bnodetype type;                  /**< must be cnode                     */
+    int            val;                   /**< Value of the constant: 1 or 0 for true or false */
   }                constnode;
 
-  /* function call (dynamic attribute), type is "func" */
+  /** function call (dynamic attribute), type is "func" */
   struct {
-    enum bnodetype type;
+    enum bnodetype type;                  /**< must be func                  */
     int            predef;
     Attribute     *dynattr;
-    struct _ActualParamList *args;       /* arguments of the function     */
-    int            nr_args;		 /* nr of arguments for this call */
+    struct _ActualParamList *args;        /**< arguments of the function     */
+    int            nr_args;               /**< nr of arguments for this call */
   }                func;
 
-  /* structure boundary */
+  /** structure boundary */
   struct {
-    enum bnodetype type;
-    Attribute     *strucattr;	/* the attribute which corresponds to the structure */
-    Boolean        is_closing;  /* True if closing tag, False for opening tag */
+    enum bnodetype type;                  /**< must be sbound                */
+    Attribute     *strucattr;             /**< the attribute which corresponds to the structure */
+    Boolean        is_closing;            /**< True if closing tag, False for opening tag */
   }                sbound;
 
-  /* reference to positional attribute */
+  /** reference to positional attribute */
   struct {
-    enum bnodetype type;
-    LabelEntry     label;	/* may be empty (NULL) */
-    Attribute     *attr;
-    int            delete;	/* delete label after using it ? */
+    enum bnodetype type;                  /**< must be pa_ref */
+    LabelEntry     label;                 /**< may be empty (NULL) */
+    Attribute     *attr;                  /**< the P-attribute we are referring to */
+    int            delete;                /**< delete label after using it ? */
   }                pa_ref;
 
-  /* reference to structural attribute */
-  /* if label is empty, this checks if the current position is at start
-     or end of structural_attribute and returns INT value (this is kept for
-     backward compatibility regarding lbound() and rbound() builtins; the new
-     syntax is to use <s> and </s>, which are represented as 'Tag' nodes */
-  /* if label is non-empty, the referenced S-attribute must have values, and
-     the value of the enclosing region is returned as a string; in short,
-     values of attributes can be accessed through label references */
+  /**
+   * reference to structural attribute.
+   *
+   * If label is empty, this checks if the current position is at start
+   * or end of structural_attribute and returns INT value (this is kept for
+   * backward compatibility regarding lbound() and rbound() builtins; the new
+   * syntax is to use {s} and {/s}, which are represented as 'Tag' nodes.
+   *
+   * If label is non-empty, the referenced S-attribute must have values, and
+   * the value of the enclosing region is returned as a string; in short,
+   * values of attributes can be accessed through label references .
+   */
   struct {
-    enum bnodetype type;
-    LabelEntry     label;	/* may be empty (NULL) */
-    Attribute     *attr;
-    int            delete;	/* delete label after using it ? */
+    enum bnodetype type;                  /**< must be sa_ref */
+    LabelEntry     label;                 /**< may be empty (NULL) */
+    Attribute     *attr;                  /**< the s-attribute we are referring to */
+    int            delete;                /**< delete label after using it ? */
   }                sa_ref;
 
   struct {
-    enum bnodetype type;
+    enum bnodetype type;                  /**< must be var_ref */
     char          *varName;
   }                varref;
 
   struct {
-    enum bnodetype type;
+    enum bnodetype type;                  /**< must be id_list */
     Attribute     *attr;
-    LabelEntry     label;	/* may be empty (NULL) */
+    LabelEntry     label;                 /**< may be empty (NULL) */
     int            negated;
     int            nr_items;
-    int           *items;	/* an array of item IDs of size nr_items */
-    int            delete;	/* delete label after using it ? */
+    int           *items;                 /**< an array of item IDs of size nr_items */
+    int            delete;                /**< delete label after using it ? */
   }                idlist;
 
-  /* constant (string, int, float, ...) */
+  /** constant (string, int, float, ...) */
   struct {
-    enum bnodetype type;
+    enum bnodetype type;                  /**< string_leaf, int_leaf, or float_leaf */
 
-    int            canon;     /* canonicalization mode (i.e. flags)         */
-    enum wf_type   pat_type;  /* pattern type: normal wordform or reg. exp. */
-    CL_Regex       rx;        /* compiled regular expression (using CL frontend) */
+    int            canon;                 /**< canonicalization mode (i.e. flags)         */
+    enum wf_type   pat_type;              /**< pattern type: normal wordform or reg. exp. */
+    CL_Regex       rx;                    /**< compiled regular expression (using CL frontend) */
 
+    /** Union containing the constant type. */
     union {
-      char         *sconst;     /* operand is a string constant.           */
-      int           iconst;     /* operand is a integer constant.          */
-      int           cidconst;
-      double        fconst;
-    }               ctype;      /* constant type.                */
-  }                 leaf;
+      char        *sconst;               /**< operand is a string constant.           */
+      int          iconst;               /**< operand is a integer constant.          */
+      int          cidconst;             /**< operand is {?? corpus position??} constant */
+      double       fconst;               /**< operand is a float (well, double) constant */
+    }              ctype;
+  }                leaf;
 } Constraint;
 
+/**
+ * The Constrainttree object.
+ */
 typedef Constraint * Constrainttree;
 
 
-
+/**
+ * The ActualParamList object: used to build a linked list of parameters,
+ * each one of which is a Constrainttree.
+ */
 typedef struct _ActualParamList {
   Constrainttree param;
   struct _ActualParamList *next;
@@ -175,15 +201,15 @@ typedef struct _ActualParamList {
 
 enum tnodetype { node, leaf, meet_union, tabular };
 
-enum re_ops  { re_od_concat,	/* order dependent concat.   */
-	       re_oi_concat,	/* order independent concat. */
-	       re_disj,		/* disjunction               */
-	       re_repeat	/* repetition ({n} and {n,k})*/
-	     };
+enum re_ops  { re_od_concat,        /* order dependent concat.   */
+               re_oi_concat,        /* order independent concat. */
+               re_disj,                /* disjunction               */
+               re_repeat        /* repetition ({n} and {n,k})*/
+             };
 
 enum cooc_op { cooc_meet,
-	       cooc_union
-	     };
+               cooc_union
+             };
 
 
 typedef union e_tree *Evaltree;
@@ -201,7 +227,7 @@ union e_tree {
     enum re_ops    op_id;      /* id_number of the RE operator */
     Evaltree       left,       /* points to the first argument */
                    right;      /* points to the second argument -- */
-			       /* if it exists.                    */
+                               /* if it exists.                    */
     int            min,        /* minimum number of repetitions.  */
                    max;        /* maximum number of repetitions.  */
   }                node;
@@ -224,10 +250,10 @@ union e_tree {
   struct {
     enum tnodetype type;
 
-    int patindex;		/* index into pattern list */
-    int min_dist;		/* minimal and maximal distance to next pattern */
+    int patindex;                /* index into pattern list */
+    int min_dist;                /* minimal and maximal distance to next pattern */
     int max_dist;
-    Evaltree       next;	/* next pattern */
+    Evaltree       next;        /* next pattern */
   }                tab_el;
 
 };
@@ -245,36 +271,36 @@ typedef union _avs {
 
   /* a matchall item */
   struct {
-    AVSType type;		/* MatchAll */
+    AVSType type;                /* MatchAll */
     LabelEntry label;
     Boolean is_target;
-    Boolean lookahead;		/* whether pattern is just a lookahead constraint */
+    Boolean lookahead;                /* whether pattern is just a lookahead constraint */
   } matchall;
 
   /* a constraint tree */
   struct {
-    AVSType type;		/* Pattern */
+    AVSType type;                /* Pattern */
     LabelEntry label;
     Constrainttree constraint;
     Boolean is_target;
-    Boolean lookahead;		/* whether pattern is just a lookahead constraint */
+    Boolean lookahead;                /* whether pattern is just a lookahead constraint */
   } con;
 
   /* a structure describing tag */
   struct {
-    AVSType type;		/* Tag */
+    AVSType type;                /* Tag */
     int is_closing;
     Attribute *attr;
-    char *constraint;		/* constraint for annotated value of region (string or regexp); NULL = no constraint */
-    int flags;			/* flags passed to regexp or string constraint (information purposes only) */
-    CL_Regex rx;		/* if constraint is a regexp, this holds the compiled regexp; otherwise NULL */
-    int negated;		/* whether constraint is negated (!=, not matches, not contains) */
-    LabelEntry right_boundary;	/* label in RDAT namespace: contains right boundary of constraining region (in StrictRegions mode) */
+    char *constraint;                /* constraint for annotated value of region (string or regexp); NULL = no constraint */
+    int flags;                        /* flags passed to regexp or string constraint (information purposes only) */
+    CL_Regex rx;                /* if constraint is a regexp, this holds the compiled regexp; otherwise NULL */
+    int negated;                /* whether constraint is negated (!=, not matches, not contains) */
+    LabelEntry right_boundary;        /* label in RDAT namespace: contains right boundary of constraining region (in StrictRegions mode) */
   } tag;
 
   /* an anchor point tag (used in subqueries) */
   struct {
-    AVSType type;		/* Anchor */
+    AVSType type;                /* Anchor */
     int is_closing;
     FieldType field;
   } anchor;
@@ -291,49 +317,56 @@ enum ctxtdir { leftright, left, right };
 enum spacet { word, structure };
 
 typedef struct ctxtsp {
-  enum ctxtdir   direction;	/* direction of context expansion (if valid) */
-  enum spacet    type;		/* kind of space.                         */
-  Attribute     *attrib;	/* attribute representing the structure.  */
-  int            size;		/* size of space in number of structures. */
-  int            size2;		/* only for meet-context                  */
+  enum ctxtdir   direction;        /* direction of context expansion (if valid) */
+  enum spacet    type;                /* kind of space.                         */
+  Attribute     *attrib;        /* attribute representing the structure.  */
+  int            size;                /* size of space in number of structures. */
+  int            size2;                /* only for meet-context                  */
 } Context;
 
 
 /* ====================================================================== */
 
-int eep;			/* eval environment pointer */
+int eep;                            /**< eval environment pointer */
 
+/**
+ * The EvalEnvironment object: environment variables for the evaluation of
+ * a corpus query.
+ */
 typedef struct evalenv {
 
-  CorpusList *query_corpus;	/* the search corpus for this query part */
+  CorpusList *query_corpus;         /**< the search corpus for this query part */
 
-  int rp;			/* index of current range (in subqueries) */
+  int rp;                           /**< index of current range (in subqueries) */
 
-  SymbolTable labels;		/* symbol table for labels */
+  SymbolTable labels;               /**< symbol table for labels */
 
-  int MaxPatIndex;		/* the current number of patterns */
-  Patternlist patternlist;	/* global variable which holds the pattern list */
+  int MaxPatIndex;                  /**< the current number of patterns */
+  Patternlist patternlist;          /**< global variable which holds the pattern list */
 
-  Constrainttree gconstraint;	/* the "global constraint" */
+  Constrainttree gconstraint;       /**< the "global constraint" */
 
-  Evaltree evaltree;		/* the evaluation tree (with regular exprs) */
+  Evaltree evaltree;                /**< the evaluation tree (with regular exprs) */
 
-  DFA  dfa;			/* the regex NFA for the current query */
+  DFA  dfa;                         /**< the regex NFA for the current query */
 
-  int has_target_indicator;     /* is there a target mark ('@') in the query? */
-  LabelEntry target_label;      /* targets are implemented as a special label "target" now */
+  int has_target_indicator;         /**< is there a target mark ('@') in the query? */
+  LabelEntry target_label;          /**< targets are implemented as a special label "target" now */
 
-  LabelEntry match_label;	/* special "match" and "matchend"-Labels for access to start & end of match within query */
+  LabelEntry match_label;           /**< special "match" and "matchend"-Labels for access to start & end of match within query */
   LabelEntry matchend_label;
 
-  Context search_context;	/* the search context (within...) */
+  Context search_context;           /**< the search context (within...) */
 
-  Attribute *aligned;		/* the attribute holding the alignment info */
+  Attribute *aligned;               /**< the attribute holding the alignment info */
 
-  int negated;			/* 1 iff we should negate alignment constr */
+  int negated;                      /**< 1 iff we should negate alignment constr */
 
 } EvalEnvironment;
 
+/**
+ * EEPs are Eval Environment pointers.
+ */
 typedef EvalEnvironment *EEP;
 
 EvalEnvironment Environment[MAXENVIRONMENT];

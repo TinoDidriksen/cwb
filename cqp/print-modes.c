@@ -27,17 +27,30 @@
 #include "output.h"
 #include "options.h"
 
+/** String containing print structure separators */
 #define PRINT_STRUC_SEP ": ,"
 
 /* ---------------------------------------------------------------------- */
 
+/** Global print-mode setting. */
 PrintMode GlobalPrintMode = PrintASCII;
 
+/** Global print-options: all booleans initially set to false */
 PrintOptions GlobalPrintOptions = { 0, 0, 0, 0, 0 };
 
 /* ---------------------------------------------------------------------- */
 
-AttributeList *ComputePrintStructures(CorpusList *cl)
+
+/**
+ * Computes a list of s-attributes to print from the PrintStructure global option setting.
+ *
+ * PrintStructure is itself updated.
+ *
+ * @param cl  The corpus from which to find the attributes.
+ * @return    An attribute list containing the attributes to be printed.
+ */
+AttributeList *
+ComputePrintStructures(CorpusList *cl)
 {
   if (printStructure == NULL || printStructure[0] == '\0' || cl == NULL)
     return NULL;
@@ -58,35 +71,35 @@ AttributeList *ComputePrintStructures(CorpusList *cl)
     while (token) {
 
       if ((struc = find_attribute(cl->corpus, token, ATT_STRUC, NULL))
-	  == NULL) {
-	cqpmessage(Warning,
-		   "Structure ``%s'' not declared for corpus ``%s''.",
-		   token, cl->corpus->registry_name);
+          == NULL) {
+        cqpmessage(Warning,
+                   "Structure ``%s'' not declared for corpus ``%s''.",
+                   token, cl->corpus->registry_name);
       }
       else if (!structure_has_values(struc)) {
-	cqpmessage(Warning, "Structure ``%s'' does not have any values.",
-		   token);
-	struc = NULL;
+        cqpmessage(Warning, "Structure ``%s'' does not have any values.",
+                   token);
+        struc = NULL;
       }
 
       if (struc) {
-	if (al == NULL)
-	  al = NewAttributeList(ATT_STRUC);
+        if (al == NULL)
+          al = NewAttributeList(ATT_STRUC);
 
-	(void) AddNameToAL(al, token, 1, 0);
+        (void) AddNameToAL(al, token, 1, 0);
       }
       token = strtok(NULL, PRINT_STRUC_SEP);
     }
 
     if (al) {
       if (!VerifyList(al, cl->corpus, 1)) {
-	cqpmessage(Error,
-		   "Problems while computing print structure list");
-	DestroyAttributeList(&al);
-	al = NULL;
+        cqpmessage(Error,
+                   "Problems while computing print structure list");
+        DestroyAttributeList(&al);
+        al = NULL;
       }
       else if (!al->list)
-	DestroyAttributeList(&al);
+        DestroyAttributeList(&al);
     }
 
     /* rebuild printStructure string to show only valid attributes */
@@ -95,7 +108,7 @@ AttributeList *ComputePrintStructures(CorpusList *cl)
     ai = (al) ? al->list : NULL;
     while (ai != NULL) {
       if (p != printStructure)
-	*p++ = ' ';		/* insert blank between attributes */
+        *p++ = ' ';                /* insert blank between attributes */
       sprintf(p, "%s", ai->attribute->any.name);
       p += strlen(p);
       ai = ai->next;
@@ -107,14 +120,24 @@ AttributeList *ComputePrintStructures(CorpusList *cl)
   return NULL;
 }
 
+/**
+ * This function doesn't do anything yet.
+ */
 void
-ResetPrintOptions()
+ResetPrintOptions(void)
 {
   /* ??? */
 }
 
+
+/**
+ * Reads the global string printModeOptions and parses it to update the GlobalPrintOptions.
+ *
+ * @see printModeOptions
+ * @see GlobalPrintOptions
+ */
 void
-ParsePrintOptions()
+ParsePrintOptions(void)
 {
   if (printModeOptions) {
 
@@ -131,36 +154,42 @@ ParsePrintOptions()
     while (token) {
 
       if (strncasecmp(token, "no", 2) == 0) {
-	value = 0;
-	token += 2;
+        value = 0;
+        token += 2;
       }
       else
-	value = 1;
+        value = 1;
 
       if (strcasecmp(token, "wrap") == 0) {
-	GlobalPrintOptions.print_wrap = value;
+        GlobalPrintOptions.print_wrap = value;
       }
       else if ((strcasecmp(token, "table") == 0) || (strcasecmp(token, "tbl") == 0)) {
-	GlobalPrintOptions.print_tabular = value;
+        GlobalPrintOptions.print_tabular = value;
       }
       else if ((strcasecmp(token, "header") == 0) || (strcasecmp(token, "hdr") == 0)) {
-	GlobalPrintOptions.print_header = value;
+        GlobalPrintOptions.print_header = value;
       }
       else if ((strcasecmp(token, "border") == 0) || (strcasecmp(token, "bdr") == 0)) {
-	GlobalPrintOptions.print_border = value;
+        GlobalPrintOptions.print_border = value;
       }
       else if ((strcasecmp(token, "number") == 0) || (strcasecmp(token, "num") == 0)) {
-	GlobalPrintOptions.number_lines = value;
+        GlobalPrintOptions.number_lines = value;
       }
       else if (!silent)
-	fprintf(stderr, "Warning: %s: unknown print option\n",
-		token);
+        fprintf(stderr, "Warning: %s: unknown print option\n",
+                token);
 
       token = strtok(NULL, " \t\n,.");
     }
   }
 }
 
+/**
+ * Copies a PrintOptions object.
+ *
+ * @param target  The PrintOptions object to be overwritten.
+ * @param source  The PrintOptions object to copy.
+ */
 void
 CopyPrintOptions(PrintOptions *target, PrintOptions *source)
 {

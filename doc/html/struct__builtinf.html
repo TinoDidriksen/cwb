@@ -23,17 +23,21 @@
   </div>
 </div>
 <div class="contents">
-<h1>_builtinf Struct Reference</h1><!-- doxytag: class="_builtinf" --><code>#include &lt;builtins.h&gt;</code>
+<h1>_builtinf Struct Reference</h1><!-- doxytag: class="_builtinf" -->The BuiltinF object represents a built-in function.  
+<a href="#_details">More...</a>
+<p>
+<code>#include &lt;builtins.h&gt;</code>
 <p>
 <h2>Data Fields</h2>
 <ul>
 <li>int <a class="el" href="struct__builtinf.html#7441ef0865bcb3db9b8064dd7375c1ea">id</a>
-<li>char * <a class="el" href="struct__builtinf.html#5ac083a645d964373f022d03df4849c8">name</a>
-<li>int <a class="el" href="struct__builtinf.html#faf2ce248317fc835cad0f8cc3b60a22">nr_args</a>
-<li>int * <a class="el" href="struct__builtinf.html#f9bee17c6b1d831feb7a9111060ac837">argtypes</a>
-<li>int <a class="el" href="struct__builtinf.html#9824b00dd23d16dd617bb52ae90bdb74">result_type</a>
-</ul>
-<hr><h2>Field Documentation</h2>
+<dl class="el"><dd class="mdescRight">The id code of this function.  <a href="#7441ef0865bcb3db9b8064dd7375c1ea"></a><br></dl><li>char * <a class="el" href="struct__builtinf.html#5ac083a645d964373f022d03df4849c8">name</a>
+<dl class="el"><dd class="mdescRight">The name of this function.  <a href="#5ac083a645d964373f022d03df4849c8"></a><br></dl><li>int <a class="el" href="struct__builtinf.html#faf2ce248317fc835cad0f8cc3b60a22">nr_args</a>
+<dl class="el"><dd class="mdescRight">How many arguments the function has.  <a href="#faf2ce248317fc835cad0f8cc3b60a22"></a><br></dl><li>int * <a class="el" href="struct__builtinf.html#f9bee17c6b1d831feb7a9111060ac837">argtypes</a>
+<dl class="el"><dd class="mdescRight">Address of an ordered array of argument types ("types" are ATTAT_x constants).  <a href="#f9bee17c6b1d831feb7a9111060ac837"></a><br></dl><li>int <a class="el" href="struct__builtinf.html#9824b00dd23d16dd617bb52ae90bdb74">result_type</a>
+<dl class="el"><dd class="mdescRight">Type of the function's result ("types" are ATTAT_x constants).  <a href="#9824b00dd23d16dd617bb52ae90bdb74"></a><br></dl></ul>
+<hr><a name="_details"></a><h2>Detailed Description</h2>
+The BuiltinF object represents a built-in function. <hr><h2>Field Documentation</h2>
 <a class="anchor" name="f9bee17c6b1d831feb7a9111060ac837"></a><!-- doxytag: member="_builtinf::argtypes" ref="f9bee17c6b1d831feb7a9111060ac837" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -45,6 +49,8 @@
 </div>
 <div class="memdoc">
 
+<p>
+Address of an ordered array of argument types ("types" are ATTAT_x constants). 
 <p>
 
 </div>
@@ -61,6 +67,9 @@
 <div class="memdoc">
 
 <p>
+The id code of this function. 
+<p>
+<dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="builtins_8h.html#58b600ee9f8c217ac9a71d26ad0c59e1" title="Calls a predefined function from the built_function array.">call_predefined_function</a> </dd></dl>
 
 </div>
 </div><p>
@@ -75,6 +84,8 @@
 </div>
 <div class="memdoc">
 
+<p>
+The name of this function. 
 <p>
 
 <p>Referenced by <a class="el" href="builtins_8h.html#d197e5550481ee3428959dc468d95d3a">find_predefined()</a>, and <a class="el" href="tree_8h.html#1d06971a1727bddf03c6274c57989c75">print_booltree()</a>.</p>
@@ -93,6 +104,8 @@
 <div class="memdoc">
 
 <p>
+How many arguments the function has. 
+<p>
 
 </div>
 </div><p>
@@ -108,13 +121,15 @@
 <div class="memdoc">
 
 <p>
+Type of the function's result ("types" are ATTAT_x constants). 
+<p>
 
 </div>
 </div><p>
 <hr>The documentation for this struct was generated from the following file:<ul>
 <li>cqp/<a class="el" href="builtins_8h.html">builtins.h</a></ul>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Fri Sep 25 21:50:33 2009 for CWB by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Sat Sep 26 22:58:31 2009 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

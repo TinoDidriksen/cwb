@@ -31,15 +31,15 @@
 <h2>Data Structures</h2>
 <ul>
 <li>struct <a class="el" href="struct___range.html">_Range</a>
-<dl class="el"><dd class="mdescRight"><a class="el" href="struct_range.html">Range</a> object: represents an S-attribute being encoded.  <a href="struct___range.html#_details">More...</a><br></dl><li>struct <a class="el" href="structcl.html">cl</a>
-</ul>
+<dl class="el"><dd class="mdescRight">The <a class="el" href="struct_range.html">Range</a> object represents a range of corpus positions.  <a href="struct___range.html#_details">More...</a><br></dl><li>struct <a class="el" href="structcl.html">cl</a>
+<dl class="el"><dd class="mdescRight">The CorpusList object records information on a corpus that CQP recognises.  <a href="structcl.html#_details">More...</a><br></dl></ul>
 <h2>Typedefs</h2>
 <ul>
 <li>typedef enum <a class="el" href="corpmanag_8h.html#d831993de681337ae44f6bcccbc42d8c">_field_type</a> <a class="el" href="corpmanag_8h.html#f1a7d1a8ccee70c4d8bc6c5302a0df0f">FieldType</a>
-<li>typedef enum <a class="el" href="corpmanag_8h.html#b595f682e895370f86580c128681d88e">corpus_type</a> <a class="el" href="corpmanag_8h.html#08ba0140010dcdd3b9f641ecf9f81299">CorpusType</a>
-<li>typedef struct <a class="el" href="struct___range.html">_Range</a> <a class="el" href="corpmanag_8h.html#3598e71226b071a490c44639a5cb8ef7">Range</a>
-<li>typedef struct <a class="el" href="structcl.html">cl</a> <a class="el" href="corpmanag_8h.html#c1be873ef43cd4e8e73a2904f4aaa99a">CorpusList</a>
-</ul>
+<dl class="el"><dd class="mdescRight">The FieldType object represents the fields (or 'anchor points') of a subcorpus (inc query result).  <a href="#f1a7d1a8ccee70c4d8bc6c5302a0df0f"></a><br></dl><li>typedef enum <a class="el" href="corpmanag_8h.html#b595f682e895370f86580c128681d88e">corpus_type</a> <a class="el" href="corpmanag_8h.html#08ba0140010dcdd3b9f641ecf9f81299">CorpusType</a>
+<dl class="el"><dd class="mdescRight">The CorpusType object.  <a href="#08ba0140010dcdd3b9f641ecf9f81299"></a><br></dl><li>typedef struct <a class="el" href="struct___range.html">_Range</a> <a class="el" href="corpmanag_8h.html#3598e71226b071a490c44639a5cb8ef7">Range</a>
+<dl class="el"><dd class="mdescRight">The <a class="el" href="struct_range.html">Range</a> object represents a range of corpus positions.  <a href="#3598e71226b071a490c44639a5cb8ef7"></a><br></dl><li>typedef struct <a class="el" href="structcl.html">cl</a> <a class="el" href="corpmanag_8h.html#c1be873ef43cd4e8e73a2904f4aaa99a">CorpusList</a>
+<dl class="el"><dd class="mdescRight">The CorpusList object records information on a corpus that CQP recognises.  <a href="#c1be873ef43cd4e8e73a2904f4aaa99a"></a><br></dl></ul>
 <h2>Enumerations</h2>
 <ul>
 <li>enum <a class="el" href="corpmanag_8h.html#d831993de681337ae44f6bcccbc42d8c">_field_type</a> { <br>
@@ -51,7 +51,7 @@
 &nbsp;&nbsp;<a class="el" href="corpmanag_8h.html#d831993de681337ae44f6bcccbc42d8ce1b5487a3a59e85cdef93ded06a9144e">NoField</a>
 <br>
  }
-<li>enum <a class="el" href="corpmanag_8h.html#b595f682e895370f86580c128681d88e">corpus_type</a> { <br>
+<dl class="el"><dd class="mdescRight">The FieldType object represents the fields (or 'anchor points') of a subcorpus (inc query result).  <a href="corpmanag_8h.html#d831993de681337ae44f6bcccbc42d8c">More...</a><br></dl><li>enum <a class="el" href="corpmanag_8h.html#b595f682e895370f86580c128681d88e">corpus_type</a> { <br>
 &nbsp;&nbsp;<a class="el" href="corpmanag_8h.html#b595f682e895370f86580c128681d88e632fa39438c1676b435ec43e6a0f9647">UNDEF</a>, 
 <a class="el" href="corpmanag_8h.html#b595f682e895370f86580c128681d88e57cc238145ec1361c72c327674c0d754">SYSTEM</a>, 
 <a class="el" href="corpmanag_8h.html#b595f682e895370f86580c128681d88e12b733d4941495e86811fe6ceeeff9da">SUB</a>, 
@@ -60,19 +60,19 @@
 &nbsp;&nbsp;<a class="el" href="corpmanag_8h.html#b595f682e895370f86580c128681d88eb1d5eac4b1dca480c8056eaea7663b7a">ALL</a>
 <br>
  }
-<li>enum <a class="el" href="corpmanag_8h.html#2499845cf1a7faad4b8a53bd342d27c0">case_mode</a> { <a class="el" href="corpmanag_8h.html#2499845cf1a7faad4b8a53bd342d27c0a1017e9b343135a54a98b6f479354d16">LOWER</a>, 
+<dl class="el"><dd class="mdescRight">Underlying enumeration for CorpusType.  <a href="corpmanag_8h.html#b595f682e895370f86580c128681d88e">More...</a><br></dl><li>enum <a class="el" href="corpmanag_8h.html#2499845cf1a7faad4b8a53bd342d27c0">case_mode</a> { <a class="el" href="corpmanag_8h.html#2499845cf1a7faad4b8a53bd342d27c0a1017e9b343135a54a98b6f479354d16">LOWER</a>, 
 <a class="el" href="corpmanag_8h.html#2499845cf1a7faad4b8a53bd342d27c0e704d5d328a8522a6193aa3efb28c724">UPPER</a>
  }
-</ul>
+<dl class="el"><dd class="mdescRight">Creates an enumeration for lowercase vs.  <a href="corpmanag_8h.html#2499845cf1a7faad4b8a53bd342d27c0">More...</a><br></dl></ul>
 <h2>Functions</h2>
 <ul>
 <li><a class="el" href="corpmanag_8h.html#f1a7d1a8ccee70c4d8bc6c5302a0df0f">FieldType</a> <a class="el" href="corpmanag_8h.html#746b800ffb51e8f93719735b06e40a54">field_name_to_type</a> (char *name)
 <li>char * <a class="el" href="corpmanag_8h.html#d2588618f203b25735702d8f2ef33223">field_type_to_name</a> (<a class="el" href="corpmanag_8h.html#f1a7d1a8ccee70c4d8bc6c5302a0df0f">FieldType</a> field)
 <li>int <a class="el" href="corpmanag_8h.html#dc9f5a50505b0d2c360f904272cc9a4e">NrFieldValues</a> (<a class="el" href="structcl.html">CorpusList</a> *<a class="el" href="structcl.html">cl</a>, <a class="el" href="corpmanag_8h.html#f1a7d1a8ccee70c4d8bc6c5302a0df0f">FieldType</a> ft)
 <li>void <a class="el" href="corpmanag_8h.html#03871eef560c68779ca07a668f27f603">init_corpuslist</a> (void)
-<li>void <a class="el" href="corpmanag_8h.html#204af03e1c4c39f8366a65fd927ab2a6">free_corpuslist</a> (void)
-<li><a class="el" href="structcl.html">CorpusList</a> * <a class="el" href="corpmanag_8h.html#083e2fc50265fe909261db284153f811">findcorpus</a> (char *s, enum <a class="el" href="corpmanag_8h.html#b595f682e895370f86580c128681d88e">corpus_type</a> type, int try_recursive_search)
-<li>void <a class="el" href="corpmanag_8h.html#411a4b044a2214dc19180334cbcd1601">dropcorpus</a> (<a class="el" href="structcl.html">CorpusList</a> *<a class="el" href="structcl.html">cl</a>)
+<dl class="el"><dd class="mdescRight">Initialises the global corpus list (sets it to NULL, no matter what its value was).  <a href="#03871eef560c68779ca07a668f27f603"></a><br></dl><li>void <a class="el" href="corpmanag_8h.html#204af03e1c4c39f8366a65fd927ab2a6">free_corpuslist</a> (void)
+<dl class="el"><dd class="mdescRight">Frees the global list of currently-loaded corpora.  <a href="#204af03e1c4c39f8366a65fd927ab2a6"></a><br></dl><li><a class="el" href="structcl.html">CorpusList</a> * <a class="el" href="corpmanag_8h.html#083e2fc50265fe909261db284153f811">findcorpus</a> (char *s, enum <a class="el" href="corpmanag_8h.html#b595f682e895370f86580c128681d88e">corpus_type</a> type, int try_recursive_search)
+<dl class="el"><dd class="mdescRight">finds the pointer to the corpus with name s (strcmp), no case conversion is done.  <a href="#083e2fc50265fe909261db284153f811"></a><br></dl><li>void <a class="el" href="corpmanag_8h.html#411a4b044a2214dc19180334cbcd1601">dropcorpus</a> (<a class="el" href="structcl.html">CorpusList</a> *<a class="el" href="structcl.html">cl</a>)
 <li><a class="el" href="structcl.html">CorpusList</a> * <a class="el" href="corpmanag_8h.html#b20d278862cada0d5427b8232a3b69ad">duplicate_corpus</a> (<a class="el" href="structcl.html">CorpusList</a> *<a class="el" href="structcl.html">cl</a>, char *new_name, <a class="el" href="cqp_8h.html#2d275961e4a2bd704dde5f6a5d27f880">Boolean</a> force_overwrite)
 <li><a class="el" href="structcl.html">CorpusList</a> * <a class="el" href="corpmanag_8h.html#3567391cc22d572100bf63c0733b87ff">make_temp_corpus</a> (<a class="el" href="structcl.html">CorpusList</a> *<a class="el" href="structcl.html">cl</a>, char *new_name)
 <li><a class="el" href="structcl.html">CorpusList</a> * <a class="el" href="corpmanag_8h.html#f5eed52e11c9ca3a493ab6176fb9af54">assign_temp_to_sub</a> (<a class="el" href="structcl.html">CorpusList</a> *tmp, char *subname)
@@ -83,20 +83,20 @@
 <li><a class="el" href="cqp_8h.html#2d275961e4a2bd704dde5f6a5d27f880">Boolean</a> <a class="el" href="corpmanag_8h.html#eaedbbdc6a5276d3954fc75eb60426e6">valid_subcorpus_name</a> (char *corpusname)
 <li><a class="el" href="cqp_8h.html#2d275961e4a2bd704dde5f6a5d27f880">Boolean</a> <a class="el" href="corpmanag_8h.html#a5a6fe5bd7365a79df398ce420710304">is_qualified</a> (char *corpusname)
 <li>char * <a class="el" href="corpmanag_8h.html#42daf0609526717971c6ea704f544720">split_subcorpus_name</a> (char *corpusname, char *mother_name)
-<li><a class="el" href="cqp_8h.html#2d275961e4a2bd704dde5f6a5d27f880">Boolean</a> <a class="el" href="corpmanag_8h.html#e8901e96861c947b4fa68df2c2b423de">save_subcorpus</a> (<a class="el" href="structcl.html">CorpusList</a> *<a class="el" href="structcl.html">cl</a>, char *fname)
+<dl class="el"><dd class="mdescRight">Splits a query result corpus-name into qualifier and local name.  <a href="#42daf0609526717971c6ea704f544720"></a><br></dl><li><a class="el" href="cqp_8h.html#2d275961e4a2bd704dde5f6a5d27f880">Boolean</a> <a class="el" href="corpmanag_8h.html#e8901e96861c947b4fa68df2c2b423de">save_subcorpus</a> (<a class="el" href="structcl.html">CorpusList</a> *<a class="el" href="structcl.html">cl</a>, char *fname)
 <li>void <a class="el" href="corpmanag_8h.html#e509346bd5e7c713d70748e9926f1cdd">save_unsaved_subcorpora</a> ()
 <li><a class="el" href="structcl.html">CorpusList</a> * <a class="el" href="corpmanag_8h.html#1af5319b5b9b70c3b0847c504252421e">FirstCorpusFromList</a> ()
-<li><a class="el" href="structcl.html">CorpusList</a> * <a class="el" href="corpmanag_8h.html#c1186e909e920e22de20975a6a5f43f5">NextCorpusFromList</a> (<a class="el" href="structcl.html">CorpusList</a> *<a class="el" href="structcl.html">cl</a>)
-<li>int <a class="el" href="corpmanag_8h.html#8620a08c033dbc0f5b90fc81a028ff14">set_current_corpus</a> (<a class="el" href="structcl.html">CorpusList</a> *cp, int force)
-<li>int <a class="el" href="corpmanag_8h.html#9ba7a43161a1082a4db9b0f4d1a47f48">set_current_corpus_name</a> (char *name, int force)
-<li><a class="el" href="cqp_8h.html#2d275961e4a2bd704dde5f6a5d27f880">Boolean</a> <a class="el" href="corpmanag_8h.html#3f5760d1adaed5f55433209860c70fc1">touch_corpus</a> (<a class="el" href="structcl.html">CorpusList</a> *cp)
-<li>void <a class="el" href="corpmanag_8h.html#93a0fe59766df5ffa3e14b0fb7522971">show_corpora_files</a> (enum <a class="el" href="corpmanag_8h.html#b595f682e895370f86580c128681d88e">corpus_type</a> type)
+<dl class="el"><dd class="mdescRight">Gets the CorpusList pointer for the first corpus on the currently-loaded list.  <a href="#1af5319b5b9b70c3b0847c504252421e"></a><br></dl><li><a class="el" href="structcl.html">CorpusList</a> * <a class="el" href="corpmanag_8h.html#c1186e909e920e22de20975a6a5f43f5">NextCorpusFromList</a> (<a class="el" href="structcl.html">CorpusList</a> *<a class="el" href="structcl.html">cl</a>)
+<dl class="el"><dd class="mdescRight">Gets the CorpusList pointer for the next corpus on the currently-loaded list.  <a href="#c1186e909e920e22de20975a6a5f43f5"></a><br></dl><li>int <a class="el" href="corpmanag_8h.html#8620a08c033dbc0f5b90fc81a028ff14">set_current_corpus</a> (<a class="el" href="structcl.html">CorpusList</a> *cp, int force)
+<dl class="el"><dd class="mdescRight">Sets the current corpus (by pointer to the corpus).  <a href="#8620a08c033dbc0f5b90fc81a028ff14"></a><br></dl><li>int <a class="el" href="corpmanag_8h.html#9ba7a43161a1082a4db9b0f4d1a47f48">set_current_corpus_name</a> (char *name, int force)
+<dl class="el"><dd class="mdescRight">Sets the current corpus (by name).  <a href="#9ba7a43161a1082a4db9b0f4d1a47f48"></a><br></dl><li><a class="el" href="cqp_8h.html#2d275961e4a2bd704dde5f6a5d27f880">Boolean</a> <a class="el" href="corpmanag_8h.html#3f5760d1adaed5f55433209860c70fc1">touch_corpus</a> (<a class="el" href="structcl.html">CorpusList</a> *cp)
+<dl class="el"><dd class="mdescRight">Touches a corpus, ie, marks it as changed.  <a href="#3f5760d1adaed5f55433209860c70fc1"></a><br></dl><li>void <a class="el" href="corpmanag_8h.html#93a0fe59766df5ffa3e14b0fb7522971">show_corpora_files</a> (enum <a class="el" href="corpmanag_8h.html#b595f682e895370f86580c128681d88e">corpus_type</a> type)
 </ul>
 <h2>Variables</h2>
 <ul>
 <li><a class="el" href="structcl.html">CorpusList</a> * <a class="el" href="corpmanag_8h.html#1f1c9e6e4dec994353f8d8ee00f38faa">current_corpus</a>
-<li><a class="el" href="structcl.html">CorpusList</a> * <a class="el" href="corpmanag_8h.html#220e504e73789733727e6565941ce2c0">corpuslist</a>
-</ul>
+<dl class="el"><dd class="mdescRight">Global pointer to the "current" corpus.  <a href="#1f1c9e6e4dec994353f8d8ee00f38faa"></a><br></dl><li><a class="el" href="structcl.html">CorpusList</a> * <a class="el" href="corpmanag_8h.html#220e504e73789733727e6565941ce2c0">corpuslist</a>
+<dl class="el"><dd class="mdescRight">Global pointer to the head of CQP's linked list of corpora.  <a href="#220e504e73789733727e6565941ce2c0"></a><br></dl></ul>
 <hr><h2>Typedef Documentation</h2>
 <a class="anchor" name="c1be873ef43cd4e8e73a2904f4aaa99a"></a><!-- doxytag: member="corpmanag.h::CorpusList" ref="c1be873ef43cd4e8e73a2904f4aaa99a" args="" -->
 <div class="memitem">
@@ -109,6 +109,8 @@
 </div>
 <div class="memdoc">
 
+<p>
+The CorpusList object records information on a corpus that CQP recognises. 
 <p>
 
 </div>
@@ -125,6 +127,8 @@
 <div class="memdoc">
 
 <p>
+The CorpusType object. 
+<p>
 
 </div>
 </div><p>
@@ -140,7 +144,9 @@
 <div class="memdoc">
 
 <p>
-
+The FieldType object represents the fields (or 'anchor points') of a subcorpus (inc query result). 
+<p>
+NoField is always the last field (so it can be used to determine range of field type codes) (the mnemonic is NoField = "no field" = "number of fields") 
 </div>
 </div><p>
 <a class="anchor" name="3598e71226b071a490c44639a5cb8ef7"></a><!-- doxytag: member="corpmanag.h::Range" ref="3598e71226b071a490c44639a5cb8ef7" args="" -->
@@ -154,6 +160,8 @@
 </div>
 <div class="memdoc">
 
+<p>
+The <a class="el" href="struct_range.html">Range</a> object represents a range of corpus positions. 
 <p>
 
 </div>
@@ -171,7 +179,9 @@
 <div class="memdoc">
 
 <p>
-<dl compact><dt><b>Enumerator: </b></dt><dd>
+The FieldType object represents the fields (or 'anchor points') of a subcorpus (inc query result). 
+<p>
+NoField is always the last field (so it can be used to determine range of field type codes) (the mnemonic is NoField = "no field" = "number of fields") <dl compact><dt><b>Enumerator: </b></dt><dd>
 <table border="0" cellspacing="2" cellpadding="0">
 <tr><td valign="top"><em><a class="anchor" name="d831993de681337ae44f6bcccbc42d8c16ea4d72964b1a5e3855e1e9a2d7e3e1"></a><!-- doxytag: member="MatchField" ref="d831993de681337ae44f6bcccbc42d8c16ea4d72964b1a5e3855e1e9a2d7e3e1" args="" -->MatchField</em>&nbsp;</td><td>
 </td></tr>
@@ -200,7 +210,9 @@
 <div class="memdoc">
 
 <p>
-<dl compact><dt><b>Enumerator: </b></dt><dd>
+Creates an enumeration for lowercase vs. 
+<p>
+uppercase mode. <dl compact><dt><b>Enumerator: </b></dt><dd>
 <table border="0" cellspacing="2" cellpadding="0">
 <tr><td valign="top"><em><a class="anchor" name="2499845cf1a7faad4b8a53bd342d27c0a1017e9b343135a54a98b6f479354d16"></a><!-- doxytag: member="LOWER" ref="2499845cf1a7faad4b8a53bd342d27c0a1017e9b343135a54a98b6f479354d16" args="" -->LOWER</em>&nbsp;</td><td>
 </td></tr>
@@ -223,16 +235,22 @@
 <div class="memdoc">
 
 <p>
-<dl compact><dt><b>Enumerator: </b></dt><dd>
+Underlying enumeration for CorpusType. 
+<p>
+Gives an identifier for each "type" of corpus CQP can deal with. <dl compact><dt><b>Enumerator: </b></dt><dd>
 <table border="0" cellspacing="2" cellpadding="0">
 <tr><td valign="top"><em><a class="anchor" name="b595f682e895370f86580c128681d88e632fa39438c1676b435ec43e6a0f9647"></a><!-- doxytag: member="UNDEF" ref="b595f682e895370f86580c128681d88e632fa39438c1676b435ec43e6a0f9647" args="" -->UNDEF</em>&nbsp;</td><td>
+undefined status. 
+<p>
 </td></tr>
 <tr><td valign="top"><em><a class="anchor" name="b595f682e895370f86580c128681d88e57cc238145ec1361c72c327674c0d754"></a><!-- doxytag: member="SYSTEM" ref="b595f682e895370f86580c128681d88e57cc238145ec1361c72c327674c0d754" args="" -->SYSTEM</em>&nbsp;</td><td>
-</td></tr>
+system corpus, ie registered corpus </td></tr>
 <tr><td valign="top"><em><a class="anchor" name="b595f682e895370f86580c128681d88e12b733d4941495e86811fe6ceeeff9da"></a><!-- doxytag: member="SUB" ref="b595f682e895370f86580c128681d88e12b733d4941495e86811fe6ceeeff9da" args="" -->SUB</em>&nbsp;</td><td>
+subcorpus which was generated by a query. 
+<p>
 </td></tr>
 <tr><td valign="top"><em><a class="anchor" name="b595f682e895370f86580c128681d88e5937389a60030a604f0efdf5e3927325"></a><!-- doxytag: member="TEMP" ref="b595f682e895370f86580c128681d88e5937389a60030a604f0efdf5e3927325" args="" -->TEMP</em>&nbsp;</td><td>
-</td></tr>
+temporary subcorpus, deleted after query </td></tr>
 <tr><td valign="top"><em><a class="anchor" name="b595f682e895370f86580c128681d88eb1d5eac4b1dca480c8056eaea7663b7a"></a><!-- doxytag: member="ALL" ref="b595f682e895370f86580c128681d88eb1d5eac4b1dca480c8056eaea7663b7a" args="" -->ALL</em>&nbsp;</td><td>
 </td></tr>
 </table>
@@ -520,7 +538,9 @@
 <div class="memdoc">
 
 <p>
-
+finds the pointer to the corpus with name s (strcmp), no case conversion is done. 
+<p>
+NULL is returned when the corpus is not yet present. if "type" is UNDEF, it returns the first corpus with matching name, otherwise the returned corpus has the type "type" 
 </div>
 </div><p>
 <a class="anchor" name="1af5319b5b9b70c3b0847c504252421e"></a><!-- doxytag: member="corpmanag.h::FirstCorpusFromList" ref="1af5319b5b9b70c3b0847c504252421e" args="()" -->
@@ -539,6 +559,10 @@
 <div class="memdoc">
 
 <p>
+Gets the CorpusList pointer for the first corpus on the currently-loaded list. 
+<p>
+Function for iterating through the list of currently-loaded corpora.<p>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>The requested CorpusList pointer. </dd></dl>
 
 <p>Referenced by <a class="el" href="cqpserver_8c.html#4f6612358d3fc58ac44175f7c3d58b27">do_cqi_corpus_list_corpora()</a>, <a class="el" href="cqpserver_8c.html#43f247f2e2873651f479445383f2414d">do_cqi_cqp_list_subcorpora()</a>, and <a class="el" href="cqpserver_8c.html#0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
 
@@ -561,7 +585,9 @@
 <div class="memdoc">
 
 <p>
-
+Frees the global list of currently-loaded corpora. 
+<p>
+This function sets the corpus list to NULL and frees all members of the list. 
 <p>References <a class="el" href="corpmanag_8c.html#c15e0e3266238b8728caa182e4b4407d">initialize_cl()</a>, <a class="el" href="structcl.html#fdcc09ad7f27c639d3bb56e7ac18c31c">cl::next</a>, <a class="el" href="corpmanag_8c.html#8620a08c033dbc0f5b90fc81a028ff14">set_current_corpus()</a>, and <a class="el" href="cqp_8h.html#dd3ca9eefe3b5b754426f51d3043e579">True</a>.</p>
 
 <p>Referenced by <a class="el" href="corpmanag_8c.html#11e7688d54afbe94e0828319c129ac3b">CorpusListFree()</a>.</p>
@@ -584,6 +610,8 @@
 </div>
 <div class="memdoc">
 
+<p>
+Initialises the global corpus list (sets it to NULL, no matter what its value was). 
 <p>
 
 <p>References <a class="el" href="corpmanag_8c.html#8620a08c033dbc0f5b90fc81a028ff14">set_current_corpus()</a>.</p>
@@ -666,6 +694,15 @@
 <div class="memdoc">
 
 <p>
+Gets the CorpusList pointer for the next corpus on the currently-loaded list. 
+<p>
+Function for iterating through the list of currently-loaded corpora.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em><a class="el" href="structcl.html" title="The CorpusList object records information on a corpus that CQP recognises.">cl</a></em>&nbsp;</td><td>The current corpus on the list. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>The requested CorpusList pointer. </dd></dl>
 
 <p>References <a class="el" href="structcl.html#fdcc09ad7f27c639d3bb56e7ac18c31c">cl::next</a>.</p>
 
@@ -786,6 +823,16 @@
 <div class="memdoc">
 
 <p>
+Sets the current corpus (by pointer to the corpus). 
+<p>
+Also, execustes Xkwic side effects, if necessary<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>cp</em>&nbsp;</td><td>Pointer to the corpus to set as current. cp may be NULL, which is legal. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>force</em>&nbsp;</td><td>If true, the current corpus is set to the specified corpus, even if it is ALREADY set to that corpus. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>Always 1. </dd></dl>
 
 <p>References <a class="el" href="struct__context__description__block.html#b0c9f5c58479a7132e805c6cb613a606">_context_description_block::attributes</a>, <a class="el" href="options_8h.html#38074d63a29843b040ae9aff4f0b289e">CD</a>, <a class="el" href="structcl.html#ca3a1fb765418f9b9b1d74051aa88667">cl::corpus</a>, <a class="el" href="corpmanag_8h.html#1f1c9e6e4dec994353f8d8ee00f38faa">current_corpus</a>, <a class="el" href="attributes_8h.html#0f022cbfe7890834b65ea9542eb4f50c">DEFAULT_ATT_NAME</a>, <a class="el" href="attlist_8c.html#c69cc92e385b1dd966796466b80835f1">DestroyAttributeList()</a>, <a class="el" href="attlist_8c.html#0cf502d952bfb4ae39ec2e2e539a9660">FindInAL()</a>, <a class="el" href="struct__attlist.html#1e66fdb8689099e30442d6824a2d423a">_attlist::list</a>, <a class="el" href="struct__attrbuf.html#35b0b6674742b8bb955b2d672a898c86">_attrbuf::next</a>, <a class="el" href="struct__attrbuf.html#6e27f49150e9a14580fb313cc2777e00">_attrbuf::status</a>, <a class="el" href="struct__context__description__block.html#3dc101bb70f3d6bcc4bfebef24d7837f">_context_description_block::strucAttributes</a>, and <a class="el" href="context__descriptor_8c.html#14d9faf7f37cbb4a51b5d0f4f543c8ea">update_context_descriptor()</a>.</p>
 
@@ -819,6 +866,16 @@
 <div class="memdoc">
 
 <p>
+Sets the current corpus (by name). 
+<p>
+Also, execustes Xkwic side effects, if necessary.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>name</em>&nbsp;</td><td>Name of the corpus to set as current. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>force</em>&nbsp;</td><td>If true, the current corpus is set to the specified corpus, even if it is ALREADY set to that corpus. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>True if the corpus was found and set, otherwise false if the corpus could not be found. </dd></dl>
 
 <p>References <a class="el" href="corpmanag_8c.html#c2bc10afb97f5bafaf76b5793d0e7471">findcorpus()</a>, <a class="el" href="corpmanag_8c.html#8620a08c033dbc0f5b90fc81a028ff14">set_current_corpus()</a>, and <a class="el" href="corpmanag_8h.html#b595f682e895370f86580c128681d88e632fa39438c1676b435ec43e6a0f9647">UNDEF</a>.</p>
 
@@ -876,7 +933,9 @@
 <div class="memdoc">
 
 <p>
-
+Splits a query result corpus-name into qualifier and local name. 
+<p>
+This function splits query result name {corpusname} into qualifier (name of mother corpus) and local name; returns pointer to local name part, or NULL if {corpusname} is not syntactically valid; if mother_name is not NULL, it must point to a buffer of suitable length (MAX_LINE_LENGTH is sufficient) where the qualifier will be stored (empty string for unqualified corpus, and return value == {corpusname} in this case) 
 <p>References <a class="el" href="corpmanag_8c.html#8301ee0d0b0055ebb4e8ecc46fadd69e">COLON</a>.</p>
 
 <p>Referenced by <a class="el" href="parse__actions_8h.html#4d494e76da98d09f20a77d1dfb9b7fd2">do_undump()</a>, and <a class="el" href="corpmanag_8h.html#eaedbbdc6a5276d3954fc75eb60426e6">valid_subcorpus_name()</a>.</p>
@@ -900,6 +959,14 @@
 <div class="memdoc">
 
 <p>
+Touches a corpus, ie, marks it as changed. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>cp</em>&nbsp;</td><td>The corpus to touch. This must be of type SUB. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>Boolean: true if the touch worked, otherwise false. </dd></dl>
 
 <p>References <a class="el" href="cqp_8h.html#306ebd41c0cd1303b1372c6153f0caf8">False</a>, <a class="el" href="structcl.html#60fdb8cfe061a7d895942dd0ccbd33d6">cl::needs_update</a>, <a class="el" href="structcl.html#b1f9d035161a53874c84ac68634b947a">cl::saved</a>, <a class="el" href="corpmanag_8h.html#b595f682e895370f86580c128681d88e12b733d4941495e86811fe6ceeeff9da">SUB</a>, <a class="el" href="cqp_8h.html#dd3ca9eefe3b5b754426f51d3043e579">True</a>, and <a class="el" href="structcl.html#aeb0da22893ef241c1ad027ca78da765">cl::type</a>.</p>
 
@@ -944,6 +1011,8 @@
 <div class="memdoc">
 
 <p>
+Global pointer to the head of CQP's linked list of corpora. 
+<p>
 
 </div>
 </div><p>
@@ -959,13 +1028,15 @@
 <div class="memdoc">
 
 <p>
+Global pointer to the "current" corpus. 
+<p>
 
 <p>Referenced by <a class="el" href="cqp_8h.html#7c30de93f06347a9bc939e324afd1472">cqp_parse_file()</a>, <a class="el" href="parse__actions_8h.html#dfd3db2dc278ff1da061a1dd597b9b81">do_attribute_show()</a>, <a class="el" href="parse__actions_8h.html#d54cd36f0dadd371fa6a84e03a4c989c">do_MUQuery()</a>, <a class="el" href="parse__actions_8h.html#2aaabbb6bcc4e5210745065baaaf715c">do_StandardQuery()</a>, <a class="el" href="parse__actions_8h.html#4d494e76da98d09f20a77d1dfb9b7fd2">do_undump()</a>, <a class="el" href="corpmanag_8h.html#411a4b044a2214dc19180334cbcd1601">dropcorpus()</a>, <a class="el" href="options_8c.html#c25b2835b607daf6f05f6f87df840e40">execute_side_effects()</a>, <a class="el" href="parse__actions_8h.html#53f277e74f9797cafd18e94b3b617cd4">in_CorpusCommand()</a>, <a class="el" href="corpmanag_8c.html#999fbf759df5edab70703bfb10399ef0">LoadedCorpus()</a>, <a class="el" href="parse__actions_8h.html#0cd76ad97a709afa3bd6610768e1d39d">prepare_Query()</a>, and <a class="el" href="corpmanag_8h.html#8620a08c033dbc0f5b90fc81a028ff14">set_current_corpus()</a>.</p>
 
 </div>
 </div><p>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Fri Sep 25 21:50:32 2009 for CWB by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Sat Sep 26 22:58:31 2009 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

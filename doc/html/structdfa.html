@@ -23,17 +23,23 @@
   </div>
 </div>
 <div class="contents">
-<h1>dfa Struct Reference</h1><!-- doxytag: class="dfa" --><code>#include &lt;regex2dfa.h&gt;</code>
+<h1>dfa Struct Reference</h1><!-- doxytag: class="dfa" -->The DFA object.  
+<a href="#_details">More...</a>
+<p>
+<code>#include &lt;regex2dfa.h&gt;</code>
 <p>
 <h2>Data Fields</h2>
 <ul>
 <li>int <a class="el" href="structdfa.html#4e13df223e06eeb511ea4cf8fd211ffb">Max_States</a>
-<li>int <a class="el" href="structdfa.html#527218880bb5117e62de1e786c263044">Max_Input</a>
-<li>int ** <a class="el" href="structdfa.html#39a9c7689219c7bc954d8f096cff9454">TransTable</a>
-<li><a class="el" href="cqp_8h.html#2d275961e4a2bd704dde5f6a5d27f880">Boolean</a> * <a class="el" href="structdfa.html#7e2d4ac1a0a606c961a5e45b2e470865">Final</a>
-<li>int <a class="el" href="structdfa.html#81ef1cda7575629802e9007d33185919">E_State</a>
-</ul>
-<hr><h2>Field Documentation</h2>
+<dl class="el"><dd class="mdescRight">max number of states of the current <a class="el" href="structdfa.html" title="The DFA object.">dfa</a>.  <a href="#4e13df223e06eeb511ea4cf8fd211ffb"></a><br></dl><li>int <a class="el" href="structdfa.html#527218880bb5117e62de1e786c263044">Max_Input</a>
+<dl class="el"><dd class="mdescRight">max number of input chars of the current <a class="el" href="structdfa.html" title="The DFA object.">dfa</a>.  <a href="#527218880bb5117e62de1e786c263044"></a><br></dl><li>int ** <a class="el" href="structdfa.html#39a9c7689219c7bc954d8f096cff9454">TransTable</a>
+<dl class="el"><dd class="mdescRight"><a class="el" href="structstate.html">state</a> transition table of the current <a class="el" href="structdfa.html" title="The DFA object.">dfa</a>.  <a href="#39a9c7689219c7bc954d8f096cff9454"></a><br></dl><li><a class="el" href="cqp_8h.html#2d275961e4a2bd704dde5f6a5d27f880">Boolean</a> * <a class="el" href="structdfa.html#7e2d4ac1a0a606c961a5e45b2e470865">Final</a>
+<dl class="el"><dd class="mdescRight">set of final states.  <a href="#7e2d4ac1a0a606c961a5e45b2e470865"></a><br></dl><li>int <a class="el" href="structdfa.html#81ef1cda7575629802e9007d33185919">E_State</a>
+<dl class="el"><dd class="mdescRight">Error State -- it is introduced in order to make the <a class="el" href="structdfa.html" title="The DFA object.">dfa</a> complete, so the <a class="el" href="structstate.html">state</a> transition is a total mapping.  <a href="#81ef1cda7575629802e9007d33185919"></a><br></dl></ul>
+<hr><a name="_details"></a><h2>Detailed Description</h2>
+The DFA object. 
+<p>
+A Deterministic Finite Automaton: into which a regular expression can be converted. <hr><h2>Field Documentation</h2>
 <a class="anchor" name="81ef1cda7575629802e9007d33185919"></a><!-- doxytag: member="dfa::E_State" ref="81ef1cda7575629802e9007d33185919" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -46,7 +52,9 @@
 <div class="memdoc">
 
 <p>
-
+Error State -- it is introduced in order to make the <a class="el" href="structdfa.html" title="The DFA object.">dfa</a> complete, so the <a class="el" href="structstate.html">state</a> transition is a total mapping. 
+<p>
+The value of this variable is Max_States. 
 <p>Referenced by <a class="el" href="regex2dfa_8h.html#69e30286442eee48a3350d6da9bcd4d8">regex2dfa()</a>, and <a class="el" href="regex2dfa_8h.html#b7827b454b4605ccfe01459f50fa04ad">show_complete_dfa()</a>.</p>
 
 </div>
@@ -62,6 +70,8 @@
 </div>
 <div class="memdoc">
 
+<p>
+set of final states. 
 <p>
 
 <p>Referenced by <a class="el" href="regex2dfa_8h.html#a55b1bb98a8db993375c6683f145a1d9">free_dfa()</a>, <a class="el" href="regex2dfa_8h.html#f850e7f80ec40d5a2d5cc49027fc3bab">init_dfa()</a>, <a class="el" href="regex2dfa_8h.html#69e30286442eee48a3350d6da9bcd4d8">regex2dfa()</a>, and <a class="el" href="regex2dfa_8h.html#b7827b454b4605ccfe01459f50fa04ad">show_complete_dfa()</a>.</p>
@@ -80,6 +90,8 @@
 <div class="memdoc">
 
 <p>
+max number of input chars of the current <a class="el" href="structdfa.html" title="The DFA object.">dfa</a>. 
+<p>
 
 <p>Referenced by <a class="el" href="regex2dfa_8h.html#a55b1bb98a8db993375c6683f145a1d9">free_dfa()</a>, <a class="el" href="regex2dfa_8h.html#f850e7f80ec40d5a2d5cc49027fc3bab">init_dfa()</a>, <a class="el" href="regex2dfa_8h.html#69e30286442eee48a3350d6da9bcd4d8">regex2dfa()</a>, and <a class="el" href="regex2dfa_8h.html#b7827b454b4605ccfe01459f50fa04ad">show_complete_dfa()</a>.</p>
 
@@ -97,7 +109,9 @@
 <div class="memdoc">
 
 <p>
-
+max number of states of the current <a class="el" href="structdfa.html" title="The DFA object.">dfa</a>. 
+<p>
+<a class="el" href="structstate.html">state</a> no. 0 is the initial <a class="el" href="structstate.html">state</a>. 
 <p>Referenced by <a class="el" href="eval_8c.html#6b88f677ea68fdf529f6588033930492">check_alignment_constraints()</a>, <a class="el" href="regex2dfa_8h.html#a55b1bb98a8db993375c6683f145a1d9">free_dfa()</a>, <a class="el" href="regex2dfa_8h.html#f850e7f80ec40d5a2d5cc49027fc3bab">init_dfa()</a>, <a class="el" href="regex2dfa_8h.html#69e30286442eee48a3350d6da9bcd4d8">regex2dfa()</a>, and <a class="el" href="regex2dfa_8h.html#b7827b454b4605ccfe01459f50fa04ad">show_complete_dfa()</a>.</p>
 
 </div>
@@ -114,6 +128,8 @@
 <div class="memdoc">
 
 <p>
+<a class="el" href="structstate.html">state</a> transition table of the current <a class="el" href="structdfa.html" title="The DFA object.">dfa</a>. 
+<p>
 
 <p>Referenced by <a class="el" href="regex2dfa_8h.html#a55b1bb98a8db993375c6683f145a1d9">free_dfa()</a>, <a class="el" href="regex2dfa_8h.html#f850e7f80ec40d5a2d5cc49027fc3bab">init_dfa()</a>, <a class="el" href="regex2dfa_8h.html#69e30286442eee48a3350d6da9bcd4d8">regex2dfa()</a>, and <a class="el" href="regex2dfa_8h.html#b7827b454b4605ccfe01459f50fa04ad">show_complete_dfa()</a>.</p>
 
@@ -122,7 +138,7 @@
 <hr>The documentation for this struct was generated from the following file:<ul>
 <li>cqp/<a class="el" href="regex2dfa_8h.html">regex2dfa.h</a></ul>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Fri Sep 25 21:50:33 2009 for CWB by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Sat Sep 26 22:58:32 2009 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

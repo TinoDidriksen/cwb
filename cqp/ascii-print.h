@@ -33,30 +33,30 @@ ascii_convert_string(char *s);
 
 void
 ascii_print_aligned_line(FILE *stream, 
-			 int highlighting,
-			 char *attribute_name, 
-			 char *line);
+                         int highlighting,
+                         char *attribute_name,
+                         char *line);
 
 void 
 ascii_print_corpus_header(CorpusList *cl, 
-			  FILE *outfd);
+                          FILE *outfd);
 
 void 
 ascii_print_output(CorpusList *cl, 
-		   FILE *outfd,
-		   int interactive,
-		   ContextDescriptor *cd,
-		   int first, int last);
+                   FILE *outfd,
+                   int interactive,
+                   ContextDescriptor *cd,
+                   int first, int last);
 
 void 
 ascii_print_group(Group *group, int expand, FILE *fd);
 
-/* interface to the terminal formatting escape sequences (with dummy replacements if USE_TERMCAP is not set) */
-char *
-get_colour_escape(char colour, int foreground);	/* colour: r=red g=green b=blue, p=pink, y=yellow, c=cyan */
 
 char *
-get_typeface_escape(char typeface);             /* typeface = b=bold, u=underlined, s=standout, n=normal */
+get_colour_escape(char colour, int foreground);
+
+char *
+get_typeface_escape(char typeface);
 
 #endif
 

@@ -351,7 +351,16 @@ Gets the number of entries in an AttributeList.
 <p>
 Goes through an AttributeList, deletes entries for attributes that don't exist, and adds entries for those that do. 
 <p>
-Note that all AttributeInfo entries are linked to the actual Attribute objects by this function. 
+Note that all AttributeInfo entries are linked to the actual Attribute objects by this function.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>list</em>&nbsp;</td><td>The AttributeList to recompute. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>corpus</em>&nbsp;</td><td>The corpus in which these attributes are found. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>init_status</em>&nbsp;</td><td>Not currently used. </td></tr>
+  </table>
+</dl>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>Always 1. </dd></dl>
+
 <p>References <a class="el" href="attlist_8c.html#7be7f302f175dc78fd71765f617ce585">AddNameToAL()</a>, <a class="el" href="union___attribute.html#92ee130caba4408ab4de51c602910107">_Attribute::any</a>, <a class="el" href="struct__attrbuf.html#a6941092bf1c0d49260bc71e63e5ef41">_attrbuf::attribute</a>, <a class="el" href="struct_t_corpus.html#97504befdc17001f29ab2a0aa50d5c1f">TCorpus::attributes</a>, <a class="el" href="cl_8h.html#9e15a3c725711d9effd623b2f3e225be">cl_free</a>, <a class="el" href="struct__attlist.html#22f351f912163379a2774fb4887cf3da">_attlist::element_type</a>, <a class="el" href="attributes_8c.html#de29ce8707ea27ed6797b1c1276bcfc9">find_attribute()</a>, <a class="el" href="struct__attlist.html#1e66fdb8689099e30442d6824a2d423a">_attlist::list</a>, <a class="el" href="struct__attlist.html#4477f83591734a93ef7b705cbc710db9">_attlist::list_valid</a>, <a class="el" href="struct__attrbuf.html#35b0b6674742b8bb955b2d672a898c86">_attrbuf::next</a>, <a class="el" href="struct__attrbuf.html#a5799dd66a77236749ae9a5e41f23b8a">_attrbuf::prev</a>, and <a class="el" href="union___attribute.html#c765329451135abec74c45e1897abf26">_Attribute::type</a>.</p>
 
 <p>Referenced by <a class="el" href="context__descriptor_8h.html#14d9faf7f37cbb4a51b5d0f4f543c8ea">update_context_descriptor()</a>.</p>
@@ -452,7 +461,7 @@ If the relevant attribute cannot be found, the entry is deleted iff remove_illeg
 </div>
 </div><p>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Fri Sep 25 21:50:32 2009 for CWB by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Sat Sep 26 22:58:31 2009 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

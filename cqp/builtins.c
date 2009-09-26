@@ -33,16 +33,19 @@
 
 /* valid attribute types are ATTAT_INT, ATTAT_POS, ATTAT_STRING, ATTAT_NONE */
 
-int f_args[]        = {ATTAT_STRING};
-int distance_args[] = {ATTAT_POS, ATTAT_POS};
-int distabs_args[]  = {ATTAT_POS, ATTAT_POS};
-int bound_args[]    = {ATTAT_INT};
-int unify_args[]    = {ATTAT_STRING, ATTAT_STRING};
-int ambiguity_args[]= {ATTAT_STRING};
-int string_arg[]    = {ATTAT_STRING};
-int arith_args[]    = {ATTAT_INT, ATTAT_INT};
-int ignore_args[]   = {ATTAT_POS};
+int f_args[]        = {ATTAT_STRING};                 /**< Argument types for builtin function f */
+int distance_args[] = {ATTAT_POS, ATTAT_POS};         /**< Argument types for builtin function distance (or dist) */
+int distabs_args[]  = {ATTAT_POS, ATTAT_POS};         /**< Argument types for builtin function distabs */
+int bound_args[]    = {ATTAT_INT};                    /**< Argument types for builtin functions lbound and rbound */
+int unify_args[]    = {ATTAT_STRING, ATTAT_STRING};   /**< Argument types for builtin functions unify, prefix, is_prefix, minus*/
+int ambiguity_args[]= {ATTAT_STRING};                 /**< Argument types for builtin function ambiguity */
+int string_arg[]    = {ATTAT_STRING};                 /**< Argument types for builtin functions taking a single string argument */
+int arith_args[]    = {ATTAT_INT, ATTAT_INT};         /**< Argument types for builtin arithemtical functions */
+int ignore_args[]   = {ATTAT_POS};                    /**< Argument types for builtin function ignore */
 
+/**
+ * Global array of built-in functions.
+ */
 BuiltinF builtin_function[] = {
   {  0, "f",        1, f_args,        ATTAT_INT }, /* frequency of attribute value (positional attributes) */
 
@@ -68,8 +71,16 @@ BuiltinF builtin_function[] = {
   { -1, NULL,       0, NULL,          ATTAT_NONE }
 };
 
-/* returns name of argument type */
-char *attat_name(int type) {
+
+/**
+ * Gets a string containing the name of the specified argument type.
+ *
+ * @param type  One of the ATTAT_x constants (an argument type).
+ * @return      The name of the argument type.
+ */
+char *
+attat_name(int type)
+{
   switch(type) {
   case ATTAT_NONE:
     return "ATTAT_NONE";
@@ -90,8 +101,17 @@ char *attat_name(int type) {
   }
 }
 
+
+/**
+ * Gets the index of a specified predefined function.
+ *
+ * @see builtin_function
+ * @param name  The name of the function to search for.
+ * @return      An index into the builtin_function array.
+ */
 int 
-find_predefined(char *name) {
+find_predefined(char *name)
+{
   int i;
   
   for (i = 0; builtin_function[i].name; i++)
@@ -100,16 +120,35 @@ find_predefined(char *name) {
   return -1;
 }
 
+/**
+ * Checks whether a string is the name of a predefined function.
+ *
+ * @param name  The name of the function to search for.
+ * @return      Boolean.
+ */
 int 
-is_predefined_function(char *name) {
+is_predefined_function(char *name)
+{
   int k;
 
   k = find_predefined(name);
   return (k >= 0 ? 1 : 0);
 }
 
+
+/**
+ * Calculates the length of a prefix shared by two strings.
+ *
+ * @param s  The first string.
+ * @param t  The second string.
+ * @return   The number of characters from the start of
+ *           the two strings, that are identical between them.
+ *           (Or, to put it another way, the index of the first
+ *           non-identical character.)
+ */
 int
-common_prefix_length(char *s, char *t) {
+common_prefix_length(char *s, char *t)
+{
   int l = 0;
   if ((s == NULL) || (t == NULL))
     return 0;
@@ -120,12 +159,23 @@ common_prefix_length(char *s, char *t) {
 
 
 
-
-int call_predefined_function(int bf_id,
-			     DynCallResult *apl,
-			     int nr_args,
-			     Constrainttree ctptr,
-			     DynCallResult *result)
+/**
+ * Calls a predefined function from the built_function array.
+ *
+ * @see            builtin_function
+ * @param bf_id    The function to call, identified as an index to the builtin_function array.
+ * @param apl      Contains the arguments to this function.
+ * @param nr_args  The number of arguments the function takes.
+ * @param ctptr    A constraint tree used in some (but not all) of the builtin functions.
+ * @param result   Where to put the result of calling the function.
+ * @return         boolean: true on success, otherwise false.
+ */
+int
+call_predefined_function(int bf_id,
+                         DynCallResult *apl,
+                         int nr_args,
+                         Constrainttree ctptr,
+                         DynCallResult *result)
 {
   int argp, pos;
   char *str0, *str1;
@@ -135,7 +185,7 @@ int call_predefined_function(int bf_id,
 
   if (nr_args != builtin_function[bf_id].nr_args) {
     fprintf(stderr, "Predefined function %s got %d args, takes %d (mismatch)\n",
-	    builtin_function[bf_id].name, nr_args, builtin_function[bf_id].nr_args);
+            builtin_function[bf_id].name, nr_args, builtin_function[bf_id].nr_args);
     return False;
   }
   
@@ -151,20 +201,20 @@ int call_predefined_function(int bf_id,
 
   for (argp = 0; argp < nr_args; argp++) {
     if (! ((apl[argp].type == builtin_function[bf_id].argtypes[argp]) || 
-	   ((apl[argp].type == ATTAT_INT)   && (builtin_function[bf_id].argtypes[argp] == ATTAT_POS)) ||
-	   ((apl[argp].type == ATTAT_POS)   && (builtin_function[bf_id].argtypes[argp] == ATTAT_INT)) ||
-	   ((apl[argp].type == ATTAT_PAREF) && (builtin_function[bf_id].argtypes[argp] == ATTAT_STRING)) ||
- 	   ((apl[argp].type == ATTAT_NONE)  && (builtin_function[bf_id].argtypes[argp] == ATTAT_STRING)) || 
-	   0
-	   )) 
+           ((apl[argp].type == ATTAT_INT)   && (builtin_function[bf_id].argtypes[argp] == ATTAT_POS)) ||
+           ((apl[argp].type == ATTAT_POS)   && (builtin_function[bf_id].argtypes[argp] == ATTAT_INT)) ||
+           ((apl[argp].type == ATTAT_PAREF) && (builtin_function[bf_id].argtypes[argp] == ATTAT_STRING)) ||
+            ((apl[argp].type == ATTAT_NONE)  && (builtin_function[bf_id].argtypes[argp] == ATTAT_STRING)) ||
+           0
+           ))
       {
-	cqpmessage(Error, 
-		   "Builtin function %s(): argument type mismatch at arg #%d\n\tExpected %s, got %s.", 
-		   builtin_function[bf_id].name,
-		   argp,
-		   attat_name(builtin_function[bf_id].argtypes[argp]),
-		   attat_name(apl[argp].type));
-	return False;
+        cqpmessage(Error,
+                   "Builtin function %s(): argument type mismatch at arg #%d\n\tExpected %s, got %s.",
+                   builtin_function[bf_id].name,
+                   argp,
+                   attat_name(builtin_function[bf_id].argtypes[argp]),
+                   attat_name(apl[argp].type));
+        return False;
       } 
   }
 
@@ -174,7 +224,7 @@ int call_predefined_function(int bf_id,
 
   switch (bf_id) {
 
-  case 0:			/* f */
+  case 0:                        /* f */
     
     /* it should be a pa_ref */
     assert(ctptr->func.args->param->type == pa_ref);
@@ -183,7 +233,7 @@ int call_predefined_function(int bf_id,
     assert(attr != NULL);
     
     if (apl[0].type == ATTAT_NONE) {
-      result->type = ATTAT_INT;	/* label references which are not set return 0 (no other pa_refs should do that!) */
+      result->type = ATTAT_INT;        /* label references which are not set return 0 (no other pa_refs should do that!) */
       result->value.intres = 0;
       return True;
     }
@@ -196,24 +246,24 @@ int call_predefined_function(int bf_id,
       result->type = ATTAT_INT;
       result->value.intres = get_id_frequency(attr, pos);
       if (cderrno == CDA_OK)
-	return True;
+        return True;
     }
     break;
     
-  case 1:			/* distance */
-  case 2:			/* dist */
+  case 1:                        /* distance */
+  case 2:                        /* dist */
     result->type = ATTAT_INT;
     result->value.intres = apl[1].value.intres - apl[0].value.intres;
     return True;
     break;
 
-  case 3:			/* distabs */
+  case 3:                        /* distabs */
     result->type = ATTAT_INT;
     result->value.intres = abs(apl[1].value.intres - apl[0].value.intres);
     return True;
     break;
 
-  case 4:			/* int (typecast) */
+  case 4:                        /* int (typecast) */
 
     /* convert argument from PAREF to STRING if necessary */
     if (apl[0].type == ATTAT_PAREF) {
@@ -229,11 +279,11 @@ int call_predefined_function(int bf_id,
     {
       int value = 0;
       
-      errno = 0;		/* might catch some conversion errors */
+      errno = 0;                /* might catch some conversion errors */
       value = atoi(str0);
       if (errno != 0) {
-	cqpmessage(Error, "Bulitin integer conversion failed for int(%s).", str0);
-	return False;		/* probably a conversion error */
+        cqpmessage(Error, "Bulitin integer conversion failed for int(%s).", str0);
+        return False;                /* probably a conversion error */
       }
 
       result->type = ATTAT_INT;
@@ -243,7 +293,7 @@ int call_predefined_function(int bf_id,
 
     break;
 
-  case 5:			/* lbound */
+  case 5:                        /* lbound */
 
     attr = (ctptr->func.args->param->type == sa_ref)
       ? ctptr->func.args->param->sa_ref.attr
@@ -261,7 +311,7 @@ int call_predefined_function(int bf_id,
 
     break;
 
-  case 6:			/* rbound */
+  case 6:                        /* rbound */
 
     attr = (ctptr->func.args->param->type == sa_ref)
       ? ctptr->func.args->param->sa_ref.attr
@@ -279,7 +329,7 @@ int call_predefined_function(int bf_id,
 
     break;
 
-  case 7:			/* unify */
+  case 7:                        /* unify */
     
     /* first handle the disallowed case of ATTAT_NONE in the 2nd argument */
     if (apl[1].type == ATTAT_NONE) {
@@ -329,7 +379,7 @@ int call_predefined_function(int bf_id,
 
     break;
 
-  case 8:			/* ambiguity */
+  case 8:                        /* ambiguity */
 
     /* in the case of ATTAT_NONE, ambiguity is 0, which means 'no data' */
     /* (it might be cleaner to raise an error in this case, but it's simpler */
@@ -352,50 +402,50 @@ int call_predefined_function(int bf_id,
       int count = cl_set_size(str0);
       
       if (count >= 0) {
-	result->type = ATTAT_INT;
-	result->value.intres = count;
-	return True;
+        result->type = ATTAT_INT;
+        result->value.intres = count;
+        return True;
       }
       else {
-	cqpmessage(Error, "Malformed input string passed to builtin ambiguity(%s).", str0);
-	return False;
+        cqpmessage(Error, "Malformed input string passed to builtin ambiguity(%s).", str0);
+        return False;
       }
     }
 
     break;
 
-  case 9:			/* arithmetic: add */
+  case 9:                        /* arithmetic: add */
     result->type = ATTAT_INT;
     result->value.intres = apl[0].value.intres + apl[1].value.intres;
     return True;
     break;
 
-  case 10:			/* arithmetic: sub */
+  case 10:                        /* arithmetic: sub */
     result->type = ATTAT_INT;
     result->value.intres = apl[0].value.intres - apl[1].value.intres;
     return True;
     break;
 
-  case 11:			/* arithmetic: mul */
+  case 11:                        /* arithmetic: mul */
     result->type = ATTAT_INT;
     result->value.intres = apl[0].value.intres * apl[1].value.intres;
     return True;
     break;
 
-  case 12:			/* prefix */
-  case 13:			/* is_prefix */
-  case 14:			/* minus */
+  case 12:                        /* prefix */
+  case 13:                        /* is_prefix */
+  case 14:                        /* minus */
 
     /* first handle the disallowed case of ATTAT_NONE type arguments */
     if (apl[0].type == ATTAT_NONE) {
       cqpmessage(Error, "First argument to builtin %s() function is undefined.",
-		 builtin_function[bf_id].name);
+                 builtin_function[bf_id].name);
       result->type = ATTAT_NONE; /* ATTAT_NONE not allowed as second argument */
       return False;
     }
     if (apl[1].type == ATTAT_NONE) {
       cqpmessage(Error, "Second argument to builtin %s() function is undefined.",
-		 builtin_function[bf_id].name);
+                 builtin_function[bf_id].name);
       result->type = ATTAT_NONE; /* ATTAT_NONE not allowed as second argument */
       return False;
     }
@@ -420,12 +470,12 @@ int call_predefined_function(int bf_id,
     else
       str1 = apl[1].value.charres;
     
-    result->type = ATTAT_NONE;	/* in case of failure */
-    if (bf_id == 12) {		/* prefix */
+    result->type = ATTAT_NONE;        /* in case of failure */
+    if (bf_id == 12) {                /* prefix */
       int l = common_prefix_length(str0, str1);
       if (l >= CL_DYN_STRING_SIZE - 1) {
-	cqpmessage(Error, "DCR string buffer overflow in builtin function prefix().");
-	return False;
+        cqpmessage(Error, "DCR string buffer overflow in builtin function prefix().");
+        return False;
       }
       strncpy(result->dynamic_string_buffer, str0, l);
       result->dynamic_string_buffer[l] = '\0';
@@ -433,24 +483,24 @@ int call_predefined_function(int bf_id,
       result->value.charres = result->dynamic_string_buffer;
       return True;
     }
-    else if (bf_id == 13) {	/* is_prefix */
+    else if (bf_id == 13) {        /* is_prefix */
       int l = common_prefix_length(str0, str1);
       result->type = ATTAT_INT;
       if (l == strlen(str0)) {
-	result->value.intres = 1;
+        result->value.intres = 1;
       }
       else {
-	result->value.intres = 0;
+        result->value.intres = 0;
       }
       return True;
     }
-    else {			/* minus */
+    else {                        /* minus */
       int lp = common_prefix_length(str0, str1);
       int l0 = strlen(str0);
-      int l = l0 - lp;		/* length of resulting suffix */
+      int l = l0 - lp;                /* length of resulting suffix */
       if (l >= CL_DYN_STRING_SIZE - 1) {
-	cqpmessage(Error, "DCR string buffer overflow in builtin function minus().");
-	return False;
+        cqpmessage(Error, "DCR string buffer overflow in builtin function minus().");
+        return False;
       }
       strncpy(result->dynamic_string_buffer, str0 + lp, l);
       result->dynamic_string_buffer[l] = '\0';
@@ -461,7 +511,7 @@ int call_predefined_function(int bf_id,
 
     break;
 
-  case 15:			/* ignore */
+  case 15:                        /* ignore */
     result->type = ATTAT_INT;
     result->value.intres = 1;
     return True;

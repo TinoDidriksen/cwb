@@ -21,12 +21,15 @@
 #include "../cl/cdaccess.h"
 #include "eval.h"
 
+/**
+ * The BuiltinF object represents a built-in function.
+ */
 typedef struct _builtinf {
-  int id;
-  char *name;
-  int nr_args;
-  int *argtypes;
-  int result_type;
+  int id;                 /**< The id code of this function @see call_predefined_function */
+  char *name;             /**< The name of this function */
+  int nr_args;            /**< How many arguments the function has */
+  int *argtypes;          /**< Address of an ordered array of argument types ("types" are ATTAT_x constants) */
+  int result_type;        /**< Type of the function's result ("types" are ATTAT_x constants) */
 } BuiltinF;
 
 
@@ -38,9 +41,9 @@ int find_predefined(char *name);
 int is_predefined_function(char *name);
 
 int call_predefined_function(int bf_id,
-			     DynCallResult *apl,
-			     int nr_args,
-			     Constrainttree ctptr,
-			     DynCallResult *result);
+                             DynCallResult *apl,
+                             int nr_args,
+                             Constrainttree ctptr,
+                             DynCallResult *result);
 
 #endif

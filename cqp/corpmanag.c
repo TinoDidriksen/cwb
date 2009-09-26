@@ -45,8 +45,9 @@
 
 #define subcorpload_debug False
 
+/** magic number for {?? subcorpus files} */
 #define SUBCORPMAGIC 36193928
-/* the sum of our birthdays: 15081963 (Max) + 21111965 (Oli) */
+/* the sum of the original programmers' birthdays: 15081963 (Max) + 21111965 (Oli) */
 
 
 /* typedef struct { */
@@ -56,6 +57,8 @@
 /*   int  *ml; */
 /* } bincorpform; */
 
+/* module-internal function prototypes */
+
 static Boolean attach_subcorpus(CorpusList *cl,
                                 char *advertised_directory,
                                 char *advertised_filename);
@@ -64,15 +67,33 @@ CorpusList *GetSystemCorpus(char *name, char *registry);
 
 /* -------------------------------------------------- */
 
+/** Global list of currently-loaded corpora */
 CorpusList *corpuslist;
+/* TODO: this is in both corpmanag.h and corpmanag.c and it shouldn't be, I'm sure. -- AH*/
 
-void init_corpuslist(void)
+
+/**
+ * Initialises the global corpus list (sets it to NULL, no matter what its value was).
+ */
+void
+init_corpuslist(void)
 {
   corpuslist = (CorpusList *)NULL;
   set_current_corpus(NULL, 0);
 }
 
-void initialize_cl(CorpusList *cl, int free_name)
+/**
+ * Resets to empty a CorpusList object.
+ *
+ * This is done, largely, by freeing all its members
+ * (and setting nonfreeable members to 0 or NULL)...
+ *
+ * @param cl         The corpus list to initialise.
+ * @param free_name  Boolean: the name, mother_name and mother_sizemembers
+ *                   will be cleared iff free_name.
+ */
+void
+initialize_cl(CorpusList *cl, int free_name)
 {
   if (free_name) {
     cl_free(cl->name);
@@ -101,7 +122,13 @@ void initialize_cl(CorpusList *cl, int free_name)
   cl_free(cl->keywords);
 }
 
-void free_corpuslist(void)
+/**
+ * Frees the global list of currently-loaded corpora.
+ *
+ * This function sets the corpus list to NULL and frees all members of the list.
+ */
+void
+free_corpuslist(void)
 {
   CorpusList *tmp;
   
@@ -114,7 +141,11 @@ void free_corpuslist(void)
   set_current_corpus(NULL, 0);
 }
 
-CorpusList *NewCL(void)
+/**
+ * Creates a new CorpusList object.
+ */
+CorpusList *
+NewCL(void)
 {
   CorpusList *cl;
 
@@ -226,8 +257,10 @@ NrFieldValues(CorpusList *cl, FieldType ft)
 }
 
 /* ---------------------------------------------------------------------- */
-/* utility required by ensure_corpus_size() */
-int SystemCorpusSize(Corpus *corpus)
+
+/* A utility function required by ensure_corpus_size() */
+int
+SystemCorpusSize(Corpus *corpus)
 {
   Attribute *attr;
   
@@ -240,19 +273,24 @@ int SystemCorpusSize(Corpus *corpus)
 }
 
 /* ---------------------------------------------------------------------- */
-/* This is an internal function used to ensure that a system corpus
-   from the corpus list is accessible and that its size has been
-   computed. In case of subcorpora, this function implements delayed
-   loading. It is necessary because of a hack that prevents CQP from
-   determining the sizes of all know corpora at start-up (which caused
-   annoying delays if one or more corpora are not accessible) and from
-   reading all subcorpora in the local corpus directory (which caused
-   a number of delays and crashes with MP templates).
-   ensure_corpus_size() is needed by findcorpus() and
-   ensure_syscorpus() at the very least. It may be needed in other
-   places to keep CQP from crashing. */
-
-Boolean ensure_corpus_size(CorpusList *cl)
+/**
+ * This is an internal function used to ensure that a system corpus
+ * from the corpus list is accessible and that its size has been
+ * computed. In case of subcorpora, this function implements delayed
+ * loading. It is necessary because of a hack that prevents CQP from
+ * determining the sizes of all know corpora at start-up (which caused
+ * annoying delays if one or more corpora are not accessible) and from
+ * reading all subcorpora in the local corpus directory (which caused
+ * a number of delays and crashes with MP templates).
+ * ensure_corpus_size() is needed by findcorpus() and
+ * ensure_syscorpus() at the very least. It may be needed in other
+ * places to keep CQP from crashing.
+ *
+ * @param cl The corpus whose accessibility is to be checked.
+ * @return   Boolean: true if access is OK.
+ */
+Boolean
+ensure_corpus_size(CorpusList *cl)
 {
   if (cl->type == SYSTEM) { 
     /* System corpus: check corpus size (may have to be computed now) */
@@ -324,18 +362,27 @@ Boolean ensure_corpus_size(CorpusList *cl)
 
 
 
-/* ---------------------------------------------------------------------- */
 
-/* try to find the corpus with name 'name' in the list of currently
+
+/**
+ * Finds a loaded corpus.
+ *
+ * This function tries to find the corpus with name 'name' in the list of currently
  * loaded corpora. In case of subcorpora, qualifier is the mother's
- * name. in case of syscorpora, qualifier is the registry. If
+ * name. in case of system corpora, qualifier is the registry. If
  * qualifier is NULL, it is neglected and the first matching corpus is
  * returned. If type is not UNDEF, only corpora of that type are
- * returned. No side effects take place. */
-
-CorpusList *LoadedCorpus(char *name, 
-                         char *qualifier, 
-                         CorpusType type)
+ * returned. No side effects take place.
+ *
+ * @param name       The corpus we are lookign for.
+ * @param qualifier  An extra "bit" of the corpus name (see function description).
+ * @param type       Which type of corpus is wanted (may be UNDEF).
+ * @return           Pointer to the CorpusList of the corpus that was found.
+ */
+CorpusList *
+LoadedCorpus(char *name,
+             char *qualifier,
+             CorpusType type)
 {
   CorpusList *sp;
 
@@ -388,7 +435,8 @@ CorpusList *LoadedCorpus(char *name,
 
 /* ---------------------------------------------------------------------- */
 
-CorpusList *findcorpus(char *s, CorpusType type, int try_recursive_search)
+CorpusList *
+findcorpus(char *s, CorpusType type, int try_recursive_search)
 {
   CorpusList *sp, *tmp;
   char *colon;
@@ -498,7 +546,8 @@ CorpusList *findcorpus(char *s, CorpusType type, int try_recursive_search)
   return sp;
 }
 
-void dropcorpus(CorpusList *cl)
+void
+dropcorpus(CorpusList *cl)
 {
   CorpusList *prev;
 
@@ -537,9 +586,10 @@ void dropcorpus(CorpusList *cl)
   }
 }
 
-CorpusList *duplicate_corpus(CorpusList *cl,
-                             char *new_name,
-                             Boolean force_overwrite)
+CorpusList *
+duplicate_corpus(CorpusList *cl,
+                 char *new_name,
+                 Boolean force_overwrite)
 {
   CorpusList *newc;
 
@@ -653,8 +703,9 @@ CorpusList *duplicate_corpus(CorpusList *cl,
   return newc;
 }
 
-CorpusList *make_temp_corpus(CorpusList *cl,
-                             char *new_name)
+CorpusList *
+make_temp_corpus(CorpusList *cl,
+                 char *new_name)
 {
   CorpusList *newc;
 
@@ -745,7 +796,8 @@ CorpusList *make_temp_corpus(CorpusList *cl,
   return newc;
 }
 
-CorpusList *assign_temp_to_sub(CorpusList *tmp, char *subname)
+CorpusList *
+assign_temp_to_sub(CorpusList *tmp, char *subname)
 {
   CorpusList *cl;
 
@@ -817,7 +869,8 @@ CorpusList *assign_temp_to_sub(CorpusList *tmp, char *subname)
   return NULL;
 }
 
-void drop_temp_corpora(void)
+void
+drop_temp_corpora(void)
 {
   CorpusList *cl, *prev, *del;
   
@@ -859,7 +912,8 @@ void drop_temp_corpora(void)
 
 /* ---------------------------------------------------------------------- */
 
-static char *changecase_string(char *str, enum case_mode mode)
+static char *
+changecase_string(char *str, enum case_mode mode)
 {
   char *str_new;
   int i, len = strlen(str);
@@ -872,7 +926,8 @@ static char *changecase_string(char *str, enum case_mode mode)
   return (str_new);
 }
 
-static char *changecase_string_no_copy(char *str, enum case_mode mode)
+static char *
+changecase_string_no_copy(char *str, enum case_mode mode)
 {
   int i;
 
@@ -882,7 +937,8 @@ static char *changecase_string_no_copy(char *str, enum case_mode mode)
   return str;
 }
 
-static char *get_fulllocalpath(CorpusList *cl, int qualify)
+static char *
+get_fulllocalpath(CorpusList *cl, int qualify)
 {
   char fullname[1024];
   char *upname;
@@ -907,9 +963,21 @@ static char *get_fulllocalpath(CorpusList *cl, int qualify)
 
 /* ---------------------------------------------------------------------- */
 
-/* this test is used for registry entries -> a file is considered accessible
-   iff user can read it and it is not a (sub)directory */
-static Boolean accessible(char *dir, char *file)
+
+/**
+ * Tests whether a file is accessible.
+ *
+ * A file is considered accessible
+ * iff user can read it and it is not a (sub)directory.
+ *
+ * This test is used for registry entries.
+ *
+ * @param dir   Directory in which the file is to be found.
+ * @param file  The filename to check.
+ * @return      Boolean: true iff file is accessible.
+ */
+static Boolean
+accessible(char *dir, char *file)
 {
 
   /* fullname is allocated: lenth of string dir and length of string file */
@@ -942,7 +1010,8 @@ static Boolean accessible(char *dir, char *file)
    but this caused enormous delays when there were lots of files in this directory (e.g. in BNCweb).  So now
    every file whose name looks right will be inserted into the internal list, but accessing it will fail
    if it turns out to be bogus (which shouldn't happen anyway if the directory is handled by a sane person). */
-int check_stamp(char *directory, char *fname)
+int
+check_stamp(char *directory, char *fname)
 {
   FILE *fd;
   char full_name[1024];
@@ -965,7 +1034,8 @@ int check_stamp(char *directory, char *fname)
 
 /* ---------------------------------------------------------------------- */
 
-void load_corpusnames(enum corpus_type ct)
+void
+load_corpusnames(enum corpus_type ct)
 {
   DIR           *dp;
   struct dirent *ep;
@@ -1087,7 +1157,8 @@ void load_corpusnames(enum corpus_type ct)
   }
 }
 
-void check_available_corpora(enum corpus_type ct)
+void
+check_available_corpora(enum corpus_type ct)
 {
   if (ct == UNDEF) {
     load_corpusnames(SYSTEM);
@@ -1104,7 +1175,8 @@ void check_available_corpora(enum corpus_type ct)
 
 /* ---------------------------------------------------------------------- */
 
-CorpusList *GetSystemCorpus(char *name, char *registry)
+CorpusList *
+GetSystemCorpus(char *name, char *registry)
 {
   Corpus *this_corpus;
   CorpusList *cl;
@@ -1170,7 +1242,8 @@ CorpusList *GetSystemCorpus(char *name, char *registry)
 
 /* ------------------------------------------------------------ */
 
-CorpusList *ensure_syscorpus(char *registry, char *name)
+CorpusList *
+ensure_syscorpus(char *registry, char *name)
 {
   CorpusList *cl;
 
@@ -1200,9 +1273,12 @@ CorpusList *ensure_syscorpus(char *registry, char *name)
   return cl;
 }
 
-static Boolean attach_subcorpus(CorpusList *cl,
-                                char *advertised_directory,
-                                char *advertised_filename)
+
+
+static Boolean
+attach_subcorpus(CorpusList *cl,
+                 char *advertised_directory,
+                 char *advertised_filename)
 {
   int         j, len;
   char       *fullname;
@@ -1405,7 +1481,8 @@ static Boolean attach_subcorpus(CorpusList *cl,
   return load_ok;
 }
 
-Boolean save_subcorpus(CorpusList *cl, char *fname)
+Boolean
+save_subcorpus(CorpusList *cl, char *fname)
 {
   int i, l1, l2, magic;
 
@@ -1515,7 +1592,8 @@ Boolean save_subcorpus(CorpusList *cl, char *fname)
   }
 }
 
-void save_unsaved_subcorpora()
+void
+save_unsaved_subcorpora()
 {
   CorpusList *cl;
   
@@ -1530,20 +1608,38 @@ void save_unsaved_subcorpora()
     }
 }
 
-/* Iterate through list of corpora */
 
-CorpusList *FirstCorpusFromList()
+
+/**
+ * Gets the CorpusList pointer for the first corpus on the currently-loaded list.
+ *
+ * Function for iterating through the list of currently-loaded corpora.
+ *
+ * @return  The requested CorpusList pointer.
+ */
+CorpusList *
+FirstCorpusFromList()
 {
   return corpuslist;
 }
 
-CorpusList *NextCorpusFromList(CorpusList *cl)
+/**
+ * Gets the CorpusList pointer for the next corpus on the currently-loaded list.
+ *
+ * Function for iterating through the list of currently-loaded corpora.
+ *
+ * @param cl  The current corpus on the list.
+ * @return  The requested CorpusList pointer.
+ */
+CorpusList *
+NextCorpusFromList(CorpusList *cl)
 {
   return (cl ? cl->next : NULL);
 }
 
 
-Boolean access_corpus(CorpusList *cl)
+Boolean
+access_corpus(CorpusList *cl)
 {
   if (!cl)
     return False;
@@ -1573,7 +1669,8 @@ Boolean access_corpus(CorpusList *cl)
 
 /* implements the search strategy for corpora */
 
-CorpusList *search_corpus(char *name)
+CorpusList *
+search_corpus(char *name)
 {
   CorpusList *cl;
 
@@ -1588,7 +1685,8 @@ CorpusList *search_corpus(char *name)
  * the corpus accessible
  */
 
-Boolean change_corpus(char *name, Boolean silent)
+Boolean
+change_corpus(char *name, Boolean silent)
 {
   CorpusList *cl;
 
@@ -1623,8 +1721,18 @@ is_qualified(char *corpusname) {
   return (strchr(corpusname, COLON) == NULL ? 0 : 1);
 }
 
+
+/**
+ * Splits a query result corpus-name into qualifier and local name.
+ *
+ * This function splits query result name {corpusname} into qualifier (name of mother corpus) and local name;
+ * returns pointer to local name part, or NULL if {corpusname} is not syntactically valid;
+ * if mother_name is not NULL, it must point to a buffer of suitable length (MAX_LINE_LENGTH is sufficient)
+ * where the qualifier will be stored (empty string for unqualified corpus, and return value == {corpusname} in this case)
+ */
 char *
-split_subcorpus_name(char *corpusname, char *mother_name) {
+split_subcorpus_name(char *corpusname, char *mother_name)
+{
   char *mark;
   int i, after_colon;
 
@@ -1662,7 +1770,14 @@ split_subcorpus_name(char *corpusname, char *mother_name) {
 
 
 
-Boolean touch_corpus(CorpusList *cp)
+/**
+ * Touches a corpus, ie, marks it as changed.
+ *
+ * @param cp  The corpus to touch. This must be of type SUB.
+ * @return    Boolean: true if the touch worked, otherwise false.
+ */
+Boolean
+touch_corpus(CorpusList *cp)
 {
   if ((!cp) ||
       (cp->type != SUB))
@@ -1676,15 +1791,20 @@ Boolean touch_corpus(CorpusList *cp)
 }
 
 
+/**
+ * Sets the current corpus (by pointer to the corpus).
+ *
+ * Also, execustes Xkwic side effects, if necessary
+ *
+ * @param cp     Pointer to the corpus to set as current.
+ *               cp may be NULL, which is legal.
+ * @param force  If true, the current corpus is set to the specified
+ *               corpus, even if it is ALREADY set to that corpus.
+ * @return       Always 1.
+ */
 int 
 set_current_corpus(CorpusList *cp, int force)
 {
-
-  /*
-   * NOTE:
-   * cp may be NULL, which is legal
-   */
-
   if (cp != current_corpus || force) {
     current_corpus = cp;
 
@@ -1713,7 +1833,19 @@ set_current_corpus(CorpusList *cp, int force)
 }
 
 
-int set_current_corpus_name(char *name, int force)
+/**
+ * Sets the current corpus (by name).
+ *
+ * Also, execustes Xkwic side effects, if necessary.
+ *
+ * @param name   Name of the corpus to set as current.
+ * @param force  If true, the current corpus is set to the specified
+ *               corpus, even if it is ALREADY set to that corpus.
+ * @return       True if the corpus was found and set, otherwise
+ *               false if the corpus could not be found.
+ */
+int
+set_current_corpus_name(char *name, int force)
 {
   CorpusList *cp;
   
@@ -1724,9 +1856,12 @@ int set_current_corpus_name(char *name, int force)
 }
 
 
-/* internal function for sorting list of corpus names */
+/**
+ * Internal function for sorting list of corpus names.
+ */
 static int
-show_corpora_files_sort(const void *p1, const void *p2) {
+show_corpora_files_sort(const void *p1, const void *p2)
+{
   char *name1 = *((char **) p1);
   char *name2 = *((char **) p2);
   int result = strcmp(name1, name2);
@@ -1815,9 +1950,20 @@ show_corpora_files(enum corpus_type ct)
 
 /* NEW FUNCTIONS ================================================== */
 
+/*
+ * TODO  (??)
+ *
+ * None of these functions is used anywhere.
+ * Their names are not noticeably better than the original names!
+ * Also, they are a deeply inefficient way of rewriting the API; all those unnecessary function calls!
+ * Can they be got rid of? -- and maybe rewrite the API the way SE did it in the CL instead -- AH. 26.9.09
+ */
+
+
 /* ============================== THE LIST OF CORPORA */
 
-void CorpusListInit(void)
+void
+CorpusListInit(void)
 {
   init_corpuslist();
 }
@@ -1829,17 +1975,20 @@ void CorpusListFree(void)
 
 /* ============================== CORPUS NAMES */
 
-Boolean CorpusNameValid(char *name) {
+Boolean
+CorpusNameValid(char *name) {
   return valid_subcorpus_id(name);
 }
 
-Boolean CorpusNameQualified(char *name) {
+Boolean
+CorpusNameQualified(char *name) {
   return is_qualified(name);
 }
 
 /* ============================== OPERATIONS ON/WITH CORPORA */
 
-void CorpusLoadDescriptors(CorpusType ct)
+void
+CorpusLoadDescriptors(CorpusType ct)
 {
   check_available_corpora(ct);
 }

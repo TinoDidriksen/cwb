@@ -70,6 +70,6 @@ int VerifyList(AttributeList *list,
                Corpus *corpus,
                int remove_illegal_entries);
 
-/* ======================================== EOF */
+
 
 #endif

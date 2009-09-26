@@ -50,10 +50,17 @@
 
 /* ---------------------------------------------------------------------- */
 
+/** doesn't currently appear to be used anywhere? */
 #define USE_OLD_COMPOSE  
 
 /* ---------------------------------------------------------------------- */
 
+/**
+ * Convert string function for ASCII mode.
+ *
+ * @param s  The string to convert.
+ * @return   s (ie no change).
+ */
 /* inline */
 char *
 ascii_convert_string(char *s)
@@ -66,104 +73,123 @@ ascii_print_field(FieldType field, int at_end);
 
 /* ---------------------------------------------------------------------- */
 
+/**
+ * Print description record for ASCII print mode.
+ */
 PrintDescriptionRecord 
 ASCIIPrintDescriptionRecord = {
-  "%9d: ",			/* CPOSPrintFormat */
+  "%9d: ",                            /* CPOSPrintFormat */
   
-  NULL,				/* BeforePrintStructures */
-  " ",				/* PrintStructureSeparator */
-  ": ",				/* AfterPrintStructures */
+  NULL,                               /* BeforePrintStructures */
+  " ",                                /* PrintStructureSeparator */
+  ": ",                               /* AfterPrintStructures */
 
-  "<",				/* StructureBeginPrefix */
-  ">",				/* StructureBeginSuffix */
-  " ",				/* StructureSeparator */
-  "</",				/* StructureEndPrefix */
-  ">",				/* StructureEndSuffix */
+  "<",                                /* StructureBeginPrefix */
+  ">",                                /* StructureBeginSuffix */
+  " ",                                /* StructureSeparator */
+  "</",                               /* StructureEndPrefix */
+  ">",                                /* StructureEndSuffix */
 
-  NULL,				/* BeforeToken */
-  " ",				/* TokenSeparator */
-  "/",				/* AttributeSeparator */
-  NULL,				/* AfterToken */
+  NULL,                               /* BeforeToken */
+  " ",                                /* TokenSeparator */
+  "/",                                /* AttributeSeparator */
+  NULL,                               /* AfterToken */
 
-  NULL,				/* BeforeField */
-  NULL,				/* FieldSeparator */
-  NULL,				/* AfterField */
+  NULL,                               /* BeforeField */
+  NULL,                               /* FieldSeparator */
+  NULL,                               /* AfterField */
 
-  NULL,				/* BeforeLine */
-  "\n",				/* AfterLine */
+  NULL,                               /* BeforeLine */
+  "\n",                               /* AfterLine */
 
-  NULL,				/* BeforeConcordance */
-  NULL,				/* AfterConcordance */
+  NULL,                               /* BeforeConcordance */
+  NULL,                               /* AfterConcordance */
   ascii_convert_string,
-  NULL				/* don't highlight anchor points */
+  NULL                                /* don't highlight anchor points */
 };
 
+/**
+ * Print description record for Highlighted-ASCII print mode.
+ */
 PrintDescriptionRecord 
 ASCIIHighlightedPrintDescriptionRecord = {
-  "%9d: ",			/* CPOSPrintFormat */
+  "%9d: ",                            /* CPOSPrintFormat */
   
-  NULL,				/* BeforePrintStructures */
-  " ",				/* PrintStructureSeparator */
-  ": ",				/* AfterPrintStructures */
+  NULL,                               /* BeforePrintStructures */
+  " ",                                /* PrintStructureSeparator */
+  ": ",                               /* AfterPrintStructures */
 
-  "<",				/* StructureBeginPrefix */
-  ">",				/* StructureBeginSuffix */
-  " ",				/* StructureSeparator */
-  "</",				/* StructureEndPrefix */
-  ">",				/* StructureEndSuffix */
+  "<",                                /* StructureBeginPrefix */
+  ">",                                /* StructureBeginSuffix */
+  " ",                                /* StructureSeparator */
+  "</",                               /* StructureEndPrefix */
+  ">",                                /* StructureEndSuffix */
 
-  NULL,		                /* BeforeToken */
-  " ",				/* TokenSeparator */
-  "/",				/* AttributeSeparator */
-  NULL,				/* AfterToken */
+  NULL,                               /* BeforeToken */
+  " ",                                /* TokenSeparator */
+  "/",                                /* AttributeSeparator */
+  NULL,                               /* AfterToken */
 
-  NULL,				/* BeforeField */
-  NULL,				/* FieldSeparator */
-  NULL,				/* AfterField */
+  NULL,                               /* BeforeField */
+  NULL,                               /* FieldSeparator */
+  NULL,                               /* AfterField */
 
-  NULL,				/* BeforeLine */
-  "\n",				/* AfterLine */
+  NULL,                               /* BeforeLine */
+  "\n",                               /* AfterLine */
 
-  NULL,				/* BeforeConcordance */
-  NULL,				/* AfterConcordance */
+  NULL,                               /* BeforeConcordance */
+  NULL,                               /* AfterConcordance */
   ascii_convert_string,
-  ascii_print_field		/* printField -> highlighting of anchor points */
+  ascii_print_field                   /* printField -> highlighting of anchor points */
 };
 
 /* ---------------------------------------------------------------------- */
 
+/**
+ * Boolean: have escapes been initialised?
+ */
 static int escapes_initialized = 0;
 
 static char
-  *sc_s_in,		/* Enter standout (highlighted) mode */
-  *sc_s_out,		/* Exit standout mode */
-  *sc_u_in,		/* Enter underline mode */
-  *sc_u_out,		/* Exit underline mode */
-  *sc_b_in,		/* Enter bold mode */
-  *sc_b_out,		/* Exit bold mode (doesn't exist; this code turns off _all_ attributes) */
-  *sc_bl_in,		/* Enter blink mode */
-  *sc_bl_out,		/* Exit blink mode */
-  *sc_all_out;		/* Turn off all display attributes */
+  *sc_s_in,                           /**< Enter standout (highlighted) mode */
+  *sc_s_out,                          /**< Exit standout mode */
+  *sc_u_in,                           /**< Enter underline mode */
+  *sc_u_out,                          /**< Exit underline mode */
+  *sc_b_in,                           /**< Enter bold mode */
+  *sc_b_out,                          /**< Exit bold mode (doesn't exist; this code turns off _all_ attributes) */
+  *sc_bl_in,                          /**< Enter blink mode */
+  *sc_bl_out,                         /**< Exit blink mode */
+  *sc_all_out;                        /**< Turn off all display attributes */
 
 /* flags for current display attributes */
-int sc_s_mode = 0;		/* following tokens will be shown in standout mode */
-int sc_u_mode = 0;		/* following tokens will be shown in underline mode */
-int sc_b_mode = 0;		/* following tokens will be shown in bold mode */
+int sc_s_mode = 0;                    /**< Boolean: following tokens will be shown in standout mode */
+int sc_u_mode = 0;                    /**< Boolean: following tokens will be shown in underline mode */
+int sc_b_mode = 0;                    /**< Boolean: following tokens will be shown in bold mode */
 
 
 #ifndef USE_TERMCAP
 
+/**
+ * Dummy function
+ */
 char *
-get_colour_escape(char colour, int foreground) {
+get_colour_escape(char colour, int foreground)
+{
   return "";
 }
 
+/**
+ * Dummy function
+ */
 char *
 get_typeface_escape(char typeface) {
   return "";
 }
 
-void get_screen_escapes() 
+/**
+ * Dummy function
+ */
+void get_screen_escapes(void)
 {
   sc_s_in = NULL;
   sc_s_out = NULL;
@@ -181,7 +207,8 @@ void get_screen_escapes()
 #else /* USE_TERMCAP */
 
 
-void get_screen_escapes()
+void
+get_screen_escapes(void)
 {
   int status, l;
   char *term;
@@ -212,7 +239,7 @@ void get_screen_escapes()
   l = strlen(sc_all_out);
   if ((l > 0) && (sc_all_out[l-1] == '\x0f')) {
     sc_all_out = cl_strdup(sc_all_out);
-    sc_all_out[l-1] = 0;	/* just chop of the offending character */
+    sc_all_out[l-1] = 0;        /* just chop of the offending character */
   }
 
 
@@ -254,7 +281,7 @@ void get_screen_escapes()
   /* in highlighted mode, switch off display attributes at end of line (to be on the safe side) */
   ASCIIHighlightedPrintDescriptionRecord.AfterLine = cl_malloc(strlen(sc_all_out) + 2);
   sprintf(ASCIIHighlightedPrintDescriptionRecord.AfterLine,
-	  "%s\n", sc_all_out);
+          "%s\n", sc_all_out);
 
   /* print cpos in blue, "print structures" in pink if we're in coloured mode */
   if (use_colour) {
@@ -265,27 +292,29 @@ void get_screen_escapes()
 
     ASCIIHighlightedPrintDescriptionRecord.CPOSPrintFormat = cl_malloc(strlen(blue) + strlen(normal) + 8);
     sprintf(ASCIIHighlightedPrintDescriptionRecord.CPOSPrintFormat,
-	    "%s%c9d:%s ", blue, '%', normal);
+            "%s%c9d:%s ", blue, '%', normal);
     ASCIIHighlightedPrintDescriptionRecord.BeforePrintStructures = cl_malloc(strlen(pink) + strlen(bold) + 4);
     sprintf(ASCIIHighlightedPrintDescriptionRecord.BeforePrintStructures,
-	    "%s%s", pink, bold);
+            "%s%s", pink, bold);
     ASCIIHighlightedPrintDescriptionRecord.AfterPrintStructures = cl_malloc(strlen(normal) + 6);
     sprintf(ASCIIHighlightedPrintDescriptionRecord.AfterPrintStructures,
-	    ":%s ", normal);
+            ":%s ", normal);
   }
 }
 
+/* typeface = b=bold, u=underlined, s=standout, n=normal */
 char *
-get_typeface_escape(char typeface) {
+get_typeface_escape(char typeface)
+{
   if (!escapes_initialized)
     get_screen_escapes();
   if (!escapes_initialized)
-    return "";			/* initialisation failed */
+    return "";                        /* initialisation failed */
   switch (typeface) {
   case 'b': return sc_b_in;
   case 'u': return sc_u_in;
   case 's': return sc_s_in;
-  case 'n': return sc_all_out;	/* also switches off colour */
+  case 'n': return sc_all_out;        /* also switches off colour */
   default:
     fprintf(stderr, "Internal error: unknown typeface '%c'.\n", typeface);
     return "";
@@ -293,11 +322,13 @@ get_typeface_escape(char typeface) {
 }
 
 
+/* interface to the terminal formatting escape sequences (with dummy replacements if USE_TERMCAP is not set) */
+/* colour: r=red g=green b=blue, p=pink, y=yellow, c=cyan */
 char *
 get_colour_escape(char colour, int foreground) {
   if (use_colour) {
     if (*(get_typeface_escape('n')) == 0) 
-      return "";		/* don't try colour if terminal doesn't support typefaces */
+      return "";                /* don't try colour if terminal doesn't support typefaces */
     if (foreground) {
       switch(colour) {
       case 'r': return "\x1B[0;31m";
@@ -307,8 +338,8 @@ get_colour_escape(char colour, int foreground) {
       case 'p': return "\x1B[0;35m";
       case 'c': return "\x1B[0;36m";
       default:
-	fprintf(stderr, "Internal error: unknown colour '%c'.\n", colour);
-	return "\x1B[0m";
+        fprintf(stderr, "Internal error: unknown colour '%c'.\n", colour);
+        return "\x1B[0m";
       }
     }
     else {
@@ -320,8 +351,8 @@ get_colour_escape(char colour, int foreground) {
       case 'p': return "\x1B[0;45m";
       case 'c': return "\x1B[0;46m";
       default:
-	fprintf(stderr, "Internal error: unknown colour '%c'.\n", colour);
-	return "\x1B[0m";
+        fprintf(stderr, "Internal error: unknown colour '%c'.\n", colour);
+        return "\x1B[0m";
       }
     }
   }
@@ -342,14 +373,14 @@ get_colour_escape(char colour, int foreground) {
  * ======================================================================
  */
 
-/* 'static' return value of ascii_print_field() */
+/**< 'static' return value of ascii_print_field() */
 char sc_before_token[256];
 
 char *
 ascii_print_field(FieldType field, int at_end)
 {
 
-  *sc_before_token = 0;		/* sets sc_before_token to "" */
+  *sc_before_token = 0;                /* sets sc_before_token to "" */
 
   /* if targets are shown, print target number at end of target/keyword fields */
   if (show_targets && at_end && (field==TargetField || field==KeywordField)) {
@@ -358,18 +389,18 @@ ascii_print_field(FieldType field, int at_end)
     if (*red != 0) {
       /* must set colour first, then all other current attributes */
       sprintf(sc_before_token + strlen(sc_before_token),
-	      "%s%s%s%s%s%d", 
-	      sc_all_out,
-	      red,
-	      (sc_s_mode) ? sc_s_in : "",
-	      (sc_u_mode) ? sc_u_in : "",
-	      (sc_b_mode) ? sc_b_in : "",
-	      field - TargetField);       /* should yield 0 .. 9  */
+              "%s%s%s%s%s%d",
+              sc_all_out,
+              red,
+              (sc_s_mode) ? sc_s_in : "",
+              (sc_u_mode) ? sc_u_in : "",
+              (sc_b_mode) ? sc_b_in : "",
+              field - TargetField);       /* should yield 0 .. 9  */
     }
     else {
       sprintf(sc_before_token + strlen(sc_before_token),
- 	      "(%d)", field - TargetField /* should yield 0 .. 9 */
-	);
+               "(%d)", field - TargetField /* should yield 0 .. 9 */
+        );
     }
   }
 
@@ -404,30 +435,30 @@ ascii_print_field(FieldType field, int at_end)
   
   /* now compose escape sequence which has to be sent to the terminal (setting _all_ attributes to their current values) */
   sprintf(sc_before_token + strlen(sc_before_token),
-	  "%s%s%s%s",
-	  sc_all_out,		/* first switch off all attributes, then set the active ones in order standout, underline, bold */
-	  (sc_s_mode) ? sc_s_in : "",
-	  (sc_u_mode) ? sc_u_in : "",
-	  (sc_b_mode) ? sc_b_in : "");
+          "%s%s%s%s",
+          sc_all_out,                /* first switch off all attributes, then set the active ones in order standout, underline, bold */
+          (sc_s_mode) ? sc_s_in : "",
+          (sc_u_mode) ? sc_u_in : "",
+          (sc_b_mode) ? sc_b_in : "");
 
   return sc_before_token;
 }
 
 void
 ascii_print_aligned_line(FILE *stream, 
-			 int highlighting,
-			 char *attribute_name, 
-			 char *line)
+                         int highlighting,
+                         char *attribute_name,
+                         char *line)
 {
   if (highlighting) {
     char *red = get_colour_escape('r', 1);
     char *bold = get_typeface_escape('b');
     char *normal = get_typeface_escape('n');
     fprintf(stream, "%s%s-->%s:%s %s\n", 
-	    red, bold,
-	    attribute_name, 
-	    normal,
-	    line);
+            red, bold,
+            attribute_name,
+            normal,
+            line);
   }
   else
     fprintf(stream, "-->%s: %s\n", attribute_name, line);
@@ -435,17 +466,21 @@ ascii_print_aligned_line(FILE *stream,
 
 
 /* print the concordance line for the target_word on the screen */
-
+/**
+ * Prints a concordance line.
+ * (documentation not compklete)_
+ *
+ */
 void 
 print_concordance_line(FILE *outfd,
-			    CorpusList *cl, 
-			    int element,
-			    int apply_highlighting,
-			    AttributeList *strucs)
+                       CorpusList *cl,
+                       int element,
+                       int apply_highlighting,
+                       AttributeList *strucs)
 {
   char *outstr;
   int length, string_match_begin_pos, string_match_end_pos;
-  ConcLineField clf[NoField];	/* NoField is largest field code (not used by us) */
+  ConcLineField clf[NoField];        /* NoField is largest field code (not used by us) */
   PrintDescriptionRecord *pdr;
 
   if ((cl == NULL) || (outfd == NULL)) {
@@ -461,7 +496,7 @@ print_concordance_line(FILE *outfd,
   if (escapes_initialized == 0)
     get_screen_escapes();
 
-  sc_s_mode = 0;		/* reset display flags */
+  sc_s_mode = 0;                /* reset display flags */
   sc_u_mode = 0;
   sc_b_mode = 0;
 
@@ -501,16 +536,16 @@ print_concordance_line(FILE *outfd,
     pdr = &ASCIIPrintDescriptionRecord;
 
   outstr = compose_kwic_line(cl->corpus, 
-			     cl->range[element].start, cl->range[element].end,
-			     &CD, 
-			     &length,
-			     &string_match_begin_pos, &string_match_end_pos,
-			     left_delimiter, right_delimiter,
-			     NULL, 0, NULL,
-			     clf, NoField, /* NoField = # of entries in clf[] */
-			     ConcLineHorizontal, 
-			     pdr,
-			     0, NULL);
+                             cl->range[element].start, cl->range[element].end,
+                             &CD,
+                             &length,
+                             &string_match_begin_pos, &string_match_end_pos,
+                             left_delimiter, right_delimiter,
+                             NULL, 0, NULL,
+                             clf, NoField, /* NoField = # of entries in clf[] */
+                             ConcLineHorizontal,
+                             pdr,
+                             0, NULL);
 
   fputs(outstr, outfd);
   free(outstr);
@@ -520,17 +555,17 @@ print_concordance_line(FILE *outfd,
   
   if (CD.alignedCorpora != NULL)
     printAlignedStrings(cl->corpus, 
-			&CD, 
-			cl->range[element].start, cl->range[element].end,
-			apply_highlighting, 
-			outfd);
+                        &CD,
+                        cl->range[element].start, cl->range[element].end,
+                        apply_highlighting,
+                        outfd);
 }
 
 
 
 void 
 ascii_print_corpus_header(CorpusList *cl, 
-			  FILE *stream)
+                          FILE *stream)
 {
   time_t now;
   struct passwd *pwd = NULL;
@@ -546,30 +581,30 @@ ascii_print_corpus_header(CorpusList *cl,
   fputc('\n', stream);
   
   fprintf(stream,
-	  "#\n"
-	  "# User:    %s (%s)\n"
-	  "# Date:    %s"
-	  "# Corpus:  %s (%s)\n"
-	  "# Name:    %s:%s\n"
-	  "# Size:    %d intervals/matches\n",
-	  (pwd ? pwd->pw_name : "<unknown>"),
-	  (pwd ? pwd->pw_gecos  : "<unknown>"),
-	  ctime(&now),
-	  (cl->corpus && cl->corpus->registry_name ? cl->corpus->registry_name : "<Unknown Corpus>"),
-	  (cl->corpus && cl->corpus->name ? cl->corpus->name : "<Unknown Corpus>"),
-	  cl->mother_name, cl->name,
-	  cl->size);
+          "#\n"
+          "# User:    %s (%s)\n"
+          "# Date:    %s"
+          "# Corpus:  %s (%s)\n"
+          "# Name:    %s:%s\n"
+          "# Size:    %d intervals/matches\n",
+          (pwd ? pwd->pw_name : "<unknown>"),
+          (pwd ? pwd->pw_gecos  : "<unknown>"),
+          ctime(&now),
+          (cl->corpus && cl->corpus->registry_name ? cl->corpus->registry_name : "<Unknown Corpus>"),
+          (cl->corpus && cl->corpus->name ? cl->corpus->name : "<Unknown Corpus>"),
+          cl->mother_name, cl->name,
+          cl->size);
   fprintf(stream,
-	  "# Context: %d %s left, %d %s right\n"
-	  "#\n",
-	  CD.left_width, 
-	  (CD.left_type == CHAR_CONTEXT) ? "characters" :
-	  ((CD.left_type == WORD_CONTEXT) ? "words" : 
-	   (CD.left_structure_name) ? CD.left_structure_name : "???"),
-	  CD.right_width, 
-	  (CD.right_type == CHAR_CONTEXT) ? "characters" :
-	  ((CD.right_type == WORD_CONTEXT) ? "words" : 
-	   (CD.right_structure_name) ? CD.right_structure_name : "???"));
+          "# Context: %d %s left, %d %s right\n"
+          "#\n",
+          CD.left_width,
+          (CD.left_type == CHAR_CONTEXT) ? "characters" :
+          ((CD.left_type == WORD_CONTEXT) ? "words" :
+           (CD.left_structure_name) ? CD.left_structure_name : "???"),
+          CD.right_width,
+          (CD.right_type == CHAR_CONTEXT) ? "characters" :
+          ((CD.right_type == WORD_CONTEXT) ? "words" :
+           (CD.right_structure_name) ? CD.right_structure_name : "???"));
   
   if (cl->query_corpus && cl->query_text) {
     fprintf(stream, "# Query: %s; %s\n", cl->query_corpus, cl->query_text);
@@ -584,10 +619,10 @@ ascii_print_corpus_header(CorpusList *cl,
 
 void 
 ascii_print_output(CorpusList *cl, 
-		   FILE *outfd,
-		   int interactive,
-		   ContextDescriptor *cd,
-		   int first, int last)
+                   FILE *outfd,
+                   int interactive,
+                   ContextDescriptor *cd,
+                   int first, int last)
 {
   int real_line, i;
   int output_line = 1;
@@ -610,8 +645,8 @@ ascii_print_output(CorpusList *cl,
     }
 
     print_concordance_line(outfd, cl, real_line,
-			   interactive && highlighting, 
-			   cd->printStructureTags);
+                           interactive && highlighting,
+                           cd->printStructureTags);
   }
 }
 
@@ -642,24 +677,24 @@ ascii_print_group(Group *group, int expand, FILE *fd)
 
     if (pretty_print) {
       if (source_id != last_source_id) {
-	last_source_id = source_id;
-	nr_targets = 0;
+        last_source_id = source_id;
+        nr_targets = 0;
       }
 
       /* separator bar is meaningless when using the internal grouping algorithm */
       if ((UseExternalGrouping) || (cell == 0))
-	fprintf(fd, SEPARATOR);
+        fprintf(fd, SEPARATOR);
       
       fprintf(fd, "%-28s  %-28s\t%6d\n",
-	      (nr_targets == 0) ? source_s : " ", target_s, count);
+              (nr_targets == 0) ? source_s : " ", target_s, count);
     }
     else {
-      if (source_id < 0) source_s = "";	/* don't print "(none)" or "(all)" in plain mode (just empty string) */
+      if (source_id < 0) source_s = "";        /* don't print "(none)" or "(all)" in plain mode (just empty string) */
       if (target_id < 0) target_s = "";
       if (has_source) 
-	fprintf(fd, "%s\t%s\t%d\n", source_s, target_s, count);
+        fprintf(fd, "%s\t%s\t%d\n", source_s, target_s, count);
       else 
-	fprintf(fd, "%s\t%d\n", target_s, count);
+        fprintf(fd, "%s\t%d\n", target_s, count);
     }
     
     if (expand) {

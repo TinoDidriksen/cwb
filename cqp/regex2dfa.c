@@ -1077,7 +1077,7 @@ init(void)
  * Converts a regular expression to a DFA.
  *
  * @param rxs         The regular expression.
- * @param automation  Pointer to the DFA to write to.
+ * @param automaton   Pointer to the DFA to write to.
  */
 void
 regex2dfa(char *rxs, DFA *automaton)

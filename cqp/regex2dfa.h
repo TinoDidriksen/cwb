@@ -32,9 +32,9 @@ typedef struct dfa {
   int **TransTable;       /**< state transition table of the current dfa.    */
   Boolean *Final;         /**< set of final states.                          */
   int E_State;            /**< Error State -- it is introduced in order to
-                           * make the dfa complete, so the state transition
-                           * is a total mapping. The value of this variable
-                           * is Max_States.
+                           *   make the dfa complete, so the state transition
+                           *   is a total mapping. The value of this variable
+                           *   is Max_States.
                            */
 } DFA;
 

@@ -40,11 +40,11 @@
 #include "parser.tab.h"
 
 
-/** File handle used by the parser. */
+/** File handle used by the CQP-query-language parser. */
 extern FILE *yyin;
-/** Activates the parser. */
+/** Activates the CQP-query-language parser. */
 extern int yyparse (void);
-/** restarts the parser. */
+/** restarts the CQP-query-language parser. */
 extern void yyrestart(FILE *input_file);
 
 
@@ -53,6 +53,13 @@ FILE *cqp_files[MAXCQPFILES];
 /** index-pointer into cqp_files. @see cqp_files */
 int cqp_file_p;
 
+/**
+ * Boolean: true iff cqp_parse_file() - the main query syntax parsing function -
+ * is currently reading from the cqprc file handler.
+ *
+ * @see cqprc
+ * @see cqp_parse_file
+ */
 int reading_cqprc = 0;
 
 /* ======================================== Query Buffer Interface */
@@ -65,7 +72,11 @@ int QueryBufferOverflow = 0;                /**< flag which signals buffer overf
 
 
 
-
+/**
+ * This is the signal handler function that is used for the interrupt signal (CTRL+C).
+ *
+ * @param signum  The signal number (ignored).
+ */
 static void
 sigINT_signal_handler(int signum)
 {
@@ -76,6 +87,9 @@ sigINT_signal_handler(int signum)
   signal_handler_is_installed = 0;
 }
 
+/**
+ * Installs the interrupt signal handler function with the OS.
+ */
 void
 install_signal_handler(void)
 {

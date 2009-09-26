@@ -33,8 +33,11 @@
 
 #ifdef __NEVER__
 
-/* initialize the patternlist */
-void init_patternlist(void) 
+/**
+ * Initializes the patternlist.
+ */
+void
+init_patternlist(void)
 {
 
   int i;
@@ -58,7 +61,16 @@ void init_patternlist(void)
 
 #endif
 
-void print_pattern(int envidx, int index, int indent)
+
+/**
+ * Pretty-prints {what??}
+ *
+ * @param envidx  Index into the Environment global array.
+ * @param index   Index into the patternlist element of that element of environment.
+ * @param indent  The indent level to start printing at.
+ */
+void
+print_pattern(int envidx, int index, int indent)
 {
   if ((index >= 0) && (index <= Environment[envidx].MaxPatIndex))
     switch (Environment[envidx].patternlist[index].type) {
@@ -91,9 +103,17 @@ void print_pattern(int envidx, int index, int indent)
     fprintf(stderr, "Illegal index in print_pattern: %d\n", index);
 }
 
-/* utility function which translates the symbolic value for the 
-   repetition arguments */
-void print_rep_factor(int i)
+
+
+/**
+ * Translates the symbolic value for the repetition arguments.
+ *
+ * (The translated value is printed as a string to STDOUT.)
+ *
+ * @param i  The repetition argument symbol to translate.
+ */
+void
+print_rep_factor(int i)
 {
   switch (i) {
   case repeat_inf: 
@@ -108,10 +128,20 @@ void print_rep_factor(int i)
   }
 }
 
-/* pretty printer: traverse the evaluation tree in infix order and
- *  print it appropriately indented. */
 
-void print_evaltree(int envidx, Evaltree etptr, int indent) 
+
+/**
+ * Pretty-prints an evaluation tree.
+ *
+ * This function traverses the evaluation tree in infix order and
+ * prints it appropriately indented.
+ *
+ * @param envidx  Index into the Environment global array.
+ * @param etptr   The evaluation tree to print.
+ * @param indent  The indent level to start printing at.
+ */
+void
+print_evaltree(int envidx, Evaltree etptr, int indent)
 {
   int i;
 
@@ -232,11 +262,14 @@ void print_evaltree(int envidx, Evaltree etptr, int indent)
   }
 }
 
-/*
- * delete a boolean evaluation tree (recursive with depth-first). 
- */
 
-void free_booltree(Constrainttree ctptr)
+/**
+ * Deletes a boolean evaluation tree (recursive with depth-first).
+ *
+ * @param ctptr  The Constrainttree to delete.
+ */
+void
+free_booltree(Constrainttree ctptr)
 {
   ActualParamList *arg, *a2;
 
@@ -318,8 +351,14 @@ void free_booltree(Constrainttree ctptr)
 }
 
 
-/* delete evaluation tree with the depth-first method. */
-void free_evaltree(Evaltree *etptr) 
+
+/**
+ * Deletes an evaluation tree with the depth-first method.
+ *
+ * @param etptr  The evaluation tree to delete.
+ */
+void
+free_evaltree(Evaltree *etptr)
 {
   if ((*etptr) != NULL) {
     /* is the current node an operator node? */
@@ -382,8 +421,18 @@ void free_evaltree(Evaltree *etptr)
   }
 }
 
-/*initialize a boolean evaluation tree. */
-void init_booltree(Constrainttree *ctptr) {
+
+/**
+ * Initialises a boolean evaluation tree.
+ *
+ * At the moment, this involved simply setting the Constrainttree to NULL.
+ *
+ * @param ctptr  Pointer to the constrainttree to initialise. Note the Constrainttree
+ *               type is itself a pointer, so this is underlyingly a pointer-to-pointer.
+ */
+void
+init_booltree(Constrainttree *ctptr)
+{
   (*ctptr) = NULL;
 }
 
@@ -606,7 +655,16 @@ void print_booltree(Constrainttree ctptr, int indent)
 }
 
 /* show contents of the patternlist */
-void show_patternlist(int eidx)
+/**
+ * Shows the contents of the patternlist.
+ *
+ * (Prints to STDOUT.)
+ *
+ * @param eidx  Index into the global Environment array, identifying the element
+ *              whose patternlist is to be printed.
+ */
+void
+show_patternlist(int eidx)
 { 
   int i;
   
@@ -624,12 +682,18 @@ void show_patternlist(int eidx)
 
 
 
-/*
- * convert the evaluation tree to a string by traversing the tree in
- * infix order.                                                      
+/**
+ * Converts an evaluation tree to a string.
+ *
+ * This is done by traversing the tree in
+ * infix order.
+ *
+ * @param etptr   The evaluation tree to convert.
+ * @param length  Size of the returned string is placed here.
+ * @return        The resulting string.
  */
-
-char *evaltree2searchstr(Evaltree etptr, int *length) 
+char *
+evaltree2searchstr(Evaltree etptr, int *length)
 {
   int n, p, l, min, max, remain;
   char numstr[10];
@@ -801,7 +865,8 @@ char *evaltree2searchstr(Evaltree etptr, int *length)
 
 
 
-Constraint *try_optimization(Constraint *tree)
+Constraint *
+try_optimization(Constraint *tree)
 {
 
   enum b_ops operator;
