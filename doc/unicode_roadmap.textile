@@ -41,6 +41,46 @@ h1. Glossary
 
 h1. Implementation steps
 
+# Enfore declaration of encoding with @charset@ corpus property in registry files
+** already implemented; default for missing declaration could be @latin1@ (backward compatibility) or @ascii@ (encourages upgrades)
+# Upgrade *regular expression functions* in @cl/regopt.c@ to multi-charset implementation
+** all regexp functionality in the CWB should already be encapsulated in @CL_Regex@ objects (check!)
+** regexp optimiser (@cl_regopt_analyse()@, @cl_regex_match()@) should work out of the box for all ASCII extensions (in particular, ISO-8859-X and UTF-8)
+** @cl_new_regex()@ has to make use of charset declaration, which is already part of the API
+** alternative API: regexp tied to corpus handle, can only be used to match strings from this corpus
+** @cl_regex_match()@ should validate input strings for correct encoding if possible (esp. with UTF-8)
+# All low-level CL functions must validate MBCs in UTF-8 input strings to ensure well-defined behaviour
+** virtually all functions are linked to a corpus handle, from which they obtain their expected character set
+# Extend code in @cl/special_chars.c@ to support multiple character sets
+** in particular, @%c@ and @%d@ mappings must be implemented for all supported character sets
+** for ISO-8859-X, *mapping tables* have to be declared in analogy to @latin1_nocase_tab@ and @latin1_nodiac_tab@
+** for UTF-8, *case-folding* is handled by external library (preferably with @towlower@, although Unicode defines a different folding algorithm, e.g. for German _Straße_ vs. _STRASSE_)
+** *accent-folding* in UTF-8 is tricky, and no support library seems to offer pre-defined functions for this operation; possible strategies: (1) decompose, strip combining characters, compose; (2) construct explicit mapping from Unicode name database
+** case-folding and esp. accent-folding in UTF-8 will be rather slow; future CWB versions may want to store normalised versions of lexicon files on disk
+# Revise *escape codes* for non-ASCII characters (@cl_string_latex2iso()@)
+** existing latex escapes should be deactivated by default, but can be switched on for Latin1-encoded corpora with compatibility option
+** note that latex escapes also make it impossible to quote an arbitrary input string (containing ' and ") safely
+** new escape mechanism for non-ASCII characters: numeric codes (@\xNN@, @\uNNNN@) and possibly named characters in UTF-8 mode (@\N{LATIN SMALL LETTER A WITH GRAVE}@)
+# Unicode string normalisation
+** a crucial problem of Unicode is that many characters do not have a unique representation; e.g. latin letter + combining accent vs. pre-composed accented letter (see "Unicode normalization FAQ":http://unicode.org/faq/normalization.html)
+** in order to ensure correct matching, all UTF-8 input strings have to be *normalised*
+** applies in particular to CL low-level functions and the @cwb-encode@ / @cwb-s-encode@ tools
+** recommended: canonical pre-composed form (*NFC*), which gives a more compact string representation (and seems to be used by most existing software)
+** problem: many simple Unicode / regexp libraries don't offer normalisation functions
+# CQP commands @sort@, @count@ and @tabulate@ should work out of the box, since they rely on CL string folding
+** just need to make sure that the commands activate the appropriate character set
+** ideally, sorting should use a local-specific collation algorithm (which differs by language and country)
+# If CQP defines built-in functions for string processing (@cqp/builtins.c@), they must also be adapted to multiple character sets
+# Proper handling of fixed-character context in *kwic output* (@cat@) will require a major rewrite
+** affects all kwic-formatting code in @cqp/output.c@, @cqp/print-modes.c@, @ascii-print.c@, @html-print.c@, @latex-print.c@, @sgml-print.c@, etc.
+** this code is inefficient and seriously broken anyway (buffer overflow + segfault for large context sizes), so it should be re-implemented from scratch
+** recommendation: drop HTML, Latex and SGML modes; just offer ASCII for interactive use and XML as a general-purpose format (which can easily be transformed to other formats using XSLT, Perl, etc.)
+# If a "heavy" Unicode support library (e.g. ICU) is used, local installation has to be included in binary distribution
+** current binaries are statically linked with all non-standard libraries and can be installed and used stand-alone
+** "heavy" packages (e.g. Glib) consist of multiple shared libraries, data files, and configuration information (and may depend on further libraries, e.g. Glib requires @libgettext@)
+** for a standalone package, complete installations of these libraries have to be included in the binary distribution; wrapper scripts must set appropriate paths for dynamic libraries etc. before calling CWB tools; direct linking of e.g. CL library into other applications (as used by @CWB::CL@) may be very difficult
+
+
 h1. Software options (external libraries)
 
 h1. Discussion of support libraries
