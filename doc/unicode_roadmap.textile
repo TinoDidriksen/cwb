@@ -1,0 +1,46 @@
+h1. Goals
+
+* Full support for *UTF-8* and all *ISO-8859-X* character sets / encodings
+** ISO-8859-1 required for backward compatibility
+** 8-bit character sets are more compact and allow faster regexp matching
+
+* Relevant functionality:
+** *regular expressions* (including POSIX character classes and regexp optimiser)
+** *case/accent-folding* with @%c@ and @%d@ flags (regexp matching as well as @sort@, @count@ and @tabulate@ commands)
+** appropriate *sorting* of query results (should use language- and country-specific locale)
+
+* Proper input and output handling
+** fixed character context in kwic output (@cat@ command), where the current implementation counts bytes instead of characters (and may thus break MBCs)
+** strings in CQP queries accept hard-coded latex-style escapes for Latin1 accented characters, which should be deactivated (by default) and replaced by a more general mechanism for entering non-ASCII characters (@\xNN@, @\uNNNN@, etc.)
+** interactive pager (@cat@, @count@, etc.) should automatically be configured for UTF-8 or ISO-8859-X character set
+** in UTF-8 mode, all input strings (both interactive input in CQP and arguments of low-level CL functions) must be validated
+** corpus indexing (@cwb-encode@) also has to make sure that UTF-8 strings are handled and sorted properly
+
+* If possible, keep *compilation process* and *binary distribution* simple
+** avoid dependencies on large & complex frameworks such as ICU or Glib
+** static linking of external libraries, so stand-alone binaries can be distributed
+** currently, it is possible to do Universal builds (@ppc@, @i386@ and @x86_64@ in a single binary) on Mac OS X, which is really nice
+
+* Interactive users might want automatic recoding of input/output data
+** set input and output character sets independently of encoding used by corpus
+** otherwise, users would have to reconfigure their terminal window when they activate a new corpus with different encoding in a CQP session
+** this feature is probably difficult to implement (it would probably use @libiconv@, but there seem to be lots of compatibility and robustness issues)
+** probably easier to provide this functionality _only_ in HLL APIs (such as the @CWB::CQP@ module)
+
+* Should the CQP command syntax allow identifiers with Unicode characters?
+** CQP grammar: attribute names, named query results, etc.
+** registry file grammar: attribute names, "long names" of corpora, comments, etc.
+** *current recommendation* is to allow only simple ASCII identifiers (most portable, compatible with all supported character sets)
+** note that corpus IDs, attribute names and named query results are also used as (parts of) filenames, which may break if they contain non-ASCII characters
+
+h1. Glossary
+
+* MBC = multi-byte character (in UTF-8 encoding)
+* HLL = high-level language (Perl, Python, PHP, etc]
+* "character set" and "encoding" are used interchangeably (although this is not formally correct); they always refer to one of the following: UTF-8, ISO-8859-X or ASCII
+
+h1. Implementation steps
+
+h1. Software options (external libraries)
+
+h1. Discussion of support libraries
