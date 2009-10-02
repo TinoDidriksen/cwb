@@ -80,7 +80,75 @@ h1. Implementation steps
 ** "heavy" packages (e.g. Glib) consist of multiple shared libraries, data files, and configuration information (and may depend on further libraries, e.g. Glib requires @libgettext@)
 ** for a standalone package, complete installations of these libraries have to be included in the binary distribution; wrapper scripts must set appropriate paths for dynamic libraries etc. before calling CWB tools; direct linking of e.g. CL library into other applications (as used by @CWB::CL@) may be very difficult
 
+h1. Unicode software options (external libraries)
 
-h1. Software options (external libraries)
+* Regular expressions
+** easy solution: use standard *POSIX regexp functions* with locale support
+*** requires minimal changes to existing CWB code
+*** well-defined POSIX syntax with basic character classes, should be reasonably fast
+** *ICU regular expressions* (performance? POSIX syntax only?)
+*** performance? might be heavy-weight and slow
+*** POSIX syntax only?
+** *PCRE* library
+*** very powerful regular-expression syntax
+*** supports UTF-8 and single-byte codes (but no character classes in ISO-8859-X encodings?)
+*** said to be relatively heavy-weight and much slower than Perl regexp
+** *Oniguruma* regular expression library
+*** modern regexp library, explicitly designed for multiple character sets
+*** powerful syntax, but not Perl-compatible
+
+* Support functions (string manipulation, case-folding)
+** easy solution: standard *POSIX string functions* with locale support (should provide most of the necessary functionality)
+** *ICU* library (certainly has everything we might need)
+** *Glib* confirmed to include all necessary functions (but difficult to install & distribute)
+** SQLite uses various Unicode support functions from *Tcl* source code
+** is it possible to extract Unicode functionality from *Perl* codebase?
+
+* Unicode normalisation and accent-folding
+** *not available in POSIX* and most other light-weight solutions
+** *ICU* should provide all kinds of normalisation functions
+** other solutions: *Tcl* source code(?), or a specialised "utf8proc library":http://www.flexiguided.de/publications.utf8proc.en.html (not released under a standard license)
 
 h1. Discussion of support libraries
+
+* POSIX locales
+** @+@ no dependency on external libraries
+** @+@ easy to implement, with minimal changes to existing CWB code
+** @+@ string length, lowercasing and regular expressions confirmed to work on several platforms 
+** @?@ performance and reliability (across platforms) are unclear
+** @-@ only plain POSIX regexp syntax without powerful Perl-style extensions
+** @-@ need to activate appropriate locale (including language + country setting) for each string operation
+** @-@ locale names are not standardised, which may lead to compatibility problems (idea: precise locale to be declared in registry file, otherwise CWB will try to guess a widespread locale name for chosen character set + language)
+** @-@ may be difficult to port to Windows (but Cygwin works)
+
+* ICU
+** @+@ everything we need for Unicode support available in a single package
+** @?@ performance is unclear
+** @?@ do ICU regexp support only POSIX syntax or also Perl extensions?
+** @-@ as bloated as a hippo after a bean-eating contest
+** @-@ other functions / libraries are still needed for ISO-8859-X encodings
+** @-@ as far as Stefan knows, ICU is a complex installation with multiple shared libraries and data files, so it cannot be statically linked in an easily distributable stand-alone binary package
+
+* Glib
+** @+@ seems to offer all necessary Unicode functionality, except for regular expressions
+** @+@ also includes many other useful support functions that abstract away from platform dependencies
+** @-@ rather difficult to install (depends on other shared libs like @libgettext@ and local installation paths in @pkg-config@)
+** @-@ cannot be statically linked into binaries for distribution
+
+* "PCRE":http://www.pcre.org/ 
+** @+@ well-known and very powerful regular expresson dialect
+** @+@ presumably well-tested, since it is used by many software packages
+** @?@ as far as Stefan knows, PCRE has support at least for UTF-8 and byte-coded strings, but no further knowledge about ISO-8859-X character sets (so it wouldn't recognise accented characters there)
+** @-@ PCRE is rumored to be rather slow (esp. compared to the fast Perl implementation)
+
+* "Oniguruma":http://www.geocities.jp/kosako3/oniguruma/
+** @+@ modern, elegant regular expression library (also used by various software packages)
+** @+@ explicitly designed to support multiple character sets natively
+** @+@ documentation written in Japanese ;-)
+** @?@ performance is unclear, some comparative tests would be needed
+** @-@ powerful regexp extensions, but syntax is not Perl-compatible
+
+* Specialised solutions
+** "utf8proc":http://www.flexiguided.de/publications.utf8proc.en.html is a small software library for Unicode normalisation (providing missing functionality in POSIX locale approach); MIT license, not backed by a large developer community
+** Tcl Unicode functions (as used by SQLite) for various string operations; unclear whether normalisation functions are included
+** is it possible to extract Perl's Unicode functionality?
