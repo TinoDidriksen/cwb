@@ -3,6 +3,7 @@ h1. Goals
 * Full support for *UTF-8* and all *ISO-8859-X* character sets / encodings
 ** ISO-8859-1 required for backward compatibility
 ** 8-bit character sets are more compact and allow faster regexp matching
+*** Suggestion: make *ISO-8859-[^1] a secondary goal (most people with non-Latin1 data now have UTF-8 and it is the Unicode support for which there is currently most demand) -- AH
 
 * Relevant functionality:
 ** *regular expressions* (including POSIX character classes and regexp optimiser)
@@ -32,6 +33,7 @@ h1. Goals
 ** registry file grammar: attribute names, "long names" of corpora, comments, etc.
 ** *current recommendation* is to allow only simple ASCII identifiers (most portable, compatible with all supported character sets)
 ** note that corpus IDs, attribute names and named query results are also used as (parts of) filenames, which may break if they contain non-ASCII characters
+*** likewise, in high-level GUIs (CQPweb, BNCweb) CQP identifiers can end up within mySQL table names, which likewise may break if they contain non-ASCII characters [AH]  
 
 h1. Glossary
 
@@ -43,13 +45,16 @@ h1. Implementation steps
 
 # Enfore declaration of encoding with @charset@ corpus property in registry files
 ** already implemented; default for missing declaration could be @latin1@ (backward compatibility) or @ascii@ (encourages upgrades)
+*** I would prefer the latter as nowadays a non-savvy user's computer is as likely to produce UTF8 as Latin1 -- [AH]
 # Upgrade *regular expression functions* in @cl/regopt.c@ to multi-charset implementation
 ** all regexp functionality in the CWB should already be encapsulated in @CL_Regex@ objects (check!)
 ** regexp optimiser (@cl_regopt_analyse()@, @cl_regex_match()@) should work out of the box for all ASCII extensions (in particular, ISO-8859-X and UTF-8)
 ** @cl_new_regex()@ has to make use of charset declaration, which is already part of the API
 ** alternative API: regexp tied to corpus handle, can only be used to match strings from this corpus
 ** @cl_regex_match()@ should validate input strings for correct encoding if possible (esp. with UTF-8)
+*** suggest a function, int cl_string_validate_encoding(const char *, corpusCharset), to do this -- AH
 # All low-level CL functions must validate MBCs in UTF-8 input strings to ensure well-defined behaviour
+** ideally, this would be better done immediately on the string being taken into CWB, rather than repeatedly by different functions. So we should be able to assume that strings in indexed corpora are valid UTF8 (or whatever). -- AH
 ** virtually all functions are linked to a corpus handle, from which they obtain their expected character set
 # Extend code in @cl/special_chars.c@ to support multiple character sets
 ** in particular, @%c@ and @%d@ mappings must be implemented for all supported character sets
@@ -61,20 +66,25 @@ h1. Implementation steps
 ** existing latex escapes should be deactivated by default, but can be switched on for Latin1-encoded corpora with compatibility option
 ** note that latex escapes also make it impossible to quote an arbitrary input string (containing ' and ") safely
 ** new escape mechanism for non-ASCII characters: numeric codes (@\xNN@, @\uNNNN@) and possibly named characters in UTF-8 mode (@\N{LATIN SMALL LETTER A WITH GRAVE}@)
+*** we should standardise to the escape codes used by libraries: for instance PCRE and ICU both use @\xNN@ and @\x{NNNN}@ . The named-characters way of doing it would be very slow due to the need to search the whole unicode database , but it could be sped up by using the first word of the name to skip to an appropriate starting point in the DB. -- [AH]
 # Unicode string normalisation
 ** a crucial problem of Unicode is that many characters do not have a unique representation; e.g. latin letter + combining accent vs. pre-composed accented letter (see "Unicode normalization FAQ":http://unicode.org/faq/normalization.html)
 ** in order to ensure correct matching, all UTF-8 input strings have to be *normalised*
 ** applies in particular to CL low-level functions and the @cwb-encode@ / @cwb-s-encode@ tools
 ** recommended: canonical pre-composed form (*NFC*), which gives a more compact string representation (and seems to be used by most existing software)
+*** concur for Latin, Greek etc. alphabets, but for Arabic the opposite is probably true - most software does not use the "presentation forms" which are precomposed  -- AH
 ** problem: many simple Unicode / regexp libraries don't offer normalisation functions
+*** and if we write our own we have the difficulty of keeping it up to date with new versions of unicode -- AH
 # CQP commands @sort@, @count@ and @tabulate@ should work out of the box, since they rely on CL string folding
 ** just need to make sure that the commands activate the appropriate character set
-** ideally, sorting should use a local-specific collation algorithm (which differs by language and country)
+** ideally, sorting should use a locale-specific collation algorithm (which differs by language and country)
+*** again I think relying on locales could be dodgy for many languages...
 # If CQP defines built-in functions for string processing (@cqp/builtins.c@), they must also be adapted to multiple character sets
 # Proper handling of fixed-character context in *kwic output* (@cat@) will require a major rewrite
 ** affects all kwic-formatting code in @cqp/output.c@, @cqp/print-modes.c@, @ascii-print.c@, @html-print.c@, @latex-print.c@, @sgml-print.c@, etc.
 ** this code is inefficient and seriously broken anyway (buffer overflow + segfault for large context sizes), so it should be re-implemented from scratch
 ** recommendation: drop HTML, Latex and SGML modes; just offer ASCII for interactive use and XML as a general-purpose format (which can easily be transformed to other formats using XSLT, Perl, etc.)
+*** There is a problem here with multilingual support. For Arabic, devanagari etc. there is no such thing as fixed width afaik. Command line display is thus liable to be broken anyway. -- AH.
 # If a "heavy" Unicode support library (e.g. ICU) is used, local installation has to be included in binary distribution
 ** current binaries are statically linked with all non-standard libraries and can be installed and used stand-alone
 ** "heavy" packages (e.g. Glib) consist of multiple shared libraries, data files, and configuration information (and may depend on further libraries, e.g. Glib requires @libgettext@)
@@ -89,10 +99,13 @@ h1. Unicode software options (external libraries)
 ** *ICU regular expressions* (performance? POSIX syntax only?)
 *** performance? might be heavy-weight and slow
 *** POSIX syntax only?
+*** also worth noting: uses UTF16 internally, so there would be lots of conversion and malloc'ing overhead to use it with UTF8 -- AH.
 ** *PCRE* library
 *** very powerful regular-expression syntax
 *** supports UTF-8 and single-byte codes (but no character classes in ISO-8859-X encodings?)
+**** the Perl character classes like \w, \d etc. apply to ASCII and to top half of ISO-8859-X, depending on locale (so, possibly a bad idea to rely on this!) -- AH
 *** said to be relatively heavy-weight and much slower than Perl regexp
+**** I am not so sure about this, PCRE is less than 1/10 the size of ICU and seems to be as fast as POSIX (at least within the PHP engine). It is known to be slow when a pattern has to invoke the Unicode character database but I think this would apply to any library. -- AH.
 ** *Oniguruma* regular expression library
 *** modern regexp library, explicitly designed for multiple character sets
 *** powerful syntax, but not Perl-compatible
@@ -111,6 +124,10 @@ h1. Unicode software options (external libraries)
 
 h1. Discussion of support libraries
 
+* Performance testing
+** Many of the unknowns below concern the performance of regexes in the different libraries. We should get figures on this by testing them. This would be simple enough to code up - but what regexes can we use as benchmarks?
+** One suggestion from a webpage on benchmarking different regex modules in Haskell: haystack "Hello world foo=123 whereas bar=456 Goodbye", pattern ".*foo=([0-9]+).*bar=([0-9]+).*" 
+
 * POSIX locales
 ** @+@ no dependency on external libraries
 ** @+@ easy to implement, with minimal changes to existing CWB code
@@ -123,8 +140,9 @@ h1. Discussion of support libraries
 
 * ICU
 ** @+@ everything we need for Unicode support available in a single package
+*** (and we might need its functions for normalisation etc. even if we go elsewhere for regexp matching -- AH)
+** @+@ ICU regexps support  Perl extensions as well as basic POSIX-style
 ** @?@ performance is unclear
-** @?@ do ICU regexp support only POSIX syntax or also Perl extensions?
 ** @-@ as bloated as a hippo after a bean-eating contest
 ** @-@ other functions / libraries are still needed for ISO-8859-X encodings
 ** @-@ as far as Stefan knows, ICU is a complex installation with multiple shared libraries and data files, so it cannot be statically linked in an easily distributable stand-alone binary package
@@ -139,7 +157,9 @@ h1. Discussion of support libraries
 ** @+@ well-known and very powerful regular expresson dialect
 ** @+@ presumably well-tested, since it is used by many software packages
 ** @?@ as far as Stefan knows, PCRE has support at least for UTF-8 and byte-coded strings, but no further knowledge about ISO-8859-X character sets (so it wouldn't recognise accented characters there)
+*** It has support for at least locales in Latin1; not sure about other ISO-8859-X -- AH
 ** @-@ PCRE is rumored to be rather slow (esp. compared to the fast Perl implementation)
+*** my first bash at benchmarking suggests it is faster than POSIX and ICU -- AH
 
 * "Oniguruma":http://www.geocities.jp/kosako3/oniguruma/
 ** @+@ modern, elegant regular expression library (also used by various software packages)
@@ -152,3 +172,4 @@ h1. Discussion of support libraries
 ** "utf8proc":http://www.flexiguided.de/publications.utf8proc.en.html is a small software library for Unicode normalisation (providing missing functionality in POSIX locale approach); MIT license, not backed by a large developer community
 ** Tcl Unicode functions (as used by SQLite) for various string operations; unclear whether normalisation functions are included
 ** is it possible to extract Perl's Unicode functionality?
+*** I  would be worried about this because of the need to keep up with unicode updates. -- [AH] 
