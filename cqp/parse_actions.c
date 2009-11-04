@@ -2853,7 +2853,7 @@ do_dump(CorpusList *cl, int first, int last, struct Redir *rd)
 int
 do_undump(char *corpname, int extension_fields, int sort_ranges, struct InputRedir *rd)
 {
-  int i, size, match, matchend, target, keyword;
+  int i, ok, size, match, matchend, target, keyword;
   int max_cpos, mark, abort;                /* for validity checks */
   char line[MAX_LINE_LENGTH], junk[MAX_LINE_LENGTH], mother[MAX_LINE_LENGTH];
   CorpusList *cl = current_corpus, *new = NULL;
@@ -2902,8 +2902,30 @@ do_undump(char *corpname, int extension_fields, int sort_ranges, struct InputRed
     return 0;
   }
 
-  if ( (!fgets(line, MAX_LINE_LENGTH, rd->stream)) /* read undump table header = number of rows */
-       || (1 != sscanf(line, "%d %s", &size, junk)) ) {
+  ok = 0; /* read undump table header = number of rows */
+  if (fgets(line, MAX_LINE_LENGTH, rd->stream)) {
+    if (1 == sscanf(line, "%d %s", &size, junk)) {
+      ok = 1;
+    }
+    else if (2 == sscanf(line, "%d %d", &match, &matchend)) {
+      /* looks like undump file without line count => determine number of lines */
+      if (rd->is_pipe) {
+        cqpmessage(Warning, "Sorry, undump files without explict line count can only be read from regular files, not from pipes or standard input");
+      }
+      else {
+        size = 1; /* first line is already in buffer */
+        while (fgets(line, MAX_LINE_LENGTH, rd->stream))
+          size++; /* dump files should not contain any long lines, so this count is correct */
+        /* rewind stream to start of file */
+        if (fseek(rd->stream, 0, SEEK_SET) != 0) {
+          cqpmessage(Warning, "Can't rewind undump file after counting lines: line count must be given explicitly");
+        }
+        else
+          ok = 1;
+      }
+    }
+  }
+  if (!ok) {
     cqpmessage(Error, "Format error in undump file: expecting number of rows on first line");
     close_input_stream(rd);
     drop_temp_corpora();

@@ -302,6 +302,8 @@ open_input_stream(struct InputRedir *rd)
 
   assert(rd);
 
+  /* TODO: check if stream is already open (options: ignore, warning, silently close old stream) */
+
   if (rd->name) {
     i = strlen(rd->name) - 1;
     if (i < 0) i = 0;
@@ -310,12 +312,12 @@ open_input_stream(struct InputRedir *rd)
     
     if ((rd->name[i] == '|') && i >= 1) {
 
+      /* read input from a pipe (unless running in "secure" mode) */
       if (insecure) {
         rd->stream = NULL;
         rd->is_pipe = False;
       }
       else {
-        /* we read the input from a pipe */
         rd->is_pipe = True;
         tmp = (char *) cl_malloc(i + 1);
         strncpy(tmp, rd->name, i);
@@ -323,17 +325,19 @@ open_input_stream(struct InputRedir *rd)
         rd->stream = popen(tmp, "r");
         cl_free(tmp);
       }
+
     }
     else {
-      /* normal output to file */
-      
+
+      /* normal input from a regular file */
       rd->is_pipe = False;
       rd->stream = OpenFile(rd->name, "r");
+
     }
   }
   else {
     rd->stream = stdin;
-    rd->is_pipe = False;
+    rd->is_pipe = True;  /* stdin behaves like a pipe */
   }
   return (rd->stream == NULL ? 0 : 1);
 }
@@ -343,16 +347,15 @@ close_input_stream(struct InputRedir *rd)
 {
   int rv = 1;
 
-  if (rd->stream) {
+  if (rd->stream && rd->stream != stdin) {
     if (rd->is_pipe)
       rv = ! pclose(rd->stream); /* pclose returns 0 = success, non-zero = failure */
-    else if (rd->stream != stdin)
+    else
       rv = ! fclose(rd->stream); /* fclose the same; */
-
-    rd->stream = NULL;
-    rd->is_pipe = 0;
   }
 
+  rd->stream = NULL;
+  rd->is_pipe = 0;
   return rv;
 }
 

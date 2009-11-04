@@ -31,6 +31,11 @@ New features:
    indicated by a leading '?' character.  If these are not mounted, CQP will not issue warning messages; if
    they are mounted, all tools should ignore the '?' in the pathname.
 
+ - The header line of undump files (for the "undump" command in CQP) is now optional, provided that the
+   undump is a regular file (not a pipe or standard input).  CQP will automatically detect the new format
+   and read the file in two passes (first pass counts lines, second pass reads actual data).  This modification
+   simplifies data exchange with external programs such as spreadsheets, SQL databases and R.
+
 Bug fixes:
 
  - [2008-01-03] Fixed a strange bug in which the query

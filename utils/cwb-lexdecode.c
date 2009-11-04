@@ -293,7 +293,7 @@ main(int argc, char **argv) {
     case 's':                        /* s: print sorted */
       sort++;
       break;
-o
+
     case 'p':                        /* p: match regular expression */
       rx = optarg;
       break;

@@ -75,7 +75,7 @@ Attribute *word2;               /**< word attribute handle: target */
 Attribute *s2;                  /**< sentence attribute handle: target */
 Attribute *prealign1 = NULL;    /**< pre-alignment attribute (source) if given */
 Attribute *prealign2 = NULL;    /**< pre-alignment attribute (target) */
-int size2;                      /**< size of source corpus in sentences */
+int size1;                      /**< size of source corpus in sentences */
 int size2;                      /**< size of target corpus in sentences */
 int ws1;                        /**< size of source corpus in words (i.e. corpus positions) */
 int ws2;                        /**< size of target corpus in words (i.e. corpus positions) */
@@ -95,7 +95,7 @@ char prealign_name[1024] = "";  /**< pre-alignment given by structural attribute
 int prealign_has_values = 0;    /**< boolean: if 1, regions with same ID values are pre-aligned */
 int verbose = 0;                /**< controls printing of some extra progress info */
 
-char *registry_directory = NULL; /** string containing location of the registry directory.
+char *registry_directory = NULL; /** string containing location of the registry directory. */
 
 
 /**

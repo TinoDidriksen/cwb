@@ -23,8 +23,8 @@
 #
 # CWB version
 #
-VERSION = 2.2.100
-# the absolutely last release candidate for 3.0
+VERSION = 2.2.101
+# the absolutely very last release candidate for 3.0
 
 #
 # Check that required configuration variables are set
