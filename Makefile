@@ -122,7 +122,7 @@ depend:
 	done;
 
 clean:
-	for i in $(SUBDIRS) $(EXTERNALS) ; do $(MAKE) -C $$i clean; done;
+	for i in $(SUBDIRS) $(EXTERNALS); do if [ -f "$$i/Makefile" ]; then $(MAKE) -C $$i clean; fi; done;
 	-$(RM) *~ config/*/*~ CQi/*~ CQi/*.o technical/*~ TAGS
 	-$(RM) -rf build
 
