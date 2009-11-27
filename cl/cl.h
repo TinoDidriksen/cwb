@@ -348,6 +348,8 @@ CorpusProperty cl_next_corpus_property(CorpusProperty p);
 char *cl_corpus_property(Corpus *corpus, char *property);
 CorpusCharset cl_corpus_charset(Corpus *corpus);
 char *cl_charset_name(CorpusCharset id);
+CorpusCharset cl_charset_from_name(char *name);
+char *cl_charset_name_canonical(char *name_to_check);
 #define cl_new_attribute(c, name, type) find_attribute(c, name, type, NULL)
 #define cl_delete_attribute(a) attr_drop_attribute(a)
 #define cl_sequence_compressed(a) item_sequence_is_compressed(a)

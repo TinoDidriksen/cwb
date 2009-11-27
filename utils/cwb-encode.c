@@ -87,6 +87,7 @@ int input_file_is_pipe = 0;             /**< so we can properly close input_fd u
 int input_line = 0;                     /**< input line number (reset for each new file) for error messages */
 char *registry_file = NULL;             /**< if set, auto-generate registry file named {registry_file}, listing declared attributes */
 char *directory = NULL;                 /**< corpus data directory (no longer defaults to current directory) */
+char *corpus_character_set = "latin1";  /**< character set label that is inserted into the registry file */
 
 
 /* ---------------------------------------------------------------------- */
@@ -340,7 +341,7 @@ usage(void)
   fprintf(stderr, "     * this option always has to be specified (use -d . for current directory)\n");
   fprintf(stderr, "  -f <file> read input from <file> [default: stdin; may be used repeatedly]\n");
   fprintf(stderr, "     * gzipped files named *.gz will be decompressed automatically\n");
-  fprintf(stderr, "     • alias -t <file> is provided for backward compatibility\n");
+  fprintf(stderr, "     * alias -t <file> is provided for backward compatibility\n");
   fprintf(stderr, "  -F <dir>  read all files named *.vrt or *.vrt.gz in directory <dir>\n");
   fprintf(stderr, "     * files will be added to the corpus in alphabetical order (ASCII)\n");
   fprintf(stderr, "     * it is not possible to scan subdirectories recursively\n");
@@ -353,6 +354,9 @@ usage(void)
   fprintf(stderr, "  -s        skip empty lines in input data (recommended)\n");
   fprintf(stderr, "  -U <str>  insert <str> for missing columns [default: \"%s\"]\n", undef_value);
   fprintf(stderr, "  -b <n>    number of buckets in lexicon hash tables\n");
+  fprintf(stderr, "  -c <charset> specify corpus character set (instead of the default latin1)\n");
+  fprintf(stderr, "     * valid charsets: ascii ; latin1 to latin9 ; utf8\n");
+  fprintf(stderr, "     * NB: whatever this is set to, CWB/CQP currently treats everything as Latin1!\n");
   fprintf(stderr, "  -v        verbose mode (show progress messages while encoding)\n");
   fprintf(stderr, "  -q        quiet mode (suppresses most warnings)\n");
   fprintf(stderr, "  -D        debug mode (quiet, sorry, quite the opposite :-)\n");
@@ -1219,7 +1223,7 @@ parse_options(int argc, char **argv)
   cl_string_list dir_files;   /* list of input files found in directory (-F option) */
   int i, l;
 
-  while((c = getopt(argc, argv, "p:P:S:V:0:f:t:F:d:r:C:R:U:Bsb:xvqhD")) != EOF)
+  while((c = getopt(argc, argv, "p:P:S:V:0:f:t:F:d:r:C:R:U:Bsb:c:xvqhD")) != EOF)
     switch(c) {
 
       /* -B: strip leading and trailing blanks from tokens and annotations */
@@ -1235,6 +1239,13 @@ parse_options(int argc, char **argv)
       /* -q: suppress warnings (quiet mode) */
     case 'q':
       silent++;
+      break;
+
+      /* -c: specifies a character set */
+    case 'c':
+      corpus_character_set = cl_charset_name_canonical(optarg);
+      if (corpus_character_set == NULL)
+        error("Invalid character set specified with the -c flag!");
       break;
 
       /* -x: translate XML entities and ignore declarations & comments */
@@ -1917,7 +1928,7 @@ main(int argc, char **argv) {
     fprintf(registry_fd, "INFO %s\n\n", path);
     cl_free(path);
     fprintf(registry_fd, "# corpus properties provide additional information about the corpus:\n");
-    fprintf(registry_fd, "##:: charset  = \"latin1\" # change if your corpus uses different charset\n");
+    fprintf(registry_fd, "##:: charset  = \"%s\" \n", corpus_character_set);
     fprintf(registry_fd, "##:: language = \"??\"     # insert ISO code for language (de, en, fr, ...)\n");
     fprintf(registry_fd, "\n\n");
 

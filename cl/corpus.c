@@ -707,6 +707,8 @@ charset_spec charset_names[] = {
 
 /**
  * Gets a string containing the name of the specified CorpusCharset character set object.
+ *
+ * Note that returned string cannot be modified.
  */
 char *
 cl_charset_name(CorpusCharset id)
@@ -718,6 +720,42 @@ cl_charset_name(CorpusCharset id)
       return charset_names[i].name;
   }
   return "<unsupported>";
+}
+
+/**
+ * Gets a CorpusCharset enumeration with the id code for the given string.
+ */
+CorpusCharset
+cl_charset_from_name(char *name)
+{
+  int i;
+  CorpusCharset fallback = unknown_charset;
+  for (i = 0; charset_names[i].name; i++) {
+    if (strcasecmp(name, charset_names[i].name) == 0) {
+      return (charset_names[i].id);
+    }
+  }
+  return fallback;
+}
+
+/**
+ * Checks whether a string represents a valid charset, and returns a pointer to the name in
+ * canonical form (ie lacking any nonstandard-case there may be in the input string).
+ *
+ * @param name_to_check  String containing the character set name to be checked
+ * @return               Pointer to canonical-form string for that charset's name
+ *                       or NULL if name_to_check cannot be linked to a valid charset.
+ */
+char *
+cl_charset_name_canonical(char *name_to_check)
+{
+  int i;
+  for (i = 0; charset_names[i].name; i++) {
+    if (strcasecmp(name_to_check, charset_names[i].name) == 0) {
+      return charset_names[i].name;
+    }
+  }
+  return NULL;
 }
 
 
