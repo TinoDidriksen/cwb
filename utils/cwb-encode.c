@@ -1928,7 +1928,7 @@ main(int argc, char **argv) {
     fprintf(registry_fd, "INFO %s\n\n", path);
     cl_free(path);
     fprintf(registry_fd, "# corpus properties provide additional information about the corpus:\n");
-    fprintf(registry_fd, "##:: charset  = \"%s\" \n", corpus_character_set);
+    fprintf(registry_fd, "##:: charset  = \"%s\" # character encoding of corpus data\n", corpus_character_set);
     fprintf(registry_fd, "##:: language = \"??\"     # insert ISO code for language (de, en, fr, ...)\n");
     fprintf(registry_fd, "\n\n");
 

@@ -791,15 +791,7 @@ add_corpus_property(Corpus *corpus, char *property, char *value)
 
     /* if property=='charset', set corpus->charset accordingly */
     if (0 == strcmp(property, "charset")) {
-      charset = unknown_charset;
-
-      for (i = 0; charset_names[i].name; i++) {
-        if (strcasecmp(value, charset_names[i].name) == 0) {
-          charset = charset_names[i].id;
-          break;
-        }
-      }
-      corpus->charset = charset;
+      corpus->charset = cl_charset_from_name(value);
     }
   }
 }
