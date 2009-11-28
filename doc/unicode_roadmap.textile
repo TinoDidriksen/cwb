@@ -46,6 +46,7 @@ h1. Implementation steps
 # Enfore declaration of encoding with @charset@ corpus property in registry files
 ** already implemented; default for missing declaration could be @latin1@ (backward compatibility) or @ascii@ (encourages upgrades)
 *** I would prefer the latter as nowadays a non-savvy user's computer is as likely to produce UTF8 as Latin1 -- [AH]
+*** I have added a commandline option for charset declaration to cwb-encode. -- [AH]
 # Upgrade *regular expression functions* in @cl/regopt.c@ to multi-charset implementation
 ** all regexp functionality in the CWB should already be encapsulated in @CL_Regex@ objects (check!)
 ** regexp optimiser (@cl_regopt_analyse()@, @cl_regex_match()@) should work out of the box for all ASCII extensions (in particular, ISO-8859-X and UTF-8)
@@ -146,12 +147,24 @@ h1. Discussion of support libraries
 ** @-@ as bloated as a hippo after a bean-eating contest
 ** @-@ other functions / libraries are still needed for ISO-8859-X encodings
 ** @-@ as far as Stefan knows, ICU is a complex installation with multiple shared libraries and data files, so it cannot be statically linked in an easily distributable stand-alone binary package
+*** I think it can [AH]: if the library is compiled with --enable-static then you get the .a files ( "apparently":http://icu-project.org/repos/icu/icu/trunk/readme.html#HowToPackage ), albeit with "funny names":http://bugs.icu-project.org/trac/ticket/6332 
 
 * Glib
 ** @+@ seems to offer all necessary Unicode functionality, except for regular expressions
+*** Actually it does - it incorporates PCRE!  (uses an internal copy of the pcre code) It allows regex matching in PCRE-UTF8 style or ASCII/Latin1 char=byte style. The former is the default. -- [AH]
 ** @+@ also includes many other useful support functions that abstract away from platform dependencies
+*** although moving over to GType and GObject would be a bigger job than any of this unicode stuff!
 ** @-@ rather difficult to install (depends on other shared libs like @libgettext@ and local installation paths in @pkg-config@)
+*** and @libpcre@ and @libselinux@ and.... [AH]
 ** @-@ cannot be statically linked into binaries for distribution
+*** I think it can (it's described as "not recommended" but that's prob for higher level elements of GTK) -- [AH].  I have seen two ways mentioned on the net:
+**** way one --  if it is built with ./configure --enable-static  
+**** way two -- if the libglib-VERSION.a file is specified on the GCC command line in the makefile as a literal object file, and NOT using gcc's -l flag
+***** (and I've seen some things that suggest using -lglib would work if -static is also specified in the options for gcc)
+**** (although perhaps I am misunderstanding it and BOTH are required --enable-static to create the right sort of .a file which must then be linked)
+**** note, in debian and ubuntu, libglib-VERSION.a is part of the libglib-VERSION-dev package, not the libglib-VERSION package (wjhich only contains the .so files)
+**** See these links: "1":http://mail.gnome.org/archives/gtk-list/2005-February/msg00031.html "2":http://mail.gnome.org/archives/gtk-list/1998-November/msg00672.html "3":http://mail.gnome.org/archives/mc/2003-December/msg00007.html "4":http://mail.gnome.org/archives/gtk-list/1999-December/msg00219.html "5":http://mail.gnome.org/archives/gtkmm-list/2002-July/msg00171.html 
+***** and an example: "here":http://directfb.org/docs/GTK_Embedded/ "here":http://directfb.org/docs/GTK_Embedded/static-linking.html and "here":http://directfb.org/docs/GTK_Embedded/static-linking2.html 
 
 * "PCRE":http://www.pcre.org/ 
 ** @+@ well-known and very powerful regular expresson dialect
@@ -160,6 +173,7 @@ h1. Discussion of support libraries
 *** It has support for at least locales in Latin1; not sure about other ISO-8859-X -- AH
 ** @-@ PCRE is rumored to be rather slow (esp. compared to the fast Perl implementation)
 *** my first bash at benchmarking suggests it is faster than POSIX and ICU -- AH
+** @-@ lacks other functions we would need, e.g. tolower and toupper functions for case folding
 
 * "Oniguruma":http://www.geocities.jp/kosako3/oniguruma/
 ** @+@ modern, elegant regular expression library (also used by various software packages)
