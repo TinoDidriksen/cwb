@@ -94,6 +94,7 @@ doxygen:
 	@$(ECHO) "--------------------------------- BUILDING CODE DOCUMENTATION"
 	-$(RM) -rf doc/html/*
 	doxygen doc/doxygen-config
+	(cd doc && perl textile2html.perl)
 
 editline:
 	@$(ECHO) "--------------------------------- BUILDING EDITLINE LIBRARY"
