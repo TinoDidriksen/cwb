@@ -163,7 +163,7 @@ h1. Discussion of support libraries
 ** @-@ as bloated as a hippo after a bean-eating contest
 ** @-@ other functions / libraries are still needed for ISO-8859-X encodings
 ** @-@ as far as Stefan knows, ICU is a complex installation with multiple shared libraries and data files, so it cannot be statically linked in an easily distributable stand-alone binary package
-*** %{color:red}AH% I think it can: if the library is compiled with --enable-static then you get the .a files ( "apparently":http://icu-project.org/repos/icu/icu/trunk/readme.html#HowToPackage ), albeit with "funny names":http://bugs.icu-project.org/trac/ticket/6332 
+*** %{color:red}AH% I think it can: if the library is compiled with @--enable-static@ then you get the @.a@ files ( "apparently":http://icu-project.org/repos/icu/icu/trunk/readme.html#HowToPackage ), albeit with "funny names":http://bugs.icu-project.org/trac/ticket/6332 
 *** %{color:red}SE% It might also be possible to work out individual solutions for the major platforms, provided there are enough experienced volunteers.  For instance, Mac OS X comes with an ICU core library and shared data, but is missing header files.  These can be obtained from "www.opensource.apple.com":http://www.opensource.apple.com/, possibly enabling a developer to compile the CWB against the system ICU library, so the binary distribution would run on any Mac.
 
 * Glib
