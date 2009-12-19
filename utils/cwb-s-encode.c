@@ -665,7 +665,7 @@ main(int argc, char **argv)
   char *annot;
   char buf[MAX_LINE_LENGTH];
   Attribute *att;
-  int V_switch, values;
+  int V_switch, values, S_annotations_dropped;
   int i, N;
 
   progname = argv[0];
@@ -709,6 +709,7 @@ main(int argc, char **argv)
   if (in_memory && (!silent))
     printf("[Reading input data]\n");
   input_line = 0;
+  S_annotations_dropped = 0;
   while (fgets(buf, MAX_LINE_LENGTH, text_fd)) {
     input_line++;
 
@@ -727,8 +728,9 @@ main(int argc, char **argv)
       exit(1);
     }
     if ((!range.store_values) && (annot != NULL)) {
-      fprintf(stderr, "ANNOTATION FOUND for -S attribute on line #%d:\n>> %s", input_line, buf);
-      exit(1);
+      if (! S_annotations_dropped)
+        fprintf(stderr, "WARNING: Annotation for -S attribute ignored on line #%d (warning issued only once):\n>> %s", input_line, buf);
+      S_annotations_dropped++;
     }
     if ((start <= range.last_cpos) || (end < start)) {
       fprintf(stderr, "RANGE INCONSISTENCY on line #%d:\n>> %s(end of previous range was %d)\n", input_line, buf, range.last_cpos);
@@ -774,6 +776,9 @@ main(int argc, char **argv)
 
   /* close files */
   close_range();
+
+  if (S_annotations_dropped > 0)
+    fprintf(stderr, "Warning: %d annotation values dropped for -S attribute '%s'.\n", S_annotations_dropped, range.name);
 
   exit(0);
 }
