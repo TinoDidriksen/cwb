@@ -13,7 +13,7 @@ then
 	echo "Thanks!"
 fi
 
-yum install autoconf bison flex gcc glibc glibc-common glibc-devel glibc-headers make ncurses ncurses-lib subversion
+yum install autoconf bison flex gcc glibc glibc-common glibc-devel glibc-headers make ncurses ncurses-lib
 
 ./cwb-config-basic
 

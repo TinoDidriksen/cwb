@@ -13,7 +13,7 @@ then
 	echo "Thanks!"
 fi
 
-apt-get install autoconf bison flex gcc libc6-dev libncurses5-dev make subversion
+apt-get install autoconf bison flex gcc libc6-dev libncurses5-dev make
 
 ./cwb-config-basic
 

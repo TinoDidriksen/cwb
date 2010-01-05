@@ -209,7 +209,7 @@ initialize_cqp(int argc, char **argv)
 
         reading_cqprc = 1;        /* not good for very much, really */
         if (!cqp_parse_file(cqprc, 1)) {
-          fprintf(stderr, "Parse errors while reading %s, exitting.\n",
+          fprintf(stderr, "Parse errors while reading %s, exiting.\n",
                   init_file_fullname);
           exit(1);
         }
@@ -247,7 +247,7 @@ initialize_cqp(int argc, char **argv)
 
         reading_cqprc = 1;        /* not good for very much, really */
         if (!cqp_parse_file(cqprc, 1)) {
-          fprintf(stderr, "Parse errors while reading %s, exitting.\n",
+          fprintf(stderr, "Parse errors while reading %s, exiting.\n",
                   init_file_fullname);
           exit(1);
         }

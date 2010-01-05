@@ -69,7 +69,6 @@ CorpusList *GetSystemCorpus(char *name, char *registry);
 
 /** Global list of currently-loaded corpora */
 CorpusList *corpuslist;
-/* TODO: this is in both corpmanag.h and corpmanag.c and it shouldn't be, I'm sure. -- AH*/
 
 
 /**
@@ -1068,11 +1067,11 @@ load_corpusnames(enum corpus_type ct)
   for (dirname = get_path_component(dirlist); 
        dirname;
        dirname = get_path_component(NULL)) {
-   int optional_dir = 0; /* 1 = optional registry directory -> don't issue warning if not mounted */
-   if (*dirname == '?') {
-     dirname++;
-     optional_dir = 1;
-   }
+    int optional_dir = 0; /* 1 = optional registry directory -> don't issue warning if not mounted */
+    if (*dirname == '?') {
+      dirname++;
+      optional_dir = 1;
+  }
 
     dp = opendir(dirname);
   
