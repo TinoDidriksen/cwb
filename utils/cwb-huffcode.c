@@ -558,7 +558,11 @@ compute_code_lengths(Attribute *attr, HCD *hc, char *fname)
   }
   /* ============================== PROTOCOL ============================== */
 
-
+  if (hc->max_codelen >= MAXCODELEN) {
+    fprintf(stderr, "Error: Huffman codes too long (%d bits, current maximum is %d bits).\n", hc->max_codelen, MAXCODELEN-1);
+    fprintf(stderr, "       Recompile CWB with larger value of MAXCODELEN constant [cl/attributes.h].\n");
+    exit(1);
+  }
 
   if ((hc->max_codelen == 0) && (hc->min_codelen == 100)) {
 
