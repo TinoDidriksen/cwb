@@ -419,7 +419,7 @@ compute_code_lengths(Attribute *attr, HCD *hc, char *fname)
   /* ============================== PROTOCOL ============================== */
   if (do_protocol > 2) {
     print_heap(heap, hc->size, "Initial Min-Heap");
-    fprintf(protocol, "\n");
+    fprintf(protocol, "\n");
   }
   /* ============================== PROTOCOL ============================== */
 
@@ -502,7 +502,7 @@ compute_code_lengths(Attribute *attr, HCD *hc, char *fname)
 
   /* ============================== PROTOCOL ============================== */
   if (do_protocol > 3)
-    fprintf(protocol, "\n");
+    fprintf(protocol, "\n");
   /* ============================== PROTOCOL ============================== */
 
 
@@ -560,7 +560,7 @@ compute_code_lengths(Attribute *attr, HCD *hc, char *fname)
 
   if (hc->max_codelen >= MAXCODELEN) {
     fprintf(stderr, "Error: Huffman codes too long (%d bits, current maximum is %d bits).\n", hc->max_codelen, MAXCODELEN-1);
-    fprintf(stderr, "       Recompile CWB with larger value of MAXCODELEN constant [cl/attributes.h].\n");
+    fprintf(stderr, "       Please contact the CWB development team for assistance.\n");
     exit(1);
   }
 

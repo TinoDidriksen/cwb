@@ -88,6 +88,14 @@ Bug fixes:
    a pointer always has the same sized as an unsigned int ... aaaargh!).  Kudos to Bogdan Babych (b.babych@leeds.ac.uk)
    for a beautiful and fully reproducible bug report.
 
+ - [2010-01-09] NOT FIXED: Huffman codes may exceed maximal allowed code length of 31 bits in some extreme cases,
+   which was not checked in cwb-huffcode and could lead to buffer overflows and segmentation faults.  The program
+   now aborts with an error message, but the underlying problem has not been fixed yet.  It is NOT POSSIBLE just
+   to increase MAXCODELEN<cl/attributes.h>, as this changes the index file format and breaks compatibility with
+   previously encoded corpora.  The only good solution is to patch the Huffman code generation so that it computes
+   a suboptimal code in this cases that stays within the allowed limit, but for this somebody needs to go through
+   and understand the entire code in compute_code_lengths()<utils/cwb-huffcode.c>. 
+
 
 Version 2.2.b99 (2007-03-11)
 ----------------------------
