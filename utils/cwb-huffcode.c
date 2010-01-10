@@ -601,6 +601,14 @@ compute_code_lengths(Attribute *attr, HCD *hc, char *fname)
     for (i = 0; i < MAXCODELEN; i++)
       next_code[i] = hc->min_code[i];
 
+    /* ============================== PROTOCOL ============================== */
+    if (do_protocol > 1) {
+      fprintf(protocol, "\n");
+      fprintf(protocol, "   Item   f(item)  CL      Bits     Code, String\n");
+      fprintf(protocol, "------------------------------------"
+              "------------------------------------\n");
+    }
+    /* ============================== PROTOCOL ============================== */
 
     /* compute and issue codes */
     
@@ -609,24 +617,11 @@ compute_code_lengths(Attribute *attr, HCD *hc, char *fname)
     for (i = 0; i < hc->size; i++) {
 
       /* we store the code for item i in heap[i] */
-
       heap[i] = next_code[codelength[i]];
       next_code[codelength[i]]++;
 
-      /* and put the item itself in the second half of the table */
-      heap[hc->size+hc->symindex[codelength[i]]+issued_codes[codelength[i]]] = i;
-      issued_codes[codelength[i]]++;
-    }
-
-    /* ============================== PROTOCOL ============================== */
-    if (do_protocol > 1) {
-
-      fprintf(protocol, "\n");
-      fprintf(protocol, "   Item   f(item)  CL      Bits     Code, String\n");
-      fprintf(protocol, "------------------------------------"
-              "------------------------------------\n");
-
-      for (i = 0; i < hc->size; i++) {
+      /* ============================== PROTOCOL ============================== */
+      if (do_protocol > 1) {
         fprintf(protocol, "%7d  %7d  %3d  %10d ",
                 i,
                 get_id_frequency(attr, i),
@@ -638,7 +633,15 @@ compute_code_lengths(Attribute *attr, HCD *hc, char *fname)
         fprintf(protocol, "  %7d  %s\n",
                 heap[i], get_string_of_id(attr, i));
       }
+      /* ============================== PROTOCOL ============================== */
 
+      /* and put the item itself in the second half of the table */
+      heap[hc->size+hc->symindex[codelength[i]]+issued_codes[codelength[i]]] = i;
+      issued_codes[codelength[i]]++;
+    }
+
+    /* ============================== PROTOCOL ============================== */
+    if (do_protocol > 1) {
       fprintf(protocol, "------------------------------------"
               "------------------------------------\n");
     }
