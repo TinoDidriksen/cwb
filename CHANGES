@@ -36,6 +36,9 @@ New features:
    and read the file in two passes (first pass counts lines, second pass reads actual data).  This modification
    simplifies data exchange with external programs such as spreadsheets, SQL databases and R.
 
+ - Evil hacks in cwb-scan-corpus allow frequency counts for s-attributes with annotations (since 2007),
+   and now also special constraints such as "?footnote" for s-attributes without annotations.
+
 Bug fixes:
 
  - [2008-01-03] Fixed a strange bug in which the query

@@ -28,4 +28,4 @@ INSTALL = install
 INSTFLAGS_FILE = -p
 
 ## CPU architecture and operating system used to name binary releases
-RELEASE_OS = osx-10.4
+RELEASE_OS = osx-10.5

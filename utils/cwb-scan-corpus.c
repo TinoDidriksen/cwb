@@ -517,7 +517,8 @@ add_key(char *key)
       fprintf(stderr, "Error: s-attribute %s.%s is empty (aborted)\n", corpname, buf);
       exit(1);
     }
-    if (! cl_struc_values(att)) {
+    if (!cl_struc_values(att) && !(is_constraint && regex == NULL)) {
+      /* s-attributes without annotation allowed for special ``?head'' constraints to restrict scan to regions */
       fprintf(stderr, "Error: s-attribute %s.%s has no annotations (aborted)\n", corpname, buf);
       exit(1);
     }
@@ -525,7 +526,8 @@ add_key(char *key)
     Hash.start_cpos[Hash.N] = -1;
     Hash.end_cpos[Hash.N] = -1;
     Hash.constraint_ok[Hash.N] = 0;
-    Hash.source_base[Hash.N] = cl_struc2str(att, 0); /* should be pointer to start of lexicon data */
+    Hash.source_base[Hash.N] =  /* should be pointer to start of lexicon data (NULL marks special ``?head'' case) */
+      (cl_struc_values(att)) ? cl_struc2str(att, 0) : NULL;
   }
 
   Hash.N++;
@@ -756,14 +758,21 @@ main (int argc, char *argv[])
             }
             else {                         /* update Hash data structure with information for next region */
               cl_struc2cpos(Hash.att[i], Hash.current_struc[i], &(Hash.start_cpos[i]), &(Hash.end_cpos[i]));
-              str = cl_struc2str(Hash.att[i], Hash.current_struc[i]);
-              Hash.virtual_id[i] = str - Hash.source_base[i];
+              if (Hash.source_base[i]) {
+                str = cl_struc2str(Hash.att[i], Hash.current_struc[i]);
+                Hash.virtual_id[i] = str - Hash.source_base[i];
+              }
+              else {
+                str = "NULL";  /* s-attribute without annotation, allowed for special ``?head'' constrains */
+                Hash.virtual_id[i] = -1;
+              }
               Hash.constraint_ok[i] = 1;
               if ((Hash.regex[i] != NULL) && (! cl_regex_match(Hash.regex[i], str)))
                 Hash.constraint_ok[i] = 0;
               if (check_words && !is_regular(str))
                 Hash.constraint_ok[i] = 0;
-              if (Hash.regex[i] != NULL) { /* may jump directly to next region when regex constraint is present */
+              /* may jump directly to next region when regex constraint is present (or for ``?head'' constraints) */ 
+              if (Hash.regex[i] != NULL || Hash.source_base[i] == NULL) { 
                 int jump_target;
                 if (Hash.constraint_ok[i])
                   jump_target = Hash.start_cpos[i] - Hash.offset[i]; /* convert back from effective_cpos to cpos */
@@ -784,6 +793,8 @@ main (int argc, char *argv[])
           else {                        /* outside region, ID is undef (-1) and any regex constraint fails */
             id = -1;
             if (Hash.regex[i] != NULL) /* note that -C flag is _not_ applied to undefs outside region */
+              accept = 0;
+            if (Hash.source_base[i] == NULL) /* special constraint of type ``?head'' fails outside regions */
               accept = 0;
           }
         }

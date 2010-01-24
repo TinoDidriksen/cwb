@@ -314,6 +314,7 @@ int
 bf_compare(Bitfield bf1, Bitfield bf2)
 {
   int i, items, last_item_bits_used, mask;
+  signed long diff;
 
   assert(bf1->elements == bf2->elements);
   assert(bf1->bytes == bf2->bytes);
@@ -325,7 +326,7 @@ bf_compare(Bitfield bf1, Bitfield bf2)
     items--; /* check last, partially used item (i.e. field[items-1]) separately (below) */
 
   for (i = 0; i < items; i++) {
-    signed long diff = ((signed long) bf1->field[i]) - ((signed long) bf2->field[i]);
+    diff = ((signed long) bf1->field[i]) - ((signed long) bf2->field[i]);
     if (diff < 0)
       return -1;
     else if (diff > 0)
@@ -334,7 +335,7 @@ bf_compare(Bitfield bf1, Bitfield bf2)
 
   if (last_item_bits_used != 0) {
     mask = (1 << last_item_bits_used) - 1; /* should set first <last_item_bits_used> bits in mask */
-    signed long diff = ((signed long) (bf1->field[i] & mask)) - ((signed long) (bf2->field[i] & mask));
+    diff = ((signed long) (bf1->field[i] & mask)) - ((signed long) (bf2->field[i] & mask));
     if (diff < 0)
       return -1;
     else if (diff > 0)

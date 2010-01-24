@@ -23,7 +23,7 @@
 #
 # CWB version
 #
-VERSION = 2.2.102
+VERSION = 2.2.103
 # the absolutely very last release candidate for 3.0
 
 #

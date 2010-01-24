@@ -31,4 +31,4 @@ CFLAGS = -Wall -O3 -arch x86_64 -arch i386 -arch ppc
 DEPEND_CFLAGS = -Wall -O3
 
 ## CPU architecture and operating system used to name binary releases
-RELEASE_ARCH = x86_64
+RELEASE_ARCH = universal
