@@ -792,10 +792,9 @@ main (int argc, char *argv[])
           }
           else {                        /* outside region, ID is undef (-1) and any regex constraint fails */
             id = -1;
-            if (Hash.regex[i] != NULL) /* note that -C flag is _not_ applied to undefs outside region */
-              accept = 0;
-            if (Hash.source_base[i] == NULL) /* special constraint of type ``?head'' fails outside regions */
-              accept = 0;
+            if (Hash.regex[i] != NULL || Hash.is_constraint[i]) 
+              accept = 0; /* pure constraint keys also fail outside regions */
+            /* note that -C flag is _not_ applied here */
           }
         }
 
