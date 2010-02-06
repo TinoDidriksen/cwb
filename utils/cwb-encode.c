@@ -596,6 +596,7 @@ declare_range(char *name, char *directory, int store_values, int null_attribute)
   cl_lexhash_entry entry;
   int i, is_feature_set;
   char* flag_SV = (store_values) ? "-V" : "-S";
+  struct stat dir_status;
 
   if (debug)
     fprintf(stderr, "ATT: %s %s\n", flag_SV, name);
@@ -657,6 +658,11 @@ declare_range(char *name, char *directory, int store_values, int null_attribute)
 
   if (ea_start != NULL)
     ea_start = cl_strdup(ea_start); /* now buf can be re-used for pathnames below */
+
+  /* Check if directory exists */
+  if (stat(directory, &dir_status) != 0 || !(dir_status.st_mode & S_IFDIR)) {
+    error("Data directory '%s' does not exist. Please create this directory first.", directory);
+  }
 
   /* open data files for this s-attribute (children will be added later) */
   /* create .rng component */
