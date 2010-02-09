@@ -596,7 +596,6 @@ declare_range(char *name, char *directory, int store_values, int null_attribute)
   cl_lexhash_entry entry;
   int i, is_feature_set;
   char* flag_SV = (store_values) ? "-V" : "-S";
-  struct stat dir_status;
 
   if (debug)
     fprintf(stderr, "ATT: %s %s\n", flag_SV, name);
@@ -658,11 +657,6 @@ declare_range(char *name, char *directory, int store_values, int null_attribute)
 
   if (ea_start != NULL)
     ea_start = cl_strdup(ea_start); /* now buf can be re-used for pathnames below */
-
-  /* Check if directory exists */
-  if (stat(directory, &dir_status) != 0 || !(dir_status.st_mode & S_IFDIR)) {
-    error("Data directory '%s' does not exist. Please create this directory first.", directory);
-  }
 
   /* open data files for this s-attribute (children will be added later) */
   /* create .rng component */
@@ -1220,6 +1214,7 @@ parse_options(int argc, char **argv)
   int c;
   extern char *optarg;
   extern int optind;
+  struct stat dir_status;
 
   char *prefix = DEFAULT_ATT_NAME;
 
@@ -1273,6 +1268,11 @@ parse_options(int argc, char **argv)
       /* -d <dir>: create files in this directory */
     case 'd':
       directory = optarg;
+      /* Check if directory exists */
+      if (stat(directory, &dir_status) != 0 || !(dir_status.st_mode & S_IFDIR)) {
+          error("Error: data directory '%s' does not exist.\nPlease create this directory first.",
+                directory);
+      }
       break;
 
       /* -r <dir>: change registry directory (for -C option) */
@@ -1289,8 +1289,45 @@ parse_options(int argc, char **argv)
     case 'R':
       if (registry_file != NULL)
         error("Usage error: -R option used twice.");
-      else
+      else {
+        int size;
+        int registry_is_ok = 1;
+        int registry_is_canonical = 1;
         registry_file = optarg;
+
+        /* Check for directory in lowercase */
+        size = strlen(registry_file) - 1;
+        if ((size < 0) || (registry_file[size] == '/') || (registry_file[size] == '\\'))
+          error("Usage error: invalid filename '%s' for registry entry", registry_file);
+
+        while (size >= 0 &&
+               registry_file[size] != '/' && registry_file[size] != '\\') 
+        {
+          char c = registry_file[size];
+          if ((c >= 'A' && c <= 'Z') || c == '.' || c == '~')
+            registry_is_ok = 0; /* uppercase characters, '.' and '~' are definitely not allowed */
+          
+          if (!( c == '_' || c == '-' || (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') ))
+            registry_is_canonical = 0; /* new canonical form allows only a-z, 0-9, _, - */
+
+          size--;
+        }
+        
+        if (!registry_is_ok)
+          error("Usage error: invalid filename '%s' for registry entry.\nFilename must not contain uppercase letters, '.' or '~'.", registry_file + size + 1);
+        if (!registry_is_canonical)
+          fprintf(stderr, "Warning: filename '%s' of registry entry not in canonical format.\n(Allowed characters: a-z, 0-9, -, _)\n", registry_file + size + 1);
+
+        if (size >= 0) {
+          /* if registry filename includes a directory part, check that it exists and is indeed a directory */
+          char sep = registry_file[size];
+          registry_file[size] = 0; /* now registry_file holds the directory part as a NUL-terminated string */
+          if (stat(registry_file, &dir_status) != 0 || !(dir_status.st_mode & S_IFDIR))
+            error("Error: registry directory '%s' does not exist.\nPlease create this directory first.", registry_file);
+          registry_file[size] = sep;
+        }
+        
+      }
       break;
 
       /* -f, -t: verticalised text input file */

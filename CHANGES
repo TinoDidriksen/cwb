@@ -99,6 +99,10 @@ Bug fixes:
    a suboptimal code in this cases that stays within the allowed limit, but for this somebody needs to go through
    and understand the entire code in compute_code_lengths()<utils/cwb-huffcode.c>. 
 
+ - [2010-02-09] cwb-encode now checks that data directory and registry directory exist, and that registry filename
+   specified with -R doesn't contain uppercase letters, in order to avoid strange errors later on (patch contributed
+   by Alberto Simoes).
+
 
 Version 2.2.b99 (2007-03-11)
 ----------------------------
