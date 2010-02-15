@@ -67,7 +67,7 @@
 <dl class="el"><dd class="mdescRight">Retrieves the special 'charset' property.  <a href="#a3786eda36f00b2645b6b3a9b77410644"></a><br/></dl><li>char * <a class="el" href="corpus_8c.html#ae4024a534e679bd4e9a9b3761d1fe866">cl_charset_name</a> (<a class="el" href="cl_8h.html#a3502421ae8eac74673133702852dde32">CorpusCharset</a> id)
 <dl class="el"><dd class="mdescRight">Gets a string containing the name of the specified CorpusCharset character set object.  <a href="#ae4024a534e679bd4e9a9b3761d1fe866"></a><br/></dl><li><a class="el" href="cl_8h.html#a3502421ae8eac74673133702852dde32">CorpusCharset</a> <a class="el" href="corpus_8c.html#a20d2084b184a14006c0e205543501adb">cl_charset_from_name</a> (char *name)
 <dl class="el"><dd class="mdescRight">Gets a CorpusCharset enumeration with the id code for the given string.  <a href="#a20d2084b184a14006c0e205543501adb"></a><br/></dl><li>char * <a class="el" href="corpus_8c.html#a92eae915bcb6747965ed1856f18a9c0c">cl_charset_name_canonical</a> (char *name_to_check)
-<dl class="el"><dd class="mdescRight">Checks whether a string represents a valid charset, and returns a pointer to the name in canonical form (ie lacking any nonstandard-case there may be in the input string).  <a href="#a92eae915bcb6747965ed1856f18a9c0c"></a><br/></dl><li>void <a class="el" href="corpus_8c.html#a5492efc3742070f65be1b0bcbead995a">add_corpus_property</a> (<a class="el" href="struct_t_corpus.html">Corpus</a> *<a class="el" href="cwb-s-encode_8c.html#aca3a1fb765418f9b9b1d74051aa88667">corpus</a>, char *property, char *value)
+<dl class="el"><dd class="mdescRight">Checks whether a string represents a valid charset, and returns a pointer to the name in canonical form (ie lacking any non-standard case there may be in the input string).  <a href="#a92eae915bcb6747965ed1856f18a9c0c"></a><br/></dl><li>void <a class="el" href="corpus_8c.html#a5492efc3742070f65be1b0bcbead995a">add_corpus_property</a> (<a class="el" href="struct_t_corpus.html">Corpus</a> *<a class="el" href="cwb-s-encode_8c.html#aca3a1fb765418f9b9b1d74051aa88667">corpus</a>, char *property, char *value)
 <dl class="el"><dd class="mdescRight">Adds a property to the list of corpus properties.  <a href="#a5492efc3742070f65be1b0bcbead995a"></a><br/></dl></ul>
 <h2>Variables</h2>
 <ul>
@@ -79,7 +79,7 @@
 <dl class="el"><dd class="mdescRight">Buffer for an error message.  <a href="#a81cd298308ae5ef99a1bf3590d9a998e"></a><br/></dl><li><a class="el" href="struct_t_corpus.html">Corpus</a> * <a class="el" href="corpus_8c.html#a327a2334a34b9be8f75bcb5d9537a0da">loaded_corpora</a> = NULL
 <dl class="el"><dd class="mdescRight">Head of a linked list of loaded corpus handles (for memory manager).  <a href="#a327a2334a34b9be8f75bcb5d9537a0da"></a><br/></dl><li>static char * <a class="el" href="corpus_8c.html#ae6ef637d7447e7a251e9130f21b8adac">regdir</a> = NULL
 <dl class="el"><dd class="mdescRight">The default registry directory.  <a href="#ae6ef637d7447e7a251e9130f21b8adac"></a><br/></dl><li><a class="el" href="struct__charset__spec.html">charset_spec</a> <a class="el" href="corpus_8c.html#adcf052209f22ab8c104507ba1847de37">charset_names</a> []
-<dl class="el"><dd class="mdescRight">a list of charset names as strings linked to CorpusCharset objects  <a href="#adcf052209f22ab8c104507ba1847de37"></a><br/></dl></ul>
+<dl class="el"><dd class="mdescRight">a list of charset names as strings linked to CorpusCharset enumerations  <a href="#adcf052209f22ab8c104507ba1847de37"></a><br/></dl></ul>
 <hr/><h2>Typedef Documentation</h2>
 <a class="anchor" id="a5fe44c397eafaa1719f2c820982230c9"></a><!-- doxytag: member="corpus.c::charset_spec" ref="a5fe44c397eafaa1719f2c820982230c9" args="" -->
 <div class="memitem">
@@ -93,7 +93,7 @@
 <div class="memdoc">
 
 <p>structure for the global list of charset names </p>
-<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="corpus_8c.html#adcf052209f22ab8c104507ba1847de37" title="a list of charset names as strings linked to CorpusCharset objects">charset_names</a> </dd></dl>
+<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="corpus_8c.html#adcf052209f22ab8c104507ba1847de37" title="a list of charset names as strings linked to CorpusCharset enumerations">charset_names</a> </dd></dl>
 
 </div>
 </div>
@@ -140,7 +140,7 @@
   </dd>
 </dl>
 
-<p>References <a class="el" href="struct_t_corpus.html#ab7d33183c58d7df43cc5602b9c842b37">TCorpus::charset</a>, <a class="el" href="cl_8h.html#aebdac9a974ddd5ecb18aa8354e1f027f">cl_corpus_property()</a>, <a class="el" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="corpus_8c.html#a43fea1a843ca9acc56fe021a28ec9452">cregin_name</a>, <a class="el" href="corpus_8c.html#ada4573d717d73336f342e8b6a83e03aa">cregin_path</a>, <a class="el" href="struct__charset__spec.html#a8af1e075187b5021b929e2597a32af06">_charset_spec::id</a>, <a class="el" href="struct__charset__spec.html#a5ac083a645d964373f022d03df4849c8">_charset_spec::name</a>, <a class="el" href="struct_t_corpus_property.html#a0e217eae2df0974e4635854902a2aca1">TCorpusProperty::next</a>, <a class="el" href="struct_t_corpus.html#a1e19a624b45265cd91082d959f6055d8">TCorpus::properties</a>, <a class="el" href="struct_t_corpus_property.html#a131309b64687b3eb2ab0a0ba37189cbd">TCorpusProperty::property</a>, <a class="el" href="cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa9f590c5dcd376840cb9d36ea0f2ffd8e">unknown_charset</a>, and <a class="el" href="struct_t_corpus_property.html#a4e9aec275e566b978a3ccb4e043d8c61">TCorpusProperty::value</a>.</p>
+<p>References <a class="el" href="struct_t_corpus.html#ab7d33183c58d7df43cc5602b9c842b37">TCorpus::charset</a>, <a class="el" href="cwb-check-input_8c.html#ab7d33183c58d7df43cc5602b9c842b37">charset</a>, <a class="el" href="cl_8h.html#a20d2084b184a14006c0e205543501adb">cl_charset_from_name()</a>, <a class="el" href="cl_8h.html#aebdac9a974ddd5ecb18aa8354e1f027f">cl_corpus_property()</a>, <a class="el" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="corpus_8c.html#a43fea1a843ca9acc56fe021a28ec9452">cregin_name</a>, <a class="el" href="corpus_8c.html#ada4573d717d73336f342e8b6a83e03aa">cregin_path</a>, <a class="el" href="struct_t_corpus_property.html#a0e217eae2df0974e4635854902a2aca1">TCorpusProperty::next</a>, <a class="el" href="struct_t_corpus.html#a1e19a624b45265cd91082d959f6055d8">TCorpus::properties</a>, <a class="el" href="struct_t_corpus_property.html#a131309b64687b3eb2ab0a0ba37189cbd">TCorpusProperty::property</a>, and <a class="el" href="struct_t_corpus_property.html#a4e9aec275e566b978a3ccb4e043d8c61">TCorpusProperty::value</a>.</p>
 
 </div>
 </div>
@@ -233,6 +233,8 @@
 
 <p>References <a class="el" href="struct__charset__spec.html#a5ac083a645d964373f022d03df4849c8">_charset_spec::name</a>, and <a class="el" href="cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa9f590c5dcd376840cb9d36ea0f2ffd8e">unknown_charset</a>.</p>
 
+<p>Referenced by <a class="el" href="corpus_8h.html#a5492efc3742070f65be1b0bcbead995a">add_corpus_property()</a>, and <a class="el" href="cwb-check-input_8c.html#a8bc1180195e9821ecbeb25553f61e8c0">cwbci_parse_options()</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="ae4024a534e679bd4e9a9b3761d1fe866"></a><!-- doxytag: member="corpus.c::cl_charset_name" ref="ae4024a534e679bd4e9a9b3761d1fe866" args="(CorpusCharset id)" -->
@@ -276,7 +278,7 @@
 </div>
 <div class="memdoc">
 
-<p>Checks whether a string represents a valid charset, and returns a pointer to the name in canonical form (ie lacking any nonstandard-case there may be in the input string). </p>
+<p>Checks whether a string represents a valid charset, and returns a pointer to the name in canonical form (ie lacking any non-standard case there may be in the input string). </p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>name_to_check</em>&nbsp;</td><td>String containing the character set name to be checked </td></tr>
@@ -287,7 +289,7 @@
 
 <p>References <a class="el" href="struct__charset__spec.html#a5ac083a645d964373f022d03df4849c8">_charset_spec::name</a>.</p>
 
-<p>Referenced by <a class="el" href="cwb-encode_8c.html#a0318e97f40679e849d9259e5edb4dfce">parse_options()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-check-input_8c.html#a8bc1180195e9821ecbeb25553f61e8c0">cwbci_parse_options()</a>, and <a class="el" href="cwb-encode_8c.html#a0318e97f40679e849d9259e5edb4dfce">parse_options()</a>.</p>
 
 </div>
 </div>
@@ -782,7 +784,7 @@
 </div>
 <div class="memdoc">
 
-<p>a list of charset names as strings linked to CorpusCharset objects </p>
+<p>a list of charset names as strings linked to CorpusCharset enumerations </p>
 
 </div>
 </div>
@@ -907,7 +909,7 @@
 </div>
 </div>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on Fri Nov 27 23:26:06 2009 for CWB by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on Mon Feb 15 00:09:47 2010 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>
