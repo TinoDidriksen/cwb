@@ -44,26 +44,28 @@ SRCS =  cwb-atoi.c cwb-itoa.c \
 	cwb-describe-corpus.c cwb-decode-nqrfile.c \
 	cwb-scan-corpus.c \
 	barlib.c feature_maps.c \
-	cwb-align.c cwb-align-show.c cwb-align-encode.c
+	cwb-align.c cwb-align-show.c cwb-align-encode.c \
+	cwb-check-input.c
 
 HDRS =	barlib.h feature_maps.h
 
 ## PROGRAMS: the utils which form an essential part of the CWB (plus some useful helper tools)
-#	cwb-atoi, cwb-itoa	convert ascii to CWB integers and vice versa
-#	cwb-encode		encode corpus (position stream & lexicon)
-#	cwb-makeall		create index & sorted index components (using Corpus Library)
-#	cwb-huffcode		compress token stream of p-attribute
-#	cwb-compress-rdx	compress index of p-attribute
-#	cwb-decode		decode corpus (output corpus in text format)
-#	cwb-lexdecode		decode corpus lexicon
-#	cwb-s-encode		add s-attribute to encoded corpus
-#	cwb-s-decode		decode s-attribute (output: <reg.start> TAB <reg.end> TAB <annotation>)
-#	cwb-describe-corpus	prints some corpus info and/or statistics
-#	cwb-decode-nqrfile	decode named query result file (prints information on STDOUT)
-#       cwb-scan-corpus		scan corpus for n-grams of adjacent tokens or different p-attributes
-#       cwb-align		EasyAlign sentence aligner (operates on CWB-encoded corpora)
-#       cwb-align-show		simple terminal-based viewer for EasyAlign alignment files (.align)
-#       cwb-align-encode	encode .align file into CWB format (.alx, and .alg for backward compatibility)
+#       cwb-atoi, cwb-itoa  convert ascii to CWB integers and vice versa
+#       cwb-encode          encode corpus (position stream & lexicon)
+#       cwb-makeall         create index & sorted index components (using Corpus Library)
+#       cwb-huffcode	    compress token stream of p-attribute
+#       cwb-compress-rdx    compress index of p-attribute
+#       cwb-decode          decode corpus (output corpus in text format)
+#       cwb-lexdecode       decode corpus lexicon
+#       cwb-s-encode        add s-attribute to encoded corpus
+#       cwb-s-decode        decode s-attribute (output: <reg.start> TAB <reg.end> TAB <annotation>)
+#       cwb-describe-corpus prints some corpus info and/or statistics
+#       cwb-decode-nqrfile  decode named query result file (prints information on STDOUT)
+#       cwb-scan-corpus     scan corpus for n-grams of adjacent tokens or different p-attributes
+#       cwb-align           EasyAlign sentence aligner (operates on CWB-encoded corpora)
+#       cwb-align-show      simple terminal-based viewer for EasyAlign alignment files (.align)
+#       cwb-align-encode    encode .align file into CWB format (.alx, and .alg for backward compatibility)
+#       cwb-check-input     program for checking wellformedness of vertical files
 
 PROGRAMS = cwb-atoi$(EXEC_SUFFIX) cwb-itoa$(EXEC_SUFFIX) \
 	cwb-makeall$(EXEC_SUFFIX) \
@@ -72,7 +74,8 @@ PROGRAMS = cwb-atoi$(EXEC_SUFFIX) cwb-itoa$(EXEC_SUFFIX) \
 	cwb-s-encode$(EXEC_SUFFIX) cwb-s-decode$(EXEC_SUFFIX) \
 	cwb-describe-corpus$(EXEC_SUFFIX) cwb-decode-nqrfile$(EXEC_SUFFIX) \
 	cwb-scan-corpus$(EXEC_SUFFIX) \
-	cwb-align$(EXEC_SUFFIX) cwb-align-show$(EXEC_SUFFIX) cwb-align-encode$(EXEC_SUFFIX)
+	cwb-align$(EXEC_SUFFIX) cwb-align-show$(EXEC_SUFFIX) cwb-align-encode$(EXEC_SUFFIX) \
+	cwb-check-input$(EXEC_SUFFIX)
 
 ## ----------------------------------------------------------------------
 
@@ -87,6 +90,15 @@ cwb-%$(EXEC_SUFFIX): cwb-%.o
 cwb-align$(EXEC_SUFFIX): cwb-align.o barlib.o feature_maps.o
 	$(RM) $@
 	$(CC) $(CFLAGS) -o $@ $^ $(CL_LIBS) $(LDFLAGS_ALL)
+
+## special rules for cwb-check-input, which requires Glib
+# tmeporary before use of Glib made general
+cwb-check-input.o:
+	$(RM) $@
+	$(CC) -c cwb-check-input.c -o cwb-check-input.o $(CFLAGS) $(CL_LIBS) $(LDFLAGS_ALL) `pkg-config --cflags --libs glib-2.0` `pkg-config --cflags --libs gobject-2.0` 
+cwb-check-input$(EXEC_SUFFIX): cwb-check-input.o
+	$(RM) $@
+	$(CC) $(CFLAGS) -o $@ $^ $(CL_LIBS) `pkg-config --libs glib-2.0` `pkg-config --libs gobject-2.0` $(LDFLAGS_ALL)  
 
 depend:
 	-$(RM) depend.mk

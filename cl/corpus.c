@@ -672,7 +672,7 @@ typedef struct _charset_spec
   char *name;
 } charset_spec;
 
-/** a list of charset names as strings linked to CorpusCharset objects */
+/** a list of charset names as strings linked to CorpusCharset enumerations */
 charset_spec charset_names[] = {
     { ascii,    "ascii" },
     { latin1,   "latin1" },
@@ -740,7 +740,7 @@ cl_charset_from_name(char *name)
 
 /**
  * Checks whether a string represents a valid charset, and returns a pointer to the name in
- * canonical form (ie lacking any nonstandard-case there may be in the input string).
+ * canonical form (ie lacking any non-standard case there may be in the input string).
  *
  * @param name_to_check  String containing the character set name to be checked
  * @return               Pointer to canonical-form string for that charset's name
