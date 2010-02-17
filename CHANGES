@@ -39,6 +39,14 @@ New features:
  - Evil hacks in cwb-scan-corpus allow frequency counts for s-attributes with annotations (since 2007),
    and now also special constraints such as "?footnote" for s-attributes without annotations.
 
+ - String quoting in CQP has been revised in order to allow safe quoting of arbitrary strings.  Strings can be
+   enclosed in single or double quotes (which are equivalent), and inside the string any character can be
+   escaped with a preceding backslash (\).  Backslashes are passed through and interpreted by the regexp engine;
+   the sequences \' \" \, \` \^ trigger latex-style escapes for accented Latin1 characters.  For instance,
+   '\'em' matches an accented "e" rather than the sequence "'e" (followed by "m").  Strings can be safely quoted
+   by doubling any occurrence of the surrounding delimiter, e.g. '''em' to match "'em".  These doubling escapes
+   are removed by the lexical scanner, so they work in all string contexts and do not trigger any side effects.
+
 Bug fixes:
 
  - [2008-01-03] Fixed a strange bug in which the query
