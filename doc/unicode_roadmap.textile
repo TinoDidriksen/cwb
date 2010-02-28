@@ -88,7 +88,9 @@ h1. Implementation steps
 # CQP commands @sort@, @count@ and @tabulate@ should work out of the box, since they rely on CL string folding
 ** just need to make sure that the commands activate the appropriate character set
 ** ideally, sorting should use a locale-specific collation algorithm (which differs by language and country)
-*** again I think relying on locales could be dodgy for many languages...  (%{color:red}SE% define "dodgy")
+*** again I think relying on locales could be dodgy for many languages...  
+**** %{color:red}SE% define "dodgy"
+**** %{color:red}AH% "dodgy" == "prone to variable behaviour across different OS that we will find it difficult to fully account for"; see "for instance":http://library.gnome.org/devel/glib/2.22/glib-running.html#setlocale  
 # If CQP defines built-in functions for string processing (@cqp/builtins.c@), they must also be adapted to multiple character sets
 # Proper handling of fixed-character context in *kwic output* (@cat@) will require a major rewrite
 ** affects all kwic-formatting code in @cqp/output.c@, @cqp/print-modes.c@, @ascii-print.c@, @html-print.c@, @latex-print.c@, @sgml-print.c@, etc.
@@ -118,7 +120,7 @@ h1. Unicode software options (external libraries)
 *** supports UTF-8 and single-byte codes (but no character classes in ISO-8859-X encodings?)
 **** %{color:red}AH% the Perl character classes like \w, \d etc. apply to ASCII and to top half of ISO-8859-X, depending on locale (so, possibly a bad idea to rely on this!)
 *** said to be relatively heavy-weight and much slower than regexp in Perl
-**** %{color:red}AH% I am not so sure about this, PCRE is less than 1/10 the size of ICU (%{color:red}SE% that's like saying "Vista is only half as bad as Windows 3.1" ;-) and seems to be as fast as POSIX (at least within the PHP engine). It is known to be slow when a pattern has to invoke the Unicode character database but I think this would apply to any library.
+**** %{color:red}AH% I am not so sure about this, PCRE is less than 1/10 the size of ICU ( %{color:red}SE% that's like saying "Vista is only half as bad as Windows 3.1" ;-) and seems to be as fast as POSIX (at least within the PHP engine). It is known to be slow when a pattern has to invoke the Unicode character database but I think this would apply to any library.
 **** %{color:red}SE% At least PCRE isn't the slowest library around: In R 2.10.0 on Mac OS X, PCRE regexps are about 2.5x faster than POSIX regexp (now using the "TRE library":http://laurikari.net/tre/).  See discussion in next section for details.
 ** *Oniguruma* regular expression library
 *** modern regexp library, explicitly designed for multiple character sets
@@ -207,4 +209,34 @@ h1. Discussion of support libraries
 ** Is it possible to extract Perl's Unicode functionality?
 *** %{color:red}AH% I would be worried about this because of the need to keep up with unicode updates.
 *** %{color:red}SE% This applies to all specialised solutions suggested here, and basically leaves us with a choice between ICU and Glib.
+
+h1. Regex library benchmarking exercise [added 28-2-2010]
+
+* How the exercise was done
+** The following libraries were tested: *POSIX* as a baseline, *ICU* (with and without pre-mapping to UTF16), *Glib*, *PCRE* (the latter two in both UTF8 and Latin1 mode). 
+*** *Oniguruma* was not tested as getting it to link into the benchmark programpresented supreme difficulties; as it is nowhere near the level of de-facto standardisation that PCRE, Glib and ICU possess - and as it is apparently not being actively maintained - this is probably no loss.  
+** The benchmarks were a list of 165 regexes from Hoffmann et al. "Corpus Linguistics with BNCweb"
+** The "haystack" was the complete lexicon of the @word@ attribute o fthe CWB-encoded British National Corpus.  
+** The time for each regular expression was calculated as follows:
+*** The time to compile the regular expression ten times plus
+*** The time to check the regular expression ten times against each string in the haystack.
+
+* Results
+** For full results "see here":../doc/unicode-regexlib-benchmarking-results.html
+** Highlights as follows:
+*** *PCRE* is the fastest of the unicode-aware libraries
+**** Its overall time for all checks is lowest, at only 50% more than POSIX.
+**** Its backwards-compatible non-UTF8 mode offers a speed boost over UTF8 mode which will be handy for non-Unicdoe corpora 
+**** PCRE is also fastest on the majority of individual regexes (faster than POSIX in most cases). So there is no problem in *also* using PCRE when working with ASCII/Latin-1 corpora.
+*** *ICU* is slow, slow, slow.
+*** Although *Glib* uses PCRE, it seems to suffer an apparently pretty consistent speed penalty in the process of wrapping PCRE - and unlike PCRE it doesn't benefit when you revert to 8-bit mode.
+** Notably, there are certain regexes that while apparently trivial in POSIX, suffer major speed penalties in the other libraries (and absolutely kill ICU). They are:
+*** @141: ".{3,}(ness(es)?|it(y|ies)|(tion|ment)s?)"@
+*** @145: ".*(a|e|i|o|u){4,}.*"@
+*** @151: "([^t]*(t[^t]*){3}|[^r]*(r[^r]*){3})"@
+** The common factor seems to be a string of "almost anything" at the start of the regex. Since CQP's regex matching is always anchored at the beginning and end of the regex, i.e. always a full p-attribute not part of a p-attribute, this may not present problemsfor us  (? - I think) 
+
+* Conclusion
+** Use *PCRE* for regex matching; speed combined with its implementation of a very well-known regex dialect (Perl) make it the best choice.
+** Use *Glib* for support functions; it offers all the functionality of ICU that is relevant to CWB but is easier to program against (simpler API, no need to keep switching between UTF8 and UTF16).
 

@@ -139,7 +139,11 @@
 <li><span class="caps">CQP </span>commands <code>sort</code>, <code>count</code> and <code>tabulate</code> should work out of the box, since they rely on CL string folding<ul>
 <li>just need to make sure that the commands activate the appropriate character set</li>
 <li>ideally, sorting should use a locale-specific collation algorithm (which differs by language and country)<ul>
-<li>again I think relying on locales could be dodgy for many languages...  (%{color:red}SE% define "dodgy")</li>
+<li>again I think relying on locales could be dodgy for many languages...  <ul>
+<li><span style="color:red" cite="http://">SE</span> define "dodgy"</li>
+<li><span style="color:red" cite="http://">AH</span> "dodgy" == "prone to variable behaviour across different OS that we will find it difficult to fully account for"; see <a href="http://library.gnome.org/devel/glib/2.22/glib-running.html#setlocale">for instance</a>  </li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -186,7 +190,7 @@
 </ul>
 </li>
 <li>said to be relatively heavy-weight and much slower than regexp in Perl<ul>
-<li><span style="color:red" cite="http://">AH</span> I am not so sure about this, <span class="caps">PCRE </span>is less than 1/10 the size of <span class="caps">ICU </span>(%{color:red}SE% that&#39;s like saying "Vista is only half as bad as Windows 3.1" ;-) and seems to be as fast as <span class="caps">POSIX </span>(at least within the <span class="caps">PHP </span>engine). It is known to be slow when a pattern has to invoke the Unicode character database but I think this would apply to any library.</li>
+<li><span style="color:red" cite="http://">AH</span> I am not so sure about this, <span class="caps">PCRE </span>is less than 1/10 the size of <span class="caps">ICU </span>( <span style="color:red" cite="http://">SE</span> that&#39;s like saying "Vista is only half as bad as Windows 3.1" ;-) and seems to be as fast as <span class="caps">POSIX </span>(at least within the <span class="caps">PHP </span>engine). It is known to be slow when a pattern has to invoke the Unicode character database but I think this would apply to any library.</li>
 <li><span style="color:red" cite="http://">SE</span> At least <span class="caps">PCRE </span>isn&#39;t the slowest library around: In R 2.10.0 on Mac OS X, <span class="caps">PCRE </span>regexps are about 2.5x faster than <span class="caps">POSIX </span>regexp (now using the <a href="http://laurikari.net/tre/"><span class="caps">TRE </span>library</a>).  See discussion in next section for details.</li>
 </ul>
 </li>
@@ -329,5 +333,53 @@
 <li><span style="color:red" cite="http://">AH</span> I would be worried about this because of the need to keep up with unicode updates.</li>
 <li><span style="color:red" cite="http://">SE</span> This applies to all specialised solutions suggested here, and basically leaves us with a choice between <span class="caps">ICU </span>and Glib.</li>
 </ul></li>
+</ul></li>
+</ul>
+
+<h1>Regex library benchmarking exercise [added 28-2-2010]</h1>
+
+<ul>
+<li>How the exercise was done<ul>
+<li>The following libraries were tested: <strong><span class="caps">POSIX</span></strong> as a baseline, <strong><span class="caps">ICU</span></strong> (with and without pre-mapping to <span class="caps">UTF16</span>), <strong>Glib</strong>, <strong><span class="caps">PCRE</span></strong> (the latter two in both <span class="caps">UTF8 </span>and Latin1 mode). <ul>
+<li><strong>Oniguruma</strong> was not tested as getting it to link into the benchmark programpresented supreme difficulties; as it is nowhere near the level of de-facto standardisation that <span class="caps">PCRE,</span> Glib and <span class="caps">ICU </span>possess - and as it is apparently not being actively maintained - this is probably no loss.  </li>
+</ul>
+</li>
+<li>The benchmarks were a list of 165 regexes from Hoffmann et al. "Corpus Linguistics with <span class="caps">BNC</span>web"</li>
+<li>The "haystack" was the complete lexicon of the <code>word</code> attribute o fthe <span class="caps">CWB</span>-encoded British National Corpus.  </li>
+<li>The time for each regular expression was calculated as follows:<ul>
+<li>The time to compile the regular expression ten times plus</li>
+<li>The time to check the regular expression ten times against each string in the haystack.</li>
+</ul></li>
+</ul></li>
+</ul>
+
+<ul>
+<li>Results<ul>
+<li>For full results <a href="../doc/unicode-regexlib-benchmarking-results.html">see here</a></li>
+<li>Highlights as follows:<ul>
+<li><strong><span class="caps">PCRE</span></strong> is the fastest of the unicode-aware libraries<ul>
+<li>Its overall time for all checks is lowest, at only 50% more than <span class="caps">POSIX.</span></li>
+<li>Its backwards-compatible non-UTF8 mode offers a speed boost over <span class="caps">UTF8 </span>mode which will be handy for non-Unicdoe corpora </li>
+<li><span class="caps">PCRE </span>is also fastest on the majority of individual regexes (faster than <span class="caps">POSIX </span>in most cases). So there is no problem in <strong>also</strong> using <span class="caps">PCRE </span>when working with <span class="caps">ASCII</span>/Latin-1 corpora.</li>
+</ul>
+</li>
+<li><strong><span class="caps">ICU</span></strong> is slow, slow, slow.</li>
+<li>Although <strong>Glib</strong> uses <span class="caps">PCRE, </span>it seems to suffer an apparently pretty consistent speed penalty in the process of wrapping <span class="caps">PCRE </span>- and unlike <span class="caps">PCRE </span>it doesn&#39;t benefit when you revert to 8-bit mode.</li>
+</ul>
+</li>
+<li>Notably, there are certain regexes that while apparently trivial in <span class="caps">POSIX, </span>suffer major speed penalties in the other libraries (and absolutely kill <span class="caps">ICU</span>). They are:<ul>
+<li><code>141: &quot;.{3,}(ness(es)?|it(y|ies)|(tion|ment)s?)&quot;</code></li>
+<li><code>145: &quot;.*(a|e|i|o|u){4,}.*&quot;</code></li>
+<li><code>151: &quot;([^t]*(t[^t]*){3}|[^r]*(r[^r]*){3})&quot;</code></li>
+</ul>
+</li>
+<li>The common factor seems to be a string of "almost anything" at the start of the regex. Since <span class="caps">CQP</span>&#39;s regex matching is always anchored at the beginning and end of the regex, i.e. always a full p-attribute not part of a p-attribute, this may not present problemsfor us  (? - I think) </li>
+</ul></li>
+</ul>
+
+<ul>
+<li>Conclusion<ul>
+<li>Use <strong><span class="caps">PCRE</span></strong> for regex matching; speed combined with its implementation of a very well-known regex dialect (Perl) make it the best choice.</li>
+<li>Use <strong>Glib</strong> for support functions; it offers all the functionality of <span class="caps">ICU </span>that is relevant to <span class="caps">CWB </span>but is easier to program against (simpler <span class="caps">API, </span>no need to keep switching between <span class="caps">UTF8 </span>and <span class="caps">UTF16</span>).</li>
 </ul></li>
 </ul>
