@@ -176,11 +176,11 @@ BAR_write(BARdesc BAR, int x, int y, int i)
  * i = BAR_read(BAR, x, y);
  *
  * @param BAR     BAR descriptor
-   @param x       matrix x coordinate
+ * @param x       matrix x coordinate
  * @param y       matrix y coordinate
-   @return        the value of A(x,y);  if (x,y) is
-                  outside matrix or beam range, returns 0.
-   */
+ * @return        the value of A(x,y);  if (x,y) is
+ *                outside matrix or beam range, returns 0.
+ */
 int
 BAR_read(BARdesc BAR, int x, int y)
 {
