@@ -1,4 +1,12 @@
 
+Version 3.1
+-----------
+
+Version 3.1 of CWB (currently in beta) will run on Windows (currently, by cross-compilation on Linux using MinGW).
+This was accomplished by incorporating back into the main code base changes made to a branch of CWB by Serge 
+Heiden and colleagues on the Textometrie project. There are no other new features.
+
+
 Version 3.0
 -----------
 

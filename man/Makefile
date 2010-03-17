@@ -22,14 +22,14 @@ include $(TOP)/config.mk
 ## The following targets are available:
 #
 #  all          create man pages from POD documentation
-#  install	install man pages
-#  uninstall	uninstall man pages from chosen location (currently not supported)
+#  install      install man pages
+#  uninstall    uninstall man pages from chosen location (currently not supported)
 #  relase       install to binary release dir
-#  pdf		create PDF files from man pages
+#  pdf          create PDF files from man pages
 #  clean        delete PostScript files and other temporary files
-#  realclean	also delete generated man pages
-#  depend	<dummy target>
-#  size	        <dummy target>
+#  realclean    also delete generated man pages
+#  depend       <dummy target>
+#  size         <dummy target>
 
 MANS = 	cqp.man cqpcl.man cqpserver.man \
 	cwb-align.man cwb-align-show.man cwb-align-encode.man \

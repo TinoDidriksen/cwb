@@ -1,4 +1,4 @@
-h1. CWB R3 code architecture
+h1. CWB V3 code architecture
 
 This document is a rough guideline to the architecture of the CWB source code.
 
@@ -674,6 +674,13 @@ This directory contains shell scripts (@sh@) for configuring / installing CWB.
 h3. man
 
 This contains the *.pod source files for the man entries for @cqp@ and the CWB command-line utilties.
+
+h3. mingw-libgnurx-2.5.1
+
+This contains an internal copy of the source code for the @libregex@ needed to give CWB under windows (with MinGW) POSIX regular expression capability. It comes from here:
+https://sourceforge.net/project/shownotes.php?release_id=140957
+To quote the release notes, "This is a port of the GNU regex components from glibc, ported for use in native Win32 applications by Tor Lillqvist." There is a binary version, but for cross-compilation it seemed like
+a better idea to have a copy of the source internal to the CWB tree.
 
 
 h2. Global variables in CL

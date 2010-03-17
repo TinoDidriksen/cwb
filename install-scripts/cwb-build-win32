@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# Note : this is a build script, not an install script, for cross-compilation.
+# So no need to run as root.
+
+
+# load config.mk
+config_file=$(cat config.mk)
+
+
+# alter platform
+target="include \$(TOP)/config/platform/darwin-universal"
+rep="include \$(TOP)/config/platform/mingw"
+
+config_file=${config_file/"$target"/"$rep"}
+
+# alter site
+target="include \$(TOP)/config/site/standard"
+rep="include \$(TOP)/config/site/mingw"
+
+config_file=${config_file/"$target"/"$rep"}
+
+
+# save config.mk
+mv config.mk config.mk.bak
+echo "$config_file" > config.mk
+
+
+
+# make cwb
+
+make clean
+make depend
+make cl
+make editline
+make utils
+make cqp
+
+# AH notes: check the following. It should be make release or make WinTrasporter, depending on how is best to do it.
+# make install

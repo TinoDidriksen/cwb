@@ -199,6 +199,81 @@ Otherwise, the build process will automatically select the generic Linux
 configuration for standard i386-compatible processors.
 
 
+        BUILDING WINDOWS BINARIES
+        
+Currently, it is only possible to create Windows binaries via cross-compilation
+on a Unix-like system (if you want to compile on a Windows box your best option
+for now is Cygwin). For cross-compilatuion, you will need to install:
+
+ - the MinGW system including the Windows cross-compiler version of gcc
+
+On Debian/Ubuntu, this can be done by installing the package "mingw32" together
+with two other "mingw32-.*" packages on which it depends. There are also 
+various "mingw32-.*" packages available for Fedora and other RPM-based Linux 
+variants, although cross-compilation probably doesn't require all of them. 
+Alternatively the MinGW cross-compiler can be downloaded from the MinGW project
+website:
+
+        http://www.mingw.org/wiki/LinuxCrossMinGW
+
+However you install MinGW, make sure the cross-compiler binary file
+(i586-mingw32msvc-gcc) and the other executables with this prefix are all 
+available via your path.
+
+Then manually edit config.mk to select "mingw" as the configuration file for 
+both the "site" and the "platform". Note that the cwb-config-basic script 
+will not do this for you as it always assumes you are building binaries for
+the machine you are working on!
+
+[hang on, need to think carefully about mingw as a site...]
+
+When you have changed the config.mk file, builfing the CWB binaries is the same
+as above:
+
+        make clean
+        make depend
+        make all
+
+Running "make install" is meaningless in this case, because of course you will
+want to install the binaries on a different machine. To create an archive for
+easy transport of the Windows .exe files, together with PDFs of the man files,
+run
+
+        make WinTransporter
+
+[or would a "release" config file be better? look at these, see how they work]
+[ then it could just be "make release" here and the win transproter zip would 
+be created by the makefile; have a look at the release config files.]
+
+This will generate the file cwb-win-transporter.zip in the root directory. 
+
+Once again, to speed up these steps tehre is a script which automates the changes
+to config.mk and the various steps of "making":
+
+        ./install-scripts/cwb-build-win32
+
+When you take the "transporter" archive to a Windows system, you will probably
+want to follow these steps:
+
+ - create a folder like C:\Program Files\CWB
+ - put all the files from cwb-win-transporter.zip in there
+ - add this folder to the PATH environment variable
+ - put a copy of the PDF man files in some convenient place for the user's 
+   reference.
+
+Note that so far, cross-compilation has been tested with the following 
+Unix-like starting points:
+
+ - Ubuntu
+ - [add others here]
+
+The resulting Windows binaries have been tested on the following Windows 
+variants:
+
+ - Windows XP SP3 (32 bit)
+ - [add others here: windows server, vista, 7, 64-bit windows?]
+
+
         PACKAGE CONTENTS
 
 Makefile                top-level makefile
@@ -224,4 +299,5 @@ utils/                  source code of command-line utilities
 man/                    manpages for CQP and the command-line utilities
 
 editline/               local copy of the CSTR Editline library used by CQP
+mingw-libgnurx-2.5.1/   local copy of the MinGW regex library (from GNU libc)
 

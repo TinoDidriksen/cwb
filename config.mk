@@ -37,6 +37,7 @@
 #         darwin-core2   - optimised build for Core 2 CPU (requires Xcode 3.1 / OS X 10.5)
 #       solaris       SUN Solaris 8 for SPARC CPU
 #       cygwin        Win32 build using Cygwin emulation layer (experimental)
+#       mingw         Cross-compile for Win32 from a *nix system with MinGW installed (experimental)
 #
 include $(TOP)/config/platform/darwin-universal
 
@@ -53,6 +54,9 @@ include $(TOP)/config/platform/darwin-universal
 #         solaris-release ... for SUN Solaris 2.x
 #         linux-rpm       ... build binary RPM package on Linux (together with rpm-linux.spec)
 #       cygwin          Win32 / Cygwin configuration (experimental)
+#       mingw           Configuration for cross-compilation (defaults to "standard" because no
+#                       installation is needed in this case)
+#                       [AH notes: should this be a "win32-release" configuration instead?]
 #       
 include $(TOP)/config/site/standard
 
