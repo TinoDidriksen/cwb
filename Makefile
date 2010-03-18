@@ -148,6 +148,7 @@ release:
 	$(MAKE) -C man release
 	$(MAKE) -C instutils all
 	$(MAKE) -C instutils release	
+# make release for windows should use zip instead of tar/gzip; ifndef __MINGW__
 	if [ -f "$(RELEASE_DIR).tar.gz" ]; then $(RM) "$(RELEASE_DIR).tar.gz"; fi
 	(cd build/ && $(TAR) cfz "$(RELEASE_NAME).tar.gz" "$(RELEASE_NAME)")
 	@$(ECHO) "==> CREATED BINARY RELEASE build/$(RELEASE_NAME).tar.gz"

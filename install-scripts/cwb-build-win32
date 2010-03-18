@@ -14,12 +14,6 @@ rep="include \$(TOP)/config/platform/mingw"
 
 config_file=${config_file/"$target"/"$rep"}
 
-# alter site
-target="include \$(TOP)/config/site/standard"
-rep="include \$(TOP)/config/site/mingw"
-
-config_file=${config_file/"$target"/"$rep"}
-
 
 # save config.mk
 mv config.mk config.mk.bak
@@ -37,4 +31,4 @@ make utils
 make cqp
 
 # AH notes: check the following. It should be make release or make WinTrasporter, depending on how is best to do it.
-# make install
+make release

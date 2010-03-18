@@ -203,7 +203,7 @@ configuration for standard i386-compatible processors.
         
 Currently, it is only possible to create Windows binaries via cross-compilation
 on a Unix-like system (if you want to compile on a Windows box your best option
-for now is Cygwin). For cross-compilatuion, you will need to install:
+for now is Cygwin). For cross-compilation, you will need to install:
 
  - the MinGW system including the Windows cross-compiler version of gcc
 
@@ -211,6 +211,7 @@ On Debian/Ubuntu, this can be done by installing the package "mingw32" together
 with two other "mingw32-.*" packages on which it depends. There are also 
 various "mingw32-.*" packages available for Fedora and other RPM-based Linux 
 variants, although cross-compilation probably doesn't require all of them. 
+
 Alternatively the MinGW cross-compiler can be downloaded from the MinGW project
 website:
 
@@ -221,11 +222,7 @@ However you install MinGW, make sure the cross-compiler binary file
 available via your path.
 
 Then manually edit config.mk to select "mingw" as the configuration file for 
-both the "site" and the "platform". Note that the cwb-config-basic script 
-will not do this for you as it always assumes you are building binaries for
-the machine you are working on!
-
-[hang on, need to think carefully about mingw as a site...]
+the "platform".
 
 When you have changed the config.mk file, builfing the CWB binaries is the same
 as above:
@@ -239,15 +236,11 @@ want to install the binaries on a different machine. To create an archive for
 easy transport of the Windows .exe files, together with PDFs of the man files,
 run
 
-        make WinTransporter
+        make release
 
-[or would a "release" config file be better? look at these, see how they work]
-[ then it could just be "make release" here and the win transproter zip would 
-be created by the makefile; have a look at the release config files.]
+This will generate the file cwb-win-transporter.zip in the "build" directory. 
 
-This will generate the file cwb-win-transporter.zip in the root directory. 
-
-Once again, to speed up these steps tehre is a script which automates the changes
+Once again, to speed up these steps there is a script which automates the changes
 to config.mk and the various steps of "making":
 
         ./install-scripts/cwb-build-win32
