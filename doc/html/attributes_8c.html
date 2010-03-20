@@ -248,7 +248,7 @@
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The set attribute value in standard syntax ('|' delimited, sorted with cl_strcmp). If there is any syntax error, <a class="el" href="attributes_8c.html#a8e1d05d565a13c56790b5dd35d144d49" title="Generates a set attribute value.">cl_make_set()</a> returns NULL. </dd></dl>
 
-<p>References <a class="el" href="cl_8h.html#aede9087e6156e4d179f2dfaf1b797634">CDA_EFSETINV</a>, <a class="el" href="cl_8h.html#a1fa2e2ab47bd2c689b68a78bdac22028">CDA_OK</a>, <a class="el" href="cdaccess_8c.html#a19cdf6dd32b5379c47e316fc514b2f09">cderrno</a>, <a class="el" href="cl_8h.html#a29821a3153a5aec8029f2c9f3c548a07">cl_delete_string_list()</a>, <a class="el" href="cl_8h.html#a9e15a3c725711d9effd623b2f3e225be">cl_free</a>, <a class="el" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="cl_8h.html#a3ddaa979e97ca8e1feb6ab92ecb589df">cl_new_string_list()</a>, <a class="el" href="cl_8h.html#a6647d75d1d69c7d25447da514b7e4682">cl_strdup()</a>, <a class="el" href="cl_8h.html#ab6fbfc379ef8e7d8195f79c53fbf94d0">cl_string_list_append()</a>, <a class="el" href="cl_8h.html#a34bf9985ab4b45d40d82c6224e93d155">cl_string_list_get()</a>, <a class="el" href="cl_8h.html#a42de57219db6b73e81a37610b5651ff6">cl_string_list_qsort()</a>, and <a class="el" href="cl_8h.html#a1957504511cba402e45a9d987c771408">cl_string_list_size()</a>.</p>
+<p>References <a class="el" href="cl_8h.html#aede9087e6156e4d179f2dfaf1b797634">CDA_EFSETINV</a>, <a class="el" href="cl_8h.html#a1fa2e2ab47bd2c689b68a78bdac22028">CDA_OK</a>, <a class="el" href="cl_8h.html#a8807f044dd47ab4d1f1c3eba26b2646c">cderrno</a>, <a class="el" href="cl_8h.html#a29821a3153a5aec8029f2c9f3c548a07">cl_delete_string_list()</a>, <a class="el" href="cl_8h.html#a9e15a3c725711d9effd623b2f3e225be">cl_free</a>, <a class="el" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="cl_8h.html#a3ddaa979e97ca8e1feb6ab92ecb589df">cl_new_string_list()</a>, <a class="el" href="cl_8h.html#a6647d75d1d69c7d25447da514b7e4682">cl_strdup()</a>, <a class="el" href="cl_8h.html#ab6fbfc379ef8e7d8195f79c53fbf94d0">cl_string_list_append()</a>, <a class="el" href="cl_8h.html#a34bf9985ab4b45d40d82c6224e93d155">cl_string_list_get()</a>, <a class="el" href="cl_8h.html#a42de57219db6b73e81a37610b5651ff6">cl_string_list_qsort()</a>, and <a class="el" href="cl_8h.html#a1957504511cba402e45a9d987c771408">cl_string_list_size()</a>.</p>
 
 <p>Referenced by <a class="el" href="cwb-encode_8c.html#af99342049f0c726b2e1223b1f5c7feab">addline()</a>, <a class="el" href="cwb-s-encode_8c.html#aaf755ce7815d09ec0dab7ce520a909f3">check_set()</a>, and <a class="el" href="cwb-encode_8c.html#adff58f0a1109dd9e778ba480c6b33327">open_range()</a>.</p>
 
@@ -289,7 +289,7 @@
 <p>Compute intersection of two set attribute values (in standard syntax, i.e. sorted and '|'-delimited); memory for the result string must be allocated by the caller.</p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>0 on error, 1 otherwise </dd></dl>
 
-<p>References <a class="el" href="cl_8h.html#a248a0b0ee797db59e9e6b6077c6a81ca">CDA_EBUFFER</a>, <a class="el" href="cl_8h.html#aede9087e6156e4d179f2dfaf1b797634">CDA_EFSETINV</a>, <a class="el" href="cl_8h.html#a1fa2e2ab47bd2c689b68a78bdac22028">CDA_OK</a>, <a class="el" href="cdaccess_8c.html#a19cdf6dd32b5379c47e316fc514b2f09">cderrno</a>, <a class="el" href="cl_8h.html#a19a84a3423e3468bf511c61271c06689">CL_DYN_STRING_SIZE</a>, and <a class="el" href="cdaccess_8c.html#abf5768f9ef1a1fda1d35becaf9053927">cl_strcmp()</a>.</p>
+<p>References <a class="el" href="cl_8h.html#a248a0b0ee797db59e9e6b6077c6a81ca">CDA_EBUFFER</a>, <a class="el" href="cl_8h.html#aede9087e6156e4d179f2dfaf1b797634">CDA_EFSETINV</a>, <a class="el" href="cl_8h.html#a1fa2e2ab47bd2c689b68a78bdac22028">CDA_OK</a>, <a class="el" href="cl_8h.html#a8807f044dd47ab4d1f1c3eba26b2646c">cderrno</a>, <a class="el" href="cl_8h.html#a19a84a3423e3468bf511c61271c06689">CL_DYN_STRING_SIZE</a>, and <a class="el" href="cdaccess_8c.html#abf5768f9ef1a1fda1d35becaf9053927">cl_strcmp()</a>.</p>
 
 <p>Referenced by <a class="el" href="builtins_8h.html#a58b600ee9f8c217ac9a71d26ad0c59e1">call_predefined_function()</a>.</p>
 
@@ -315,7 +315,7 @@
 <p>This function counts the number of elements in a set attribute value (using '|'-delimited standard syntax);</p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>-1 on error (in particular, if set is malformed) </dd></dl>
 
-<p>References <a class="el" href="cl_8h.html#aede9087e6156e4d179f2dfaf1b797634">CDA_EFSETINV</a>, <a class="el" href="cl_8h.html#a1fa2e2ab47bd2c689b68a78bdac22028">CDA_OK</a>, and <a class="el" href="cdaccess_8c.html#a19cdf6dd32b5379c47e316fc514b2f09">cderrno</a>.</p>
+<p>References <a class="el" href="cl_8h.html#aede9087e6156e4d179f2dfaf1b797634">CDA_EFSETINV</a>, <a class="el" href="cl_8h.html#a1fa2e2ab47bd2c689b68a78bdac22028">CDA_OK</a>, and <a class="el" href="cl_8h.html#a8807f044dd47ab4d1f1c3eba26b2646c">cderrno</a>.</p>
 
 <p>Referenced by <a class="el" href="builtins_8h.html#a58b600ee9f8c217ac9a71d26ad0c59e1">call_predefined_function()</a>.</p>
 
@@ -515,7 +515,7 @@
 <div class="memdoc">
 
 <p>Creates the specified component for the given Attribute. </p>
-<p>This function only works for the following components: CompRevCorpus, CompRevCorpusIdx, CompLexiconSrt, CompCorpusFreqs. Also, it only works if the <a class="el" href="structstate.html">state</a> of the component is ComponentDefined</p>
+<p>This function only works for the following components: CompRevCorpus, CompRevCorpusIdx, CompLexiconSrt, CompCorpusFreqs. Also, it only works if the <a class="el" href="structstate.html">state</a> of the component is ComponentDefined.</p>
 <p>"Create" here means create the CWB data files. This is accomplished by calling one of the "creat_*" functions, of which there is one for each of the four available component types. These are defined in <a class="el" href="makecomps_8c.html">makecomps.c</a>.</p>
 <p>Each of these functions reads in the data it needs, processes it, and then writes a new file.</p>
 <dl><dt><b>Parameters:</b></dt><dd>
@@ -1225,7 +1225,7 @@ ALLOW_COMPONENT_CREATION</dd></dl>
 </div>
 </div>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on Sun Feb 28 18:08:03 2010 for CWB by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on Sat Mar 20 17:47:14 2010 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

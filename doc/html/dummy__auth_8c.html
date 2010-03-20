@@ -39,10 +39,10 @@
 <li>void <a class="el" href="dummy__auth_8c.html#a05cd1513ddf2ff1ad96bad1ac63bf50d">add_host_to_list</a> (char *ipaddr)
 <li>void <a class="el" href="dummy__auth_8c.html#adeea09d31126f7ba47e449099695f0c4">add_hosts_in_subnet_to_list</a> (char *ipsubnet)
 <li>int <a class="el" href="dummy__auth_8c.html#a54427d07e5e87fb064f15fb7d6323d82">check_host</a> (struct in_addr host_addr)
-<li>int <a class="el" href="dummy__auth_8c.html#a636cd65762915bde9cb4f8dd8de30c9e">authenticate_user</a> (char *username, char *<a class="el" href="cqpserver_8c.html#a24d99e99564d8672d8aa4d3930b764af">passwd</a>)
-<li>int <a class="el" href="dummy__auth_8c.html#ae6371964c336b358b1a4d37ea576ca67">check_grant</a> (char *username, char *<a class="el" href="cwb-s-encode_8c.html#aca3a1fb765418f9b9b1d74051aa88667">corpus</a>)
-<li>void <a class="el" href="dummy__auth_8c.html#a3438acd3b7f91c3d2edfa86988e4023b">show_grants</a> (void)
-</ul>
+<dl class="el"><dd class="mdescRight">returns true if host is in list of allowed hosts  <a href="#a54427d07e5e87fb064f15fb7d6323d82"></a><br/></dl><li>int <a class="el" href="dummy__auth_8c.html#a636cd65762915bde9cb4f8dd8de30c9e">authenticate_user</a> (char *username, char *<a class="el" href="cqpserver_8c.html#a24d99e99564d8672d8aa4d3930b764af">passwd</a>)
+<dl class="el"><dd class="mdescRight">returns true if (user, passwd) pair is in list  <a href="#a636cd65762915bde9cb4f8dd8de30c9e"></a><br/></dl><li>int <a class="el" href="dummy__auth_8c.html#ae6371964c336b358b1a4d37ea576ca67">check_grant</a> (char *username, char *<a class="el" href="cwb-s-encode_8c.html#aca3a1fb765418f9b9b1d74051aa88667">corpus</a>)
+<dl class="el"><dd class="mdescRight">returns true if user may access corpus  <a href="#ae6371964c336b358b1a4d37ea576ca67"></a><br/></dl><li>void <a class="el" href="dummy__auth_8c.html#a3438acd3b7f91c3d2edfa86988e4023b">show_grants</a> (void)
+<dl class="el"><dd class="mdescRight">for debugging only  <a href="#a3438acd3b7f91c3d2edfa86988e4023b"></a><br/></dl></ul>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <p>All functions in this module are dummy implementations which just print an error message. </p>
 <hr/><h2>Function Documentation</h2>
@@ -160,6 +160,8 @@
 </div>
 <div class="memdoc">
 
+<p>returns true if (user, passwd) pair is in list </p>
+
 <p>References <a class="el" href="auth_8c.html#a639945a3a4a62b5a8911a0f7a463c247">find_user()</a>, <a class="el" href="struct___user_entry.html#a3b8cb37fa26cdca2b7460e14facd9ec0">_UserEntry::passwd</a>, and <a class="el" href="cqpserver_8c.html#a14871705f45ccdc5bb9f4549efd8e119">user</a>.</p>
 
 </div>
@@ -189,6 +191,8 @@
 </div>
 <div class="memdoc">
 
+<p>returns true if user may access corpus </p>
+
 <p>References <a class="el" href="struct___grant.html#a785dc71f5277d801f238ab786d269786">_Grant::corpus</a>, <a class="el" href="auth_8c.html#a639945a3a4a62b5a8911a0f7a463c247">find_user()</a>, <a class="el" href="struct___user_entry.html#abf92327051ab7c042ca2bba413417d80">_UserEntry::grants</a>, <a class="el" href="struct___grant.html#a2a6615f7b0193f12e3d63db90c4e664d">_Grant::next</a>, and <a class="el" href="cqpserver_8c.html#a14871705f45ccdc5bb9f4549efd8e119">user</a>.</p>
 
 </div>
@@ -208,6 +212,8 @@
       </table>
 </div>
 <div class="memdoc">
+
+<p>returns true if host is in list of allowed hosts </p>
 
 <p>References <a class="el" href="struct___host_entry.html#aab7e20b35ad3be1702854fa9f8d1ca98">_HostEntry::accept_any</a>, <a class="el" href="struct___host_entry.html#ac336b3ba92873758e062459a77a9555f">_HostEntry::address</a>, and <a class="el" href="struct___host_entry.html#a998a86f8fea1ddf580d174f3cc994747">_HostEntry::next</a>.</p>
 
@@ -229,12 +235,14 @@
 </div>
 <div class="memdoc">
 
+<p>for debugging only </p>
+
 <p>References <a class="el" href="struct___host_entry.html#ac336b3ba92873758e062459a77a9555f">_HostEntry::address</a>, <a class="el" href="struct___grant.html#a785dc71f5277d801f238ab786d269786">_Grant::corpus</a>, <a class="el" href="struct___user_entry.html#abf92327051ab7c042ca2bba413417d80">_UserEntry::grants</a>, <a class="el" href="struct___user_entry.html#a5ac083a645d964373f022d03df4849c8">_UserEntry::name</a>, <a class="el" href="struct___grant.html#a2a6615f7b0193f12e3d63db90c4e664d">_Grant::next</a>, <a class="el" href="struct___user_entry.html#a3164381d1eb75864c1c9c4a0ebbbaafa">_UserEntry::next</a>, <a class="el" href="struct___host_entry.html#a998a86f8fea1ddf580d174f3cc994747">_HostEntry::next</a>, <a class="el" href="struct___user_entry.html#a3b8cb37fa26cdca2b7460e14facd9ec0">_UserEntry::passwd</a>, and <a class="el" href="cqpserver_8c.html#a14871705f45ccdc5bb9f4549efd8e119">user</a>.</p>
 
 </div>
 </div>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on Sun Feb 28 18:08:04 2010 for CWB by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on Sat Mar 20 17:47:14 2010 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

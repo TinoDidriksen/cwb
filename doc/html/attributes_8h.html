@@ -49,7 +49,7 @@
 <li>#define <a class="el" href="attributes_8h.html#a1488303fde5403174782bbb5324eca5e">ATTS_LOCAL</a>&nbsp;&nbsp;&nbsp;1
 <li>#define <a class="el" href="attributes_8h.html#a4846942ef236e17622c5a6ee3aab1abc">SYNCHRONIZATION</a>&nbsp;&nbsp;&nbsp;128
 <li>#define <a class="el" href="attributes_8h.html#a534de8769153925b5bd6a51dd8e3ee79">MAXCODELEN</a>&nbsp;&nbsp;&nbsp;32
-<li>#define <a class="el" href="attributes_8h.html#a493c716f0c2cdf70614dcaa0b9aae21f">COMMON_ATTR_FIELDS</a>
+<dl class="el"><dd class="mdescRight">The maximum length of a single code, which is also the number of possible code lengths.  <a href="#a534de8769153925b5bd6a51dd8e3ee79"></a><br/></dl><li>#define <a class="el" href="attributes_8h.html#a493c716f0c2cdf70614dcaa0b9aae21f">COMMON_ATTR_FIELDS</a>
 <dl class="el"><dd class="mdescRight">Members found in ALL the different types of Attribute object.  <a href="#a493c716f0c2cdf70614dcaa0b9aae21f"></a><br/></dl></ul>
 <h2>Typedefs</h2>
 <ul>
@@ -200,6 +200,8 @@
       </table>
 </div>
 <div class="memdoc">
+
+<p>The maximum length of a single code, which is also the number of possible code lengths. </p>
 
 <p>Referenced by <a class="el" href="cwb-huffcode_8c.html#a80203248d1441475e98106bf8f8ea6ec">compute_code_lengths()</a>, <a class="el" href="attributes_8h.html#aa8cca29b27b82feca31150e6f77a5fcd">load_component()</a>, <a class="el" href="cwb-huffcode_8c.html#a54819f1c7b28623c39a3231a6a23f49e">ReadHCD()</a>, and <a class="el" href="cwb-huffcode_8c.html#acf652ab7419c1a640d1682e183733f9c">WriteHCD()</a>.</p>
 
@@ -629,7 +631,7 @@
 <div class="memdoc">
 
 <p>Creates the specified component for the given Attribute. </p>
-<p>This function only works for the following components: CompRevCorpus, CompRevCorpusIdx, CompLexiconSrt, CompCorpusFreqs. Also, it only works if the <a class="el" href="structstate.html">state</a> of the component is ComponentDefined</p>
+<p>This function only works for the following components: CompRevCorpus, CompRevCorpusIdx, CompLexiconSrt, CompCorpusFreqs. Also, it only works if the <a class="el" href="structstate.html">state</a> of the component is ComponentDefined.</p>
 <p>"Create" here means create the CWB data files. This is accomplished by calling one of the "creat_*" functions, of which there is one for each of the four available component types. These are defined in <a class="el" href="makecomps_8c.html">makecomps.c</a>.</p>
 <p>Each of these functions reads in the data it needs, processes it, and then writes a new file.</p>
 <dl><dt><b>Parameters:</b></dt><dd>
@@ -1155,7 +1157,7 @@ ALLOW_COMPONENT_CREATION</dd></dl>
 </div>
 </div>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on Sun Feb 28 18:08:03 2010 for CWB by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on Sat Mar 20 17:47:14 2010 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

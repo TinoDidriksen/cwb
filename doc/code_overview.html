@@ -1,4 +1,4 @@
-<h1><span class="caps">CWB</span> R3 code architecture</h1>
+<h1><span class="caps">CWB</span> V3 code architecture</h1>
 
 <p>This document is a rough guideline to the architecture of the <span class="caps">CWB </span>source code.</p>
 
@@ -935,7 +935,14 @@
 
 <h3>man</h3>
 
-<p>This contains the *.pod source files for the man entries for <code>cqp</code> and the <span class="caps">CWB </span>command-line utilties.</p>
+<p>This contains the <code>*.pod</code> source files for the man entries for <code>cqp</code> and the <span class="caps">CWB </span>command-line utilties.</p>
+
+<h3>mingw-libgnurx-2.5.1</h3>
+
+<p>This contains an internal copy of the source code for the <code>libregex</code> needed to give <span class="caps">CWB </span>under windows (with MinGW) <span class="caps">POSIX </span>regular expression capability. It comes from here:<br />
+https://sourceforge.net/project/shownotes.php?release_id=140957<br />
+To quote the release notes, "This is a port of the <span class="caps">GNU </span>regex components from glibc, ported for use in native Win32 applications by Tor Lillqvist." There is a binary version, but for cross-compilation it seemed like<br />
+a better idea to have a copy of the source internal to the <span class="caps">CWB </span>tree.</p>
 
 
 <h2>Global variables in CL</h2>

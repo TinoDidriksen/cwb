@@ -198,6 +198,7 @@
 <p>Then ditto for the list of groups and current group; then ditto for the list of hosts and current host.</p>
 <p>Note that this is currently disabled for users/groups. So, if either <a class="el" href="struct_t_corpus.html#ac771eb92304afb01bd985218cdca5a81" title="List of users allowed to access this corpus (can be NULL).">Corpus::userAccessList</a> or <a class="el" href="struct_t_corpus.html#aeca16b764f325a0ace5e7c7865271070" title="List of groups allowed to access this corpus (can be NULL).">Corpus::groupAccessList</a> are changed from their initial (NULL) setting, this function will return false.</p>
 <p>On the other hand, the function does work with hosts. If a list of allows hosts is set, this function will return true iff the current host is on that list.</p>
+<p>Finally note: if compiled for Windows, this function returns true without actually checking anything, because windows does not support the POSIX user/group functionality on which all of this relies. Under Windows, access policies have to managed by the cqpserver rather than by the CL simply reading from the registry.</p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>corpus</em>&nbsp;</td><td>The corpus. </td></tr>
@@ -606,7 +607,7 @@
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The Corpus, or NULL if it wasn't found. </dd></dl>
 
-<p>References <a class="el" href="cl_8h.html#a6abae3b6b39350df13cfe97acc1f0a30">cl_standard_registry</a>, <a class="el" href="struct_t_corpus.html#ac457df8bdae957932046725f5e9d30a2">TCorpus::next</a>, <a class="el" href="struct_t_corpus.html#a1151e3383439ca5d8096811a09b42823">TCorpus::registry_dir</a>, <a class="el" href="struct_t_corpus.html#aba368bab230678d58be125f5b732cc25">TCorpus::registry_name</a>, and <a class="el" href="macros_8h.html#aedf9a4cdd75e574d55f252e31d2ec453">STREQ</a>.</p>
+<p>References <a class="el" href="cl_8h.html#a6abae3b6b39350df13cfe97acc1f0a30">cl_standard_registry</a>, <a class="el" href="struct_t_corpus.html#ac457df8bdae957932046725f5e9d30a2">TCorpus::next</a>, <a class="el" href="globals_8h.html#a256a5721249aa3309437212cc21a9fe4">PATH_SEPARATOR</a>, <a class="el" href="struct_t_corpus.html#a1151e3383439ca5d8096811a09b42823">TCorpus::registry_dir</a>, <a class="el" href="struct_t_corpus.html#aba368bab230678d58be125f5b732cc25">TCorpus::registry_name</a>, and <a class="el" href="macros_8h.html#aedf9a4cdd75e574d55f252e31d2ec453">STREQ</a>.</p>
 
 <p>Referenced by <a class="el" href="corpus_8c.html#a84eb9130d44b1b40bd3bfe5a94f777d9">setup_corpus()</a>.</p>
 
@@ -654,7 +655,7 @@
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>A file handle, or NULL in case of error. </dd></dl>
 
-<p>References <a class="el" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, and <a class="el" href="globals_8h.html#af0f2173e3b202ddf5756531b4471dcb2">MAX_LINE_LENGTH</a>.</p>
+<p>References <a class="el" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="globals_8h.html#af0f2173e3b202ddf5756531b4471dcb2">MAX_LINE_LENGTH</a>, <a class="el" href="globals_8h.html#a256a5721249aa3309437212cc21a9fe4">PATH_SEPARATOR</a>, and <a class="el" href="globals_8h.html#aa3cbd33788dfd77d29dc892204a609a5">SUBDIR_SEPARATOR</a>.</p>
 
 <p>Referenced by <a class="el" href="corpus_8c.html#a84eb9130d44b1b40bd3bfe5a94f777d9">setup_corpus()</a>.</p>
 
@@ -909,7 +910,7 @@
 </div>
 </div>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on Sun Feb 28 18:08:04 2010 for CWB by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on Sat Mar 20 17:47:14 2010 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

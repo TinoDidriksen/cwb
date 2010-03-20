@@ -36,7 +36,9 @@
 <code>#include &lt;unistd.h&gt;</code><br/>
 <h2>Defines</h2>
 <ul>
-<li>#define <a class="el" href="globals_8h.html#ac392b52df688734d343a5acc32fb6b87">REGISTRY_DEFAULT_PATH</a>&nbsp;&nbsp;&nbsp;&quot;/corpora/c1/<a class="el" href="options_8h.html#ab6be6986e1a07fc76b7a5a77aa7cc43b">registry</a>&quot;
+<li>#define <a class="el" href="globals_8h.html#a256a5721249aa3309437212cc21a9fe4">PATH_SEPARATOR</a>&nbsp;&nbsp;&nbsp;':'
+<dl class="el"><dd class="mdescRight">character used to separate different paths in a string variable  <a href="#a256a5721249aa3309437212cc21a9fe4"></a><br/></dl><li>#define <a class="el" href="globals_8h.html#aa3cbd33788dfd77d29dc892204a609a5">SUBDIR_SEPARATOR</a>&nbsp;&nbsp;&nbsp;'/'
+<dl class="el"><dd class="mdescRight">character used to delimit subdirectories in a path  <a href="#aa3cbd33788dfd77d29dc892204a609a5"></a><br/></dl><li>#define <a class="el" href="globals_8h.html#ac392b52df688734d343a5acc32fb6b87">REGISTRY_DEFAULT_PATH</a>&nbsp;&nbsp;&nbsp;&quot;/corpora/c1/<a class="el" href="options_8h.html#ab6be6986e1a07fc76b7a5a77aa7cc43b">registry</a>&quot;
 <dl class="el"><dd class="mdescRight">The default path assumed for the location of the corpus registry.  <a href="#ac392b52df688734d343a5acc32fb6b87"></a><br/></dl><li>#define <a class="el" href="globals_8h.html#a7cb97950b921d5fd5ea7bc1b5f8dafdb">REGISTRY_ENVVAR</a>&nbsp;&nbsp;&nbsp;&quot;CORPUS_REGISTRY&quot;
 <dl class="el"><dd class="mdescRight">The Unix environment variable from which the value of the registry will be taken.  <a href="#a7cb97950b921d5fd5ea7bc1b5f8dafdb"></a><br/></dl><li>#define <a class="el" href="globals_8h.html#af0f2173e3b202ddf5756531b4471dcb2">MAX_LINE_LENGTH</a>&nbsp;&nbsp;&nbsp;4096
 <dl class="el"><dd class="mdescRight">this is the length of temporary strings which are allocated with a fixed size .  <a href="#af0f2173e3b202ddf5756531b4471dcb2"></a><br/></dl><li>#define <a class="el" href="globals_8h.html#a3d5a3c317dcfbb56869875ed4a91ddcc">MAX_IDENTIFIER_LENGTH</a>&nbsp;&nbsp;&nbsp;1024
@@ -82,6 +84,23 @@
 
 </div>
 </div>
+<a class="anchor" id="a256a5721249aa3309437212cc21a9fe4"></a><!-- doxytag: member="globals.h::PATH_SEPARATOR" ref="a256a5721249aa3309437212cc21a9fe4" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define PATH_SEPARATOR&nbsp;&nbsp;&nbsp;':'</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>character used to separate different paths in a string variable </p>
+
+<p>Referenced by <a class="el" href="corpus_8c.html#a2e8c6f04bb423451ab68782fdd5da158">find_corpus()</a>, <a class="el" href="corpus_8c.html#ae4b2cca2b7b9b49c52b63430577051ad">find_corpus_registry()</a>, and <a class="el" href="paths_8h.html#ac294ea41f70977db59074c0c496aff00">get_path_component()</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="ac392b52df688734d343a5acc32fb6b87"></a><!-- doxytag: member="globals.h::REGISTRY_DEFAULT_PATH" ref="ac392b52df688734d343a5acc32fb6b87" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -113,6 +132,23 @@
 <p>The Unix environment variable from which the value of the registry will be taken. </p>
 
 <p>Referenced by <a class="el" href="corpus_8c.html#a4d7cb8811357af41ee0c95d6a3ce3b65">central_corpus_directory()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aa3cbd33788dfd77d29dc892204a609a5"></a><!-- doxytag: member="globals.h::SUBDIR_SEPARATOR" ref="aa3cbd33788dfd77d29dc892204a609a5" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SUBDIR_SEPARATOR&nbsp;&nbsp;&nbsp;'/'</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>character used to delimit subdirectories in a path </p>
+
+<p>Referenced by <a class="el" href="special-chars_8c.html#a76a88a09e8eed393bae6ef422744dd84">cl_path_adjust_os()</a>, and <a class="el" href="corpus_8c.html#ae4b2cca2b7b9b49c52b63430577051ad">find_corpus_registry()</a>.</p>
 
 </div>
 </div>
@@ -193,7 +229,7 @@
 </div>
 </div>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on Sun Feb 28 18:08:04 2010 for CWB by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on Sat Mar 20 17:47:14 2010 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>
