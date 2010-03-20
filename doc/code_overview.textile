@@ -673,7 +673,7 @@ This directory contains shell scripts (@sh@) for configuring / installing CWB.
 
 h3. man
 
-This contains the *.pod source files for the man entries for @cqp@ and the CWB command-line utilties.
+This contains the @*.pod@ source files for the man entries for @cqp@ and the CWB command-line utilties.
 
 h3. mingw-libgnurx-2.5.1
 

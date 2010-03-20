@@ -23,7 +23,11 @@
 #include "globals.h"
 
 #include "endian.h"
+#ifndef __MINGW__
 #include <regex.h>
+#else
+#include "../mingw-libgnurx-2.5.1/regex.h"
+#endif
 #include "macros.h"
 #include "attributes.h"
 #include "special-chars.h"
@@ -42,7 +46,7 @@
 /**
  * Error number for CL: is set after access to any of various corpus-data-access functions.
  */
-int cderrno;
+int cl_errno;
 
 
 
@@ -51,7 +55,6 @@ int cderrno;
  * Checks an Attribute passed as a function argument for usability in that function.
  *
  * (a) arg must not be NULL.
- *
  * (b) arg type has to be the type specified in atyp.
  *
  * If these conditions are not specified, the function returns rval.
@@ -90,14 +93,14 @@ cl_strcmp(char *s1, char *s2)
 /**
  * Gets a string describing the error identified by an error number.
  *
- * @param errno  Error number integer (a CDA_* constant as defined in cl.h)
+ * @param error_num  Error number integer (a CDA_* constant as defined in cl.h)
  */
 char *
-cdperror_string(int errno)
+cl_error_string(int error_num)
 {
   char *s;
 
-  switch (errno) {
+  switch (error_num) {
   case CDA_OK:
     s = "CL: No error";
     break;
@@ -126,7 +129,7 @@ cdperror_string(int errno)
     s = "CL: no structure defined for this position";
     break;
   case CDA_EALIGN:
-    s = "CL: no alignent defined for this position";
+    s = "CL: no alignment defined for this position";
     break;
   case CDA_EREMOTE:
     s = "CL: error during access of remote data";
@@ -169,12 +172,12 @@ cdperror_string(int errno)
  * Prints an error message, together with a string identifying the current error number.
  */
 void
-cdperror(char *message)
+cl_error(char *message)
 {
   if (message != NULL)
-    fprintf(stderr, "%s: %s\n", cdperror_string(cderrno), message);
+    fprintf(stderr, "%s: %s\n", cl_error_string(cderrno), message);
   else
-    fprintf(stderr, "%s\n", cdperror_string(cderrno));
+    fprintf(stderr, "%s\n", cl_error_string(cderrno));
 }
 
 

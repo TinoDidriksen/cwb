@@ -117,7 +117,10 @@ endif
 ifndef TAR
 TAR = tar
 endif
-
+## only needed by "make release" for Windows
+ifndef ZIP
+ZIP = zip -r
+endif
 
 #
 # Command-line flags for (GNU-compatible) install program

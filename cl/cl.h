@@ -148,7 +148,7 @@ typedef struct _DCR {
 /* 
  *  error handling (error values and related functions) 
  */
-#define CDA_OK           0        /**< everything fine; error values all less than 0 */
+#define CDA_OK           0        /**< everything fine; error values are all less than 0 */
 #define CDA_ENULLATT    -1        /**< NULL passed as attribute argument */
 #define CDA_EATTTYPE    -2        /**< function was called on illegal attribute */
 #define CDA_EIDORNG     -3        /**< id out of range */
@@ -169,11 +169,12 @@ typedef struct _DCR {
 #define CDA_EBUFFER     -18       /**< buffer overflow (hard-coded internal buffer sizes) */
 #define CDA_EINTERNAL   -19       /**< internal data consistency error (really bad) */
 
-extern int cderrno;
+/* a global variable which will always be set to one of the above constants! */
+extern int cl_errno;
 
-/* these are old-style-API prototypes... */
-void cdperror(char *message);
-char *cdperror_string(int error_num);
+
+void cl_error(char *message);
+char *cl_error_string(int error_num);
 
 
 
@@ -210,6 +211,12 @@ char *cl_string_latex2iso(char *str, char *result, int target_len);
 /* <result> points to buffer of appropriate size; auto-allocated if NULL; 
    str == result is explicitly allowed; conveniently returns <result> */
 
+void cl_path_adjust_os(char *path);  /* normalises a path to Windowslike or Unixlike, depending on the build;
+                                        string changed in place. */
+
+
+
+/* ANDREW NOTES: this function should be removed from public view in the API once we go to UTF8. */
 unsigned char *cl_string_maptable(CorpusCharset charset /*ignored*/, int flags);
 /* returns pointer to static mapping table for given flags (IGNORE_CASE and IGNORE_DIAC) and character set */
 
@@ -337,9 +344,6 @@ void cl_set_memory_limit(int megabytes);  /* 0 or less turns limit off */
  *  CL corpus and attribute 'methods' -- the CL core library
  */
 /* new style function names (implemented as macros mapping to the old names) */
-#define cl_errno cderrno
-#define cl_error(message) cdperror(message)
-#define cl_error_string(no) cdperror_string(no)
 #define cl_new_corpus(reg, name) setup_corpus(reg, name)
 #define cl_delete_corpus(c) drop_corpus(c)
 #define cl_standard_registry() central_corpus_directory()
@@ -380,6 +384,13 @@ int cl_max_struc(Attribute *a);             /* normalised to standard return val
 #define cl_struc_values(a) structure_has_values(a)
 #define cl_struc2str(a, struc) structure_value(a, struc)
 #define cl_cpos2struc2str(a, cpos) structure_value_at_position(a, cpos)
+
+/* compatibility macros (old names #defined to new names... */
+/* old names are in the course of being phased out, many do not occur anywhere, so these macros are just for safety */
+#define cderrno cl_errno
+#define cdperror_string(no) cl_error_string(no)
+#define cdperror(message) cl_error(message)
+
 /* extended alignment attributes (with fallback to old alignment */
 int cl_has_extended_alignment(Attribute *attribute);
 int cl_max_alg(Attribute *attribute);

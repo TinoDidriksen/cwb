@@ -39,6 +39,17 @@ PARSES  = registry.tab.c lex.creg.c
 PARSEG  = registry.l registry.y
 PARSEO  = registry.tab.o lex.creg.o
 
+## Compile and link-in windows-mmap functions only if we are in MinGW
+ifdef __MINGW__
+MMAPH = windows-mmap.h
+MMAPS = windows-mmap.c
+MMAPO = windows-mmap.o
+else
+MMAPH =
+MMAPS =
+MMAPO =
+endif 
+
 ## cl.h header file will be installed in subdirectory cwb/
 REALINCINSTDIR = $(INCINSTDIR)/cwb
 
@@ -46,44 +57,47 @@ REALINCINSTDIR = $(INCINSTDIR)/cwb
 ## CORPUS LIBRARY  headers / sources / objects 
 
 HDRS = globals.h macros.h \
-	  list.h lexhash.h \
-	  bitfields.h storage.h fileutils.h \
-          special-chars.h regopt.h \
-	  corpus.h attributes.h makecomps.h \
-	  $(PARSEH) \
-          cdaccess.h \
-	  bitio.h \
-	  endian.h \
-	  compression.h \
-	  binsert.h \
-	  class-mapping.h   # used by lexdecode
+       list.h lexhash.h \
+       bitfields.h storage.h fileutils.h \
+       special-chars.h regopt.h \
+       corpus.h attributes.h makecomps.h \
+       $(PARSEH) \
+       cdaccess.h \
+       bitio.h \
+       endian.h \
+       compression.h \
+       binsert.h \
+       class-mapping.h \
+       $(MMAPH)
 
-SRCS   = globals.c macros.c \
-	  list.c lexhash.c \
-          bitfields.c storage.c fileutils.c \
-	  special-chars.c regopt.c \
-	  corpus.c attributes.c makecomps.c \
-	  $(PARSES) \
-	  cdaccess.c \
-	  bitio.c \
-	  endian.c \
-	  compression.c \
-	  binsert.c \
-	  class-mapping.c 
+SRCS = globals.c macros.c \
+       list.c lexhash.c \
+       bitfields.c storage.c fileutils.c \
+       special-chars.c regopt.c \
+       corpus.c attributes.c makecomps.c \
+       $(PARSES) \
+       cdaccess.c \
+       bitio.c \
+       endian.c \
+       compression.c \
+       binsert.c \
+       class-mapping.c \
+       $(MMAPS)
  
-OBJS   = globals.o macros.o \
-	  list.o lexhash.o \
-	  bitfields.o storage.o fileutils.o \
-	  special-chars.o regopt.o \
-	  corpus.o attributes.o \
-          $(PARSEO) \
-	  makecomps.o \
-	  cdaccess.o \
-	  bitio.o \
-	  endian.o \
-	  compression.o \
-	  binsert.o \
-	  class-mapping.o 
+OBJS = globals.o macros.o \
+       list.o lexhash.o \
+       bitfields.o storage.o fileutils.o \
+       special-chars.o regopt.o \
+       corpus.o attributes.o \
+       $(PARSEO) \
+       makecomps.o \
+       cdaccess.o \
+       bitio.o \
+       endian.o \
+       compression.o \
+       binsert.o \
+       class-mapping.o \
+       $(MMAPO)
 
 ## Extra objects (will be compiled, but not included in libcl.a) 
 #   - dl_stub.o is a dummy replacement for libdl.a, which is missing in Solaris
@@ -105,16 +119,24 @@ libcl.a: $(OBJS)
 	$(RANLIB) $@
 
 install: libcl.a
+ifndef __MINGW__
 	if [ ! -d "$(LIBINSTDIR)" ]; then $(INSTALL) $(INST_FLAGS_DIR) "$(LIBINSTDIR)" ; fi;
 	$(INSTALL) $(INST_FLAGS_DATA) libcl.a "$(LIBINSTDIR)"
 	if [ ! -d "$(REALINCINSTDIR)" ]; then $(INSTALL) $(INST_FLAGS_DIR) "$(REALINCINSTDIR)" ; fi;
 	$(INSTALL) $(INST_FLAGS_DATA) cl.h "$(REALINCINSTDIR)"
+else
+	@$(ECHO) "ERROR: install operation is not supported for Windows binaries!"
+endif
 
 release: libcl.a
+ifndef __MINGW__
 	if [ ! -d "$(RELEASE_DIR)/lib" ]; then $(INSTALL) $(INST_FLAGS_DIR) "$(RELEASE_DIR)/lib"; fi;
 	$(INSTALL) $(INST_FLAGS_DATA) libcl.a "$(RELEASE_DIR)/lib"
 	if [ ! -d "$(RELEASE_DIR)/include/cwb" ]; then $(INSTALL) $(INST_FLAGS_DIR) "$(RELEASE_DIR)/include/cwb"; fi;
 	$(INSTALL) $(INST_FLAGS_DATA) cl.h "$(RELEASE_DIR)/include/cwb"
+else
+	@$(ECHO) "ERROR: the Windows-targeted libcl.a should not be released (will only link with MinGW)!"
+endif
 
 uninstall:
 	@$(ECHO) "ERROR: uninstall operation is currently not supported!"

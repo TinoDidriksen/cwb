@@ -38,7 +38,7 @@ get_path_component(char *s)
   
   do {
     c = *s++;
-  } while (c == ':');
+  } while (c == PATH_SEPARATOR);
   
   if (c == 0) {           /* no non-delimiter characters */
     last = NULL;
@@ -49,7 +49,7 @@ get_path_component(char *s)
   for (;;) {
     c = *s++;
 
-    if (c == ':' || c == '\0') {
+    if (c == PATH_SEPARATOR || c == '\0') {
       if (c == 0)
         s = NULL;
       else

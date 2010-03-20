@@ -308,6 +308,25 @@ cl_string_canonical(char *s, int flags)
   }
 }
 
+/**
+ * Standardises subdirectory-dividers in a string that represents a path, in an
+ * OS-sensitive way.
+ *
+ * If the CL was compiled for Unix, backslash is changed to forwardslash.
+ * If the CL was compiled for windows, forwardslash is changed to backslash.
+ *
+ * Note that the path is modified in place.
+ *
+ * @param path     The path to modify (must be Ascii-compatible)
+ */
+void
+cl_path_adjust_os(char *path)
+{
+  for ( ; *path != '\0' ; path++ )
+    if (*path == '/' || *path == '\\')
+      *path = SUBDIR_SEPARATOR;
+}
+
 
 
 

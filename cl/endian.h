@@ -36,12 +36,25 @@
  * Macros for network/internal number representation conversion.
  */
 
+#ifndef __MINGW__
 /* macros ntohl() and htonl() should usually be defined here (or in <arpa/inet.h>?) */
 #include <netinet/in.h>
+#else
+/* but in windows we need to use winsock2.h (poss also windows.h?) from the Windows API instead */
+#include <windows.h>
+#include <winsock2.h>
+/* for consistency: define the ntohl and htonl macros since they are functions (not macros) in winsock2.h */
+#define ntohl ntohl
+#define htonl htonl
+/* note, in order for all this to work, it is necessary to link against ws2_32 in MinGW. */
+#endif
 
 /* rely on system library macros ntohl() and htonl(), so we don't have to work out endianness of the current architecture;
    this is essential for Universal builds on Mac OS X, and should also be the most efficient solution because these
-   macros are no-ops on big-endian machines and compiled to efficient machine code instructions on little-endian machines */
+   macros are no-ops on big-endian machines and compiled to efficient machine code instructions on little-endian machines
+
+   (whether any of the above is true for Windows is an open question...)
+*/
 
 /* -- skip check for availability of macros, since it breaks during "make depend" on some Linux platforms
 

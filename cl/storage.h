@@ -22,6 +22,10 @@
 
 #include "globals.h"
 
+#ifdef __MINGW__
+#include "windows-mmap.h"
+#endif
+
 
 /* data allocation methods */
 

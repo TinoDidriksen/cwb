@@ -907,7 +907,7 @@ load_component(Attribute *attribute, ComponentID cid)
  * This function only works for the following components:
  * CompRevCorpus, CompRevCorpusIdx, CompLexiconSrt, CompCorpusFreqs.
  * Also, it only works if the state of the component is
- * ComponentDefined
+ * ComponentDefined.
  *
  * "Create" here means create the CWB data files.  This is accomplished by
  * calling one of the "creat_*" functions, of which there is one for each
@@ -923,7 +923,6 @@ load_component(Attribute *attribute, ComponentID cid)
  *                   error (e.g. if an invalid component was requested).
  *
  */
-
 Component *
 create_component(Attribute *attribute, ComponentID cid)
 {

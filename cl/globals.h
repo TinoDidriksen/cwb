@@ -37,12 +37,30 @@ extern int cl_debug;
 extern int cl_optimize;
 extern size_t cl_memory_limit;
 
+
+/* macros for path-handling: different between Unix and Windows */
+#ifndef __MINGW__
+/** character used to separate different paths in a string variable */
+#define PATH_SEPARATOR ':'
+/** character used to delimit subdirectories in a path */
+#define SUBDIR_SEPARATOR '/'
+#else
+#define PATH_SEPARATOR ';'
+#define SUBDIR_SEPARATOR '\\'
+#endif
+
+
 /* default registry settings */
 #if (!defined(REGISTRY_DEFAULT_PATH))
+#ifndef __MINGW__
 /**
  * The default path assumed for the location of the corpus registry.
  */
 #define REGISTRY_DEFAULT_PATH  "/corpora/c1/registry"
+#else
+/* note that the notion of a default path under Windows is fundamentally dodgy in any case... */
+#define REGISTRY_DEFAULT_PATH  "."
+#endif
 #endif
 
 #if (!defined(REGISTRY_ENVVAR))

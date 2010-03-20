@@ -1,13 +1,13 @@
-/* 
+/*
  *  IMS Open Corpus Workbench (CWB)
  *  Copyright (C) 1993-2006 by IMS, University of Stuttgart
  *  Copyright (C) 2007-     by the respective contributers (see file AUTHORS)
- * 
+ *
  *  This program is free software; you can redistribute it and/or modify it
  *  under the terms of the GNU General Public License as published by the
  *  Free Software Foundation; either version 2, or (at your option) any later
  *  version.
- * 
+ *
  *  This program is distributed in the hope that it will be useful, but
  *  WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
@@ -15,23 +15,28 @@
  *  WWW at http://www.gnu.org/copyleft/gpl.html).
  */
 
-#include <sys/types.h>		/* required on Darwin */
-#include <sys/socket.h>		/* required on Darwin */
-#include <netinet/in.h>
 
-void add_user_to_list(char *user, char *passwd);
-void add_host_to_list(char *ipaddr);               /* e.g. "141.58.127.243"; NULL to accept connections from all hosts */
-void add_hosts_in_subnet_to_list(char *ipsubnet);  /* e.g. "141.58.127." */
-void add_grant_to_last_user(char *corpus);
+#ifndef __windows_mmap_h
+#define __windows_mmap_h
 
-/** returns true if host is in list of allowed hosts */
-int check_host(struct in_addr host);
+#include <windows.h>
+#include <sys/stat.h>
+#include <stdint.h>
+#include <stdio.h>
 
-/** returns true if (user, passwd) pair is in list */
-int authenticate_user(char *user, char *passwd);
+/* macro definitions extracted from git/git-compat-util.h */
+#define PROT_READ  1
+#define PROT_WRITE 2
+#define MAP_FAILED ((void*)-1)
 
-/** returns true if user may access corpus */
-int check_grant(char *user, char *corpus);
+/* macro definitions extracted from /usr/include/bits/mman.h */
+#define MAP_SHARED	0x01		/* Share changes.  */
+#define MAP_PRIVATE	0x02		/* Changes are private.  */
 
-/** for debugging only */
-void show_grants(void);
+
+typedef int caddr_t;
+
+void *mmap(void *start, size_t length, int prot, int flags, int fd, off_t offset);
+int munmap(void *start, size_t length);
+
+#endif

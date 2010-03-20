@@ -30,6 +30,9 @@ include $(TOP)/config.mk
 #  depend      <dummy target>
 #  size        <dummy target>
 
+## The whole set of Unix options is wrapped in an ifndef ...
+ifndef __MING__
+
 all:
 	if [ -f cwb-config ]; then rm -f cwb-config; fi
 	if [ -f install-cwb.sh ]; then rm -f install-cwb.sh; fi
@@ -65,3 +68,12 @@ depend:
 size:
 	@$(ECHO) "Nothing to be done for 'make size'"
 
+
+
+else
+
+## The install system for Windows will be made here. Needless to say it will need to be utterly different from the above.
+## will probably involve genreating some kind of bat file for installation.
+## This will allow the directories (BININSTDIR etc) to be ifnored where appropriate. 
+
+endif

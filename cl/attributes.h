@@ -54,6 +54,7 @@ DynArg *makearg(char *type_id);
 /* ================================================== Huffman compressed item seq */
 
 #define SYNCHRONIZATION 128
+/** The maximum length of a single code, which is also the number of possible code lengths */
 #define MAXCODELEN 32
 
 /**

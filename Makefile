@@ -45,12 +45,17 @@
 TOP = $(shell pwd)
 include $(TOP)/config.mk
 
-EXTERNALS = editline		# targets for external libraries
+# targets for external libraries
+ifdef __MINGW__
+EXTERNALS = editline mingw-libgnurx-2.5.1
+else
+EXTERNALS = editline
+endif
 SUBDIRS = cl cqp utils man instutils	# subdirectories that have their own makefiles
 SRCDIRS = cl cqp utils CQi	# subdirectories containing C source code
 
 
-.PHONY: clean realclean depend all test install uninstall release editline cl cqp utils man instutils tags size
+.PHONY: clean realclean depend all test install uninstall release editline mingw-libgnurx-2.5.1 cl cqp utils man instutils tags size
 
 default:
 	@$(ECHO) "Please type one of the following:"
@@ -63,6 +68,8 @@ default:
 	@$(ECHO) "  make release   create binary release in build/ directory"
 	@$(ECHO) ""
 	@$(ECHO) "  make editline  build included editline library for CQP"
+	@$(ECHO) "  make mingw-libgnurx-2.5.1  "
+	@$(ECHO) "                 build included mingw-libgnurx-2.5.1 (for Windows)"
 	@$(ECHO) "  make cl        build low-level corpus library (CL)"
 	@$(ECHO) "  make cqp       build CQP query processor"
 	@$(ECHO) "  make utils     build command-line utilities"
@@ -101,6 +108,16 @@ editline:
 	(cd editline && CC="$(CC)" CFLAGS="$(CFLAGS)" ./configure && $(MAKE))
 ## -- this is not optimal (CWB flags might break editline build / should use externally installed library instead!
 
+mingw-libgnurx-2.5.1:
+ifdef __MINGW__
+	@$(ECHO) "--------------------------------- BUILDING MINGW-LIBGNURX LIBRARY"
+#	this is the original version, I am making it alike unto editline
+#	$(MAKE) -C mingw-libgnurx-2.5.1
+	(cd mingw-libgnurx-2.5.1 && ./configure CC="$(CC)" && $(MAKE))
+else
+	@$(ECHO) "Error: mingw-libgnurx can only be built when targeting a Windows environment."
+endif
+
 instutils:
 	@$(ECHO) "--------------------------------- CONFIGURING INSTUTILS"
 	$(MAKE) -C instutils
@@ -130,14 +147,21 @@ clean:
 realclean:	clean
 	for i in $(SUBDIRS) ; do $(MAKE) -C $$i realclean; done;
 	-$(RM) -rf editline/config.log editline/autom4te.cache editline/config.status editline/Makefile editline/editline_config.h
+ifdef __MINGW__
+	-$(RM) -rf mingw-libgnurx-2.5.1/config.log mingw-libgnurx-2.5.1/config.status mingw-libgnurx-2.5.1/Makefile
+endif
 
 install:
+ifdef __MINGW__
+	@$(ECHO) "ERROR: install operation is not supported for Windows binaries!"
+else
 	$(MAKE) -C cl install   # not in for loop to make sure we abort on error
 	$(MAKE) -C cqp install
 	$(MAKE) -C utils install
 	$(MAKE) -C man install
 	$(MAKE) -C instutils all
 	$(MAKE) -C instutils install
+endif
 
 release:
 	if [ -d "$(RELEASE_DIR)" ]; then $(RM) -rf "$(RELEASE_DIR)"; fi
@@ -148,10 +172,16 @@ release:
 	$(MAKE) -C man release
 	$(MAKE) -C instutils all
 	$(MAKE) -C instutils release	
-# make release for windows should use zip instead of tar/gzip; ifndef __MINGW__
-	if [ -f "$(RELEASE_DIR).tar.gz" ]; then $(RM) "$(RELEASE_DIR).tar.gz"; fi
-	(cd build/ && $(TAR) cfz "$(RELEASE_NAME).tar.gz" "$(RELEASE_NAME)")
-	@$(ECHO) "==> CREATED BINARY RELEASE build/$(RELEASE_NAME).tar.gz"
+ifndef __MINGW__
+	RELEASE_COMPRESSED_FILENAME = "$(RELEASE_NAME).tar.gz"
+	COMPRESS_COMMAND = $(TAR) cfz
+else
+	RELEASE_COMPRESSED_FILENAME = "$(RELEASE_NAME).zip"
+	COMPRESS_COMMAND = $(ZIP) 
+endif
+	if [ -f "$(RELEASE_COMPRESSED_FILENAME)" ]; then $(RM) "$(RELEASE_COMPRESSED_FILENAME)"; fi
+	(cd build/ && $(COMPRESS_COMMAND) "$(RELEASE_COMPRESSED_FILENAME)" "$(RELEASE_NAME)")
+	@$(ECHO) "==> CREATED BINARY RELEASE build/$(RELEASE_COMPRESSED_FILENAME)"
 
 uninstall:
 	@$(ECHO) "ERROR: uninstall operation is currently not supported!"

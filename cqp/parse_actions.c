@@ -19,7 +19,11 @@
 
 #include <stdlib.h>
 #include <sys/time.h>
+#ifndef __MINGW__
 #include <sys/resource.h>
+#else
+#include <windows.h>
+#endif
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
@@ -620,7 +624,7 @@ do_set_complex_target(CorpusList *cl,
 /**
  * Puts the program to sleep.
  *
- * A wrapper round the standard sleep() function.
+ * A wrapper round the standard sleep() function (or Sleep() in Windows).
  *
  * @param duration  How many seconds to sleep for.
  */
@@ -628,7 +632,11 @@ void
 do_sleep(int duration)
 {
   if (duration > 0) {
-    sleep(duration);
+#ifndef __MINGW__
+    sleep(duration);       /* sleep in number of seconds (normal POSIX function) */
+#else
+    Sleep(duration*1000);  /* sleep in number of milliseconds (Windows "equivalent" */
+#endif
   }
 }
 

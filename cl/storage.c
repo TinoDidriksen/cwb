@@ -16,8 +16,11 @@
  */
 
 #include <sys/types.h>
+#ifndef __MINGW__
 #include <sys/mman.h>
-#include <sys/stat.h>
+#else
+#include "windows-mmap.h"
+#endif
 #include <fcntl.h>
 #include <errno.h>
 

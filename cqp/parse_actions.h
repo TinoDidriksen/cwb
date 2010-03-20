@@ -21,7 +21,11 @@
 
 #include <stdio.h>
 #include <sys/time.h>
+#ifndef __MINGW__
 #include <sys/resource.h>
+#else
+#include <windows.h>
+#endif
 
 #include "cqp.h"
 #include "corpmanag.h"

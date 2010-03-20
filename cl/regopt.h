@@ -18,7 +18,11 @@
 #ifndef _REGOPT_H_
 #define _REGOPT_H_
 #include "globals.h"
+#ifndef __MINGW__
 #include <regex.h>
+#else
+#include "../mingw-libgnurx-2.5.1/regex.h"
+#endif
 
 /**
  * Maximum number of grains of optimisation.

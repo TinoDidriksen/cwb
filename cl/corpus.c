@@ -17,9 +17,11 @@
 
 #include <ctype.h>
 #include <sys/types.h>
+#ifndef __MINGW__
 #include <sys/utsname.h>
 #include <pwd.h>
 #include <grp.h>
+#endif
 
 #include "globals.h"
 
@@ -157,11 +159,12 @@ find_corpus(char *registry_dir, char *registry_name)
 
   for (c = loaded_corpora; c != NULL; c = c->next) {
     int l_dir = strlen(c->registry_dir);
-    if (STREQ(registry_name, c->registry_name) && /* corpus ID must be the same */
-    (mark = strstr(registry_dir, c->registry_dir)) && /* find registry dir of <c> as substring of list <registry_dir> */
-    /* now we must check that the substring corresponds to a full component of the list */
-    (mark == registry_dir || mark[-1] == ':') && /* must start at beginning of string or after ':' separator */
-    (mark[l_dir] == '\0' || mark[l_dir] == ':') /* must end at end of string or before ':' separator */
+    if (STREQ(registry_name, c->registry_name) &&             /* corpus ID must be the same */
+      (mark = strstr(registry_dir, c->registry_dir)) &&       /* find registry dir of <c> as substring of list <registry_dir> */
+                                                          /* now we must check that the substring corresponds
+                                                           * to a full component of the list */
+      (mark == registry_dir || mark[-1] == PATH_SEPARATOR) && /* must start at beginning of string or after ':' separator */
+      (mark[l_dir] == '\0' || mark[l_dir] == PATH_SEPARATOR)  /* must end at end of string or before ':' separator */
     ) {
       break;
     }
@@ -181,8 +184,7 @@ find_corpus(char *registry_dir, char *registry_name)
  * @return                    A file handle, or NULL in case of error.
  */
 FILE *
-find_corpus_registry(char *registry_dir, char *registry_name,
-    char **real_registry_dir)
+find_corpus_registry(char *registry_dir, char *registry_name, char **real_registry_dir)
 {
   char full_name[MAX_LINE_LENGTH];
 
@@ -199,7 +201,7 @@ find_corpus_registry(char *registry_dir, char *registry_name,
     }
     else {
       if (registry_dir[re_p] == '?' && registry_dir[re_p + 1] != '\0'
-          && registry_dir[re_p + 1] != ':')
+          && registry_dir[re_p + 1] != PATH_SEPARATOR)
         re_p++; /* this is an optional registry directory, which will not cause warnings if it is not mounted */
 
       ins_p = 0;
@@ -209,12 +211,12 @@ find_corpus_registry(char *registry_dir, char *registry_name,
 
         full_name[ins_p++] = registry_dir[re_p++];
 
-      } while ((registry_dir[re_p] != ':') && (registry_dir[re_p] != '\0'));
+      } while ((registry_dir[re_p] != PATH_SEPARATOR) && (registry_dir[re_p] != '\0'));
 
       end_of_entry = re_p;
 
-      if (full_name[ins_p - 1] != '/')
-        full_name[ins_p++] = '/';
+      if (full_name[ins_p - 1] != SUBDIR_SEPARATOR)
+        full_name[ins_p++] = SUBDIR_SEPARATOR;
 
       for (p = 0; registry_name[p]; p++)
         full_name[ins_p++] = registry_name[p];
@@ -229,7 +231,7 @@ find_corpus_registry(char *registry_dir, char *registry_name,
         (*real_registry_dir)[end_of_entry - start_of_entry] = '\0';
         return fd;
       }
-      else if (registry_dir[re_p] == ':')
+      else if (registry_dir[re_p] == PATH_SEPARATOR)
         re_p++;
     }
   }
@@ -258,6 +260,13 @@ find_corpus_registry(char *registry_dir, char *registry_name,
  * of allows hosts is set, this function will return true iff
  * the current host is on that list.
  *
+ * Finally note: if compiled for Windows, this function returns
+ * true without actually checking anything, because windows
+ * does not support the POSIX user/group functionality on which
+ * all of this relies. Under Windows, access policies have to
+ * managed by the cqpserver rather than by the CL simply reading from
+ * the registry.
+ *
  * @param corpus   The corpus.
  * @param verbose  A boolean. Currently ignored.
  * @return         A boolean: true if access is OK, else false.
@@ -266,6 +275,9 @@ int
 check_access_conditions(Corpus *corpus, int verbose)
 {
   int access_ok = 1;
+
+#ifndef __MINGW__
+
   struct passwd *pwd = NULL;
 
   /* get password data only if we have user / group access restrictions */
@@ -356,6 +368,8 @@ check_access_conditions(Corpus *corpus, int verbose)
     fprintf(stderr, "User ``%s'' is not authorized to access corpus ``%s''\n",
         (pwd && pwd->pw_name) ? pwd->pw_name : "(unknown)", corpus->name);
   }
+
+#endif
 
   return access_ok;
 }

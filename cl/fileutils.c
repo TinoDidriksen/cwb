@@ -141,12 +141,16 @@ is_file(char *path)
 /**
  * Checks whether the specified path indicates a link.
  *
+ * Note this function always returns false in Windows, because Windows
+ * doesn't have Unix-style links.
+ *
  * @param path  Path to check.
  * @return      Boolean. (Also false if there's an error.)
  */
 int
 is_link(char *path)
 {
+#ifndef __MINGW__
   struct stat sBuf;
   
   if (stat(path, &sBuf) < 0) {
@@ -155,5 +159,8 @@ is_link(char *path)
   else {
     return S_ISLNK(sBuf.st_mode) ? 1 : 0;
   }
+#else
+  return 0;
+#endif
 }
 
