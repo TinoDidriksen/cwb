@@ -175,7 +175,9 @@
   </dd>
 </dl>
 
-<p>References <a class="el" href="struct_t_corpus.html#ab7d33183c58d7df43cc5602b9c842b37">TCorpus::charset</a>, <a class="el" href="cwb-check-input_8c.html#ab7d33183c58d7df43cc5602b9c842b37">charset</a>, <a class="el" href="cl_8h.html#a20d2084b184a14006c0e205543501adb">cl_charset_from_name()</a>, <a class="el" href="cl_8h.html#aebdac9a974ddd5ecb18aa8354e1f027f">cl_corpus_property()</a>, <a class="el" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="corpus_8c.html#a43fea1a843ca9acc56fe021a28ec9452">cregin_name</a>, <a class="el" href="corpus_8c.html#ada4573d717d73336f342e8b6a83e03aa">cregin_path</a>, <a class="el" href="struct_t_corpus_property.html#a0e217eae2df0974e4635854902a2aca1">TCorpusProperty::next</a>, <a class="el" href="struct_t_corpus.html#a1e19a624b45265cd91082d959f6055d8">TCorpus::properties</a>, <a class="el" href="struct_t_corpus_property.html#a131309b64687b3eb2ab0a0ba37189cbd">TCorpusProperty::property</a>, and <a class="el" href="struct_t_corpus_property.html#a4e9aec275e566b978a3ccb4e043d8c61">TCorpusProperty::value</a>.</p>
+<p>References <a class="el" href="struct_t_corpus.html#ab7d33183c58d7df43cc5602b9c842b37">TCorpus::charset</a>, <a class="el" href="cwb-check-input_8c.html#ab7d33183c58d7df43cc5602b9c842b37">charset</a>, <a class="el" href="cl_8h.html#a20d2084b184a14006c0e205543501adb">cl_charset_from_name()</a>, <a class="el" href="cl_8h.html#aebdac9a974ddd5ecb18aa8354e1f027f">cl_corpus_property()</a>, <a class="el" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="corpus_8c.html#a43fea1a843ca9acc56fe021a28ec9452">cregin_name</a>, <a class="el" href="corpus_8c.html#ada4573d717d73336f342e8b6a83e03aa">cregin_path</a>, <a class="el" href="struct_t_corpus_property.html#a0e217eae2df0974e4635854902a2aca1">TCorpusProperty::next</a>, <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>, <a class="el" href="struct_t_corpus.html#a1e19a624b45265cd91082d959f6055d8">TCorpus::properties</a>, <a class="el" href="struct_t_corpus_property.html#a131309b64687b3eb2ab0a0ba37189cbd">TCorpusProperty::property</a>, and <a class="el" href="struct_t_corpus_property.html#a4e9aec275e566b978a3ccb4e043d8c61">TCorpusProperty::value</a>.</p>
+
+<p>Referenced by <a class="el" href="cqp_8c.html#a847a2de5c1c28c9d7055a2b89ed7dad7">yyparse()</a>.</p>
 
 </div>
 </div>
@@ -203,7 +205,7 @@
   </dd>
 </dl>
 
-<p>References <a class="el" href="cl_8h.html#a9e15a3c725711d9effd623b2f3e225be">cl_free</a>, <a class="el" href="struct__idbuf.html#a2f7fb77427a558f1deedce6006b23454">_idbuf::next</a>, and <a class="el" href="struct__idbuf.html#aed1cfb225a5fb77461e7972691e68a72">_idbuf::string</a>.</p>
+<p>References <a class="el" href="cl_8h.html#a9e15a3c725711d9effd623b2f3e225be">cl_free</a>, <a class="el" href="struct__idbuf.html#a2f7fb77427a558f1deedce6006b23454">_idbuf::next</a>, <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>, and <a class="el" href="struct__idbuf.html#aed1cfb225a5fb77461e7972691e68a72">_idbuf::string</a>.</p>
 
 <p>Referenced by <a class="el" href="corpus_8c.html#a1c317981d288c9d0964017ada173b2b4">drop_corpus()</a>.</p>
 
@@ -265,7 +267,7 @@
 <p>The name of registry file currently being parsed (for registry parser error messages). </p>
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="corpus_8c.html#a29be981b1574bcfe5dc4c5966b180975" title="Parse a corpus registry file.">cregparse</a> </dd></dl>
 
-<p>Referenced by <a class="el" href="corpus_8h.html#a5492efc3742070f65be1b0bcbead995a">add_corpus_property()</a>, and <a class="el" href="corpus_8c.html#a84eb9130d44b1b40bd3bfe5a94f777d9">setup_corpus()</a>.</p>
+<p>Referenced by <a class="el" href="corpus_8h.html#a5492efc3742070f65be1b0bcbead995a">add_corpus_property()</a>, <a class="el" href="registry_8tab_8c.html#a8e0c1120c88fd505c4132f404f428ff1">cregerror_cleanup()</a>, and <a class="el" href="corpus_8c.html#a84eb9130d44b1b40bd3bfe5a94f777d9">setup_corpus()</a>.</p>
 
 </div>
 </div>
@@ -283,7 +285,7 @@
 <p>Full path of the registry file currently being parsed (for registry parser error messages). </p>
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="corpus_8c.html#a29be981b1574bcfe5dc4c5966b180975" title="Parse a corpus registry file.">cregparse</a> </dd></dl>
 
-<p>Referenced by <a class="el" href="corpus_8h.html#a5492efc3742070f65be1b0bcbead995a">add_corpus_property()</a>, and <a class="el" href="corpus_8c.html#a84eb9130d44b1b40bd3bfe5a94f777d9">setup_corpus()</a>.</p>
+<p>Referenced by <a class="el" href="corpus_8h.html#a5492efc3742070f65be1b0bcbead995a">add_corpus_property()</a>, <a class="el" href="registry_8tab_8c.html#a8e0c1120c88fd505c4132f404f428ff1">cregerror_cleanup()</a>, and <a class="el" href="corpus_8c.html#a84eb9130d44b1b40bd3bfe5a94f777d9">setup_corpus()</a>.</p>
 
 </div>
 </div>
@@ -303,7 +305,7 @@
 </div>
 </div>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on Sat Mar 20 17:47:14 2010 for CWB by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on Fri Apr 2 22:19:15 2010 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

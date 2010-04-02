@@ -35,7 +35,7 @@
 <code>#include &quot;<a class="el" href="globals_8h.html">globals.h</a>&quot;</code><br/>
 <code>#include &quot;<a class="el" href="macros_8h.html">macros.h</a>&quot;</code><br/>
 <code>#include &quot;<a class="el" href="attributes_8h.html">attributes.h</a>&quot;</code><br/>
-<code>#include &quot;registry.tab.h&quot;</code><br/>
+<code>#include &quot;<a class="el" href="registry_8tab_8h.html">registry.tab.h</a>&quot;</code><br/>
 <code>#include &quot;<a class="el" href="corpus_8h.html">corpus.h</a>&quot;</code><br/>
 <h2>Data Structures</h2>
 <ul>
@@ -71,8 +71,8 @@
 <dl class="el"><dd class="mdescRight">Adds a property to the list of corpus properties.  <a href="#a5492efc3742070f65be1b0bcbead995a"></a><br/></dl></ul>
 <h2>Variables</h2>
 <ul>
-<li>FILE * <a class="el" href="corpus_8c.html#a6e55d2b09ee70c7015f916a45b53e3ce">cregin</a>
-<dl class="el"><dd class="mdescRight">File pointer for loading corpus registry.  <a href="#a6e55d2b09ee70c7015f916a45b53e3ce"></a><br/></dl><li><a class="el" href="struct_t_corpus.html">Corpus</a> * <a class="el" href="corpus_8c.html#af8cafbaed41340da6cc0f79e97e6cd5e">cregcorpus</a>
+<li>FILE * <a class="el" href="corpus_8c.html#aaabadb450ac72f52473503c248860997">cregin</a> = (FILE *) 0
+<dl class="el"><dd class="mdescRight">File pointer for loading corpus registry.  <a href="#aaabadb450ac72f52473503c248860997"></a><br/></dl><li><a class="el" href="struct_t_corpus.html">Corpus</a> * <a class="el" href="corpus_8c.html#af8cafbaed41340da6cc0f79e97e6cd5e">cregcorpus</a>
 <dl class="el"><dd class="mdescRight">Pointer to a corpus object that is used when loading from the registry.  <a href="#af8cafbaed41340da6cc0f79e97e6cd5e"></a><br/></dl><li>char * <a class="el" href="corpus_8c.html#ada4573d717d73336f342e8b6a83e03aa">cregin_path</a> = &quot;&quot;
 <dl class="el"><dd class="mdescRight">Full path of the registry file currently being parsed (for registry parser error messages).  <a href="#ada4573d717d73336f342e8b6a83e03aa"></a><br/></dl><li>char * <a class="el" href="corpus_8c.html#a43fea1a843ca9acc56fe021a28ec9452">cregin_name</a> = &quot;&quot;
 <dl class="el"><dd class="mdescRight">The name of registry file currently being parsed (for registry parser error messages).  <a href="#a43fea1a843ca9acc56fe021a28ec9452"></a><br/></dl><li>char <a class="el" href="corpus_8c.html#a81cd298308ae5ef99a1bf3590d9a998e">errmsg</a> [MAX_LINE_LENGTH]
@@ -140,7 +140,9 @@
   </dd>
 </dl>
 
-<p>References <a class="el" href="struct_t_corpus.html#ab7d33183c58d7df43cc5602b9c842b37">TCorpus::charset</a>, <a class="el" href="cwb-check-input_8c.html#ab7d33183c58d7df43cc5602b9c842b37">charset</a>, <a class="el" href="cl_8h.html#a20d2084b184a14006c0e205543501adb">cl_charset_from_name()</a>, <a class="el" href="cl_8h.html#aebdac9a974ddd5ecb18aa8354e1f027f">cl_corpus_property()</a>, <a class="el" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="corpus_8c.html#a43fea1a843ca9acc56fe021a28ec9452">cregin_name</a>, <a class="el" href="corpus_8c.html#ada4573d717d73336f342e8b6a83e03aa">cregin_path</a>, <a class="el" href="struct_t_corpus_property.html#a0e217eae2df0974e4635854902a2aca1">TCorpusProperty::next</a>, <a class="el" href="struct_t_corpus.html#a1e19a624b45265cd91082d959f6055d8">TCorpus::properties</a>, <a class="el" href="struct_t_corpus_property.html#a131309b64687b3eb2ab0a0ba37189cbd">TCorpusProperty::property</a>, and <a class="el" href="struct_t_corpus_property.html#a4e9aec275e566b978a3ccb4e043d8c61">TCorpusProperty::value</a>.</p>
+<p>References <a class="el" href="struct_t_corpus.html#ab7d33183c58d7df43cc5602b9c842b37">TCorpus::charset</a>, <a class="el" href="cwb-check-input_8c.html#ab7d33183c58d7df43cc5602b9c842b37">charset</a>, <a class="el" href="cl_8h.html#a20d2084b184a14006c0e205543501adb">cl_charset_from_name()</a>, <a class="el" href="cl_8h.html#aebdac9a974ddd5ecb18aa8354e1f027f">cl_corpus_property()</a>, <a class="el" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="corpus_8c.html#a43fea1a843ca9acc56fe021a28ec9452">cregin_name</a>, <a class="el" href="corpus_8c.html#ada4573d717d73336f342e8b6a83e03aa">cregin_path</a>, <a class="el" href="struct_t_corpus_property.html#a0e217eae2df0974e4635854902a2aca1">TCorpusProperty::next</a>, <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>, <a class="el" href="struct_t_corpus.html#a1e19a624b45265cd91082d959f6055d8">TCorpus::properties</a>, <a class="el" href="struct_t_corpus_property.html#a131309b64687b3eb2ab0a0ba37189cbd">TCorpusProperty::property</a>, and <a class="el" href="struct_t_corpus_property.html#a4e9aec275e566b978a3ccb4e043d8c61">TCorpusProperty::value</a>.</p>
+
+<p>Referenced by <a class="el" href="cqp_8c.html#a847a2de5c1c28c9d7055a2b89ed7dad7">yyparse()</a>.</p>
 
 </div>
 </div>
@@ -162,7 +164,7 @@
 <p>Gets a string containing the path of the default registry directory. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The value of the corpus-module-internal variable regdir, which is initialised from the environment variable REGISTRY_ENVVAR or, failing that, the macro REGISTRY_DEFAULT_PATH. </dd></dl>
 
-<p>References <a class="el" href="corpus_8c.html#ae6ef637d7447e7a251e9130f21b8adac">regdir</a>, <a class="el" href="globals_8h.html#ac392b52df688734d343a5acc32fb6b87">REGISTRY_DEFAULT_PATH</a>, and <a class="el" href="globals_8h.html#a7cb97950b921d5fd5ea7bc1b5f8dafdb">REGISTRY_ENVVAR</a>.</p>
+<p>References <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>, <a class="el" href="corpus_8c.html#ae6ef637d7447e7a251e9130f21b8adac">regdir</a>, <a class="el" href="globals_8h.html#ac392b52df688734d343a5acc32fb6b87">REGISTRY_DEFAULT_PATH</a>, and <a class="el" href="globals_8h.html#a7cb97950b921d5fd5ea7bc1b5f8dafdb">REGISTRY_ENVVAR</a>.</p>
 
 <p>Referenced by <a class="el" href="corpmanag_8c.html#aa57f32e05db80db43f0f9e8b97bcf08d">load_corpusnames()</a>, <a class="el" href="cwb-compress-rdx_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>, and <a class="el" href="corpus_8c.html#a84eb9130d44b1b40bd3bfe5a94f777d9">setup_corpus()</a>.</p>
 
@@ -208,7 +210,7 @@
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>A boolean: true if access is OK, else false. </dd></dl>
 
-<p>References <a class="el" href="struct_t_corpus.html#aeca16b764f325a0ace5e7c7865271070">TCorpus::groupAccessList</a>, <a class="el" href="struct_t_corpus.html#a5a7bf37ff60c036f5bd7a9c60d77a8a1">TCorpus::hostAccessList</a>, <a class="el" href="struct_t_corpus.html#aecb3b0d045ada529257a2fbf8f829599">TCorpus::id</a>, <a class="el" href="corpus_8c.html#a3796931ad775036a92a370de8b53bc4d">memberIDList()</a>, <a class="el" href="struct_t_corpus.html#a5ac083a645d964373f022d03df4849c8">TCorpus::name</a>, <a class="el" href="struct__idbuf.html#a2f7fb77427a558f1deedce6006b23454">_idbuf::next</a>, <a class="el" href="cqpserver_8c.html#a24d99e99564d8672d8aa4d3930b764af">passwd</a>, <a class="el" href="struct__idbuf.html#aed1cfb225a5fb77461e7972691e68a72">_idbuf::string</a>, and <a class="el" href="struct_t_corpus.html#ac771eb92304afb01bd985218cdca5a81">TCorpus::userAccessList</a>.</p>
+<p>References <a class="el" href="struct_t_corpus.html#aeca16b764f325a0ace5e7c7865271070">TCorpus::groupAccessList</a>, <a class="el" href="struct_t_corpus.html#a5a7bf37ff60c036f5bd7a9c60d77a8a1">TCorpus::hostAccessList</a>, <a class="el" href="struct_t_corpus.html#aecb3b0d045ada529257a2fbf8f829599">TCorpus::id</a>, <a class="el" href="corpus_8c.html#a3796931ad775036a92a370de8b53bc4d">memberIDList()</a>, <a class="el" href="struct_t_corpus.html#a5ac083a645d964373f022d03df4849c8">TCorpus::name</a>, <a class="el" href="struct__idbuf.html#a2f7fb77427a558f1deedce6006b23454">_idbuf::next</a>, <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>, <a class="el" href="cqpserver_8c.html#a24d99e99564d8672d8aa4d3930b764af">passwd</a>, <a class="el" href="struct__idbuf.html#aed1cfb225a5fb77461e7972691e68a72">_idbuf::string</a>, and <a class="el" href="struct_t_corpus.html#ac771eb92304afb01bd985218cdca5a81">TCorpus::userAccessList</a>.</p>
 
 <p>Referenced by <a class="el" href="corpus_8c.html#a84eb9130d44b1b40bd3bfe5a94f777d9">setup_corpus()</a>.</p>
 
@@ -288,7 +290,7 @@
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Pointer to canonical-form string for that charset's name or NULL if name_to_check cannot be linked to a valid charset. </dd></dl>
 
-<p>References <a class="el" href="struct__charset__spec.html#a5ac083a645d964373f022d03df4849c8">_charset_spec::name</a>.</p>
+<p>References <a class="el" href="struct__charset__spec.html#a5ac083a645d964373f022d03df4849c8">_charset_spec::name</a>, and <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>.</p>
 
 <p>Referenced by <a class="el" href="cwb-check-input_8c.html#a8bc1180195e9821ecbeb25553f61e8c0">cwbci_parse_options()</a>, and <a class="el" href="cwb-encode_8c.html#a0318e97f40679e849d9259e5edb4dfce">parse_options()</a>.</p>
 
@@ -360,7 +362,7 @@
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Pointer to string that contains the value of the property, or NULL if the specified property is undefined for this Corpus object. </dd></dl>
 
-<p>References <a class="el" href="cl_8h.html#ae43900bdcfa4f9f973b210b8750889ad">cl_first_corpus_property()</a>, <a class="el" href="cl_8h.html#afed506c4eeddd1e7836bb38db968ae2b">cl_next_corpus_property()</a>, <a class="el" href="struct_t_corpus_property.html#a131309b64687b3eb2ab0a0ba37189cbd">TCorpusProperty::property</a>, and <a class="el" href="struct_t_corpus_property.html#a4e9aec275e566b978a3ccb4e043d8c61">TCorpusProperty::value</a>.</p>
+<p>References <a class="el" href="cl_8h.html#ae43900bdcfa4f9f973b210b8750889ad">cl_first_corpus_property()</a>, <a class="el" href="cl_8h.html#afed506c4eeddd1e7836bb38db968ae2b">cl_next_corpus_property()</a>, <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>, <a class="el" href="struct_t_corpus_property.html#a131309b64687b3eb2ab0a0ba37189cbd">TCorpusProperty::property</a>, and <a class="el" href="struct_t_corpus_property.html#a4e9aec275e566b978a3ccb4e043d8c61">TCorpusProperty::value</a>.</p>
 
 <p>Referenced by <a class="el" href="corpus_8h.html#a5492efc3742070f65be1b0bcbead995a">add_corpus_property()</a>, and <a class="el" href="output_8h.html#ac68b1c252026e89999641e0c010a5ad2">corpus_info()</a>.</p>
 
@@ -424,7 +426,7 @@
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The next property on the list. </dd></dl>
 
-<p>References <a class="el" href="struct_t_corpus_property.html#a0e217eae2df0974e4635854902a2aca1">TCorpusProperty::next</a>.</p>
+<p>References <a class="el" href="struct_t_corpus_property.html#a0e217eae2df0974e4635854902a2aca1">TCorpusProperty::next</a>, and <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>.</p>
 
 <p>Referenced by <a class="el" href="corpus_8c.html#aebdac9a974ddd5ecb18aa8354e1f027f">cl_corpus_property()</a>, and <a class="el" href="output_8h.html#ac68b1c252026e89999641e0c010a5ad2">corpus_info()</a>.</p>
 
@@ -534,7 +536,7 @@
 
 <p>Prints a description of the corpus to STDOUT. </p>
 
-<p>References <a class="el" href="union___attribute.html#a92ee130caba4408ab4de51c602910107">_Attribute::any</a>, <a class="el" href="struct_t_corpus.html#a97504befdc17001f29ab2a0aa50d5c1f">TCorpus::attributes</a>, <a class="el" href="attributes_8c.html#ada8d72fbcffc9236afd648baeb2a80cd">describe_attribute()</a>, <a class="el" href="struct_t_corpus.html#aecb3b0d045ada529257a2fbf8f829599">TCorpus::id</a>, <a class="el" href="struct_t_corpus.html#a9f25be44cbb4c737b8bfc7f94c1ff6d1">TCorpus::info_file</a>, <a class="el" href="struct_t_corpus.html#a5ac083a645d964373f022d03df4849c8">TCorpus::name</a>, <a class="el" href="struct_t_corpus.html#a44196e6a5696d10442c29e639437196e">TCorpus::path</a>, <a class="el" href="struct_t_corpus.html#a1151e3383439ca5d8096811a09b42823">TCorpus::registry_dir</a>, and <a class="el" href="struct_t_corpus.html#aba368bab230678d58be125f5b732cc25">TCorpus::registry_name</a>.</p>
+<p>References <a class="el" href="union___attribute.html#a92ee130caba4408ab4de51c602910107">_Attribute::any</a>, <a class="el" href="struct_t_corpus.html#a97504befdc17001f29ab2a0aa50d5c1f">TCorpus::attributes</a>, <a class="el" href="attributes_8c.html#ada8d72fbcffc9236afd648baeb2a80cd">describe_attribute()</a>, <a class="el" href="struct_t_corpus.html#aecb3b0d045ada529257a2fbf8f829599">TCorpus::id</a>, <a class="el" href="struct_t_corpus.html#a9f25be44cbb4c737b8bfc7f94c1ff6d1">TCorpus::info_file</a>, <a class="el" href="struct_t_corpus.html#a5ac083a645d964373f022d03df4849c8">TCorpus::name</a>, <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>, <a class="el" href="struct_t_corpus.html#a44196e6a5696d10442c29e639437196e">TCorpus::path</a>, <a class="el" href="struct_t_corpus.html#a1151e3383439ca5d8096811a09b42823">TCorpus::registry_dir</a>, and <a class="el" href="struct_t_corpus.html#aba368bab230678d58be125f5b732cc25">TCorpus::registry_name</a>.</p>
 
 <p>Referenced by <a class="el" href="cwb-describe-corpus_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>.</p>
 
@@ -565,9 +567,9 @@
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Always 1. </dd></dl>
 
-<p>References <a class="el" href="struct_t_corpus.html#a37e28e0e6cea644b9e65a1b7980d7934">TCorpus::admin</a>, <a class="el" href="attributes_8c.html#a597daacaba108b8a4f8a28bb7a04af8c">attr_drop_attribute()</a>, <a class="el" href="struct_t_corpus.html#a97504befdc17001f29ab2a0aa50d5c1f">TCorpus::attributes</a>, <a class="el" href="cl_8h.html#a9e15a3c725711d9effd623b2f3e225be">cl_free</a>, <a class="el" href="corpus_8c.html#ae779332ae5e89e614575239c7c3e4bd4">FreeIDList()</a>, <a class="el" href="struct_t_corpus.html#aeca16b764f325a0ace5e7c7865271070">TCorpus::groupAccessList</a>, <a class="el" href="struct_t_corpus.html#a5a7bf37ff60c036f5bd7a9c60d77a8a1">TCorpus::hostAccessList</a>, <a class="el" href="struct_t_corpus.html#aecb3b0d045ada529257a2fbf8f829599">TCorpus::id</a>, <a class="el" href="struct_t_corpus.html#a9f25be44cbb4c737b8bfc7f94c1ff6d1">TCorpus::info_file</a>, <a class="el" href="struct_t_corpus.html#a5ac083a645d964373f022d03df4849c8">TCorpus::name</a>, <a class="el" href="struct_t_corpus.html#ac457df8bdae957932046725f5e9d30a2">TCorpus::next</a>, <a class="el" href="struct_t_corpus.html#a53389315db3bcac8c56751dcabe1a3f6">TCorpus::nr_of_loads</a>, <a class="el" href="struct_t_corpus.html#a44196e6a5696d10442c29e639437196e">TCorpus::path</a>, <a class="el" href="struct_t_corpus.html#a1151e3383439ca5d8096811a09b42823">TCorpus::registry_dir</a>, <a class="el" href="struct_t_corpus.html#aba368bab230678d58be125f5b732cc25">TCorpus::registry_name</a>, and <a class="el" href="struct_t_corpus.html#ac771eb92304afb01bd985218cdca5a81">TCorpus::userAccessList</a>.</p>
+<p>References <a class="el" href="struct_t_corpus.html#a37e28e0e6cea644b9e65a1b7980d7934">TCorpus::admin</a>, <a class="el" href="attributes_8c.html#a597daacaba108b8a4f8a28bb7a04af8c">attr_drop_attribute()</a>, <a class="el" href="struct_t_corpus.html#a97504befdc17001f29ab2a0aa50d5c1f">TCorpus::attributes</a>, <a class="el" href="cl_8h.html#a9e15a3c725711d9effd623b2f3e225be">cl_free</a>, <a class="el" href="corpus_8c.html#ae779332ae5e89e614575239c7c3e4bd4">FreeIDList()</a>, <a class="el" href="struct_t_corpus.html#aeca16b764f325a0ace5e7c7865271070">TCorpus::groupAccessList</a>, <a class="el" href="struct_t_corpus.html#a5a7bf37ff60c036f5bd7a9c60d77a8a1">TCorpus::hostAccessList</a>, <a class="el" href="struct_t_corpus.html#aecb3b0d045ada529257a2fbf8f829599">TCorpus::id</a>, <a class="el" href="struct_t_corpus.html#a9f25be44cbb4c737b8bfc7f94c1ff6d1">TCorpus::info_file</a>, <a class="el" href="struct_t_corpus.html#a5ac083a645d964373f022d03df4849c8">TCorpus::name</a>, <a class="el" href="struct_t_corpus.html#ac457df8bdae957932046725f5e9d30a2">TCorpus::next</a>, <a class="el" href="struct_t_corpus.html#a53389315db3bcac8c56751dcabe1a3f6">TCorpus::nr_of_loads</a>, <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>, <a class="el" href="struct_t_corpus.html#a44196e6a5696d10442c29e639437196e">TCorpus::path</a>, <a class="el" href="struct_t_corpus.html#a1151e3383439ca5d8096811a09b42823">TCorpus::registry_dir</a>, <a class="el" href="struct_t_corpus.html#aba368bab230678d58be125f5b732cc25">TCorpus::registry_name</a>, and <a class="el" href="struct_t_corpus.html#ac771eb92304afb01bd985218cdca5a81">TCorpus::userAccessList</a>.</p>
 
-<p>Referenced by <a class="el" href="cwb-compress-rdx_8c.html#a919b69e333b16392f3afa989c19765fa">cleanup()</a>, <a class="el" href="cwb-describe-corpus_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>, <a class="el" href="corpus_8c.html#a84eb9130d44b1b40bd3bfe5a94f777d9">setup_corpus()</a>, and <a class="el" href="cwb-huffcode_8c.html#ac896e7e59472ff8e2d14ac44f0e23634">usage()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-compress-rdx_8c.html#a919b69e333b16392f3afa989c19765fa">cleanup()</a>, <a class="el" href="registry_8tab_8c.html#a8e0c1120c88fd505c4132f404f428ff1">cregerror_cleanup()</a>, <a class="el" href="cwb-describe-corpus_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>, <a class="el" href="corpus_8c.html#a84eb9130d44b1b40bd3bfe5a94f777d9">setup_corpus()</a>, and <a class="el" href="cwb-huffcode_8c.html#ac896e7e59472ff8e2d14ac44f0e23634">usage()</a>.</p>
 
 </div>
 </div>
@@ -607,7 +609,7 @@
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The Corpus, or NULL if it wasn't found. </dd></dl>
 
-<p>References <a class="el" href="cl_8h.html#a6abae3b6b39350df13cfe97acc1f0a30">cl_standard_registry</a>, <a class="el" href="struct_t_corpus.html#ac457df8bdae957932046725f5e9d30a2">TCorpus::next</a>, <a class="el" href="globals_8h.html#a256a5721249aa3309437212cc21a9fe4">PATH_SEPARATOR</a>, <a class="el" href="struct_t_corpus.html#a1151e3383439ca5d8096811a09b42823">TCorpus::registry_dir</a>, <a class="el" href="struct_t_corpus.html#aba368bab230678d58be125f5b732cc25">TCorpus::registry_name</a>, and <a class="el" href="macros_8h.html#aedf9a4cdd75e574d55f252e31d2ec453">STREQ</a>.</p>
+<p>References <a class="el" href="cl_8h.html#a6abae3b6b39350df13cfe97acc1f0a30">cl_standard_registry</a>, <a class="el" href="struct_t_corpus.html#ac457df8bdae957932046725f5e9d30a2">TCorpus::next</a>, <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>, <a class="el" href="globals_8h.html#a256a5721249aa3309437212cc21a9fe4">PATH_SEPARATOR</a>, <a class="el" href="struct_t_corpus.html#a1151e3383439ca5d8096811a09b42823">TCorpus::registry_dir</a>, <a class="el" href="struct_t_corpus.html#aba368bab230678d58be125f5b732cc25">TCorpus::registry_name</a>, and <a class="el" href="macros_8h.html#aedf9a4cdd75e574d55f252e31d2ec453">STREQ</a>.</p>
 
 <p>Referenced by <a class="el" href="corpus_8c.html#a84eb9130d44b1b40bd3bfe5a94f777d9">setup_corpus()</a>.</p>
 
@@ -655,7 +657,7 @@
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>A file handle, or NULL in case of error. </dd></dl>
 
-<p>References <a class="el" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="globals_8h.html#af0f2173e3b202ddf5756531b4471dcb2">MAX_LINE_LENGTH</a>, <a class="el" href="globals_8h.html#a256a5721249aa3309437212cc21a9fe4">PATH_SEPARATOR</a>, and <a class="el" href="globals_8h.html#aa3cbd33788dfd77d29dc892204a609a5">SUBDIR_SEPARATOR</a>.</p>
+<p>References <a class="el" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="globals_8h.html#af0f2173e3b202ddf5756531b4471dcb2">MAX_LINE_LENGTH</a>, <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>, <a class="el" href="globals_8h.html#a256a5721249aa3309437212cc21a9fe4">PATH_SEPARATOR</a>, and <a class="el" href="globals_8h.html#aa3cbd33788dfd77d29dc892204a609a5">SUBDIR_SEPARATOR</a>.</p>
 
 <p>Referenced by <a class="el" href="corpus_8c.html#a84eb9130d44b1b40bd3bfe5a94f777d9">setup_corpus()</a>.</p>
 
@@ -685,7 +687,7 @@
   </dd>
 </dl>
 
-<p>References <a class="el" href="cl_8h.html#a9e15a3c725711d9effd623b2f3e225be">cl_free</a>, <a class="el" href="struct__idbuf.html#a2f7fb77427a558f1deedce6006b23454">_idbuf::next</a>, and <a class="el" href="struct__idbuf.html#aed1cfb225a5fb77461e7972691e68a72">_idbuf::string</a>.</p>
+<p>References <a class="el" href="cl_8h.html#a9e15a3c725711d9effd623b2f3e225be">cl_free</a>, <a class="el" href="struct__idbuf.html#a2f7fb77427a558f1deedce6006b23454">_idbuf::next</a>, <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>, and <a class="el" href="struct__idbuf.html#aed1cfb225a5fb77461e7972691e68a72">_idbuf::string</a>.</p>
 
 <p>Referenced by <a class="el" href="corpus_8c.html#a1c317981d288c9d0964017ada173b2b4">drop_corpus()</a>.</p>
 
@@ -767,7 +769,7 @@
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Pointer to the resulting Corpus object. </dd></dl>
 
-<p>References <a class="el" href="cl_8h.html#a4d7cb8811357af41ee0c95d6a3ce3b65">central_corpus_directory()</a>, <a class="el" href="corpus_8c.html#ae70a858159cb5d38fd3259648b343eb3">check_access_conditions()</a>, <a class="el" href="cl_8h.html#a9e15a3c725711d9effd623b2f3e225be">cl_free</a>, <a class="el" href="cl_8h.html#a6647d75d1d69c7d25447da514b7e4682">cl_strdup()</a>, <a class="el" href="cl_8h.html#a012ffb5a06680b1985a6f08e739d45b0">cl_string_canonical()</a>, <a class="el" href="cwb-compress-rdx_8c.html#aca3a1fb765418f9b9b1d74051aa88667">corpus</a>, <a class="el" href="corpus_8c.html#a6e55d2b09ee70c7015f916a45b53e3ce">cregin</a>, <a class="el" href="corpus_8c.html#a43fea1a843ca9acc56fe021a28ec9452">cregin_name</a>, <a class="el" href="corpus_8c.html#ada4573d717d73336f342e8b6a83e03aa">cregin_path</a>, <a class="el" href="corpus_8c.html#a29be981b1574bcfe5dc4c5966b180975">cregparse()</a>, <a class="el" href="corpus_8c.html#a74a72273cb5ab90343ec0c99186d0fcb">cregrestart()</a>, <a class="el" href="cl_8h.html#a1c317981d288c9d0964017ada173b2b4">drop_corpus()</a>, <a class="el" href="cl_8h.html#a2e8c6f04bb423451ab68782fdd5da158">find_corpus()</a>, <a class="el" href="corpus_8c.html#ae4b2cca2b7b9b49c52b63430577051ad">find_corpus_registry()</a>, <a class="el" href="struct_t_corpus.html#aecb3b0d045ada529257a2fbf8f829599">TCorpus::id</a>, <a class="el" href="cl_8h.html#a1f397c74f7f8ba3952858c70eb19d082">IGNORE_CASE</a>, <a class="el" href="struct_t_corpus.html#ac457df8bdae957932046725f5e9d30a2">TCorpus::next</a>, <a class="el" href="struct_t_corpus.html#a53389315db3bcac8c56751dcabe1a3f6">TCorpus::nr_of_loads</a>, <a class="el" href="struct_t_corpus.html#a1151e3383439ca5d8096811a09b42823">TCorpus::registry_dir</a>, and <a class="el" href="struct_t_corpus.html#aba368bab230678d58be125f5b732cc25">TCorpus::registry_name</a>.</p>
+<p>References <a class="el" href="cl_8h.html#a4d7cb8811357af41ee0c95d6a3ce3b65">central_corpus_directory()</a>, <a class="el" href="corpus_8c.html#ae70a858159cb5d38fd3259648b343eb3">check_access_conditions()</a>, <a class="el" href="cl_8h.html#a9e15a3c725711d9effd623b2f3e225be">cl_free</a>, <a class="el" href="cl_8h.html#a6647d75d1d69c7d25447da514b7e4682">cl_strdup()</a>, <a class="el" href="cl_8h.html#a012ffb5a06680b1985a6f08e739d45b0">cl_string_canonical()</a>, <a class="el" href="cwb-compress-rdx_8c.html#aca3a1fb765418f9b9b1d74051aa88667">corpus</a>, <a class="el" href="corpus_8c.html#aaabadb450ac72f52473503c248860997">cregin</a>, <a class="el" href="corpus_8c.html#a43fea1a843ca9acc56fe021a28ec9452">cregin_name</a>, <a class="el" href="corpus_8c.html#ada4573d717d73336f342e8b6a83e03aa">cregin_path</a>, <a class="el" href="corpus_8c.html#a29be981b1574bcfe5dc4c5966b180975">cregparse()</a>, <a class="el" href="corpus_8c.html#a74a72273cb5ab90343ec0c99186d0fcb">cregrestart()</a>, <a class="el" href="cl_8h.html#a1c317981d288c9d0964017ada173b2b4">drop_corpus()</a>, <a class="el" href="cl_8h.html#a2e8c6f04bb423451ab68782fdd5da158">find_corpus()</a>, <a class="el" href="corpus_8c.html#ae4b2cca2b7b9b49c52b63430577051ad">find_corpus_registry()</a>, <a class="el" href="struct_t_corpus.html#aecb3b0d045ada529257a2fbf8f829599">TCorpus::id</a>, <a class="el" href="cl_8h.html#a1f397c74f7f8ba3952858c70eb19d082">IGNORE_CASE</a>, <a class="el" href="struct_t_corpus.html#ac457df8bdae957932046725f5e9d30a2">TCorpus::next</a>, <a class="el" href="struct_t_corpus.html#a53389315db3bcac8c56751dcabe1a3f6">TCorpus::nr_of_loads</a>, <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>, <a class="el" href="struct_t_corpus.html#a1151e3383439ca5d8096811a09b42823">TCorpus::registry_dir</a>, and <a class="el" href="struct_t_corpus.html#aba368bab230678d58be125f5b732cc25">TCorpus::registry_name</a>.</p>
 
 <p>Referenced by <a class="el" href="corpmanag_8c.html#a6971e7cc89868423f1044529eb3047da">GetSystemCorpus()</a>, <a class="el" href="cwb-describe-corpus_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>, and <a class="el" href="print__align_8h.html#a788d17c5137b4ed29a1cbef60a2e657e">printAlignedStrings()</a>.</p>
 
@@ -794,7 +796,7 @@
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="struct_t_corpus.html">Corpus</a>* <a class="el" href="corpus_8c.html#af8cafbaed41340da6cc0f79e97e6cd5e">cregcorpus</a></td>
+          <td class="memname"><a class="el" href="struct_t_corpus.html">Corpus</a>* <a class="el" href="registry_8tab_8c.html#af8cafbaed41340da6cc0f79e97e6cd5e">cregcorpus</a></td>
         </tr>
       </table>
 </div>
@@ -805,12 +807,12 @@
 
 </div>
 </div>
-<a class="anchor" id="a6e55d2b09ee70c7015f916a45b53e3ce"></a><!-- doxytag: member="corpus.c::cregin" ref="a6e55d2b09ee70c7015f916a45b53e3ce" args="" -->
+<a class="anchor" id="aaabadb450ac72f52473503c248860997"></a><!-- doxytag: member="corpus.c::cregin" ref="aaabadb450ac72f52473503c248860997" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">FILE* <a class="el" href="corpus_8c.html#a6e55d2b09ee70c7015f916a45b53e3ce">cregin</a></td>
+          <td class="memname">FILE * <a class="el" href="lex_8creg_8c.html#a6e55d2b09ee70c7015f916a45b53e3ce">cregin</a> = (FILE *) 0</td>
         </tr>
       </table>
 </div>
@@ -819,7 +821,7 @@
 <p>File pointer for loading corpus registry. </p>
 <p>(External variable, defined in the output from parsing registry.y) </p>
 
-<p>Referenced by <a class="el" href="corpus_8c.html#a84eb9130d44b1b40bd3bfe5a94f777d9">setup_corpus()</a>.</p>
+<p>Referenced by <a class="el" href="lex_8creg_8c.html#a1455136e703eb6f59b7920127480404a">cregget_in()</a>, <a class="el" href="lex_8creg_8c.html#a761dec2ca4ca8463a54df400677526bc">cregset_in()</a>, <a class="el" href="corpus_8c.html#a84eb9130d44b1b40bd3bfe5a94f777d9">setup_corpus()</a>, and <a class="el" href="lex_8creg_8c.html#a599b60cd059cf60e89cc49953dc708d0">yy_init_globals()</a>.</p>
 
 </div>
 </div>
@@ -837,7 +839,7 @@
 <p>The name of registry file currently being parsed (for registry parser error messages). </p>
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="corpus_8c.html#a29be981b1574bcfe5dc4c5966b180975" title="Parse a corpus registry file.">cregparse</a> </dd></dl>
 
-<p>Referenced by <a class="el" href="corpus_8h.html#a5492efc3742070f65be1b0bcbead995a">add_corpus_property()</a>, and <a class="el" href="corpus_8c.html#a84eb9130d44b1b40bd3bfe5a94f777d9">setup_corpus()</a>.</p>
+<p>Referenced by <a class="el" href="corpus_8h.html#a5492efc3742070f65be1b0bcbead995a">add_corpus_property()</a>, <a class="el" href="registry_8tab_8c.html#a8e0c1120c88fd505c4132f404f428ff1">cregerror_cleanup()</a>, and <a class="el" href="corpus_8c.html#a84eb9130d44b1b40bd3bfe5a94f777d9">setup_corpus()</a>.</p>
 
 </div>
 </div>
@@ -855,7 +857,7 @@
 <p>Full path of the registry file currently being parsed (for registry parser error messages). </p>
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="corpus_8c.html#a29be981b1574bcfe5dc4c5966b180975" title="Parse a corpus registry file.">cregparse</a> </dd></dl>
 
-<p>Referenced by <a class="el" href="corpus_8h.html#a5492efc3742070f65be1b0bcbead995a">add_corpus_property()</a>, and <a class="el" href="corpus_8c.html#a84eb9130d44b1b40bd3bfe5a94f777d9">setup_corpus()</a>.</p>
+<p>Referenced by <a class="el" href="corpus_8h.html#a5492efc3742070f65be1b0bcbead995a">add_corpus_property()</a>, <a class="el" href="registry_8tab_8c.html#a8e0c1120c88fd505c4132f404f428ff1">cregerror_cleanup()</a>, and <a class="el" href="corpus_8c.html#a84eb9130d44b1b40bd3bfe5a94f777d9">setup_corpus()</a>.</p>
 
 </div>
 </div>
@@ -910,7 +912,7 @@
 </div>
 </div>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on Sat Mar 20 17:47:14 2010 for CWB by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on Fri Apr 2 22:19:15 2010 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

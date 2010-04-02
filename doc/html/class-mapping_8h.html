@@ -147,7 +147,7 @@
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Always 1. </dd></dl>
 
-<p>References <a class="el" href="cl_8h.html#a9e15a3c725711d9effd623b2f3e225be">cl_free</a>.</p>
+<p>References <a class="el" href="cl_8h.html#a9e15a3c725711d9effd623b2f3e225be">cl_free</a>, and <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>.</p>
 
 <p>Referenced by <a class="el" href="class-mapping_8h.html#a416d19ddd272a2c289369bc44f18b282">read_mapping()</a>.</p>
 
@@ -188,7 +188,7 @@
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The SingleMapping containing the class which has the name "name". </dd></dl>
 
-<p>References <a class="el" href="struct__single__mapping.html#aae3d1a72a2baf650faf76ec98669051e">_single_mapping::class_name</a>, <a class="el" href="struct__mapping.html#af9c554bdfff7d1f2f58a41dfbf3596b2">_mapping::classes</a>, and <a class="el" href="struct__mapping.html#ad88594354ad0cd1b5f3cebf37f8381cf">_mapping::nr_classes</a>.</p>
+<p>References <a class="el" href="struct__single__mapping.html#aae3d1a72a2baf650faf76ec98669051e">_single_mapping::class_name</a>, <a class="el" href="struct__mapping.html#af9c554bdfff7d1f2f58a41dfbf3596b2">_mapping::classes</a>, <a class="el" href="struct__mapping.html#ad88594354ad0cd1b5f3cebf37f8381cf">_mapping::nr_classes</a>, and <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>.</p>
 
 <p>Referenced by <a class="el" href="class-mapping_8h.html#a416d19ddd272a2c289369bc44f18b282">read_mapping()</a>.</p>
 
@@ -309,7 +309,7 @@
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The SingleMapping representing the class that contains that token (or NULL if the token was not found). </dd></dl>
 
-<p>References <a class="el" href="struct__mapping.html#af9c554bdfff7d1f2f58a41dfbf3596b2">_mapping::classes</a>, and <a class="el" href="class-mapping_8c.html#a36e096ce9d4d6d12ae6db314cf82f460">map_token_to_class_number()</a>.</p>
+<p>References <a class="el" href="struct__mapping.html#af9c554bdfff7d1f2f58a41dfbf3596b2">_mapping::classes</a>, <a class="el" href="class-mapping_8c.html#a36e096ce9d4d6d12ae6db314cf82f460">map_token_to_class_number()</a>, and <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>.</p>
 
 <p>Referenced by <a class="el" href="class-mapping_8h.html#a416d19ddd272a2c289369bc44f18b282">read_mapping()</a>.</p>
 
@@ -399,7 +399,7 @@
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Boolean. </dd></dl>
 
-<p>References <a class="el" href="class-mapping_8c.html#ae98330ef3e5bb8dc3b997f5b8c83415e">intcompare()</a>.</p>
+<p>References <a class="el" href="class-mapping_8c.html#ae98330ef3e5bb8dc3b997f5b8c83415e">intcompare()</a>, and <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>.</p>
 
 <p>Referenced by <a class="el" href="class-mapping_8h.html#aca894a0480d71ea9c6f85c6f02ca525c">map_id_to_class_number()</a>, and <a class="el" href="class-mapping_8h.html#a02edad94ebf884e3325157440785e4b3">member_of_class_s()</a>.</p>
 
@@ -571,12 +571,12 @@
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The resulting Mapping object, or NULL in case of error. </dd></dl>
 
-<p>References <a class="el" href="cl_8h.html#a3b60fdde6a7c8fbc535efaf526dbcb78">ATT_POS</a>, <a class="el" href="struct__mapping.html#aa6941092bf1c0d49260bc71e63e5ef41">_mapping::attribute</a>, <a class="el" href="cl_8h.html#a1fa2e2ab47bd2c689b68a78bdac22028">CDA_OK</a>, <a class="el" href="cl_8h.html#a8807f044dd47ab4d1f1c3eba26b2646c">cderrno</a>, <a class="el" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="cl_8h.html#a7480d6ea66599014088f218912ddb89f">cl_realloc()</a>, <a class="el" href="cl_8h.html#a6647d75d1d69c7d25447da514b7e4682">cl_strdup()</a>, <a class="el" href="struct__single__mapping.html#aae3d1a72a2baf650faf76ec98669051e">_single_mapping::class_name</a>, <a class="el" href="class-mapping_8c.html#a8b4398db472bc6f556485ee83efdfc29">CLASS_REALLOC_THRESHOLD</a>, <a class="el" href="struct__mapping.html#af9c554bdfff7d1f2f58a41dfbf3596b2">_mapping::classes</a>, <a class="el" href="struct__mapping.html#aca3a1fb765418f9b9b1d74051aa88667">_mapping::corpus</a>, <a class="el" href="class-mapping_8c.html#adf0c4c450ecd53d223c6c67c0bf63f92">drop_mapping()</a>, <a class="el" href="attributes_8c.html#ade29ce8707ea27ed6797b1c1276bcfc9">find_attribute()</a>, <a class="el" href="class-mapping_8c.html#aa7f31b566dac41f6a76ee17a7e5631c2">find_mapping()</a>, <a class="el" href="cdaccess_8c.html#a9f57508affc8a0eec51174ed6ab4090f">get_id_of_string()</a>, <a class="el" href="class-mapping_8c.html#ae98330ef3e5bb8dc3b997f5b8c83415e">intcompare()</a>, <a class="el" href="class-mapping_8c.html#a5e2d698a781f95e090a4505db015451b">map_token_to_class()</a>, <a class="el" href="struct__mapping.html#afc4e49ac3da25ee01a57f9a44e32d094">_mapping::mapping_name</a>, <a class="el" href="class-mapping_8c.html#aacd77fba571e190cbab0d35da6083d8e">NAME_TOKEN</a>, <a class="el" href="struct__mapping.html#ad88594354ad0cd1b5f3cebf37f8381cf">_mapping::nr_classes</a>, <a class="el" href="struct__single__mapping.html#a4c0ead051f33f313ff37088c4385e5d1">_single_mapping::nr_tokens</a>, <a class="el" href="class-mapping_8c.html#ae62d422c8235a1588c0a260f847c1e3e">TOKEN_REALLOC_THRESHOLD</a>, and <a class="el" href="struct__single__mapping.html#ac78a8ead2257bccdecab1b3fc3330171">_single_mapping::tokens</a>.</p>
+<p>References <a class="el" href="cl_8h.html#a3b60fdde6a7c8fbc535efaf526dbcb78">ATT_POS</a>, <a class="el" href="struct__mapping.html#aa6941092bf1c0d49260bc71e63e5ef41">_mapping::attribute</a>, <a class="el" href="cl_8h.html#a1fa2e2ab47bd2c689b68a78bdac22028">CDA_OK</a>, <a class="el" href="cl_8h.html#a8807f044dd47ab4d1f1c3eba26b2646c">cderrno</a>, <a class="el" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="cl_8h.html#a7480d6ea66599014088f218912ddb89f">cl_realloc()</a>, <a class="el" href="cl_8h.html#a6647d75d1d69c7d25447da514b7e4682">cl_strdup()</a>, <a class="el" href="struct__single__mapping.html#aae3d1a72a2baf650faf76ec98669051e">_single_mapping::class_name</a>, <a class="el" href="class-mapping_8c.html#a8b4398db472bc6f556485ee83efdfc29">CLASS_REALLOC_THRESHOLD</a>, <a class="el" href="struct__mapping.html#af9c554bdfff7d1f2f58a41dfbf3596b2">_mapping::classes</a>, <a class="el" href="struct__mapping.html#aca3a1fb765418f9b9b1d74051aa88667">_mapping::corpus</a>, <a class="el" href="class-mapping_8c.html#adf0c4c450ecd53d223c6c67c0bf63f92">drop_mapping()</a>, <a class="el" href="attributes_8c.html#ade29ce8707ea27ed6797b1c1276bcfc9">find_attribute()</a>, <a class="el" href="class-mapping_8c.html#aa7f31b566dac41f6a76ee17a7e5631c2">find_mapping()</a>, <a class="el" href="cdaccess_8c.html#a9f57508affc8a0eec51174ed6ab4090f">get_id_of_string()</a>, <a class="el" href="class-mapping_8c.html#ae98330ef3e5bb8dc3b997f5b8c83415e">intcompare()</a>, <a class="el" href="class-mapping_8c.html#a5e2d698a781f95e090a4505db015451b">map_token_to_class()</a>, <a class="el" href="struct__mapping.html#afc4e49ac3da25ee01a57f9a44e32d094">_mapping::mapping_name</a>, <a class="el" href="class-mapping_8c.html#aacd77fba571e190cbab0d35da6083d8e">NAME_TOKEN</a>, <a class="el" href="struct__mapping.html#ad88594354ad0cd1b5f3cebf37f8381cf">_mapping::nr_classes</a>, <a class="el" href="struct__single__mapping.html#a4c0ead051f33f313ff37088c4385e5d1">_single_mapping::nr_tokens</a>, <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>, <a class="el" href="class-mapping_8c.html#ae62d422c8235a1588c0a260f847c1e3e">TOKEN_REALLOC_THRESHOLD</a>, and <a class="el" href="struct__single__mapping.html#ac78a8ead2257bccdecab1b3fc3330171">_single_mapping::tokens</a>.</p>
 
 </div>
 </div>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on Sat Mar 20 17:47:14 2010 for CWB by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on Fri Apr 2 22:19:15 2010 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

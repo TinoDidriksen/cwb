@@ -29,10 +29,10 @@
 <div class="contents">
 <h1>server.c File Reference</h1><code>#include &quot;<a class="el" href="server_8h.html">server.h</a>&quot;</code><br/>
 <code>#include &quot;<a class="el" href="auth_8h.html">auth.h</a>&quot;</code><br/>
-<code>#include &quot;<a class="el" href="cqi_8h.html">cqi.h</a>&quot;</code><br/>
+<code>#include &quot;<a class="el" href="_c_qi_2cqi_8h.html">cqi.h</a>&quot;</code><br/>
 <code>#include &lt;sys/types.h&gt;</code><br/>
-<code>#include &lt;sys/socket.h&gt;</code><br/>
 <code>#include &lt;sys/time.h&gt;</code><br/>
+<code>#include &lt;sys/socket.h&gt;</code><br/>
 <code>#include &lt;netinet/in.h&gt;</code><br/>
 <code>#include &lt;arpa/inet.h&gt;</code><br/>
 <code>#include &lt;netdb.h&gt;</code><br/>
@@ -122,7 +122,7 @@
 <li>int <a class="el" href="server_8c.html#ad2c8fb3df3a737e0685e902870a611d2">sockfd</a>
 <li>int <a class="el" href="server_8c.html#aed30cd62160a97ddbc3edd0d05017e7c">connfd</a>
 <li>FILE * <a class="el" href="server_8c.html#a12bc92bcd4ab17d27f7b118d5f62f9e1">conn_out</a>
-<li>struct sockaddr_in my_addr <a class="el" href="server_8c.html#af79f33b56466ff737182e3f73d7385b5">client_addr</a>
+<dl class="el"><dd class="mdescRight">Connection out: buffered output (don't forget to flush()).  <a href="#a12bc92bcd4ab17d27f7b118d5f62f9e1"></a><br/></dl><li>struct sockaddr_in my_addr <a class="el" href="server_8c.html#af79f33b56466ff737182e3f73d7385b5">client_addr</a>
 <li>struct hostent * <a class="el" href="server_8c.html#abfce577066d8927ac65d9211cb980d59">remote_host</a>
 <li>char * <a class="el" href="server_8c.html#a7cb374ca04ac60371bf1428c9f154890">remote_address</a>
 <li><a class="el" href="server_8h.html#a931476c94af93bfdaaa080b6c91420e1">cqi_byte</a> <a class="el" href="server_8c.html#ab5e290cd2b9fc226d23e9ae96d1af730">netbuf</a> [NETBUFSIZE]
@@ -239,7 +239,7 @@
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="server_8c.html#a716958bc71d0ec9216a06ed079d0dce1">ATTHASHSIZE</a>, <a class="el" href="auth_8c.html#a54427d07e5e87fb064f15fb7d6323d82">check_host()</a>, <a class="el" href="server_8c.html#af79f33b56466ff737182e3f73d7385b5">client_addr</a>, <a class="el" href="server_8c.html#a12bc92bcd4ab17d27f7b118d5f62f9e1">conn_out</a>, <a class="el" href="server_8c.html#aed30cd62160a97ddbc3edd0d05017e7c">connfd</a>, <a class="el" href="cqi_8h.html#a32b715d980b9f17d725557e710c77714">CQI_PORT</a>, <a class="el" href="options_8h.html#a644551fe8fa35fb428baa6d0ce9d08d0">localhost</a>, <a class="el" href="server_8c.html#a6f81c046570703b84676139d556f53ad">make_attribute_hash()</a>, <a class="el" href="options_8h.html#a57937e62353d2f14318c3e2311a0b4a6">private_server</a>, <a class="el" href="server_8c.html#a7cb374ca04ac60371bf1428c9f154890">remote_address</a>, <a class="el" href="server_8c.html#abfce577066d8927ac65d9211cb980d59">remote_host</a>, <a class="el" href="options_8h.html#a30ed1d5e5cd4b60ec73a38312f8c9941">server_debug</a>, <a class="el" href="options_8h.html#afcb567e6d475e9f8afee3cb5ef9d8538">server_log</a>, <a class="el" href="options_8h.html#a80998dce9ef06f1b7af632725d3d0c65">server_quit</a>, and <a class="el" href="server_8c.html#ad2c8fb3df3a737e0685e902870a611d2">sockfd</a>.</p>
+<p>References <a class="el" href="server_8c.html#a716958bc71d0ec9216a06ed079d0dce1">ATTHASHSIZE</a>, <a class="el" href="auth_8c.html#a54427d07e5e87fb064f15fb7d6323d82">check_host()</a>, <a class="el" href="server_8c.html#af79f33b56466ff737182e3f73d7385b5">client_addr</a>, <a class="el" href="server_8c.html#a12bc92bcd4ab17d27f7b118d5f62f9e1">conn_out</a>, <a class="el" href="server_8c.html#aed30cd62160a97ddbc3edd0d05017e7c">connfd</a>, <a class="el" href="build_2cwb-3_81_8b0-windows-i586_2include_2cwb_2cqi_8h.html#a32b715d980b9f17d725557e710c77714">CQI_PORT</a>, <a class="el" href="options_8h.html#a644551fe8fa35fb428baa6d0ce9d08d0">localhost</a>, <a class="el" href="server_8c.html#a6f81c046570703b84676139d556f53ad">make_attribute_hash()</a>, <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>, <a class="el" href="options_8h.html#a57937e62353d2f14318c3e2311a0b4a6">private_server</a>, <a class="el" href="server_8c.html#a7cb374ca04ac60371bf1428c9f154890">remote_address</a>, <a class="el" href="server_8c.html#abfce577066d8927ac65d9211cb980d59">remote_host</a>, <a class="el" href="options_8h.html#a30ed1d5e5cd4b60ec73a38312f8c9941">server_debug</a>, <a class="el" href="options_8h.html#afcb567e6d475e9f8afee3cb5ef9d8538">server_log</a>, <a class="el" href="options_8h.html#a80998dce9ef06f1b7af632725d3d0c65">server_quit</a>, and <a class="el" href="server_8c.html#ad2c8fb3df3a737e0685e902870a611d2">sockfd</a>.</p>
 
 <p>Referenced by <a class="el" href="cqpserver_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
 
@@ -261,7 +261,7 @@
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="cl_8h.html#ae4397771d999c7e5a1eddb3f22d70721">ATT_NONE</a>, <a class="el" href="structatt__bucket.html#aa6941092bf1c0d49260bc71e63e5ef41">att_bucket::attribute</a>, <a class="el" href="cl_8h.html#a6647d75d1d69c7d25447da514b7e4682">cl_strdup()</a>, <a class="el" href="server_8c.html#a8ee48d45dd3272bc77acc6d4469489e5">cqi_internal_error()</a>, <a class="el" href="lexhash_8c.html#ac7b0e59697b408e515f7dd9b3d62b024">hash_string()</a>, <a class="el" href="structatt__hashtable.html#a439227feff9d7f55384e8780cfc2eb82">att_hashtable::size</a>, <a class="el" href="structatt__hashtable.html#a3f7a831f66b8703540b0436add889201">att_hashtable::space</a>, <a class="el" href="structatt__bucket.html#aed1cfb225a5fb77461e7972691e68a72">att_bucket::string</a>, and <a class="el" href="structatt__bucket.html#ac765329451135abec74c45e1897abf26">att_bucket::type</a>.</p>
+<p>References <a class="el" href="cl_8h.html#ae4397771d999c7e5a1eddb3f22d70721">ATT_NONE</a>, <a class="el" href="structatt__bucket.html#aa6941092bf1c0d49260bc71e63e5ef41">att_bucket::attribute</a>, <a class="el" href="cl_8h.html#a6647d75d1d69c7d25447da514b7e4682">cl_strdup()</a>, <a class="el" href="server_8c.html#a8ee48d45dd3272bc77acc6d4469489e5">cqi_internal_error()</a>, <a class="el" href="lexhash_8c.html#ac7b0e59697b408e515f7dd9b3d62b024">hash_string()</a>, <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>, <a class="el" href="structatt__hashtable.html#a439227feff9d7f55384e8780cfc2eb82">att_hashtable::size</a>, <a class="el" href="structatt__hashtable.html#a3f7a831f66b8703540b0436add889201">att_hashtable::space</a>, <a class="el" href="structatt__bucket.html#aed1cfb225a5fb77461e7972691e68a72">att_bucket::string</a>, and <a class="el" href="structatt__bucket.html#ac765329451135abec74c45e1897abf26">att_bucket::type</a>.</p>
 
 <p>Referenced by <a class="el" href="server_8h.html#a4e380947b2e28191aa507907b4e97456">cqi_drop_attribute()</a>, and <a class="el" href="server_8h.html#a4ed474bdc682e0da18871d421eb691be">cqi_lookup_attribute()</a>.</p>
 
@@ -283,7 +283,7 @@
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="server_8c.html#a053ef209fea3d4b6b4d5e9feb17860c9">cqi_errno</a>, <a class="el" href="cqi_8h.html#ae79c5450c4448e6ec48a9f4b35e97028">CQI_ERROR_SYNTAX_ERROR</a>, <a class="el" href="server_8c.html#a80130d5b13f35135c2015ad633c0351e">cqi_id_lc</a>, <a class="el" href="server_8c.html#a7e00789e43a7b6b7803208345eadc054">cqi_id_lc_first</a>, and <a class="el" href="cqi_8h.html#acc587d33b88109d6e5151bbd90ab6c7b">CQI_STATUS_OK</a>.</p>
+<p>References <a class="el" href="server_8c.html#a053ef209fea3d4b6b4d5e9feb17860c9">cqi_errno</a>, <a class="el" href="build_2cwb-3_81_8b0-windows-i586_2include_2cwb_2cqi_8h.html#ae79c5450c4448e6ec48a9f4b35e97028">CQI_ERROR_SYNTAX_ERROR</a>, <a class="el" href="build_2cwb-3_81_8b0-windows-i586_2include_2cwb_2cqi_8h.html#acc587d33b88109d6e5151bbd90ab6c7b">CQI_STATUS_OK</a>, and <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>.</p>
 
 <p>Referenced by <a class="el" href="server_8h.html#a89a5eb56c012472931e60cac0aedf886">split_attribute_spec()</a>.</p>
 
@@ -305,7 +305,7 @@
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="server_8c.html#a053ef209fea3d4b6b4d5e9feb17860c9">cqi_errno</a>, <a class="el" href="cqi_8h.html#ae79c5450c4448e6ec48a9f4b35e97028">CQI_ERROR_SYNTAX_ERROR</a>, <a class="el" href="server_8c.html#a7670cc1370b37cc94506e02cb8137c35">cqi_id_uc</a>, <a class="el" href="server_8c.html#ab23bb269e60e10aee3cafa1f03903b7b">cqi_id_uc_first</a>, and <a class="el" href="cqi_8h.html#acc587d33b88109d6e5151bbd90ab6c7b">CQI_STATUS_OK</a>.</p>
+<p>References <a class="el" href="server_8c.html#a053ef209fea3d4b6b4d5e9feb17860c9">cqi_errno</a>, <a class="el" href="build_2cwb-3_81_8b0-windows-i586_2include_2cwb_2cqi_8h.html#ae79c5450c4448e6ec48a9f4b35e97028">CQI_ERROR_SYNTAX_ERROR</a>, <a class="el" href="build_2cwb-3_81_8b0-windows-i586_2include_2cwb_2cqi_8h.html#acc587d33b88109d6e5151bbd90ab6c7b">CQI_STATUS_OK</a>, and <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>.</p>
 
 <p>Referenced by <a class="el" href="server_8h.html#ae353d1823477b57f50ea5b6f3af4aee8">cqi_find_corpus()</a>, <a class="el" href="cqpserver_8c.html#a43f247f2e2873651f479445383f2414d">do_cqi_cqp_list_subcorpora()</a>, <a class="el" href="server_8h.html#a89a5eb56c012472931e60cac0aedf886">split_attribute_spec()</a>, and <a class="el" href="server_8h.html#a344ff3b1714cb7c1b8938fc366a3782d">split_subcorpus_spec()</a>.</p>
 
@@ -327,7 +327,7 @@
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="server_8c.html#a053ef209fea3d4b6b4d5e9feb17860c9">cqi_errno</a>, <a class="el" href="cqi_8h.html#ae79c5450c4448e6ec48a9f4b35e97028">CQI_ERROR_SYNTAX_ERROR</a>, <a class="el" href="server_8c.html#a4c3dade2a2047a672e399c5d5c05fe68">cqi_id_all</a>, <a class="el" href="server_8c.html#ab23bb269e60e10aee3cafa1f03903b7b">cqi_id_uc_first</a>, and <a class="el" href="cqi_8h.html#acc587d33b88109d6e5151bbd90ab6c7b">CQI_STATUS_OK</a>.</p>
+<p>References <a class="el" href="server_8c.html#a053ef209fea3d4b6b4d5e9feb17860c9">cqi_errno</a>, <a class="el" href="build_2cwb-3_81_8b0-windows-i586_2include_2cwb_2cqi_8h.html#ae79c5450c4448e6ec48a9f4b35e97028">CQI_ERROR_SYNTAX_ERROR</a>, <a class="el" href="build_2cwb-3_81_8b0-windows-i586_2include_2cwb_2cqi_8h.html#acc587d33b88109d6e5151bbd90ab6c7b">CQI_STATUS_OK</a>, and <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>.</p>
 
 <p>Referenced by <a class="el" href="cqpserver_8c.html#a0c7327cf2c044dc71462eb0d8e70e57a">do_cqi_cqp_query()</a>, and <a class="el" href="server_8h.html#a344ff3b1714cb7c1b8938fc366a3782d">split_subcorpus_spec()</a>.</p>
 
@@ -358,7 +358,7 @@
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, and <a class="el" href="cl_8h.html#a6647d75d1d69c7d25447da514b7e4682">cl_strdup()</a>.</p>
+<p>References <a class="el" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="cl_8h.html#a6647d75d1d69c7d25447da514b7e4682">cl_strdup()</a>, and <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>.</p>
 
 <p>Referenced by <a class="el" href="cqpserver_8c.html#a0c7327cf2c044dc71462eb0d8e70e57a">do_cqi_cqp_query()</a>.</p>
 
@@ -380,7 +380,7 @@
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="server_8c.html#ae353d1823477b57f50ea5b6f3af4aee8">cqi_find_corpus()</a>, <a class="el" href="options_8h.html#a30ed1d5e5cd4b60ec73a38312f8c9941">server_debug</a>, and <a class="el" href="corpmanag_8c.html#a8620a08c033dbc0f5b90fc81a028ff14">set_current_corpus()</a>.</p>
+<p>References <a class="el" href="server_8c.html#ae353d1823477b57f50ea5b6f3af4aee8">cqi_find_corpus()</a>, <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>, <a class="el" href="options_8h.html#a30ed1d5e5cd4b60ec73a38312f8c9941">server_debug</a>, and <a class="el" href="corpmanag_8c.html#a8620a08c033dbc0f5b90fc81a028ff14">set_current_corpus()</a>.</p>
 
 <p>Referenced by <a class="el" href="cqpserver_8c.html#a0c7327cf2c044dc71462eb0d8e70e57a">do_cqi_cqp_query()</a>.</p>
 
@@ -424,7 +424,7 @@
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="cqi_8h.html#a82f9e04ca970ccc5adc6e41cd98177de">CQI_DATA_BOOL</a>, <a class="el" href="server_8c.html#a53bd13a4620a8deae3df12b56eabe5e7">cqi_flush()</a>, <a class="el" href="server_8c.html#a6f370c32854705485c41198d8d03692a">cqi_send_byte()</a>, <a class="el" href="server_8c.html#afdf5768c6ea89dcf125cc56b9adb0bba">cqi_send_error()</a>, and <a class="el" href="server_8c.html#aa94c1d511a980a4bdc3d64e6e52518db">cqi_send_word()</a>.</p>
+<p>References <a class="el" href="build_2cwb-3_81_8b0-windows-i586_2include_2cwb_2cqi_8h.html#a82f9e04ca970ccc5adc6e41cd98177de">CQI_DATA_BOOL</a>, <a class="el" href="server_8c.html#a53bd13a4620a8deae3df12b56eabe5e7">cqi_flush()</a>, <a class="el" href="server_8c.html#a6f370c32854705485c41198d8d03692a">cqi_send_byte()</a>, <a class="el" href="server_8c.html#afdf5768c6ea89dcf125cc56b9adb0bba">cqi_send_error()</a>, and <a class="el" href="server_8c.html#aa94c1d511a980a4bdc3d64e6e52518db">cqi_send_word()</a>.</p>
 
 <p>Referenced by <a class="el" href="cqpserver_8c.html#a9afea233c86be72ff7b8930e00aab56c">do_cqi_corpus_structural_attribute_has_values()</a>, <a class="el" href="cqpserver_8c.html#a2ede5fb1fed10ecd0b8666e715328830">do_cqi_cqp_subcorpus_has_field()</a>, and <a class="el" href="cqpserver_8c.html#a08a98a5503e4f3e1a5a19222d425275a">interpreter()</a>.</p>
 
@@ -455,7 +455,7 @@
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="cqi_8h.html#ad59a416ec1936a6c1b215b1f73e52532">CQI_DATA_BOOL_LIST</a>, <a class="el" href="server_8c.html#a53bd13a4620a8deae3df12b56eabe5e7">cqi_flush()</a>, <a class="el" href="server_8c.html#a619c1dec4a300291927d34d43ce19f8f">cqi_send_byte_list()</a>, <a class="el" href="server_8c.html#afdf5768c6ea89dcf125cc56b9adb0bba">cqi_send_error()</a>, and <a class="el" href="server_8c.html#aa94c1d511a980a4bdc3d64e6e52518db">cqi_send_word()</a>.</p>
+<p>References <a class="el" href="build_2cwb-3_81_8b0-windows-i586_2include_2cwb_2cqi_8h.html#ad59a416ec1936a6c1b215b1f73e52532">CQI_DATA_BOOL_LIST</a>, <a class="el" href="server_8c.html#a53bd13a4620a8deae3df12b56eabe5e7">cqi_flush()</a>, <a class="el" href="server_8c.html#a619c1dec4a300291927d34d43ce19f8f">cqi_send_byte_list()</a>, <a class="el" href="server_8c.html#afdf5768c6ea89dcf125cc56b9adb0bba">cqi_send_error()</a>, and <a class="el" href="server_8c.html#aa94c1d511a980a4bdc3d64e6e52518db">cqi_send_word()</a>.</p>
 
 </div>
 </div>
@@ -475,7 +475,7 @@
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="cqi_8h.html#a35cad37494403313d5a7aad89e4637a2">CQI_DATA_BYTE</a>, <a class="el" href="server_8c.html#a53bd13a4620a8deae3df12b56eabe5e7">cqi_flush()</a>, <a class="el" href="server_8c.html#a6f370c32854705485c41198d8d03692a">cqi_send_byte()</a>, <a class="el" href="server_8c.html#afdf5768c6ea89dcf125cc56b9adb0bba">cqi_send_error()</a>, and <a class="el" href="server_8c.html#aa94c1d511a980a4bdc3d64e6e52518db">cqi_send_word()</a>.</p>
+<p>References <a class="el" href="build_2cwb-3_81_8b0-windows-i586_2include_2cwb_2cqi_8h.html#a35cad37494403313d5a7aad89e4637a2">CQI_DATA_BYTE</a>, <a class="el" href="server_8c.html#a53bd13a4620a8deae3df12b56eabe5e7">cqi_flush()</a>, <a class="el" href="server_8c.html#a6f370c32854705485c41198d8d03692a">cqi_send_byte()</a>, <a class="el" href="server_8c.html#afdf5768c6ea89dcf125cc56b9adb0bba">cqi_send_error()</a>, and <a class="el" href="server_8c.html#aa94c1d511a980a4bdc3d64e6e52518db">cqi_send_word()</a>.</p>
 
 </div>
 </div>
@@ -504,7 +504,7 @@
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="cqi_8h.html#a73cc703d56c1b0ce3f3ac4913da3ff57">CQI_DATA_BYTE_LIST</a>, <a class="el" href="server_8c.html#a53bd13a4620a8deae3df12b56eabe5e7">cqi_flush()</a>, <a class="el" href="server_8c.html#a619c1dec4a300291927d34d43ce19f8f">cqi_send_byte_list()</a>, <a class="el" href="server_8c.html#afdf5768c6ea89dcf125cc56b9adb0bba">cqi_send_error()</a>, and <a class="el" href="server_8c.html#aa94c1d511a980a4bdc3d64e6e52518db">cqi_send_word()</a>.</p>
+<p>References <a class="el" href="build_2cwb-3_81_8b0-windows-i586_2include_2cwb_2cqi_8h.html#a73cc703d56c1b0ce3f3ac4913da3ff57">CQI_DATA_BYTE_LIST</a>, <a class="el" href="server_8c.html#a53bd13a4620a8deae3df12b56eabe5e7">cqi_flush()</a>, <a class="el" href="server_8c.html#a619c1dec4a300291927d34d43ce19f8f">cqi_send_byte_list()</a>, <a class="el" href="server_8c.html#afdf5768c6ea89dcf125cc56b9adb0bba">cqi_send_error()</a>, and <a class="el" href="server_8c.html#aa94c1d511a980a4bdc3d64e6e52518db">cqi_send_word()</a>.</p>
 
 </div>
 </div>
@@ -524,7 +524,7 @@
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="cqi_8h.html#a03ae964a97fc5bd57d5a6703e40b924c">CQI_DATA_INT</a>, <a class="el" href="server_8c.html#a53bd13a4620a8deae3df12b56eabe5e7">cqi_flush()</a>, <a class="el" href="server_8c.html#afdf5768c6ea89dcf125cc56b9adb0bba">cqi_send_error()</a>, <a class="el" href="server_8c.html#a031dd74ea850a6e6fdce1fb38fd5bb25">cqi_send_int()</a>, and <a class="el" href="server_8c.html#aa94c1d511a980a4bdc3d64e6e52518db">cqi_send_word()</a>.</p>
+<p>References <a class="el" href="build_2cwb-3_81_8b0-windows-i586_2include_2cwb_2cqi_8h.html#a03ae964a97fc5bd57d5a6703e40b924c">CQI_DATA_INT</a>, <a class="el" href="server_8c.html#a53bd13a4620a8deae3df12b56eabe5e7">cqi_flush()</a>, <a class="el" href="server_8c.html#afdf5768c6ea89dcf125cc56b9adb0bba">cqi_send_error()</a>, <a class="el" href="server_8c.html#a031dd74ea850a6e6fdce1fb38fd5bb25">cqi_send_int()</a>, and <a class="el" href="server_8c.html#aa94c1d511a980a4bdc3d64e6e52518db">cqi_send_word()</a>.</p>
 
 <p>Referenced by <a class="el" href="cqpserver_8c.html#ae6ea3a03a9f3aa7895f43e027b51aadf">do_cqi_cl_attribute_size()</a>, <a class="el" href="cqpserver_8c.html#a36a7106d1ef4f819843d79635b4a7aa6">do_cqi_cl_lexicon_size()</a>, and <a class="el" href="cqpserver_8c.html#af7bcd890dba03bd33aa7fabaebf8fd33">do_cqi_cqp_subcorpus_size()</a>.</p>
 
@@ -555,7 +555,7 @@
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="cqi_8h.html#a89a44c575bce3e3a77a5703750fae00b">CQI_DATA_INT_INT</a>, <a class="el" href="server_8c.html#a53bd13a4620a8deae3df12b56eabe5e7">cqi_flush()</a>, <a class="el" href="server_8c.html#afdf5768c6ea89dcf125cc56b9adb0bba">cqi_send_error()</a>, <a class="el" href="server_8c.html#a031dd74ea850a6e6fdce1fb38fd5bb25">cqi_send_int()</a>, and <a class="el" href="server_8c.html#aa94c1d511a980a4bdc3d64e6e52518db">cqi_send_word()</a>.</p>
+<p>References <a class="el" href="build_2cwb-3_81_8b0-windows-i586_2include_2cwb_2cqi_8h.html#a89a44c575bce3e3a77a5703750fae00b">CQI_DATA_INT_INT</a>, <a class="el" href="server_8c.html#a53bd13a4620a8deae3df12b56eabe5e7">cqi_flush()</a>, <a class="el" href="server_8c.html#afdf5768c6ea89dcf125cc56b9adb0bba">cqi_send_error()</a>, <a class="el" href="server_8c.html#a031dd74ea850a6e6fdce1fb38fd5bb25">cqi_send_int()</a>, and <a class="el" href="server_8c.html#aa94c1d511a980a4bdc3d64e6e52518db">cqi_send_word()</a>.</p>
 
 <p>Referenced by <a class="el" href="cqpserver_8c.html#a8d5cf9e9b5a5f282015ac184867a73e3">do_cqi_cl_struc2cpos()</a>.</p>
 
@@ -598,7 +598,7 @@
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="cqi_8h.html#a371939a716e110694a6a67aca62e4513">CQI_DATA_INT_INT_INT_INT</a>, <a class="el" href="server_8c.html#a53bd13a4620a8deae3df12b56eabe5e7">cqi_flush()</a>, <a class="el" href="server_8c.html#afdf5768c6ea89dcf125cc56b9adb0bba">cqi_send_error()</a>, <a class="el" href="server_8c.html#a031dd74ea850a6e6fdce1fb38fd5bb25">cqi_send_int()</a>, and <a class="el" href="server_8c.html#aa94c1d511a980a4bdc3d64e6e52518db">cqi_send_word()</a>.</p>
+<p>References <a class="el" href="build_2cwb-3_81_8b0-windows-i586_2include_2cwb_2cqi_8h.html#a371939a716e110694a6a67aca62e4513">CQI_DATA_INT_INT_INT_INT</a>, <a class="el" href="server_8c.html#a53bd13a4620a8deae3df12b56eabe5e7">cqi_flush()</a>, <a class="el" href="server_8c.html#afdf5768c6ea89dcf125cc56b9adb0bba">cqi_send_error()</a>, <a class="el" href="server_8c.html#a031dd74ea850a6e6fdce1fb38fd5bb25">cqi_send_int()</a>, and <a class="el" href="server_8c.html#aa94c1d511a980a4bdc3d64e6e52518db">cqi_send_word()</a>.</p>
 
 <p>Referenced by <a class="el" href="cqpserver_8c.html#ad570d7f947ad120a8a453ecf527b2890">do_cqi_cl_alg2cpos()</a>.</p>
 
@@ -629,7 +629,7 @@
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="cqi_8h.html#a572534bd23e627c40018118312cf7d7f">CQI_DATA_INT_LIST</a>, <a class="el" href="server_8c.html#a53bd13a4620a8deae3df12b56eabe5e7">cqi_flush()</a>, <a class="el" href="server_8c.html#afdf5768c6ea89dcf125cc56b9adb0bba">cqi_send_error()</a>, <a class="el" href="server_8c.html#aadc8c8fcb304b358cd64dcff86d05940">cqi_send_int_list()</a>, and <a class="el" href="server_8c.html#aa94c1d511a980a4bdc3d64e6e52518db">cqi_send_word()</a>.</p>
+<p>References <a class="el" href="build_2cwb-3_81_8b0-windows-i586_2include_2cwb_2cqi_8h.html#a572534bd23e627c40018118312cf7d7f">CQI_DATA_INT_LIST</a>, <a class="el" href="server_8c.html#a53bd13a4620a8deae3df12b56eabe5e7">cqi_flush()</a>, <a class="el" href="server_8c.html#afdf5768c6ea89dcf125cc56b9adb0bba">cqi_send_error()</a>, <a class="el" href="server_8c.html#aadc8c8fcb304b358cd64dcff86d05940">cqi_send_int_list()</a>, and <a class="el" href="server_8c.html#aa94c1d511a980a4bdc3d64e6e52518db">cqi_send_word()</a>.</p>
 
 <p>Referenced by <a class="el" href="cqpserver_8c.html#a0c10effde536613f692df587e4bd9f8f">do_cqi_cl_id2cpos()</a>, <a class="el" href="cqpserver_8c.html#a3ce9613def160d766879ca7116d8a656">do_cqi_cl_idlist2cpos()</a>, and <a class="el" href="cqpserver_8c.html#a85ad05f24457be0cc6d5fa24d42d7689">do_cqi_cl_regex2id()</a>.</p>
 
@@ -651,7 +651,7 @@
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="cqi_8h.html#a5d0190a91be8d933ec41ccd9e35dab94">CQI_DATA_STRING</a>, <a class="el" href="server_8c.html#a53bd13a4620a8deae3df12b56eabe5e7">cqi_flush()</a>, <a class="el" href="server_8c.html#afdf5768c6ea89dcf125cc56b9adb0bba">cqi_send_error()</a>, <a class="el" href="server_8c.html#a171a4f951909cb838b9a47bf9fc95ce7">cqi_send_string()</a>, and <a class="el" href="server_8c.html#aa94c1d511a980a4bdc3d64e6e52518db">cqi_send_word()</a>.</p>
+<p>References <a class="el" href="build_2cwb-3_81_8b0-windows-i586_2include_2cwb_2cqi_8h.html#a5d0190a91be8d933ec41ccd9e35dab94">CQI_DATA_STRING</a>, <a class="el" href="server_8c.html#a53bd13a4620a8deae3df12b56eabe5e7">cqi_flush()</a>, <a class="el" href="server_8c.html#afdf5768c6ea89dcf125cc56b9adb0bba">cqi_send_error()</a>, <a class="el" href="server_8c.html#a171a4f951909cb838b9a47bf9fc95ce7">cqi_send_string()</a>, and <a class="el" href="server_8c.html#aa94c1d511a980a4bdc3d64e6e52518db">cqi_send_word()</a>.</p>
 
 <p>Referenced by <a class="el" href="cqpserver_8c.html#ab60d8c751aff697880accfaf128dbe99">do_cqi_corpus_charset()</a>, <a class="el" href="cqpserver_8c.html#afb49ac865f86e4d0d15470be399b28e9">do_cqi_corpus_full_name()</a>, and <a class="el" href="cqpserver_8c.html#a08a98a5503e4f3e1a5a19222d425275a">interpreter()</a>.</p>
 
@@ -682,7 +682,7 @@
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="cqi_8h.html#aa16e9ffa184753255caca51a35e0344a">CQI_DATA_STRING_LIST</a>, <a class="el" href="server_8c.html#a53bd13a4620a8deae3df12b56eabe5e7">cqi_flush()</a>, <a class="el" href="server_8c.html#afdf5768c6ea89dcf125cc56b9adb0bba">cqi_send_error()</a>, <a class="el" href="server_8c.html#a80531109322aee45faf0be4d2299c97f">cqi_send_string_list()</a>, and <a class="el" href="server_8c.html#aa94c1d511a980a4bdc3d64e6e52518db">cqi_send_word()</a>.</p>
+<p>References <a class="el" href="build_2cwb-3_81_8b0-windows-i586_2include_2cwb_2cqi_8h.html#aa16e9ffa184753255caca51a35e0344a">CQI_DATA_STRING_LIST</a>, <a class="el" href="server_8c.html#a53bd13a4620a8deae3df12b56eabe5e7">cqi_flush()</a>, <a class="el" href="server_8c.html#afdf5768c6ea89dcf125cc56b9adb0bba">cqi_send_error()</a>, <a class="el" href="server_8c.html#a80531109322aee45faf0be4d2299c97f">cqi_send_string_list()</a>, and <a class="el" href="server_8c.html#aa94c1d511a980a4bdc3d64e6e52518db">cqi_send_word()</a>.</p>
 
 <p>Referenced by <a class="el" href="cqpserver_8c.html#af98390443fc209a903d32529b50bb313">do_cqi_corpus_properties()</a>.</p>
 
@@ -704,7 +704,7 @@
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="server_8c.html#ae08e9f05d751077e190df68c373fdcfc">att_hash_lookup()</a>, <a class="el" href="cl_8h.html#ae4397771d999c7e5a1eddb3f22d70721">ATT_NONE</a>, <a class="el" href="structatt__bucket.html#aa6941092bf1c0d49260bc71e63e5ef41">att_bucket::attribute</a>, <a class="el" href="cl_8h.html#a30561c61a5acdb70f86ec152c3f9bf8f">cl_delete_attribute</a>, and <a class="el" href="structatt__bucket.html#ac765329451135abec74c45e1897abf26">att_bucket::type</a>.</p>
+<p>References <a class="el" href="server_8c.html#ae08e9f05d751077e190df68c373fdcfc">att_hash_lookup()</a>, <a class="el" href="cl_8h.html#ae4397771d999c7e5a1eddb3f22d70721">ATT_NONE</a>, <a class="el" href="structatt__bucket.html#aa6941092bf1c0d49260bc71e63e5ef41">att_bucket::attribute</a>, <a class="el" href="cl_8h.html#a30561c61a5acdb70f86ec152c3f9bf8f">cl_delete_attribute</a>, <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>, and <a class="el" href="structatt__bucket.html#ac765329451135abec74c45e1897abf26">att_bucket::type</a>.</p>
 
 </div>
 </div>
@@ -724,7 +724,7 @@
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="corpmanag_8c.html#a133d99a40e4b51fe8cad6362e8b4e737">access_corpus()</a>, <a class="el" href="server_8c.html#a82531f33d8a2a321470ed154e45cbeca">check_corpus_name()</a>, <a class="el" href="cwb-compress-rdx_8c.html#aca3a1fb765418f9b9b1d74051aa88667">corpus</a>, <a class="el" href="cqi_8h.html#aea3597ac0aa9de3c7c4feb15241a7bb0">CQI_CQP_ERROR_NO_SUCH_CORPUS</a>, <a class="el" href="server_8c.html#a053ef209fea3d4b6b4d5e9feb17860c9">cqi_errno</a>, <a class="el" href="cqi_8h.html#acc587d33b88109d6e5151bbd90ab6c7b">CQI_STATUS_OK</a>, <a class="el" href="corpmanag_8c.html#ac2bc10afb97f5bafaf76b5793d0e7471">findcorpus()</a>, <a class="el" href="server_8c.html#a30b5345638ccaf1a206fb6a3ef4522a7">split_subcorpus_spec()</a>, <a class="el" href="corpmanag_8h.html#ab595f682e895370f86580c128681d88ea12b733d4941495e86811fe6ceeeff9da">SUB</a>, and <a class="el" href="corpmanag_8h.html#ab595f682e895370f86580c128681d88ea57cc238145ec1361c72c327674c0d754">SYSTEM</a>.</p>
+<p>References <a class="el" href="corpmanag_8c.html#a133d99a40e4b51fe8cad6362e8b4e737">access_corpus()</a>, <a class="el" href="server_8c.html#a82531f33d8a2a321470ed154e45cbeca">check_corpus_name()</a>, <a class="el" href="cwb-compress-rdx_8c.html#aca3a1fb765418f9b9b1d74051aa88667">corpus</a>, <a class="el" href="build_2cwb-3_81_8b0-windows-i586_2include_2cwb_2cqi_8h.html#aea3597ac0aa9de3c7c4feb15241a7bb0">CQI_CQP_ERROR_NO_SUCH_CORPUS</a>, <a class="el" href="server_8c.html#a053ef209fea3d4b6b4d5e9feb17860c9">cqi_errno</a>, <a class="el" href="build_2cwb-3_81_8b0-windows-i586_2include_2cwb_2cqi_8h.html#acc587d33b88109d6e5151bbd90ab6c7b">CQI_STATUS_OK</a>, <a class="el" href="corpmanag_8c.html#ac2bc10afb97f5bafaf76b5793d0e7471">findcorpus()</a>, <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>, <a class="el" href="server_8c.html#a30b5345638ccaf1a206fb6a3ef4522a7">split_subcorpus_spec()</a>, <a class="el" href="corpmanag_8h.html#ab595f682e895370f86580c128681d88ea12b733d4941495e86811fe6ceeeff9da">SUB</a>, and <a class="el" href="corpmanag_8h.html#ab595f682e895370f86580c128681d88ea57cc238145ec1361c72c327674c0d754">SYSTEM</a>.</p>
 
 <p>Referenced by <a class="el" href="server_8h.html#a6739804115846e33f9ff7c753bec1abb">cqi_activate_corpus()</a>, <a class="el" href="cqpserver_8c.html#a6912e5826b0c2389d696760d1aecc59c">do_cqi_cqp_drop_subcorpus()</a>, <a class="el" href="cqpserver_8c.html#acc9be65d4ae72f0ae16790fee4e1bf70">do_cqi_cqp_dump_subcorpus()</a>, <a class="el" href="cqpserver_8c.html#af303ab31916ff1180ad1e0670575cad1">do_cqi_cqp_fdist_1()</a>, <a class="el" href="cqpserver_8c.html#acdd876f27d34fce653173394e0dde952">do_cqi_cqp_fdist_2()</a>, <a class="el" href="cqpserver_8c.html#a43f247f2e2873651f479445383f2414d">do_cqi_cqp_list_subcorpora()</a>, <a class="el" href="cqpserver_8c.html#a0c7327cf2c044dc71462eb0d8e70e57a">do_cqi_cqp_query()</a>, <a class="el" href="cqpserver_8c.html#a2ede5fb1fed10ecd0b8666e715328830">do_cqi_cqp_subcorpus_has_field()</a>, and <a class="el" href="cqpserver_8c.html#af7bcd890dba03bd33aa7fabaebf8fd33">do_cqi_cqp_subcorpus_size()</a>.</p>
 
@@ -768,7 +768,7 @@
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="server_8c.html#ac45e5545238d14a7be0f882e8d523508">cqi_command()</a>, <a class="el" href="cqi_8h.html#aa3957be81059abb64b9146250bee8880">CQI_ERROR_GENERAL_ERROR</a>, <a class="el" href="server_8c.html#ac32b6aef224f4155098b94d5635b3a48">cqi_error_string</a>, <a class="el" href="server_8c.html#a8ee48d45dd3272bc77acc6d4469489e5">cqi_internal_error()</a>, and <a class="el" href="server_8c.html#ae3b40ed075925c58304bfa5cf4fc18c5">GENERAL_ERROR_SIZE</a>.</p>
+<p>References <a class="el" href="server_8c.html#ac45e5545238d14a7be0f882e8d523508">cqi_command()</a>, <a class="el" href="build_2cwb-3_81_8b0-windows-i586_2include_2cwb_2cqi_8h.html#aa3957be81059abb64b9146250bee8880">CQI_ERROR_GENERAL_ERROR</a>, <a class="el" href="server_8c.html#ac32b6aef224f4155098b94d5635b3a48">cqi_error_string</a>, <a class="el" href="server_8c.html#a8ee48d45dd3272bc77acc6d4469489e5">cqi_internal_error()</a>, and <a class="el" href="server_8c.html#ae3b40ed075925c58304bfa5cf4fc18c5">GENERAL_ERROR_SIZE</a>.</p>
 
 <p>Referenced by <a class="el" href="cqpserver_8c.html#a7f2bda5c5a8d207fd74fe021bedec8da">do_cqi_cl_drop_attribute()</a>, and <a class="el" href="cqpserver_8c.html#a10e179d58abfa38f8edbae43b5d478fb">do_cqi_corpus_attributes()</a>.</p>
 
@@ -828,7 +828,7 @@
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="corpmanag_8c.html#a133d99a40e4b51fe8cad6362e8b4e737">access_corpus()</a>, <a class="el" href="server_8c.html#ae08e9f05d751077e190df68c373fdcfc">att_hash_lookup()</a>, <a class="el" href="structatt__bucket.html#aa6941092bf1c0d49260bc71e63e5ef41">att_bucket::attribute</a>, <a class="el" href="cl_8h.html#ae9e879605cdbdafc2a8939ae590b6aa0">cl_new_attribute</a>, <a class="el" href="structcl.html#aca3a1fb765418f9b9b1d74051aa88667">cl::corpus</a>, <a class="el" href="cqi_8h.html#a7ec7ee4ef46fe36f7e289c662f1b39db">CQI_CL_ERROR_NO_SUCH_ATTRIBUTE</a>, <a class="el" href="cqi_8h.html#a90900ef2ca280fb2d97d48cd1777b6de">CQI_CL_ERROR_WRONG_ATTRIBUTE_TYPE</a>, <a class="el" href="cqi_8h.html#aea3597ac0aa9de3c7c4feb15241a7bb0">CQI_CQP_ERROR_NO_SUCH_CORPUS</a>, <a class="el" href="server_8c.html#a053ef209fea3d4b6b4d5e9feb17860c9">cqi_errno</a>, <a class="el" href="cqi_8h.html#acc587d33b88109d6e5151bbd90ab6c7b">CQI_STATUS_OK</a>, <a class="el" href="corpmanag_8c.html#ac2bc10afb97f5bafaf76b5793d0e7471">findcorpus()</a>, <a class="el" href="options_8h.html#a30ed1d5e5cd4b60ec73a38312f8c9941">server_debug</a>, <a class="el" href="server_8c.html#a2b1054c54cb57e689f8c4d725924b321">split_attribute_spec()</a>, <a class="el" href="corpmanag_8h.html#ab595f682e895370f86580c128681d88ea57cc238145ec1361c72c327674c0d754">SYSTEM</a>, and <a class="el" href="structatt__bucket.html#ac765329451135abec74c45e1897abf26">att_bucket::type</a>.</p>
+<p>References <a class="el" href="corpmanag_8c.html#a133d99a40e4b51fe8cad6362e8b4e737">access_corpus()</a>, <a class="el" href="server_8c.html#ae08e9f05d751077e190df68c373fdcfc">att_hash_lookup()</a>, <a class="el" href="structatt__bucket.html#aa6941092bf1c0d49260bc71e63e5ef41">att_bucket::attribute</a>, <a class="el" href="cl_8h.html#ae9e879605cdbdafc2a8939ae590b6aa0">cl_new_attribute</a>, <a class="el" href="structcl.html#aca3a1fb765418f9b9b1d74051aa88667">cl::corpus</a>, <a class="el" href="build_2cwb-3_81_8b0-windows-i586_2include_2cwb_2cqi_8h.html#a7ec7ee4ef46fe36f7e289c662f1b39db">CQI_CL_ERROR_NO_SUCH_ATTRIBUTE</a>, <a class="el" href="build_2cwb-3_81_8b0-windows-i586_2include_2cwb_2cqi_8h.html#a90900ef2ca280fb2d97d48cd1777b6de">CQI_CL_ERROR_WRONG_ATTRIBUTE_TYPE</a>, <a class="el" href="build_2cwb-3_81_8b0-windows-i586_2include_2cwb_2cqi_8h.html#aea3597ac0aa9de3c7c4feb15241a7bb0">CQI_CQP_ERROR_NO_SUCH_CORPUS</a>, <a class="el" href="server_8c.html#a053ef209fea3d4b6b4d5e9feb17860c9">cqi_errno</a>, <a class="el" href="build_2cwb-3_81_8b0-windows-i586_2include_2cwb_2cqi_8h.html#acc587d33b88109d6e5151bbd90ab6c7b">CQI_STATUS_OK</a>, <a class="el" href="corpmanag_8c.html#ac2bc10afb97f5bafaf76b5793d0e7471">findcorpus()</a>, <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>, <a class="el" href="options_8h.html#a30ed1d5e5cd4b60ec73a38312f8c9941">server_debug</a>, <a class="el" href="server_8c.html#a2b1054c54cb57e689f8c4d725924b321">split_attribute_spec()</a>, <a class="el" href="corpmanag_8h.html#ab595f682e895370f86580c128681d88ea57cc238145ec1361c72c327674c0d754">SYSTEM</a>, and <a class="el" href="structatt__bucket.html#ac765329451135abec74c45e1897abf26">att_bucket::type</a>.</p>
 
 <p>Referenced by <a class="el" href="cqpserver_8c.html#ad570d7f947ad120a8a453ecf527b2890">do_cqi_cl_alg2cpos()</a>, <a class="el" href="cqpserver_8c.html#ae6ea3a03a9f3aa7895f43e027b51aadf">do_cqi_cl_attribute_size()</a>, <a class="el" href="cqpserver_8c.html#a53a85e081d0019ef7992a6ba846cc233">do_cqi_cl_cpos2alg()</a>, <a class="el" href="cqpserver_8c.html#a42af46ccabad07757fffa4c6299d1da1">do_cqi_cl_cpos2id()</a>, <a class="el" href="cqpserver_8c.html#a74018eff16bcc1150a0e2a9049267fc9">do_cqi_cl_cpos2lbound()</a>, <a class="el" href="cqpserver_8c.html#ad1fb89937d6bf55cfc02c9b1e9241e7d">do_cqi_cl_cpos2rbound()</a>, <a class="el" href="cqpserver_8c.html#a8f080cc531e3a99f413b025dc35418f0">do_cqi_cl_cpos2str()</a>, <a class="el" href="cqpserver_8c.html#ad05f841b3c525a4c76ca9b4b88e29424">do_cqi_cl_cpos2struc()</a>, <a class="el" href="cqpserver_8c.html#a0c10effde536613f692df587e4bd9f8f">do_cqi_cl_id2cpos()</a>, <a class="el" href="cqpserver_8c.html#aaa8658fea0834dc99cc5b3c82369e222">do_cqi_cl_id2freq()</a>, <a class="el" href="cqpserver_8c.html#a141a080b31071a71805e4acebb4d9f85">do_cqi_cl_id2str()</a>, <a class="el" href="cqpserver_8c.html#a3ce9613def160d766879ca7116d8a656">do_cqi_cl_idlist2cpos()</a>, <a class="el" href="cqpserver_8c.html#a36a7106d1ef4f819843d79635b4a7aa6">do_cqi_cl_lexicon_size()</a>, <a class="el" href="cqpserver_8c.html#a85ad05f24457be0cc6d5fa24d42d7689">do_cqi_cl_regex2id()</a>, <a class="el" href="cqpserver_8c.html#aace636f52e3e45d492f317db35b8035d">do_cqi_cl_str2id()</a>, <a class="el" href="cqpserver_8c.html#a8d5cf9e9b5a5f282015ac184867a73e3">do_cqi_cl_struc2cpos()</a>, <a class="el" href="cqpserver_8c.html#a4829621c85303be9da6c286c6b318020">do_cqi_cl_struc2str()</a>, and <a class="el" href="cqpserver_8c.html#a9afea233c86be72ff7b8930e00aab56c">do_cqi_corpus_structural_attribute_has_values()</a>.</p>
 
@@ -870,7 +870,7 @@
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="server_8c.html#acbf6ee5a1a7c13f765d0e42cd7dbd2be">cqi_read_byte()</a>, <a class="el" href="server_8c.html#a0ae5480bbf68a49f43ca1374c3ddcf44">cqi_read_int()</a>, and <a class="el" href="options_8h.html#a5165a807d9a46b3aed8aa60e9e81c6a8">snoop</a>.</p>
+<p>References <a class="el" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="server_8c.html#acbf6ee5a1a7c13f765d0e42cd7dbd2be">cqi_read_byte()</a>, <a class="el" href="server_8c.html#a0ae5480bbf68a49f43ca1374c3ddcf44">cqi_read_int()</a>, <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>, and <a class="el" href="options_8h.html#a5165a807d9a46b3aed8aa60e9e81c6a8">snoop</a>.</p>
 
 </div>
 </div>
@@ -912,7 +912,7 @@
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="server_8c.html#acbf6ee5a1a7c13f765d0e42cd7dbd2be">cqi_read_byte()</a>, <a class="el" href="server_8c.html#a0ae5480bbf68a49f43ca1374c3ddcf44">cqi_read_int()</a>, and <a class="el" href="options_8h.html#a5165a807d9a46b3aed8aa60e9e81c6a8">snoop</a>.</p>
+<p>References <a class="el" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="server_8c.html#acbf6ee5a1a7c13f765d0e42cd7dbd2be">cqi_read_byte()</a>, <a class="el" href="server_8c.html#a0ae5480bbf68a49f43ca1374c3ddcf44">cqi_read_int()</a>, <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>, and <a class="el" href="options_8h.html#a5165a807d9a46b3aed8aa60e9e81c6a8">snoop</a>.</p>
 
 </div>
 </div>
@@ -932,7 +932,7 @@
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="cqi_8h.html#a0207b2ace5b7bbe90ebe2ac657e03a18">CQI_PAD</a>, <a class="el" href="server_8c.html#acbf6ee5a1a7c13f765d0e42cd7dbd2be">cqi_read_byte()</a>, and <a class="el" href="options_8h.html#a30ed1d5e5cd4b60ec73a38312f8c9941">server_debug</a>.</p>
+<p>References <a class="el" href="build_2cwb-3_81_8b0-windows-i586_2include_2cwb_2cqi_8h.html#a0207b2ace5b7bbe90ebe2ac657e03a18">CQI_PAD</a>, <a class="el" href="server_8c.html#acbf6ee5a1a7c13f765d0e42cd7dbd2be">cqi_read_byte()</a>, and <a class="el" href="options_8h.html#a30ed1d5e5cd4b60ec73a38312f8c9941">server_debug</a>.</p>
 
 <p>Referenced by <a class="el" href="cqpserver_8c.html#a08a98a5503e4f3e1a5a19222d425275a">interpreter()</a>, and <a class="el" href="cqpserver_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
 
@@ -976,7 +976,7 @@
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="server_8c.html#a0ae5480bbf68a49f43ca1374c3ddcf44">cqi_read_int()</a>, and <a class="el" href="options_8h.html#a5165a807d9a46b3aed8aa60e9e81c6a8">snoop</a>.</p>
+<p>References <a class="el" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="server_8c.html#a0ae5480bbf68a49f43ca1374c3ddcf44">cqi_read_int()</a>, <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>, and <a class="el" href="options_8h.html#a5165a807d9a46b3aed8aa60e9e81c6a8">snoop</a>.</p>
 
 <p>Referenced by <a class="el" href="cqpserver_8c.html#a53a85e081d0019ef7992a6ba846cc233">do_cqi_cl_cpos2alg()</a>, <a class="el" href="cqpserver_8c.html#a42af46ccabad07757fffa4c6299d1da1">do_cqi_cl_cpos2id()</a>, <a class="el" href="cqpserver_8c.html#a74018eff16bcc1150a0e2a9049267fc9">do_cqi_cl_cpos2lbound()</a>, <a class="el" href="cqpserver_8c.html#ad1fb89937d6bf55cfc02c9b1e9241e7d">do_cqi_cl_cpos2rbound()</a>, <a class="el" href="cqpserver_8c.html#a8f080cc531e3a99f413b025dc35418f0">do_cqi_cl_cpos2str()</a>, <a class="el" href="cqpserver_8c.html#ad05f841b3c525a4c76ca9b4b88e29424">do_cqi_cl_cpos2struc()</a>, <a class="el" href="cqpserver_8c.html#aaa8658fea0834dc99cc5b3c82369e222">do_cqi_cl_id2freq()</a>, <a class="el" href="cqpserver_8c.html#a141a080b31071a71805e4acebb4d9f85">do_cqi_cl_id2str()</a>, <a class="el" href="cqpserver_8c.html#a3ce9613def160d766879ca7116d8a656">do_cqi_cl_idlist2cpos()</a>, and <a class="el" href="cqpserver_8c.html#a4829621c85303be9da6c286c6b318020">do_cqi_cl_struc2str()</a>.</p>
 
@@ -1020,7 +1020,7 @@
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="server_8c.html#a0ae5480bbf68a49f43ca1374c3ddcf44">cqi_read_int()</a>, <a class="el" href="server_8c.html#ab6c0ae8fbfe08d8d16ec4cc330dcda17">cqi_read_string()</a>, and <a class="el" href="options_8h.html#a5165a807d9a46b3aed8aa60e9e81c6a8">snoop</a>.</p>
+<p>References <a class="el" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="server_8c.html#a0ae5480bbf68a49f43ca1374c3ddcf44">cqi_read_int()</a>, <a class="el" href="server_8c.html#ab6c0ae8fbfe08d8d16ec4cc330dcda17">cqi_read_string()</a>, <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>, and <a class="el" href="options_8h.html#a5165a807d9a46b3aed8aa60e9e81c6a8">snoop</a>.</p>
 
 <p>Referenced by <a class="el" href="cqpserver_8c.html#aace636f52e3e45d492f317db35b8035d">do_cqi_cl_str2id()</a>.</p>
 
@@ -1263,7 +1263,7 @@
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="server_8c.html#a12bc92bcd4ab17d27f7b118d5f62f9e1">conn_out</a>, <a class="el" href="server_8c.html#aa94c1d511a980a4bdc3d64e6e52518db">cqi_send_word()</a>, and <a class="el" href="options_8h.html#a5165a807d9a46b3aed8aa60e9e81c6a8">snoop</a>.</p>
+<p>References <a class="el" href="server_8c.html#a12bc92bcd4ab17d27f7b118d5f62f9e1">conn_out</a>, <a class="el" href="server_8c.html#aa94c1d511a980a4bdc3d64e6e52518db">cqi_send_word()</a>, <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>, and <a class="el" href="options_8h.html#a5165a807d9a46b3aed8aa60e9e81c6a8">snoop</a>.</p>
 
 <p>Referenced by <a class="el" href="server_8h.html#a0afd41c2ef18481d54fa913badc06bd0">cqi_data_string()</a>, <a class="el" href="server_8h.html#a26b5189b0c7545209a9af86cc53639ea">cqi_send_string_list()</a>, <a class="el" href="cqpserver_8c.html#a8f080cc531e3a99f413b025dc35418f0">do_cqi_cl_cpos2str()</a>, <a class="el" href="cqpserver_8c.html#a141a080b31071a71805e4acebb4d9f85">do_cqi_cl_id2str()</a>, <a class="el" href="cqpserver_8c.html#a4829621c85303be9da6c286c6b318020">do_cqi_cl_struc2str()</a>, <a class="el" href="cqpserver_8c.html#a4f6612358d3fc58ac44175f7c3d58b27">do_cqi_corpus_list_corpora()</a>, <a class="el" href="cqpserver_8c.html#a43f247f2e2873651f479445383f2414d">do_cqi_cqp_list_subcorpora()</a>, and <a class="el" href="cqpserver_8c.html#a5f20901a699479daba10f077bba6572a">send_cqi_corpus_attributes()</a>.</p>
 
@@ -1338,7 +1338,7 @@
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="structatt__hashtable.html#a3f7a831f66b8703540b0436add889201">att_hashtable::space</a>.</p>
+<p>References <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>, and <a class="el" href="structatt__hashtable.html#a3f7a831f66b8703540b0436add889201">att_hashtable::space</a>.</p>
 
 </div>
 </div>
@@ -1395,7 +1395,7 @@
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="server_8c.html#afab13247645a802a1c407ceae8ddaccd">check_attribute_name()</a>, <a class="el" href="server_8c.html#a82531f33d8a2a321470ed154e45cbeca">check_corpus_name()</a>, <a class="el" href="cl_8h.html#a6647d75d1d69c7d25447da514b7e4682">cl_strdup()</a>, <a class="el" href="server_8c.html#a053ef209fea3d4b6b4d5e9feb17860c9">cqi_errno</a>, <a class="el" href="cqi_8h.html#ae79c5450c4448e6ec48a9f4b35e97028">CQI_ERROR_SYNTAX_ERROR</a>, <a class="el" href="cqi_8h.html#acc587d33b88109d6e5151bbd90ab6c7b">CQI_STATUS_OK</a>, and <a class="el" href="server_8c.html#aa3fe862e1a310fbf63cd2ffc01806d53">strdupto()</a>.</p>
+<p>References <a class="el" href="server_8c.html#afab13247645a802a1c407ceae8ddaccd">check_attribute_name()</a>, <a class="el" href="server_8c.html#a82531f33d8a2a321470ed154e45cbeca">check_corpus_name()</a>, <a class="el" href="cl_8h.html#a6647d75d1d69c7d25447da514b7e4682">cl_strdup()</a>, <a class="el" href="server_8c.html#a053ef209fea3d4b6b4d5e9feb17860c9">cqi_errno</a>, <a class="el" href="build_2cwb-3_81_8b0-windows-i586_2include_2cwb_2cqi_8h.html#ae79c5450c4448e6ec48a9f4b35e97028">CQI_ERROR_SYNTAX_ERROR</a>, <a class="el" href="build_2cwb-3_81_8b0-windows-i586_2include_2cwb_2cqi_8h.html#acc587d33b88109d6e5151bbd90ab6c7b">CQI_STATUS_OK</a>, <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>, and <a class="el" href="server_8c.html#aa3fe862e1a310fbf63cd2ffc01806d53">strdupto()</a>.</p>
 
 <p>Referenced by <a class="el" href="server_8h.html#a4ed474bdc682e0da18871d421eb691be">cqi_lookup_attribute()</a>.</p>
 
@@ -1432,7 +1432,7 @@
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="server_8c.html#a82531f33d8a2a321470ed154e45cbeca">check_corpus_name()</a>, <a class="el" href="server_8c.html#a1dddf6961bb8587f8a6482344c13a8d1">check_subcorpus_name()</a>, <a class="el" href="cl_8h.html#a9e15a3c725711d9effd623b2f3e225be">cl_free</a>, <a class="el" href="cl_8h.html#a6647d75d1d69c7d25447da514b7e4682">cl_strdup()</a>, <a class="el" href="server_8c.html#a053ef209fea3d4b6b4d5e9feb17860c9">cqi_errno</a>, <a class="el" href="cqi_8h.html#acc587d33b88109d6e5151bbd90ab6c7b">CQI_STATUS_OK</a>, and <a class="el" href="server_8c.html#aa3fe862e1a310fbf63cd2ffc01806d53">strdupto()</a>.</p>
+<p>References <a class="el" href="server_8c.html#a82531f33d8a2a321470ed154e45cbeca">check_corpus_name()</a>, <a class="el" href="server_8c.html#a1dddf6961bb8587f8a6482344c13a8d1">check_subcorpus_name()</a>, <a class="el" href="cl_8h.html#a9e15a3c725711d9effd623b2f3e225be">cl_free</a>, <a class="el" href="cl_8h.html#a6647d75d1d69c7d25447da514b7e4682">cl_strdup()</a>, <a class="el" href="server_8c.html#a053ef209fea3d4b6b4d5e9feb17860c9">cqi_errno</a>, <a class="el" href="build_2cwb-3_81_8b0-windows-i586_2include_2cwb_2cqi_8h.html#acc587d33b88109d6e5151bbd90ab6c7b">CQI_STATUS_OK</a>, <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>, and <a class="el" href="server_8c.html#aa3fe862e1a310fbf63cd2ffc01806d53">strdupto()</a>.</p>
 
 <p>Referenced by <a class="el" href="server_8h.html#ae353d1823477b57f50ea5b6f3af4aee8">cqi_find_corpus()</a>, <a class="el" href="cqpserver_8c.html#a6912e5826b0c2389d696760d1aecc59c">do_cqi_cqp_drop_subcorpus()</a>, and <a class="el" href="cqpserver_8c.html#a0c7327cf2c044dc71462eb0d8e70e57a">do_cqi_cqp_query()</a>.</p>
 
@@ -1524,6 +1524,8 @@
 </div>
 <div class="memdoc">
 
+<p>Connection out: buffered output (don't forget to flush()). </p>
+
 <p>Referenced by <a class="el" href="server_8h.html#a69c3de98def430f21382ee9de60a2f0b">accept_connection()</a>, <a class="el" href="server_8h.html#a53bd13a4620a8deae3df12b56eabe5e7">cqi_flush()</a>, <a class="el" href="server_8h.html#a6f370c32854705485c41198d8d03692a">cqi_send_byte()</a>, <a class="el" href="server_8h.html#a031dd74ea850a6e6fdce1fb38fd5bb25">cqi_send_int()</a>, <a class="el" href="server_8h.html#a171a4f951909cb838b9a47bf9fc95ce7">cqi_send_string()</a>, and <a class="el" href="server_8h.html#aa94c1d511a980a4bdc3d64e6e52518db">cqi_send_word()</a>.</p>
 
 </div>
@@ -1584,8 +1586,6 @@
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="server_8h.html#a1dddf6961bb8587f8a6482344c13a8d1">check_subcorpus_name()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="a80130d5b13f35135c2015ad633c0351e"></a><!-- doxytag: member="server.c::cqi_id_lc" ref="a80130d5b13f35135c2015ad633c0351e" args="[]" -->
@@ -1598,8 +1598,6 @@
       </table>
 </div>
 <div class="memdoc">
-
-<p>Referenced by <a class="el" href="server_8h.html#afab13247645a802a1c407ceae8ddaccd">check_attribute_name()</a>.</p>
 
 </div>
 </div>
@@ -1614,8 +1612,6 @@
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="server_8h.html#afab13247645a802a1c407ceae8ddaccd">check_attribute_name()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="a7670cc1370b37cc94506e02cb8137c35"></a><!-- doxytag: member="server.c::cqi_id_uc" ref="a7670cc1370b37cc94506e02cb8137c35" args="[]" -->
@@ -1629,8 +1625,6 @@
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="server_8h.html#a82531f33d8a2a321470ed154e45cbeca">check_corpus_name()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="ab23bb269e60e10aee3cafa1f03903b7b"></a><!-- doxytag: member="server.c::cqi_id_uc_first" ref="ab23bb269e60e10aee3cafa1f03903b7b" args="[]" -->
@@ -1643,8 +1637,6 @@
       </table>
 </div>
 <div class="memdoc">
-
-<p>Referenced by <a class="el" href="server_8h.html#a82531f33d8a2a321470ed154e45cbeca">check_corpus_name()</a>, and <a class="el" href="server_8h.html#a1dddf6961bb8587f8a6482344c13a8d1">check_subcorpus_name()</a>.</p>
 
 </div>
 </div>
@@ -1707,7 +1699,7 @@
 </div>
 </div>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on Sat Mar 20 17:47:14 2010 for CWB by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on Fri Apr 2 22:19:15 2010 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>
