@@ -236,7 +236,7 @@ RE\(                    { return(RE_PAREN); }  /* for [lemma = RE($var)] */
                         }
 {floatconst}            { 
                           yylval.fval = atof(yytext);
-                          return(FLOAT);
+                          return(DOUBLEFLOAT);
                         }   
 \/{id}[\(\[]            { 
                           if (!enable_macros) { 

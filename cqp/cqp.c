@@ -102,16 +102,19 @@ install_signal_handler(void)
 
 
 
-/**
+/*
  * Wrapper function: randomises the internal random number generator.
  *
  * @see cl_randomize
- */
+
+Doesn't seem to be actually used anywhere, so commented out in anticipation
+of deletion; declaration in cqp.h file also commented out - AH 2/4/2010
+
 void
 cqp_randomize(void)
 {
   cl_randomize();
-}
+} */
 
 
 /**
@@ -136,6 +139,7 @@ initialize_cqp(int argc, char **argv)
   char *home = NULL;
   char init_file_fullname[256];
 
+  /* file handle for initialisation files, if any */
   FILE *cqprc;
 
   extern int yydebug;
@@ -202,7 +206,7 @@ initialize_cqp(int argc, char **argv)
     if (cqp_init_file)
       sprintf(init_file_fullname, "%s", cqp_init_file);
     else if ((home = (char *)getenv("HOME")) != NULL)
-      sprintf(init_file_fullname, "%s/%s", home, CQPRC_NAME);
+      sprintf(init_file_fullname, "%s%c%s", home, SUBDIR_SEPARATOR, CQPRC_NAME);
 
     if (init_file_fullname[0] != '\0') {
       if ((cqprc = fopen(init_file_fullname, "r")) != NULL) {
@@ -272,11 +276,14 @@ initialize_cqp(int argc, char **argv)
     exit(1);
   }
 
+#ifndef __MINGW__
   if (signal(SIGPIPE, SIG_IGN) == SIG_IGN) {
     /* fprintf(stderr, "Couldn't install SIG_IGN for SIGPIPE signal\n"); */
     /* -- be silent about not being able to ignore the SIGPIPE signal, which often happens in slave mode */
+    /* note that SIGPIPE does not seem to exist in signal.h under MinGW */
     signal(SIGPIPE, SIG_DFL);
   }
+#endif
 
   return 1;
 }

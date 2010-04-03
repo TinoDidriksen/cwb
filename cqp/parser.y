@@ -18,7 +18,9 @@
 
 
 #include <sys/time.h>
+#ifndef __MINGW__
 #include <sys/resource.h>
+#endif
 #include <stdio.h>
 #include <string.h>
 #include <limits.h>
@@ -79,12 +81,16 @@ void warn_query_lock_violation(void) {
 
 /* ============================================================ */
 
+/* note: SYCHRONIZE is a windows API identifier, and it doesn't seem at all
+necessary here - it is just defined, then tested.
+So: commented out. AH 2/4/2010
 #define SYNCHRONIZE
+*/
 
 void
 synchronize(void)
 {
-#if defined(SYNCHRONIZE)
+/*#if defined(SYNCHRONIZE)*/
   int macro_status;
 
   /* delete macro buffers & disable macro expansion while sync'ing */
@@ -104,7 +110,7 @@ synchronize(void)
   }
 
   enable_macros = macro_status; /* reset enable_macros to previous value */
-#endif
+/*#endif*/
 }
 
 #define YYERROR_VERBOSE
@@ -185,7 +191,7 @@ synchronize(void)
 
 %token <strval> ID QID LABEL STRING FLAG TAGSTART TAGEND VARIABLE IPAddress IPSubnet
 %token <ival> INTEGER
-%token <fval> FLOAT
+%token <fval> DOUBLEFLOAT
 %token <field> FIELD FIELDLABEL ANCHORTAG ANCHORENDTAG
 %token <search_strategy> SEARCH_STRATEGY
 
@@ -1309,7 +1315,7 @@ RelRHS:           RelLHS                { $$ = $1; }
                                           else
                                             $$ = NULL;
                                         }
-                | FLOAT                 { if (generate_code) {
+                | DOUBLEFLOAT           { if (generate_code) {
                                             NEW_BNODE($$);
                                             $$->type = float_leaf;
                                             $$->leaf.ctype.fconst = $1;

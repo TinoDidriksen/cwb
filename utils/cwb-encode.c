@@ -449,7 +449,7 @@ scan_directory(char *dir)
            || (len_name >= 8 && (0 == strcmp(name + len_name - 7, ".vrt.gz"))) )
       {
         char *full_name = (char *) cl_malloc(len_dir + len_name + 2);
-        sprintf(full_name, "%s/%s", dir, name);
+        sprintf(full_name, "%s%c%s", dir, SUBDIR_SEPARATOR, name);
         if (stat(full_name, &statbuf) != 0) {
           perror("Can't stat file:");
           error("Failed to access input file %s -- aborted.\n", full_name);

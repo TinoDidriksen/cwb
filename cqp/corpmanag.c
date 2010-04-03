@@ -1018,7 +1018,7 @@ check_stamp(char *directory, char *fname)
 
   sprintf(full_name, "%s/%s", directory, fname);
 
-  if (((fd = OpenFile(full_name, "r")) == NULL) ||
+  if (((fd = open_file(full_name, "r")) == NULL) ||
       (fread(&magic, sizeof(int), 1, fd) == 0) ||
       ((magic != SUBCORPMAGIC) && (magic != SUBCORPMAGIC+1)))
     ok = 0;
@@ -1309,10 +1309,10 @@ attach_subcorpus(CorpusList *cl,
     else
       fullname = get_fulllocalpath(cl, 0);
 
-    if ((fp = OpenFile(fullname, "r")) == NULL && !advertised_filename) {
+    if ((fp = open_file(fullname, "r")) == NULL && !advertised_filename) {
       cl_free(fullname);
       fullname = get_fulllocalpath(cl, 1);
-      fp = OpenFile(fullname, "r");
+      fp = open_file(fullname, "r");
     }
 
     if (fp == NULL)
@@ -1519,7 +1519,7 @@ save_subcorpus(CorpusList *cl, char *fname)
       }
     }
 
-    if ((fp = OpenFile(fname, "w")) != NULL) {
+    if ((fp = open_file(fname, "w")) != NULL) {
 
       int zero; 
       zero = 0;

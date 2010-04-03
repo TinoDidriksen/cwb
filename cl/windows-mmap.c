@@ -21,7 +21,7 @@
  * This file provides an equivalent of the POSIX mmap() function for use in
  * Windows; the Windows API lacks this function.
  *
- * The code was adapted from the Git project.
+ * The code was adapted from the Git project (note that Git is GPL-licensed).
  *
  * Very important note: this file should only be compiled and linked when
  * targeting a windows environment.

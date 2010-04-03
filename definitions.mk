@@ -172,12 +172,31 @@ endif
 RELEASE_NAME = cwb-$(VERSION)-$(RELEASE_OS)-$(RELEASE_ARCH)
 RELEASE_DIR = $(TOP)/build/$(RELEASE_NAME)
 
+## commands / filenames used by make release
+ifndef __MINGW__
+RELEASE_COMPRESSED_FILENAME = "$(RELEASE_NAME).tar.gz"
+COMPRESS_COMMAND = $(TAR) cfz
+else
+RELEASE_COMPRESSED_FILENAME = "$(RELEASE_NAME).zip"
+COMPRESS_COMMAND = $(ZIP) 
+endif
+
 #
 # Set up compiler and linker flags
 #
 
 CFLAGS += $(DEBUG_FLAGS) $(SITE_CFLAGS)
 LDFLAGS += $(DEBUG_FLAGS) $(SITE_LDFLAGS)
+
+# termcap/curses/readline DISALLOWED under MinGW, even if set elsewhere
+# (because we don't want to link against a Unix libncurses, and editline
+# won't compile under MinGW.)
+ifdef __MINGW__
+READLINE_LIBS = 
+TERMCAP_LIBS =
+READLINE_DEFINES =
+TERMCAP_DEFINES =
+endif
 
 # termcap/curses support is activated by setting TERMCAP_LIBS
 ifdef TERMCAP_LIBS
@@ -195,6 +214,16 @@ INTERNAL_DEFINES = -DREGISTRY_DEFAULT_PATH=\""$(DEFAULT_REGISTRY)"\" -DCOMPILE_D
 # path to locally compiled CL library and linker command
 LIBCL_PATH = $(TOP)/cl/libcl.a
 CL_LIBS = $(LIBCL_PATH) 
+
+# path to internal copy of GNU regex library for use in MinGW 
+ifdef __MINGW__ 
+LIBREGEX_PATH = $(TOP)/mingw-libgnurx-2.5.1/libregex.a
+LIB_REGEX = $(LIBREGEX_PATH)
+else
+LIB_REGEX = 
+endif
+
+## note. Might be worth having a LIBS_ALL variable (for easy specification of build rules)
 
 # complete sets of compiler and linker flags (allows easy specification of specific build rules)
 CFLAGS_ALL = $(CFLAGS) $(INTERNAL_DEFINES) $(READLINE_DEFINES) $(TERMCAP_DEFINES)

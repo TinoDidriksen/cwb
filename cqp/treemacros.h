@@ -15,30 +15,38 @@
  *  WWW at http://www.gnu.org/copyleft/gpl.html).
  */
 
+#ifndef _TREEMACROS_H_
+#define _TREEMACROS_H_
+
 #include "../cl/macros.h"
 
 #define NEW_TNODE(n)  n = (Evaltree)cl_malloc(sizeof(union e_tree))
 
 #define NEW_EVALNODE(n, _relop, _left, _right, _min, _max)                        \
-		      do {                                                        \
-                        n = (Evaltree)cl_malloc(sizeof(union e_tree));              \
-			n->type = node;                                           \
-			n->node.op_id = _relop;                                   \
-			n->node.left = _left;                                     \
-			n->node.right = _right;                                   \
-			n->node.min = _min;                                       \
-			n->node.max = _max;                                       \
+                      do {                                                        \
+                        n = (Evaltree)cl_malloc(sizeof(union e_tree));            \
+                        n->type = node;                                           \
+                        n->node.op_id = _relop;                                   \
+                        n->node.left = _left;                                     \
+                        n->node.right = _right;                                   \
+                        n->node.min = _min;                                       \
+                        n->node.max = _max;                                       \
                       } while (0)
 
 #define NEW_EVALLEAF(n, _patindex)                                                \
-		      do {                                                        \
-                        n = (Evaltree)cl_malloc(sizeof(union e_tree));              \
-		        n->type = leaf;                                           \
+                      do {                                                        \
+                        n = (Evaltree)cl_malloc(sizeof(union e_tree));            \
+                        n->type = leaf;                                           \
                         n->leaf.patindex = _patindex;                             \
-		      } while (0)
+                      } while (0)
 
 #define NEW_BNODE(n) n = (Constrainttree)cl_malloc(sizeof(union c_tree))
 
 #define DELETE_NODE(n) cl_free(n)
 
+/* conflicts with a windows function, and is never used anyway
+ * commented out in preparation for deletion
 #define DELETE(n) cl_free(n)
+*/
+
+#endif

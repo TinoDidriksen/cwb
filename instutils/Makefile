@@ -31,7 +31,7 @@ include $(TOP)/config.mk
 #  size        <dummy target>
 
 ## The whole set of Unix options is wrapped in an ifndef ...
-ifndef __MING__
+ifndef __MINGW__
 
 all:
 	if [ -f cwb-config ]; then rm -f cwb-config; fi
@@ -73,7 +73,7 @@ size:
 else
 
 ## The install system for Windows will be made here. Needless to say it will need to be utterly different from the above.
-## will probably involve genreating some kind of bat file for installation.
+## will probably involve generating some kind of bat file for installation.
 ## This will allow the directories (BININSTDIR etc) to be ifnored where appropriate. 
 
 endif

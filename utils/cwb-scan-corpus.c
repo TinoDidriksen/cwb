@@ -324,7 +324,8 @@ hash_add(int *tuple, int f)
   else {                        /* add new tuple (to bucket <index> */
     entry = (HashEntry) cl_malloc(sizeof(struct _hash_entry));
     entry->tuple = (int *) cl_malloc(Hash.K * sizeof(int));
-    bcopy(tuple, entry->tuple, Hash.K * sizeof(int)); /* we can just copy it verbatim */
+    /* bcopy(tuple, entry->tuple, Hash.K * sizeof(int)); */
+    memcpy(entry->tuple, tuple, Hash.K * sizeof(int));    /* we can just copy it verbatim */
     entry->freq = f;
     entry->next = Hash.table[index];
     Hash.table[index] = entry;

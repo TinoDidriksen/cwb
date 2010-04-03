@@ -93,7 +93,7 @@ addHistoryLine(void)
 
       FILE *fd;
 
-      if (!(fd = OpenFile(cqp_history_file, "a"))) {
+      if (!(fd = open_file(cqp_history_file, "a"))) {
         cqpmessage(Error, "Can't open history file %s\n",
                    cqp_history_file);
       }
@@ -654,7 +654,7 @@ do_exec(char *fname)
     generate_code = 0;
   }
   else {
-    if ((f = OpenFile(fname, "r")) != NULL) {
+    if ((f = open_file(fname, "r")) != NULL) {
       if (!cqp_parse_file(f, 1)) {
         cqpmessage(Error,
                    "Errors in exec'ed file %s\n", fname);

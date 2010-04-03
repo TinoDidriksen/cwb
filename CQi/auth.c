@@ -16,7 +16,9 @@
  */
 
 #include "auth.h"
+#ifndef __MINGW__
 #include <arpa/inet.h>
+#endif
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>

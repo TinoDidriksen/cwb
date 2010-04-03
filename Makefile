@@ -16,6 +16,8 @@
 ##  WWW at http://www.gnu.org/copyleft/gpl.html).
 
 
+##  This is the main Makefile for the CWB. 
+
 
 #
 #  Welcome to the IMS Open Corpus Workbench.  See "INSTALL" for detailed
@@ -47,7 +49,7 @@ include $(TOP)/config.mk
 
 # targets for external libraries
 ifdef __MINGW__
-EXTERNALS = editline mingw-libgnurx-2.5.1
+EXTERNALS = mingw-libgnurx-2.5.1
 else
 EXTERNALS = editline
 endif
@@ -105,17 +107,21 @@ doxygen:
 
 editline:
 	@$(ECHO) "--------------------------------- BUILDING EDITLINE LIBRARY"
-	(cd editline && CC="$(CC)" CFLAGS="$(CFLAGS)" ./configure && $(MAKE))
+ifndef __MINGW__
+	(cd editline && CC="$(CC)" RANLIB="$(RANLIB)" CFLAGS="$(CFLAGS)" ./configure && $(MAKE))
 ## -- this is not optimal (CWB flags might break editline build / should use externally installed library instead!
+else
+	@$(ECHO) "Editline cannot currently be built for Windows..."
+#   note that editline/configure cannot run under mingw because it attempts to run some compiled files
+#   which causes configure to hang (because Unix can't run *.exe files)
+endif
 
 mingw-libgnurx-2.5.1:
 ifdef __MINGW__
 	@$(ECHO) "--------------------------------- BUILDING MINGW-LIBGNURX LIBRARY"
-#	this is the original version, I am making it alike unto editline
-#	$(MAKE) -C mingw-libgnurx-2.5.1
 	(cd mingw-libgnurx-2.5.1 && ./configure CC="$(CC)" && $(MAKE))
 else
-	@$(ECHO) "Error: mingw-libgnurx can only be built when targeting a Windows environment."
+	@$(ECHO) "Error: mingw-libgnurx-2.5.1 can only be built when targeting a Windows environment."
 endif
 
 instutils:
@@ -172,13 +178,6 @@ release:
 	$(MAKE) -C man release
 	$(MAKE) -C instutils all
 	$(MAKE) -C instutils release	
-ifndef __MINGW__
-	RELEASE_COMPRESSED_FILENAME = "$(RELEASE_NAME).tar.gz"
-	COMPRESS_COMMAND = $(TAR) cfz
-else
-	RELEASE_COMPRESSED_FILENAME = "$(RELEASE_NAME).zip"
-	COMPRESS_COMMAND = $(ZIP) 
-endif
 	if [ -f "$(RELEASE_COMPRESSED_FILENAME)" ]; then $(RM) "$(RELEASE_COMPRESSED_FILENAME)"; fi
 	(cd build/ && $(COMPRESS_COMMAND) "$(RELEASE_COMPRESSED_FILENAME)" "$(RELEASE_NAME)")
 	@$(ECHO) "==> CREATED BINARY RELEASE build/$(RELEASE_COMPRESSED_FILENAME)"

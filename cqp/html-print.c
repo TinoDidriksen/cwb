@@ -39,7 +39,9 @@
 
 #include <sys/types.h>
 #include <sys/time.h>
+#ifndef __MINGW__
 #include <pwd.h>
+#endif
 
 /* ---------------------------------------------------------------------- */
 
@@ -348,7 +350,10 @@ void html_print_context(ContextDescriptor *cd, FILE *stream)
 void html_print_corpus_header(CorpusList *cl, FILE *stream)
 {
   time_t now;
+
+#ifndef __MINGW__
   struct passwd *pwd = NULL;
+#endif
 
   if (GlobalPrintOptions.print_header) {
 
@@ -365,8 +370,13 @@ void html_print_corpus_header(CorpusList *cl, FILE *stream)
             "<tr><td nowrap> </td><td nowrap>%s</td></tr>\n"
             "<tr><td nowrap><em>Subcorpus:</em></td><td nowrap>%s:%s</td></tr>\n"
             "<tr><td nowrap><em>Number of Matches:</em></td><td nowrap>%d</td></tr>\n",
+#ifndef __MINGW__
             (pwd ? pwd->pw_name : "unknown"),
             (pwd ? pwd->pw_gecos  : "unknown"),
+#else
+            "<unknown>",
+            "<unknown>",
+#endif
             ctime(&now),
             (cl->corpus && cl->corpus->registry_name ? cl->corpus->registry_name : "unknown"),
             (cl->corpus && cl->corpus->name ? cl->corpus->name : "unknown"),

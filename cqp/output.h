@@ -67,11 +67,11 @@ if successful, returns an I/O stream object and copies the name of the
 temporary file into tmp_name_buffer[]; otherwise, NULL is returned and the
 tmp_name_buffer[] contains an empty string */
 FILE *
-OpenTemporaryFile(char *tmp_name_buffer);
+open_temporary_file(char *tmp_name_buffer);
 
 /* same as fopen, but supports ~ and $HOME syntax */
 FILE *
-OpenFile(char *name, char *mode);
+open_file(char *name, char *mode);
 
 int 
 open_stream(struct Redir *rd, CorpusCharset charset);

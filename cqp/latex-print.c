@@ -37,7 +37,9 @@
 
 #include <sys/types.h>
 #include <sys/time.h>
+#ifndef __MINGW__
 #include <pwd.h>
+#endif
 #include <unistd.h>
 
 /* ---------------------------------------------------------------------- */
@@ -46,34 +48,34 @@ char *latex_print_field(FieldType field, int start);
 
 PrintDescriptionRecord
 LaTeXPrintDescriptionRecord = {
-  "{\\em %d:\\/} ",		/* CPOSPrintFormat */
+  "{\\em %d:\\/} ",                /* CPOSPrintFormat */
 
-  "{\\sf ",			/* BeforePrintStructures */
-  " ",				/* PrintStructureSeparator */
-  "} ",				/* AfterPrintStructures */
+  "{\\sf ",                        /* BeforePrintStructures */
+  " ",                                /* PrintStructureSeparator */
+  "} ",                                /* AfterPrintStructures */
 
-  "$<$",			/* StructureBeginPrefix */
-  "$>$",			/* StructureBeginSuffix */
+  "$<$",                        /* StructureBeginPrefix */
+  "$>$",                        /* StructureBeginSuffix */
 
-  " ",				/* StructureSeparator */
+  " ",                                /* StructureSeparator */
 
-  "$<$/",			/* StructureEndPrefix */
-  "$>$",			/* StructureEndSuffix */
+  "$<$/",                        /* StructureEndPrefix */
+  "$>$",                        /* StructureEndSuffix */
 
-  "",				/* BeforeToken */
-  " ",				/* TokenSeparator */
-  "/",				/* AttributeSeparator */
-  "",				/* AfterToken */
+  "",                                /* BeforeToken */
+  " ",                                /* TokenSeparator */
+  "/",                                /* AttributeSeparator */
+  "",                                /* AfterToken */
 
-  "",				/* BeforeField */
-  "",				/* FieldSeparator */
-  "",				/* AfterField */
+  "",                                /* BeforeField */
+  "",                                /* FieldSeparator */
+  "",                                /* AfterField */
 
-  "\\item ",			/* BeforeLine */
-  "\n",				/* AfterLine */
+  "\\item ",                        /* BeforeLine */
+  "\n",                                /* AfterLine */
 
-  "\\begin{itemize}\n",		/* BeforeConcordance */
-  "\\end{itemize}\n",		/* AfterConcordance */
+  "\\begin{itemize}\n",                /* BeforeConcordance */
+  "\\end{itemize}\n",                /* AfterConcordance */
 
   latex_convert_string,
   latex_print_field
@@ -81,34 +83,34 @@ LaTeXPrintDescriptionRecord = {
 
 PrintDescriptionRecord
 LaTeXTabularPrintDescriptionRecord = {
-  "{\\em %d:\\/} & ",		/* CPOSPrintFormat */
+  "{\\em %d:\\/} & ",                /* CPOSPrintFormat */
 
-  "{\\sf ",			/* BeforePrintStructures */
-  " ",				/* PrintStructureSeparator */
-  "} & ",			/* AfterPrintStructures */
+  "{\\sf ",                        /* BeforePrintStructures */
+  " ",                                /* PrintStructureSeparator */
+  "} & ",                        /* AfterPrintStructures */
 
-  "$<$",			/* StructureBeginPrefix */
-  "$>$",			/* StructureBeginSuffix */
+  "$<$",                        /* StructureBeginPrefix */
+  "$>$",                        /* StructureBeginSuffix */
 
-  " ",				/* StructureSeparator */
+  " ",                                /* StructureSeparator */
 
-  "$<$/",			/* StructureEndPrefix */
-  "$>$",			/* StructureEndSuffix */
+  "$<$/",                        /* StructureEndPrefix */
+  "$>$",                        /* StructureEndSuffix */
 
-  "",				/* BeforeToken */
-  " ",				/* TokenSeparator */
-  "/",				/* AttributeSeparator */
-  "",				/* AfterToken */
+  "",                                /* BeforeToken */
+  " ",                                /* TokenSeparator */
+  "/",                                /* AttributeSeparator */
+  "",                                /* AfterToken */
 
-  "",				/* BeforeField */
-  "",				/* FieldSeparator */
-  "",				/* AfterField */
+  "",                                /* BeforeField */
+  "",                                /* FieldSeparator */
+  "",                                /* AfterField */
 
-  "",				/* BeforeLine */
-  " \\\\\n",			/* AfterLine */
+  "",                                /* BeforeLine */
+  " \\\\\n",                        /* AfterLine */
 
-  "\\begin{tabular}\n",		/* BeforeConcordance */
-  "\\end{tabular}\n",	/* AfterConcordance */
+  "\\begin{tabular}\n",                /* BeforeConcordance */
+  "\\end{tabular}\n",        /* AfterConcordance */
 
   latex_convert_string,
   latex_print_field
@@ -128,15 +130,15 @@ latex_print_field(FieldType field, int at_end)
   case MatchField:
     if (GlobalPrintOptions.print_tabular) {
       if (at_end)
-	return "} & ";
+        return "} & ";
       else
-	return " & {\\bf ";
+        return " & {\\bf ";
     }
     else {
       if (at_end)
-	return "} ";
+        return "} ";
       else
-	return " {\\bf ";
+        return " {\\bf ";
     }
     break;
 
@@ -235,7 +237,7 @@ void latex_print_context(ContextDescriptor *cd, FILE *stream)
     break;
   case STRUC_CONTEXT:
     fprintf(stream, "%d %s", cd->left_width, 
-	    cd->left_structure_name ? cd->left_structure_name : "???");
+            cd->left_structure_name ? cd->left_structure_name : "???");
     break;
   default:
     s = "error";
@@ -255,7 +257,7 @@ void latex_print_context(ContextDescriptor *cd, FILE *stream)
     break;
   case STRUC_CONTEXT:
     fprintf(stream, "%d %s", cd->right_width, 
-	    cd->right_structure_name ? cd->right_structure_name : "???");
+            cd->right_structure_name ? cd->right_structure_name : "???");
     break;
   default:
     s = "error";
@@ -266,31 +268,39 @@ void latex_print_context(ContextDescriptor *cd, FILE *stream)
 }
 
 void latex_print_corpus_header(CorpusList *cl, 
-			       FILE *stream)
+                               FILE *stream)
 {
   time_t now;
+#ifndef __MINGW__
   struct passwd *pwd = NULL;
+#endif
 
   (void) time(&now);
   /*   pwd = getpwuid(geteuid()); */
   /* disabled because of incompatibilities between different Linux versions */
 
   fprintf(stream,
-	  "{\\em This concordance was generated by:\\/}\n"
-	  "\\begin{quote}\\begin{tabular}{ll}\n"
-	  "{\\em User:\\/}      & %s (%s) \\\\\n"
-	  "{\\em Date:\\/}      & %s \\\\\n"
-	  "{\\em Corpus:\\/}    & %s \\\\\n"
-	  "                     & %s \\\\\n"
-	  "{\\em Subcorpus:\\/} & %s:%s \\\\\n"
-	  "{\\em Number of Matches:\\/} & %d \\\\\n",
-	  (pwd ? pwd->pw_name : "unknown"),
-	  (pwd ? pwd->pw_gecos  : "unknown"),
-	  ctime(&now),
-	  (cl->corpus && cl->corpus->registry_name ? cl->corpus->registry_name : "unknown"),
-	  (cl->corpus && cl->corpus->name ? cl->corpus->name : "unknown"),
-	  cl->mother_name, cl->name,
-	  cl->size);
+          "{\\em This concordance was generated by:\\/}\n"
+          "\\begin{quote}\\begin{tabular}{ll}\n"
+          "{\\em User:\\/}      & %s (%s) \\\\\n"
+          "{\\em Date:\\/}      & %s \\\\\n"
+          "{\\em Corpus:\\/}    & %s \\\\\n"
+          "                     & %s \\\\\n"
+          "{\\em Subcorpus:\\/} & %s:%s \\\\\n"
+          "{\\em Number of Matches:\\/} & %d \\\\\n",
+
+#ifndef __MINGW__
+          (pwd ? pwd->pw_name : "unknown"),
+          (pwd ? pwd->pw_gecos  : "unknown"),
+#else
+          "<unknown>",
+          "<unknown>",
+#endif
+          ctime(&now),
+          (cl->corpus && cl->corpus->registry_name ? cl->corpus->registry_name : "unknown"),
+          (cl->corpus && cl->corpus->name ? cl->corpus->name : "unknown"),
+          cl->mother_name, cl->name,
+          cl->size);
   
   latex_print_context(&CD, stream);
 
@@ -298,13 +308,13 @@ void latex_print_corpus_header(CorpusList *cl,
 }
 
 void latex_print_output(CorpusList *cl, 
-			FILE *stream,
-			int interactive,
-			ContextDescriptor *cd,
-			int first, int last)
+                        FILE *stream,
+                        int interactive,
+                        ContextDescriptor *cd,
+                        int first, int last)
 {
   int line, real_line;
-  ConcLineField clf[NoField];	/* NoField is largest field code (not used by us) */
+  ConcLineField clf[NoField];        /* NoField is largest field code (not used by us) */
   PrintDescriptionRecord *pdr;
 
   ParsePrintOptions();
@@ -331,13 +341,13 @@ void latex_print_output(CorpusList *cl,
       int v = 0;
 
       for (l = cd->printStructureTags->list; l; l = l->next)
-	if (l->status) {
-	  v++;
-	  break;
-	}
+        if (l->status) {
+          v++;
+          break;
+        }
 
       if (v)
-	strcat(latex_tab_format, GlobalPrintOptions.print_border ? "l|" : "l");
+        strcat(latex_tab_format, GlobalPrintOptions.print_border ? "l|" : "l");
     }
 
     strcat(latex_tab_format, GlobalPrintOptions.print_border ? "r|l|l|" : "rll");
@@ -400,19 +410,19 @@ void latex_print_output(CorpusList *cl,
     {
       char *outstr;
       int dummy;
-	
+
       outstr = compose_kwic_line(cl->corpus, 
-				 cl->range[real_line].start, 
-				 cl->range[real_line].end,
-				 &CD, 
-				 &dummy,
-				 &dummy, &dummy,
-				 NULL, NULL, 
-				 NULL, 0, NULL,
-				 clf, NoField, /* NoField = # of entries in clf[] */
-				 ConcLineHorizontal, 
-				 pdr,
-				 0, NULL);
+                                 cl->range[real_line].start,
+                                 cl->range[real_line].end,
+                                 &CD,
+                                 &dummy,
+                                 &dummy, &dummy,
+                                 NULL, NULL,
+                                 NULL, 0, NULL,
+                                 clf, NoField, /* NoField = # of entries in clf[] */
+                                 ConcLineHorizontal,
+                                 pdr,
+                                 0, NULL);
       fputs(outstr, stream);
       free(outstr);
     }
@@ -421,11 +431,11 @@ void latex_print_output(CorpusList *cl,
       
     if (CD.alignedCorpora != NULL) {
       printAlignedStrings(cl->corpus, 
-			  &CD, 
-			  cl->range[real_line].start, 
-			  cl->range[real_line].end, 
-			  0,	/* ASCII print mode only */
-			  stream);
+                          &CD,
+                          cl->range[real_line].start,
+                          cl->range[real_line].end,
+                          0,        /* ASCII print mode only */
+                          stream);
     }
 
     if (GlobalPrintOptions.print_tabular && GlobalPrintOptions.print_border)
@@ -466,7 +476,7 @@ latex_print_group(Group *group, int expand, FILE *fd)
     count     = group->count_cells[cell].freq;
     
     fprintf(fd, " & %s & %d \\\\\n", 
-	    latex_convert_string(target_s), count);
+            latex_convert_string(target_s), count);
     
     nr_targets++;
   }

@@ -15,20 +15,26 @@
 ##  Public License for more details (in the file "COPYING", or available via
 ##  WWW at http://www.gnu.org/copyleft/gpl.html).
 
+
+
+##  This is the Makefile for the CWB "utils" programs. 
+
+
+
 ## Read configuration settings and standard definitions
 TOP = $(shell pwd)/..
 include $(TOP)/config.mk
 
 # the following targets are available
 #
-#  all		compile tools
+#  all          compile tools
 #  clean        delete object files and binaries
 #  realclean    also deleted automatically generated parsers and dependencies
-#  depend	update dependencies
-#  install	install tool binaries
-#  uninstall	uninstall tools from chosen location (currently not supported)
+#  depend       update dependencies
+#  install      install tool binaries
+#  uninstall    uninstall tools from chosen location (currently not supported)
 #  relase       install to binary release dir
-#  size		print size of source code (line counts)
+#  size         print size of source code (line counts)
 #
 
 .PHONY: all clean realclean depend install uninstall size
@@ -45,9 +51,9 @@ SRCS =  cwb-atoi.c cwb-itoa.c \
 	cwb-scan-corpus.c \
 	barlib.c feature_maps.c \
 	cwb-align.c cwb-align-show.c cwb-align-encode.c \
-	cwb-check-input.c
+#	cwb-check-input.c
 
-HDRS =	barlib.h feature_maps.h
+HDRS = barlib.h feature_maps.h
 
 ## PROGRAMS: the utils which form an essential part of the CWB (plus some useful helper tools)
 #       cwb-atoi, cwb-itoa  convert ascii to CWB integers and vice versa
@@ -75,7 +81,7 @@ PROGRAMS = cwb-atoi$(EXEC_SUFFIX) cwb-itoa$(EXEC_SUFFIX) \
 	cwb-describe-corpus$(EXEC_SUFFIX) cwb-decode-nqrfile$(EXEC_SUFFIX) \
 	cwb-scan-corpus$(EXEC_SUFFIX) \
 	cwb-align$(EXEC_SUFFIX) cwb-align-show$(EXEC_SUFFIX) cwb-align-encode$(EXEC_SUFFIX) \
-	cwb-check-input$(EXEC_SUFFIX)
+#	cwb-check-input$(EXEC_SUFFIX)
 
 ## ----------------------------------------------------------------------
 
@@ -84,21 +90,30 @@ all: $(PROGRAMS)
 ## general linking rule for all utility programs
 cwb-%$(EXEC_SUFFIX): cwb-%.o
 	$(RM) $@
-	$(CC) $(CFLAGS) -o $@ $< $(CL_LIBS) $(LDFLAGS_ALL)
+	$(CC) $(CFLAGS) -o $@ $< $(CL_LIBS) $(LIB_REGEX) $(LDFLAGS_ALL)
 
 ## special rule for align program, which requires barlib.o and feature_maps.o libraries
 cwb-align$(EXEC_SUFFIX): cwb-align.o barlib.o feature_maps.o
 	$(RM) $@
-	$(CC) $(CFLAGS) -o $@ $^ $(CL_LIBS) $(LDFLAGS_ALL)
+	$(CC) $(CFLAGS) -o $@ $^ $(CL_LIBS) $(LIB_REGEX) $(LDFLAGS_ALL)
 
 ## special rules for cwb-check-input, which requires Glib
-# tmeporary before use of Glib made general
-cwb-check-input.o:
-	$(RM) $@
-	$(CC) -c cwb-check-input.c -o cwb-check-input.o $(CFLAGS) $(CL_LIBS) $(LDFLAGS_ALL) `pkg-config --cflags --libs glib-2.0` `pkg-config --cflags --libs gobject-2.0` 
-cwb-check-input$(EXEC_SUFFIX): cwb-check-input.o
-	$(RM) $@
-	$(CC) $(CFLAGS) -o $@ $^ $(CL_LIBS) `pkg-config --libs glib-2.0` `pkg-config --libs gobject-2.0` $(LDFLAGS_ALL)  
+# temporary before use of Glib made general
+#cwb-check-input.o:
+#	$(RM) $@
+#	$(CC) -c cwb-check-input.c -o cwb-check-input.o $(CFLAGS) `pkg-config --cflags glib-2.0` `pkg-config --cflags gobject-2.0` 
+#cwb-check-input$(EXEC_SUFFIX): cwb-check-input.o
+## note that the pkg-config calls are needed to be in definitions.mk instead of here, and also in any makefile rule
+## that calls ${DEPEND}
+#ifndef __MINGW__
+#	$(RM) $@
+#	$(CC) $(CFLAGS) -o $@ $< $(CL_LIBS) $(LIB_REGEX) `pkg-config --libs glib-2.0` `pkg-config --libs gobject-2.0` $(LDFLAGS_ALL)
+#else
+#	@$(ECHO) "--------------------- can't yet build progs that need glib under mingw...."
+## we need a Glib built for Win32 cross-compiling to do this
+## http://library.gnome.org/devel/glib/stable/glib-cross-compiling.html
+## http://library.gnome.org/devel/glib/stable/glib-building.html
+#endif  
 
 depend:
 	-$(RM) depend.mk

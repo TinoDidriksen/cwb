@@ -24,7 +24,7 @@
 #include <sys/time.h>           /* for select() */
 
 
-#include "../cl/cl.h"
+#include "../cl/globals.h"
 #include "../cl/corpus.h"
 #include "../cl/attributes.h"
 #include "../cl/cdaccess.h"
@@ -47,7 +47,10 @@
 
 #include <sys/types.h>
 #include <sys/time.h>
+
+#ifndef __MINGW__
 #include <pwd.h>
+#endif
 
 /* ---------------------------------------------------------------------- */
 
@@ -104,32 +107,49 @@ print_corpus_info_header(CorpusList *cl,
 
 /* ---------------------------------------------------------------------- */
 
+/**
+ * Creates and opens for text-mode write a temporary file.
+ *
+ * Temporary files have the prefix "cqpt." and are placed in the directory
+ * defined as TEMPDIR_PATH.
+ *
+ * @see                   TEMPDIR_PATH
+ * @see                   TEMP_FILENAME_BUFSIZE
+ * @param tmp_nam_buffer  A buffer which will be overwritten with the name of the
+ *                        temporary file. This should be at least
+ *                        TEMP_FILENAME_BUFSIZE bytes in size.
+ * @return                A stream (FILE *) to the opened temporary file.
+ */
 FILE *
-OpenTemporaryFile(char *tmp_name_buffer) {
-  int fnum;
+open_temporary_file(char *tmp_name_buffer)
+{
+  char *intermed_buffer;
   FILE *fd;
 
-  assert((tmp_name_buffer != NULL) && "Invalid NULL argument in OpenTemporaryFile().");
-  sprintf(tmp_name_buffer, "/tmp/cqp.tmp.XXXXXX");
-  fnum = mkstemp(tmp_name_buffer);
-  if (fnum >= 0) {
-    fd = fdopen(fnum, "w");
-    if (fd) 
-      return fd;
-    else {
-      perror("OpenTemporaryFile(): can't open stream for temporary file");
-      close(fnum);
-      return NULL;
-    }
-  }
+  assert((tmp_name_buffer != NULL) && "Invalid NULL argument in open_temporary_file().");
+
+  intermed_buffer = tempnam(TEMPDIR_PATH, "cqpt.");
+  strcpy(tmp_name_buffer, intermed_buffer);
+  cl_free(intermed_buffer);
+
+  fd = fopen(tmp_name_buffer, "w");
+
+  if (fd)
+    return fd;
   else {
-    perror("OpenTemporaryFile(): can't create temporary file");
+    perror("open_temporary_file(): can't create temporary file");
     return NULL;
   }
 }
 
+/**
+ * This function is a wrapper round fopen() which provides checks for
+ * different shorthands for a "home" directory, such as ~ or $HOME.
+ *
+ * Its arguments and return values are the same as fopen().
+ */
 FILE *
-OpenFile(char *name, char *mode)
+open_file(char *name, char *mode)
 {
   if (name == NULL || mode == NULL || 
       name[0] == '\0' || mode[0] == '\0')
@@ -169,7 +189,8 @@ OpenFile(char *name, char *mode)
 
 /* try to open pager <cmd> / if different from <tested_pager>, run a test first */
 FILE *
-open_pager(char *cmd, CorpusCharset charset) {
+open_pager(char *cmd, CorpusCharset charset)
+{
   FILE *pipe;
 
   if ((tested_pager == NULL) || (strcmp(tested_pager, cmd) != 0)) {
@@ -233,7 +254,7 @@ open_stream(struct Redir *rd, CorpusCharset charset)
       
       rd->is_pipe = False;
       rd->is_paging = False;
-      rd->stream = OpenFile(rd->name, rd->mode);
+      rd->stream = open_file(rd->name, rd->mode);
 
     }
   }
@@ -331,7 +352,7 @@ open_input_stream(struct InputRedir *rd)
 
       /* normal input from a regular file */
       rd->is_pipe = False;
-      rd->stream = OpenFile(rd->name, "r");
+      rd->stream = open_file(rd->name, "r");
 
     }
   }
@@ -368,12 +389,14 @@ int broken_pipe;
 static void 
 bp_signal_handler(int signum)
 {
+#ifndef __MINGW__
   broken_pipe = 1;
 
   /* fprintf(stderr, "Handle broken pipe signal\n"); */
 
   if (signal(SIGPIPE, bp_signal_handler) == SIG_ERR)
     perror("Can't reinstall signal handler for broken pipe");
+#endif
 }
 
 
@@ -464,10 +487,12 @@ catalog_corpus(CorpusList *cl,
     if (GlobalPrintMode == PrintHTML)
       printHeader = True;
 
+#ifndef __MINGW__
     if (rd->is_pipe && handle_sigpipe) {
       if (signal(SIGPIPE, bp_signal_handler) == SIG_ERR)
         perror("Can't install signal handler for broken pipe (ignored)");
     }
+#endif
 
     /* do the job. */
     
@@ -499,9 +524,12 @@ catalog_corpus(CorpusList *cl,
                  isatty(fileno(rd->stream)) || rd->is_paging, 
                  &CD, first, last, mode);
     
-    if (rd->is_paging && handle_sigpipe)
+#ifndef __MINGW__
+    if (rd->is_paging && handle_sigpipe) {
       if (signal(SIGPIPE, SIG_IGN) == SIG_ERR)
         perror("Can't reinstall SIG_IGN signal handler");
+    }
+#endif
     
   }
 
@@ -586,7 +614,7 @@ corpus_info(CorpusList *cl)
 
     if (cl->corpus->info_file == NULL)
       fprintf(outfd, "No further information available about %s\n", cl->name);
-    else if ((fd = OpenFile(cl->corpus->info_file, "r")) == NULL)
+    else if ((fd = open_file(cl->corpus->info_file, "r")) == NULL)
       cqpmessage(Warning,
                  "Can't open info file %s for reading",
                  cl->corpus->info_file);

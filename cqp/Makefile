@@ -15,6 +15,11 @@
 ##  Public License for more details (in the file "COPYING", or available via
 ##  WWW at http://www.gnu.org/copyleft/gpl.html).
 
+
+##  This is the Makefile for the CWB Corpus Query Processor programs. 
+
+
+
 ## Read configuration settings and standard definitions
 TOP = $(shell pwd)/..
 include $(TOP)/config.mk
@@ -101,15 +106,15 @@ lex.yy.c: parser.l parser.y
 
 cqp$(EXEC_SUFFIX): $(OBJS) $(CQP_OBJS) llquery.o $(LIBCL_PATH)
 	$(RM) $@
-	$(CC) $(CFLAGS_ALL) -o $@ llquery.o $(OBJS) $(CQP_OBJS) $(CL_LIBS) $(LDFLAGS_ALL) $(LDFLAGS_CQP)
+	$(CC) $(CFLAGS_ALL) -o $@ llquery.o $(OBJS) $(CQP_OBJS) $(CL_LIBS) $(LIB_REGEX) $(LDFLAGS_ALL) $(LDFLAGS_CQP)
 
 cqpcl$(EXEC_SUFFIX): $(OBJS) $(CQP_OBJS) cqpcl.o $(LIBCL_PATH)
 	$(RM) $@
-	$(CC) $(CFLAGS_ALL) -o $@ cqpcl.o $(OBJS) $(CQP_OBJS) $(CL_LIBS) $(LDFLAGS_ALL) $(LDFLAGS_CQP)
+	$(CC) $(CFLAGS_ALL) -o $@ cqpcl.o $(OBJS) $(CQP_OBJS) $(CL_LIBS) $(LIB_REGEX) $(LDFLAGS_ALL) $(LDFLAGS_CQP)
 
 cqpserver$(EXEC_SUFFIX): $(OBJS) $(CQI_OBJS) ../CQi/cqpserver.o $(LIBCL_PATH)
 	$(RM) $@
-	$(CC) $(CFLAGS_ALL) -o $@ ../CQi/cqpserver.o $(OBJS) $(CQI_OBJS) $(CL_LIBS) $(LDFLAGS_ALL) $(LDFLAGS_CQP) $(NETWORK_LIBS)
+	$(CC) $(CFLAGS_ALL) -o $@ ../CQi/cqpserver.o $(OBJS) $(CQI_OBJS) $(CL_LIBS) $(LIB_REGEX) $(LDFLAGS_ALL) $(LDFLAGS_CQP) $(NETWORK_LIBS)
 
 depend:
 	-$(RM) depend.mk

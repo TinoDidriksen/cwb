@@ -940,12 +940,12 @@ static int *current_sortidx;    /* alias to newly created sortidx, so it can be 
 
 int
 SortExternally(void) {          /* uses settings from static srt_* variables */
-  char temporary_name[32];
+  char temporary_name[TEMP_FILENAME_BUFSIZE];
   FILE *fd;
   FILE *pipe;
   char sort_call[1024];
 
-  if ((fd = OpenTemporaryFile(temporary_name)) != NULL) {
+  if ((fd = open_temporary_file(temporary_name)) != NULL) {
     int line, p1start, p1end, plen, step, token, l;
 
     line = -1;                  /* will indicate sort failure below if text_size == 0 */
@@ -1101,8 +1101,7 @@ SortExternally(void) {          /* uses settings from static srt_* variables */
     if (unlink(temporary_name) != 0) {
       perror(temporary_name);
       cqpmessage(Warning, "Couldn't remove temporary file %s (ignored)\n"
-                 "\tPlease remove the file manually.",
-                   temporary_name);
+                 "\tPlease remove the file manually.", temporary_name);
     }      
     
     /* now we should have read exactly cl->size lines; otherwise something went wrong */

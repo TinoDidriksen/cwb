@@ -290,7 +290,7 @@ SetVariableValue(char *varName,
 
     VariableDeleteItems(v);
 
-    if ((fd = OpenFile(varValues, "r"))) {
+    if ((fd = open_file(varValues, "r"))) {
       
       int l;
       char s[1024];

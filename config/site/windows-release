@@ -21,7 +21,7 @@
 
 ## Directory tree where binaries, libraries, header files and man pages will be installed
 ## We can set this in Windows, but we will need to allow an override at install time.
-PREFIX = C:\CWB
+PREFIX = C:\Program Files\CWB
 
 ## Install locations are given to override the default paths, which include /s
 BININSTDIR = $(PREFIX)\bin
@@ -30,8 +30,8 @@ LIBINSTDIR = $(PREFIX)\lib
 INCINSTDIR = $(PREFIX)\include\cwb
 
 ## Default registry directory (used unless -r option or CORPUS_REGISTRY variable is set)
-## For Windows, our best guess is "current directory". This will almost never be correct!
-DEFAULT_REGISTRY = .
+## For Windows, the best guess is that the right drive is C:, and a CWB folder exists
+DEFAULT_REGISTRY = C:\CWB\Registry
 
 
 ### [AH notes -- I am still not sure about the preceding, we will see if it works out!!]

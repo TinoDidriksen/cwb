@@ -59,9 +59,15 @@ install: $(MANS)
 	if [ ! -d $(MANINSTDIR)/man$(MANEXT) ];	then  $(INSTALL) $(INST_FLAGS_DIR) $(MANINSTDIR)/man$(MANEXT); fi
 	for i in $(BASENAMES); do $(INSTALL) $(INST_FLAGS_DATA) $$i.man $(MANINSTDIR)/man$(MANEXT)/$$i.$(MANEXT) ; done
 
+ifdef __MINGW__
+release: $(PDFMANS)
+	if [ ! -d "$(RELEASE_DIR)/man" ]; then $(INSTALL) $(INST_FLAGS_DIR) "$(RELEASE_DIR)/man"; fi;
+	for i in $(PDFMANS); do $(INSTALL) $(INST_FLAGS_DATA) $$i "$(RELEASE_DIR)/man/$$i"; done
+else
 release: $(MANS)
 	if [ ! -d "$(RELEASE_DIR)/man/man$(MANEXT)" ]; then $(INSTALL) $(INST_FLAGS_DIR) "$(RELEASE_DIR)/man/man$(MANEXT)"; fi;
 	for i in $(BASENAMES); do $(INSTALL) $(INST_FLAGS_DATA) $$i.man "$(RELEASE_DIR)/man/man$(MANEXT)/$$i.$(MANEXT)"; done
+endif
 
 uninstall:
 	@$(ECHO) "ERROR: uninstall operation is currently not supported!"

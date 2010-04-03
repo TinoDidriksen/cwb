@@ -15,9 +15,13 @@
  *  WWW at http://www.gnu.org/copyleft/gpl.html).
  */
 
-#include <sys/types.h>		/* required on Darwin */
-#include <sys/socket.h>		/* required on Darwin */
+#ifndef __MINGW__
+#include <sys/types.h>     /* required on Darwin */
+#include <sys/socket.h>    /* required on Darwin */
 #include <netinet/in.h>
+#else
+#include <winsock2.h>
+#endif
 
 void add_user_to_list(char *user, char *passwd);
 void add_host_to_list(char *ipaddr);               /* e.g. "141.58.127.243"; NULL to accept connections from all hosts */

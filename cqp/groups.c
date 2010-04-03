@@ -234,14 +234,14 @@ ComputeGroupExternally(Group *group)
   int size = group->my_corpus->size;
   int cutoff_freq = group->cutoff_frequency;
 
-  char temporary_name[32];
+  char temporary_name[TEMP_FILENAME_BUFSIZE];
   FILE *fd;
   FILE *pipe;
   char sort_call[1024];
 
   /* ---------------------------------------------------------------------- */
 
-  if ((fd = OpenTemporaryFile(temporary_name)) == NULL) {
+  if ((fd = open_temporary_file(temporary_name)) == NULL) {
     perror("Error while opening temporary file");
     cqpmessage(Warning, "Can't open temporary file");
     return group;
@@ -306,9 +306,8 @@ ComputeGroupExternally(Group *group)
   }
   else if (unlink(temporary_name) != 0) {
     perror(temporary_name);
-    fprintf(stderr, "Can't remove temporary file %s -- \n\t"
-            "I will continue, but you should remove that file.\n",
-            temporary_name);
+    fprintf(stderr, "Can't remove temporary file %s -- \n\tI will continue, "
+            "but you should remove that file.\n", temporary_name);
   }
   
   return group;

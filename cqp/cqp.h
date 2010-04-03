@@ -61,7 +61,7 @@ int exit_cqp;                   /**< 1 iff exit-command was issued while parsing
 char *cqp_input_string;
 int cqp_input_string_position;
 
-void cqp_randomize(void);
+/*void cqp_randomize(void); */
 
 int initialize_cqp(int argc, char **argv);
 

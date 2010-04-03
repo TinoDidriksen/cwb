@@ -16,7 +16,7 @@
 ##  WWW at http://www.gnu.org/copyleft/gpl.html).
 
 ##
-## PLATFORM CONFIGURATION FILE: Windows on i586-compatible CPU, cross-compiled using minGW
+## PLATFORM CONFIGURATION FILE: Windows on i586-compatible CPU, cross-compiled using MinGW
 ##
 
 ## this variable is checked with "ifdefs" in makefiles that need to do something different
@@ -26,9 +26,15 @@ __MINGW__ = 1
 ## C compiler
 CC = i586-mingw32msvc-gcc
 
+## we also MAY need the following sub-programs...
+LD = i586-mingw32msvc-ld
+RC = i586-mingw32msvc-windres
+
 ## C compiler flags (optimisation, warning, additional include directories)
 ## in this case, we also have the __MINGW__ macro-constant that is "ifdef" checked in the C code 
-CFLAGS = -O2 -Wall -D__MINGW__ -pg
+CFLAGS = -O2 -Wall -D__MINGW__ -DEMULATE_SETENV
+## MinGW doesn't have setenv() for manipulating environment variables, so we need to emulate it with putenv()
+## this is controlled by EMULATE_SETENV, created for Solaris but also useful here.
 
 ## Linker flags (libraries to link against, search path, static linkage)
 LDFLAGS = -lm -lws2_32

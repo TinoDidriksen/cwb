@@ -21,11 +21,18 @@
 #include "cqi.h"
 
 #include <sys/types.h>
-#include <sys/socket.h>
 #include <sys/time.h>
+
+#ifndef __MINGW__
+#include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
+#else
+#include <winsock2.h>
+#define socklen_t int
+#endif
+
 #include <signal.h>
 #include <strings.h>
 #include <string.h>
@@ -45,7 +52,7 @@
 #define GENERAL_ERROR_SIZE 1024
 
 #ifndef MSG_WAITALL
-/* Linux doesn't define the MSG_WAITALL flag, but under normal conditions 
+/* Linux doesn't define the MSG_WAITALL flag (ditto MinGW), but under normal conditions
    it _does_ wait for the entire amount of data requested to arrive; so we
    just set MSG_WAITALL to 0 (nothing) in this case */
 #define MSG_WAITALL 0
@@ -53,7 +60,7 @@
 
 
 int sockfd, connfd;
-FILE *conn_out;                 /* buffered output (don't forget to flush()) */
+FILE *conn_out;                 /**< Connection out: buffered output (don't forget to flush()) */
 struct sockaddr_in my_addr, client_addr;
 struct hostent *remote_host;
 char *remote_address;
@@ -116,12 +123,16 @@ int
 accept_connection(int port) {
   const int on = 1;
   socklen_t sin_size = sizeof(struct sockaddr_in);
+#ifndef __MINGW__
   pid_t child_pid;
+#endif
 
+#ifndef __MINGW__
   if (SIG_ERR == signal(SIGCHLD, SIG_IGN)) {
     perror("ERROR Can't ignore SIGCHLD");
     exit(1);
   }
+#endif
 
   if (port <= 0) {
     port = CQI_PORT;
@@ -129,8 +140,29 @@ accept_connection(int port) {
 
   if (server_debug) 
     fprintf(stderr, "CQi: Opening socket and binding to port %d\n", port);
+
+#ifdef __MINGW__
+  WORD wVersionRequested;
+  WSADATA wsaData;
+  int err;
+  wVersionRequested = MAKEWORD(2, 2); /* 2.2 is the higher version */
+  err = WSAStartup(wVersionRequested, &wsaData);
+
+  if (err != 0) {
+    char buffer[50];
+    sprintf(buffer,"ERROR WSAStartup failed with error: %d\n",err);
+    perror(buffer);
+    return -1;
+    }
+#endif
+
   sockfd = socket(AF_INET, SOCK_STREAM, 0);
+
+#ifndef __MINGW__
   if (sockfd < 0) {
+#else
+  if (sockfd == INVALID_SOCKET) {
+#endif
     perror("ERROR Can't create socket");
     return -1;
   }
@@ -143,7 +175,7 @@ accept_connection(int port) {
     my_addr.sin_addr.s_addr = inet_addr("127.0.0.1"); /* loopback device */
   else 
     my_addr.sin_addr.s_addr = htonl(INADDR_ANY);      /* all network devices on local machine */
-  bzero(&(my_addr.sin_zero), 8);
+  memset(&(my_addr.sin_zero), '\0', 8);
   if (0 != bind(sockfd, (struct sockaddr *)&my_addr, sizeof(struct sockaddr))) {
     perror("ERROR Can't bind socket to port");
     return -1;
@@ -156,6 +188,7 @@ accept_connection(int port) {
     return -1;
   }
 
+#ifndef __MINGW__
   /* if called with '-q', fork() and quit before waiting for connections */
   if (server_quit) {
     pid_t pid = fork();
@@ -165,6 +198,9 @@ accept_connection(int port) {
       exit(0);
     }
   }
+#else
+  /* no forking in Windows! */
+#endif
 
   while (42) {
     /* when run as a private server, we'll only wait for up to 10 seconds */
@@ -201,6 +237,7 @@ accept_connection(int port) {
       printf("\n");
     }
     
+#ifndef __MINGW__
     /* spawn a server to handle the request */
     child_pid = fork();
     if (child_pid < 0) {
@@ -220,6 +257,20 @@ accept_connection(int port) {
       close(sockfd);
       exit(0);                  /* SIGCHLD should be reaped by calling process */
     }
+#else
+    /* no forking in Windows!
+     * So all we can do here is break the loop, assuming we are a child.
+     *
+     * Note this means: the Windows version of cqpserver accepts only one client!
+     * (see here for some discussion:
+     *      http://www.gamedev.net/community/forums/topic.asp?topic_id=360290
+     *      http://stackoverflow.com/questions/985281/what-is-the-closest-thing-windows-has-to-fork
+     *      )
+     * We print the "private server" message automatically.
+     */
+    printf("Accepting no more connections (private server).\n");
+    break;
+#endif
   }
 
   /* this is the child serving the new CQi connection */
@@ -235,12 +286,15 @@ accept_connection(int port) {
     exit(1);
   }
 
+#ifndef __MINGW__
   conn_out = fdopen(connfd, "w");
   if (conn_out == NULL) {
     perror("ERROR Can't switch CQi connection to buffered output");
     close(connfd);
     return -1;
   }
+#endif
+
   if (server_debug) 
     fprintf(stderr, "CQi: creating attribute hash (size = %d)\n", ATTHASHSIZE);
   make_attribute_hash(ATTHASHSIZE);
@@ -260,6 +314,9 @@ accept_connection(int port) {
 
 int 
 cqi_flush(void) {
+#ifdef __MINGW__
+  return 1;
+#else
   if (snoop) {
     fprintf(stderr, "CQi FLUSH\n");
   }
@@ -270,6 +327,7 @@ cqi_flush(void) {
   else {
     return 1;
   }
+#endif
 }
 
 /* BYTE ... send byte */

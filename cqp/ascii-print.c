@@ -23,7 +23,10 @@
 #include "../cl/cdaccess.h"
 
 #include <sys/time.h>
+
+#ifndef __MINGW__
 #include <pwd.h>
+#endif
 
 #ifdef USE_TERMCAP
 #include <curses.h>
@@ -568,7 +571,11 @@ ascii_print_corpus_header(CorpusList *cl,
                           FILE *stream)
 {
   time_t now;
+
+#ifndef __MINGW__
   struct passwd *pwd = NULL;
+#endif
+
   int i;
   
   (void) time(&now);
@@ -587,8 +594,13 @@ ascii_print_corpus_header(CorpusList *cl,
           "# Corpus:  %s (%s)\n"
           "# Name:    %s:%s\n"
           "# Size:    %d intervals/matches\n",
+#ifndef __MINGW__
           (pwd ? pwd->pw_name : "<unknown>"),
           (pwd ? pwd->pw_gecos  : "<unknown>"),
+#else
+          "<unknown>",
+          "<unknown>",
+#endif
           ctime(&now),
           (cl->corpus && cl->corpus->registry_name ? cl->corpus->registry_name : "<Unknown Corpus>"),
           (cl->corpus && cl->corpus->name ? cl->corpus->name : "<Unknown Corpus>"),

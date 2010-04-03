@@ -1026,7 +1026,7 @@ parse_options(int ac, char *av[])
         symtab_debug = parser_debug = eval_debug = search_debug = False;
       if (strcmp(optarg, "-") == 0) 
         batchfd = stdin;
-      else if ((batchfd = OpenFile(optarg, "r")) == NULL) {
+      else if ((batchfd = open_file(optarg, "r")) == NULL) {
         perror(optarg);
         exit(1);
       }

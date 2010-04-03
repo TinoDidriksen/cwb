@@ -39,34 +39,44 @@ extern size_t cl_memory_limit;
 
 
 /* macros for path-handling: different between Unix and Windows */
+/*
+ * NOTE:
+ * When we move to Glib, it will be better to use G_DIR_SEPARATOR and G_SEARCHPATH_SEPARATOR
+ * and delete these two macros.
+ */
 #ifndef __MINGW__
 /** character used to separate different paths in a string variable */
 #define PATH_SEPARATOR ':'
 /** character used to delimit subdirectories in a path */
 #define SUBDIR_SEPARATOR '/'
+/** name of directory for temporary files (as string, absolute path) */
+#define TEMPDIR_PATH "/tmp"
 #else
 #define PATH_SEPARATOR ';'
 #define SUBDIR_SEPARATOR '\\'
+#define TEMPDIR_PATH "." /* A CQP user may not have access to C:\Temp, which is where they SHOULD fo */
 #endif
+/**
+ * size in bytes of string buffers capable of holding absolute paths
+ * of temporary filenames; needs to be big enough for TEMPDIR_PATH plus
+ * the result of a call to tempnam(), at least.
+ */
+#define TEMP_FILENAME_BUFSIZE 128
 
 
 /* default registry settings */
 #if (!defined(REGISTRY_DEFAULT_PATH))
 #ifndef __MINGW__
-/**
- * The default path assumed for the location of the corpus registry.
- */
+/** The default path assumed for the location of the corpus registry. */
 #define REGISTRY_DEFAULT_PATH  "/corpora/c1/registry"
 #else
-/* note that the notion of a default path under Windows is fundamentally dodgy in any case... */
-#define REGISTRY_DEFAULT_PATH  "."
+/* note that the notion of a default path under Windows is fundamentally dodgy ... */
+#define REGISTRY_DEFAULT_PATH  "C:\CWB\Registry"
 #endif
 #endif
 
 #if (!defined(REGISTRY_ENVVAR))
-/**
- * The Unix environment variable from which the value of the registry will be taken.
- */
+/** The Unix environment variable from which the value of the registry will be taken. */
 #define REGISTRY_ENVVAR        "CORPUS_REGISTRY"
 #endif
 

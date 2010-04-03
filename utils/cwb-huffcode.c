@@ -362,11 +362,11 @@ compute_code_lengths(Attribute *attr, HCD *hc, char *fname)
   hc->min_codelen = 100;
   hc->max_codelen = 0;
 
-  bzero((char *)hc->lcount, MAXCODELEN * sizeof(int));
-  bzero((char *)hc->min_code, MAXCODELEN * sizeof(int));
-  bzero((char *)hc->symindex, MAXCODELEN * sizeof(int));
+  memset((char *)hc->lcount, '\0', MAXCODELEN * sizeof(int));
+  memset((char *)hc->min_code, '\0', MAXCODELEN * sizeof(int));
+  memset((char *)hc->symindex, '\0', MAXCODELEN * sizeof(int));
 
-  bzero((char *)issued_codes, MAXCODELEN * sizeof(int));
+  memset((char *)issued_codes, '\0', MAXCODELEN * sizeof(int));
 
   codelength = (unsigned *)cl_calloc(hc->size, sizeof(unsigned));
 

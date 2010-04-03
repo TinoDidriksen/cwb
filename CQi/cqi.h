@@ -17,6 +17,17 @@
 
 /*   CQi v0.1 (Corpus Query Interface)                                   */
 
+/**
+ * @file
+ *
+ * This file contains definitions of messages that can be passed via the
+ * Corpus Query Interface.
+ *
+ * They are broken down into (a) CQi responses that can be sent by the server
+ * (b) CQi requests that the clienyt can send to the server (c) some other
+ * bits and pieces.
+ */
+
 
 /* default port for CQi services                                         */
 #define CQI_PORT 4877
@@ -99,6 +110,9 @@
 #define CQI_CQP_ERROR_INVALID_FIELD 0x0503
 #define CQI_CQP_ERROR_OUT_OF_RANGE 0x0504
 /* various cases where a number is out of range                          */
+
+
+
 
 /*  ***                                                                  */
 /*  ***   CQi commands                                                   */

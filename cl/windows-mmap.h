@@ -23,6 +23,7 @@
 #include <sys/stat.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <io.h>
 
 /* macro definitions extracted from git/git-compat-util.h */
 #define PROT_READ  1
@@ -34,7 +35,7 @@
 #define MAP_PRIVATE	0x02		/* Changes are private.  */
 
 
-typedef int caddr_t;
+typedef void * caddr_t;
 
 void *mmap(void *start, size_t length, int prot, int flags, int fd, off_t offset);
 int munmap(void *start, size_t length);

@@ -15,6 +15,11 @@
 ##  Public License for more details (in the file "COPYING", or available via
 ##  WWW at http://www.gnu.org/copyleft/gpl.html).
 
+
+##  This is the Makefile for the CWB Corpus Library. 
+
+
+
 ## Read configuration settings and standard definitions
 TOP = $(shell pwd)/..
 include $(TOP)/config.mk

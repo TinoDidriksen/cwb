@@ -37,7 +37,10 @@
 
 #include <string.h>
 
-/* DEFINITIONS BELOW SHOULD NOT BE NECESSARY ON MODERN UNIX SYSTEMS */
+/*
+ * DEFINITIONS BELOW SHOULD NOT BE NECESSARY ON MODERN UNIX SYSTEMS
+ * Much better to use memmove, memcpy etc than the non-ANSI bincpy!
+ */
 /* #else /\* not __svr4__ *\/ */
 /* #define memmove(dest,src,bytes) bcopy((char *)src, (char *)dest, (size_t) bytes) */
 /* #extern void bcopy(char *b1, char *b2, int length); */

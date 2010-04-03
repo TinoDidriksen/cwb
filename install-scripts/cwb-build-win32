@@ -34,6 +34,7 @@ make realclean
 make depend
 make cl
 make editline
+make mingw-libgnurx-2.5.1
 make utils
 make cqp
 

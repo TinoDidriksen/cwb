@@ -194,7 +194,7 @@ static void UNGET(int Ch)
     --currpos;
 }
 
-static void ERROR(char *Format, ...) 
+static void REGEX2DFA_ERROR(char *Format, ...)
 {
 
   va_list AP;
@@ -285,7 +285,7 @@ Lexical LEX(void)
     return IdenT;
   } 
   else {
-    ERROR("extra character %c", Ch); 
+    REGEX2DFA_ERROR("extra character %c", Ch);
     return EndT;
   }
 }
@@ -503,7 +503,7 @@ void PUSH(StackTag Tag, int Q)
 
   if (SP >= Stack + STACK_MAX) 
     {
-      ERROR("Expression too complex ... aborting.");
+      REGEX2DFA_ERROR("Expression too complex ... aborting.");
       exit(1);
     }
   SP->Tag = Tag;
@@ -570,7 +570,7 @@ int Parse(void)
       L = LEX(); 
       goto END;
     default: 
-      ERROR("Corrupt expression."); 
+      REGEX2DFA_ERROR("Corrupt expression.");
       return -1;
     }
   
@@ -578,37 +578,37 @@ int Parse(void)
   switch (Action[TOP][L]) 
     {
     case 'A': 
-      ERROR("Extra ','"); 
+      REGEX2DFA_ERROR("Extra ','");
       exit(1);
     case 'B': 
-      ERROR("Unmatched ).");  
+      REGEX2DFA_ERROR("Unmatched ).");
       L = LEX(); 
       goto END;
     case 'C': 
-      ERROR("Unmatched ].");  
+      REGEX2DFA_ERROR("Unmatched ].");
       L = LEX(); 
       goto END;
     case 'D': 
-      ERROR("Unmatched (."); 
+      REGEX2DFA_ERROR("Unmatched (.");
       ignore_value = POP();
       goto END;
     case 'E': 
-      ERROR("Unmatched [."); 
+      REGEX2DFA_ERROR("Unmatched [.");
       goto MakeOpt;
     case 'F': 
-      ERROR("( ... ]."); 
+      REGEX2DFA_ERROR("( ... ].");
       ignore_value = POP(); 
       L = LEX(); 
       goto END;
     case 'G': 
-      ERROR("[ ... )."); 
+      REGEX2DFA_ERROR("[ ... ).");
       L = LEX(); 
       goto MakeOpt;
     case 'H': 
-      ERROR("Left-hand side of '=' must be symbol."); 
+      REGEX2DFA_ERROR("Left-hand side of '=' must be symbol.");
       exit(1);
     case 'I': 
-      ERROR("Missing evaluation."); 
+      REGEX2DFA_ERROR("Missing evaluation.");
       exit(1);
     case '.': 
       ignore_value = POP(); 
