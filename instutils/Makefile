@@ -30,7 +30,7 @@ include $(TOP)/config.mk
 #  depend      <dummy target>
 #  size        <dummy target>
 
-## The whole set of Unix options is wrapped in an ifndef ...
+## These are the options for *nix
 ifndef __MINGW__
 
 all:
@@ -40,6 +40,8 @@ all:
 
 cwb-config:
 	VERSION='$(VERSION)' PREFIX='$(PREFIX)' BINDIR='$(BININSTDIR)' LIBDIR='$(LIBINSTDIR)' INCDIR='$(INCINSTDIR)' MANDIR='$(MANINSTDIR)' CFLAGS='-I$(INCINSTDIR)' LDFLAGS='-L$(LIBINSTDIR) -lcl' REGISTRY='$(DEFAULT_REGISTRY)' sh cwb-config.in > cwb-config
+
+
 
 install-cwb.sh:
 	VERSION='$(VERSION)' PREFIX='$(PREFIX)' REGISTRY='$(DEFAULT_REGISTRY)' MANEXT='$(MANEXT)' sh install-cwb.sh.in > install-cwb.sh	
@@ -60,6 +62,35 @@ release:	cwb-config install-cwb.sh
 clean:
 	-rm -f cwb-config install-cwb.sh *~
 
+## And these are the options for Windows.
+else
+##    Note especially that cwb-config doesn't exit in the Windows world (no easy way to update it 
+##    once it is on the user's system to account for a manually-specified install path being used)
+
+all:	install-cwb-win.bat
+
+install:	install-cwb-win.bat
+	$(ECHO) "Installation is not possible when cross-compiling for Windows. Try ''make release'' instead..."
+
+install-cwb-win.bat:	install-cwb-win.bat.in
+	VERSION='$(VERSION)' PREFIX='$(PREFIX)' REGISTRY='$(DEFAULT_REGISTRY)' MANEXT='$(MANEXT)' sh install-cwb-win.bat.in > install-cwb-win.bat	
+
+release:	install-cwb-win.bat
+	for i in INSTALL; do $(INSTALL) $(INST_FLAGS_DATA) $$i "$(RELEASE_DIR)/$$i.txt"; done
+	for i in README COPYING AUTHORS CHANGES; do $(INSTALL) $(INST_FLAGS_DATA) ../$$i "$(RELEASE_DIR)/$$i.txt"; done
+ifdef UNIX2DOS
+	for i in INSTALL README COPYING AUTHORS CHANGES; do  $(UNIX2DOS) "$(RELEASE_DIR)/$$i.txt"; done
+endif
+	for i in install-cwb-win.bat; do $(INSTALL) $(INST_FLAGS_BIN) $$i "$(RELEASE_DIR)"; done
+
+clean:
+	-rm -f install-cwb-win.bat *~
+
+endif
+
+
+## These targets are the same for *nix and for Windows releases.
+
 realclean:	clean
 
 depend:
@@ -67,13 +98,3 @@ depend:
 
 size:
 	@$(ECHO) "Nothing to be done for 'make size'"
-
-
-
-else
-
-## The install system for Windows will be made here. Needless to say it will need to be utterly different from the above.
-## will probably involve generating some kind of bat file for installation.
-## This will allow the directories (BININSTDIR etc) to be ifnored where appropriate. 
-
-endif

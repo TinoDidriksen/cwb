@@ -21,6 +21,34 @@ You may also want to join the CWBdev mailing list
 and ask your question there.
 
 
+
+	(1) WINDOWS INSTALLATION
+
+Note that the rest of this file applies only to non-windows releases. If
+you want to install on Windows, first make sure that you have unzipped the
+.zip file that CWB came in, and then run the "install-cwb-win" program 
+contained in the same folder as this text file.
+
+Important Note: you will probably need admin rights to do this.
+
+You can do this either by (a) double-clicking on "install-cwb-win"
+or (b) opening a command prompt, navigating to this folder, and 
+typing "install-cwb-win". 
+
+Note that the program will display as "install-cwb-win.bat" if you have 
+turned off the Widnows "Hide File Extensions" option. If you don't know what
+the preceding sentence means, you may safely ignore it.
+
+You will also need to add the "binary" directory -- which is usually 
+"C:\Program Files\CWB\bin" -- to your path. (Right click on My Computer >
+Properties > Advanced > Environment Variables > under "System Variables", 
+highlight "Path" and press Edit > add the "binary" directory at the end
+of the path, after a semicolon > press OK > OK > OK).
+
+
+
+	(2) UNIX, etc, INSTALLATION
+
 	QUICK INSTALLATION
 
 If you want to install the CWB in its standard location (depending on the

@@ -33,7 +33,9 @@
 #define cregwrap() 1
 */
 
-/* remove \" and \\ escapes, but keep all other "literal" backslashes; modified <string> in place */
+/**
+ * remove \" and \\ escapes, but keep all other "literal" backslashes; modified <string> in place
+ */
 void
 unescape_string (char *string) {
   char *p, *q;

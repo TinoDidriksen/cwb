@@ -1,0 +1,108 @@
+#!/bin/sh
+
+# The script following this line produces a .bat file that will do the same (ish)
+# on Windows as the install-cwb.sh script will on Unix.
+#################################################################################
+
+cat <<__END__
+@echo off
+
+rem ## Directory tree where the CWB will be installed (normally C:\Program Files\CWB in Windows)
+set PREFIX=${PREFIX}
+:bf_choose_install_dir
+
+rem ## You can also change individual installation directories ...
+
+rem # CQP and other executable programs ("binaries")
+set BINDIR=%PREFIX%\bin
+
+rem # C header files (CL library and CQi specification)
+set INCDIR=%PREFIX%\include
+
+rem # CL library (can be linked into C programs) (!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!as dll?)
+set LIBDIR=%PREFIX%\lib
+
+rem # manual pages
+set MANDIR=%PREFIX%\man
+
+rem ############### DO NOT CHANGE ANYTHING BELOW THIS LINE ###############
+
+rem Before we do anything else, we must check that C:\Program Files exists.
+if not exist "C:\Program Files" (
+	goto choose_install_dir
+)
+
+rem We could use xcopy, but INSTALL is used for one file at a time...
+set INSTALL=copy
+
+set VERSION=${VERSION}
+set REGISTRY=${REGISTRY}
+
+set REALINCDIR="%INCDIR%\cwb"
+set REALMANDIR=%MANDIR%
+
+
+rem # install CQP and utilities 
+
+echo Installing CQP and utilities in %BINDIR%
+if not exist "%BINDIR%" (
+	mkdir "%BINDIR%"
+)
+for %%f in (bin\*.exe) do %INSTALL% "%%f" "%BINDIR%"
+
+
+rem # install CL library and header files
+
+echo Installing CL library and header files in %LIBDIR% and %INCDIR%
+if not exist "%LIBDIR%" (
+	mkdir "%LIBDIR%"
+)
+if not exist "%REALINCDIR%" (
+	mkdir "%REALINCDIR%"
+)
+rem !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!or is it the DLL?
+%INSTALL% lib\libcl.a "%LIBDIR%"
+%INSTALL% include\cwb\cl.h "%REALINCDIR%"
+%INSTALL% include\cwb\cqi.h "%REALINCDIR%"
+
+rem # install manpages
+echo "Installing manual pages in %MANDIR%"
+if not exist "%REALMANDIR%" (
+	mkdir "%REALMANDIR%"
+)
+for %%f in (man\*.pdf) do %INSTALL% "%%f" "%REALMANDIR%"
+
+rem  # that's it!
+echo Congratulations, the IMS Open Corpus Workbench v%VERSION% has been installed successfully.
+echo 
+echo Please make sure that %BINDIR% is in your "path" so you can call CWB programs from the
+echo command prompt!
+echo 
+echo Also note that the compiled-in default corpus registry is %REGISTRY%.
+echo To use a different registry directory, use the -r flag when calling CWB programs.
+goto:eof
+
+rem This would probably be better as a function, but when the %PREFIX% is changed, all directory
+rem variables need to be re-initialised.
+:choose_install_dir
+
+echo The directory "C:\Program Files" does not exist, perhaps because you have a non-English Windows.
+echo CWB is normally installed in "C:\Program Files\CWB" -- so you need to specify a different directory.
+echo 
+
+:while
+set /p NEWDIR=[Enter your chosen installation directory:]
+rem The double check is in case the directory can't be made, ie typing error!
+if not exist "%NEWDIR%" (
+	mkdir "%NEWDIR%"
+)
+if not exist "%NEWDIR%" (
+	echo That directory can't be created! Please specify a different directory.
+	goto while
+)
+set PREFIX=%NEWDIR%
+ 
+goto bf_choose_install_dir
+__END__
+
+

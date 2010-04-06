@@ -39,7 +39,7 @@
 #       cygwin        Win32 build using Cygwin emulation layer (experimental)
 #       mingw         Cross-compile for Win32 from a *nix system with MinGW installed (experimental)
 #
-include $(TOP)/config/platform/darwin-universal
+include $(TOP)/config/platform/mingw
 
 #
 # SITE-SPECIFIC CONFIGURATION (installation path and other local settings)
@@ -53,12 +53,10 @@ include $(TOP)/config/platform/darwin-universal
 #         linux-release   ... for i386 Linux
 #         solaris-release ... for SUN Solaris 2.x
 #         linux-rpm       ... build binary RPM package on Linux (together with rpm-linux.spec)
+#         windows-release ... for Windows binaries cross-compiled with MinGW; use with "mingw" platform
 #       cygwin          Win32 / Cygwin configuration (experimental)
-#       mingw           Configuration for cross-compilation (defaults to "standard" because no
-#                       installation is needed in this case)
-#                       [AH notes: should this be a "win32-release" configuration instead?]
 #       
-include $(TOP)/config/site/standard
+include $(TOP)/config/site/windows-release
 
 
 #

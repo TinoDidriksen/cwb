@@ -22,6 +22,9 @@
 ## this variable is checked with "ifdefs" in makefiles that need to do something different
 ## when we are cross-compiling for windows...
 __MINGW__ = 1
+## if a "unix-to-dos" conversion program is specified here, it will be used when creating
+## windows releases
+UNIX2DOS = unix2dos
 
 ## C compiler
 CC = i586-mingw32msvc-gcc

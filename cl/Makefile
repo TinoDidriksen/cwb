@@ -134,14 +134,11 @@ else
 endif
 
 release: libcl.a
-ifndef __MINGW__
 	if [ ! -d "$(RELEASE_DIR)/lib" ]; then $(INSTALL) $(INST_FLAGS_DIR) "$(RELEASE_DIR)/lib"; fi;
 	$(INSTALL) $(INST_FLAGS_DATA) libcl.a "$(RELEASE_DIR)/lib"
 	if [ ! -d "$(RELEASE_DIR)/include/cwb" ]; then $(INSTALL) $(INST_FLAGS_DIR) "$(RELEASE_DIR)/include/cwb"; fi;
 	$(INSTALL) $(INST_FLAGS_DATA) cl.h "$(RELEASE_DIR)/include/cwb"
-else
-	@$(ECHO) "ERROR: the Windows-targeted libcl.a should not be released (will only link with MinGW)!"
-endif
+
 
 uninstall:
 	@$(ECHO) "ERROR: uninstall operation is currently not supported!"
