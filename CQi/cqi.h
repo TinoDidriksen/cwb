@@ -26,6 +26,10 @@
  * They are broken down into (a) CQi responses that can be sent by the server
  * (b) CQi requests that the clienyt can send to the server (c) some other
  * bits and pieces.
+ *
+ * This file should be #included into any program that wishes to use CQi
+ * but note that as there are no functions defined for a CQi client program,
+ * there are no accompanying source, object or library files.
  */
 
 
@@ -163,45 +167,45 @@
 #define CQI_CORPUS 0x13
 
 #define CQI_CORPUS_LIST_CORPORA 0x1301
-/* INPUT: ()                                                             */
+/* INPUT:  ()                                                            */
 /* OUTPUT: CQI_DATA_STRING_LIST                                          */
 
 #define CQI_CORPUS_CHARSET 0x1303
-/* INPUT: (STRING corpus)                                                */
+/* INPUT:  (STRING corpus)                                               */
 /* OUTPUT: CQI_DATA_STRING                                               */
 
 #define CQI_CORPUS_PROPERTIES 0x1304
-/* INPUT: (STRING corpus)                                                */
+/* INPUT:  (STRING corpus)                                               */
 /* OUTPUT: CQI_DATA_STRING_LIST                                          */
 
 #define CQI_CORPUS_POSITIONAL_ATTRIBUTES 0x1305
-/* INPUT: (STRING corpus)                                                */
+/* INPUT:  (STRING corpus)                                               */
 /* OUTPUT: CQI_DATA_STRING_LIST                                          */
 
 #define CQI_CORPUS_STRUCTURAL_ATTRIBUTES 0x1306
-/* INPUT: (STRING corpus)                                                */
+/* INPUT:  (STRING corpus)                                               */
 /* OUTPUT: CQI_DATA_STRING_LIST                                          */
 
 #define CQI_CORPUS_STRUCTURAL_ATTRIBUTE_HAS_VALUES 0x1307
-/* INPUT: (STRING attribute)                                             */
+/* INPUT:  (STRING attribute)                                            */
 /* OUTPUT: CQI_DATA_BOOL                                                 */
 
 #define CQI_CORPUS_ALIGNMENT_ATTRIBUTES 0x1308
-/* INPUT: (STRING corpus)                                                */
+/* INPUT:  (STRING corpus)                                               */
 /* OUTPUT: CQI_DATA_STRING_LIST                                          */
 
 #define CQI_CORPUS_FULL_NAME 0x1309
-/* INPUT: (STRING corpus)                                                */
+/* INPUT:  (STRING corpus)                                               */
 /* OUTPUT: CQI_DATA_STRING                                               */
 /* the full name of <corpus> as specified in its registry entry          */
 
 #define CQI_CORPUS_INFO 0x130A
-/* INPUT: (STRING corpus)                                                */
+/* INPUT:  (STRING corpus)                                               */
 /* OUTPUT: CQI_DATA_STRING_LIST                                          */
 /* returns the contents of the .info file of <corpus> as a list of lines */
 
 #define CQI_CORPUS_DROP_CORPUS 0x130B
-/* INPUT: (STRING corpus)                                                */
+/* INPUT:  (STRING corpus)                                               */
 /* OUTPUT: CQI_STATUS_OK                                                 */
 /* try to unload a corpus and all its attributes from memory             */
 
@@ -211,7 +215,7 @@
 /* low-level corpus access (CL functions)                                */
 
 #define CQI_CL_ATTRIBUTE_SIZE 0x1401
-/* INPUT: (STRING attribute)                                             */
+/* INPUT:  (STRING attribute)                                            */
 /* OUTPUT: CQI_DATA_INT                                                  */
 /* returns the size of <attribute>:                                      */
 /*     number of tokens        (positional)                              */
@@ -219,64 +223,64 @@
 /*     number of alignments    (alignment)                               */
 
 #define CQI_CL_LEXICON_SIZE 0x1402
-/* INPUT: (STRING attribute)                                             */
+/* INPUT:  (STRING attribute)                                            */
 /* OUTPUT: CQI_DATA_INT                                                  */
 /* returns the number of entries in the lexicon of a positional attribute; */
 /* valid lexicon IDs range from 0 .. (lexicon_size - 1)                  */
 
 #define CQI_CL_DROP_ATTRIBUTE 0x1403
-/* INPUT: (STRING attribute)                                             */
+/* INPUT:  (STRING attribute)                                            */
 /* OUTPUT: CQI_STATUS_OK                                                 */
 /* unload attribute from memory                                          */
 
 #define CQI_CL_STR2ID 0x1404
-/* INPUT: (STRING attribute, STRING_LIST strings)                        */
+/* INPUT:  (STRING attribute, STRING_LIST strings)                       */
 /* OUTPUT: CQI_DATA_INT_LIST                                             */
 /* returns -1 for every string in <strings> that is not found in the lexicon */
 
 #define CQI_CL_ID2STR 0x1405
-/* INPUT: (STRING attribute, INT_LIST id)                                */
+/* INPUT:  (STRING attribute, INT_LIST id)                               */
 /* OUTPUT: CQI_DATA_STRING_LIST                                          */
 /* returns "" for every ID in <id> that is out of range                  */
 
 #define CQI_CL_ID2FREQ 0x1406
-/* INPUT: (STRING attribute, INT_LIST id)                                */
+/* INPUT:  (STRING attribute, INT_LIST id)                               */
 /* OUTPUT: CQI_DATA_INT_LIST                                             */
 /* returns 0 for every ID in <id> that is out of range                   */
 
 #define CQI_CL_CPOS2ID 0x1407
-/* INPUT: (STRING attribute, INT_LIST cpos)                              */
+/* INPUT:  (STRING attribute, INT_LIST cpos)                             */
 /* OUTPUT: CQI_DATA_INT_LIST                                             */
 /* returns -1 for every corpus position in <cpos> that is out of range   */
 
 #define CQI_CL_CPOS2STR 0x1408
-/* INPUT: (STRING attribute, INT_LIST cpos)                              */
+/* INPUT:  (STRING attribute, INT_LIST cpos)                             */
 /* OUTPUT: CQI_DATA_STRING_LIST                                          */
 /* returns "" for every corpus position in <cpos> that is out of range   */
 
 #define CQI_CL_CPOS2STRUC 0x1409
-/* INPUT: (STRING attribute, INT_LIST cpos)                              */
+/* INPUT:  (STRING attribute, INT_LIST cpos)                             */
 /* OUTPUT: CQI_DATA_INT_LIST                                             */
 /* returns -1 for every corpus position not inside a structure region    */
 
 /* temporary addition for the Euralex2000 tutorial, but should probably be included in CQi specs */
 #define CQI_CL_CPOS2LBOUND 0x1420
-/* INPUT: (STRING attribute, INT_LIST cpos)                              */
+/* INPUT:  (STRING attribute, INT_LIST cpos)                             */
 /* OUTPUT: CQI_DATA_INT_LIST                                             */
 /* returns left boundary of s-attribute region enclosing cpos, -1 if not in region */
 
 #define CQI_CL_CPOS2RBOUND 0x1421
-/* INPUT: (STRING attribute, INT_LIST cpos)                              */
+/* INPUT:  (STRING attribute, INT_LIST cpos)                             */
 /* OUTPUT: CQI_DATA_INT_LIST                                             */
 /* returns right boundary of s-attribute region enclosing cpos, -1 if not in region */
 
 #define CQI_CL_CPOS2ALG 0x140A
-/* INPUT: (STRING attribute, INT_LIST cpos)                              */
+/* INPUT:  (STRING attribute, INT_LIST cpos)                             */
 /* OUTPUT: CQI_DATA_INT_LIST                                             */
 /* returns -1 for every corpus position not inside an alignment          */
 
 #define CQI_CL_STRUC2STR 0x140B
-/* INPUT: (STRING attribute, INT_LIST strucs)                            */
+/* INPUT:  (STRING attribute, INT_LIST strucs)                           */
 /* OUTPUT: CQI_DATA_STRING_LIST                                          */
 /* returns annotated string values of structure regions in <strucs>; "" if out of range */
 /* check CQI_CORPUS_STRUCTURAL_ATTRIBUTE_HAS_VALUES(<attribute>) first   */
@@ -287,7 +291,7 @@
 /* returns all corpus positions where the given token occurs             */
 
 #define CQI_CL_IDLIST2CPOS 0x140D
-/* INPUT: (STRING attribute, INT_LIST id_list)                           */
+/* INPUT:  (STRING attribute, INT_LIST id_list)                          */
 /* OUTPUT: CQI_DATA_INT_LIST                                             */
 /* returns all corpus positions where one of the tokens in <id_list>     */
 /* occurs; the returned list is sorted as a whole, not per token id      */
@@ -313,37 +317,37 @@
 #define CQI_CQP 0x15
 
 #define CQI_CQP_QUERY 0x1501
-/* INPUT: (STRING mother_corpus, STRING subcorpus_name, STRING query)    */
+/* INPUT:  (STRING mother_corpus, STRING subcorpus_name, STRING query)   */
 /* OUTPUT: CQI_STATUS_OK                                                 */
 /* <query> must include the ';' character terminating the query.         */
 
 #define CQI_CQP_LIST_SUBCORPORA 0x1502
-/* INPUT: (STRING corpus)                                                */
+/* INPUT:  (STRING corpus)                                               */
 /* OUTPUT: CQI_DATA_STRING_LIST                                          */
 
 #define CQI_CQP_SUBCORPUS_SIZE 0x1503
-/* INPUT: (STRING subcorpus)                                             */
+/* INPUT:  (STRING subcorpus)                                            */
 /* OUTPUT: CQI_DATA_INT                                                  */
 
 #define CQI_CQP_SUBCORPUS_HAS_FIELD 0x1504
-/* INPUT: (STRING subcorpus, BYTE field)                                 */
+/* INPUT:  (STRING subcorpus, BYTE field)                                */
 /* OUTPUT: CQI_DATA_BOOL                                                 */
 
 #define CQI_CQP_DUMP_SUBCORPUS 0x1505
-/* INPUT: (STRING subcorpus, BYTE field, INT first, INT last)            */
+/* INPUT:  (STRING subcorpus, BYTE field, INT first, INT last)           */
 /* OUTPUT: CQI_DATA_INT_LIST                                             */
 /* Dump the values of <field> for match ranges <first> .. <last>         */
 /* in <subcorpus>. <field> is one of the CQI_CONST_FIELD_* constants.    */
 
 #define CQI_CQP_DROP_SUBCORPUS 0x1509
-/* INPUT: (STRING subcorpus)                                             */
+/* INPUT:  (STRING subcorpus)                                            */
 /* OUTPUT: CQI_STATUS_OK                                                 */
 /* delete a subcorpus from memory                                        */
 
 /* The following two functions are temporarily included for the Euralex 2000 tutorial demo */
 /* frequency distribution of single tokens                               */
 #define CQI_CQP_FDIST_1 0x1510
-/* INPUT: (STRING subcorpus, INT cutoff, BYTE field, STRING attribute)   */
+/* INPUT:  (STRING subcorpus, INT cutoff, BYTE field, STRING attribute)  */
 /* OUTPUT: CQI_DATA_INT_LIST                                             */
 /* returns <n> (id, frequency) pairs flattened into a list of size 2*<n> */
 /* field is one of CQI_CONST_FIELD_MATCH, CQI_CONST_FIELD_TARGET, CQI_CONST_FIELD_KEYWORD */
@@ -351,7 +355,7 @@
 
 /* frequency distribution of pairs of tokens                             */
 #define CQI_CQP_FDIST_2 0x1511
-/* INPUT: (STRING subcorpus, INT cutoff, BYTE field1, STRING attribute1, BYTE field2, STRING attribute2) */
+/* INPUT:  (STRING subcorpus, INT cutoff, BYTE field1, STRING attribute1, BYTE field2, STRING attribute2) */
 /* OUTPUT: CQI_DATA_INT_LIST                                             */
 /* returns <n> (id1, id2, frequency) pairs flattened into a list of size 3*<n> */
 /* NB: triples are sorted by frequency desc.                             */
@@ -391,7 +395,7 @@
 /* The following constants are provided for backward compatibility       */
 /* with traditional CQP field names & while the generalised target       */
 /* concept isn't yet implemented in the CQPserver.                       */
-#define CQI_CONST_FIELD_TARGET 0x00
+#define CQI_CONST_FIELD_TARGET  0x00
 #define CQI_CONST_FIELD_KEYWORD 0x09
 
 
