@@ -40,7 +40,7 @@ int accept_connection(int port);
 
 /* CQi network primitives (no auto-flush) */
 int cqi_flush(void);
-int cqi_send_byte(int n);
+int cqi_send_byte(int n, int nosnoop);
 int cqi_send_word(int n);
 int cqi_send_int(int n);
 int cqi_send_string(char *str);	/* NULL pointer sends "" */
@@ -49,7 +49,7 @@ int cqi_send_int_list(int *list, int length);
 int cqi_send_string_list(char **list, int length);
 
 /* send a CQi command (auto-flush) [exit on error] */
-void cqi_command(int command);	/* simple command (no args) */
+void cqi_command(int command);        /* simple command (no args) */
 void cqi_data_byte(int n);
 void cqi_data_bool(int n);
 void cqi_data_int(int n);
@@ -63,7 +63,7 @@ void cqi_data_int_int_int_int(int n1, int n2, int n3, int n4);
 
 /* receive data from client */
 int cqi_recv_bytes(cqi_byte *buf, int n); /* receive exactly n bytes */
-int cqi_recv_byte(void);	/* receive 1 byte from client (returns EOF on error*/
+int cqi_recv_byte(void);             /* receive 1 byte from client (returns EOF on error*/
 
 /* advanced functions which read chunks of data [exit on error] */
 int cqi_read_byte(void); 

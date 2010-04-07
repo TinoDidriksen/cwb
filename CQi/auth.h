@@ -31,7 +31,7 @@ void add_grant_to_last_user(char *corpus);
 /** returns true if host is in list of allowed hosts */
 int check_host(struct in_addr host);
 
-/** returns true if (user, passwd) pair is in list */
+/** returns true if (user, passwd) pair is in list of allowed users */
 int authenticate_user(char *user, char *passwd);
 
 /** returns true if user may access corpus */

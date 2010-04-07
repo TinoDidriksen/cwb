@@ -35,14 +35,12 @@
 char *user = "", *passwd = "";
 
 
-/*
- *
- *  CQi server welcome & copyright message
- *
+/**
+ *  Prints the CQi server welcome & copyright message
  */
-
 void 
-cqiserver_welcome(void) {
+cqiserver_welcome(void)
+{
   printf("** CQPserver v" VERSION "\n");
   printf("** implementing version %d.%d of the CQi\n", CQI_MAJOR_VERSION, CQI_MINOR_VERSION);
   printf("\n");
@@ -56,19 +54,22 @@ cqiserver_welcome(void) {
  */
 
 void 
-unknown_command_error(int cmd) {
+unknown_command_error(int cmd)
+{
   fprintf(stderr, "CQPserver: unknown CQi command 0x%04X.\n", cmd);
   exit(1);
 }
 
 void 
-wrong_command_error(int cmd) {
+wrong_command_error(int cmd)
+{
   fprintf(stderr, "CQPserver: command 0x%04X not allowed in this context.\n", cmd);
   exit(1);
 }
 
 void
-internal_error(char *function, char *reason) {
+internal_error(char *function, char *reason)
+{
   fprintf(stderr, "CQPserver: internal error in %s()\n", function);
   fprintf(stderr, "CQPserver: ''%s''\n", reason);
   exit(1);
@@ -83,7 +84,8 @@ internal_error(char *function, char *reason) {
 
 /* send CQI_CL_ERROR_* according to the CL cderrno variable */
 void
-send_cl_error(void) {
+send_cl_error(void)
+{
   int cmd;
   
   switch (cderrno) {
@@ -125,12 +127,13 @@ send_cl_error(void) {
 
 /*
  *
- *  CQi commands  (removed from interpreter loop)
+ *  CQi commands  (called from interpreter loop)
  *
  */
 
 void
-do_cqi_corpus_list_corpora(void) {
+do_cqi_corpus_list_corpora(void)
+{
   CorpusList *cl;
   int n = 0;
   
@@ -151,7 +154,8 @@ do_cqi_corpus_list_corpora(void) {
 }
 
 void 
-do_cqi_corpus_charset(void) {
+do_cqi_corpus_charset(void)
+{
   char *c;
 
   c = cqi_read_string();
@@ -163,7 +167,8 @@ do_cqi_corpus_charset(void) {
 }
 
 void 
-do_cqi_corpus_properties(void) {
+do_cqi_corpus_properties(void)
+{
   char *c;
 
   c = cqi_read_string();
@@ -176,7 +181,8 @@ do_cqi_corpus_properties(void) {
 
 /* this part sends attributes of a certain type as a STRING[] to the client */
 void
-send_cqi_corpus_attributes(Corpus *c, int type) {
+send_cqi_corpus_attributes(Corpus *c, int type)
+{
   Attribute *a;
   int len;
   
@@ -194,7 +200,8 @@ send_cqi_corpus_attributes(Corpus *c, int type) {
 }
 
 void
-do_cqi_corpus_attributes(int type) {
+do_cqi_corpus_attributes(int type)
+{
   char *c, *typename;
   CorpusList *cl;
 
@@ -227,7 +234,8 @@ do_cqi_corpus_attributes(int type) {
 }
 
 void
-do_cqi_corpus_full_name(void) {
+do_cqi_corpus_full_name(void)
+{
   char *c;
   CorpusList *cl;
 
@@ -263,7 +271,8 @@ do_cqi_corpus_structural_attribute_has_values(void) {
 }
 
 void
-do_cqi_cl_attribute_size(void) {
+do_cqi_cl_attribute_size(void)
+{
   char *a;
   Attribute *attribute;
   int size;
@@ -314,7 +323,8 @@ do_cqi_cl_attribute_size(void) {
 }
 
 void
-do_cqi_cl_lexicon_size(void) {
+do_cqi_cl_lexicon_size(void)
+{
   char *a;
   Attribute *attribute;
   int size;
@@ -339,7 +349,8 @@ do_cqi_cl_lexicon_size(void) {
 }
 
 void
-do_cqi_cl_drop_attribute(void) {
+do_cqi_cl_drop_attribute(void)
+{
   if (server_debug)
     fprintf(stderr, "CQi: CQI_CL_DROP_ATTRIBUTE()  --  not implemented\n");
  cqi_general_error("CQI_CL_DROP_ATTRIBUTE not implemented."); 
@@ -348,7 +359,8 @@ do_cqi_cl_drop_attribute(void) {
 /* one might wish to add extensive error checking to all the CL functions,
    but that will need a LOT of code! */
 void
-do_cqi_cl_str2id(void) {
+do_cqi_cl_str2id(void)
+{
   char **strlist;
   int len, i, id;
   char *a;
@@ -385,7 +397,8 @@ do_cqi_cl_str2id(void) {
 }
 
 void
-do_cqi_cl_id2str(void) {
+do_cqi_cl_id2str(void)
+{
   int *idlist;
   int len, i;
   char *a, *str;
@@ -420,7 +433,8 @@ do_cqi_cl_id2str(void) {
 }
 
 void
-do_cqi_cl_id2freq(void) {
+do_cqi_cl_id2freq(void)
+{
   int *idlist;
   int len, i, f;
   char *a;
@@ -457,7 +471,8 @@ do_cqi_cl_id2freq(void) {
 }
 
 void
-do_cqi_cl_cpos2str(void) {
+do_cqi_cl_cpos2str(void)
+{
   int *cposlist;
   int len, i;
   char *a, *str;
@@ -492,7 +507,8 @@ do_cqi_cl_cpos2str(void) {
 }
 
 void
-do_cqi_cl_cpos2id(void) {
+do_cqi_cl_cpos2id(void)
+{
   int *cposlist;
   int len, i, id;
   char *a;
@@ -529,7 +545,8 @@ do_cqi_cl_cpos2id(void) {
 }
 
 void
-do_cqi_cl_cpos2struc(void) {
+do_cqi_cl_cpos2struc(void)
+{
   int *cposlist;
   int len, i, struc;
   char *a;
@@ -569,7 +586,8 @@ do_cqi_cl_cpos2struc(void) {
    and should be improved with a caching model to avoid the frequent cpos2struc lookup;
    perhaps make them CL functions with an intelligent caching algorithm? */
 void
-do_cqi_cl_cpos2lbound(void) {
+do_cqi_cl_cpos2lbound(void)
+{
   int *cposlist;
   int len, i, struc, lb, rb;
   char *a;
@@ -611,7 +629,8 @@ do_cqi_cl_cpos2lbound(void) {
 }
 
 void
-do_cqi_cl_cpos2rbound(void) {
+do_cqi_cl_cpos2rbound(void)
+{
   int *cposlist;
   int len, i, struc, lb, rb;
   char *a;
@@ -653,7 +672,8 @@ do_cqi_cl_cpos2rbound(void) {
 }
 
 void
-do_cqi_cl_cpos2alg(void) {
+do_cqi_cl_cpos2alg(void)
+{
   int *cposlist;
   int len, i, alg;
   char *a;
@@ -690,7 +710,8 @@ do_cqi_cl_cpos2alg(void) {
 }
 
 void
-do_cqi_cl_struc2str(void) {
+do_cqi_cl_struc2str(void)
+{
   int *struclist;
   int len, i;
   char *a, *str;
@@ -725,7 +746,8 @@ do_cqi_cl_struc2str(void) {
 }
 
 void
-do_cqi_cl_id2cpos(void) {
+do_cqi_cl_id2cpos(void)
+{
   int *cposlist;
   int len, id;
   char *a;
@@ -752,7 +774,8 @@ do_cqi_cl_id2cpos(void) {
 }
 
 void
-do_cqi_cl_idlist2cpos(void) {
+do_cqi_cl_idlist2cpos(void)
+{
   int *idlist, *cposlist;
   int i, len, cposlen;
   char *a;
@@ -786,7 +809,8 @@ do_cqi_cl_idlist2cpos(void) {
 }
 
 void
-do_cqi_cl_regex2id(void) {
+do_cqi_cl_regex2id(void)
+{
   int *idlist;
   int len;
   char *a, *regex;
@@ -818,7 +842,8 @@ do_cqi_cl_regex2id(void) {
 }
 
 void
-do_cqi_cl_struc2cpos(void) {
+do_cqi_cl_struc2cpos(void)
+{
   int struc, start, end;
   char *a;
   Attribute *attribute;
@@ -841,7 +866,8 @@ do_cqi_cl_struc2cpos(void) {
 }
 
 void
-do_cqi_cl_alg2cpos(void) {
+do_cqi_cl_alg2cpos(void)
+{
   int alg, s1, s2, t1, t2;
   char *a;
   Attribute *attribute;
@@ -864,7 +890,8 @@ do_cqi_cl_alg2cpos(void) {
 }
 
 void
-do_cqi_cqp_list_subcorpora(void) {
+do_cqi_cqp_list_subcorpora(void)
+{
   char *corpus;
   CorpusList *cl, *mother;
   int n = 0;
@@ -898,7 +925,8 @@ do_cqi_cqp_list_subcorpora(void) {
 /* multiple semicolons will produce an error to occur -- so we */
 /* have to check and add a semicolon if necessary. */
 int
-query_has_semicolon(char *query) {
+query_has_semicolon(char *query)
+{
   char *p;
 
   if (query == NULL || *query == 0)
@@ -910,7 +938,8 @@ query_has_semicolon(char *query) {
 }
 
 void 
-do_cqi_cqp_query(void) {
+do_cqi_cqp_query(void)
+{
   char *child, *mother, *query, *c, *sc;
   
   mother = cqi_read_string();
@@ -968,7 +997,8 @@ do_cqi_cqp_query(void) {
 }
 
 void
-do_cqi_cqp_subcorpus_size(void) {
+do_cqi_cqp_subcorpus_size(void)
+{
   char *subcorpus;
   CorpusList *cl;
 
@@ -1002,7 +1032,8 @@ cqi_field_name(cqi_byte field) {
 }
 
 void
-do_cqi_cqp_subcorpus_has_field(void) {
+do_cqi_cqp_subcorpus_has_field(void)
+{
   char *subcorpus;
   CorpusList *cl;
   cqi_byte field;
@@ -1057,13 +1088,15 @@ do_cqi_cqp_subcorpus_has_field(void) {
 
 /* CQI_CQP_DUMP_SUBCORPUS returns list of (-1) values if requested field is not set */
 void
-cqi_send_minus_one_list(int n) {
+cqi_send_minus_one_list(int n)
+{
   while (n--) 
     cqi_send_int(-1);
 }
 
 void
-do_cqi_cqp_dump_subcorpus(void) {
+do_cqi_cqp_dump_subcorpus(void)
+{
   char *subcorpus;
   CorpusList *cl;
   cqi_byte field;
@@ -1129,7 +1162,8 @@ do_cqi_cqp_dump_subcorpus(void) {
 }
 
 void
-do_cqi_cqp_drop_subcorpus(void) {
+do_cqi_cqp_drop_subcorpus(void)
+{
   char *subcorpus;
   CorpusList *cl;
   char *c, *sc;
@@ -1161,7 +1195,8 @@ do_cqi_cqp_drop_subcorpus(void) {
 
 /* temporary functions for CQI_CQP_FDIST_1() and CQI_CQP_FDIST_2() */
 void
-do_cqi_cqp_fdist_1(void) {
+do_cqi_cqp_fdist_1(void)
+{
   char *subcorpus;
   CorpusList *cl;
   int cutoff;
@@ -1223,7 +1258,8 @@ do_cqi_cqp_fdist_1(void) {
 
 
 void
-do_cqi_cqp_fdist_2(void) {
+do_cqi_cqp_fdist_2(void)
+{
   char *subcorpus;
   CorpusList *cl;
   int cutoff;
@@ -1303,7 +1339,8 @@ do_cqi_cqp_fdist_2(void) {
  */
 
 void 
-interpreter(void) {
+interpreter(void)
+{
   int cmd;
   int cmd_group;
 
@@ -1495,16 +1532,21 @@ interpreter(void) {
       
     default:
       unknown_command_error(cmd);
-    }
+
+    } /* end outer switch */
     
-  }
+  } /* end while 42 */
 
 }
 
 
 
-
-int main(int argc, char *argv[]) {
+/**
+ * Main function for the cqpserver app
+ */
+int
+main(int argc, char *argv[])
+{
   int cmd;
 
   which_app = cqpserver;
@@ -1545,7 +1587,7 @@ int main(int argc, char *argv[]) {
 
   /* check password here (always required !!) */
   if (!authenticate_user(user, passwd)) {
-    printf("Wrong password. Connection refused.\n");
+    printf("Wrong username or password. Connection refused.\n");
     cqi_command(CQI_ERROR_CONNECT_REFUSED);
   }
   else {
@@ -1556,12 +1598,12 @@ int main(int argc, char *argv[]) {
 
     /* check which corpora the user is granted access to */
     {
-    CorpusList *cl = FirstCorpusFromList();
-    while (cl != NULL) {
-      if (!check_grant(user, cl->name))
-        dropcorpus(cl);
-      cl = NextCorpusFromList(cl);
-    }
+      CorpusList *cl = FirstCorpusFromList();
+      while (cl != NULL) {
+        if (!check_grant(user, cl->name))
+          dropcorpus(cl);
+        cl = NextCorpusFromList(cl);
+      }
     }
 
     /* start command interpreter loop */

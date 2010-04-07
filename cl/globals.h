@@ -59,7 +59,7 @@ extern size_t cl_memory_limit;
 /**
  * size in bytes of string buffers capable of holding absolute paths
  * of temporary filenames; needs to be big enough for TEMPDIR_PATH plus
- * the result of a call to tempnam(), at least.
+ * the result of a call to tempnam() plus the length of a process ID, at least.
  */
 #define TEMP_FILENAME_BUFSIZE 128
 

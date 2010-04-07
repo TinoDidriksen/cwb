@@ -33,10 +33,10 @@ echo "$config_file" > config.mk
 make realclean
 make depend
 make cl
-make editline
 make mingw-libgnurx-2.5.1
 make utils
 make cqp
 
+# and finally....
 
 make release

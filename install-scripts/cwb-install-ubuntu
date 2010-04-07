@@ -11,11 +11,12 @@ then
 	echo "This script must be run as root."
 	echo "Please try again: sudo cwb-install-ubuntu"
 	echo "Thanks!"
+	exit
 fi
 
 apt-get install autoconf bison flex gcc libc6-dev libncurses5-dev make
 
-./cwb-config-basic
+./install-scripts/cwb-config-basic
 
 make clean
 make depend

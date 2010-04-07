@@ -42,7 +42,7 @@ enum _which_app { undef, cqp, cqpcl, cqpserver} which_app;
  * [ insecure and inhibit_activation are kept for compatibility; inhibit_interactives has been removed ]
  */
 int insecure;                        /* != 0 means we should not allow pipes etc. (cgi) */
-int inhibit_activation;                /* inhibit corpus activations in parser */
+int inhibit_activation;              /* inhibit corpus activations in parser */
 
 
 /* debugging options */
@@ -87,7 +87,7 @@ int subquery;                     /**< Query option: use auto-subquery mode */
 char *def_unbr_attr;              /**< Query option: unbracketed attribute (attribute matched by "..." patterns) */
 int query_optimize;               /**< Query option: use query optimisation (untested and expensive optimisations) */
 
-/* matching strategy */
+/** matching strategy */
 enum _matching_strategy { traditional, shortest_match, standard_match, longest_match } matching_strategy;
 char *matching_strategy_name;     /**< The matching strategy option: which is implemented as a vstring option with side-effect */
 int strict_regions;               /**< boolean: expression between {s} ... {/s} tags is constrained to single {s} region  */
@@ -98,7 +98,7 @@ int highlighting;                 /**< UI option: highlight match / fields in te
 int paging;                       /**< UI option: activate/deactivate paging of query results */
 char *pager;                      /**< UI option: pager program to used for paged kwic display */
 char *tested_pager;               /**< UI option: CQP tests if selected pager works & will fall back to "more" if it doesn't */
-char *less_charset_variable;      /**< UI option: name of environment variable for controlling less charset (usu. LESSCHARSET) */
+char *less_charset_variable;      /**< UI option: name of environment variable for controlling less charset (usually LESSCHARSET) */
 int use_colour;                   /**< UI option: use colours for terminal output (experimental) */
 int progress_bar;                 /**< UI option: show progress bar during query execution */
 int pretty_print;                 /**< UI option: pretty-print most of CQP's output (turn off to simplify parsing of CQP output) */
@@ -142,7 +142,7 @@ char *query_string;               /**< query specified on command line (-E {stri
 
 
 /**
- * Child process mode (used by Perl interface (CQP.pm))
+ * Child process mode (used by Perl interface (CQP.pm) and by CQPweb (cqp.inc.php))
  *  - don't automatically read in user's .cqprc and .cqpmacros
  *  - print CQP version on startup
  *  - now: output blank line after each command -> SHOULD BE CHANGED

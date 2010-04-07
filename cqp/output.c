@@ -108,10 +108,10 @@ print_corpus_info_header(CorpusList *cl,
 /* ---------------------------------------------------------------------- */
 
 /**
- * Creates and opens for text-mode write a temporary file.
+ * Creates, and opens for text-mode write, a temporary file.
  *
- * Temporary files have the prefix "cqpt." and are placed in the directory
- * defined as TEMPDIR_PATH.
+ * Temporary files have the prefix "$PID.cqpt." (where $PID = the process ID of this copy of CQP)
+ * and are placed in the directory defined as TEMPDIR_PATH.
  *
  * @see                   TEMPDIR_PATH
  * @see                   TEMP_FILENAME_BUFSIZE
@@ -124,13 +124,27 @@ FILE *
 open_temporary_file(char *tmp_name_buffer)
 {
   char *intermed_buffer;
-  FILE *fd;
+  FILE *fd = NULL;
 
   assert((tmp_name_buffer != NULL) && "Invalid NULL argument in open_temporary_file().");
 
-  intermed_buffer = tempnam(TEMPDIR_PATH, "cqpt.");
-  strcpy(tmp_name_buffer, intermed_buffer);
-  cl_free(intermed_buffer);
+  /* note there is a potential problem using tempnam rather than tmpfile () or mkstemp () if there
+   * is more than one copy of cqp running and they both call this function at the same time.
+   * A race condition could result where copy#2 gets the same name as copy#1 by calling tempnam()
+   * after copy#1 calls it but before copy#1 opens the file.
+   *
+   * For this reason, the process ID is used to make the filename unique to this process.
+   * But we then need to try to open the file for read to check whether it exists (because
+   * tempnam() doesn't guarantee that the filename will still not exist once we add an
+   * arbitrary numerical prefix!)
+   */
+  do {
+    if (fd)
+      fclose(fd);
+    intermed_buffer = tempnam(TEMPDIR_PATH, "cqpt."); /* we need to catch the pointer in order to free it below */
+    sprintf(tmp_name_buffer, "%d.%s", (int)getpid(), intermed_buffer);
+    cl_free(intermed_buffer);
+  } while (NULL != (fd = fopen(tmp_name_buffer, "r")));
 
   fd = fopen(tmp_name_buffer, "w");
 

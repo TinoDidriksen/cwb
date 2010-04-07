@@ -58,41 +58,74 @@
 #define MSG_WAITALL 0
 #endif
 
+/*
+ *
+ * Global variables for CQPSERVER
+ *
+ */
 
-int sockfd, connfd;
-FILE *conn_out;                 /**< Connection out: buffered output (don't forget to flush()) */
+int sockfd;                       /**< Connection in:  file-descriptor integer */
+int connfd;                       /**< Connection out: file-descriptor integer */
+FILE *conn_out;                   /**< Connection out: stream for buffered output (don't forget to flush()) */
 struct sockaddr_in my_addr, client_addr;
 struct hostent *remote_host;
 char *remote_address;
-cqi_byte netbuf[NETBUFSIZE];    /* do we need it at all? */
-int bytes;                      /* always used for data held in netbuf[] */
+cqi_byte netbuf[NETBUFSIZE];      /* do we need it at all? */
+int bytes;                        /* always used for data held in netbuf[] */
 
 
-int cqi_errno = CQI_STATUS_OK;  /* CQi last error */
-char cqi_error_string[GENERAL_ERROR_SIZE] = "No error.";
+int cqi_errno = CQI_STATUS_OK;    /**< CQi last error */
+char cqi_error_string[GENERAL_ERROR_SIZE] = "No error.";  /**< String describing the last CQi error.
+                                                           *   This can be queried by the client. */
 
 /*
  *
  *  Error messages
  *
  */
+/* TODO: better names might be cqi_error_send, cqi_error_recv, cqi_error_internal */
 
+/**
+ * Prints an error message to cqpserver's STDERR and then exits.
+ *
+ * This function reports an error in SENDING data to the outgoing connection.
+ *
+ * @param function  String containing the name of the function where the error was raised.
+ */
 void 
-cqi_send_error(char *function) {
+cqi_send_error(char *function)
+{
   fprintf(stderr, "ERROR CQi data send failure in function\n");
   fprintf(stderr, "ERROR %s() <server.c>\n", function);
   exit(1);
 }
 
+/**
+ * Prints an error message to cqpserver's STDERR and then exits.
+ *
+ * This function reports an error in READING data from the incoming connection.
+ *
+ * @param function  String containing the name of the function where the error was raised.
+ */
 void 
-cqi_recv_error(char *function) {
+cqi_recv_error(char *function)
+{
   fprintf(stderr, "ERROR CQi data recv failure in function\n");
   fprintf(stderr, "ERROR %s() <server.c>\n", function);
   exit(1);
 }
 
+/**
+ * Prints an error message to cqpserver's STDERR and then exits.
+ *
+ * This function reports a (miscellanrous) internal error in a cqpserver function.
+ *
+ * @param function  String containing the name of the function where the error was raised.
+ * @param cause     String containing a description of what caused the error.
+ */
 void
-cqi_internal_error(char *function, char *cause) {
+cqi_internal_error(char *function, char *cause)
+{
   fprintf(stderr, "ERROR Internal error in function\n");
   fprintf(stderr, "ERROR %s() <server.c>\n", function);
   fprintf(stderr, "ERROR ''%s''\n", cause);
@@ -100,12 +133,23 @@ cqi_internal_error(char *function, char *cause) {
 }
 
 
-/*
+/**
+ * General error reporting function.
  *
- *  General error reporting
+ * Note that unlike other CQi error functions, this function sends an error
+ * message to the outgoing connection, rather than printing to the server's
+ * STDERR. Also note that the program doesn't exit!
  *
+ * The error message is placed into the global variable cqi_error_string,
+ * whence it can be accessed by the client if the CQI_CTRL_LAST_GENERAL_ERROR
+ * is sent to the server.
+ *
+ * TODO a better name would be cqi_error_general
+ * @param errstring  String containing the error message.
  */
-void cqi_general_error(char *errstring) {
+void
+cqi_general_error(char *errstring)
+{
   if (strlen(errstring) >= GENERAL_ERROR_SIZE) 
     cqi_internal_error("cqi_general_error", "Error message too long.");
   strcpy(cqi_error_string, errstring);
@@ -113,14 +157,31 @@ void cqi_general_error(char *errstring) {
 }
 
 
-/*
- *
- *  Init TCP/IP connection
- *
- */
 
+/**
+ * Wait for, and then process, an attempt by a client to initiate a connection
+ * to cqpserver via TCP/IP.
+ *
+ * Note that this function may or may not fork the cqpserver process.
+ *
+ * If forking happens, then the child handles the connection, whereas the parent carries
+ * on waiting for further connections.
+ *
+ * On Windows, forking never happens (since Windows doesn't support it).
+ *
+ * On *nix, forking happens UNLESS the global private_server is true. (Actually, if
+ * private_server is true, then forking still happens, but the parent process immeidately
+ * exits.)
+ *
+ * TODO: a better name would be server_accept_connection or somesuch...
+ *
+ * @param port  The integer identifier of the port to listen on.
+ * @return      A > 0 value (actually the socket ID of the incoming connection)
+ *              if all is OK; otherwise -1.
+ */
 int 
-accept_connection(int port) {
+accept_connection(int port)
+{
   const int on = 1;
   socklen_t sin_size = sizeof(struct sockaddr_in);
 #ifndef __MINGW__
@@ -142,6 +203,7 @@ accept_connection(int port) {
     fprintf(stderr, "CQi: Opening socket and binding to port %d\n", port);
 
 #ifdef __MINGW__
+  /* startup the use of the Winsock DLL */
   WORD wVersionRequested;
   WSADATA wsaData;
   int err;
@@ -153,7 +215,7 @@ accept_connection(int port) {
     sprintf(buffer,"ERROR WSAStartup failed with error: %d\n",err);
     perror(buffer);
     return -1;
-    }
+  }
 #endif
 
   sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -271,7 +333,7 @@ accept_connection(int port) {
     printf("Accepting no more connections (private server).\n");
     break;
 #endif
-  }
+  }/* endwhile 42 */
 
   /* this is the child serving the new CQi connection */
   if (server_debug) 
@@ -287,6 +349,7 @@ accept_connection(int port) {
   }
 
 #ifndef __MINGW__
+  /* create a buffered stream to the outgoing connection */
   conn_out = fdopen(connfd, "w");
   if (conn_out == NULL) {
     perror("ERROR Can't switch CQi connection to buffered output");
@@ -345,20 +408,39 @@ cqi_flush(void)
  *
  * This function should be called via one of the cqi_data_* functions
  * and not on its own.
+ *
+ * This is the fundamental "sending" function, and the only one that calls the underlying
+ * OS-specific file stream/socket functions.
+ *
+ * @param n        The byte to send. NOTE that as the parameter is an int, numbers bigger than
+ *                 0xff can be passed. BUT all content except the lowest-order 8-bits are discarded
+ *                 (0xff is used as a mask with bitwise-and).
+ * @param nosnoop  Boolean: if true, snoop functionality is overridden (to allow for non-repetition
+ *                 of messages when called from a function that has already printed a message)
  */
 int 
-cqi_send_byte(int n)
+cqi_send_byte(int n, int nosnoop)
 {
-  if (snoop) {
+#ifdef __MINGW__
+  unsigned char prep;
+  prep = (unsigned char) 0xff & n;
+#endif
+
+  if (snoop && !nosnoop) {
     fprintf(stderr, "CQi SEND BYTE   %02X        [= %d]\n", n, n);
   }
+
+  /* note that the actual sending is wrapped in an "if" whose content differs between OSes */
   if (
+#ifndef __MINGW__
       (EOF == putc(0xff & n, conn_out))
-      )
-    {
-      perror("ERROR cqi_send_byte()");
-      return 0;
-    }
+#else
+      (1 != send(connfd, &prep, 1, MSG_WAITALL))
+#endif
+      )  {
+    perror("ERROR cqi_send_byte()");
+    return 0;
+  }
   else {
     return 1;
   }
@@ -380,8 +462,9 @@ cqi_send_word(int n)
     fprintf(stderr, "CQi SEND WORD   %04X      [= %d]\n", n, n);
   }
   if (
-      (EOF == putc(0xff & (n >> 8), conn_out)) ||
-      (EOF == putc(0xff & n, conn_out))
+      /* exploit the fact that cqi_send_byte() only uses the lowest 8 bytes of its argument */
+      !(cqi_send_byte(n>>8, 1)) ||
+      !(cqi_send_byte(n, 1))
       )
     {
       perror("ERROR cqi_send_word()");
@@ -409,10 +492,11 @@ cqi_send_int(int n)
     fprintf(stderr, "CQi SEND INT    %08X  [= %d]\n", n, n);
   }
   if (
-      (EOF == putc(0xff & (n >> 24), conn_out)) ||
-      (EOF == putc(0xff & (n >> 16), conn_out)) ||
-      (EOF == putc(0xff & (n >> 8), conn_out)) ||
-      (EOF == putc(0xff & n, conn_out))
+      /* exploit the fact that cqi_send_byte() only uses the lowest 8 bytes of its argument */
+      !(cqi_send_byte(n>>24, 1)) ||
+      !(cqi_send_byte(n>>16, 1)) ||
+      !(cqi_send_byte(n>>8, 1)) ||
+      !(cqi_send_byte(n, 1))
       )
     {
       perror("ERROR cqi_send_int()");
@@ -458,14 +542,16 @@ cqi_send_string(char *str)
   }
   if (snoop) {
     fprintf(stderr, "CQi SEND CHAR[] '%s'\n", str);
+ }
+  /* we can afford to mangle len and str because we're at the end of the function */
+  while (--len >= 0) {
+    if (!cqi_send_byte(*str++, 1)) {
+      perror("ERROR cqi_send_string()");
+      return 0;
+    }
   }
-  if (len != fprintf(conn_out, "%s", str)) {
-    perror("ERROR cqi_send_string()");
-    return 0;
-  }    
-  else {
-    return 1;
-  }
+
+  return 1;
 }
 
 
@@ -488,7 +574,7 @@ cqi_send_byte_list(cqi_byte *list, int l)
     return 0;
   }
   while (--l >= 0) {
-    if (!cqi_send_byte(*list++)) {
+    if (!cqi_send_byte(*list++, 0)) {
       perror("ERROR cqi_send_byte_list()");
       return 0;
     }
@@ -568,7 +654,7 @@ cqi_command(int command)
 void 
 cqi_data_byte(int n)
 {
-  if (!cqi_send_word(CQI_DATA_BYTE) || !cqi_send_byte(n) || !cqi_flush()) {
+  if (!cqi_send_word(CQI_DATA_BYTE) || !cqi_send_byte(n, 0) || !cqi_flush()) {
     cqi_send_error("cqi_data_byte");
   }
 }
@@ -579,7 +665,7 @@ cqi_data_byte(int n)
 void 
 cqi_data_bool(int n)
 {
-  if (!cqi_send_word(CQI_DATA_BOOL) || !cqi_send_byte(n) || !cqi_flush()) {
+  if (!cqi_send_word(CQI_DATA_BOOL) || !cqi_send_byte(n, 0) || !cqi_flush()) {
     cqi_send_error("cqi_data_bool");
   }
 }
@@ -1070,8 +1156,9 @@ typedef struct att_hashtable *AttHashTable;
 AttHashTable AttHash = NULL;
 
 /**
- * This function has to be called once to initialise the hash global attribute hash.
+ * This function has to be called once to initialise the global attribute hash.
  *
+ * TODO better name: att_hash_make
  * @see AttHash
  */
 void 
@@ -1091,6 +1178,8 @@ make_attribute_hash(int size)
 
 /**
  * Frees the global AttHash object and the space that it points to.
+ *
+ * TODO better name: att_hash_free
  * @see AttHash
  */
 void 
@@ -1223,7 +1312,8 @@ cqi_drop_attribute(char *name) {
  * Gets a pointer to the corpus with the given name.
  */
 CorpusList *
-cqi_find_corpus(char *name) {
+cqi_find_corpus(char *name)
+{
   CorpusList *cl;
   char *corpus, *subcorpus;
 
@@ -1253,7 +1343,8 @@ cqi_find_corpus(char *name) {
  * Activates the named corpus.
  */
 int 
-cqi_activate_corpus(char *name) {
+cqi_activate_corpus(char *name)
+{
   CorpusList *cl;
 
   if (server_debug) 
