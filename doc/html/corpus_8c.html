@@ -161,10 +161,11 @@
 
 <p>Gets a string containing the path of the default registry directory. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The value of the corpus-module-internal variable regdir, which is initialised from the environment variable REGISTRY_ENVVAR or, failing that, the macro REGISTRY_DEFAULT_PATH. </dd></dl>
+<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="globals_8h.html#a7cb97950b921d5fd5ea7bc1b5f8dafdb" title="The Unix environment variable from which the value of the registry will be taken...">REGISTRY_ENVVAR</a> </dd>
+<dd>
+<a class="el" href="globals_8h.html#ac392b52df688734d343a5acc32fb6b87" title="The default path assumed for the location of the corpus registry.">REGISTRY_DEFAULT_PATH</a> </dd></dl>
 
 <p>References <a class="el" href="corpus_8c.html#ae6ef637d7447e7a251e9130f21b8adac">regdir</a>, <a class="el" href="globals_8h.html#ac392b52df688734d343a5acc32fb6b87">REGISTRY_DEFAULT_PATH</a>, and <a class="el" href="globals_8h.html#a7cb97950b921d5fd5ea7bc1b5f8dafdb">REGISTRY_ENVVAR</a>.</p>
-
-<p>Referenced by <a class="el" href="corpmanag_8c.html#aa57f32e05db80db43f0f9e8b97bcf08d">load_corpusnames()</a>, <a class="el" href="cwb-compress-rdx_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>, and <a class="el" href="corpus_8c.html#a84eb9130d44b1b40bd3bfe5a94f777d9">setup_corpus()</a>.</p>
 
 </div>
 </div>
@@ -607,7 +608,7 @@
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The Corpus, or NULL if it wasn't found. </dd></dl>
 
-<p>References <a class="el" href="cl_8h.html#a6abae3b6b39350df13cfe97acc1f0a30">cl_standard_registry</a>, <a class="el" href="struct_t_corpus.html#ac457df8bdae957932046725f5e9d30a2">TCorpus::next</a>, <a class="el" href="globals_8h.html#a256a5721249aa3309437212cc21a9fe4">PATH_SEPARATOR</a>, <a class="el" href="struct_t_corpus.html#a1151e3383439ca5d8096811a09b42823">TCorpus::registry_dir</a>, <a class="el" href="struct_t_corpus.html#aba368bab230678d58be125f5b732cc25">TCorpus::registry_name</a>, and <a class="el" href="macros_8h.html#aedf9a4cdd75e574d55f252e31d2ec453">STREQ</a>.</p>
+<p>References <a class="el" href="cl_8h.html#ae01d418374c30b37fcd6b9bbfacef90e">cl_standard_registry()</a>, <a class="el" href="struct_t_corpus.html#ac457df8bdae957932046725f5e9d30a2">TCorpus::next</a>, <a class="el" href="globals_8h.html#a256a5721249aa3309437212cc21a9fe4">PATH_SEPARATOR</a>, <a class="el" href="struct_t_corpus.html#a1151e3383439ca5d8096811a09b42823">TCorpus::registry_dir</a>, <a class="el" href="struct_t_corpus.html#aba368bab230678d58be125f5b732cc25">TCorpus::registry_name</a>, and <a class="el" href="macros_8h.html#aedf9a4cdd75e574d55f252e31d2ec453">STREQ</a>.</p>
 
 <p>Referenced by <a class="el" href="corpus_8c.html#a84eb9130d44b1b40bd3bfe5a94f777d9">setup_corpus()</a>.</p>
 
@@ -767,7 +768,7 @@
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Pointer to the resulting Corpus object. </dd></dl>
 
-<p>References <a class="el" href="cl_8h.html#a4d7cb8811357af41ee0c95d6a3ce3b65">central_corpus_directory()</a>, <a class="el" href="corpus_8c.html#ae70a858159cb5d38fd3259648b343eb3">check_access_conditions()</a>, <a class="el" href="cl_8h.html#a9e15a3c725711d9effd623b2f3e225be">cl_free</a>, <a class="el" href="cl_8h.html#a6647d75d1d69c7d25447da514b7e4682">cl_strdup()</a>, <a class="el" href="cl_8h.html#a012ffb5a06680b1985a6f08e739d45b0">cl_string_canonical()</a>, <a class="el" href="cwb-compress-rdx_8c.html#aca3a1fb765418f9b9b1d74051aa88667">corpus</a>, <a class="el" href="corpus_8c.html#a6e55d2b09ee70c7015f916a45b53e3ce">cregin</a>, <a class="el" href="corpus_8c.html#a43fea1a843ca9acc56fe021a28ec9452">cregin_name</a>, <a class="el" href="corpus_8c.html#ada4573d717d73336f342e8b6a83e03aa">cregin_path</a>, <a class="el" href="corpus_8c.html#a29be981b1574bcfe5dc4c5966b180975">cregparse()</a>, <a class="el" href="corpus_8c.html#a74a72273cb5ab90343ec0c99186d0fcb">cregrestart()</a>, <a class="el" href="cl_8h.html#a1c317981d288c9d0964017ada173b2b4">drop_corpus()</a>, <a class="el" href="cl_8h.html#a2e8c6f04bb423451ab68782fdd5da158">find_corpus()</a>, <a class="el" href="corpus_8c.html#ae4b2cca2b7b9b49c52b63430577051ad">find_corpus_registry()</a>, <a class="el" href="struct_t_corpus.html#aecb3b0d045ada529257a2fbf8f829599">TCorpus::id</a>, <a class="el" href="cl_8h.html#a1f397c74f7f8ba3952858c70eb19d082">IGNORE_CASE</a>, <a class="el" href="struct_t_corpus.html#ac457df8bdae957932046725f5e9d30a2">TCorpus::next</a>, <a class="el" href="struct_t_corpus.html#a53389315db3bcac8c56751dcabe1a3f6">TCorpus::nr_of_loads</a>, <a class="el" href="struct_t_corpus.html#a1151e3383439ca5d8096811a09b42823">TCorpus::registry_dir</a>, and <a class="el" href="struct_t_corpus.html#aba368bab230678d58be125f5b732cc25">TCorpus::registry_name</a>.</p>
+<p>References <a class="el" href="cl_8h.html#a8788fa329cb487fb06fe050207769061">central_corpus_directory</a>, <a class="el" href="corpus_8c.html#ae70a858159cb5d38fd3259648b343eb3">check_access_conditions()</a>, <a class="el" href="cl_8h.html#a9e15a3c725711d9effd623b2f3e225be">cl_free</a>, <a class="el" href="cl_8h.html#a6647d75d1d69c7d25447da514b7e4682">cl_strdup()</a>, <a class="el" href="cl_8h.html#a012ffb5a06680b1985a6f08e739d45b0">cl_string_canonical()</a>, <a class="el" href="cwb-compress-rdx_8c.html#aca3a1fb765418f9b9b1d74051aa88667">corpus</a>, <a class="el" href="corpus_8c.html#a6e55d2b09ee70c7015f916a45b53e3ce">cregin</a>, <a class="el" href="corpus_8c.html#a43fea1a843ca9acc56fe021a28ec9452">cregin_name</a>, <a class="el" href="corpus_8c.html#ada4573d717d73336f342e8b6a83e03aa">cregin_path</a>, <a class="el" href="corpus_8c.html#a29be981b1574bcfe5dc4c5966b180975">cregparse()</a>, <a class="el" href="corpus_8c.html#a74a72273cb5ab90343ec0c99186d0fcb">cregrestart()</a>, <a class="el" href="cl_8h.html#a1c317981d288c9d0964017ada173b2b4">drop_corpus()</a>, <a class="el" href="cl_8h.html#a2e8c6f04bb423451ab68782fdd5da158">find_corpus()</a>, <a class="el" href="corpus_8c.html#ae4b2cca2b7b9b49c52b63430577051ad">find_corpus_registry()</a>, <a class="el" href="struct_t_corpus.html#aecb3b0d045ada529257a2fbf8f829599">TCorpus::id</a>, <a class="el" href="cl_8h.html#a1f397c74f7f8ba3952858c70eb19d082">IGNORE_CASE</a>, <a class="el" href="struct_t_corpus.html#ac457df8bdae957932046725f5e9d30a2">TCorpus::next</a>, <a class="el" href="struct_t_corpus.html#a53389315db3bcac8c56751dcabe1a3f6">TCorpus::nr_of_loads</a>, <a class="el" href="struct_t_corpus.html#a1151e3383439ca5d8096811a09b42823">TCorpus::registry_dir</a>, and <a class="el" href="struct_t_corpus.html#aba368bab230678d58be125f5b732cc25">TCorpus::registry_name</a>.</p>
 
 <p>Referenced by <a class="el" href="corpmanag_8c.html#a6971e7cc89868423f1044529eb3047da">GetSystemCorpus()</a>, <a class="el" href="cwb-describe-corpus_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>, and <a class="el" href="print__align_8h.html#a788d17c5137b4ed29a1cbef60a2e657e">printAlignedStrings()</a>.</p>
 
@@ -910,7 +911,7 @@
 </div>
 </div>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on Tue Apr 6 19:17:45 2010 for CWB by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on Thu Apr 8 01:47:55 2010 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

@@ -53,7 +53,7 @@
 <h2>Functions</h2>
 <ul>
 <li>FILE * <a class="el" href="output_8h.html#a121b00f746be22c41e0edeee9798161d">open_temporary_file</a> (char *tmp_name_buffer)
-<dl class="el"><dd class="mdescRight">Creates and opens for text-mode write a temporary file.  <a href="#a121b00f746be22c41e0edeee9798161d"></a><br/></dl><li>FILE * <a class="el" href="output_8h.html#aefb91b47b9096051b7366d2332c17271">open_file</a> (char *name, char *<a class="el" href="cwb-decode_8c.html#a1ea5d0cb93f22f7d0fdf804bd68c3326">mode</a>)
+<dl class="el"><dd class="mdescRight">Creates, and opens for text-mode write, a temporary file.  <a href="#a121b00f746be22c41e0edeee9798161d"></a><br/></dl><li>FILE * <a class="el" href="output_8h.html#aefb91b47b9096051b7366d2332c17271">open_file</a> (char *name, char *<a class="el" href="cwb-decode_8c.html#a1ea5d0cb93f22f7d0fdf804bd68c3326">mode</a>)
 <dl class="el"><dd class="mdescRight">This function is a wrapper round fopen() which provides checks for different shorthands for a "home" directory, such as ~ or $HOME.  <a href="#aefb91b47b9096051b7366d2332c17271"></a><br/></dl><li>int <a class="el" href="output_8h.html#a8daf0f4a91a7fb631d27c19b8f75353b">open_stream</a> (struct <a class="el" href="struct_redir.html">Redir</a> *rd, <a class="el" href="cl_8h.html#a3502421ae8eac74673133702852dde32">CorpusCharset</a> <a class="el" href="cwb-check-input_8c.html#ab7d33183c58d7df43cc5602b9c842b37">charset</a>)
 <li>int <a class="el" href="output_8h.html#aabfffd0f4126b3a2cbbad980590a0678">close_stream</a> (struct <a class="el" href="struct_redir.html">Redir</a> *rd)
 <li>int <a class="el" href="output_8h.html#a14e320f7e110fa3f4c81f78a09d41335">open_input_stream</a> (struct <a class="el" href="struct_input_redir.html">InputRedir</a> *rd)
@@ -442,8 +442,8 @@
 </div>
 <div class="memdoc">
 
-<p>Creates and opens for text-mode write a temporary file. </p>
-<p>Temporary files have the prefix "cqpt." and are placed in the directory defined as TEMPDIR_PATH.</p>
+<p>Creates, and opens for text-mode write, a temporary file. </p>
+<p>Temporary files have the prefix "$PID.cqpt." (where $PID = the process ID of this copy of CQP) and are placed in the directory defined as TEMPDIR_PATH.</p>
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="globals_8h.html#a49b0f5b674c01903678ddc980caf93fa" title="name of directory for temporary files (as string, absolute path)">TEMPDIR_PATH</a> </dd>
 <dd>
 <a class="el" href="globals_8h.html#a4ab6f745e550d4d87a22024b6a8e0897" title="size in bytes of string buffers capable of holding absolute paths of temporary filenames;...">TEMP_FILENAME_BUFSIZE</a> </dd></dl>
@@ -636,7 +636,7 @@
 </div>
 </div>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on Tue Apr 6 19:17:45 2010 for CWB by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on Thu Apr 8 01:47:56 2010 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

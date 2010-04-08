@@ -40,7 +40,7 @@
 <li>void <a class="el" href="dummy__auth_8c.html#adeea09d31126f7ba47e449099695f0c4">add_hosts_in_subnet_to_list</a> (char *ipsubnet)
 <li>int <a class="el" href="dummy__auth_8c.html#a54427d07e5e87fb064f15fb7d6323d82">check_host</a> (struct in_addr host_addr)
 <dl class="el"><dd class="mdescRight">returns true if host is in list of allowed hosts  <a href="#a54427d07e5e87fb064f15fb7d6323d82"></a><br/></dl><li>int <a class="el" href="dummy__auth_8c.html#a636cd65762915bde9cb4f8dd8de30c9e">authenticate_user</a> (char *username, char *<a class="el" href="cqpserver_8c.html#a24d99e99564d8672d8aa4d3930b764af">passwd</a>)
-<dl class="el"><dd class="mdescRight">returns true if (user, passwd) pair is in list  <a href="#a636cd65762915bde9cb4f8dd8de30c9e"></a><br/></dl><li>int <a class="el" href="dummy__auth_8c.html#ae6371964c336b358b1a4d37ea576ca67">check_grant</a> (char *username, char *<a class="el" href="cwb-s-encode_8c.html#aca3a1fb765418f9b9b1d74051aa88667">corpus</a>)
+<dl class="el"><dd class="mdescRight">returns true if (user, passwd) pair is in list of allowed users  <a href="#a636cd65762915bde9cb4f8dd8de30c9e"></a><br/></dl><li>int <a class="el" href="dummy__auth_8c.html#ae6371964c336b358b1a4d37ea576ca67">check_grant</a> (char *username, char *<a class="el" href="cwb-s-encode_8c.html#aca3a1fb765418f9b9b1d74051aa88667">corpus</a>)
 <dl class="el"><dd class="mdescRight">returns true if user may access corpus  <a href="#ae6371964c336b358b1a4d37ea576ca67"></a><br/></dl><li>void <a class="el" href="dummy__auth_8c.html#a3438acd3b7f91c3d2edfa86988e4023b">show_grants</a> (void)
 <dl class="el"><dd class="mdescRight">for debugging only  <a href="#a3438acd3b7f91c3d2edfa86988e4023b"></a><br/></dl></ul>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
@@ -160,7 +160,7 @@
 </div>
 <div class="memdoc">
 
-<p>returns true if (user, passwd) pair is in list </p>
+<p>returns true if (user, passwd) pair is in list of allowed users </p>
 
 <p>References <a class="el" href="auth_8c.html#a639945a3a4a62b5a8911a0f7a463c247">find_user()</a>, <a class="el" href="struct___user_entry.html#a3b8cb37fa26cdca2b7460e14facd9ec0">_UserEntry::passwd</a>, and <a class="el" href="cqpserver_8c.html#a14871705f45ccdc5bb9f4549efd8e119">user</a>.</p>
 
@@ -242,7 +242,7 @@
 </div>
 </div>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on Tue Apr 6 19:17:45 2010 for CWB by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on Thu Apr 8 01:47:55 2010 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

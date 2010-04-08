@@ -40,7 +40,7 @@
 <dl class="el"><dd class="mdescRight">character used to separate different paths in a string variable  <a href="#a256a5721249aa3309437212cc21a9fe4"></a><br/></dl><li>#define <a class="el" href="globals_8h.html#aa3cbd33788dfd77d29dc892204a609a5">SUBDIR_SEPARATOR</a>&nbsp;&nbsp;&nbsp;'/'
 <dl class="el"><dd class="mdescRight">character used to delimit subdirectories in a path  <a href="#aa3cbd33788dfd77d29dc892204a609a5"></a><br/></dl><li>#define <a class="el" href="globals_8h.html#a49b0f5b674c01903678ddc980caf93fa">TEMPDIR_PATH</a>&nbsp;&nbsp;&nbsp;&quot;/tmp&quot;
 <dl class="el"><dd class="mdescRight">name of directory for temporary files (as string, absolute path)  <a href="#a49b0f5b674c01903678ddc980caf93fa"></a><br/></dl><li>#define <a class="el" href="globals_8h.html#a4ab6f745e550d4d87a22024b6a8e0897">TEMP_FILENAME_BUFSIZE</a>&nbsp;&nbsp;&nbsp;128
-<dl class="el"><dd class="mdescRight">size in bytes of string buffers capable of holding absolute paths of temporary filenames; needs to be big enough for TEMPDIR_PATH plus the result of a call to tempnam(), at least.  <a href="#a4ab6f745e550d4d87a22024b6a8e0897"></a><br/></dl><li>#define <a class="el" href="globals_8h.html#ac392b52df688734d343a5acc32fb6b87">REGISTRY_DEFAULT_PATH</a>&nbsp;&nbsp;&nbsp;&quot;/corpora/c1/<a class="el" href="options_8h.html#ab6be6986e1a07fc76b7a5a77aa7cc43b">registry</a>&quot;
+<dl class="el"><dd class="mdescRight">size in bytes of string buffers capable of holding absolute paths of temporary filenames; needs to be big enough for TEMPDIR_PATH plus the result of a call to tempnam() plus the length of a process ID, at least.  <a href="#a4ab6f745e550d4d87a22024b6a8e0897"></a><br/></dl><li>#define <a class="el" href="globals_8h.html#ac392b52df688734d343a5acc32fb6b87">REGISTRY_DEFAULT_PATH</a>&nbsp;&nbsp;&nbsp;&quot;/corpora/c1/<a class="el" href="options_8h.html#ab6be6986e1a07fc76b7a5a77aa7cc43b">registry</a>&quot;
 <dl class="el"><dd class="mdescRight">The default path assumed for the location of the corpus registry.  <a href="#ac392b52df688734d343a5acc32fb6b87"></a><br/></dl><li>#define <a class="el" href="globals_8h.html#a7cb97950b921d5fd5ea7bc1b5f8dafdb">REGISTRY_ENVVAR</a>&nbsp;&nbsp;&nbsp;&quot;CORPUS_REGISTRY&quot;
 <dl class="el"><dd class="mdescRight">The Unix environment variable from which the value of the registry will be taken.  <a href="#a7cb97950b921d5fd5ea7bc1b5f8dafdb"></a><br/></dl><li>#define <a class="el" href="globals_8h.html#af0f2173e3b202ddf5756531b4471dcb2">MAX_LINE_LENGTH</a>&nbsp;&nbsp;&nbsp;4096
 <dl class="el"><dd class="mdescRight">this is the length of temporary strings which are allocated with a fixed size .  <a href="#af0f2173e3b202ddf5756531b4471dcb2"></a><br/></dl><li>#define <a class="el" href="globals_8h.html#a3d5a3c317dcfbb56869875ed4a91ddcc">MAX_IDENTIFIER_LENGTH</a>&nbsp;&nbsp;&nbsp;1024
@@ -165,7 +165,7 @@
 </div>
 <div class="memdoc">
 
-<p>size in bytes of string buffers capable of holding absolute paths of temporary filenames; needs to be big enough for TEMPDIR_PATH plus the result of a call to tempnam(), at least. </p>
+<p>size in bytes of string buffers capable of holding absolute paths of temporary filenames; needs to be big enough for TEMPDIR_PATH plus the result of a call to tempnam() plus the length of a process ID, at least. </p>
 
 <p>Referenced by <a class="el" href="groups_8c.html#a26c1dd72764bdec994f1517e699af745">ComputeGroupExternally()</a>, and <a class="el" href="ranges_8c.html#a0199b9d38e35100de957e78f0ad63169">SortExternally()</a>.</p>
 
@@ -265,7 +265,7 @@
 </div>
 </div>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on Tue Apr 6 19:17:45 2010 for CWB by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on Thu Apr 8 01:47:55 2010 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

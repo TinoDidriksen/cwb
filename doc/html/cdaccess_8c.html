@@ -134,10 +134,10 @@
 </div>
 <div class="memdoc">
 <b>Value:</b><div class="fragment"><pre class="fragment"><span class="keywordflow">if</span> (arg == NULL) { \
-  <a class="code" href="cl_8h.html#a8807f044dd47ab4d1f1c3eba26b2646c">cderrno</a> = <a class="code" href="cl_8h.html#a65b146b17c915a67ebc0199cc3b2242c" title="NULL passed as attribute argument.">CDA_ENULLATT</a>; <span class="keywordflow">return</span> rval; \
+  <a class="code" href="cl_8h.html#a8807f044dd47ab4d1f1c3eba26b2646c">cderrno</a> = <a class="code" href="cl_8h.html#a65b146b17c915a67ebc0199cc3b2242c" title="Error code: NULL passed as attribute argument.">CDA_ENULLATT</a>; <span class="keywordflow">return</span> rval; \
 } \
 <span class="keywordflow">else</span> <span class="keywordflow">if</span> (arg-&gt;type != atyp) { \
-  <a class="code" href="cl_8h.html#a8807f044dd47ab4d1f1c3eba26b2646c">cderrno</a> = <a class="code" href="cl_8h.html#a45ec05d36167d9c6e5074febf7f0ffd4" title="function was called on illegal attribute">CDA_EATTTYPE</a>; <span class="keywordflow">return</span> rval; \
+  <a class="code" href="cl_8h.html#a8807f044dd47ab4d1f1c3eba26b2646c">cderrno</a> = <a class="code" href="cl_8h.html#a45ec05d36167d9c6e5074febf7f0ffd4" title="Error code: function was called on illegal attribute.">CDA_EATTTYPE</a>; <span class="keywordflow">return</span> rval; \
 }
 </pre></div>
 <p>Checks an Attribute passed as a function argument for usability in that function. </p>
@@ -480,7 +480,7 @@
 <p>Gets a string describing the error identified by an error number. </p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>error_num</em>&nbsp;</td><td>Error number integer (a CDA_* constant as defined in <a class="el" href="cl_8h.html">cl.h</a>) </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>error_num</em>&nbsp;</td><td>Error number integer (a CDA_* constant as defined in <a class="el" href="cl_8h.html" title="This file contains the API for the CWB &quot;Corpus Library&quot; (CL).">cl.h</a>) </td></tr>
   </table>
   </dd>
 </dl>
@@ -2113,7 +2113,7 @@
 </div>
 </div>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on Tue Apr 6 19:17:45 2010 for CWB by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on Thu Apr 8 01:47:55 2010 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

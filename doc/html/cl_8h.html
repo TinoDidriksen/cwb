@@ -27,7 +27,10 @@
   </div>
 </div>
 <div class="contents">
-<h1>cl.h File Reference</h1><code>#include &lt;strings.h&gt;</code><br/>
+<h1>cl.h File Reference</h1>
+<p>This file contains the API for the CWB "Corpus Library" (CL).  
+<a href="#_details">More...</a></p>
+<code>#include &lt;strings.h&gt;</code><br/>
 <h2>Data Structures</h2>
 <ul>
 <li>struct <a class="el" href="struct_t_corpus_property.html">TCorpusProperty</a>
@@ -39,49 +42,48 @@
 <ul>
 <li>#define <a class="el" href="cl_8h.html#a19a84a3423e3468bf511c61271c06689">CL_DYN_STRING_SIZE</a>&nbsp;&nbsp;&nbsp;2048
 <dl class="el"><dd class="mdescRight">maximum size of 'dynamic' strings  <a href="#a19a84a3423e3468bf511c61271c06689"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#ae4397771d999c7e5a1eddb3f22d70721">ATT_NONE</a>&nbsp;&nbsp;&nbsp;0
-<li>#define <a class="el" href="cl_8h.html#a3b60fdde6a7c8fbc535efaf526dbcb78">ATT_POS</a>&nbsp;&nbsp;&nbsp;(1&lt;&lt;0)
+<dl class="el"><dd class="mdescRight">Untyped attribute.  <a href="#ae4397771d999c7e5a1eddb3f22d70721"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#a3b60fdde6a7c8fbc535efaf526dbcb78">ATT_POS</a>&nbsp;&nbsp;&nbsp;(1&lt;&lt;0)
 <dl class="el"><dd class="mdescRight">Positional attributes, ie streams of word tokens, word tags - any "column" that has a value at every corpus position.  <a href="#a3b60fdde6a7c8fbc535efaf526dbcb78"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#a81874b84793891ea3b8db58061820f1e">ATT_STRUC</a>&nbsp;&nbsp;&nbsp;(1&lt;&lt;1)
 <dl class="el"><dd class="mdescRight">Structural attributes, ie a set of SGML/XML-ish "regions" in the corpus delimited by the same SGML/XML tag.  <a href="#a81874b84793891ea3b8db58061820f1e"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#a52408881c837f635016f788716c715f8">ATT_ALIGN</a>&nbsp;&nbsp;&nbsp;(1&lt;&lt;2)
 <dl class="el"><dd class="mdescRight">Alignment attributes, ie a set of zones of alignment between a source and target corpus.  <a href="#a52408881c837f635016f788716c715f8"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#a2c160b428bf385a597f51dcfaa38d9cc">ATT_DYN</a>&nbsp;&nbsp;&nbsp;(1&lt;&lt;6)
 <dl class="el"><dd class="mdescRight">Dynamic attributes, ??  <a href="#a2c160b428bf385a597f51dcfaa38d9cc"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#a09d2e8da953666eb8c474cca3d1ca6a2">ATT_ALL</a>&nbsp;&nbsp;&nbsp;ATT_POS   | ATT_STRUC | ATT_ALIGN | ATT_DYN
 <dl class="el"><dd class="mdescRight">shorthand for "all types of attribute"  <a href="#a09d2e8da953666eb8c474cca3d1ca6a2"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#abc885de6108e89de9ca2706d8db63b03">ATT_REAL</a>&nbsp;&nbsp;&nbsp;ATT_POS   | ATT_STRUC | ATT_ALIGN
 <dl class="el"><dd class="mdescRight">shorthand for "all types of attribute except dynamic"  <a href="#abc885de6108e89de9ca2706d8db63b03"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#a0684eb3cf6877f3455cbc492624b2e7e">ATTAT_NONE</a>&nbsp;&nbsp;&nbsp;0
-<li>#define <a class="el" href="cl_8h.html#abc045d0047308c6eb000a3ae68f018e2">ATTAT_POS</a>&nbsp;&nbsp;&nbsp;1
-<li>#define <a class="el" href="cl_8h.html#aa709ce27c2fe20647bf8a47a808fba8f">ATTAT_STRING</a>&nbsp;&nbsp;&nbsp;2
-<li>#define <a class="el" href="cl_8h.html#a8afc9ead2ac64d5c1659c8eed41c0ec6">ATTAT_INT</a>&nbsp;&nbsp;&nbsp;3
-<li>#define <a class="el" href="cl_8h.html#ace54d1851d841e59d40f887e6046e320">ATTAT_VAR</a>&nbsp;&nbsp;&nbsp;4
-<li>#define <a class="el" href="cl_8h.html#a43ba9604062648696f65d3227fee02a6">ATTAT_FLOAT</a>&nbsp;&nbsp;&nbsp;5
-<li>#define <a class="el" href="cl_8h.html#a68e9660f2717ebe3586aeb3f4ee4cc15">ATTAT_PAREF</a>&nbsp;&nbsp;&nbsp;6
-<li>#define <a class="el" href="cl_8h.html#a1f397c74f7f8ba3952858c70eb19d082">IGNORE_CASE</a>&nbsp;&nbsp;&nbsp;1
+<dl class="el"><dd class="mdescRight">Dynamic att argument type: none.  <a href="#a0684eb3cf6877f3455cbc492624b2e7e"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#abc045d0047308c6eb000a3ae68f018e2">ATTAT_POS</a>&nbsp;&nbsp;&nbsp;1
+<dl class="el"><dd class="mdescRight">Dynamic att argument type: ??  <a href="#abc045d0047308c6eb000a3ae68f018e2"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#aa709ce27c2fe20647bf8a47a808fba8f">ATTAT_STRING</a>&nbsp;&nbsp;&nbsp;2
+<dl class="el"><dd class="mdescRight">Dynamic att argument type: string.  <a href="#aa709ce27c2fe20647bf8a47a808fba8f"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#a8afc9ead2ac64d5c1659c8eed41c0ec6">ATTAT_INT</a>&nbsp;&nbsp;&nbsp;3
+<dl class="el"><dd class="mdescRight">Dynamic att argument type: integer.  <a href="#a8afc9ead2ac64d5c1659c8eed41c0ec6"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#ace54d1851d841e59d40f887e6046e320">ATTAT_VAR</a>&nbsp;&nbsp;&nbsp;4
+<dl class="el"><dd class="mdescRight">Dynamic att argument type: variable number of string arguments (only in arglist).  <a href="#ace54d1851d841e59d40f887e6046e320"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#a43ba9604062648696f65d3227fee02a6">ATTAT_FLOAT</a>&nbsp;&nbsp;&nbsp;5
+<dl class="el"><dd class="mdescRight">Dynamic att argument type: floating point.  <a href="#a43ba9604062648696f65d3227fee02a6"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#a68e9660f2717ebe3586aeb3f4ee4cc15">ATTAT_PAREF</a>&nbsp;&nbsp;&nbsp;6
+<dl class="el"><dd class="mdescRight">Dynamic att argument type: ??  <a href="#a68e9660f2717ebe3586aeb3f4ee4cc15"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#a1f397c74f7f8ba3952858c70eb19d082">IGNORE_CASE</a>&nbsp;&nbsp;&nbsp;1
 <dl class="el"><dd class="mdescRight">Flag ignore-case in regular expression matching.  <a href="#a1f397c74f7f8ba3952858c70eb19d082"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#a2e9f85ae8ad88191c60cf4269b9ab296">IGNORE_DIAC</a>&nbsp;&nbsp;&nbsp;2
 <dl class="el"><dd class="mdescRight">Flag ignore-diacritics in regular expression matching.  <a href="#a2e9f85ae8ad88191c60cf4269b9ab296"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#ac6736b763df533659ab303a30c627519">IGNORE_REGEX</a>&nbsp;&nbsp;&nbsp;4
 <dl class="el"><dd class="mdescRight">Flag for: don't use regular expression matching - match as a literal string.  <a href="#ac6736b763df533659ab303a30c627519"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#aa5cad0885bdb0275e2746eb23acb3eee">STRUC_INSIDE</a>&nbsp;&nbsp;&nbsp;1
 <dl class="el"><dd class="mdescRight"><a class="el" href="cdaccess_8c.html#abe849dbff1f75208a19965f3f84d8347" title="Compares the location of a corpus position to the regions of an s-attribute.">cl_cpos2boundary()</a> return flag: specified position is WITHIN a region of this s-attribute  <a href="#aa5cad0885bdb0275e2746eb23acb3eee"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#af2cba0898fce4ff1ba3eb2573be6e6c9">STRUC_LBOUND</a>&nbsp;&nbsp;&nbsp;2
 <dl class="el"><dd class="mdescRight"><a class="el" href="cdaccess_8c.html#abe849dbff1f75208a19965f3f84d8347" title="Compares the location of a corpus position to the regions of an s-attribute.">cl_cpos2boundary()</a> return flag: specified position is AT THE START BOUNDARY OF a region of this s-attribute  <a href="#af2cba0898fce4ff1ba3eb2573be6e6c9"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#ad34f5b626103fbe19af852059a2ceaab">STRUC_RBOUND</a>&nbsp;&nbsp;&nbsp;4
 <dl class="el"><dd class="mdescRight"><a class="el" href="cdaccess_8c.html#abe849dbff1f75208a19965f3f84d8347" title="Compares the location of a corpus position to the regions of an s-attribute.">cl_cpos2boundary()</a> return flag: specified position is AT THE END BOUNDARY OF a region of this s-attribute  <a href="#ad34f5b626103fbe19af852059a2ceaab"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#a1fa2e2ab47bd2c689b68a78bdac22028">CDA_OK</a>&nbsp;&nbsp;&nbsp;0
-<dl class="el"><dd class="mdescRight">everything fine; error values are all less than 0  <a href="#a1fa2e2ab47bd2c689b68a78bdac22028"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#a65b146b17c915a67ebc0199cc3b2242c">CDA_ENULLATT</a>&nbsp;&nbsp;&nbsp;-1
-<dl class="el"><dd class="mdescRight">NULL passed as attribute argument.  <a href="#a65b146b17c915a67ebc0199cc3b2242c"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#a45ec05d36167d9c6e5074febf7f0ffd4">CDA_EATTTYPE</a>&nbsp;&nbsp;&nbsp;-2
-<dl class="el"><dd class="mdescRight">function was called on illegal attribute  <a href="#a45ec05d36167d9c6e5074febf7f0ffd4"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#a76e3e27719997ebe2286ff6d48fbe5e1">CDA_EIDORNG</a>&nbsp;&nbsp;&nbsp;-3
-<dl class="el"><dd class="mdescRight">id out of range  <a href="#a76e3e27719997ebe2286ff6d48fbe5e1"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#a81d0d94deccef135f4d9caaa6fc6b045">CDA_EPOSORNG</a>&nbsp;&nbsp;&nbsp;-4
-<dl class="el"><dd class="mdescRight">position out of range  <a href="#a81d0d94deccef135f4d9caaa6fc6b045"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#ad3310b2e10e15119787af15ce486dc32">CDA_EIDXORNG</a>&nbsp;&nbsp;&nbsp;-5
-<dl class="el"><dd class="mdescRight">index out of range  <a href="#ad3310b2e10e15119787af15ce486dc32"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#a385d59919cdc18e84687190d90919573">CDA_ENOSTRING</a>&nbsp;&nbsp;&nbsp;-6
-<dl class="el"><dd class="mdescRight">no such string encoded  <a href="#a385d59919cdc18e84687190d90919573"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#a66bc833cda7fe83964ed1da1aa4aef70">CDA_EPATTERN</a>&nbsp;&nbsp;&nbsp;-7
-<dl class="el"><dd class="mdescRight">illegal pattern  <a href="#a66bc833cda7fe83964ed1da1aa4aef70"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#a354fb6ffecc7afc27e9b92164891b05f">CDA_ESTRUC</a>&nbsp;&nbsp;&nbsp;-8
-<dl class="el"><dd class="mdescRight">no structure at position  <a href="#a354fb6ffecc7afc27e9b92164891b05f"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#aeaee18dc0eafc039c82041c6021de4ec">CDA_EALIGN</a>&nbsp;&nbsp;&nbsp;-9
-<dl class="el"><dd class="mdescRight">no alignment at position  <a href="#aeaee18dc0eafc039c82041c6021de4ec"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#adcff55760fa4417845c2a93c0558d942">CDA_EREMOTE</a>&nbsp;&nbsp;&nbsp;-10
-<dl class="el"><dd class="mdescRight">error in remote access  <a href="#adcff55760fa4417845c2a93c0558d942"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#a94695de40ed57b9b359981bf6ff78aae">CDA_ENODATA</a>&nbsp;&nbsp;&nbsp;-11
-<dl class="el"><dd class="mdescRight">can't load/create necessary data  <a href="#a94695de40ed57b9b359981bf6ff78aae"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#a21237261bf475ae59404729ec2562913">CDA_EARGS</a>&nbsp;&nbsp;&nbsp;-12
-<dl class="el"><dd class="mdescRight">error in arguments for dynamic call  <a href="#a21237261bf475ae59404729ec2562913"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#a29f9b0a4c4ab87c36c99f64dd910e746">CDA_ENOMEM</a>&nbsp;&nbsp;&nbsp;-13
-<dl class="el"><dd class="mdescRight">memory fault [unused]  <a href="#a29f9b0a4c4ab87c36c99f64dd910e746"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#a02fcf2c107d5524fdf465b2ff5154261">CDA_EOTHER</a>&nbsp;&nbsp;&nbsp;-14
-<dl class="el"><dd class="mdescRight">other error  <a href="#a02fcf2c107d5524fdf465b2ff5154261"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#aca889146671ed37b818c9e204df2cceb">CDA_ENYI</a>&nbsp;&nbsp;&nbsp;-15
-<dl class="el"><dd class="mdescRight">not yet implemented  <a href="#aca889146671ed37b818c9e204df2cceb"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#af731838e4fa831743c660972c8499a14">CDA_EBADREGEX</a>&nbsp;&nbsp;&nbsp;-16
-<dl class="el"><dd class="mdescRight">bad regular expression  <a href="#af731838e4fa831743c660972c8499a14"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#aede9087e6156e4d179f2dfaf1b797634">CDA_EFSETINV</a>&nbsp;&nbsp;&nbsp;-17
-<dl class="el"><dd class="mdescRight">invalid feature set format  <a href="#aede9087e6156e4d179f2dfaf1b797634"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#a248a0b0ee797db59e9e6b6077c6a81ca">CDA_EBUFFER</a>&nbsp;&nbsp;&nbsp;-18
-<dl class="el"><dd class="mdescRight">buffer overflow (hard-coded internal buffer sizes)  <a href="#a248a0b0ee797db59e9e6b6077c6a81ca"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#a64e74e8d1f9dcf9eb16ca7ef420585b0">CDA_EINTERNAL</a>&nbsp;&nbsp;&nbsp;-19
-<dl class="el"><dd class="mdescRight">internal data consistency error (really bad)  <a href="#a64e74e8d1f9dcf9eb16ca7ef420585b0"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#a9e15a3c725711d9effd623b2f3e225be">cl_free</a>(p)&nbsp;&nbsp;&nbsp;do { if ((p) != NULL) { free(p); p = NULL; } } while (0)
+<dl class="el"><dd class="mdescRight">Error code: everything is fine; actual error values are all less than 0.  <a href="#a1fa2e2ab47bd2c689b68a78bdac22028"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#a65b146b17c915a67ebc0199cc3b2242c">CDA_ENULLATT</a>&nbsp;&nbsp;&nbsp;-1
+<dl class="el"><dd class="mdescRight">Error code: NULL passed as attribute argument.  <a href="#a65b146b17c915a67ebc0199cc3b2242c"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#a45ec05d36167d9c6e5074febf7f0ffd4">CDA_EATTTYPE</a>&nbsp;&nbsp;&nbsp;-2
+<dl class="el"><dd class="mdescRight">Error code: function was called on illegal attribute.  <a href="#a45ec05d36167d9c6e5074febf7f0ffd4"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#a76e3e27719997ebe2286ff6d48fbe5e1">CDA_EIDORNG</a>&nbsp;&nbsp;&nbsp;-3
+<dl class="el"><dd class="mdescRight">Error code: id out of range.  <a href="#a76e3e27719997ebe2286ff6d48fbe5e1"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#a81d0d94deccef135f4d9caaa6fc6b045">CDA_EPOSORNG</a>&nbsp;&nbsp;&nbsp;-4
+<dl class="el"><dd class="mdescRight">Error code: position out of range.  <a href="#a81d0d94deccef135f4d9caaa6fc6b045"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#ad3310b2e10e15119787af15ce486dc32">CDA_EIDXORNG</a>&nbsp;&nbsp;&nbsp;-5
+<dl class="el"><dd class="mdescRight">Error code: index out of range.  <a href="#ad3310b2e10e15119787af15ce486dc32"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#a385d59919cdc18e84687190d90919573">CDA_ENOSTRING</a>&nbsp;&nbsp;&nbsp;-6
+<dl class="el"><dd class="mdescRight">Error code: no such string encoded.  <a href="#a385d59919cdc18e84687190d90919573"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#a66bc833cda7fe83964ed1da1aa4aef70">CDA_EPATTERN</a>&nbsp;&nbsp;&nbsp;-7
+<dl class="el"><dd class="mdescRight">Error code: illegal pattern.  <a href="#a66bc833cda7fe83964ed1da1aa4aef70"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#a354fb6ffecc7afc27e9b92164891b05f">CDA_ESTRUC</a>&nbsp;&nbsp;&nbsp;-8
+<dl class="el"><dd class="mdescRight">Error code: no structure at position.  <a href="#a354fb6ffecc7afc27e9b92164891b05f"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#aeaee18dc0eafc039c82041c6021de4ec">CDA_EALIGN</a>&nbsp;&nbsp;&nbsp;-9
+<dl class="el"><dd class="mdescRight">Error code: no alignment at position.  <a href="#aeaee18dc0eafc039c82041c6021de4ec"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#adcff55760fa4417845c2a93c0558d942">CDA_EREMOTE</a>&nbsp;&nbsp;&nbsp;-10
+<dl class="el"><dd class="mdescRight">Error code: error in remote access.  <a href="#adcff55760fa4417845c2a93c0558d942"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#a94695de40ed57b9b359981bf6ff78aae">CDA_ENODATA</a>&nbsp;&nbsp;&nbsp;-11
+<dl class="el"><dd class="mdescRight">Error code: can't load/create necessary data.  <a href="#a94695de40ed57b9b359981bf6ff78aae"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#a21237261bf475ae59404729ec2562913">CDA_EARGS</a>&nbsp;&nbsp;&nbsp;-12
+<dl class="el"><dd class="mdescRight">Error code: error in arguments for dynamic call.  <a href="#a21237261bf475ae59404729ec2562913"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#a29f9b0a4c4ab87c36c99f64dd910e746">CDA_ENOMEM</a>&nbsp;&nbsp;&nbsp;-13
+<dl class="el"><dd class="mdescRight">Error code: memory fault [unused].  <a href="#a29f9b0a4c4ab87c36c99f64dd910e746"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#a02fcf2c107d5524fdf465b2ff5154261">CDA_EOTHER</a>&nbsp;&nbsp;&nbsp;-14
+<dl class="el"><dd class="mdescRight">Error code: other error.  <a href="#a02fcf2c107d5524fdf465b2ff5154261"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#aca889146671ed37b818c9e204df2cceb">CDA_ENYI</a>&nbsp;&nbsp;&nbsp;-15
+<dl class="el"><dd class="mdescRight">Error code: not yet implemented.  <a href="#aca889146671ed37b818c9e204df2cceb"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#af731838e4fa831743c660972c8499a14">CDA_EBADREGEX</a>&nbsp;&nbsp;&nbsp;-16
+<dl class="el"><dd class="mdescRight">Error code: bad regular expression.  <a href="#af731838e4fa831743c660972c8499a14"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#aede9087e6156e4d179f2dfaf1b797634">CDA_EFSETINV</a>&nbsp;&nbsp;&nbsp;-17
+<dl class="el"><dd class="mdescRight">Error code: invalid feature set format.  <a href="#aede9087e6156e4d179f2dfaf1b797634"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#a248a0b0ee797db59e9e6b6077c6a81ca">CDA_EBUFFER</a>&nbsp;&nbsp;&nbsp;-18
+<dl class="el"><dd class="mdescRight">Error code: buffer overflow (hard-coded internal buffer sizes).  <a href="#a248a0b0ee797db59e9e6b6077c6a81ca"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#a64e74e8d1f9dcf9eb16ca7ef420585b0">CDA_EINTERNAL</a>&nbsp;&nbsp;&nbsp;-19
+<dl class="el"><dd class="mdescRight">Error code: internal data consistency error (really bad).  <a href="#a64e74e8d1f9dcf9eb16ca7ef420585b0"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#a9e15a3c725711d9effd623b2f3e225be">cl_free</a>(p)&nbsp;&nbsp;&nbsp;do { if ((p) != NULL) { free(p); p = NULL; } } while (0)
 <dl class="el"><dd class="mdescRight">Safely frees memory.  <a href="#a9e15a3c725711d9effd623b2f3e225be"></a><br/></dl><li>#define <a class="el" href="cl_8h.html#a2686895a6ca77424686c19bb2fb718bf">cl_new_corpus</a>(reg, name)&nbsp;&nbsp;&nbsp;setup_corpus(reg, name)
 <li>#define <a class="el" href="cl_8h.html#a59b77d2995445ce672ade06b8898dd85">cl_delete_corpus</a>(c)&nbsp;&nbsp;&nbsp;drop_corpus(c)
-<li>#define <a class="el" href="cl_8h.html#a6abae3b6b39350df13cfe97acc1f0a30">cl_standard_registry</a>()&nbsp;&nbsp;&nbsp;central_corpus_directory()
 <li>#define <a class="el" href="cl_8h.html#ae9e879605cdbdafc2a8939ae590b6aa0">cl_new_attribute</a>(c, name, type)&nbsp;&nbsp;&nbsp;find_attribute(c, name, type, NULL)
 <li>#define <a class="el" href="cl_8h.html#a30561c61a5acdb70f86ec152c3f9bf8f">cl_delete_attribute</a>(a)&nbsp;&nbsp;&nbsp;attr_drop_attribute(a)
 <li>#define <a class="el" href="cl_8h.html#ae9becfe71a61211cf983d1febb0a9085">cl_sequence_compressed</a>(a)&nbsp;&nbsp;&nbsp;item_sequence_is_compressed(a)
@@ -112,6 +114,7 @@
 <li>#define <a class="el" href="cl_8h.html#a8807f044dd47ab4d1f1c3eba26b2646c">cderrno</a>&nbsp;&nbsp;&nbsp;<a class="el" href="cl_8h.html#af97f2ad4a69c7d0105f9cee4a51b29b8">cl_errno</a>
 <li>#define <a class="el" href="cl_8h.html#a3ef8e9c3504b328f3522f1c0b5ae73d2">cdperror_string</a>(no)&nbsp;&nbsp;&nbsp;cl_error_string(no)
 <li>#define <a class="el" href="cl_8h.html#a33429ad7ed835fc0490b87153b7acc03">cdperror</a>(message)&nbsp;&nbsp;&nbsp;cl_error(message)
+<li>#define <a class="el" href="cl_8h.html#a8788fa329cb487fb06fe050207769061">central_corpus_directory</a>()&nbsp;&nbsp;&nbsp;cl_standard_registry()
 </ul>
 <h2>Typedefs</h2>
 <ul>
@@ -123,7 +126,7 @@
 <dl class="el"><dd class="mdescRight">The CL_Regex object: an optimised regular expression.  <a href="#ab595272450836292a293ea13eb49ef0b"></a><br/></dl><li>typedef struct _CL_BitVec * <a class="el" href="cl_8h.html#a72ad5ea659846b9fa54424075b183ade">CL_BitVec</a>
 <dl class="el"><dd class="mdescRight">The CL_BitVec object: doesn't seem to exist {???-- AH}.  <a href="#a72ad5ea659846b9fa54424075b183ade"></a><br/></dl><li>typedef struct <a class="el" href="struct_t_corpus_property.html">TCorpusProperty</a> * <a class="el" href="cl_8h.html#ab12fcf7e684d47b25cbcc51ac036f1b1">CorpusProperty</a>
 <dl class="el"><dd class="mdescRight">The CorpusProperty object.  <a href="#ab12fcf7e684d47b25cbcc51ac036f1b1"></a><br/></dl><li>typedef enum <a class="el" href="cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daea">ECorpusCharset</a> <a class="el" href="cl_8h.html#a3502421ae8eac74673133702852dde32">CorpusCharset</a>
-<dl class="el"><dd class="mdescRight">Identifier for one of the character sets supported by CWB.  <a href="#a3502421ae8eac74673133702852dde32"></a><br/></dl><li>typedef struct <a class="el" href="struct___d_c_r.html">_DCR</a> <a class="el" href="cl_8h.html#ac349fab2cf31832208b0dfcec2ae39fe">DynCallResult</a>
+<dl class="el"><dd class="mdescRight">The CorpusCharset object: an identifier for one of the character sets supported by CWB.  <a href="#a3502421ae8eac74673133702852dde32"></a><br/></dl><li>typedef struct <a class="el" href="struct___d_c_r.html">_DCR</a> <a class="el" href="cl_8h.html#ac349fab2cf31832208b0dfcec2ae39fe">DynCallResult</a>
 <dl class="el"><dd class="mdescRight">The DynCallResult object (needed to allocate space for dynamic function arguments).  <a href="#ac349fab2cf31832208b0dfcec2ae39fe"></a><br/></dl><li>typedef struct <a class="el" href="struct__cl__lexhash.html">_cl_lexhash</a> * <a class="el" href="cl_8h.html#a97fbf1d6d25d33b1ccc263796087f141">cl_lexhash</a>
 <dl class="el"><dd class="mdescRight">The cl_lexhash class (lexicon hashes, with IDs and frequency counts).  <a href="#a97fbf1d6d25d33b1ccc263796087f141"></a><br/></dl><li>typedef struct <a class="el" href="struct__cl__lexhash__entry.html">_cl_lexhash_entry</a> * <a class="el" href="cl_8h.html#af8c622d5f2aa78cfd6a801d0e92d8817">cl_lexhash_entry</a>
 <dl class="el"><dd class="mdescRight">Underlying structure for the cl_lexhash_entry class.  <a href="#af8c622d5f2aa78cfd6a801d0e92d8817"></a><br/></dl><li>typedef struct <a class="el" href="struct__cl__int__list.html">_cl_int_list</a> * <a class="el" href="cl_8h.html#ad48e1aef48f49d952bb9a694c5f7b6e9">cl_int_list</a>
@@ -153,7 +156,7 @@
 <a class="el" href="cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa9f590c5dcd376840cb9d36ea0f2ffd8e">unknown_charset</a>
 <br/>
  }
-<dl class="el"><dd class="mdescRight"><p>Identifier for one of the character sets supported by CWB. </p>
+<dl class="el"><dd class="mdescRight"><p>The CorpusCharset object: an identifier for one of the character sets supported by CWB. </p>
  <a href="cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daea">More...</a><br/></dl></ul>
 <h2>Functions</h2>
 <ul>
@@ -229,8 +232,8 @@
 <dl class="el"><dd class="mdescRight">Gets a pointer to the Corpus object with the specified CWB-name and registry location.  <a href="#a2e8c6f04bb423451ab68782fdd5da158"></a><br/></dl><li><a class="el" href="struct_t_corpus.html">Corpus</a> * <a class="el" href="cl_8h.html#a84eb9130d44b1b40bd3bfe5a94f777d9">setup_corpus</a> (char *<a class="el" href="cwb-align-show_8c.html#a1151e3383439ca5d8096811a09b42823">registry_dir</a>, char *registry_name)
 <dl class="el"><dd class="mdescRight">Creates a Corpus object.  <a href="#a84eb9130d44b1b40bd3bfe5a94f777d9"></a><br/></dl><li>int <a class="el" href="cl_8h.html#a1c317981d288c9d0964017ada173b2b4">drop_corpus</a> (<a class="el" href="struct_t_corpus.html">Corpus</a> *<a class="el" href="cwb-s-encode_8c.html#aca3a1fb765418f9b9b1d74051aa88667">corpus</a>)
 <dl class="el"><dd class="mdescRight">Deletes a Corpus object.  <a href="#a1c317981d288c9d0964017ada173b2b4"></a><br/></dl><li>void <a class="el" href="cl_8h.html#a5703da86de0749c60df13c9f6bc96c54">describe_corpus</a> (<a class="el" href="struct_t_corpus.html">Corpus</a> *<a class="el" href="cwb-s-encode_8c.html#aca3a1fb765418f9b9b1d74051aa88667">corpus</a>)
-<dl class="el"><dd class="mdescRight">Prints a description of the corpus to STDOUT.  <a href="#a5703da86de0749c60df13c9f6bc96c54"></a><br/></dl><li>char * <a class="el" href="cl_8h.html#a4d7cb8811357af41ee0c95d6a3ce3b65">central_corpus_directory</a> ()
-<dl class="el"><dd class="mdescRight">Gets a string containing the path of the default registry directory.  <a href="#a4d7cb8811357af41ee0c95d6a3ce3b65"></a><br/></dl><li><a class="el" href="union___attribute.html">Attribute</a> * <a class="el" href="cl_8h.html#ade29ce8707ea27ed6797b1c1276bcfc9">find_attribute</a> (<a class="el" href="struct_t_corpus.html">Corpus</a> *<a class="el" href="cwb-s-encode_8c.html#aca3a1fb765418f9b9b1d74051aa88667">corpus</a>, char *attribute_name, int type, char *data)
+<dl class="el"><dd class="mdescRight">Prints a description of the corpus to STDOUT.  <a href="#a5703da86de0749c60df13c9f6bc96c54"></a><br/></dl><li>char * <a class="el" href="cl_8h.html#ae01d418374c30b37fcd6b9bbfacef90e">cl_standard_registry</a> ()
+<li><a class="el" href="union___attribute.html">Attribute</a> * <a class="el" href="cl_8h.html#ade29ce8707ea27ed6797b1c1276bcfc9">find_attribute</a> (<a class="el" href="struct_t_corpus.html">Corpus</a> *<a class="el" href="cwb-s-encode_8c.html#aca3a1fb765418f9b9b1d74051aa88667">corpus</a>, char *attribute_name, int type, char *data)
 <dl class="el"><dd class="mdescRight">Finds an attribute that matches the specified parameters, if one exists.  <a href="#ade29ce8707ea27ed6797b1c1276bcfc9"></a><br/></dl><li>int <a class="el" href="cl_8h.html#a597daacaba108b8a4f8a28bb7a04af8c">attr_drop_attribute</a> (<a class="el" href="union___attribute.html">Attribute</a> *attribute)
 <dl class="el"><dd class="mdescRight">Deletes the specified Attribute object.  <a href="#a597daacaba108b8a4f8a28bb7a04af8c"></a><br/></dl><li>int <a class="el" href="cl_8h.html#a88d43b7acddcbfed513938f3d10e2ebf">item_sequence_is_compressed</a> (<a class="el" href="union___attribute.html">Attribute</a> *attribute)
 <dl class="el"><dd class="mdescRight">Checks whether the <a class="el" href="structitem.html">item</a> sequence of the given P-attribute is compressed.  <a href="#a88d43b7acddcbfed513938f3d10e2ebf"></a><br/></dl><li>int <a class="el" href="cl_8h.html#a626282e6f3705c3d580392268dcf3259">inverted_file_is_compressed</a> (<a class="el" href="union___attribute.html">Attribute</a> *attribute)
@@ -268,6 +271,16 @@
 <li>int <a class="el" href="cl_8h.html#af97f2ad4a69c7d0105f9cee4a51b29b8">cl_errno</a>
 <dl class="el"><dd class="mdescRight">Error number for CL: is set after access to any of various corpus-data-access functions.  <a href="#af97f2ad4a69c7d0105f9cee4a51b29b8"></a><br/></dl><li>char <a class="el" href="cl_8h.html#aff1d819a01c0ea804f724a85e14dc29e">cl_regex_error</a> []
 <dl class="el"><dd class="mdescRight">The error message from (POSIX) regex compilation are placed in this buffer if <a class="el" href="cl_8h.html#a2c4607eb8e094b7699062df8eb744058" title="Create a new CL_regex object (ie a regular expression buffer).">cl_new_regex()</a> fails.  <a href="#aff1d819a01c0ea804f724a85e14dc29e"></a><br/></dl></ul>
+<hr/><a name="_details"></a><h2>Detailed Description</h2>
+<p>This file contains the API for the CWB "Corpus Library" (CL). </p>
+<p>If you are programming against the CL, you should include ONLY this header file, and make use of ONLY the functions declared here.</p>
+<p>Other functions in the CL should ONLY be used within the CWB itself by CWB developers.</p>
+<p>The header file is laid out in such a way as to semi-document the API, i.e. function prototypes are given with brief notes on usage, parameters, and return values. You may also wish to refer to CWB's automatically-generated HTML code documentation (created using the Doxygen system). However, please note that this documentation ALSO covers (a) functions that are internal to the CL and which should NOT be used when programming against it; (b) functions from the CWB utilities and from the CQP program - neither of which are part of the CL.</p>
+<p>Note that many functions have two names -- one that follows the standardised format "cl_do_something()", and another that follows no particular pattern. The former are the "new API" (in v3.0.0 or higher of CWB) and the latter are the "old-style" API (depracated, but supported for backward compatibility). The old-style function names SHOULD NOT be used in newly-written code.</p>
+<p>We are moving towards a position where all functions have the "new API" name as their underlying name, and the "old-style" names are simply macros defined to the new names. However, we're not there yet, and you will at present find a mix of cases: some where the new name is a macro to the old name, and some where the old name is a macro to the new name.</p>
+<p>The CL header is organised to reflect the structure of the library - while it is not fully "object-oriented" in style most of the functions are organised around a small number of data objects that represent real entities in a CWB-encoded corpus. Each object is defined as an opaque type (usually a structure whose members are PRIVATE and should only be accessed via the functions provided in the CL API).</p>
+<p>CONTENTS OF THIS HEADER FILE:</p>
+<p>SECTION 1 SECTION 2 ETC SECTION XX THE OLD CL API TODO proper contents list (once contents of file are organised into sections) Last section should be the defines for the old-style API Each other section should be either for an object or for a related bundle of utility functions. There can be 1.1, 1.2 etc, esp appropriate for "core CL API" which would benefit from dividing by object, but is still all part of the same "thing", ie accessing of corpus positions. Section 1 - utilities: error handling, stirng list, int list, RNG, memory etc. </p>
 <hr/><h2>Define Documentation</h2>
 <a class="anchor" id="a52408881c837f635016f788716c715f8"></a><!-- doxytag: member="cl.h::ATT_ALIGN" ref="a52408881c837f635016f788716c715f8" args="" -->
 <div class="memitem">
@@ -328,6 +341,8 @@
       </table>
 </div>
 <div class="memdoc">
+
+<p>Untyped attribute. </p>
 
 <p>Referenced by <a class="el" href="attributes_8c.html#af069eb52d44b9277a009355a8fe1db36">aid_name()</a>, <a class="el" href="server_8c.html#ae08e9f05d751077e190df68c373fdcfc">att_hash_lookup()</a>, <a class="el" href="cl_8h.html#a597daacaba108b8a4f8a28bb7a04af8c">attr_drop_attribute()</a>, <a class="el" href="server_8h.html#a4e380947b2e28191aa507907b4e97456">cqi_drop_attribute()</a>, <a class="el" href="output_8h.html#a49f47b1503aa7f8f01f033f8b7bccf1b">new_tabulation_item()</a>, and <a class="el" href="output_8h.html#ab5e1d7c16acef5e942e242f803a494f9">print_tabulation()</a>.</p>
 
@@ -393,6 +408,8 @@
 </div>
 <div class="memdoc">
 
+<p>Dynamic att argument type: floating point. </p>
+
 <p>Referenced by <a class="el" href="attributes_8c.html#a35ee39479b7f4970c4d391cc628273f7">argid_name()</a>, <a class="el" href="builtins_8c.html#a310bfcbd1bd3d2844b484ea99074c5b3">attat_name()</a>, <a class="el" href="cl_8h.html#a118ad9f02aecfc1301027d8fc591b23a">call_dynamic_attribute()</a>, <a class="el" href="eval_8h.html#a1c6b9087d4b9c61e2be81a7a68e174cc">eval_bool()</a>, <a class="el" href="eval_8c.html#aead01bf924ccdd541a9018bf1d72730e">get_leaf_value()</a>, and <a class="el" href="attributes_8h.html#a9a0cce80ccd359777a8acb971f1ee252">makearg()</a>.</p>
 
 </div>
@@ -407,6 +424,8 @@
       </table>
 </div>
 <div class="memdoc">
+
+<p>Dynamic att argument type: integer. </p>
 
 <p>Referenced by <a class="el" href="attributes_8c.html#a35ee39479b7f4970c4d391cc628273f7">argid_name()</a>, <a class="el" href="builtins_8c.html#a310bfcbd1bd3d2844b484ea99074c5b3">attat_name()</a>, <a class="el" href="cl_8h.html#a118ad9f02aecfc1301027d8fc591b23a">call_dynamic_attribute()</a>, <a class="el" href="builtins_8h.html#a58b600ee9f8c217ac9a71d26ad0c59e1">call_predefined_function()</a>, <a class="el" href="eval_8h.html#a1c6b9087d4b9c61e2be81a7a68e174cc">eval_bool()</a>, <a class="el" href="eval_8c.html#aead01bf924ccdd541a9018bf1d72730e">get_leaf_value()</a>, and <a class="el" href="attributes_8h.html#a9a0cce80ccd359777a8acb971f1ee252">makearg()</a>.</p>
 
@@ -423,6 +442,8 @@
 </div>
 <div class="memdoc">
 
+<p>Dynamic att argument type: none. </p>
+
 <p>Referenced by <a class="el" href="attributes_8c.html#a35ee39479b7f4970c4d391cc628273f7">argid_name()</a>, <a class="el" href="builtins_8c.html#a310bfcbd1bd3d2844b484ea99074c5b3">attat_name()</a>, <a class="el" href="cl_8h.html#a118ad9f02aecfc1301027d8fc591b23a">call_dynamic_attribute()</a>, <a class="el" href="builtins_8h.html#a58b600ee9f8c217ac9a71d26ad0c59e1">call_predefined_function()</a>, <a class="el" href="eval_8h.html#a1c6b9087d4b9c61e2be81a7a68e174cc">eval_bool()</a>, and <a class="el" href="eval_8c.html#aead01bf924ccdd541a9018bf1d72730e">get_leaf_value()</a>.</p>
 
 </div>
@@ -437,6 +458,8 @@
       </table>
 </div>
 <div class="memdoc">
+
+<p>Dynamic att argument type: ?? </p>
 
 <p>Referenced by <a class="el" href="attributes_8c.html#a35ee39479b7f4970c4d391cc628273f7">argid_name()</a>, <a class="el" href="builtins_8c.html#a310bfcbd1bd3d2844b484ea99074c5b3">attat_name()</a>, <a class="el" href="cl_8h.html#a118ad9f02aecfc1301027d8fc591b23a">call_dynamic_attribute()</a>, <a class="el" href="builtins_8h.html#a58b600ee9f8c217ac9a71d26ad0c59e1">call_predefined_function()</a>, <a class="el" href="eval_8h.html#a1c6b9087d4b9c61e2be81a7a68e174cc">eval_bool()</a>, and <a class="el" href="eval_8c.html#aead01bf924ccdd541a9018bf1d72730e">get_leaf_value()</a>.</p>
 
@@ -453,6 +476,8 @@
 </div>
 <div class="memdoc">
 
+<p>Dynamic att argument type: ?? </p>
+
 <p>Referenced by <a class="el" href="attributes_8c.html#a35ee39479b7f4970c4d391cc628273f7">argid_name()</a>, <a class="el" href="builtins_8c.html#a310bfcbd1bd3d2844b484ea99074c5b3">attat_name()</a>, <a class="el" href="cl_8h.html#a118ad9f02aecfc1301027d8fc591b23a">call_dynamic_attribute()</a>, <a class="el" href="builtins_8h.html#a58b600ee9f8c217ac9a71d26ad0c59e1">call_predefined_function()</a>, <a class="el" href="eval_8h.html#a1c6b9087d4b9c61e2be81a7a68e174cc">eval_bool()</a>, <a class="el" href="eval_8c.html#aead01bf924ccdd541a9018bf1d72730e">get_leaf_value()</a>, <a class="el" href="attributes_8h.html#a9a0cce80ccd359777a8acb971f1ee252">makearg()</a>, and <a class="el" href="attributes_8h.html#abd0b504bc29de61da8b487c4b7f0b10d">setup_attribute()</a>.</p>
 
 </div>
@@ -467,6 +492,8 @@
       </table>
 </div>
 <div class="memdoc">
+
+<p>Dynamic att argument type: string. </p>
 
 <p>Referenced by <a class="el" href="attributes_8c.html#a35ee39479b7f4970c4d391cc628273f7">argid_name()</a>, <a class="el" href="builtins_8c.html#a310bfcbd1bd3d2844b484ea99074c5b3">attat_name()</a>, <a class="el" href="cl_8h.html#a118ad9f02aecfc1301027d8fc591b23a">call_dynamic_attribute()</a>, <a class="el" href="builtins_8h.html#a58b600ee9f8c217ac9a71d26ad0c59e1">call_predefined_function()</a>, <a class="el" href="eval_8h.html#a1c6b9087d4b9c61e2be81a7a68e174cc">eval_bool()</a>, <a class="el" href="eval_8c.html#aead01bf924ccdd541a9018bf1d72730e">get_leaf_value()</a>, and <a class="el" href="attributes_8h.html#a9a0cce80ccd359777a8acb971f1ee252">makearg()</a>.</p>
 
@@ -483,6 +510,8 @@
 </div>
 <div class="memdoc">
 
+<p>Dynamic att argument type: variable number of string arguments (only in arglist). </p>
+
 <p>Referenced by <a class="el" href="attributes_8c.html#a35ee39479b7f4970c4d391cc628273f7">argid_name()</a>, <a class="el" href="builtins_8c.html#a310bfcbd1bd3d2844b484ea99074c5b3">attat_name()</a>, <a class="el" href="cl_8h.html#a118ad9f02aecfc1301027d8fc591b23a">call_dynamic_attribute()</a>, <a class="el" href="eval_8h.html#a1c6b9087d4b9c61e2be81a7a68e174cc">eval_bool()</a>, <a class="el" href="attributes_8h.html#a9a0cce80ccd359777a8acb971f1ee252">makearg()</a>, and <a class="el" href="cl_8h.html#a8126faa6d13288a59d17c8d8494de099">nr_of_arguments()</a>.</p>
 
 </div>
@@ -498,7 +527,7 @@
 </div>
 <div class="memdoc">
 
-<p>no alignment at position </p>
+<p>Error code: no alignment at position. </p>
 
 <p>Referenced by <a class="el" href="cl_8h.html#addbf0e574a3e8e68431b86ffd7cac8ad">cl_cpos2alg()</a>, <a class="el" href="cl_8h.html#a873b42f2def97b97e4401184066e19fd">cl_error_string()</a>, and <a class="el" href="cdaccess_8c.html#ad948bbd7d7b623991829d84b8da58442">get_extended_alignment()</a>.</p>
 
@@ -515,7 +544,7 @@
 </div>
 <div class="memdoc">
 
-<p>error in arguments for dynamic call </p>
+<p>Error code: error in arguments for dynamic call. </p>
 
 <p>Referenced by <a class="el" href="cl_8h.html#a118ad9f02aecfc1301027d8fc591b23a">call_dynamic_attribute()</a>, and <a class="el" href="cl_8h.html#a873b42f2def97b97e4401184066e19fd">cl_error_string()</a>.</p>
 
@@ -532,7 +561,7 @@
 </div>
 <div class="memdoc">
 
-<p>function was called on illegal attribute </p>
+<p>Error code: function was called on illegal attribute. </p>
 
 <p>Referenced by <a class="el" href="cl_8h.html#a873b42f2def97b97e4401184066e19fd">cl_error_string()</a>, and <a class="el" href="cqpserver_8c.html#a143133e4b241fce2d89d02743fa1ee77">send_cl_error()</a>.</p>
 
@@ -549,7 +578,7 @@
 </div>
 <div class="memdoc">
 
-<p>bad regular expression </p>
+<p>Error code: bad regular expression. </p>
 
 <p>Referenced by <a class="el" href="cl_8h.html#a873b42f2def97b97e4401184066e19fd">cl_error_string()</a>, <a class="el" href="regopt_8c.html#a2c4607eb8e094b7699062df8eb744058">cl_new_regex()</a>, <a class="el" href="cl_8h.html#a19c764c027474dcfd9c4c8815d50dbf3">collect_matching_ids()</a>, and <a class="el" href="cqpserver_8c.html#a143133e4b241fce2d89d02743fa1ee77">send_cl_error()</a>.</p>
 
@@ -566,7 +595,7 @@
 </div>
 <div class="memdoc">
 
-<p>buffer overflow (hard-coded internal buffer sizes) </p>
+<p>Error code: buffer overflow (hard-coded internal buffer sizes). </p>
 
 <p>Referenced by <a class="el" href="cl_8h.html#a873b42f2def97b97e4401184066e19fd">cl_error_string()</a>, and <a class="el" href="cl_8h.html#aec47eb49595bea417dc17dd8dbf7b371">cl_set_intersection()</a>.</p>
 
@@ -583,7 +612,7 @@
 </div>
 <div class="memdoc">
 
-<p>invalid feature set format </p>
+<p>Error code: invalid feature set format. </p>
 
 <p>Referenced by <a class="el" href="cl_8h.html#a873b42f2def97b97e4401184066e19fd">cl_error_string()</a>, <a class="el" href="cl_8h.html#a8e1d05d565a13c56790b5dd35d144d49">cl_make_set()</a>, <a class="el" href="cl_8h.html#aec47eb49595bea417dc17dd8dbf7b371">cl_set_intersection()</a>, and <a class="el" href="cl_8h.html#a72b2d3b0eedaf37bf41d89d5409ce4a7">cl_set_size()</a>.</p>
 
@@ -600,7 +629,7 @@
 </div>
 <div class="memdoc">
 
-<p>id out of range </p>
+<p>Error code: id out of range. </p>
 
 <p>Referenced by <a class="el" href="cl_8h.html#a873b42f2def97b97e4401184066e19fd">cl_error_string()</a>, <a class="el" href="cl_8h.html#aa5e937c206920436456d58958dd99efd">collect_matches()</a>, <a class="el" href="cl_8h.html#af27d8b6bed091e14530ef78550079d92">get_id_string_len()</a>, <a class="el" href="cl_8h.html#a443d11045572d4bd47a91403a5d6ea6e">get_positions()</a>, <a class="el" href="cl_8h.html#a5ca2ad7f5f01418b8b8e30850601a0ff">get_string_of_id()</a>, <a class="el" href="cl_8h.html#aa372426dde27af039ba968901f0fd688">OpenPositionStream()</a>, and <a class="el" href="cqpserver_8c.html#a143133e4b241fce2d89d02743fa1ee77">send_cl_error()</a>.</p>
 
@@ -617,7 +646,7 @@
 </div>
 <div class="memdoc">
 
-<p>index out of range </p>
+<p>Error code: index out of range. </p>
 
 <p>Referenced by <a class="el" href="cl_8h.html#a5e8f82bb50cbb95415de2af1e910e1ff">cl_alg2cpos()</a>, <a class="el" href="cl_8h.html#a873b42f2def97b97e4401184066e19fd">cl_error_string()</a>, <a class="el" href="cl_8h.html#a42e77e5222b7f4731e0b94f855ced4d3">get_bounds_of_nth_struc()</a>, <a class="el" href="cl_8h.html#a210d82140f7e2d596b1e753d7662e323">get_id_frequency()</a>, <a class="el" href="cl_8h.html#a7445b84e0d0f4ad25189ceca3d5bac37">get_id_from_sortidx()</a>, <a class="el" href="cqpserver_8c.html#a143133e4b241fce2d89d02743fa1ee77">send_cl_error()</a>, and <a class="el" href="cl_8h.html#ab692d583fecd3fccc32dcbe9a1d0cef6">structure_value()</a>.</p>
 
@@ -634,7 +663,7 @@
 </div>
 <div class="memdoc">
 
-<p>internal data consistency error (really bad) </p>
+<p>Error code: internal data consistency error (really bad). </p>
 
 <p>Referenced by <a class="el" href="cl_8h.html#a873b42f2def97b97e4401184066e19fd">cl_error_string()</a>, and <a class="el" href="cl_8h.html#ab692d583fecd3fccc32dcbe9a1d0cef6">structure_value()</a>.</p>
 
@@ -651,7 +680,7 @@
 </div>
 <div class="memdoc">
 
-<p>can't load/create necessary data </p>
+<p>Error code: can't load/create necessary data. </p>
 
 <p>Referenced by <a class="el" href="cl_8h.html#a5e8f82bb50cbb95415de2af1e910e1ff">cl_alg2cpos()</a>, <a class="el" href="cl_8h.html#addbf0e574a3e8e68431b86ffd7cac8ad">cl_cpos2alg()</a>, <a class="el" href="cl_8h.html#a873b42f2def97b97e4401184066e19fd">cl_error_string()</a>, <a class="el" href="cl_8h.html#a87171a8a06237fe4024730d2363b9f8b">cl_max_alg()</a>, <a class="el" href="cl_8h.html#aa5e937c206920436456d58958dd99efd">collect_matches()</a>, <a class="el" href="cl_8h.html#a19c764c027474dcfd9c4c8815d50dbf3">collect_matching_ids()</a>, <a class="el" href="cl_8h.html#aca3f87d3f6eafabff6188fd222957237">cumulative_id_frequency()</a>, <a class="el" href="cl_8h.html#a1d4135d2d4da1305ba8fc28ba3a23690">get_alg_attribute()</a>, <a class="el" href="cl_8h.html#ad9ad7716f44fe9a9a20a0099a1bfd192">get_attribute_size()</a>, <a class="el" href="cl_8h.html#a42e77e5222b7f4731e0b94f855ced4d3">get_bounds_of_nth_struc()</a>, <a class="el" href="cl_8h.html#a655947caaf34b27c4bd5641a012d6c56">get_id_at_position()</a>, <a class="el" href="cl_8h.html#a210d82140f7e2d596b1e753d7662e323">get_id_frequency()</a>, <a class="el" href="cl_8h.html#a7445b84e0d0f4ad25189ceca3d5bac37">get_id_from_sortidx()</a>, <a class="el" href="cl_8h.html#a9f57508affc8a0eec51174ed6ab4090f">get_id_of_string()</a>, <a class="el" href="cl_8h.html#a910e9b60981819f62f4186421c817062">get_id_range()</a>, <a class="el" href="cl_8h.html#af27d8b6bed091e14530ef78550079d92">get_id_string_len()</a>, <a class="el" href="cl_8h.html#a27c31473a381561831cc85f3f64f845f">get_nr_of_strucs()</a>, <a class="el" href="cl_8h.html#a6ffcf8e9b02a9b9126fc4233f0232519">get_num_of_struc()</a>, <a class="el" href="cl_8h.html#a443d11045572d4bd47a91403a5d6ea6e">get_positions()</a>, <a class="el" href="cl_8h.html#a4472dd78bb50bf7e7920f9d2b7f462cf">get_sortidxpos_of_id()</a>, <a class="el" href="cl_8h.html#a5ca2ad7f5f01418b8b8e30850601a0ff">get_string_of_id()</a>, <a class="el" href="cl_8h.html#a69a592cef24694a51a28b4277f03dd8b">get_struc_attribute()</a>, <a class="el" href="cl_8h.html#aa372426dde27af039ba968901f0fd688">OpenPositionStream()</a>, <a class="el" href="cqpserver_8c.html#a143133e4b241fce2d89d02743fa1ee77">send_cl_error()</a>, and <a class="el" href="cl_8h.html#ab692d583fecd3fccc32dcbe9a1d0cef6">structure_value()</a>.</p>
 
@@ -668,7 +697,7 @@
 </div>
 <div class="memdoc">
 
-<p>memory fault [unused] </p>
+<p>Error code: memory fault [unused]. </p>
 
 <p>Referenced by <a class="el" href="cl_8h.html#a873b42f2def97b97e4401184066e19fd">cl_error_string()</a>, and <a class="el" href="cqpserver_8c.html#a143133e4b241fce2d89d02743fa1ee77">send_cl_error()</a>.</p>
 
@@ -685,7 +714,7 @@
 </div>
 <div class="memdoc">
 
-<p>no such string encoded </p>
+<p>Error code: no such string encoded. </p>
 
 <p>Referenced by <a class="el" href="cl_8h.html#a873b42f2def97b97e4401184066e19fd">cl_error_string()</a>, and <a class="el" href="cl_8h.html#a9f57508affc8a0eec51174ed6ab4090f">get_id_of_string()</a>.</p>
 
@@ -702,7 +731,7 @@
 </div>
 <div class="memdoc">
 
-<p>NULL passed as attribute argument. </p>
+<p>Error code: NULL passed as attribute argument. </p>
 
 <p>Referenced by <a class="el" href="cl_8h.html#a873b42f2def97b97e4401184066e19fd">cl_error_string()</a>.</p>
 
@@ -719,7 +748,7 @@
 </div>
 <div class="memdoc">
 
-<p>not yet implemented </p>
+<p>Error code: not yet implemented. </p>
 
 <p>Referenced by <a class="el" href="cl_8h.html#a873b42f2def97b97e4401184066e19fd">cl_error_string()</a>, <a class="el" href="cl_8h.html#a4472dd78bb50bf7e7920f9d2b7f462cf">get_sortidxpos_of_id()</a>, and <a class="el" href="cqpserver_8c.html#a143133e4b241fce2d89d02743fa1ee77">send_cl_error()</a>.</p>
 
@@ -736,7 +765,7 @@
 </div>
 <div class="memdoc">
 
-<p>other error </p>
+<p>Error code: other error. </p>
 
 <p>Referenced by <a class="el" href="cl_8h.html#a873b42f2def97b97e4401184066e19fd">cl_error_string()</a>, <a class="el" href="cl_8h.html#a9f57508affc8a0eec51174ed6ab4090f">get_id_of_string()</a>, <a class="el" href="cl_8h.html#af27d8b6bed091e14530ef78550079d92">get_id_string_len()</a>, and <a class="el" href="cqpserver_8c.html#a143133e4b241fce2d89d02743fa1ee77">send_cl_error()</a>.</p>
 
@@ -753,7 +782,7 @@
 </div>
 <div class="memdoc">
 
-<p>illegal pattern </p>
+<p>Error code: illegal pattern. </p>
 
 <p>Referenced by <a class="el" href="cl_8h.html#a873b42f2def97b97e4401184066e19fd">cl_error_string()</a>, and <a class="el" href="cqpserver_8c.html#a143133e4b241fce2d89d02743fa1ee77">send_cl_error()</a>.</p>
 
@@ -770,7 +799,7 @@
 </div>
 <div class="memdoc">
 
-<p>position out of range </p>
+<p>Error code: position out of range. </p>
 
 <p>Referenced by <a class="el" href="cl_8h.html#addbf0e574a3e8e68431b86ffd7cac8ad">cl_cpos2alg()</a>, <a class="el" href="cl_8h.html#a873b42f2def97b97e4401184066e19fd">cl_error_string()</a>, <a class="el" href="cl_8h.html#a1d4135d2d4da1305ba8fc28ba3a23690">get_alg_attribute()</a>, <a class="el" href="cl_8h.html#a655947caaf34b27c4bd5641a012d6c56">get_id_at_position()</a>, <a class="el" href="eval_8c.html#aead01bf924ccdd541a9018bf1d72730e">get_leaf_value()</a>, and <a class="el" href="cqpserver_8c.html#a143133e4b241fce2d89d02743fa1ee77">send_cl_error()</a>.</p>
 
@@ -787,7 +816,7 @@
 </div>
 <div class="memdoc">
 
-<p>error in remote access </p>
+<p>Error code: error in remote access. </p>
 
 <p>Referenced by <a class="el" href="cl_8h.html#a873b42f2def97b97e4401184066e19fd">cl_error_string()</a>.</p>
 
@@ -804,7 +833,7 @@
 </div>
 <div class="memdoc">
 
-<p>no structure at position </p>
+<p>Error code: no structure at position. </p>
 
 <p>Referenced by <a class="el" href="cl_8h.html#abe849dbff1f75208a19965f3f84d8347">cl_cpos2boundary()</a>, <a class="el" href="cl_8h.html#a873b42f2def97b97e4401184066e19fd">cl_error_string()</a>, <a class="el" href="cl_8h.html#a6ffcf8e9b02a9b9126fc4233f0232519">get_num_of_struc()</a>, and <a class="el" href="cl_8h.html#a69a592cef24694a51a28b4277f03dd8b">get_struc_attribute()</a>.</p>
 
@@ -821,7 +850,7 @@
 </div>
 <div class="memdoc">
 
-<p>everything fine; error values are all less than 0 </p>
+<p>Error code: everything is fine; actual error values are all less than 0. </p>
 
 <p>Referenced by <a class="el" href="cl_8h.html#a118ad9f02aecfc1301027d8fc591b23a">call_dynamic_attribute()</a>, <a class="el" href="builtins_8h.html#a58b600ee9f8c217ac9a71d26ad0c59e1">call_predefined_function()</a>, <a class="el" href="eval_8c.html#a6b88f677ea68fdf529f6588033930492">check_alignment_constraints()</a>, <a class="el" href="cl_8h.html#a5e8f82bb50cbb95415de2af1e910e1ff">cl_alg2cpos()</a>, <a class="el" href="cl_8h.html#addbf0e574a3e8e68431b86ffd7cac8ad">cl_cpos2alg()</a>, <a class="el" href="cl_8h.html#a873b42f2def97b97e4401184066e19fd">cl_error_string()</a>, <a class="el" href="cl_8h.html#a8e1d05d565a13c56790b5dd35d144d49">cl_make_set()</a>, <a class="el" href="cl_8h.html#a87171a8a06237fe4024730d2363b9f8b">cl_max_alg()</a>, <a class="el" href="regopt_8c.html#a2c4607eb8e094b7699062df8eb744058">cl_new_regex()</a>, <a class="el" href="cl_8h.html#aec47eb49595bea417dc17dd8dbf7b371">cl_set_intersection()</a>, <a class="el" href="cl_8h.html#a72b2d3b0eedaf37bf41d89d5409ce4a7">cl_set_size()</a>, <a class="el" href="cl_8h.html#aa5e937c206920436456d58958dd99efd">collect_matches()</a>, <a class="el" href="cl_8h.html#a19c764c027474dcfd9c4c8815d50dbf3">collect_matching_ids()</a>, <a class="el" href="cwb-compress-rdx_8c.html#ada27dd0455655c13cd8dca8259eefbfb">compress_reversed_index()</a>, <a class="el" href="cwb-huffcode_8c.html#a80203248d1441475e98106bf8f8ea6ec">compute_code_lengths()</a>, <a class="el" href="cl_8h.html#aca3f87d3f6eafabff6188fd222957237">cumulative_id_frequency()</a>, <a class="el" href="cwb-huffcode_8c.html#a774e9c4cc2dd18b1e82c4db3cc464395">decode_check_huff()</a>, <a class="el" href="cwb-compress-rdx_8c.html#a6e572abf235d74b194d259cb97476a28">decompress_check_reversed_index()</a>, <a class="el" href="cqpserver_8c.html#a85ad05f24457be0cc6d5fa24d42d7689">do_cqi_cl_regex2id()</a>, <a class="el" href="cwb-lexdecode_8c.html#a21e71f17ac00f605db9328ae3148978c">do_show()</a>, <a class="el" href="eval_8h.html#a1c6b9087d4b9c61e2be81a7a68e174cc">eval_bool()</a>, <a class="el" href="cl_8h.html#a1d4135d2d4da1305ba8fc28ba3a23690">get_alg_attribute()</a>, <a class="el" href="cl_8h.html#ad9ad7716f44fe9a9a20a0099a1bfd192">get_attribute_size()</a>, <a class="el" href="cl_8h.html#a42e77e5222b7f4731e0b94f855ced4d3">get_bounds_of_nth_struc()</a>, <a class="el" href="eval_8c.html#a8b5cec215ec2857925194e627ead0184">get_corpus_positions()</a>, <a class="el" href="cl_8h.html#a655947caaf34b27c4bd5641a012d6c56">get_id_at_position()</a>, <a class="el" href="cl_8h.html#a210d82140f7e2d596b1e753d7662e323">get_id_frequency()</a>, <a class="el" href="cl_8h.html#a7445b84e0d0f4ad25189ceca3d5bac37">get_id_from_sortidx()</a>, <a class="el" href="cl_8h.html#a274b1c4ee8563017a11ff141188350e6">get_id_info()</a>, <a class="el" href="cl_8h.html#a9f57508affc8a0eec51174ed6ab4090f">get_id_of_string()</a>, <a class="el" href="cl_8h.html#a910e9b60981819f62f4186421c817062">get_id_range()</a>, <a class="el" href="cl_8h.html#af27d8b6bed091e14530ef78550079d92">get_id_string_len()</a>, <a class="el" href="eval_8c.html#aead01bf924ccdd541a9018bf1d72730e">get_leaf_value()</a>, <a class="el" href="cl_8h.html#a27c31473a381561831cc85f3f64f845f">get_nr_of_strucs()</a>, <a class="el" href="cl_8h.html#a6ffcf8e9b02a9b9126fc4233f0232519">get_num_of_struc()</a>, <a class="el" href="concordance_8h.html#a4155e7ddef475f76f6d066ff49afb011">get_position_values()</a>, <a class="el" href="cl_8h.html#a443d11045572d4bd47a91403a5d6ea6e">get_positions()</a>, <a class="el" href="cl_8h.html#a4472dd78bb50bf7e7920f9d2b7f462cf">get_sortidxpos_of_id()</a>, <a class="el" href="cl_8h.html#a63e7c6e881070c9c8de17d193481d6f8">get_string_at_position()</a>, <a class="el" href="cl_8h.html#a5ca2ad7f5f01418b8b8e30850601a0ff">get_string_of_id()</a>, <a class="el" href="cl_8h.html#a69a592cef24694a51a28b4277f03dd8b">get_struc_attribute()</a>, <a class="el" href="class-mapping_8h.html#a36e096ce9d4d6d12ae6db314cf82f460">map_token_to_class_number()</a>, <a class="el" href="eval_8c.html#ad49aedc126aa9ab11de81b6c5d62db6a">meet_mu()</a>, <a class="el" href="class-mapping_8h.html#a02edad94ebf884e3325157440785e4b3">member_of_class_s()</a>, <a class="el" href="cl_8h.html#a8126faa6d13288a59d17c8d8494de099">nr_of_arguments()</a>, <a class="el" href="cl_8h.html#aa372426dde27af039ba968901f0fd688">OpenPositionStream()</a>, <a class="el" href="parse__actions_8c.html#af171dda31157fe9e0f1a31f8ce2d687f">OptimizeStringConstraint()</a>, <a class="el" href="cwb-lexdecode_8c.html#acf9dabb3c45c8b01f22903e4c2526976">print_info()</a>, <a class="el" href="class-mapping_8h.html#a416d19ddd272a2c289369bc44f18b282">read_mapping()</a>, <a class="el" href="cqpserver_8c.html#a143133e4b241fce2d89d02743fa1ee77">send_cl_error()</a>, <a class="el" href="matchlist_8h.html#aceac8bbec1e489f033a2bee302b1b193">Setop()</a>, <a class="el" href="cwb-decode_8c.html#ae319baa29bcce4fc1184bda24e29f12f">show_position_values()</a>, <a class="el" href="cl_8h.html#adb7eed641b83fdfa9801b4bbf0fb88b5">structure_has_values()</a>, and <a class="el" href="cl_8h.html#ab692d583fecd3fccc32dcbe9a1d0cef6">structure_value()</a>.</p>
 
@@ -879,6 +908,26 @@
 <div class="memdoc">
 
 <p>Referenced by <a class="el" href="corpmanag_8c.html#abc4b504862b3c36cb40aa76dd8200395">ensure_corpus_size()</a>, and <a class="el" href="parse__actions_8c.html#af171dda31157fe9e0f1a31f8ce2d687f">OptimizeStringConstraint()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a8788fa329cb487fb06fe050207769061"></a><!-- doxytag: member="cl.h::central_corpus_directory" ref="a8788fa329cb487fb06fe050207769061" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define central_corpus_directory</td>
+          <td>(</td>
+&nbsp;</td>
+          <td class="paramname"></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td>&nbsp;&nbsp;&nbsp;cl_standard_registry()</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Referenced by <a class="el" href="corpmanag_8c.html#aa57f32e05db80db43f0f9e8b97bcf08d">load_corpusnames()</a>, <a class="el" href="cwb-compress-rdx_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>, and <a class="el" href="corpus_8c.html#a84eb9130d44b1b40bd3bfe5a94f777d9">setup_corpus()</a>.</p>
 
 </div>
 </div>
@@ -1567,26 +1616,6 @@
 
 </div>
 </div>
-<a class="anchor" id="a6abae3b6b39350df13cfe97acc1f0a30"></a><!-- doxytag: member="cl.h::cl_standard_registry" ref="a6abae3b6b39350df13cfe97acc1f0a30" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define cl_standard_registry</td>
-          <td>(</td>
-&nbsp;</td>
-          <td class="paramname"></td>
-          <td>&nbsp;)&nbsp;</td>
-          <td>&nbsp;&nbsp;&nbsp;central_corpus_directory()</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Referenced by <a class="el" href="corpus_8c.html#a2e8c6f04bb423451ab68782fdd5da158">find_corpus()</a>, and <a class="el" href="cwb-scan-corpus_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
-
-</div>
-</div>
 <a class="anchor" id="a2f930d35fe0c08c57816d799a28e0bf6"></a><!-- doxytag: member="cl.h::cl_str2id" ref="a2f930d35fe0c08c57816d799a28e0bf6" args="(a, str)" -->
 <div class="memitem">
 <div class="memproto">
@@ -1740,7 +1769,7 @@
 <div class="memdoc">
 
 <p>Flag for: don't use regular expression matching - match as a literal string. </p>
-<p>Not used in the CL but in use in CQP. </p>
+<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="cl_8h.html#a95af63d7509ad6eac536b9a3ecb7037c">cl_regex2id</a> </dd></dl>
 
 <p>Referenced by <a class="el" href="parse__actions_8h.html#ac5fbebcf44cd212f00f1890a6ab56a0a">do_flagged_re_variable()</a>, <a class="el" href="parse__actions_8h.html#a6cc225469d64fbddecf2d9dce7e0a28d">do_flagged_string()</a>, <a class="el" href="parse__actions_8h.html#aebbdee09270339c0b9e08de62ad01161">do_mval_string()</a>, <a class="el" href="parse__actions_8h.html#a4335ddbb14865c031041a194e182ed92">do_XMLTag()</a>, and <a class="el" href="tree_8c.html#aca2a4391805fb773fcb3ab743fca858f">print_pattern()</a>.</p>
 
@@ -1875,6 +1904,7 @@
 <div class="memdoc">
 
 <p>Underlying structure for the cl_lexhash_entry class. </p>
+<p>Unlike most underlying structures, this is public in the CL API. </p>
 
 </div>
 </div>
@@ -1935,7 +1965,7 @@
 </div>
 <div class="memdoc">
 
-<p>Identifier for one of the character sets supported by CWB. </p>
+<p>The CorpusCharset object: an identifier for one of the character sets supported by CWB. </p>
 
 </div>
 </div>
@@ -1951,7 +1981,7 @@
 <div class="memdoc">
 
 <p>The CorpusProperty object. </p>
-<p>The underlying structure takes the form of a linked-list entry.</p>
+<p>The underlying structure takes the form of a linked-list entry. Note that unlike most CL objects, the underlying structure is exposed in the public API.</p>
 <p>Each Corpus object has, as one of its members, the head entry on a list of CorpusProperties. </p>
 
 </div>
@@ -1998,7 +2028,7 @@
 </div>
 <div class="memdoc">
 
-<p>Identifier for one of the character sets supported by CWB. </p>
+<p>The CorpusCharset object: an identifier for one of the character sets supported by CWB. </p>
 <dl><dt><b>Enumerator: </b></dt><dd><table border="0" cellspacing="2" cellpadding="0">
 <tr><td valign="top"><em><a class="anchor" id="aa018eeb7e5a4bb1586a3f4337011daeaa1fc467976b8e2979150a99beb709443e"></a><!-- doxytag: member="ascii" ref="aa018eeb7e5a4bb1586a3f4337011daeaa1fc467976b8e2979150a99beb709443e" args="" -->ascii</em>&nbsp;</td><td>
 </td></tr>
@@ -2117,30 +2147,6 @@
 <p>References <a class="el" href="struct_dynamic___attribute.html#a1f3e6ee316e4a0bda520b620b05194ec">Dynamic_Attribute::arglist</a>, <a class="el" href="cl_8h.html#a2c160b428bf385a597f51dcfaa38d9cc">ATT_DYN</a>, <a class="el" href="cl_8h.html#a43ba9604062648696f65d3227fee02a6">ATTAT_FLOAT</a>, <a class="el" href="cl_8h.html#a8afc9ead2ac64d5c1659c8eed41c0ec6">ATTAT_INT</a>, <a class="el" href="cl_8h.html#a0684eb3cf6877f3455cbc492624b2e7e">ATTAT_NONE</a>, <a class="el" href="cl_8h.html#a68e9660f2717ebe3586aeb3f4ee4cc15">ATTAT_PAREF</a>, <a class="el" href="cl_8h.html#abc045d0047308c6eb000a3ae68f018e2">ATTAT_POS</a>, <a class="el" href="cl_8h.html#aa709ce27c2fe20647bf8a47a808fba8f">ATTAT_STRING</a>, <a class="el" href="cl_8h.html#ace54d1851d841e59d40f887e6046e320">ATTAT_VAR</a>, <a class="el" href="struct_dynamic___attribute.html#adff903bb8c3d7f906a4d308594114a34">Dynamic_Attribute::call</a>, <a class="el" href="cl_8h.html#a21237261bf475ae59404729ec2562913">CDA_EARGS</a>, <a class="el" href="cl_8h.html#a1fa2e2ab47bd2c689b68a78bdac22028">CDA_OK</a>, <a class="el" href="cl_8h.html#a8807f044dd47ab4d1f1c3eba26b2646c">cderrno</a>, <a class="el" href="struct___d_c_r.html#aed280317dcbdff54b4551a9d3f8143b8">_DCR::charres</a>, <a class="el" href="cdaccess_8c.html#a764796354d59769c4402a8a37dac7e24">check_arg</a>, <a class="el" href="cl_8h.html#a6647d75d1d69c7d25447da514b7e4682">cl_strdup()</a>, <a class="el" href="union___attribute.html#a74f8d07f045cdfbd5e3bc4e732adb983">_Attribute::dyn</a>, <a class="el" href="cwb-encode_8c.html#a3654b5eb0d17fed9fc1f1dee818ad49f">error()</a>, <a class="el" href="struct___d_c_r.html#a81932566160a1d624e8d49bcc4702b56">_DCR::floatres</a>, <a class="el" href="struct___d_c_r.html#a301b87715f22d861c1729f6a14d5dbf3">_DCR::intres</a>, <a class="el" href="struct___dyn_arg.html#a6be7615c881f11aadad5c6dea634316d">_DynArg::next</a>, <a class="el" href="struct_dynamic___attribute.html#a4be699527cc53d602c9a568bf536dd04">Dynamic_Attribute::res_type</a>, <a class="el" href="struct___d_c_r.html#ac765329451135abec74c45e1897abf26">_DCR::type</a>, <a class="el" href="struct___dyn_arg.html#ac765329451135abec74c45e1897abf26">_DynArg::type</a>, and <a class="el" href="struct___d_c_r.html#aed98da7341d30a5ac42210954a5dee43">_DCR::value</a>.</p>
 
 <p>Referenced by <a class="el" href="eval_8c.html#aead01bf924ccdd541a9018bf1d72730e">get_leaf_value()</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a4d7cb8811357af41ee0c95d6a3ce3b65"></a><!-- doxytag: member="cl.h::central_corpus_directory" ref="a4d7cb8811357af41ee0c95d6a3ce3b65" args="()" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">char* central_corpus_directory </td>
-          <td>(</td>
-          <td class="paramname"></td>
-          <td>&nbsp;)&nbsp;</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Gets a string containing the path of the default registry directory. </p>
-<dl class="return"><dt><b>Returns:</b></dt><dd>The value of the corpus-module-internal variable regdir, which is initialised from the environment variable REGISTRY_ENVVAR or, failing that, the macro REGISTRY_DEFAULT_PATH. </dd></dl>
-
-<p>References <a class="el" href="corpus_8c.html#ae6ef637d7447e7a251e9130f21b8adac">regdir</a>, <a class="el" href="globals_8h.html#ac392b52df688734d343a5acc32fb6b87">REGISTRY_DEFAULT_PATH</a>, and <a class="el" href="globals_8h.html#a7cb97950b921d5fd5ea7bc1b5f8dafdb">REGISTRY_ENVVAR</a>.</p>
-
-<p>Referenced by <a class="el" href="corpmanag_8c.html#aa57f32e05db80db43f0f9e8b97bcf08d">load_corpusnames()</a>, <a class="el" href="cwb-compress-rdx_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>, and <a class="el" href="corpus_8c.html#a84eb9130d44b1b40bd3bfe5a94f777d9">setup_corpus()</a>.</p>
 
 </div>
 </div>
@@ -2683,7 +2689,7 @@
 <p>Gets a string describing the error identified by an error number. </p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>error_num</em>&nbsp;</td><td>Error number integer (a CDA_* constant as defined in <a class="el" href="cl_8h.html">cl.h</a>) </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>error_num</em>&nbsp;</td><td>Error number integer (a CDA_* constant as defined in <a class="el" href="cl_8h.html" title="This file contains the API for the CWB &quot;Corpus Library&quot; (CL).">cl.h</a>) </td></tr>
   </table>
   </dd>
 </dl>
@@ -3909,7 +3915,7 @@
 <div class="memdoc">
 
 <p>Sets the memory limit. </p>
-<p>NOTE name of parameter differs here and in <a class="el" href="cl_8h.html">cl.h</a> -- TODO </p>
+<p>NOTE name of parameter differs here and in <a class="el" href="cl_8h.html" title="This file contains the API for the CWB &quot;Corpus Library&quot; (CL).">cl.h</a> -- TODO </p>
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="globals_8h.html#a8c066560b8ca7c38e328d918b7dca009" title="global configuration variable: memory limit.">cl_memory_limit</a> </dd></dl>
 
 <p>References <a class="el" href="globals_8c.html#a8c066560b8ca7c38e328d918b7dca009">cl_memory_limit</a>.</p>
@@ -4042,6 +4048,25 @@
 <p>References <a class="el" href="cl_8h.html#aede9087e6156e4d179f2dfaf1b797634">CDA_EFSETINV</a>, <a class="el" href="cl_8h.html#a1fa2e2ab47bd2c689b68a78bdac22028">CDA_OK</a>, and <a class="el" href="cl_8h.html#a8807f044dd47ab4d1f1c3eba26b2646c">cderrno</a>.</p>
 
 <p>Referenced by <a class="el" href="builtins_8h.html#a58b600ee9f8c217ac9a71d26ad0c59e1">call_predefined_function()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ae01d418374c30b37fcd6b9bbfacef90e"></a><!-- doxytag: member="cl.h::cl_standard_registry" ref="ae01d418374c30b37fcd6b9bbfacef90e" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">char* cl_standard_registry </td>
+          <td>(</td>
+          <td class="paramname"></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Referenced by <a class="el" href="corpus_8c.html#a2e8c6f04bb423451ab68782fdd5da158">find_corpus()</a>, and <a class="el" href="cwb-scan-corpus_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
 
 </div>
 </div>
@@ -4270,7 +4295,7 @@
   </table>
   </dd>
 </dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>The n'th string on the list, or NULL if there is no n'th string. </dd></dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>The n'th string on the list, or NULL if there is no n'th string. Note that the returned pointer references the ACTUAL DATA in the list - not a copy, if you want a copy you must make one yourself. </dd></dl>
 
 <p>References <a class="el" href="struct__cl__string__list.html#a6b121cb8ec17d1734645f705377f63df">_cl_string_list::data</a>, and <a class="el" href="struct__cl__string__list.html#a439227feff9d7f55384e8780cfc2eb82">_cl_string_list::size</a>.</p>
 
@@ -4810,7 +4835,7 @@
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The Corpus, or NULL if it wasn't found. </dd></dl>
 
-<p>References <a class="el" href="cl_8h.html#a6abae3b6b39350df13cfe97acc1f0a30">cl_standard_registry</a>, <a class="el" href="struct_t_corpus.html#ac457df8bdae957932046725f5e9d30a2">TCorpus::next</a>, <a class="el" href="globals_8h.html#a256a5721249aa3309437212cc21a9fe4">PATH_SEPARATOR</a>, <a class="el" href="struct_t_corpus.html#a1151e3383439ca5d8096811a09b42823">TCorpus::registry_dir</a>, <a class="el" href="struct_t_corpus.html#aba368bab230678d58be125f5b732cc25">TCorpus::registry_name</a>, and <a class="el" href="macros_8h.html#aedf9a4cdd75e574d55f252e31d2ec453">STREQ</a>.</p>
+<p>References <a class="el" href="cl_8h.html#ae01d418374c30b37fcd6b9bbfacef90e">cl_standard_registry()</a>, <a class="el" href="struct_t_corpus.html#ac457df8bdae957932046725f5e9d30a2">TCorpus::next</a>, <a class="el" href="globals_8h.html#a256a5721249aa3309437212cc21a9fe4">PATH_SEPARATOR</a>, <a class="el" href="struct_t_corpus.html#a1151e3383439ca5d8096811a09b42823">TCorpus::registry_dir</a>, <a class="el" href="struct_t_corpus.html#aba368bab230678d58be125f5b732cc25">TCorpus::registry_name</a>, and <a class="el" href="macros_8h.html#aedf9a4cdd75e574d55f252e31d2ec453">STREQ</a>.</p>
 
 <p>Referenced by <a class="el" href="corpus_8c.html#a84eb9130d44b1b40bd3bfe5a94f777d9">setup_corpus()</a>.</p>
 
@@ -5797,7 +5822,7 @@
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Pointer to the resulting Corpus object. </dd></dl>
 
-<p>References <a class="el" href="cl_8h.html#a4d7cb8811357af41ee0c95d6a3ce3b65">central_corpus_directory()</a>, <a class="el" href="corpus_8c.html#ae70a858159cb5d38fd3259648b343eb3">check_access_conditions()</a>, <a class="el" href="cl_8h.html#a9e15a3c725711d9effd623b2f3e225be">cl_free</a>, <a class="el" href="cl_8h.html#a6647d75d1d69c7d25447da514b7e4682">cl_strdup()</a>, <a class="el" href="cl_8h.html#a012ffb5a06680b1985a6f08e739d45b0">cl_string_canonical()</a>, <a class="el" href="cwb-compress-rdx_8c.html#aca3a1fb765418f9b9b1d74051aa88667">corpus</a>, <a class="el" href="corpus_8c.html#a6e55d2b09ee70c7015f916a45b53e3ce">cregin</a>, <a class="el" href="corpus_8c.html#a43fea1a843ca9acc56fe021a28ec9452">cregin_name</a>, <a class="el" href="corpus_8c.html#ada4573d717d73336f342e8b6a83e03aa">cregin_path</a>, <a class="el" href="corpus_8c.html#a29be981b1574bcfe5dc4c5966b180975">cregparse()</a>, <a class="el" href="corpus_8c.html#a74a72273cb5ab90343ec0c99186d0fcb">cregrestart()</a>, <a class="el" href="cl_8h.html#a1c317981d288c9d0964017ada173b2b4">drop_corpus()</a>, <a class="el" href="cl_8h.html#a2e8c6f04bb423451ab68782fdd5da158">find_corpus()</a>, <a class="el" href="corpus_8c.html#ae4b2cca2b7b9b49c52b63430577051ad">find_corpus_registry()</a>, <a class="el" href="struct_t_corpus.html#aecb3b0d045ada529257a2fbf8f829599">TCorpus::id</a>, <a class="el" href="cl_8h.html#a1f397c74f7f8ba3952858c70eb19d082">IGNORE_CASE</a>, <a class="el" href="struct_t_corpus.html#ac457df8bdae957932046725f5e9d30a2">TCorpus::next</a>, <a class="el" href="struct_t_corpus.html#a53389315db3bcac8c56751dcabe1a3f6">TCorpus::nr_of_loads</a>, <a class="el" href="struct_t_corpus.html#a1151e3383439ca5d8096811a09b42823">TCorpus::registry_dir</a>, and <a class="el" href="struct_t_corpus.html#aba368bab230678d58be125f5b732cc25">TCorpus::registry_name</a>.</p>
+<p>References <a class="el" href="cl_8h.html#a8788fa329cb487fb06fe050207769061">central_corpus_directory</a>, <a class="el" href="corpus_8c.html#ae70a858159cb5d38fd3259648b343eb3">check_access_conditions()</a>, <a class="el" href="cl_8h.html#a9e15a3c725711d9effd623b2f3e225be">cl_free</a>, <a class="el" href="cl_8h.html#a6647d75d1d69c7d25447da514b7e4682">cl_strdup()</a>, <a class="el" href="cl_8h.html#a012ffb5a06680b1985a6f08e739d45b0">cl_string_canonical()</a>, <a class="el" href="cwb-compress-rdx_8c.html#aca3a1fb765418f9b9b1d74051aa88667">corpus</a>, <a class="el" href="corpus_8c.html#a6e55d2b09ee70c7015f916a45b53e3ce">cregin</a>, <a class="el" href="corpus_8c.html#a43fea1a843ca9acc56fe021a28ec9452">cregin_name</a>, <a class="el" href="corpus_8c.html#ada4573d717d73336f342e8b6a83e03aa">cregin_path</a>, <a class="el" href="corpus_8c.html#a29be981b1574bcfe5dc4c5966b180975">cregparse()</a>, <a class="el" href="corpus_8c.html#a74a72273cb5ab90343ec0c99186d0fcb">cregrestart()</a>, <a class="el" href="cl_8h.html#a1c317981d288c9d0964017ada173b2b4">drop_corpus()</a>, <a class="el" href="cl_8h.html#a2e8c6f04bb423451ab68782fdd5da158">find_corpus()</a>, <a class="el" href="corpus_8c.html#ae4b2cca2b7b9b49c52b63430577051ad">find_corpus_registry()</a>, <a class="el" href="struct_t_corpus.html#aecb3b0d045ada529257a2fbf8f829599">TCorpus::id</a>, <a class="el" href="cl_8h.html#a1f397c74f7f8ba3952858c70eb19d082">IGNORE_CASE</a>, <a class="el" href="struct_t_corpus.html#ac457df8bdae957932046725f5e9d30a2">TCorpus::next</a>, <a class="el" href="struct_t_corpus.html#a53389315db3bcac8c56751dcabe1a3f6">TCorpus::nr_of_loads</a>, <a class="el" href="struct_t_corpus.html#a1151e3383439ca5d8096811a09b42823">TCorpus::registry_dir</a>, and <a class="el" href="struct_t_corpus.html#aba368bab230678d58be125f5b732cc25">TCorpus::registry_name</a>.</p>
 
 <p>Referenced by <a class="el" href="corpmanag_8c.html#a6971e7cc89868423f1044529eb3047da">GetSystemCorpus()</a>, <a class="el" href="cwb-describe-corpus_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>, and <a class="el" href="print__align_8h.html#a788d17c5137b4ed29a1cbef60a2e657e">printAlignedStrings()</a>.</p>
 
@@ -5944,7 +5969,7 @@
 </div>
 </div>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on Tue Apr 6 19:17:45 2010 for CWB by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on Thu Apr 8 01:47:55 2010 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>
