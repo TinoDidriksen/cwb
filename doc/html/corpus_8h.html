@@ -49,7 +49,9 @@
 <li>void <a class="el" href="corpus_8h.html#ae779332ae5e89e614575239c7c3e4bd4">FreeIDList</a> (<a class="el" href="struct__idbuf.html">IDList</a> *list)
 <dl class="el"><dd class="mdescRight">Deletes an IDList object, and sets the argument pointer to NULL.  <a href="#ae779332ae5e89e614575239c7c3e4bd4"></a><br/></dl><li>int <a class="el" href="corpus_8h.html#a3796931ad775036a92a370de8b53bc4d">memberIDList</a> (char *s, <a class="el" href="struct__idbuf.html">IDList</a> l)
 <dl class="el"><dd class="mdescRight">Checks whether the specified string occurs in the given IDList.  <a href="#a3796931ad775036a92a370de8b53bc4d"></a><br/></dl><li>void <a class="el" href="corpus_8h.html#a5492efc3742070f65be1b0bcbead995a">add_corpus_property</a> (<a class="el" href="struct_t_corpus.html">Corpus</a> *<a class="el" href="cwb-s-encode_8c.html#aca3a1fb765418f9b9b1d74051aa88667">corpus</a>, char *property, char *value)
-<dl class="el"><dd class="mdescRight">Adds a property to the list of corpus properties.  <a href="#a5492efc3742070f65be1b0bcbead995a"></a><br/></dl></ul>
+<dl class="el"><dd class="mdescRight">Adds a property to the list of corpus properties.  <a href="#a5492efc3742070f65be1b0bcbead995a"></a><br/></dl><li><a class="el" href="struct_t_corpus.html">Corpus</a> * <a class="el" href="corpus_8h.html#a2e8c6f04bb423451ab68782fdd5da158">find_corpus</a> (char *<a class="el" href="cwb-align-show_8c.html#a1151e3383439ca5d8096811a09b42823">registry_dir</a>, char *registry_name)
+<dl class="el"><dd class="mdescRight">Gets a pointer to the Corpus object with the specified CWB-name and registry location.  <a href="#a2e8c6f04bb423451ab68782fdd5da158"></a><br/></dl><li>void <a class="el" href="corpus_8h.html#a5703da86de0749c60df13c9f6bc96c54">describe_corpus</a> (<a class="el" href="struct_t_corpus.html">Corpus</a> *<a class="el" href="cwb-s-encode_8c.html#aca3a1fb765418f9b9b1d74051aa88667">corpus</a>)
+<dl class="el"><dd class="mdescRight">Prints a description of the corpus to STDOUT.  <a href="#a5703da86de0749c60df13c9f6bc96c54"></a><br/></dl></ul>
 <h2>Variables</h2>
 <ul>
 <li>char * <a class="el" href="corpus_8h.html#ada4573d717d73336f342e8b6a83e03aa">cregin_path</a>
@@ -128,7 +130,7 @@
 <p>The IDList class: entries in linked lists of identifier strings. </p>
 <p>These identifier strings can be usernames, groupnames or hostnames and are used to restrict access to particular corpora.</p>
 <p>Note that IDLists are added to Corpus objects by the registry parser.</p>
-<p>NOT to be confused with "idlist" in the sense of <a class="el" href="cl_8h.html#a6eba3870f37b2eb87912505b9299726b">cl_idlist2cpos()</a>. </p>
+<p>NOT to be confused with "idlist" in the sense of <a class="el" href="cl_8h.html#a6eba3870f37b2eb87912505b9299726b" title="Gets a list of corpus positions matching a list of ids.">cl_idlist2cpos()</a>. </p>
 
 </div>
 </div>
@@ -179,6 +181,72 @@
 
 </div>
 </div>
+<a class="anchor" id="a5703da86de0749c60df13c9f6bc96c54"></a><!-- doxytag: member="corpus.h::describe_corpus" ref="a5703da86de0749c60df13c9f6bc96c54" args="(Corpus *corpus)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void describe_corpus </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_t_corpus.html">Corpus</a> *&nbsp;</td>
+          <td class="paramname"> <em>corpus</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Prints a description of the corpus to STDOUT. </p>
+
+<p>References <a class="el" href="union___attribute.html#a92ee130caba4408ab4de51c602910107">_Attribute::any</a>, <a class="el" href="struct_t_corpus.html#a97504befdc17001f29ab2a0aa50d5c1f">TCorpus::attributes</a>, <a class="el" href="attributes_8c.html#ada8d72fbcffc9236afd648baeb2a80cd">describe_attribute()</a>, <a class="el" href="struct_t_corpus.html#aecb3b0d045ada529257a2fbf8f829599">TCorpus::id</a>, <a class="el" href="struct_t_corpus.html#a9f25be44cbb4c737b8bfc7f94c1ff6d1">TCorpus::info_file</a>, <a class="el" href="struct_t_corpus.html#a5ac083a645d964373f022d03df4849c8">TCorpus::name</a>, <a class="el" href="struct_t_corpus.html#a44196e6a5696d10442c29e639437196e">TCorpus::path</a>, <a class="el" href="struct_t_corpus.html#a1151e3383439ca5d8096811a09b42823">TCorpus::registry_dir</a>, and <a class="el" href="struct_t_corpus.html#aba368bab230678d58be125f5b732cc25">TCorpus::registry_name</a>.</p>
+
+<p>Referenced by <a class="el" href="cwb-describe-corpus_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a2e8c6f04bb423451ab68782fdd5da158"></a><!-- doxytag: member="corpus.h::find_corpus" ref="a2e8c6f04bb423451ab68782fdd5da158" args="(char *registry_dir, char *registry_name)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct_t_corpus.html">Corpus</a>* find_corpus </td>
+          <td>(</td>
+          <td class="paramtype">char *&nbsp;</td>
+          <td class="paramname"> <em>registry_dir</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&nbsp;</td>
+          <td class="paramname"> <em>registry_name</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Gets a pointer to the Corpus object with the specified CWB-name and registry location. </p>
+<p>(Works by searching the loaded_corpora global linked list.)</p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>registry_dir</em>&nbsp;</td><td>The registry directory. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>registry_name</em>&nbsp;</td><td>The CWB name of the corpus. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>The Corpus, or NULL if it wasn't found. </dd></dl>
+
+<p>References <a class="el" href="cl_8h.html#ae01d418374c30b37fcd6b9bbfacef90e">cl_standard_registry()</a>, <a class="el" href="struct_t_corpus.html#ac457df8bdae957932046725f5e9d30a2">TCorpus::next</a>, <a class="el" href="globals_8h.html#a256a5721249aa3309437212cc21a9fe4">PATH_SEPARATOR</a>, <a class="el" href="struct_t_corpus.html#a1151e3383439ca5d8096811a09b42823">TCorpus::registry_dir</a>, <a class="el" href="struct_t_corpus.html#aba368bab230678d58be125f5b732cc25">TCorpus::registry_name</a>, and <a class="el" href="macros_8h.html#aedf9a4cdd75e574d55f252e31d2ec453">STREQ</a>.</p>
+
+<p>Referenced by <a class="el" href="corpus_8c.html#aee476e23a98efac85d9a9288f18fe686">cl_new_corpus()</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="ae779332ae5e89e614575239c7c3e4bd4"></a><!-- doxytag: member="corpus.h::FreeIDList" ref="ae779332ae5e89e614575239c7c3e4bd4" args="(IDList *list)" -->
 <div class="memitem">
 <div class="memproto">
@@ -205,7 +273,7 @@
 
 <p>References <a class="el" href="cl_8h.html#a9e15a3c725711d9effd623b2f3e225be">cl_free</a>, <a class="el" href="struct__idbuf.html#a2f7fb77427a558f1deedce6006b23454">_idbuf::next</a>, and <a class="el" href="struct__idbuf.html#aed1cfb225a5fb77461e7972691e68a72">_idbuf::string</a>.</p>
 
-<p>Referenced by <a class="el" href="corpus_8c.html#a1c317981d288c9d0964017ada173b2b4">drop_corpus()</a>.</p>
+<p>Referenced by <a class="el" href="corpus_8c.html#afd6ee191959ef253a4b89bff3521a24a">cl_delete_corpus()</a>.</p>
 
 </div>
 </div>
@@ -265,7 +333,7 @@
 <p>The name of registry file currently being parsed (for registry parser error messages). </p>
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="corpus_8c.html#a29be981b1574bcfe5dc4c5966b180975" title="Parse a corpus registry file.">cregparse</a> </dd></dl>
 
-<p>Referenced by <a class="el" href="corpus_8h.html#a5492efc3742070f65be1b0bcbead995a">add_corpus_property()</a>, and <a class="el" href="corpus_8c.html#a84eb9130d44b1b40bd3bfe5a94f777d9">setup_corpus()</a>.</p>
+<p>Referenced by <a class="el" href="corpus_8h.html#a5492efc3742070f65be1b0bcbead995a">add_corpus_property()</a>, and <a class="el" href="corpus_8c.html#aee476e23a98efac85d9a9288f18fe686">cl_new_corpus()</a>.</p>
 
 </div>
 </div>
@@ -283,7 +351,7 @@
 <p>Full path of the registry file currently being parsed (for registry parser error messages). </p>
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="corpus_8c.html#a29be981b1574bcfe5dc4c5966b180975" title="Parse a corpus registry file.">cregparse</a> </dd></dl>
 
-<p>Referenced by <a class="el" href="corpus_8h.html#a5492efc3742070f65be1b0bcbead995a">add_corpus_property()</a>, and <a class="el" href="corpus_8c.html#a84eb9130d44b1b40bd3bfe5a94f777d9">setup_corpus()</a>.</p>
+<p>Referenced by <a class="el" href="corpus_8h.html#a5492efc3742070f65be1b0bcbead995a">add_corpus_property()</a>, and <a class="el" href="corpus_8c.html#aee476e23a98efac85d9a9288f18fe686">cl_new_corpus()</a>.</p>
 
 </div>
 </div>
@@ -303,7 +371,7 @@
 </div>
 </div>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on Thu Apr 8 01:47:55 2010 for CWB by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on Sun Apr 11 13:58:12 2010 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>
