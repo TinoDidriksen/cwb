@@ -177,7 +177,11 @@ release:
 	$(MAKE) -C utils release
 	$(MAKE) -C man release
 	$(MAKE) -C instutils all
-	$(MAKE) -C instutils release	
+	$(MAKE) -C instutils release
+ifdef __MINGW__
+# we also need DLL file(s) 
+	for i in $(DLLS_TO_INSTALL); do $(INSTALL) $(INST_FLAGS_DATA) $$i "$(RELEASE_DIR)/bin"; done
+endif
 	if [ -f "$(RELEASE_COMPRESSED_FILENAME)" ]; then $(RM) "$(RELEASE_COMPRESSED_FILENAME)"; fi
 	(cd build/ && $(COMPRESS_COMMAND) "$(RELEASE_COMPRESSED_FILENAME)" "$(RELEASE_NAME)")
 	@$(ECHO) "==> CREATED BINARY RELEASE build/$(RELEASE_COMPRESSED_FILENAME)"

@@ -2,6 +2,12 @@
 
 # The script following this line produces a .bat file that will do the same (ish)
 # on Windows as the install-cwb.sh script will on Unix.
+
+# note that we need to convert the registry variable from Unix-escapes to Windows-escapes
+# twice-over to reduce \\\\ to \
+REGISTRY=${REGISTRY//\\\\/\\}
+REGISTRY=${REGISTRY//\\\\/\\}
+
 #################################################################################
 
 cat <<__END__
@@ -38,7 +44,7 @@ set INSTALL=copy
 set VERSION=${VERSION}
 set REGISTRY=${REGISTRY}
 
-set REALINCDIR="%INCDIR%\cwb"
+set REALINCDIR=%INCDIR%\cwb
 set REALMANDIR=%MANDIR%
 
 
@@ -48,8 +54,10 @@ echo Installing CQP and utilities in %BINDIR%
 if not exist "%BINDIR%" (
 	mkdir "%BINDIR%"
 )
-for %%f in (bin\*.exe) do %INSTALL% "%%f" "%BINDIR%"
-
+for %%f in (bin\*.exe) do %INSTALL% "%%f" "%BINDIR%" > nul
+for %%f in (bin\*.dll) do %INSTALL% "%%f" "%BINDIR%" > nul
+echo ... done
+echo.
 
 rem # install CL library and header files
 
@@ -60,35 +68,50 @@ if not exist "%LIBDIR%" (
 if not exist "%REALINCDIR%" (
 	mkdir "%REALINCDIR%"
 )
-rem !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!or is it the DLL?
-%INSTALL% lib\libcl.a "%LIBDIR%"
-%INSTALL% include\cwb\cl.h "%REALINCDIR%"
-%INSTALL% include\cwb\cqi.h "%REALINCDIR%"
+rem libcl.a should, in theory, allow static linking if the linker used is mingw!
+%INSTALL% lib\libcl.a "%LIBDIR%" > nul
+%INSTALL% include\cwb\cl.h "%REALINCDIR%" > nul
+%INSTALL% include\cwb\cqi.h "%REALINCDIR%" > nul
+echo ... done
+echo.
 
 rem # install manpages
-echo "Installing manual pages in %MANDIR%"
+
+echo Installing manual pages in %MANDIR%
 if not exist "%REALMANDIR%" (
 	mkdir "%REALMANDIR%"
 )
-for %%f in (man\*.pdf) do %INSTALL% "%%f" "%REALMANDIR%"
+for %%f in (man\*.pdf) do %INSTALL% "%%f" "%REALMANDIR%" > nul
+echo ... done
 
 rem  # that's it!
-echo Congratulations, the IMS Open Corpus Workbench v%VERSION% has been installed successfully.
-echo 
-echo Please make sure that %BINDIR% is in your "path" so you can call CWB programs from the
-echo command prompt!
-echo 
-echo Also note that the compiled-in default corpus registry is %REGISTRY%.
-echo To use a different registry directory, use the -r flag when calling CWB programs.
+echo Congratulations, the IMS Open Corpus Workbench v%VERSION% has been installed 
+echo successfully.
+echo.
+echo Please make sure that 
+echo      %BINDIR% 
+echo is in your "path" so you can call CWB programs from the command prompt!
+echo.
+echo Also note that the compiled-in default corpus registry is 
+echo      %REGISTRY%.
+echo To use a different registry directory, use the -r flag when calling CWB 
+echo programs.
+echo.
 goto:eof
 
-rem This would probably be better as a function, but when the %PREFIX% is changed, all directory
-rem variables need to be re-initialised.
+
+
+
+
+rem This would probably be better as a function, but when the PREFIX is changed,
+rem all directory variables need to be re-initialised.
 :choose_install_dir
 
-echo The directory "C:\Program Files" does not exist, perhaps because you have a non-English Windows.
-echo CWB is normally installed in "C:\Program Files\CWB" -- so you need to specify a different directory.
-echo 
+echo The directory "C:\Program Files" does not exist, perhaps because you have 
+echo a non-English Windows.
+echo CWB is normally installed in "C:\Program Files\CWB" -- so you need to specify 
+echo a different directory.
+echo.
 
 :while
 set /p NEWDIR=[Enter your chosen installation directory:]

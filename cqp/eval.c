@@ -512,7 +512,7 @@ get_label_referenced_position(LabelEntry label, RefTab rt, int corppos)
   return referenced_position;
 }
 
-
+
 
 Boolean
 get_leaf_value(Constrainttree ctptr,
@@ -747,7 +747,7 @@ get_leaf_value(Constrainttree ctptr,
   return 0;
 }
 
-
+
 
 /* evaluate the boolean constraint tree by using recursion
  * "corppos" is the current corpus position 
@@ -1228,7 +1228,7 @@ eval_bool(Constrainttree ctptr, RefTab rt, int corppos)
 }
 
 
-
+
 
 int mark_offrange_cells(Matchlist *matchlist, 
                         CorpusList *corpus)
@@ -1297,7 +1297,8 @@ Boolean calculate_initial_matchlist_1(Constrainttree ctptr,
         assert(ctptr->node.left && ctptr->node.right);
 
         /* just the beginnings of an implementation for the b_and operator (by oli);
-           never mind, the entire <eval.c> code will have to be rewritten for CWB-3.0 */
+           never mind, the entire <eval.c> code will have to be rewritten for CWB-3.0
+           TODO */
 #ifdef INITIAL_MATCH_BY_MU
 
         if (calculate_initial_matchlist_1(ctptr->node.left, &left, corpus) &&

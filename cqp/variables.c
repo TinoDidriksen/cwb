@@ -80,10 +80,10 @@ VariableAddItem(Variable v, char *item)
     
     for (i = 0; i < v->nr_items; i++)
       if (v->items[i].free) {
-	v->items[i].free = 0;
-	v->items[i].sval = cl_strdup(item);
-	v->items[i].ival = -1;
-	break;
+        v->items[i].free = 0;
+        v->items[i].sval = cl_strdup(item);
+        v->items[i].ival = -1;
+        break;
       }
 
     if (i >= v->nr_items) {
@@ -93,17 +93,17 @@ VariableAddItem(Variable v, char *item)
       v->nr_items += ITEM_REALLOC;
       
       if (v->items == NULL) 
-	v->items = (VariableItem *)cl_malloc(sizeof(VariableItem) * 
-					  v->nr_items);
+        v->items = (VariableItem *)cl_malloc(sizeof(VariableItem) *
+                                          v->nr_items);
       else 
-	v->items = (VariableItem *)cl_realloc(v->items,
-					   sizeof(VariableItem) * 
-					   v->nr_items);
+        v->items = (VariableItem *)cl_realloc(v->items,
+                                           sizeof(VariableItem) *
+                                           v->nr_items);
       
       if (v->items == NULL) {
-	fprintf(stderr, "Fatal Error #6: no memory left.");
-	perror("Memory fault");
-	assert(0 && "Big Problem here!");
+        fprintf(stderr, "Fatal Error #6: no memory left.");
+        perror("Memory fault");
+        assert(0 && "Big Problem here!");
       }
 
       v->items[i].sval = cl_strdup(item);
@@ -113,9 +113,9 @@ VariableAddItem(Variable v, char *item)
       i++;
 
       for ( ; i < v->nr_items; i++) {
-	v->items[i].sval = NULL;
-	v->items[i].free = 1;
-	v->items[i].ival = -1;
+        v->items[i].sval = NULL;
+        v->items[i].free = 1;
+        v->items[i].ival = -1;
       }
     }
   }
@@ -134,8 +134,8 @@ VariableSubtractItem(Variable v, char *item)
     /* wir löschen _alle_ vorkommen eines items in der Liste! */
     
     if (!v->items[i].free && 
-	v->items[i].sval != NULL &&
-	strcmp(v->items[i].sval, item) == 0) {
+        v->items[i].sval != NULL &&
+        strcmp(v->items[i].sval, item) == 0) {
       cl_free(v->items[i].sval);
       v->items[i].ival = -1;
       v->items[i].free++;
@@ -176,7 +176,7 @@ DropVariable(Variable *vp)
 
   if (i >= nr_variables) {
     fprintf(stderr, 
-	    "Error #5 in variable logic. Please contact developer.\n");
+            "Error #5 in variable logic. Please contact developer.\n");
   }
   
   *vp = NULL;
@@ -219,7 +219,7 @@ NewVariable(char *varname)
       VariableSpace = (Variable *)cl_malloc(nr_variables * sizeof(Variable));
     else
       VariableSpace = (Variable *)cl_realloc(VariableSpace, 
-					  nr_variables * sizeof(Variable));
+                                          nr_variables * sizeof(Variable));
     if (VariableSpace == NULL) {
       fprintf(stderr, "Fatal Error: Variable space out of memory.\n");
       assert(0 && "Sorry, big problem here!");
@@ -236,8 +236,8 @@ NewVariable(char *varname)
 
 int
 SetVariableValue(char *varName, 
-		 char operator, 
-		 char *varValues)
+                 char operator,
+                 char *varValues)
 {
   Variable v;
   char *item;
@@ -255,7 +255,7 @@ SetVariableValue(char *varName,
 
   switch (operator) {
     
-  case '+':			/* += operator: extend */
+  case '+':                        /* += operator: extend */
     
     item = strtok(varValues, " \t\n");
     while (item) {
@@ -265,7 +265,7 @@ SetVariableValue(char *varName,
 
     break;
 
-  case '-':			/* -= operator: substract */
+  case '-':                        /* -= operator: substract */
 
     item = strtok(varValues, " \t\n");
     while (item) {
@@ -275,7 +275,7 @@ SetVariableValue(char *varName,
 
     break;
 
-  case '=':			/* = operator: absolute setting */
+  case '=':                        /* = operator: absolute setting */
 
     VariableDeleteItems(v);
 
@@ -286,7 +286,7 @@ SetVariableValue(char *varName,
     }
     break;
 
-  case '<':			/* < operator: read from file */
+  case '<':                        /* < operator: read from file */
 
     VariableDeleteItems(v);
 
@@ -297,23 +297,23 @@ SetVariableValue(char *varName,
 
       while (fgets(s, 1024, fd) != NULL) {
 
-	l = strlen(s);
+        l = strlen(s);
 
-	if (l > 0 && s[l-1] == '\n') {
+        if (l > 0 && s[l-1] == '\n') {
 
-	  /* strip trailing newline */
-	  s[l-1] = '\0'; l--;
-	}
+          /* strip trailing newline */
+          s[l-1] = '\0'; l--;
+        }
 
-	if (l > 0)
-	  VariableAddItem(v, s);
+        if (l > 0)
+          VariableAddItem(v, s);
       }
       fclose(fd);
     }
     else {
       perror(varValues);
       cqpmessage(Warning, "Can't open %s: no such file or directory",
-		 varValues);
+                 varValues);
       return 0;
     }
     break;
@@ -351,8 +351,8 @@ variables_iterator_next(void) {
 
 int
 VerifyVariable(Variable v, 
-	       Corpus *corpus, 
-	       Attribute *attribute)
+               Corpus *corpus,
+               Attribute *attribute)
 {
   int i;
 
@@ -380,17 +380,17 @@ VerifyVariable(Variable v,
     for (i = 0; i < v->nr_items; i++) {
 
       if (!v->items[i].free) {
-	if (v->items[i].sval == NULL) {
-	  fprintf(stderr, "Error #1 in variable logic. Contact developer.\n");
-	  v->items[i].ival = -1;
-	}
-	else
-	  v->items[i].ival = get_id_of_string(attribute, v->items[i].sval);
+        if (v->items[i].sval == NULL) {
+          fprintf(stderr, "Error #1 in variable logic. Contact developer.\n");
+          v->items[i].ival = -1;
+        }
+        else
+          v->items[i].ival = get_id_of_string(attribute, v->items[i].sval);
 
-	if (v->items[i].ival < 0)
-	  nr_invalid++;
-	else
-	  nr_valid++;
+        if (v->items[i].ival < 0)
+          nr_invalid++;
+        else
+          nr_valid++;
       }
     }
     
@@ -416,9 +416,9 @@ int intcompare(const void *i, const void *j)
 
 int *
 GetVariableItems(Variable v, 
-		 Corpus *corpus, Attribute *attribute, 
-		 /* returned: */
-		 int *nr_items)
+                 Corpus *corpus, Attribute *attribute,
+                 /* returned: */
+                 int *nr_items)
 {
   if (VerifyVariable(v, corpus, attribute)) {
 
@@ -431,19 +431,19 @@ GetVariableItems(Variable v,
 
       ip = 0;
       for (i = 0; i < v->nr_items; i++)
-	if (!v->items[i].free && v->items[i].ival >= 0) {
-	  if (ip >= v->nr_valid_items)
-	    fprintf(stderr, 
-		    "Error #2 in variable logic. Please contact developer.\n");
-	  else {
-	    items[ip] = v->items[i].ival;
-	    ip++;
-	  }
-	}
+        if (!v->items[i].free && v->items[i].ival >= 0) {
+          if (ip >= v->nr_valid_items)
+            fprintf(stderr,
+                    "Error #2 in variable logic. Please contact developer.\n");
+          else {
+            items[ip] = v->items[i].ival;
+            ip++;
+          }
+        }
 
       if (ip != v->nr_valid_items) 
-	fprintf(stderr, 
-		"Error #3 in variable logic. Please contact developer.\n");
+        fprintf(stderr,
+                "Error #3 in variable logic. Please contact developer.\n");
 
       /* eval_bool() <eval.c> expects a sorted list of IDs (for binary search) */
       qsort(items, *nr_items, sizeof(int), intcompare);
@@ -462,8 +462,8 @@ GetVariableItems(Variable v,
 
 char **
 GetVariableStrings(Variable v, 
-		   /* returned: */
-		   int *nr_items)
+                   /* returned: */
+                   int *nr_items)
 {
   char **result;
   int i, j, N;
@@ -486,11 +486,11 @@ GetVariableStrings(Variable v,
     j = 0;
     for (i=0; i < v->nr_items; i++) {
       if (!v->items[i].free) {
-	result[j] = v->items[i].sval;
-	j++;
+        result[j] = v->items[i].sval;
+        j++;
       }
     }
     
-    return result;		/* must be freed by caller */
+    return result;                /* must be freed by caller */
   }
 }

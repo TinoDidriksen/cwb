@@ -31,7 +31,8 @@ INCINSTDIR = $(PREFIX)\include\cwb
 
 ## Default registry directory (used unless -r option or CORPUS_REGISTRY variable is set)
 ## For Windows, the best guess is that the right drive is C:, and a CWB folder exists
-DEFAULT_REGISTRY = C:\CWB\Registry
+## Note: \\\\ needed for \\ because the variable is string-embedded multiple times!
+DEFAULT_REGISTRY = C:\\\\CWB\\\\Registry
 
 
 ### [AH notes -- I am still not sure about the preceding, we will see if it works out!!]

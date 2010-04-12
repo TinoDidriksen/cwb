@@ -185,7 +185,8 @@ get_colour_escape(char colour, int foreground)
  * Dummy function
  */
 char *
-get_typeface_escape(char typeface) {
+get_typeface_escape(char typeface)
+{
   return "";
 }
 
@@ -203,8 +204,8 @@ void get_screen_escapes(void)
   sc_bl_in = NULL;
   sc_bl_out = NULL;
   sc_all_out = NULL;
- 
-  return;
+
+  escapes_initialized++;
 }
 
 #else /* USE_TERMCAP */
@@ -383,7 +384,7 @@ char *
 ascii_print_field(FieldType field, int at_end)
 {
 
-  *sc_before_token = 0;                /* sets sc_before_token to "" */
+  sc_before_token[0] = '\0';                /* sets sc_before_token to "" */
 
   /* if targets are shown, print target number at end of target/keyword fields */
   if (show_targets && at_end && (field==TargetField || field==KeywordField)) {
@@ -471,7 +472,7 @@ ascii_print_aligned_line(FILE *stream,
 /* print the concordance line for the target_word on the screen */
 /**
  * Prints a concordance line.
- * (documentation not compklete)_
+ * (documentation not complete)_
  *
  */
 void 

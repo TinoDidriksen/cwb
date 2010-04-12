@@ -242,6 +242,12 @@ int latin1_nocase_nodiac_tab_init = 0;
 /**
  * Gets a specified character mapping table for use in regular expressions.
  *
+ * Returns pointer to static mapping table for given flags (IGNORE_CASE and
+ * IGNORE_DIAC) and character set.
+ *
+ * Removed from the public API for 3.2.0 because there's no way for it to work
+ * if the CorpusCharset is UTF8. Prototype moved to special-chars.h
+ *
  * @param charset  The character set of this corpus. Currently ignored.
  * @param flags    The flags that specify which table is required.
  *                 Can be IGNORE_CASE and/or IGNORE_DIAC.
@@ -327,6 +333,30 @@ cl_path_adjust_os(char *path)
       *path = SUBDIR_SEPARATOR;
 }
 
+/**
+ * Standardises subdirectory-dividers in a string that represents a path
+ * into Unix-like form (ie with forward-slash), regardless of what OS
+ * we are in.
+ *
+ * Or, to put it another way, changes backslashes into forward slashes
+ * under Windows.
+ *
+ * This may be useful because of the need to move corpora between systems
+ * - in which case, the paths need to be in '/' format -- Windows tolerates
+ * forward slashes in paths a hell of a lot better than *nix tolerates
+ * unescaped backslashes!
+ *
+ * Note that the path is modified in place.
+ *
+ * @param path     The path to modify (must be Ascii-compatible)
+ */
+void
+cl_path_adjust_independent(char *path)
+{
+  for ( ; *path != '\0' ; path++ )
+    if (*path == SUBDIR_SEPARATOR)
+      *path = '/';
+}
 
 
 

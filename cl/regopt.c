@@ -47,6 +47,8 @@
  * but it does also serve to reduce memory allocation overhead.
  */
 
+/* optimiser variables */
+
 char *cl_regopt_grain[MAX_GRAINS]; /**< list of 'grains' (any matching string must contain one of these) */
 int cl_regopt_grain_len;           /**< all the grains have the same length */
 int cl_regopt_grains;              /**< number of grains */
@@ -74,12 +76,14 @@ char local_grain_data[MAX_LINE_LENGTH];
 int cl_regopt_analyse(char *regex);
 
 /*
- * interface functions
+ * interface functions (ie "public methods" of CL_Regex)
  */
 
 /**
  * The error message from (POSIX) regex compilation are placed in this buffer
  * if cl_new_regex() fails.
+ *
+ * This global variable is part of the CL_Regex object's API.
  */
 char cl_regex_error[MAX_LINE_LENGTH];
 
@@ -133,7 +137,7 @@ CL_Regex cl_new_regex(char *regex, int flags, CorpusCharset charset)
     cl_free(rx);
     cl_free(iso_regex);
     cl_free(anchored_regex);
-    cderrno = CDA_EBADREGEX;
+    cl_errno = CDA_EBADREGEX;
     return NULL;
   }
 
@@ -159,7 +163,7 @@ CL_Regex cl_new_regex(char *regex, int flags, CorpusCharset charset)
 
   cl_free(iso_regex);
   cl_free(anchored_regex);
-  cderrno = CDA_OK;
+  cl_errno = CDA_OK;
   return rx;
 }
 
@@ -275,6 +279,7 @@ void cl_delete_regex(CL_Regex rx)
 
 /*
  * helper functions (for optimiser)
+ * (non-exported in the publuic API)
  */
 
 /**
@@ -283,12 +288,22 @@ void cl_delete_regex(CL_Regex rx)
  * @param c  The character
  * @return   True for non-special characters; false for special characters.
  */
-int is_safe_char(unsigned char c)
+int
+is_safe_char(unsigned char c)
 {
-  if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')
-      || (c >= '0' && c <= '9') || (c == '-' || c == '"' || c == '\'' || c
-      == '%' || c == '&' || c == '/' || c == '_' || c == '!' || c == ':' || c
-      == ';' || c == ',') || (c >= 128 /* && c <= 255 */)) { /* c <= 255 produces 'comparison is always true' compiler warning */
+  /* TODO is this UTF8-safe? */
+  /* c <= 255 produces 'comparison is always true' compiler warning */
+  if(
+      (c >= 'A' && c <= 'Z') ||
+      (c >= 'a' && c <= 'z') ||
+      (c >= '0' && c <= '9') ||
+      (
+        c == '-' || c == '"' || c == '\'' || c == '%' ||
+        c == '&' || c == '/' || c == '_'  || c == '!' ||
+        c == ':' || c == ';' || c == ','
+      ) ||
+      (c >= 128 /* && c <= 255 */)
+    )   {
     return 1;
   }
   else {

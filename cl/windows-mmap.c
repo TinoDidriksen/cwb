@@ -43,8 +43,6 @@
 void *
 mmap(void *start, size_t length, int prot, int flags, int fd, off_t offset)
 {
-
-
   HANDLE hmap;
   void *temp;
   size_t len;
@@ -60,7 +58,6 @@ mmap(void *start, size_t length, int prot, int flags, int fd, off_t offset)
     exit(1);
   }
 
-
   if ((length + offset) > len)
     length = len - offset;
 
@@ -75,7 +72,6 @@ mmap(void *start, size_t length, int prot, int flags, int fd, off_t offset)
     return MAP_FAILED;
 
   temp = MapViewOfFileEx(hmap, FILE_MAP_COPY, h, l, length, start);
-
 
   if (!CloseHandle(hmap))
     fprintf(stderr,"unable to close file mapping handle\n");

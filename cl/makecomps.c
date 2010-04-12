@@ -51,7 +51,8 @@ static MemBlob *SortIndex;
  *
  * This function is for use with qsort().
  */
-static int scompare(const void *idx1, const void *idx2)
+static int
+scompare(const void *idx1, const void *idx2)
 {
   /* this is the way qsort(..) is meant to be used: give it void*
      and cast them to the actual type in the compare function;
@@ -176,7 +177,7 @@ creat_freqs(Component *freqs)
   corpus_fn = component_full_name(freqs->attribute, CompCorpus, NULL);
   assert(corpus_fn != NULL);
 
-  if ((fd = fopen(corpus_fn, "r")) == NULL) {
+  if ((fd = fopen(corpus_fn, "rb")) == NULL) {
     fprintf(stderr, "makecomps:creat_freqs(): Couldn't open corpus %s\n", corpus_fn);
     perror(corpus_fn);
     exit(2);
@@ -267,7 +268,7 @@ creat_rev_corpus(Component *revcorp)
   buffer = cl_malloc(4 * bufsize); /* allocate buffer */
 
   /* open REVCORP data file for writing */
-  if ((revcorp_fd = fopen(revcorp->path, "w")) == NULL) {
+  if ((revcorp_fd = fopen(revcorp->path, "wb")) == NULL) {
     perror(revcorp->path);
     exit(1);
   }

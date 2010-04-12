@@ -219,7 +219,7 @@ WriteHCD(char *filename, HCD *hc)
 {
   FILE *fd;
 
-  if ((fd = fopen(filename, "w")) == NULL) {
+  if ((fd = fopen(filename, "wb")) == NULL) {
     perror(filename);
     return 0;
   }

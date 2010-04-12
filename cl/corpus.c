@@ -110,7 +110,10 @@ Corpus *loaded_corpora = NULL;
  *
  * It is initialised when the function that reads it is first called.
  *
- * @see central_corpus_directory
+ * @see cl_standard_registry
+ * TODO: would this be better as a static variable WITHIN that function?
+ * That way there is no change of anyone acessing the regdir variable
+ * except via that function...
  *
  */
 static char *regdir = NULL;
@@ -122,9 +125,11 @@ static char *regdir = NULL;
  *          which is initialised from the environment variable
  *          REGISTRY_ENVVAR or, failing that, the macro
  *          REGISTRY_DEFAULT_PATH.
+ * @see     REGISTRY_ENVVAR
+ * @see     REGISTRY_DEFAULT_PATH
  */
 char *
-central_corpus_directory()
+cl_standard_registry()
 {
   if (regdir == NULL)
     regdir = getenv(REGISTRY_ENVVAR);
@@ -175,6 +180,8 @@ find_corpus(char *registry_dir, char *registry_name)
 
 /**
  * Gets a file handle for the registry file of the corpus with the specified CWB-name and registry location.
+ *
+ * The registry file is opened for text-mode read.
  *
  * @param  registry_dir       The registry directory.
  * @param  registry_name      The CWB name of the corpus.
@@ -375,7 +382,8 @@ check_access_conditions(Corpus *corpus, int verbose)
 }
 
 /**
- * Creates a Corpus object.
+ * Creates a Corpus object to represent a given indexed corpus, located in
+ * a given directory accessible to the program.
  *
  * @param registry_dir   Path to the CWB registry directory from which the corpus is to be loaded.
  *                       This may be NULL, in which case the default registry directory is used.
@@ -383,13 +391,14 @@ check_access_conditions(Corpus *corpus, int verbose)
  * @return               Pointer to the resulting Corpus object.
  */
 Corpus *
-setup_corpus(char *registry_dir, char *registry_name)
+cl_new_corpus(char *registry_dir, char *registry_name)
 {
   char *real_registry_name;
   static char *canonical_name = NULL;
   Corpus *corpus;
 
-  /* corpus name must be all lowercase at this level -> canonicalise (standard) uppercase and (deprecated) mixed-case forms */
+  /* corpus name must be all lowercase at this level
+   * -> canonicalise (standard) uppercase and (deprecated) mixed-case forms */
   cl_free(canonical_name); /* if necessary, free buffer allocated in previous call to setup_corpus() */
 
   canonical_name = cl_strdup(registry_name);
@@ -463,7 +472,7 @@ setup_corpus(char *registry_dir, char *registry_name)
  * @return        Always 1.
  */
 int
-drop_corpus(Corpus *corpus)
+cl_delete_corpus(Corpus *corpus)
 {
   Corpus *prev;
 
@@ -561,6 +570,46 @@ describe_corpus(Corpus *corpus)
     describe_attribute(attr);
 
   printf("\n\n------------------------- END -------------------------\n\n");
+}
+
+/* ---------------------------------------------------------------------- */
+
+/**
+ * Gets a list of the named attributes that this corpus posesses.
+ *
+ * This function creates a list of strings containing the names of all and only
+ * those Attributes in this corpus whose type matches that specified in the
+ * second parameter.
+ *
+ * @param corpus          The corpus whose attributes are to be listed.
+ * @param attribute_type  The type of attributes to be listed. This must be one
+ *                        of the attribute type macros: ATT_POS, ATT_STRUC etc.
+ *                        For all attributes, specify ATT_ALL (natuerlich).
+ * @return                String list containing names of all the corpus's
+ *                        attributes that have the desired type. All the
+ *                        actual character buffers have been newly
+ *                        allocated, so it is safe to call cl_free_string_list
+ *                        on the returned cl_string_list object once you're
+ *                        done with it.
+ */
+cl_string_list
+cl_corpus_list_attributes(Corpus *corpus, int attribute_type)
+{
+  cl_string_list attnames;
+  Attribute *attr;
+
+  attnames = cl_new_string_list();
+
+  for (attr = corpus->attributes;
+       attr != NULL;
+       attr= (Attribute *) (attr->any.next)) {
+    /* ie if any of the bits set on the parameter match the type bit of this att   */
+    /* (allows ATT_ANY and ATT_REAL to be passed, and we will get the right result */
+    if ((attr->any.type & attribute_type) != 0)
+      cl_string_list_append(attnames, cl_strdup(attr->any.name));
+  }
+
+  return attnames;
 }
 
 /* ---------------------------------------------------------------------- */
@@ -669,7 +718,8 @@ cl_corpus_property(Corpus *corpus, char *property)
 
 
 /**
- * Retrieves the special 'charset' property
+ * Retrieves the special 'charset' property from a Corpus object.
+ *
  * @param corpus  The corpus object from which to retrieve the charset
  * @return        The character set (as a CorpusCharset object).
  */
@@ -683,10 +733,17 @@ cl_corpus_charset(Corpus *corpus)
 typedef struct _charset_spec
 {
   CorpusCharset id;
+  /* TODO should this be const char *? */
   char *name;
 } charset_spec;
 
-/** a list of charset names as strings linked to CorpusCharset enumerations */
+/** a list of charset names as strings paired with CorpusCharset ID values;
+ *  where there are multiple possible names for one ID, the pair with the
+ *  CWB-preferred name comes first in the array (and is the same as the
+ *  identifier used for that charset in the CorpusCharset enumeration).
+ *
+ *  TODO should it be const charset_spec ?
+ */
 charset_spec charset_names[] = {
     { ascii,    "ascii" },
     { latin1,   "latin1" },
@@ -722,7 +779,7 @@ charset_spec charset_names[] = {
 /**
  * Gets a string containing the name of the specified CorpusCharset character set object.
  *
- * Note that returned string cannot be modified.
+ * Note that returned string cannot be modified. TODO It should probably be a const char.
  */
 char *
 cl_charset_name(CorpusCharset id)
@@ -755,6 +812,8 @@ cl_charset_from_name(char *name)
 /**
  * Checks whether a string represents a valid charset, and returns a pointer to the name in
  * canonical form (ie lacking any non-standard case there may be in the input string).
+ *
+ * Note that the returned string cannot be modified.
  *
  * @param name_to_check  String containing the character set name to be checked
  * @return               Pointer to canonical-form string for that charset's name

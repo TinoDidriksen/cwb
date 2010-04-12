@@ -223,6 +223,13 @@ else
 LIB_REGEX = 
 endif
 
+# paths to DLL files that need to be installed along with CWB binaries (win only)
+ifdef __MINGW__
+DLLS_TO_INSTALL = mingw-libgnurx-2.5.1/libgnurx-0.dll
+else
+DLLS_TO_INSTALL = 
+endif 
+
 ## note. Might be worth having a LIBS_ALL variable (for easy specification of build rules)
 
 # complete sets of compiler and linker flags (allows easy specification of specific build rules)

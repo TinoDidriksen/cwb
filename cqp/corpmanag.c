@@ -1018,7 +1018,7 @@ check_stamp(char *directory, char *fname)
 
   sprintf(full_name, "%s/%s", directory, fname);
 
-  if (((fd = open_file(full_name, "r")) == NULL) ||
+  if (((fd = open_file(full_name, "rb")) == NULL) ||
       (fread(&magic, sizeof(int), 1, fd) == 0) ||
       ((magic != SUBCORPMAGIC) && (magic != SUBCORPMAGIC+1)))
     ok = 0;
@@ -1045,14 +1045,13 @@ load_corpusnames(enum corpus_type ct)
   CorpusList    *corpus;
 
   if (!((ct == SYSTEM) || (ct == SUB))) {
-    fprintf(stderr, "Can't load corpus names for type %d\n",
-            ct);
+    fprintf(stderr, "Can't load corpus names for type %d\n", ct);
     return;
   }
 
   if (ct == SYSTEM) {
     if (registry == NULL)
-      strcpy(dirlist, central_corpus_directory());
+      strcpy(dirlist, cl_standard_registry());
     else
       strcpy(dirlist, registry);
   }
@@ -1071,7 +1070,7 @@ load_corpusnames(enum corpus_type ct)
     if (*dirname == '?') {
       dirname++;
       optional_dir = 1;
-  }
+    }
 
     dp = opendir(dirname);
   
@@ -1153,7 +1152,7 @@ load_corpusnames(enum corpus_type ct)
     }
     else if (!silent && !optional_dir)
       cqpmessage(Warning, "Couldn't open directory %s (continuing)", dirname);
-  }
+  } /* end for (each directory) */
 }
 
 void
@@ -1309,10 +1308,10 @@ attach_subcorpus(CorpusList *cl,
     else
       fullname = get_fulllocalpath(cl, 0);
 
-    if ((fp = open_file(fullname, "r")) == NULL && !advertised_filename) {
+    if ((fp = open_file(fullname, "rb")) == NULL && !advertised_filename) {
       cl_free(fullname);
       fullname = get_fulllocalpath(cl, 1);
-      fp = open_file(fullname, "r");
+      fp = open_file(fullname, "rb");
     }
 
     if (fp == NULL)
@@ -1510,8 +1509,9 @@ save_subcorpus(CorpusList *cl, char *fname)
           return False;
         }
 
-        sprintf(outfn, "%s/%s:%s", 
+        sprintf(outfn, "%s%c%s:%s",
                 LOCAL_CORP_PATH, 
+                SUBDIR_SEPARATOR,
                 cl->mother_name ? cl->mother_name : "NONE",
                 cl->name);
 
@@ -1519,7 +1519,7 @@ save_subcorpus(CorpusList *cl, char *fname)
       }
     }
 
-    if ((fp = open_file(fname, "w")) != NULL) {
+    if ((fp = open_file(fname, "wb")) != NULL) {
 
       int zero; 
       zero = 0;
@@ -1793,7 +1793,7 @@ touch_corpus(CorpusList *cp)
 /**
  * Sets the current corpus (by pointer to the corpus).
  *
- * Also, execustes Xkwic side effects, if necessary
+ * Also, executes Xkwic side effects, if necessary.
  *
  * @param cp     Pointer to the corpus to set as current.
  *               cp may be NULL, which is legal.
@@ -1955,6 +1955,7 @@ show_corpora_files(enum corpus_type ct)
  * None of these functions is used anywhere.
  * Their names are not noticeably better than the original names!
  * Also, they are a deeply inefficient way of rewriting the API; all those unnecessary function calls!
+ * And they are gunking up the namespace.
  * Can they be got rid of? -- and maybe rewrite the API the way SE did it in the CL instead -- AH. 26.9.09
  */
 

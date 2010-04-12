@@ -628,7 +628,7 @@ corpus_info(CorpusList *cl)
 
     if (cl->corpus->info_file == NULL)
       fprintf(outfd, "No further information available about %s\n", cl->name);
-    else if ((fd = open_file(cl->corpus->info_file, "r")) == NULL)
+    else if ((fd = open_file(cl->corpus->info_file, "rb")) == NULL)
       cqpmessage(Warning,
                  "Can't open info file %s for reading",
                  cl->corpus->info_file);

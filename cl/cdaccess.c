@@ -196,7 +196,7 @@ cl_error(char *message)
  * @return           The string, or NULL if there is an error
  */
 char *
-get_string_of_id(Attribute *attribute, int id)
+cl_id2str(Attribute *attribute, int id)
 {
   Component *lex;
   Component *lexidx;
@@ -232,7 +232,7 @@ get_string_of_id(Attribute *attribute, int id)
  * @return           Either the integer ID of the item, or an error code (if less than 0)
  */
 int
-get_id_of_string(Attribute *attribute, char *id_string)
+cl_str2id(Attribute *attribute, char *id_string)
 {
   int low, high, nr, mid, comp;
 
@@ -302,7 +302,7 @@ get_id_of_string(Attribute *attribute, char *id_string)
  * @return           The length of the string, or a CDA_ error code
  */
 int
-get_id_string_len(Attribute *attribute, int id)
+cl_id2strlen(Attribute *attribute, int id)
 {
   Component *lexidx;
   char *s;
@@ -355,7 +355,7 @@ get_id_string_len(Attribute *attribute, int id)
  * @return                     Either the integer ID, or an error code (if less than 0)
  */
 int
-get_id_from_sortidx(Attribute *attribute, int sort_index_position)
+cl_sort2id(Attribute *attribute, int sort_index_position)
 {
   Component *srtidx;
 
@@ -393,7 +393,7 @@ get_id_from_sortidx(Attribute *attribute, int sort_index_position)
  * @return           The offset of that item in the sorted wordlist index.
  */
 int
-get_sortidxpos_of_id(Attribute *attribute, int id)
+cl_id2sort(Attribute *attribute, int id)
 {
   Component *srtidx;
 
@@ -428,7 +428,7 @@ get_sortidxpos_of_id(Attribute *attribute, int id)
  * @return  Boolean.
  */
 int
-item_sequence_is_compressed(Attribute *attribute)
+cl_sequence_compressed(Attribute *attribute)
 {
   ComponentState state;
 
@@ -479,7 +479,7 @@ item_sequence_is_compressed(Attribute *attribute)
  * @return  Boolean.
  */
 int
-inverted_file_is_compressed(Attribute *attribute)
+cl_index_compressed(Attribute *attribute)
 {
   ComponentState state;
 
@@ -527,7 +527,7 @@ inverted_file_is_compressed(Attribute *attribute)
  * @return  The maximum corpus position, or an error code (if less than 0)
  */
 int
-get_attribute_size(Attribute *attribute)
+cl_max_cpos(Attribute *attribute)
 {
   Component *corpus;
 
@@ -573,7 +573,7 @@ get_attribute_size(Attribute *attribute)
  * @return  The maximum Id, or an error code (if less than 0)
  */
 int
-get_id_range(Attribute *attribute)
+cl_max_id(Attribute *attribute)
 {
   Component *comp;
 
@@ -607,7 +607,7 @@ get_id_range(Attribute *attribute)
  *                   by id, or an error code (if less than 0)
  */
 int
-get_id_frequency(Attribute *attribute, int id)
+cl_id2freq(Attribute *attribute, int id)
 {
   Component *freqs;
 
@@ -648,6 +648,13 @@ get_id_frequency(Attribute *attribute, int id)
  * of size restrictor_list_size, that is, the number of ints in
  * this area is 2 * restrictor_list_size!!!
  *
+ * This function is "oldstyle" because in the "newstyle" function,
+ * there is no restrictor list. (And in fact, the newstyle
+ * function is implemented as a macro to this one with the last
+ * two arguments NULL and 0.)
+ *
+ * @see
+ *
  * @param attribute             The P-attribute to look on.
  * @param id                    The id of the item to look
  *                              for.
@@ -664,7 +671,7 @@ get_id_frequency(Attribute *attribute, int id)
  *                              error.
  */
 int *
-get_positions(Attribute *attribute, int id, int *freq, int *restrictor_list, int restrictor_list_size)
+cl_id2cpos_oldstyle(Attribute *attribute, int id, int *freq, int *restrictor_list, int restrictor_list_size)
 {
   Component *revcorp, *revcidx;
   int *buffer;
@@ -897,7 +904,7 @@ typedef struct _position_stream_rec_ {
  * @return           The new object, or NULL in case of problem.
  */
 PositionStream
-OpenPositionStream(Attribute *attribute,
+cl_new_stream(Attribute *attribute,
                    int id)
 {
   Component *revcorp, *revcidx;
@@ -908,20 +915,20 @@ OpenPositionStream(Attribute *attribute,
   check_arg(attribute, ATT_POS, NULL);
 
   size  = get_attribute_size(attribute);
-  if ((size <= 0) || (cderrno != CDA_OK))
+  if ((size <= 0) || (cl_errno != CDA_OK))
     return NULL;
 
   range  = get_id_range(attribute);
-  if ((range <= 0) || (cderrno != CDA_OK))
+  if ((range <= 0) || (cl_errno != CDA_OK))
     return NULL;
 
   if ((id <0) || (id >= range)) {
-    cderrno = CDA_EIDORNG;
+    cl_errno = CDA_EIDORNG;
     return NULL;
   }
 
   freq = get_id_frequency(attribute, id);
-  if ((freq < 0) || (cderrno != CDA_OK))
+  if ((freq < 0) || (cl_errno != CDA_OK))
     return NULL;
 
   ps = new(PositionStreamRecord);
@@ -935,7 +942,7 @@ OpenPositionStream(Attribute *attribute,
   ps->b = 0; ps->last_pos = 0;
   ps->base = NULL;
 
-  if (inverted_file_is_compressed(attribute) == 1) {
+  if (cl_index_compressed(attribute)) {
 
     int offset;
 
@@ -945,7 +952,7 @@ OpenPositionStream(Attribute *attribute,
     revcidx = ensure_component(attribute, CompCompRFX, 0);
 
     if (revcorp == NULL || revcidx == NULL) {
-      cderrno = CDA_ENODATA;
+      cl_errno = CDA_ENODATA;
       free(ps);
       return NULL;
     }
@@ -968,7 +975,7 @@ OpenPositionStream(Attribute *attribute,
     revcidx = ensure_component(attribute, CompRevCorpusIdx, 0);
 
     if (revcorp == NULL || revcidx == NULL) {
-      cderrno = CDA_ENODATA;
+      cl_errno = CDA_ENODATA;
       free(ps);
       return NULL;
     }
@@ -984,7 +991,7 @@ OpenPositionStream(Attribute *attribute,
  * Deletes a PositionStream object.
  */
 int
-ClosePositionStream(PositionStream *ps)
+cl_delete_stream(PositionStream *ps)
 {
   assert(ps && *ps);
 
@@ -1020,9 +1027,9 @@ ClosePositionStream(PositionStream *ps)
  *                     will be 0 if there are no instances of this item left).
  */
 int
-ReadPositionStream(PositionStream ps,
-                   int *buffer,
-                   int buffer_size)
+cl_read_stream(PositionStream ps,
+               int *buffer,
+               int buffer_size)
 {
   int items_to_read;
 
@@ -1097,7 +1104,7 @@ ReadPositionStream(PositionStream ps,
  *                   if there is an error.
  */
 int
-get_id_at_position(Attribute *attribute, int position)
+cl_cpos2id(Attribute *attribute, int position)
 {
   Component *corpus;
 
@@ -1247,7 +1254,7 @@ get_id_at_position(Attribute *attribute, int position)
  *                   if there is an error.
  */
 char *
-get_string_at_position(Attribute *attribute, int position)
+cl_cpos2str(Attribute *attribute, int position)
 {
   int id;
 
@@ -1284,7 +1291,7 @@ get_string_at_position(Attribute *attribute, int position)
  *                   if there is an error.
  */
 char *
-get_id_info(Attribute *attribute, int index, int *freq, int *slen)
+cl_id2all(Attribute *attribute, int index, int *freq, int *slen)
 {
   check_arg(attribute, ATT_POS, NULL);
 
@@ -1305,20 +1312,22 @@ get_id_info(Attribute *attribute, int index, int *freq, int *slen)
  * Gets a list of the ids of those items on a given Attribute that
  * match a particular regular-expression pattern.
  *
- * The pattern is interpreted with the CL regex engine, q.v.
+ * The pattern is interpreted internally with the CL regex engine, q.v.
  *
  * The function returns a pointer to a sequence of ints of size number_of_matches. The list
  * is allocated with malloc(), so do a cl_free() when you don't need it any more.
  *
  * @see cl_new_regex
  * @param attribute          The p-attribute to look on.
- * @param pattern            String containing the pattern against which to match each item on the attribute
+ * @param pattern            String containing the pattern against which to match each item on the attribute.
+ *                           Note: this pattern is a regular expression, but it is passed as a string, not
+ *                           a CL_Regex object. The CL_Regex object is created internally.
  * @param flags              Flags for the regular expression system via cl_new_regex.
  * @param number_of_matches  This is set to the number of item ids found, i.e. the size of the returned buffer.
  * @return                   A pointer to the list of item ids.
  */
 int *
-collect_matching_ids(Attribute *attribute, char *pattern, int flags, int *number_of_matches)
+cl_regex2id(Attribute *attribute, char *pattern, int flags, int *number_of_matches)
 {
   Component *lexidx;
   Component *lex;
@@ -1505,9 +1514,9 @@ collect_matching_ids(Attribute *attribute, char *pattern, int flags, int *number
  * @return                 Sum of all the frequencies; less than 0 for an error.
  */
 
-int cumulative_id_frequency(Attribute *attribute,
-                            int *word_ids,
-                            int number_of_words)
+int cl_idlist2freq(Attribute *attribute,
+                   int *word_ids,
+                   int number_of_words)
 {
   int k, sum;
 
@@ -1539,14 +1548,14 @@ int cumulative_id_frequency(Attribute *attribute,
 /** internal function for use with qsort */
 static int intcompare(const void *i, const void *j)
 { return(*(int *)i - *(int *)j); }
+/* this is used in the following function, thus why it's here. */
 
 
 /**
  * Gets a list of corpus positions matching a list of ids.
  *
- *
  * This function returns an (ordered) list of all corpus positions which
- * matches one of the ids given in the list of ids. The table is allocated
+ * match one of the ids given in the list of ids. The table is allocated
  * with malloc, so free it when you don't need any more.
  *
  * The list itself is returned; its size is placed in size_of_table.
@@ -1560,6 +1569,12 @@ static int intcompare(const void *i, const void *j)
  * which you probably don't have enough memory!!! It is therefore a good
  * idea to call cumulative_id_frequency before and to introduce some
  * kind of bias.
+ *
+ * This function is DEPRACATED in favour of cl_idlist2cpos().
+ *
+ * This function is "oldstyle" because it has the "restrictor list"
+ * parameters, which are not available through the "newstyle" function
+ * cl_idlist2cpos() (which is currently just a macro to this).
  *
  * A note on the last two parameters, which are currently unused:
  * restrictor_list is a list of integer pairs [a,b] which means that
@@ -1576,6 +1591,7 @@ static int intcompare(const void *i, const void *j)
  *
  * @see collect_matching_ids
  * @see get_positions
+ * @see cl_idlist2cpos
  *
  * @param attribute             The P-attribute we are looking in
  * @param word_ids              A list of item ids (i.e. id codes for
@@ -1589,13 +1605,13 @@ static int intcompare(const void *i, const void *j)
  * @return                      Pointer to the list of corpus positions.
  */
 int *
-collect_matches(Attribute *attribute,
-                int *word_ids,
-                int number_of_words,
-                int sort,
-                int *size_of_table,
-                int *restrictor_list,
-                int restrictor_list_size)
+cl_idlist2cpos_oldstyle(Attribute *attribute,
+                        int *word_ids,
+                        int number_of_words,
+                        int sort,
+                        int *size_of_table,
+                        int *restrictor_list,
+                        int restrictor_list_size)
 {
   int size, k, p, word_id, freq;
 
@@ -1740,13 +1756,16 @@ get_previous_mark(int *data, int size, int position)
  * Gets the ID number of a structure (instance of an s-attribute)
  * that is found at the given corpus position.
  *
+ * This is a wrapper of the "old" function get_num_of_struc() that
+ * normalises it to standard return value behaviour.
+ *
  * @param a      The s-attribute on which to search.
  * @param cpos   The corpus position to look for.
  * @return       The number of the structure that is found.
  */
 int
-cl_cpos2struc(Attribute *a, int cpos) {
-  /* normalised to standard return value behaviour */
+cl_cpos2struc(Attribute *a, int cpos)
+{
   int struc = -1;
   if (get_num_of_struc(a, cpos, &struc))
     return struc;
@@ -1801,12 +1820,15 @@ cl_cpos2boundary(Attribute *a, int cpos) {
  * The result of this function is equal to the number of instances
  * of this s-attribute in the corpus.
  *
+ * This function works as a wrapper round cl_max_struc_oldstyle that
+ * normalises it to standard return value behaviour.
+ *
  * @a       The s-attribute to evaluate.
  * @return  The maximum corpus position, or an error code (if less than 0)
  */
 int
-cl_max_struc(Attribute *a) {
-  /* normalised to standard return value behaviour */
+cl_max_struc(Attribute *a)
+{
   int nr = -1;
   if (get_nr_of_strucs(a, &nr)) 
     return nr;
@@ -1828,10 +1850,10 @@ cl_max_struc(Attribute *a) {
  * @param struc_end    Location for the end position of the instance.
  */
 int
-get_struc_attribute(Attribute *attribute,
-                    int position,
-                    int *struc_start,
-                    int *struc_end)
+cl_cpos2struc2cpos(Attribute *attribute,
+                   int position,
+                   int *struc_start,
+                   int *struc_end)
 {
   Component *struc_data;
   
@@ -1883,8 +1905,8 @@ get_struc_attribute(Attribute *attribute,
  * @return           Boolean: true for all OK, false for error.
  */
 int
-get_num_of_struc(Attribute *attribute,
-                 int position,
+cl_cpos2struc_oldstyle(Attribute *attribute,
+                       int position,
                  int *struc_num)
 {
 
@@ -1931,12 +1953,11 @@ get_num_of_struc(Attribute *attribute,
  * @return             boolean: true for all OK, 0 for problem
  */
 int
-get_bounds_of_nth_struc(Attribute *attribute,
-                        int struc_num,
-                        int *struc_start,
-                        int *struc_end)
+cl_struc2cpos(Attribute *attribute,
+              int struc_num,
+              int *struc_start,
+              int *struc_end)
 {
-
   Component *struc_data;
 
   check_arg(attribute, ATT_STRUC, cderrno);
@@ -2002,7 +2023,7 @@ get_nr_of_strucs(Attribute *attribute, int *nr_strucs)
  * @return Boolean.
  */
 int 
-structure_has_values(Attribute *attribute) {
+cl_struc_values(Attribute *attribute) {
 
   check_arg(attribute, ATT_STRUC, cderrno);
 
@@ -2054,7 +2075,7 @@ s_v_comp(const void *v1, const void *v2)
  *
  */
 char *
-structure_value(Attribute *attribute, int struc_num)
+cl_struc2str(Attribute *attribute, int struc_num)
 {
   check_arg(attribute, ATT_STRUC, NULL);
 
@@ -2288,12 +2309,12 @@ get_extended_alignment(int *data, int size, int position)   /* XALIGN component 
  * @return                      Boolean: true = all OK, false = problem.
  */
 int
-get_alg_attribute(Attribute *attribute, /* accesses alignment attribute */
-                  int position,
-                  int *source_corpus_start,
-                  int *source_corpus_end,
-                  int *aligned_corpus_start,
-                  int *aligned_corpus_end)
+cl_cpos2alg2cpos_oldstyle(Attribute *attribute, /* accesses alignment attribute */
+                          int position,
+                          int *source_corpus_start,
+                          int *source_corpus_end,
+                          int *aligned_corpus_start,
+                          int *aligned_corpus_end)
 {
   int *val;
   int alg;                      /* nr of alignment region */
@@ -2542,10 +2563,10 @@ cl_alg2cpos(Attribute *attribute,
  * @return           Boolean: True for all OK, false for error.
  */
 int
-call_dynamic_attribute(Attribute *attribute,
-                       DynCallResult *dcr,
-                       DynCallResult *args,
-                       int nr_args)
+cl_dynamic_call(Attribute *attribute,
+                DynCallResult *dcr,
+                DynCallResult *args,
+                int nr_args)
 {
   char call[2048];
   char istr[32];
@@ -2717,7 +2738,7 @@ call_dynamic_attribute(Attribute *attribute,
         dcr->value.intres = -1;
       break;
       
-    case ATTAT_STRING:  /* copy output */
+    case ATTAT_STRING:          /* copy output */
       fgets(call, 1024, pipe);
       dcr->value.charres = (char *)cl_strdup(call);
         
@@ -2751,7 +2772,7 @@ call_dynamic_attribute(Attribute *attribute,
 }
 
 /**
- * Count the number of arguments on an attribute's dynamic argument list.
+ * Count the number of arguments on a dynamic attribute's argument list.
  *
  * @param attribute  pointer to the Attribute object to analyse; it must
  *                   be a dynamic attribute.
@@ -2760,7 +2781,7 @@ call_dynamic_attribute(Attribute *attribute,
  *                   on dyn.arglist, the type is equal to ATTAT_VAR
  */
 int
-nr_of_arguments(Attribute *attribute)
+cl_dynamic_numargs(Attribute *attribute)
 {
   int nr;
   DynArg *arg;

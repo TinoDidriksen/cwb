@@ -45,7 +45,12 @@
     } \
     cd->right_structure = NULL
 
-
+/**
+ * Verify the current context settings against the current corpus:
+ * check whether structures are still valid, and reset them to
+ * defaults if not. returns 1 if all keeps the same, 0 otherwise. The
+ * string fields in CD are supposed to be malloced and freed.
+ */
 int verify_context_descriptor(Corpus *corpus, 
 			      ContextDescriptor *cd,
 			      int remove_illegal_entries)
@@ -57,14 +62,14 @@ int verify_context_descriptor(Corpus *corpus,
   if (cd == NULL) {
 
     fprintf(stderr,
-	    "concordance.o/verify_context_descriptor: WARNING: Context Descriptor empty!\n");
+	    "verify_context_descriptor(): WARNING: Context Descriptor empty!\n");
 
     result = 0;
   }
   else if (corpus == NULL) {
 
     fprintf(stderr,
-	    "concordance.o/verify_context_descriptor: WARNING: Corpus Descriptor empty!\n");
+	    "verify_context_descriptor(): WARNING: Corpus Descriptor empty!\n");
 
     RESET_LEFT_CONTEXT;
     RESET_RIGHT_CONTEXT;
@@ -182,7 +187,9 @@ int verify_context_descriptor(Corpus *corpus,
   return result;
 }
 
-ContextDescriptor *NewContextDescriptor()
+
+ContextDescriptor *
+NewContextDescriptor()
 {
   ContextDescriptor *cd;
 
@@ -192,7 +199,8 @@ ContextDescriptor *NewContextDescriptor()
   return cd;
 }
 
-void FreeContextDescriptor(ContextDescriptor **cdp)
+void
+FreeContextDescriptor(ContextDescriptor **cdp)
 {
   /* TODO: free allocated memory */
 
@@ -200,7 +208,8 @@ void FreeContextDescriptor(ContextDescriptor **cdp)
   *cdp = NULL;
 }
 
-int initialize_context_descriptor(ContextDescriptor *cd)
+int
+initialize_context_descriptor(ContextDescriptor *cd)
 {
   cd->left_width = 0;
   cd->left_type  = CHAR_CONTEXT;
@@ -222,8 +231,8 @@ int initialize_context_descriptor(ContextDescriptor *cd)
   return 1;
 }
 
-int update_context_descriptor(Corpus *corpus,
-			      ContextDescriptor *cd)
+int
+update_context_descriptor(Corpus *corpus, ContextDescriptor *cd)
 {
   AttributeInfo *ai;
 
@@ -263,12 +272,12 @@ int update_context_descriptor(Corpus *corpus,
   }
   
   return 1;
-
 }
 
-/* attribute (selected/unselected) print helper routine */
+/** attribute (selected/unselected) print helper routine */
 void 
-PrintAttributes(FILE *fd, char *header, AttributeList *al, int show_if_annot) {
+PrintAttributes(FILE *fd, char *header, AttributeList *al, int show_if_annot)
+{
   int line = 0, i;
   AttributeInfo *ai;
 
@@ -293,9 +302,10 @@ PrintAttributes(FILE *fd, char *header, AttributeList *al, int show_if_annot) {
   }
 }
 
-/* attribute print helper routine (non pretty-printing mode) */
+/** attribute print helper routine (non pretty-printing mode) */
 void 
-PrintAttributesSimple(FILE *fd, char *type, AttributeList *al, int show_if_annot) {
+PrintAttributesSimple(FILE *fd, char *type, AttributeList *al, int show_if_annot)
+{
   AttributeInfo *ai;
 
   if (al && al->list) {

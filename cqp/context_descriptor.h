@@ -27,6 +27,15 @@
 #define STRUC_CONTEXT -3
 #define ALIGN_CONTEXT -4	/* allow alignment blocks as context */
 
+/**
+ * ContextDescriptor object: a bundle of CQP options
+ * describing how a list of corpus positions is to be
+ * displayed: with left context, with right context,
+ * with what attributes, etc.
+ *
+ * It is passed around between different print functions
+ * so that they know what to do!
+ */
 typedef struct _context_description_block {
 
   /* ==================== left context */
@@ -60,10 +69,8 @@ typedef struct _context_description_block {
 
 } ContextDescriptor;
 
-/* verify the current context settings against the current corpus:
- * check whether structures are still valid, and reset them to
- * defaults if not. returns 1 if all keeps the same, 0 otherwise. The
- * string fields in CD are supposed to be malloced and freed. */
+
+/* Contextdescriptor methods */
 
 int verify_context_descriptor(Corpus *corpus, 
                               ContextDescriptor *cd,
@@ -71,14 +78,12 @@ int verify_context_descriptor(Corpus *corpus,
 
 int initialize_context_descriptor(ContextDescriptor *cd);
 
-int update_context_descriptor(Corpus *corpus,
-                              ContextDescriptor *cd);
+int update_context_descriptor(Corpus *corpus, ContextDescriptor *cd);
 
 ContextDescriptor *NewContextDescriptor();
 
 void FreeContextDescriptor(ContextDescriptor **cdp);
 
-void
-PrintContextDescriptor(ContextDescriptor *cdp);
+void PrintContextDescriptor(ContextDescriptor *cdp);
 
 #endif

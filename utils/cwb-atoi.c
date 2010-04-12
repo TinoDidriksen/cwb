@@ -91,7 +91,7 @@ main(int argc, char **argv)
 	exit(1);
       }
     }
-    else if ((fd = fopen(argv[i], "r")) == NULL) {
+    else if ((fd = fopen(argv[i], "rb")) == NULL) {
       fprintf(stderr, "%s: Couldn't open %s\n", progname, argv[i]);
       exit(1);
     }

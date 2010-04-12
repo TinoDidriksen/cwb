@@ -66,6 +66,7 @@ clean:
 else
 ##    Note especially that cwb-config doesn't exit in the Windows world (no easy way to update it 
 ##    once it is on the user's system to account for a manually-specified install path being used)
+##    (it would have to be generated as a bat file at install time)
 
 all:	install-cwb-win.bat
 
@@ -78,10 +79,11 @@ install-cwb-win.bat:	install-cwb-win.bat.in
 release:	install-cwb-win.bat
 	for i in INSTALL; do $(INSTALL) $(INST_FLAGS_DATA) $$i "$(RELEASE_DIR)/$$i.txt"; done
 	for i in README COPYING AUTHORS CHANGES; do $(INSTALL) $(INST_FLAGS_DATA) ../$$i "$(RELEASE_DIR)/$$i.txt"; done
+	for i in install-cwb-win.bat; do $(INSTALL) $(INST_FLAGS_BIN) $$i "$(RELEASE_DIR)"; done
 ifdef UNIX2DOS
 	for i in INSTALL README COPYING AUTHORS CHANGES; do  $(UNIX2DOS) "$(RELEASE_DIR)/$$i.txt"; done
+	$(UNIX2DOS) "$(RELEASE_DIR)/install-cwb-win.bat"
 endif
-	for i in install-cwb-win.bat; do $(INSTALL) $(INST_FLAGS_BIN) $$i "$(RELEASE_DIR)"; done
 
 clean:
 	-rm -f install-cwb-win.bat *~

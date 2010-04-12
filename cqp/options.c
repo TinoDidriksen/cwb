@@ -104,8 +104,15 @@ CQPOption cqpoptions[] = {
   { "ms", "MatchingStrategy",     OptString,  &matching_strategy_name, "standard", 0, NULL, 9, OPTION_CQP },
   { "sr", "StrictRegions",        OptBoolean, &strict_regions,    NULL, 1,  NULL, 0, OPTION_CQP},
   { "p",  "Paging",               OptBoolean, &paging,            NULL, 1,  NULL, 0, OPTION_CQP},
+#ifndef __MINGW__
   { "pg", "Pager",                OptString,  &pager,             "less -FRX -+S", 0,  "CQP_PAGER", 0, OPTION_CQP},
   { "h",  "Highlighting",         OptBoolean, &highlighting,      NULL, 1,  NULL, 0, OPTION_CQP },
+#else
+  /* use more as default pager under Windows (because it exists whereas less doesn't :-P ) */
+  { "pg", "Pager",                OptString,  &pager,             "more", 0,  "CQP_PAGER", 0, OPTION_CQP},
+  /* this implies that the default value for hihglighting must be "off" under Windows */
+  { "h",  "Highlighting",         OptBoolean, &highlighting,      NULL, 0,  NULL, 0, OPTION_CQP },
+  #endif
   { "col","Colour",               OptBoolean, &use_colour,        NULL, 0,  NULL, 0, OPTION_CQP },
   { "pb", "ProgressBar",          OptBoolean, &progress_bar,      NULL, 0,  NULL, 0, OPTION_CQP },
   { "pp", "PrettyPrint",          OptBoolean, &pretty_print,      NULL, 1,  NULL, 0, OPTION_CQP },
@@ -197,7 +204,7 @@ expand_filename(char *fname)
   
 }
 
-void syntax(void)
+void usage(void)
 {
   switch (which_app) {
   case cqpserver:
@@ -225,7 +232,9 @@ void syntax(void)
     fprintf(stderr, "    -E variable  execute query in $(<variable>)\n");
   if (which_app == cqp) {
     fprintf(stderr, "    -e           enable input line editing\n");
+#ifndef __MINGW__
     fprintf(stderr, "    -C           enable ANSI colours (experimental)\n");
+#endif
     fprintf(stderr, "    -f filename  execute commands from file (batch mode)\n");
     fprintf(stderr, "    -p           turn pager off\n");
     fprintf(stderr, "    -P pager     use program <pager> to display query results\n");
@@ -868,7 +877,7 @@ parse_options(int ac, char *av[])
     valid_options = "+1b:d:D:FhI:l:LmM:P:qr:Svx";
     break;
   default:
-    syntax();                        /* this will display the 'unknown application' message */
+    usage();                        /* this will display the 'unknown application' message */
   }
 
   while ((c = getopt(ac, av, valid_options)) != EOF)
@@ -964,7 +973,7 @@ parse_options(int ac, char *av[])
       }
       break;
     case 'h':
-      syntax();
+      usage();
       break;
     case 'v':
       printf("%s\n", licensee);

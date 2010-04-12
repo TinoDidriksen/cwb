@@ -1281,9 +1281,12 @@ cqi_lookup_attribute(char *name, int type)
 /**
  * Drops the named attribute from memory.
  *
- * The attribute name is looked up, and then cl_delete_attribute() is called on the result.
- * @see cl_delete_attribute
+ * The attribute name is looked up in the global hash,
+ * and then cl_delete_attribute() is called on the result.
+ *
+ * @see         cl_delete_attribute
  * @param name  Name of the attribute to be deleted
+ * @return      Boolean: true for all OK, otherwise false
  */
 int
 cqi_drop_attribute(char *name) {
@@ -1299,7 +1302,7 @@ cqi_drop_attribute(char *name) {
     return 0;
   }
 }
-      
+
 
 
 /*

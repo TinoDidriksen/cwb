@@ -190,7 +190,7 @@ main(int argc, char **argv)
           exit(1);
       }
       else {
-        if ((fd = fopen(argv[i], "r")) == NULL) {
+        if ((fd = fopen(argv[i], "rb")) == NULL) {
           perror(argv[i]);
           exit(1);
         }

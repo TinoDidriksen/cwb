@@ -18,6 +18,8 @@
 #ifndef _REGOPT_H_
 #define _REGOPT_H_
 #include "globals.h"
+
+/* include external regular expression library */
 #ifndef __MINGW__
 #include <regex.h>
 #else

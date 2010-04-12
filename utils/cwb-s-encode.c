@@ -68,19 +68,19 @@ enum {
 /* ---------------------------------------------------------------------- */
 
 typedef struct {
-  char *dir;                    /* directory where this range is stored */
-  char *name;                   /* range name */
+  char *dir;                    /**< directory where this range is stored */
+  char *name;                   /**< range name */
 
-  int store_values;             /* flag indicating whether to store values */
+  int store_values;             /**< flag indicating whether to store values */
 
-  int ready;                    /* flag indicates whether open_range() has already been called */
-  FILE *fd;                     /* fd of x.rng */
-  FILE *avx;                    /* the attribute value index */
-  FILE *avs;                    /* the attribute values */
+  int ready;                    /**< flag indicates whether open_range() has already been called */
+  FILE *fd;                     /**< fd of x.rng (bin mode) */
+  FILE *avx;                    /**< the attribute value index (text mode)*/
+  FILE *avs;                    /**< the attribute values (bin mode)*/
 
-  int last_cpos;                /* end of last region (consistency checking) */
-  int num;                      /* the next will be the num-th structure */
-  int offset;                   /* string offset for next string */
+  int last_cpos;                /**< end of last region (consistency checking) */
+  int num;                      /**< the next will be the num-th structure */
+  int offset;                   /**< string offset for next string */
 } Range;
 
 Range range;
@@ -401,7 +401,7 @@ open_range(void)
   char buf[MAX_LINE_LENGTH];
 
   sprintf(buf, RNG_RNG, range.dir, range.name);
-  if ((range.fd = fopen(buf, "w")) == NULL) {
+  if ((range.fd = fopen(buf, "wb")) == NULL) {
     perror(buf);
     exit(1);
   }
@@ -414,7 +414,7 @@ open_range(void)
     }
 
     sprintf(buf, RNG_AVX, range.dir, range.name);
-    if ((range.avx = fopen(buf, "w")) == NULL) {
+    if ((range.avx = fopen(buf, "wb")) == NULL) {
       perror(buf);
       exit(1);
     }

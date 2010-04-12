@@ -41,7 +41,7 @@ extern size_t cl_memory_limit;
 /* macros for path-handling: different between Unix and Windows */
 /*
  * NOTE:
- * When we move to Glib, it will be better to use G_DIR_SEPARATOR and G_SEARCHPATH_SEPARATOR
+ * When we move to Glib, it might be better to use G_DIR_SEPARATOR and G_SEARCHPATH_SEPARATOR
  * and delete these two macros.
  */
 #ifndef __MINGW__
@@ -49,11 +49,14 @@ extern size_t cl_memory_limit;
 #define PATH_SEPARATOR ':'
 /** character used to delimit subdirectories in a path */
 #define SUBDIR_SEPARATOR '/'
+/** same character as a string for compile-time concatenation */
+#define SUBDIR_SEP_STRING "/"
 /** name of directory for temporary files (as string, absolute path) */
 #define TEMPDIR_PATH "/tmp"
 #else
 #define PATH_SEPARATOR ';'
 #define SUBDIR_SEPARATOR '\\'
+#define SUBDIR_SEP_STRING "\\"
 #define TEMPDIR_PATH "." /* A CQP user may not have access to C:\Temp, which is where they SHOULD fo */
 #endif
 /**
@@ -71,8 +74,30 @@ extern size_t cl_memory_limit;
 #define REGISTRY_DEFAULT_PATH  "/corpora/c1/registry"
 #else
 /* note that the notion of a default path under Windows is fundamentally dodgy ... */
-#define REGISTRY_DEFAULT_PATH  "C:\CWB\Registry"
+#define REGISTRY_DEFAULT_PATH  "C:\\CWB\\Registry"
 #endif
+#endif
+
+/* default filename of an info file */
+#ifndef __MINGW__
+#define INFOFILE_DEFAULT_NAME ".info"
+#else
+/* since ANYTHING can be specified manually in the reg file,
+ * we might as well make the default filename one that Windows
+ * will actually allow you to create! */
+#define INFOFILE_DEFAULT_NAME "corpus-info.txt"
+/* only used in cwb-encode, so here isn't really the place for it, but
+ * for now let's keep it with other OS-path-control macros */
+#endif
+
+/* this is also Win32 compatibiltiy... extra flag for open() */
+/* so that (x | O_BINARY) always == x under POSIX */
+#ifndef O_BINARY
+# ifdef _O_BINARY
+# define O_BINARY _O_BINARY
+# else
+# define O_BINARY 0
+# endif
 #endif
 
 #if (!defined(REGISTRY_ENVVAR))

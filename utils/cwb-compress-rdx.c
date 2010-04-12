@@ -218,13 +218,13 @@ compress_reversed_index(Attribute *attr, char *output_fn)
   }
 
   nr_elements = cl_max_id(attr);
-  if ((nr_elements <= 0) || (cderrno != CDA_OK)) {
+  if ((nr_elements <= 0) || (cl_errno != CDA_OK)) {
     cdperror("(aborting) cl_max_id() failed");
     cleanup(1);
   }
 
   corpus_size = cl_max_cpos(attr);
-  if ((corpus_size <= 0) || (cderrno != CDA_OK)) {
+  if ((corpus_size <= 0) || (cl_errno != CDA_OK)) {
     cdperror("(aborting) cl_max_cpos() failed");
     cleanup(1);
   }
@@ -235,11 +235,11 @@ compress_reversed_index(Attribute *attr, char *output_fn)
   }
   else {
     s = component_full_name(attr, CompCompRF, NULL);
-    assert(s && (cderrno == CDA_OK));
+    assert(s && (cl_errno == CDA_OK));
     strcpy(data_fname, s);
 
     s = component_full_name(attr, CompCompRFX, NULL);
-    assert(s && (cderrno == CDA_OK));
+    assert(s && (cl_errno == CDA_OK));
     strcpy(index_fname, s);
   }
   
@@ -250,7 +250,7 @@ compress_reversed_index(Attribute *attr, char *output_fn)
   }
   printf("- writing compressed index to %s\n", data_fname);
   
-  if ((index_file = fopen(index_fname, "w")) == NULL) {
+  if ((index_file = fopen(index_fname, "wb")) == NULL) {
     fprintf(stderr, "ERROR: can't create file %s\n", index_fname);
     perror(index_fname);
     cleanup(1);
@@ -260,13 +260,13 @@ compress_reversed_index(Attribute *attr, char *output_fn)
   for (i = 0; i < nr_elements; i++) {
     
     element_freq = cl_id2freq(attr, i);
-    if ((element_freq == 0) || (cderrno != CDA_OK)) {
+    if ((element_freq == 0) || (cl_errno != CDA_OK)) {
       cdperror("(aborting) token frequency == 0\n");
       cleanup(1);
     }
 
     PStream = OpenPositionStream(attr, i);
-    if ((PStream == NULL) || (cderrno != CDA_OK)) {
+    if ((PStream == NULL) || (cl_errno != CDA_OK)) {
       cdperror("(aborting) index read error");
       cleanup(1);
     }
@@ -349,13 +349,13 @@ decompress_check_reversed_index(Attribute *attr, char *output_fn)
   printf("VALIDATING %s.%s\n", corpus_id, attr->any.name);
 
   nr_elements = cl_max_id(attr);
-  if ((nr_elements <= 0) || (cderrno != CDA_OK)) {
+  if ((nr_elements <= 0) || (cl_errno != CDA_OK)) {
     cdperror("(aborting) cl_max_id() failed");
     cleanup(1);
   }
 
   corpus_size = cl_max_cpos(attr);
-  if ((corpus_size <= 0) || (cderrno != CDA_OK)) {
+  if ((corpus_size <= 0) || (cl_errno != CDA_OK)) {
     cdperror("(aborting) cl_max_cpos() failed");
     cleanup(1);
   }
@@ -366,11 +366,11 @@ decompress_check_reversed_index(Attribute *attr, char *output_fn)
   }
   else {
     s = component_full_name(attr, CompCompRF, NULL);
-    assert(s && (cderrno == CDA_OK));
+    assert(s && (cl_errno == CDA_OK));
     strcpy(data_fname, s);
 
     s = component_full_name(attr, CompCompRFX, NULL);
-    assert(s && (cderrno == CDA_OK));
+    assert(s && (cl_errno == CDA_OK));
     strcpy(index_fname, s);
   }
   
@@ -392,14 +392,14 @@ decompress_check_reversed_index(Attribute *attr, char *output_fn)
   for (i = 0; i < nr_elements; i++) {
 
     element_freq = cl_id2freq(attr, i);
-    if ((element_freq == 0) || (cderrno != CDA_OK)) {
-      cdperror("(aborting) token frequency == 0\n");
+    if ((element_freq == 0) || (cl_errno != CDA_OK)) {
+      cl_error("(aborting) token frequency == 0\n");
       cleanup(1);
     }
 
-    PStream = OpenPositionStream(attr, i);
-    if ((PStream == NULL) || (cderrno != CDA_OK)) {
-      cdperror("(aborting) index read error");
+    PStream = cl_new_stream(attr, i);
+    if ((PStream == NULL) || (cl_errno != CDA_OK)) {
+      cl_error("(aborting) index read error");
       cleanup(1);
     }
 
@@ -415,8 +415,8 @@ decompress_check_reversed_index(Attribute *attr, char *output_fn)
       gap = read_golomb_code_bf(b, &data_file);
       pos += gap;
 
-      if (1 != ReadPositionStream(PStream, &true_pos, 1)) {
-        cdperror("(aborting) index read error\n");
+      if (1 != cl_read_stream(PStream, &true_pos, 1)) {
+        cl_error("(aborting) index read error\n");
         cleanup(1);
       }
       if (pos != true_pos) {
@@ -427,7 +427,7 @@ decompress_check_reversed_index(Attribute *attr, char *output_fn)
 
     }
     
-    ClosePositionStream(&PStream);
+    cl_delete_stream(&PStream);
     BFflush(&data_file);
   }
 

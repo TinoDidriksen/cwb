@@ -273,11 +273,11 @@ mfree(MemBlob *blob)
  *
  * @param filename  Name of the file to map.
  * @param len_ptr   The number of bytes the returned pointer points to.
- * @param mode      Can be either "r" or "w", nothing else. If mode is "r",
+ * @param mode      Can be either "r", "w", "rb" or "wb". If mode is "r",
  *                  len_ptr is taken as an input parameter (*len_ptr bytes
- *                  are allocated)
+ *                  are allocated).
  *                  {NB I copied this from existing notes but surely shouldn't
- *                  the last comment apply if mode is "w" not "r"? -- AH}
+ *                  the comment about len_ptr apply if mode is "w" not "r"? -- AH}
  * @return          The contents of file in filename as a pointer to a
  *                  memory area.
  */
@@ -286,14 +286,18 @@ mmapfile(char *filename, size_t *len_ptr, char *mode)
 {
   struct stat stat_buf;
   int fd;
+  int binflag = 0; /* set to O_BINARY if we want to use the binary flag with open() */
   caddr_t space;
   size_t map_len; /* should probably be off_t (for file sizes) rather than size_t (for size of objects), according to SUS */
+
+  /* allow for: r+b, w+b, rb+, wb+ */
+  binflag = (mode[1] == 'b' || (mode[1] == '+' && mode[2] == 'b') ) ? O_BINARY : 0;
 
   space = NULL;
 
   switch(mode[0]) {
   case 'r':
-    fd = open(filename, O_RDONLY);
+    fd = open(filename, O_RDONLY|binflag);
     
     if (fd == EOF) {
       fprintf(stderr, "mmapfile()<storage.c>: Can't open file %s ... \n\tReason: ", 
@@ -318,7 +322,7 @@ mmapfile(char *filename, size_t *len_ptr, char *mode)
 
   case 'w':
 
-    if ((fd = open(filename, O_RDWR|O_CREAT, 0666)) == EOF)
+    if ((fd = open(filename, O_RDWR|O_CREAT|binflag, 0666)) == EOF)
       fd = creat(filename, 0666);
 
     if (fd == EOF) {
@@ -372,14 +376,22 @@ mallocfile(char *filename, size_t *len_ptr, char *mode)
 {
   struct stat stat_buf;
   int fd;
+  int binflag = 0; /* set to O_BINARY if we want to use the binary flag with open() */
   caddr_t space;
+
+  /* allow for: r+b, w+b, rb+, wb+ */
+  binflag = (mode[1] == 'b' || (mode[1] == '+' && mode[2] == 'b') ) ? O_BINARY : 0;
 
   space = NULL;
 
   switch(mode[0]) {
-  case 'r':
-    fd = open(filename, O_RDONLY);
+    case 'r':
+
+    fd = open(filename, O_RDONLY|binflag);
     
+    printf("fd is %d; errno is %d\n strerror %s\n", fd, errno, strerror(errno));
+
+
     if (fd == EOF) {
       fprintf(stderr, "storage:mallocfile():\n  can't open %s -- ", filename);
       perror(NULL);
@@ -389,32 +401,28 @@ mallocfile(char *filename, size_t *len_ptr, char *mode)
       perror(NULL);
     }
     else {
-    
       *len_ptr = stat_buf.st_size;
 
       space = (caddr_t)cl_malloc(*len_ptr);
       
       if (read(fd, space, *len_ptr) != *len_ptr) {
-        fprintf(stderr, "storage:mallocfile():\n"
-                "  couldn't read file contents -- ");
+        fprintf(stderr, "storage:mallocfile():\n  couldn't read file contents -- ");
         perror(NULL);
         free(space);
         space = NULL;
       }
     }
-    
     if (fd != EOF)
       close(fd);
 
     break;
 
   case 'w':
-    if ((fd = open(filename, O_RDWR|O_CREAT, 0666)) == EOF)
+    if ((fd = open(filename, O_RDWR|O_CREAT|binflag, 0666)) == EOF)
       fd = creat(filename, 0666);
 
     if(fd == EOF) {
-      fprintf(stderr, "storage:mallocfile():\n"
-              "  can't open/create %s for writing -- ", filename);
+      fprintf(stderr, "storage:mallocfile():\n  can't open/create %s for writing -- ", filename);
 
       perror(NULL);
     }
@@ -422,8 +430,7 @@ mallocfile(char *filename, size_t *len_ptr, char *mode)
       space = (caddr_t)cl_malloc(*len_ptr);
       
       if (write(fd, space, *len_ptr) != *len_ptr) {
-        fprintf(stderr, "storage:mallocfile():\n"
-                "  couldn't write file -- ");
+        fprintf(stderr, "storage:mallocfile():\n  couldn't write file -- ");
         perror(NULL);
         free(space);
         space = NULL;
@@ -436,10 +443,8 @@ mallocfile(char *filename, size_t *len_ptr, char *mode)
     break;
 
   default:
-    fprintf(stderr, "storage:mallocfile():\n"
-            "  mode %s is not supported\n", mode);
+    fprintf(stderr, "storage:mallocfile():\n  mode %s is not supported\n", mode);
   }
-
   return space;
 
 }
@@ -452,6 +457,8 @@ mallocfile(char *filename, size_t *len_ptr, char *mode)
  * writeable areas of memory should be taken with care. MALLOCED is
  * slower (and far more space consuming), but writing data into malloced
  * memory is no problem.
+ *
+ * In Windows, the read is always binary-mode.
  *
  * @param filename           The file to read in.
  * @param allocation_method  MMAPPED or MALLOCED (see function description)
@@ -478,9 +485,9 @@ read_file_into_blob(char *filename,
   blob->changed = 0;
 
   if (allocation_method == MMAPPED)
-    blob->data = (int *)mmapfile(filename, &(blob->size), "r");
+    blob->data = (int *)mmapfile(filename, &(blob->size), "rb");
   else if (allocation_method == MALLOCED)
-    blob->data = (int *)mallocfile(filename, &(blob->size), "r");
+    blob->data = (int *)mallocfile(filename, &(blob->size), "rb");
   else {
     fprintf(stderr, "storage:read_file_into_blob():\n"
             "  allocation method %d is not supported\n", allocation_method);
@@ -505,7 +512,8 @@ read_file_into_blob(char *filename,
 /**
  * Writes the data stored in a blob to file.
  *
-
+ * In Windows, the write is always binary-mode.
+ *
  * @param filename           The file to write to.
  * @param blob               The MemBlob to write to file.
  * @param convert_to_nbo     boolean: if true, data is converted to
@@ -539,7 +547,7 @@ write_file_from_blob(char *filename,
       break;
     case MMAPPED:
     case MALLOCED:
-      if ((fd = fopen(filename, "w")) == NULL) {
+      if ((fd = fopen(filename, "wb")) == NULL) {
         fprintf(stderr, "storage:write_file_from_blob():\n"
                 "  Can't open output file %s\n", filename);
         result = 0;

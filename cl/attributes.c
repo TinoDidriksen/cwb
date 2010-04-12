@@ -62,8 +62,10 @@
  * @see Component_Field_Specs
  */
 typedef struct component_field_spec {
-  ComponentID id;        /**< the ID code used as the index for this component in an Attribute's component array */
-  char *name;            /**< String used as the label for this component */
+  ComponentID id;        /**< the ID code used as the index for this component in an Attribute's component array.
+                              This specifies what kind of blob of info this component this is. */
+  char *name;            /**< String used as the label for this component  (abbreviation of the
+                              relevant label used in the ComponentID enumeration). */
   int using_atts;        /**< The attributes that use this component */
   char *default_path;    /**< default location of the file corresponding to this component */
 } component_field_spec;
@@ -77,28 +79,28 @@ static struct component_field_spec Component_Field_Specs[] =
 { 
   { CompDirectory,    "DIR",     ATT_ALL,    "$APATH"},
 
-  { CompCorpus,       "CORPUS",  ATT_POS,    "$DIR/$ANAME.corpus"},
+  { CompCorpus,       "CORPUS",  ATT_POS,    "$DIR" SUBDIR_SEP_STRING "$ANAME.corpus"},
   { CompRevCorpus,    "REVCORP", ATT_POS,    "$CORPUS.rev"},
   { CompRevCorpusIdx, "REVCIDX", ATT_POS,    "$CORPUS.rdx"},
   { CompCorpusFreqs,  "FREQS",   ATT_POS,    "$CORPUS.cnt"},
-  { CompLexicon,      "LEXICON", ATT_POS,    "$DIR/$ANAME.lexicon"},
+  { CompLexicon,      "LEXICON", ATT_POS,    "$DIR" SUBDIR_SEP_STRING "$ANAME.lexicon"},
   { CompLexiconIdx,   "LEXIDX",  ATT_POS,    "$LEXICON.idx"},
   { CompLexiconSrt,   "LEXSRT",  ATT_POS,    "$LEXICON.srt"},
 
 
-  { CompAlignData,    "ALIGN",   ATT_ALIGN,  "$DIR/$ANAME.alg"},
-  { CompXAlignData,   "XALIGN",  ATT_ALIGN,  "$DIR/$ANAME.alx"},
+  { CompAlignData,    "ALIGN",   ATT_ALIGN,  "$DIR" SUBDIR_SEP_STRING "$ANAME.alg"},
+  { CompXAlignData,   "XALIGN",  ATT_ALIGN,  "$DIR" SUBDIR_SEP_STRING "$ANAME.alx"},
 
-  { CompStrucData,    "STRUC",   ATT_STRUC,  "$DIR/$ANAME.rng"},
-  { CompStrucAVS,     "STRAVS",  ATT_STRUC,  "$DIR/$ANAME.avs"},
-  { CompStrucAVX,     "STRAVX",  ATT_STRUC,  "$DIR/$ANAME.avx"},
+  { CompStrucData,    "STRUC",   ATT_STRUC,  "$DIR" SUBDIR_SEP_STRING "$ANAME.rng"},
+  { CompStrucAVS,     "STRAVS",  ATT_STRUC,  "$DIR" SUBDIR_SEP_STRING "$ANAME.avs"},
+  { CompStrucAVX,     "STRAVX",  ATT_STRUC,  "$DIR" SUBDIR_SEP_STRING "$ANAME.avx"},
 
-  { CompHuffSeq,      "CIS",     ATT_POS,    "$DIR/$ANAME.huf"},
-  { CompHuffCodes,    "CISCODE", ATT_POS,    "$DIR/$ANAME.hcd"},
+  { CompHuffSeq,      "CIS",     ATT_POS,    "$DIR" SUBDIR_SEP_STRING "$ANAME.huf"},
+  { CompHuffCodes,    "CISCODE", ATT_POS,    "$DIR" SUBDIR_SEP_STRING "$ANAME.hcd"},
   { CompHuffSync,     "CISSYNC", ATT_POS,    "$CIS.syn"},
 
-  { CompCompRF,       "CRC",     ATT_POS,    "$DIR/$ANAME.crc"},
-  { CompCompRFX,      "CRCIDX",  ATT_POS,    "$DIR/$ANAME.crx"},
+  { CompCompRF,       "CRC",     ATT_POS,    "$DIR" SUBDIR_SEP_STRING "$ANAME.crc"},
+  { CompCompRFX,      "CRCIDX",  ATT_POS,    "$DIR" SUBDIR_SEP_STRING "$ANAME.crx"},
 
   { CompLast,         "INVALID", 0,          "INVALID"}
 };
@@ -386,6 +388,17 @@ setup_attribute(Corpus *corpus,
 /**
  * Finds an attribute that matches the specified parameters, if one exists.
  *
+ * Note that although this is a cl_new_* function, and it is the canonical way
+ * that we get an Attribute to call Attribute-functions on, it doesn't actually
+ * create any kind of object. The Attribute exists already as one of the dependents
+ * of the Corpus object; this function simply locates it and returns a pointer
+ * to it.
+ *
+ * This function is DEPRACATED. Use cl_new_attribute() instead (which is
+ * actually a macro to this function, but the parameter list is different.)
+ *
+ * @see                   cl_new_attribute
+ *
  * @param corpus          The corpus in which to search for the attribute.
  * @param attribute_name  The name of the attribute (i.e. the handle it has in the registry file)
  * @param type            Type of attribute to be searched for.
@@ -394,10 +407,10 @@ setup_attribute(Corpus *corpus,
  * @return                Pointer to Attribute object, or NULL if not found.
  */
 Attribute *
-find_attribute(Corpus *corpus,
-               char *attribute_name,
-               int type,
-               char *data)
+cl_new_attribute_oldstyle(Corpus *corpus,
+                          char *attribute_name,
+                          int type,
+                          char *data)
 {
   Attribute *attr;
 
@@ -424,7 +437,10 @@ find_attribute(Corpus *corpus,
  * After calling this, the corpus does not have the attribute any
  * longer -- it is the same as it was never defined.
  *
- * @see      attr_drop_attribute
+ * This is an internal function; the function exposed in the API for
+ * this purpose is cl_delete_attribute().
+ *
+ * @see      cl_delete_attribute
  * @return   Boolean: true for all OK, false for a problem
  */
 int
@@ -438,16 +454,19 @@ drop_attribute(Corpus *corpus,
     return 0;
   }
   else
-    return attr_drop_attribute(find_attribute(corpus, attribute_name, type, data));
+    return cl_delete_attribute(cl_new_attribute_oldstyle(corpus, attribute_name, type, data));
 }
 
 /**
  * Deletes the specified Attribute object.
  *
+ * The function also appropriately amends the Corpus object of which this
+ * Attribute is a dependent.
+ *
  * @return   Boolean: true for all OK, false for a problem.
  */
 int
-attr_drop_attribute(Attribute *attribute)
+cl_delete_attribute(Attribute *attribute)
 {
   Attribute *prev;
   DynArg *arg;

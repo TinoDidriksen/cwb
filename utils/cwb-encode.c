@@ -57,12 +57,12 @@
 #define MAX_INPUT_LINE_LENGTH  65536
 
 /* implicit knowledge about CL component files naming conventions */
-#define STRUC_RNG  "%s/%s.rng"            /**< CL naming convention for S-attribute RNG files */
-#define STRUC_AVX  "%s/%s.avx"            /**< CL naming convention for S-attribute AVX files */
-#define STRUC_AVS  "%s/%s.avs"            /**< CL naming convention for S-attribute AVS files */
-#define POS_CORPUS "%s/%s.corpus"         /**< CL naming convention for P-attribute Corpus files */
-#define POS_LEX    "%s/%s.lexicon"        /**< CL naming convention for P-attribute Lexicon files */
-#define POS_LEXIDX "%s/%s.lexicon.idx"    /**< CL naming convention for P-attribute Lexicon-index files */
+#define STRUC_RNG  "%s" SUBDIR_SEP_STRING "%s.rng"            /**< CL naming convention for S-attribute RNG files */
+#define STRUC_AVX  "%s" SUBDIR_SEP_STRING "%s.avx"            /**< CL naming convention for S-attribute AVX files */
+#define STRUC_AVS  "%s" SUBDIR_SEP_STRING "%s.avs"            /**< CL naming convention for S-attribute AVS files */
+#define POS_CORPUS "%s" SUBDIR_SEP_STRING "%s.corpus"         /**< CL naming convention for P-attribute Corpus files */
+#define POS_LEX    "%s" SUBDIR_SEP_STRING "%s.lexicon"        /**< CL naming convention for P-attribute Lexicon files */
+#define POS_LEXIDX "%s" SUBDIR_SEP_STRING "%s.lexicon.idx"    /**< CL naming convention for P-attribute Lexicon-index files */
 
 
 
@@ -82,7 +82,7 @@ cl_string_list input_files = NULL;      /**< list of input file (-f option(s)) *
 int nr_input_files = 0;                 /**< number of input files (length of list after option processing) */
 int current_input_file = 0;             /**< index of input file currently being processed */
 char *current_input_file_name = NULL;   /**< filename of current input file, for error messages */
-FILE *input_fd = NULL;                  /**< file handle for current input file (or pipe) */
+FILE *input_fd = NULL;                  /**< file handle for current input file (or pipe) (text mode!) */
 int input_file_is_pipe = 0;             /**< so we can properly close input_fd using either fclose() or pclose() */
 int input_line = 0;                     /**< input line number (reset for each new file) for error messages */
 char *registry_file = NULL;             /**< if set, auto-generate registry file named {registry_file}, listing declared attributes */
@@ -661,20 +661,20 @@ declare_range(char *name, char *directory, int store_values, int null_attribute)
   /* open data files for this s-attribute (children will be added later) */
   /* create .rng component */
   sprintf(buf, STRUC_RNG, directory, rng->name);
-  if ((rng->fd = fopen(buf, "w")) == NULL) {
+  if ((rng->fd = fopen(buf, "wb")) == NULL) {
     perror(buf);
     error("Can't write .rng file for s-attribute <%s>.", name);
   }
   if (rng->store_values) {
     /* create .avx and .avs components and initialise lexicon hash */
     sprintf(buf, STRUC_AVS, rng->dir, rng->name);
-    if ((rng->avs = fopen(buf, "w")) == NULL) {
+    if ((rng->avs = fopen(buf, "wb")) == NULL) {
       perror(buf);
       error("Can't write .avs file for s-attribute <%s>.", name);
     }
 
     sprintf(buf, STRUC_AVX, rng->dir, rng->name);
-    if ((rng->avx = fopen(buf, "w")) == NULL) {
+    if ((rng->avx = fopen(buf, "wb")) == NULL) {
       perror(buf);
       error("Can't write .avx file for s-attribute <%s>.", name);
     }
@@ -1141,6 +1141,11 @@ find_wattr(char *name)
 /**
  * Sets up a new p-attribute, including opening corpus, lex and index file handles.
  *
+ * Note: corpus_fd is a binary file, lex_fd is a text file(*), and lexidx_fd is
+ * a binary file.
+ *
+ * (*) But lexicon items are delimited by '\0' not by '\n'.
+ *
  * @param name        Identifier string of the p-attribute
  * @param directory   Directory in which CWB data files are to be created.
  * @param nr_buckets  Number of buckets in the lexhash of the new p-attribute (value passed to cl_new_lexhash() )
@@ -1160,7 +1165,7 @@ declare_wattr(char *name, char *directory, int nr_buckets)
     error("Error: you must specify a directory for CWB data files with the -d option");
 
   wattrs[wattr_ptr].name = cl_strdup(name);
-  if (name[strlen(name)-1] == '/') {
+  if (name[strlen(name)-1] == SUBDIR_SEPARATOR) {
     wattrs[wattr_ptr].name[strlen(name)-1] = '\0';
     wattrs[wattr_ptr].feature_set = 1;
   }
@@ -1176,7 +1181,7 @@ declare_wattr(char *name, char *directory, int nr_buckets)
   sprintf(lexname, POS_LEX,    directory, wattrs[wattr_ptr].name);
   sprintf(idxname, POS_LEXIDX, directory, wattrs[wattr_ptr].name);
 
-  if ((wattrs[wattr_ptr].corpus_fd = fopen(corname, "w")) == NULL) {
+  if ((wattrs[wattr_ptr].corpus_fd = fopen(corname, "wb")) == NULL) {
     perror(corname);
     error("Can't write .corpus file for %s attribute.", name);
   }
@@ -1295,14 +1300,13 @@ parse_options(int argc, char **argv)
         int registry_is_canonical = 1;
         registry_file = optarg;
 
-        /* Check for directory in lowercase */
+        /* Check for path ending in slash and for non-lowercase */
+        /* allow EITHER possible value of SUBDIR_SEPARATOR */
         size = strlen(registry_file) - 1;
         if ((size < 0) || (registry_file[size] == '/') || (registry_file[size] == '\\'))
           error("Usage error: invalid filename '%s' for registry entry", registry_file);
 
-        while (size >= 0 &&
-               registry_file[size] != '/' && registry_file[size] != '\\') 
-        {
+        while (size >= 0 && registry_file[size] != '/' && registry_file[size] != '\\') {
           char c = registry_file[size];
           if ((c >= 'A' && c <= 'Z') || c == '.' || c == '~')
             registry_is_ok = 0; /* uppercase characters, '.' and '~' are definitely not allowed */
@@ -1314,12 +1318,14 @@ parse_options(int argc, char **argv)
         }
         
         if (!registry_is_ok)
-          error("Usage error: invalid filename '%s' for registry entry.\nFilename must not contain uppercase letters, '.' or '~'.", registry_file + size + 1);
+          error("Usage error: invalid filename '%s' for registry entry.\n"
+              "Filename must not contain uppercase letters, '.' or '~'.", registry_file + size + 1);
         if (!registry_is_canonical)
-          fprintf(stderr, "Warning: filename '%s' of registry entry not in canonical format.\n(Allowed characters: a-z, 0-9, -, _)\n", registry_file + size + 1);
+          fprintf(stderr, "Warning: filename '%s' of registry entry not in canonical format.\n"
+              "(Allowed characters: a-z, 0-9, -, _)\n", registry_file + size + 1);
 
         if (size >= 0) {
-          /* if registry filename includes a directory part, check that it exists and is indeed a directory */
+          /* the registry filename includes a directory part, so check that it exists and is indeed a directory */
           char sep = registry_file[size];
           registry_file[size] = 0; /* now registry_file holds the directory part as a NUL-terminated string */
           if (stat(registry_file, &dir_status) != 0 || !(dir_status.st_mode & S_IFDIR))
@@ -1617,15 +1623,21 @@ get_input_line(char *buffer, int bufsize)
   }
 }
 
-/* quote path name if necessary (for HOME and INFO fields of registry file);
-   always returns a newly allocated string for consistency */
 /**
  * Add quotes and escape slashes to a path name if necessary.
  *
  * This is for the HOME and INFO fields of the registry file.
  *
+ * If either field contains any characters that can't be
+ * treated as an "ID" token by the registry parser, then we
+ * make sure it is treated as
+ *
  * For consistency, this function always returns a newly
  * allocated string, regardless of whether changes have been made.
+ *
+ * Note that the way the registry parser works, it is quite happy
+ * with either "C:\dir\subdir" or "C:\\dir\\subdir" as a path for
+ * HOME or INFO.
  *
  * @param path  String containing the path to quotify.
  * @return      The quotified string.
@@ -1689,7 +1701,8 @@ quote_file_path(char *path)
  * @param argv   Command-line arguments.
  */
 int 
-main(int argc, char **argv) {
+main(int argc, char **argv)
+{
   int i, j, k, rng, handled;
 
   char linebuf[MAX_INPUT_LINE_LENGTH];
@@ -1926,7 +1939,7 @@ main(int argc, char **argv) {
     FILE *registry_fd;
     char *registry_id;          /* use last part of registry filename (i.e. string following last '/' character) */
     char *corpus_name = NULL;   /* name of the corpus == uppercase version of registry_id */
-    char *info_file = NULL;     /* name of INFO file == <directory>/.info */
+    char *info_file = NULL;     /* name of INFO file == <directory>/.info or corpus-info.txt under win */
     char *path = NULL;
     
     if (debug)
@@ -1938,12 +1951,12 @@ main(int argc, char **argv) {
     }
 
     i = strlen(registry_file) - 1;
-    while ((i > 0) && (registry_file[i-1] != '/'))
+    while ((i > 0) && (registry_file[i-1] != SUBDIR_SEPARATOR))
       i--;
     registry_id = registry_file + i;
 
     i = strlen(directory) - 1;
-    while ((i > 0) && (directory[i] == '/'))
+    while ((i > 0) && (directory[i] == SUBDIR_SEPARATOR))
       directory[i--] = '\0';    /* remove trailing '/' from home directory */
 
     corpus_name = cl_strdup(registry_id);       /* copy registry_id and convert it to uppercase */
@@ -1954,7 +1967,7 @@ main(int argc, char **argv) {
     }
 
     info_file = (char *) cl_malloc(strlen(directory) + 8); /* 1 byte extra as safety margin */
-    sprintf(info_file, "%s/.info", directory);
+    sprintf(info_file, "%s%c%s", directory, SUBDIR_SEPARATOR, INFOFILE_DEFAULT_NAME);
 
     /* write header part for registry file */
     fprintf(registry_fd, "##\n## registry entry for corpus %s\n##\n\n", corpus_name);

@@ -15,7 +15,14 @@
  *  WWW at http://www.gnu.org/copyleft/gpl.html).
  */
 
-/* This is the interactive CQP main function (interactive loop) */
+/**
+ * @file
+ *
+ * This file contains the main function for CQP (interactive loop)
+ *
+ * In addition, it contains the functions that interactive CQP will need
+ * if command-line editing with editline is enabled.
+ */
 
 #include <stdio.h>
 #include <signal.h>
@@ -393,6 +400,7 @@ main(int argc, char *argv[])
 
   /* Test ANSII colours (if CQP was invoked with -C switch) */
   if (use_colour) {
+#ifndef __MINGW__
     char *blue = get_colour_escape('b', 1);
     char *green = get_colour_escape('g', 1);
     char *red = get_colour_escape('r', 1);
@@ -424,6 +432,11 @@ main(int argc, char *argv[])
       }
       printf("]\n");
     }
+#else
+    fprintf(stderr, "We're sorry, CQP's Colourful Mode is not available under Windows.\n");
+    fprintf(stderr, "CQP will continue as normal without it...\n");
+    use_colour = 0;
+#endif
   } /* endif use_colour */
 
   install_signal_handler();

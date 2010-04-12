@@ -39,7 +39,7 @@
 #       cygwin        Win32 build using Cygwin emulation layer (experimental)
 #       mingw         Cross-compile for Win32 from a *nix system with MinGW installed (experimental)
 #
-include $(TOP)/config/platform/darwin-universal
+include $(TOP)/config/platform/mingw
 
 #
 # SITE-SPECIFIC CONFIGURATION (installation path and other local settings)
@@ -56,7 +56,7 @@ include $(TOP)/config/platform/darwin-universal
 #         windows-release ... for Windows binaries cross-compiled with MinGW; use with "mingw" platform
 #       cygwin          Win32 / Cygwin configuration (experimental)
 #       
-include $(TOP)/config/site/standard
+include $(TOP)/config/site/windows-release
 
 
 #
@@ -151,4 +151,3 @@ include $(TOP)/config/site/standard
 
 # load standard makefile settings (don't edit this)
 include $(TOP)/definitions.mk
-

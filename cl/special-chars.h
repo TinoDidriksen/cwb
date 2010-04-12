@@ -21,5 +21,6 @@
 
 #include "globals.h"                    /* flag and function definitions now in <cl.h> */
 
+unsigned char *cl_string_maptable(CorpusCharset charset, int flags);
 
 #endif
