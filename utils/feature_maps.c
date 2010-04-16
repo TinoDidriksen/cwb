@@ -29,7 +29,9 @@
 
 /** the top of the range of char_map's outputs @see char_map */
 int char_map_range=0;
-/** a character map for accented characters. */
+/** a character map for accented characters.
+ * IMPORTANT TODO : this map, and anything that uses it, is a source of UTF8 incompatibiltiy.
+ *  */
 unsigned char char_map[256];
 
 /** initialises char_mpa, qv @see char_map */

@@ -23,8 +23,8 @@
 #
 # CWB version
 #
-VERSION = 3.1.b0
-# alpha/beta for version 3.1
+VERSION = 3.1.0
+# an actual first release for version 3.1! don't forget to increment last number on changing.
 
 #
 # Check that required configuration variables are set

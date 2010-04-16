@@ -585,9 +585,9 @@ get_next_range(int *start, int *end)
 int
 main (int argc, char *argv[])
 {
-  int argind;                        /* index of first (non-option) argument in argv[] */
-  int Csize = 0;                /* corpus size (= number of tokens) */
-  Attribute *word;                /* need default p-attribute to compute corpus size */
+  int argind;                      /* index of first (non-option) argument in argv[] */
+  int Csize = 0;                   /* corpus size (= number of tokens) */
+  Attribute *word;                 /* need default p-attribute to compute corpus size */
   int cpos, next_cpos, start_cpos, end_cpos, previous_end;
 
   /* parse command line options */
@@ -595,11 +595,11 @@ main (int argc, char *argv[])
   progname = argv[0];
   argind = parse_options(argc, argv);
   if ((argc - argind) < 2) {
-    usage();                     /* not enough arguments -> print usage info */
+    usage();                       /* not enough arguments -> print usage info */
   }
 
   /* initialise hash */
-  Hash.N = 0;                        /* will be incremented when we process the arguments */
+  Hash.N = 0;                      /* will be incremented when we process the arguments */
   Hash.K = 0;
   Hash.max_offset = 0;
   Hash.buckets = find_prime(Hash.buckets); /* make sure number of buckets is a prime */
@@ -899,7 +899,7 @@ main (int argc, char *argv[])
     }
     if (! quiet)
       fprintf(stderr, "ok.\n");
-  }
+  } /* endblock print hash contents to stdout */
 
   exit(0);                        /* that was easy, wasn't it? */
 }
