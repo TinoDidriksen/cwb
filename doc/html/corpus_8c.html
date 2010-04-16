@@ -543,7 +543,7 @@
 
 <p>References <a class="el" href="corpus_8c.html#ae6ef637d7447e7a251e9130f21b8adac">regdir</a>, <a class="el" href="globals_8h.html#ac392b52df688734d343a5acc32fb6b87">REGISTRY_DEFAULT_PATH</a>, and <a class="el" href="globals_8h.html#a7cb97950b921d5fd5ea7bc1b5f8dafdb">REGISTRY_ENVVAR</a>.</p>
 
-<p>Referenced by <a class="el" href="corpus_8h.html#a2e8c6f04bb423451ab68782fdd5da158">find_corpus()</a>, and <a class="el" href="cwb-scan-corpus_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
+<p>Referenced by <a class="el" href="corpus_8h.html#a2e8c6f04bb423451ab68782fdd5da158">find_corpus()</a>, <a class="el" href="corpmanag_8c.html#aa57f32e05db80db43f0f9e8b97bcf08d">load_corpusnames()</a>, and <a class="el" href="cwb-scan-corpus_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
 
 </div>
 </div>
@@ -731,6 +731,7 @@
 <div class="memdoc">
 
 <p>Gets a file handle for the registry file of the corpus with the specified CWB-name and registry location. </p>
+<p>The registry file is opened for text-mode read.</p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>registry_dir</em>&nbsp;</td><td>The registry directory. </td></tr>
@@ -949,14 +950,14 @@
 
 <p>The default registry directory. </p>
 <p>It is initialised when the function that reads it is first called.</p>
-<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="cl_8h.html#a8788fa329cb487fb06fe050207769061">central_corpus_directory</a> </dd></dl>
+<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="corpus_8c.html#ae01d418374c30b37fcd6b9bbfacef90e" title="Gets a string containing the path of the default registry directory.">cl_standard_registry</a> <a class="el" href="globals_8h.html#ac610b33ec571920dfe1c0f5d93f60516" title="Macro which exits the program when a &quot;to do&quot; point is hit.">TODO</a>: would this be better as a static variable WITHIN that function? That way there is no change of anyone acessing the <a class="el" href="corpus_8c.html#ae6ef637d7447e7a251e9130f21b8adac" title="The default registry directory.">regdir</a> variable except via that function... </dd></dl>
 
 <p>Referenced by <a class="el" href="corpus_8c.html#ae01d418374c30b37fcd6b9bbfacef90e">cl_standard_registry()</a>.</p>
 
 </div>
 </div>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on Sun Apr 11 13:58:12 2010 for CWB by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on Fri Apr 16 01:25:03 2010 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

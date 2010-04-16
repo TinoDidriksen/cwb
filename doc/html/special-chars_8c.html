@@ -40,7 +40,8 @@
 <li>unsigned char * <a class="el" href="special-chars_8c.html#ae86d5e60c27778b82281ac1679409512">cl_string_maptable</a> (<a class="el" href="cl_8h.html#a3502421ae8eac74673133702852dde32">CorpusCharset</a> <a class="el" href="cwb-check-input_8c.html#ab7d33183c58d7df43cc5602b9c842b37">charset</a>, int flags)
 <dl class="el"><dd class="mdescRight">Gets a specified character mapping table for use in regular expressions.  <a href="#ae86d5e60c27778b82281ac1679409512"></a><br/></dl><li>void <a class="el" href="special-chars_8c.html#a012ffb5a06680b1985a6f08e739d45b0">cl_string_canonical</a> (char *s, int flags)
 <dl class="el"><dd class="mdescRight">Converts a string to canonical form.  <a href="#a012ffb5a06680b1985a6f08e739d45b0"></a><br/></dl><li>void <a class="el" href="special-chars_8c.html#a76a88a09e8eed393bae6ef422744dd84">cl_path_adjust_os</a> (char *path)
-<dl class="el"><dd class="mdescRight">Standardises subdirectory-dividers in a string that represents a path, in an OS-sensitive way.  <a href="#a76a88a09e8eed393bae6ef422744dd84"></a><br/></dl></ul>
+<dl class="el"><dd class="mdescRight">Standardises subdirectory-dividers in a string that represents a path, in an OS-sensitive way.  <a href="#a76a88a09e8eed393bae6ef422744dd84"></a><br/></dl><li>void <a class="el" href="special-chars_8c.html#a30fe7bb88b656c3283346265a76a797f">cl_path_adjust_independent</a> (char *path)
+<dl class="el"><dd class="mdescRight">Standardises subdirectory-dividers in a string that represents a path into Unix-like form (ie with forward-slash), regardless of what OS we are in.  <a href="#a30fe7bb88b656c3283346265a76a797f"></a><br/></dl></ul>
 <tr><td colspan="2"><div class="groupHeader"></div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrpd41d8cd98f00b204e9800998ecf8427e"></a> </p>
 <br/><br/></div></td></tr>
@@ -119,6 +120,40 @@
 </div>
 </div>
 <hr/><h2>Function Documentation</h2>
+<a class="anchor" id="a30fe7bb88b656c3283346265a76a797f"></a><!-- doxytag: member="special&#45;chars.c::cl_path_adjust_independent" ref="a30fe7bb88b656c3283346265a76a797f" args="(char *path)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cl_path_adjust_independent </td>
+          <td>(</td>
+          <td class="paramtype">char *&nbsp;</td>
+          <td class="paramname"> <em>path</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Standardises subdirectory-dividers in a string that represents a path into Unix-like form (ie with forward-slash), regardless of what OS we are in. </p>
+<p>Or, to put it another way, changes backslashes into forward slashes under Windows.</p>
+<p>This may be useful because of the need to move corpora between systems</p>
+<ul>
+<li>in which case, the paths need to be in '/' format -- Windows tolerates forward slashes in paths a hell of a lot better than *nix tolerates unescaped backslashes!</li>
+</ul>
+<p>Note that the path is modified in place.</p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>path</em>&nbsp;</td><td>The path to modify (must be Ascii-compatible) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>References <a class="el" href="globals_8h.html#aa3cbd33788dfd77d29dc892204a609a5">SUBDIR_SEPARATOR</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="a76a88a09e8eed393bae6ef422744dd84"></a><!-- doxytag: member="special&#45;chars.c::cl_path_adjust_os" ref="a76a88a09e8eed393bae6ef422744dd84" args="(char *path)" -->
 <div class="memitem">
 <div class="memproto">
@@ -415,7 +450,7 @@
 </div>
 </div>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on Sun Apr 11 13:58:12 2010 for CWB by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on Fri Apr 16 01:25:03 2010 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

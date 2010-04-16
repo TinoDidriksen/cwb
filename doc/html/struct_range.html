@@ -29,16 +29,16 @@
 <h1>Range Struct Reference</h1><!-- doxytag: class="Range" --><h2>Data Fields</h2>
 <ul>
 <li>char * <a class="el" href="struct_range.html#a73da71b9c136e698a3ccaa1366e455a8">dir</a>
-<li>char * <a class="el" href="struct_range.html#a5ac083a645d964373f022d03df4849c8">name</a>
-<li>int <a class="el" href="struct_range.html#a840e275845c4374a4384021cb20a3eb4">store_values</a>
-<li>int <a class="el" href="struct_range.html#a4adb4fb035eed17910c98225be64ec83">ready</a>
-<li>FILE * <a class="el" href="struct_range.html#a600b792d6d2ff2e71096dfa60d97a3b0">fd</a>
-<li>FILE * <a class="el" href="struct_range.html#a67794439930965560937a2118457f964">avx</a>
-<li>FILE * <a class="el" href="struct_range.html#a00ab813696887d5d4d44ed94b8656b22">avs</a>
-<li>int <a class="el" href="struct_range.html#af763c756953f5d71796b837caa7f94c3">last_cpos</a>
-<li>int <a class="el" href="struct_range.html#a86cf672daa4e0ad11ad10efc894d19c8">num</a>
-<li>int <a class="el" href="struct_range.html#aed7ea92f45bd273dde380a45ddced592">offset</a>
-</ul>
+<dl class="el"><dd class="mdescRight">directory where this range is stored  <a href="#a73da71b9c136e698a3ccaa1366e455a8"></a><br/></dl><li>char * <a class="el" href="struct_range.html#a5ac083a645d964373f022d03df4849c8">name</a>
+<dl class="el"><dd class="mdescRight">range name  <a href="#a5ac083a645d964373f022d03df4849c8"></a><br/></dl><li>int <a class="el" href="struct_range.html#a840e275845c4374a4384021cb20a3eb4">store_values</a>
+<dl class="el"><dd class="mdescRight">flag indicating whether to store values  <a href="#a840e275845c4374a4384021cb20a3eb4"></a><br/></dl><li>int <a class="el" href="struct_range.html#a4adb4fb035eed17910c98225be64ec83">ready</a>
+<dl class="el"><dd class="mdescRight">flag indicates whether <a class="el" href="cwb-encode_8c.html#adff58f0a1109dd9e778ba480c6b33327" title="Opens an instance of the given S-attribute.">open_range()</a> has already been called  <a href="#a4adb4fb035eed17910c98225be64ec83"></a><br/></dl><li>FILE * <a class="el" href="struct_range.html#a600b792d6d2ff2e71096dfa60d97a3b0">fd</a>
+<dl class="el"><dd class="mdescRight">fd of x.rng (bin mode)  <a href="#a600b792d6d2ff2e71096dfa60d97a3b0"></a><br/></dl><li>FILE * <a class="el" href="struct_range.html#a67794439930965560937a2118457f964">avx</a>
+<dl class="el"><dd class="mdescRight">the attribute value index (text mode)  <a href="#a67794439930965560937a2118457f964"></a><br/></dl><li>FILE * <a class="el" href="struct_range.html#a00ab813696887d5d4d44ed94b8656b22">avs</a>
+<dl class="el"><dd class="mdescRight">the attribute values (bin mode)  <a href="#a00ab813696887d5d4d44ed94b8656b22"></a><br/></dl><li>int <a class="el" href="struct_range.html#af763c756953f5d71796b837caa7f94c3">last_cpos</a>
+<dl class="el"><dd class="mdescRight">end of last region (consistency checking)  <a href="#af763c756953f5d71796b837caa7f94c3"></a><br/></dl><li>int <a class="el" href="struct_range.html#a86cf672daa4e0ad11ad10efc894d19c8">num</a>
+<dl class="el"><dd class="mdescRight">the next will be the num-th structure  <a href="#a86cf672daa4e0ad11ad10efc894d19c8"></a><br/></dl><li>int <a class="el" href="struct_range.html#aed7ea92f45bd273dde380a45ddced592">offset</a>
+<dl class="el"><dd class="mdescRight">string offset for next string  <a href="#aed7ea92f45bd273dde380a45ddced592"></a><br/></dl></ul>
 <hr/><h2>Field Documentation</h2>
 <a class="anchor" id="a00ab813696887d5d4d44ed94b8656b22"></a><!-- doxytag: member="Range::avs" ref="a00ab813696887d5d4d44ed94b8656b22" args="" -->
 <div class="memitem">
@@ -50,6 +50,8 @@
       </table>
 </div>
 <div class="memdoc">
+
+<p>the attribute values (bin mode) </p>
 
 <p>Referenced by <a class="el" href="cwb-encode_8c.html#ab80a63938c6804f9600afdf8ccb6bfc0">close_range()</a>, <a class="el" href="cwb-encode_8c.html#a24c98c7fc24344b98cf63c129d68d066">declare_range()</a>, <a class="el" href="cwb-encode_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>, <a class="el" href="cwb-s-encode_8c.html#ab2929450457ff7b240510be66a7ffdbd">open_range()</a>, and <a class="el" href="cwb-s-encode_8c.html#ac5af382b8e183eeafb5671e7f33619bd">write_region_to_disk()</a>.</p>
 
@@ -66,6 +68,8 @@
 </div>
 <div class="memdoc">
 
+<p>the attribute value index (text mode) </p>
+
 <p>Referenced by <a class="el" href="cwb-encode_8c.html#ab80a63938c6804f9600afdf8ccb6bfc0">close_range()</a>, <a class="el" href="cwb-encode_8c.html#a24c98c7fc24344b98cf63c129d68d066">declare_range()</a>, <a class="el" href="cwb-encode_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>, <a class="el" href="cwb-s-encode_8c.html#ab2929450457ff7b240510be66a7ffdbd">open_range()</a>, and <a class="el" href="cwb-s-encode_8c.html#ac5af382b8e183eeafb5671e7f33619bd">write_region_to_disk()</a>.</p>
 
 </div>
@@ -80,6 +84,8 @@
       </table>
 </div>
 <div class="memdoc">
+
+<p>directory where this range is stored </p>
 
 <p>Referenced by <a class="el" href="cwb-encode_8c.html#a24c98c7fc24344b98cf63c129d68d066">declare_range()</a>, and <a class="el" href="cwb-s-encode_8c.html#ab2929450457ff7b240510be66a7ffdbd">open_range()</a>.</p>
 
@@ -96,6 +102,8 @@
 </div>
 <div class="memdoc">
 
+<p>fd of x.rng (bin mode) </p>
+
 <p>Referenced by <a class="el" href="cwb-encode_8c.html#ab80a63938c6804f9600afdf8ccb6bfc0">close_range()</a>, <a class="el" href="cwb-encode_8c.html#a24c98c7fc24344b98cf63c129d68d066">declare_range()</a>, <a class="el" href="cwb-encode_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>, <a class="el" href="cwb-s-encode_8c.html#ab2929450457ff7b240510be66a7ffdbd">open_range()</a>, and <a class="el" href="cwb-s-encode_8c.html#ac5af382b8e183eeafb5671e7f33619bd">write_region_to_disk()</a>.</p>
 
 </div>
@@ -110,6 +118,8 @@
       </table>
 </div>
 <div class="memdoc">
+
+<p>end of last region (consistency checking) </p>
 
 <p>Referenced by <a class="el" href="cwb-s-encode_8c.html#a308b8a258931e50ec1999b718db816ad">declare_range()</a>, <a class="el" href="cwb-s-encode_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>, and <a class="el" href="cwb-s-encode_8c.html#ac5af382b8e183eeafb5671e7f33619bd">write_region_to_disk()</a>.</p>
 
@@ -126,6 +136,8 @@
 </div>
 <div class="memdoc">
 
+<p>range name </p>
+
 <p>Referenced by <a class="el" href="cwb-encode_8c.html#ab80a63938c6804f9600afdf8ccb6bfc0">close_range()</a>, <a class="el" href="cwb-encode_8c.html#a24c98c7fc24344b98cf63c129d68d066">declare_range()</a>, <a class="el" href="cwb-encode_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>, <a class="el" href="cwb-encode_8c.html#adff58f0a1109dd9e778ba480c6b33327">open_range()</a>, <a class="el" href="cwb-s-encode_8c.html#a0318e97f40679e849d9259e5edb4dfce">parse_options()</a>, and <a class="el" href="cwb-encode_8c.html#ae5c2bb32a75d86bb872cc2887476d60b">print_range_registry_line()</a>.</p>
 
 </div>
@@ -140,6 +152,8 @@
       </table>
 </div>
 <div class="memdoc">
+
+<p>the next will be the num-th structure </p>
 
 <p>Referenced by <a class="el" href="cwb-encode_8c.html#ab80a63938c6804f9600afdf8ccb6bfc0">close_range()</a>, <a class="el" href="cwb-encode_8c.html#a24c98c7fc24344b98cf63c129d68d066">declare_range()</a>, and <a class="el" href="cwb-s-encode_8c.html#ac5af382b8e183eeafb5671e7f33619bd">write_region_to_disk()</a>.</p>
 
@@ -156,6 +170,8 @@
 </div>
 <div class="memdoc">
 
+<p>string offset for next string </p>
+
 <p>Referenced by <a class="el" href="cwb-encode_8c.html#ab80a63938c6804f9600afdf8ccb6bfc0">close_range()</a>, <a class="el" href="cwb-encode_8c.html#a24c98c7fc24344b98cf63c129d68d066">declare_range()</a>, and <a class="el" href="cwb-s-encode_8c.html#ac5af382b8e183eeafb5671e7f33619bd">write_region_to_disk()</a>.</p>
 
 </div>
@@ -170,6 +186,8 @@
       </table>
 </div>
 <div class="memdoc">
+
+<p>flag indicates whether <a class="el" href="cwb-encode_8c.html#adff58f0a1109dd9e778ba480c6b33327" title="Opens an instance of the given S-attribute.">open_range()</a> has already been called </p>
 
 <p>Referenced by <a class="el" href="cwb-s-encode_8c.html#a8c17bfc44258ded87aef006065d81803">close_range()</a>, <a class="el" href="cwb-s-encode_8c.html#a308b8a258931e50ec1999b718db816ad">declare_range()</a>, <a class="el" href="cwb-s-encode_8c.html#ab2929450457ff7b240510be66a7ffdbd">open_range()</a>, and <a class="el" href="cwb-s-encode_8c.html#ac5af382b8e183eeafb5671e7f33619bd">write_region_to_disk()</a>.</p>
 
@@ -186,6 +204,8 @@
 </div>
 <div class="memdoc">
 
+<p>flag indicating whether to store values </p>
+
 <p>Referenced by <a class="el" href="cwb-encode_8c.html#ab80a63938c6804f9600afdf8ccb6bfc0">close_range()</a>, <a class="el" href="cwb-encode_8c.html#a24c98c7fc24344b98cf63c129d68d066">declare_range()</a>, <a class="el" href="cwb-encode_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>, <a class="el" href="cwb-encode_8c.html#adff58f0a1109dd9e778ba480c6b33327">open_range()</a>, <a class="el" href="cwb-encode_8c.html#ae5c2bb32a75d86bb872cc2887476d60b">print_range_registry_line()</a>, and <a class="el" href="cwb-s-encode_8c.html#ac5af382b8e183eeafb5671e7f33619bd">write_region_to_disk()</a>.</p>
 
 </div>
@@ -194,7 +214,7 @@
 <li>utils/<a class="el" href="cwb-s-encode_8c.html">cwb-s-encode.c</a></li>
 </ul>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on Sun Apr 11 13:58:13 2010 for CWB by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on Fri Apr 16 01:25:04 2010 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>
