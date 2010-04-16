@@ -8,55 +8,38 @@ uname_output=$(uname -a)
 
 if [[ "$uname_output" == Linux* ]]
 then
-	rep="${rep}linux"
+  rep="${rep}linux"
 # don't know how to detect opteron?
-	if [[ "$uname_output" == *x86_64* ]]
-	then
-		rep="$rep-64"
-	fi
-
+  if [[ "$uname_output" == *x86_64* ]]
+  then
+    rep="${rep}-64"
+  fi
 
 elif [[ "$uname_output" == Darwin* ]]
 then
-	if [[ "$uname_output" == *i386 ]]
-	then
-		rep="${rep}darwin-i386"	
-# don't know what uname strings identify other types of Darwin
-#	elif [[ "$uname_output" == Darwin* ]]
-#	then
-#		rep="${rep}darwin-g4"
-#	elif [[ "$uname_output" == Darwin* ]]
-#	then
-#		rep="${rep}darwin-g5"
-#	elif [[ "$uname_output" == Darwin* ]]
-#	then
-#		rep="${rep}darwin-64"
-#	elif [[ "$uname_output" == *i386 ]]
-#	then
-#		rep="${rep}darwin-core2"
-	else
-		# couldn't detect any special sort of darwin
-		rep="${rep}darwin-universal"
-	fi
-	
+  if [[ "$uname_output" == *ppc ]]
+  then
+    rep="${rep}darwin-g4" # don't make assumptions about more recent processor or ability to produce Universal binaries
+  else
+    rep="${rep}darwin-universal" # build Universal binaries by default (best for linking libcl.a into other programs such as Perl and Python)
+  fi
 
 elif [[ "$uname_output" == SunOS* ]]
 then
-	rep="${rep}solaris"
+  rep="${rep}solaris"
 
 elif [[ "$uname_output" == CYGWIN* ]]
 then
-	rep="${rep}cygwin"
-	# and add switch to cygwin in site as well
-	config_file = ${config_file/"include \$(TOP)/config/site/standard"/"include \$(TOP)/config/site/cygwin"}
+  rep="${rep}cygwin"
+  # and add switch to cygwin in site as well
+  config_file = ${config_file/"include \$(TOP)/config/site/standard"/"include \$(TOP)/config/site/cygwin"}
 
 else
         # go for generic unix
         rep="${rep}unix"
 fi
 
-echo "$target"
-echo "$rep"
+echo "$target => $rep"
 
 config_file=${config_file/"$target"/"$rep"}
 
