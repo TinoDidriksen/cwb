@@ -100,6 +100,14 @@ extern size_t cl_memory_limit;
 # endif
 #endif
 
+#ifndef __MINGW__
+/* for use with [fs]printf() */
+#define COMMA_SEP_THOUSANDS_CONVSPEC "%'d"
+#else
+#define COMMA_SEP_THOUSANDS_CONVSPEC "%d"
+/* this feature only supported on actual POSIX -- not on mingw for osme reason */
+#endif
+
 #if (!defined(REGISTRY_ENVVAR))
 /** The Unix environment variable from which the value of the registry will be taken. */
 #define REGISTRY_ENVVAR        "CORPUS_REGISTRY"

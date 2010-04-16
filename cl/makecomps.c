@@ -70,7 +70,7 @@ scompare(const void *idx1, const void *idx2)
 /* (in fact, creat_rev_corpus() would run out of address space if it tried that on a large corpus) */
 
 /**
- * creates a sort index.
+ * creates a sorted index from the (already existing) lexicon index of the Attribute.
  *
  * @see create_component
  */
@@ -87,6 +87,7 @@ creat_sort_lexicon(Component *lexsrt)
 
   assert(comp_component_state(lexsrt) == ComponentDefined);
 
+  /* make sure both the lexicon and the lexicon index components for this Att are in memory */
   lex = ensure_component(lexsrt->attribute, CompLexicon, 1);
   lexidx = ensure_component(lexsrt->attribute, CompLexiconIdx, 1);
 
@@ -97,12 +98,14 @@ creat_sort_lexicon(Component *lexsrt)
   assert(lexidx->data.size > 0);
   assert(lexidx->data.data != NULL);
 
+  /* read the contents of the lexidx component into the blob of the lexsrt component */
   if (!read_file_into_blob(lexidx->path, MALLOCED, sizeof(int), &(lexsrt->data))) {
     fprintf(stderr, "Can't open %s, can't create lexsrt component\n", lexidx->path);
     perror(lexidx->path);
     return 0;
   }
 
+  /* sanity check the stats of the new read-in and the old read-in match */
   assert(lexidx->data.size == lexsrt->data.size);
   assert(lexidx->data.nr_items == lexsrt->data.nr_items);
   assert(lexidx->data.item_size == lexsrt->data.item_size);
@@ -113,7 +116,7 @@ creat_sort_lexicon(Component *lexsrt)
   for (i = 0; i < lexsrt->data.nr_items; i++)
     lexsrt->data.data[i] = i;
 
-  /* now sort the area */
+  /* now sort the indices according to the strings they index to */
 
   SortLexicon = &(lex->data);                /* for the comparison function */
   SortIndex = &(lexidx->data);
@@ -137,7 +140,7 @@ creat_sort_lexicon(Component *lexsrt)
 
 
 /**
- * creates frequency table
+ * creates frequency table component.
  *
  * @see create_component
  */

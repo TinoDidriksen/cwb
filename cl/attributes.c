@@ -957,7 +957,7 @@ create_component(Attribute *attribute, ComponentID cid)
     assert(comp != NULL);
     assert(comp->data.data == NULL);
     assert(comp->path != NULL);
-    
+
     switch (cid) {
       
     case CompLast:
@@ -1031,6 +1031,7 @@ create_component(Attribute *attribute, ComponentID cid)
     }
     return comp;
   }
+
   return NULL;
 }
 

@@ -379,7 +379,7 @@ mallocfile(char *filename, size_t *len_ptr, char *mode)
   int binflag = 0; /* set to O_BINARY if we want to use the binary flag with open() */
   caddr_t space;
 
-  /* allow for: r+b, w+b, rb+, wb+ */
+  /* allow for: r+b, w+b, rb+, wb+, rb, wb */
   binflag = (mode[1] == 'b' || (mode[1] == '+' && mode[2] == 'b') ) ? O_BINARY : 0;
 
   space = NULL;
@@ -388,9 +388,6 @@ mallocfile(char *filename, size_t *len_ptr, char *mode)
     case 'r':
 
     fd = open(filename, O_RDONLY|binflag);
-    
-    printf("fd is %d; errno is %d\n strerror %s\n", fd, errno, strerror(errno));
-
 
     if (fd == EOF) {
       fprintf(stderr, "storage:mallocfile():\n  can't open %s -- ", filename);

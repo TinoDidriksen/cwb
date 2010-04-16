@@ -36,6 +36,8 @@
 /**
  * Underlying structure for CL_Regex object.
  *
+ * TODO: change structure name as it breaks rules for ANSI reserved-words (uscore followed by ucase)
+ *
  * @see regopt.c
  */
 struct _CL_Regex {

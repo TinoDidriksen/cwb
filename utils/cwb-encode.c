@@ -145,10 +145,10 @@ typedef struct {
   char *name;
   cl_lexhash lh;
   int position;
-  int feature_set;  /* feature set attribute => validate and normalise format */
-  FILE *lex_fd;
-  FILE *lexidx_fd;
-  FILE *corpus_fd;
+  int feature_set;              /**< Boolean: is this a feature set attribute? => validate and normalise format */
+  FILE *lex_fd;                 /**< file handle of lexicon component */
+  FILE *lexidx_fd;              /**< file handle of lexicon index component */
+  FILE *corpus_fd;              /**< file handle of corpus component */
 } WAttr;
 
 /** An array for keeping track of P-attributes being encoded. */
@@ -1191,7 +1191,7 @@ declare_wattr(char *name, char *directory, int nr_buckets)
     error("Can't write .lexicon file for %s attribute.", name);
   }
 
-  if ((wattrs[wattr_ptr].lexidx_fd = fopen(idxname, "w")) == NULL) {
+  if ((wattrs[wattr_ptr].lexidx_fd = fopen(idxname, "wb")) == NULL) {
     perror(idxname);
     error("Can't write .lexicon.idx file for %s attribute.", name);
   }
@@ -1712,6 +1712,7 @@ main(int argc, char **argv)
   int input_length;             /* length of input line */
 
   progname = argv[0];           /* initialise global variables */
+  /* TODO: the above is sloppy, if the prog is called via a path, that will go into progname! */
   input_files = cl_new_string_list();
 
   parse_options(argc, argv);    /* parse command-line options */
@@ -1739,7 +1740,7 @@ main(int argc, char **argv)
   /* MAIN LOOP: read one line of input and process it */
   while ( get_input_line(linebuf, MAX_INPUT_LINE_LENGTH) ) {  
     if (verbose && (line % 15000 == 0)) {
-      printf("%'9dk tokens processed\r", line >> 10);
+      printf(COMMA_SEP_THOUSANDS_CONVSPEC "k tokens processed\r", line >> 10);
       fflush(stdout);
     }
 
@@ -1849,7 +1850,7 @@ main(int argc, char **argv)
   } /* endwhile (main loop for each line) */
   if (verbose) {
     printf("%50s\r", "");       /* clear progress line */
-    printf("Total size: %'d tokens (%.1fM)\n", line, ((float) line) / 1048576);
+    printf("Total size: " COMMA_SEP_THOUSANDS_CONVSPEC " tokens (%.1fM)\n", line, ((float) line) / 1048576);
   }
 
   /* close open regions at end of input; then close file handles for s-attributes */
@@ -1965,8 +1966,7 @@ main(int argc, char **argv)
       corpus_name[i] = toupper((unsigned char) corpus_name[i]); /* this _might_ handle non-ascii characters, if we're lucky */
       i--;
     }
-
-    info_file = (char *) cl_malloc(strlen(directory) + 8); /* 1 byte extra as safety margin */
+    info_file = (char *) cl_malloc(strlen(directory) + 1 + strlen(INFOFILE_DEFAULT_NAME) + 4); /* extra bytes as safety margin */
     sprintf(info_file, "%s%c%s", directory, SUBDIR_SEPARATOR, INFOFILE_DEFAULT_NAME);
 
     /* write header part for registry file */
@@ -1984,6 +1984,7 @@ main(int argc, char **argv)
     fprintf(registry_fd, "INFO %s\n\n", path);
     cl_free(path);
     fprintf(registry_fd, "# corpus properties provide additional information about the corpus:\n");
+    /* lines marked with ##:: are NOT commented out, this is part of the normal registry format! */
     fprintf(registry_fd, "##:: charset  = \"%s\" # character encoding of corpus data\n", corpus_character_set);
     fprintf(registry_fd, "##:: language = \"??\"     # insert ISO code for language (de, en, fr, ...)\n");
     fprintf(registry_fd, "\n\n");
@@ -2006,6 +2007,7 @@ main(int argc, char **argv)
     fclose(registry_fd);
 
     cl_free(corpus_name);
+    cl_free(info_file);
   }
 
   if (debug)
