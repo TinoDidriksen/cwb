@@ -29,6 +29,7 @@
 <div class="contents">
 <h1>regopt.h File Reference</h1><code>#include &quot;<a class="el" href="globals_8h.html">globals.h</a>&quot;</code><br/>
 <code>#include &lt;<a class="el" href="regex_8h.html">regex.h</a>&gt;</code><br/>
+<code>#include &lt;pcre.h&gt;</code><br/>
 <h2>Data Structures</h2>
 <ul>
 <li>struct <a class="el" href="struct___c_l___regex.html">_CL_Regex</a>
@@ -37,6 +38,11 @@
 <ul>
 <li>#define <a class="el" href="regopt_8h.html#aafa5fbfbe826a5bf208d173bf0609747">MAX_GRAINS</a>&nbsp;&nbsp;&nbsp;12
 <dl class="el"><dd class="mdescRight">Maximum number of grains of optimisation.  <a href="#aafa5fbfbe826a5bf208d173bf0609747"></a><br/></dl></ul>
+<h2>Functions</h2>
+<ul>
+<li>void <a class="el" href="regopt_8h.html#a697918b2f55aa6a0fd29906a934f5836">regopt_data_copy_to_regex_object</a> (<a class="el" href="struct___c_l___regex.html">CL_Regex</a> rx)
+<dl class="el"><dd class="mdescRight">Internal regopt function: copies optimiser data from internal global variables to the member variables of argument CL_Regex object.  <a href="#a697918b2f55aa6a0fd29906a934f5836"></a><br/></dl><li>int <a class="el" href="regopt_8h.html#ab312a681f0a8c861a08f9d26a3f4ab95">cl_regopt_analyse</a> (char *regex)
+<dl class="el"><dd class="mdescRight">Analyses a regular expression and tries to find the best set of grains.  <a href="#ab312a681f0a8c861a08f9d26a3f4ab95"></a><br/></dl></ul>
 <hr/><h2>Define Documentation</h2>
 <a class="anchor" id="aafa5fbfbe826a5bf208d173bf0609747"></a><!-- doxytag: member="regopt.h::MAX_GRAINS" ref="aafa5fbfbe826a5bf208d173bf0609747" args="" -->
 <div class="memitem">
@@ -56,8 +62,68 @@
 
 </div>
 </div>
+<hr/><h2>Function Documentation</h2>
+<a class="anchor" id="ab312a681f0a8c861a08f9d26a3f4ab95"></a><!-- doxytag: member="regopt.h::cl_regopt_analyse" ref="ab312a681f0a8c861a08f9d26a3f4ab95" args="(char *regex)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int cl_regopt_analyse </td>
+          <td>(</td>
+          <td class="paramtype">char *&nbsp;</td>
+          <td class="paramname"> <em>regex</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on Fri Apr 16 01:25:03 2010 for CWB by&nbsp;
+<div class="memdoc">
+
+<p>Analyses a regular expression and tries to find the best set of grains. </p>
+<p>Part of the regex optimiser. For a given regular expression, this function will try to extract a set of grains from regular expression {regex_string}. These grains are then used by the CL regex matcher and <a class="el" href="cdaccess_8c.html#a6eb4641e0a1e14b63f2d5f2f5b6a8cea" title="Gets a list of the ids of those items on a given Attribute that match a particular...">cl_regex2id()</a> for faster regular expression search.</p>
+<p>If successful, this function returns True and stores the grains in the optiomiser's global variables above (from which they should be copied to a CL_Regex object's corresponding members).</p>
+<p>Usage: optimised = cl_regopt_analyse(regex_string);</p>
+<p>This is a non-exported function.</p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>regex</em>&nbsp;</td><td>String containing the regex to optimise. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Boolean: true = ok, false = couldn't optimise regex. </dd></dl>
+
+<p>References <a class="el" href="cwb-itoa_8c.html#a2993e80915962c80bdbd46c0f8d554b3">buf</a>, <a class="el" href="globals_8c.html#a5c4290325b240eac5fe1542a8743286a">cl_debug</a>, <a class="el" href="regopt_8c.html#aeea8fcadfd245bf518d90e45c825d518">cl_regopt_anchor_end</a>, <a class="el" href="regopt_8c.html#a44d3ff55dc4223346a2c4f9c4f4cd30f">cl_regopt_anchor_start</a>, <a class="el" href="regopt_8c.html#a17c41125f23920984f3734380cab57c4">cl_regopt_grain</a>, <a class="el" href="regopt_8c.html#a65b125ab93c3082f07ff0d7635350079">cl_regopt_grain_len</a>, <a class="el" href="regopt_8c.html#ac4527918221c359efeb1d01fb10a1a93">cl_regopt_grains</a>, <a class="el" href="regopt_8c.html#ae4d9d4be4e6b1ead777698efd2b39098">grain_buffer</a>, <a class="el" href="regopt_8c.html#a6572b918e13646e4ca08c5ce0e40ce8a">grain_buffer_grains</a>, <a class="el" href="regopt_8c.html#a5f7ef246f02726564ffb216ee72bbdb7">local_grain_data</a>, <a class="el" href="regopt_8c.html#a1b1785e702fe108639b79a3fbf6ed84f">make_jump_table()</a>, <a class="el" href="regopt_8c.html#a4ebe3946882f5e63b53e059341d0b065">read_disjunction()</a>, <a class="el" href="regopt_8c.html#a9504874fcb65abb067c81cc75a451e04">read_grain()</a>, <a class="el" href="regopt_8c.html#a696aa9aca45c0c42b9b1501ca08f39cd">read_kleene()</a>, <a class="el" href="regopt_8c.html#a237d16bb69251631763e7e7853c5a662">read_wildcard()</a>, and <a class="el" href="regopt_8c.html#a397a8686e22c556c60ed1eaec5da19da">update_grain_buffer()</a>.</p>
+
+<p>Referenced by <a class="el" href="regopt_8c.html#a2c4607eb8e094b7699062df8eb744058">cl_new_regex()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a697918b2f55aa6a0fd29906a934f5836"></a><!-- doxytag: member="regopt.h::regopt_data_copy_to_regex_object" ref="a697918b2f55aa6a0fd29906a934f5836" args="(CL_Regex rx)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void regopt_data_copy_to_regex_object </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct___c_l___regex.html">CL_Regex</a>&nbsp;</td>
+          <td class="paramname"> <em>rx</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Internal regopt function: copies optimiser data from internal global variables to the member variables of argument CL_Regex object. </p>
+
+<p>References <a class="el" href="struct___c_l___regex.html#a93e5ad5e0410fdbd7c65a09793a14cb6">_CL_Regex::anchor_end</a>, <a class="el" href="struct___c_l___regex.html#a4e3ccc6f2ec66b18f80763c9101dc2a7">_CL_Regex::anchor_start</a>, <a class="el" href="globals_8c.html#a5c4290325b240eac5fe1542a8743286a">cl_debug</a>, <a class="el" href="regopt_8c.html#aeea8fcadfd245bf518d90e45c825d518">cl_regopt_anchor_end</a>, <a class="el" href="regopt_8c.html#a44d3ff55dc4223346a2c4f9c4f4cd30f">cl_regopt_anchor_start</a>, <a class="el" href="regopt_8c.html#a17c41125f23920984f3734380cab57c4">cl_regopt_grain</a>, <a class="el" href="regopt_8c.html#a65b125ab93c3082f07ff0d7635350079">cl_regopt_grain_len</a>, <a class="el" href="regopt_8c.html#ac4527918221c359efeb1d01fb10a1a93">cl_regopt_grains</a>, <a class="el" href="regopt_8c.html#a200be31d923ac49fe9d9ab5f9963eb77">cl_regopt_jumptable</a>, <a class="el" href="cl_8h.html#a6647d75d1d69c7d25447da514b7e4682">cl_strdup()</a>, <a class="el" href="struct___c_l___regex.html#a343da7a5241d5dd4042b632f9c39006e">_CL_Regex::grain</a>, <a class="el" href="struct___c_l___regex.html#a6f097fa6018c5b24ea16507555185feb">_CL_Regex::grain_len</a>, <a class="el" href="struct___c_l___regex.html#a809c37615b266e2fdd396ac191b9a93c">_CL_Regex::grains</a>, and <a class="el" href="struct___c_l___regex.html#a9da424d392549ca48c495ad456441139">_CL_Regex::jumptable</a>.</p>
+
+<p>Referenced by <a class="el" href="regopt_8c.html#a2c4607eb8e094b7699062df8eb744058">cl_new_regex()</a>.</p>
+
+</div>
+</div>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on Mon Apr 19 21:37:25 2010 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

@@ -983,7 +983,7 @@
 
 <p>References <a class="el" href="cl_8h.html#a3b60fdde6a7c8fbc535efaf526dbcb78">ATT_POS</a>, <a class="el" href="cl_8h.html#ad3310b2e10e15119787af15ce486dc32">CDA_EIDXORNG</a>, <a class="el" href="cl_8h.html#a94695de40ed57b9b359981bf6ff78aae">CDA_ENODATA</a>, <a class="el" href="cl_8h.html#a1fa2e2ab47bd2c689b68a78bdac22028">CDA_OK</a>, <a class="el" href="cl_8h.html#a8807f044dd47ab4d1f1c3eba26b2646c">cderrno</a>, <a class="el" href="cdaccess_8c.html#a764796354d59769c4402a8a37dac7e24">check_arg</a>, <a class="el" href="attributes_8h.html#a990b084a9fbbdb7ea6b9defb1073706aac60289f7444e30489e456ca3e924cda7">CompCorpusFreqs</a>, <a class="el" href="struct_t_mblob.html#ac103627c1ad15cbec2f22d0abe6d54b6">TMblob::data</a>, <a class="el" href="struct_t_component.html#a77096a9034bc2a42ed99c36e2038c61e">TComponent::data</a>, and <a class="el" href="attributes_8c.html#a4810d7a6ab0920ad1af05e2095cc1841">ensure_component()</a>.</p>
 
-<p>Referenced by <a class="el" href="cwb-compress-rdx_8c.html#ada27dd0455655c13cd8dca8259eefbfb">compress_reversed_index()</a>, <a class="el" href="makecomps_8h.html#ab8f0ec6caf733eae459326a9c0483608">creat_rev_corpus()</a>, <a class="el" href="feature__maps_8h.html#a26d7a123154f8cd5cbb70da2c744af58">create_feature_maps()</a>, <a class="el" href="cwb-compress-rdx_8c.html#a6e572abf235d74b194d259cb97476a28">decompress_check_reversed_index()</a>, <a class="el" href="cqpserver_8c.html#aaa8658fea0834dc99cc5b3c82369e222">do_cqi_cl_id2freq()</a>, and <a class="el" href="cwb-makeall_8c.html#a0e221f9ff29909cc9c828ae87ac5455b">validate_revcorp()</a>.</p>
+<p>Referenced by <a class="el" href="cl_8h.html#aab7434e62d92508e0bf9a2787b901440">cl_idlist2freq()</a>, <a class="el" href="cwb-compress-rdx_8c.html#ada27dd0455655c13cd8dca8259eefbfb">compress_reversed_index()</a>, <a class="el" href="makecomps_8h.html#ab8f0ec6caf733eae459326a9c0483608">creat_rev_corpus()</a>, <a class="el" href="feature__maps_8h.html#a26d7a123154f8cd5cbb70da2c744af58">create_feature_maps()</a>, <a class="el" href="cwb-compress-rdx_8c.html#a6e572abf235d74b194d259cb97476a28">decompress_check_reversed_index()</a>, <a class="el" href="cqpserver_8c.html#aaa8658fea0834dc99cc5b3c82369e222">do_cqi_cl_id2freq()</a>, and <a class="el" href="cwb-makeall_8c.html#a0e221f9ff29909cc9c828ae87ac5455b">validate_revcorp()</a>.</p>
 
 </div>
 </div>
@@ -1240,7 +1240,7 @@
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Sum of all the frequencies; less than 0 for an error. </dd></dl>
 
-<p>References <a class="el" href="cl_8h.html#a3b60fdde6a7c8fbc535efaf526dbcb78">ATT_POS</a>, <a class="el" href="cl_8h.html#a94695de40ed57b9b359981bf6ff78aae">CDA_ENODATA</a>, <a class="el" href="cl_8h.html#a1fa2e2ab47bd2c689b68a78bdac22028">CDA_OK</a>, <a class="el" href="cl_8h.html#a8807f044dd47ab4d1f1c3eba26b2646c">cderrno</a>, <a class="el" href="cdaccess_8c.html#a764796354d59769c4402a8a37dac7e24">check_arg</a>, and <a class="el" href="cl_8h.html#a24bd80121a707895fcfd9b0ad6472d2d">get_id_frequency</a>.</p>
+<p>References <a class="el" href="cl_8h.html#a3b60fdde6a7c8fbc535efaf526dbcb78">ATT_POS</a>, <a class="el" href="cl_8h.html#a94695de40ed57b9b359981bf6ff78aae">CDA_ENODATA</a>, <a class="el" href="cl_8h.html#a1fa2e2ab47bd2c689b68a78bdac22028">CDA_OK</a>, <a class="el" href="cl_8h.html#a8807f044dd47ab4d1f1c3eba26b2646c">cderrno</a>, <a class="el" href="cdaccess_8c.html#a764796354d59769c4402a8a37dac7e24">check_arg</a>, <a class="el" href="cdaccess_8c.html#af97f2ad4a69c7d0105f9cee4a51b29b8">cl_errno</a>, and <a class="el" href="cdaccess_8c.html#a96decca6cc290275c02aa48ebf943aa9">cl_id2freq()</a>.</p>
 
 <p>Referenced by <a class="el" href="parse__actions_8c.html#af171dda31157fe9e0f1a31f8ce2d687f">OptimizeStringConstraint()</a>.</p>
 
@@ -2100,12 +2100,12 @@
 
 <p>Error number for CL: is set after access to any of various corpus-data-access functions. </p>
 
-<p>Referenced by <a class="el" href="regopt_8c.html#a2c4607eb8e094b7699062df8eb744058">cl_new_regex()</a>, <a class="el" href="cl_8h.html#ac00f99db989ee6dd4554e5fb3ef89359">cl_new_stream()</a>, <a class="el" href="cwb-compress-rdx_8c.html#ada27dd0455655c13cd8dca8259eefbfb">compress_reversed_index()</a>, and <a class="el" href="cwb-compress-rdx_8c.html#a6e572abf235d74b194d259cb97476a28">decompress_check_reversed_index()</a>.</p>
+<p>Referenced by <a class="el" href="cl_8h.html#aab7434e62d92508e0bf9a2787b901440">cl_idlist2freq()</a>, <a class="el" href="regopt_8c.html#a2c4607eb8e094b7699062df8eb744058">cl_new_regex()</a>, <a class="el" href="cl_8h.html#ac00f99db989ee6dd4554e5fb3ef89359">cl_new_stream()</a>, <a class="el" href="cwb-compress-rdx_8c.html#ada27dd0455655c13cd8dca8259eefbfb">compress_reversed_index()</a>, and <a class="el" href="cwb-compress-rdx_8c.html#a6e572abf235d74b194d259cb97476a28">decompress_check_reversed_index()</a>.</p>
 
 </div>
 </div>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on Fri Apr 16 01:25:03 2010 for CWB by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on Mon Apr 19 21:37:25 2010 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>
