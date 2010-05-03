@@ -23,7 +23,8 @@
 ## when we are cross-compiling for windows...
 __MINGW__ = 1
 ## if a "unix-to-dos" conversion program is specified here, it will be used when creating
-## windows releases
+## windows releases (for text files containing instructions e.g. README.txt, thus enabling
+## Notepad.exe (inter alia) to read them without mangling the linebreaks).
 UNIX2DOS = unix2dos
 
 ## C compiler

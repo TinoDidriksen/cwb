@@ -394,7 +394,6 @@ typedef union _Attribute Attribute;
  * @param corpus          The corpus in which to search for the attribute.
  * @param attribute_name  The name of the attribute (i.e. the handle it has in the registry file)
  * @param type            Type of attribute to be searched for.
- * @param data            NOT USED.
  *
  * @return                Pointer to Attribute object, or NULL if not found.
  */
@@ -525,7 +524,10 @@ int cl_cpos2alg2cpos_oldstyle(Attribute *attribute,
 
 /* attribute access functions: dynamic attributes (N/A)
  *
- * before we can prototype these, we need the DynCallResult datatype
+ * NOTE that dynamic attributes are not currently supported.
+ * Most of the code has been thrown out.
+ *
+ * Before we can prototype these, we need the DynCallResult datatype
  * This is properly an object on its own, but it is not separate
  * enough from the Attribute to merit its own heading.*/
 
@@ -709,6 +711,10 @@ int cl_regex_match(CL_Regex rx, char *str); /* automatically uses normalisation 
                                                returns True when regex matches */
 void cl_delete_regex(CL_Regex rx);
 extern char cl_regex_error[];
+
+/* two functions interface the optimiser system's reporting capabilities */
+void cl_regopt_count_reset(void);
+int cl_regopt_count_get(void);
 
 
 

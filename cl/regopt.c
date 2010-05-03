@@ -62,7 +62,7 @@ int cl_regopt_jumptable[256];
  * Intermediate buffer for grains.
  *
  * When a regex is parsed, grains for each segment are written to this intermediate buffer;
- * if the new set of grains is better than the current one, it is copied to the global variables.
+ * if the new set of grains is better than the current one, it is copied to the cl_regopt_ variables.
  */
 char *grain_buffer[MAX_GRAINS];
 /** The number of grains currently in the intermediate buffer. @see grain_buffer */
@@ -75,12 +75,19 @@ char local_grain_data[MAX_LINE_LENGTH];
 
 int cl_regopt_analyse(char *regex);
 
+/**
+ * A counter of how many times the "grain" system has found a match.
+ * @see cl_regopt_count_get
+ */
+int cl_regopt_successes = 0;
+
+
 /*
  * interface functions (ie "public methods" of CL_Regex)
  */
 
 /**
- * The error message from (POSIX) regex compilation are placed in this buffer
+ * The error message from (PCRE) regex compilation are placed in this buffer
  * if cl_new_regex() fails.
  *
  * This global variable is part of the CL_Regex object's API.
@@ -95,73 +102,88 @@ char cl_regex_error[MAX_LINE_LENGTH];
  * the start, $ to the end.)
  *
  * Then the resulting regex is compiled (using POSIX compilation) and
- * optimised. Currently the character set parameter is ignored and
- * assumed to be Latin-1.
+ * optimised.
+ *
+ * Currently, the charset parameter only distinguishes between UTF8 and "other"
+ * (Ascii or LatinX), as does PCRE.
  *
  * @param regex    String containing the regular expression
  * @param flags    IGNORE_CASE, or IGNORE_DIAC, or both, or 0.
- * @param charset  The character set of the regex. Currently ignored.
+ * @param charset  The character set of the regex.
  * @return         The new CL_Regex object, or NULL in case of error.
  */
 CL_Regex cl_new_regex(char *regex, int flags, CorpusCharset charset)
 {
-  char *iso_regex; /* allocate dynamically to support very long regexps (from RE() operator) */
+  char *preprocessed_regex; /* allocate dynamically to support very long regexps (from RE() operator) */
   char *anchored_regex;
   CL_Regex rx;
   int error_num, optimised, i, l;
 
+  int options_for_pcre = 0;
+  char *errstring_for_pcre = NULL;
+  int erroffset_for_pcre = 0;
+
   /* allocate temporary strings */
   l = strlen(regex);
-  iso_regex = (char *) cl_malloc(l + 1);
+  preprocessed_regex = (char *) cl_malloc(l + 1);
   anchored_regex = (char *) cl_malloc(l + 5);
 
   /* allocate and initialise CL_Regex object */
   rx = (CL_Regex) cl_malloc(sizeof(struct _CL_Regex));
-  rx->iso_string = NULL;
+  rx->haystack_buf = NULL;
   rx->charset = charset;
   rx->flags = flags & (IGNORE_CASE | IGNORE_DIAC); /* mask unsupported flags */
   rx->grains = 0; /* indicates no optimisation -> other opt. fields are invalid */
 
   /* pre-process regular expression (translate latex escapes and normalise) */
-  cl_string_latex2iso(regex, iso_regex, l);
-  cl_string_canonical(iso_regex, rx->flags);
+  cl_string_latex2iso(regex, preprocessed_regex, l);
+  cl_string_canonical(preprocessed_regex, rx->flags);
 
   /* add start and end anchors to improve performance of regex matcher for expressions such as ".*ung" */
-  sprintf(anchored_regex, "^(%s)$", iso_regex);
+  sprintf(anchored_regex, "^(%s)$", preprocessed_regex);
 
-  /* compile regular expression with POSIX library function */
-  error_num = regcomp(&rx->buffer, anchored_regex, REG_EXTENDED | REG_NOSUB);
-  if (error_num != 0) {
-    (void) regerror(error_num, NULL, cl_regex_error, MAX_LINE_LENGTH);
+  /* compile regular expression with PCRE library function */
+  if (charset == utf8) {
+    if (cl_debug)
+      fprintf(stderr, "CL: enabling PCRE's UTF8 mode for regex %s\n", anchored_regex);
+    /* note we assume all strings have been checked upon input (i.e. indexing or by the parser) */
+    options_for_pcre = PCRE_UTF8|PCRE_NO_UTF8_CHECK;
+    /* we do our own case folding, so we don't need the PCRE_CASELESS flag */
+  }
+  rx->needle = pcre_compile(anchored_regex, options_for_pcre, &errstring_for_pcre, &erroffset_for_pcre, NULL);
+  if (rx->needle == NULL) {
+    strcpy(cl_regex_error, errstring_for_pcre);
     fprintf(stderr, "Regex Compile Error: %s\n", cl_regex_error);
     cl_free(rx);
-    cl_free(iso_regex);
+    cl_free(preprocessed_regex);
     cl_free(anchored_regex);
     cl_errno = CDA_EBADREGEX;
     return NULL;
   }
+  /* always use pcre_study because nearly all our regexes are going to be used lots of times;
+   * note that according to man pcre, the optimisation methods are different to those used by
+   * the CL's regex optimiser. So it is all good. */
+  rx->extra = pcre_study(rx->needle, 0, &errstring_for_pcre);
+  if (errstring_for_pcre != NULL) {
+    rx->extra = NULL;
+    if (cl_debug)
+      fprintf(stderr, "CL: calling pcre_study failed with message...\n   %s\n", errstring_for_pcre);
+    /* note that failure of pcre_study is not a critical error, we can just continue without
+       the extra info */
+  }
 
   /* allocate string buffer for cl_regex_match() function if flags are present */
   if (flags)
-    rx->iso_string = (char *) cl_malloc(MAX_LINE_LENGTH); /* this is for the string being matched, not the regex! */
+    rx->haystack_buf = (char *) cl_malloc(MAX_LINE_LENGTH); /* this is for the string being matched, not the regex! */
 
   /* attempt to optimise regular expression */
-  optimised = cl_regopt_analyse(iso_regex);
-  if (optimised) { /* copy optimiser data to CL_Regex object */
-    rx->grains = cl_regopt_grains;
-    rx->grain_len = cl_regopt_grain_len;
-    rx->anchor_start = cl_regopt_anchor_start;
-    rx->anchor_end = cl_regopt_anchor_end;
-    for (i = 0; i < 256; i++)
-      rx->jumptable[i] = cl_regopt_jumptable[i];
-    for (i = 0; i < rx->grains; i++)
-      rx->grain[i] = cl_strdup(cl_regopt_grain[i]);
-    if (cl_debug)
-      fprintf(stderr, "CL: using %d grain(s) for optimised regex matching\n",
-          rx->grains);
+  optimised = cl_regopt_analyse(preprocessed_regex);
+  if (optimised) {
+    /* copy optimiser data to CL_Regex object */
+    regopt_data_copy_to_regex_object(rx);
   }
 
-  cl_free(iso_regex);
+  cl_free(preprocessed_regex);
   cl_free(anchored_regex);
   cl_errno = CDA_OK;
   return rx;
@@ -199,25 +221,28 @@ int cl_regex_optimised(CL_Regex rx)
  * @param str  The string to compare the regex to.
  * @return     Boolean: true if the regex matched, otherwise false.
  */
-int cl_regex_match(CL_Regex rx, char *str)
+int
+cl_regex_match(CL_Regex rx, char *str)
 {
-  char *iso_string; /* either the original string or a pointer to rx->iso_string */
+  char *haystack; /* either the original string to match against, or a pointer to rx->haystack_buf */
   int optimised = (rx->grains > 0);
   int i, di, k, max_i, len, jump;
   int grain_match, result;
+  int ovector[30]; /* memory for pcre to use for back-references in pattern matches */
 
-  if (rx->flags) { /* normalise input string if necessary */
-    iso_string = rx->iso_string;
-    strcpy(iso_string, str);
-    cl_string_canonical(iso_string, rx->flags);
+  if (rx->flags) { /* normalise input string if necessary TODO */
+    haystack = rx->haystack_buf;
+    strcpy(haystack, str);
+    cl_string_canonical(haystack, rx->flags);
   }
   else
-    iso_string = str;
+    haystack = str;
+  len = strlen(haystack);
 
   grain_match = 0;
+#if 0 /* disable optimised regex matching while developing utf8 matching */
   if (optimised) {
     /* this 'optimised' matcher may look fairly bloated, but it's still way ahead of POSIX regexen */
-    len = strlen(iso_string);
     /* string offset where first character of each grain would be */
     max_i = len - rx->grain_len; /* stop trying to match when i > max_i */
     if (rx->anchor_end)
@@ -226,15 +251,15 @@ int cl_regex_match(CL_Regex rx, char *str)
       i = 0;
 
     while (i <= max_i) {
-      jump = rx->jumptable[(unsigned char) iso_string[i + rx->grain_len - 1]];
+      jump = rx->jumptable[(unsigned char) haystack[i + rx->grain_len - 1]];
       if (jump > 0) {
         i += jump; /* Boyer-Moore search */
       }
       else {
+        /* for each grain */
         for (k = 0; k < rx->grains; k++) {
-          char *grain = rx->grain[k];
           di = 0;
-          while ((di < rx->grain_len) && (grain[di] == iso_string[i + di]))
+          while ((di < rx->grain_len) && (rx->grain[k][di] == haystack[i + di]))
             di++;
           if (di >= rx->grain_len) {
             grain_match = 1;
@@ -246,53 +271,83 @@ int cl_regex_match(CL_Regex rx, char *str)
       if (rx->anchor_start)
         break; /* if anchored at start, only the first iteration can match */
     }
-  }
+    if (grain_match)
+      cl_regopt_successes++;
+  } /* endif optimised */
+
 
   if (optimised && !grain_match) /* enabled since version 2.2.b94 (14 Feb 2006) -- before: && cl_optimize */
-    result = REG_NOMATCH; /* according to POSIX.2 */
-  else
-    result = regexec(&(rx->buffer), iso_string, 0, NULL, 0);
+    result = REG_NOMATCH; /* according to POSIX.2 */ //TODO change to PCRE_ERROR_NOMATCH, whihc is PCRE's no-match code
+  else {
+#else
+  if (1) { /* just to preserve structure of the ifs */
+#endif
+    result = pcre_exec(rx->needle, rx->extra, haystack,
+                       len, 0, PCRE_NO_UTF8_CHECK,
+                       ovector, 30);
+    if (result < PCRE_ERROR_NOMATCH && cl_debug)
+      /* note, "no match" is a PCRE "error", but all actual errors are lower numbers */
+      fprintf(stderr, "Regex Execute Error no. %d (see `man pcreapi` for error codes)\n", result);
+  }
 
-#if 0  /* debugging code used before version 2.2.b94 */
+#if 0  /* debugging code used before version 2.2.b94, modified to pcre return values in 3.2.0 */
   /* critical: optimiser didn't accept candidate, but regex matched */
-  if ((result == 0) && optimised && !grain_match)
-  fprintf(stderr, "CL ERROR: regex optimiser did not accept '%s' although it should have!\n", iso_string);
+  if ((result > 0) && optimised && !grain_match)
+  fprintf(stderr, "CL ERROR: regex optimiser did not accept '%s' although it should have!\n", haystack);
 #endif
 
-  return (result == 0); /* return true if regular expression matched */
+  return (result > 0); /* return true if regular expression matched */
 }
 
 /**
  * Deletes a CL_Regex object.
  *
+ * Note that we use cl_free to deallocate the internal PCRE buffers,
+ * not pcre_free, for the simple reason that pcre_free is just a
+ * function pointer that will normally contain free, and thus we
+ * miss out on the checking that cl_free provides.
+ *
  * @param rx  The CL_Regex to delete.
  */
-void cl_delete_regex(CL_Regex rx)
+void
+cl_delete_regex(CL_Regex rx)
 {
   int i;
-  regfree(&(rx->buffer));           /* free POSIX regex buffer */
-  cl_free(rx->iso_string);          /* free string buffer if it was allocated */
+  cl_free(rx->needle);           /* free PCRE regex buffer */
+  if (rx->extra)
+    cl_free(rx->extra->study_data);
+  /* don't need to free extra->tables or ->callout_data because we know we never use them in CL */
+  cl_free(rx->extra);
+  cl_free(rx->haystack_buf);       /* free string buffer if it was allocated */
   for (i = 0; i < rx->grains; i++)
-    cl_free(rx->grain[i]);          /* free grain strings if regex was optimised */
-  free(rx);
+    cl_free(rx->grain[i]);         /* free grain strings if regex was optimised */
+  cl_free(rx);
 }
 
 /*
  * helper functions (for optimiser)
- * (non-exported in the publuic API)
+ * (non-exported in the public API)
  */
 
 /**
  * Is the given character a 'safe' character which will only match itself in a regex?
  *
- * @param c  The character
+ * What counts as safe: A to Z, a to z, 0 to 9, minus, quote marks, percent,
+ * ampersand, slashes, excl mark, colon, semi colon, character, underscore,
+ * any  value over 0x7f.
+ *
+ * What counts as not safe therefore includes: brackets, braces, square brackets;
+ * questionmark, plus, and star; circumflex and dollar sign; dot; hash; etc.
+ *
+ * @param c  The character (cast to unsigned for the comparison.
  * @return   True for non-special characters; false for special characters.
  */
 int
 is_safe_char(unsigned char c)
 {
-  /* TODO is this UTF8-safe? */
   /* c <= 255 produces 'comparison is always true' compiler warning */
+  /* note: this function is UTF8-safe because values above 0x7f are
+   * always allowed */
   if(
       (c >= 'A' && c <= 'Z') ||
       (c >= 'a' && c <= 'z') ||
@@ -317,7 +372,7 @@ is_safe_char(unsigned char c)
  * A grain is a string of safe symbols not followed by ?, *, or {..}.
  * This function finds the longest grain it can starting at the point
  * in the regex indicated by mark; backslash-escaped characters are
- * allowed  but the backslashes must be stripped by the caller.
+ * allowed but the backslashes must be stripped by the caller.
  *
  * @param mark  Pointer to location in the regex string from
  *              which to read.
@@ -439,6 +494,8 @@ read_kleene(char *mark)
  * substring (but without a '|' symbol); it returns a pointer
  * to the first character after the wildcard segment.
  *
+ * Note that effectively, wildcard equals matchall plus kleene.
+ *
  * @param mark  Pointer to location in the regex string from which to read.
  * @return      Pointer to the first character after the
  *              wildcard segment (or the original "mark" pointer
@@ -495,7 +552,7 @@ read_disjunction(char *mark, int *align_start, int *align_end)
     failed = 0;
 
     /* if we can extend the disjunction parser to allow parentheses around the initial segment of 
-     an alternative, then regexen created by the matches operator will also be optimised! */
+       an alternative, then regexen created by the matches operator will also be optimised! */
     *align_start = *align_end = 1;
     while (1) { /* loop over alternatives in disjunction */
       for (p2 = read_grain(point); p2 == point; p2 = read_grain(point)) {
@@ -565,7 +622,8 @@ read_disjunction(char *mark, int *align_start, int *align_end)
  *                       beginning or end of string, depending on
  *                       front_aligned.
  */
-void update_grain_buffer(int front_aligned, int anchored)
+void
+update_grain_buffer(int front_aligned, int anchored)
 {
   char *buf = public_grain_data;
   int i, len, N;
@@ -580,11 +638,12 @@ void update_grain_buffer(int front_aligned, int anchored)
     }
     if (len >= 2) { /* minimum grain length is 2 */
       /* we make a heuristics decision whether the new set of grains is better than the current one;
-       based on grain length and the number of grains */
-      if ((len > (cl_regopt_grain_len + 1)) || ((len == (cl_regopt_grain_len
-          + 1)) && (N <= (3 * cl_regopt_grains))) || ((len
-          == cl_regopt_grain_len) && (N < cl_regopt_grains)) || ((len
-          == (cl_regopt_grain_len - 1)) && ((3 * N) < cl_regopt_grains))) {
+         based on grain length and the number of grains */
+      if (    (len >  (cl_regopt_grain_len + 1))
+          || ((len == (cl_regopt_grain_len + 1)) && (N <= (3 * cl_regopt_grains) ))
+          || ((len ==  cl_regopt_grain_len)      && (N < cl_regopt_grains))
+          || ((len == (cl_regopt_grain_len - 1)) && ((3 * N) < cl_regopt_grains))
+          ) {
         /* the new set of grains is better, copy them to the output buffer */
         for (i = 0; i < N; i++) {
           int l, diff;
@@ -626,7 +685,8 @@ void update_grain_buffer(int front_aligned, int anchored)
  *
  * A non-exported function.
  */
-void make_jump_table(void)
+void
+make_jump_table(void)
 {
   int j, k, jump;
   unsigned int ch;
@@ -634,23 +694,26 @@ void make_jump_table(void)
 
   for (ch = 0; ch < 256; ch++)
     cl_regopt_jumptable[ch] = 0;
+
   if (cl_regopt_grains > 0) {
     /* compute smallest jump distance for each character (0 -> matches last character of one or more grains) */
     for (ch = 32; ch < 256; ch++) {
       jump = cl_regopt_grain_len; /* if character isn't contained in any of the grains, jump by grain length */
-      for (k = 0; k < cl_regopt_grains; k++) {
+
+      for (k = 0; k < cl_regopt_grains; k++) { /* for each grain... */
         grain = (unsigned char *) cl_regopt_grain[k] + cl_regopt_grain_len - 1; /* pointer to last character in grain */
         for (j = 0; j < cl_regopt_grain_len; j++, grain--) {
           if (*grain == ch) {
             if (j < jump)
               jump = j;
-            break; /* can't find shorter jump dist. for this grain */
+            break; /* can't find shorter jump dist. for this grain; any jump found on subsequent loops would be longer */
           }
         }
       }
+
       cl_regopt_jumptable[ch] = jump;
     }
-    if (cl_debug) {
+    if (cl_debug) { /* in debug mode, print out the entire jumptable */
       fprintf(stderr, "CL: cl_regopt_jumptable for Boyer-Moore search is\n");
       for (k = 32; k < 256; k += 16) {
         fprintf(stderr, "CL: ");
@@ -662,7 +725,31 @@ void make_jump_table(void)
       }
     }
   }
+  /* if cl_regopt_grains not > 0, don't do anything (just clear the jumptable, as above */
 }
+
+
+/**
+ * Internal regopt function: copies optimiser data from internal global variables
+ * to the member variables of argument CL_Regex object.
+ */
+void
+regopt_data_copy_to_regex_object(CL_Regex rx)
+{
+  int i;
+
+  rx->grains = cl_regopt_grains;
+  rx->grain_len = cl_regopt_grain_len;
+  rx->anchor_start = cl_regopt_anchor_start;
+  rx->anchor_end = cl_regopt_anchor_end;
+  for (i = 0; i < 256; i++)
+    rx->jumptable[i] = cl_regopt_jumptable[i];
+  for (i = 0; i < rx->grains; i++)
+    rx->grain[i] = cl_strdup(cl_regopt_grain[i]);
+  if (cl_debug)
+    fprintf(stderr, "CL: using %d grain(s) for optimised regex matching\n", rx->grains);
+}
+
 
 /**
  * Analyses a regular expression and tries to find the best set of grains.
@@ -683,7 +770,8 @@ void make_jump_table(void)
  * @param regex  String containing the regex to optimise.
  * @return       Boolean: true = ok, false = couldn't optimise regex.
  */
-int cl_regopt_analyse(char *regex)
+int
+cl_regopt_analyse(char *regex)
 {
   char *point, *mark, *q, *buf;
   int i, ok, at_start, at_end, align_start, align_end, anchored;
@@ -696,6 +784,34 @@ int cl_regopt_analyse(char *regex)
   cl_regopt_grain_len = 0;
   cl_regopt_anchor_start = cl_regopt_anchor_end = 0;
 
+  /*
+   * Algorithm:
+   *
+   * while (1)
+   *   read_grain
+   *   if (grain found)
+   *     copy grain to grain buffer (skipping any escaping \ )
+   *     update_grain_buffer
+   *   else
+   *     read_disjunction
+   *     if (disjunction group found)
+   *       if (disjunction group followed by optional marker ?, * or {})
+   *         read_kleene (to skip the ?or * or {}) and don't save the disjunction group
+   *       else
+   *         update_grain_buffer
+   *     else
+   *       read_wildcard
+   *       if (wildcard found)
+   *         skip past the wildcard
+   *       else
+   *         we didn't find any grain, so do nothing
+   *   if (we are at end of string)
+   *     print out the grain set, if one was found, in debug mode
+   *     make_jump_table
+   *     return ok
+   *   else loop round again
+   *
+   */
   ok = 1;
   while (ok) {
     at_start = (mark == regex);
@@ -767,8 +883,49 @@ int cl_regopt_analyse(char *regex)
         make_jump_table(); /* compute jump table for Boyer-Moore search */
       return ok;
     }
-  }
+  } /* endwhile ok */
 
   /* couldn't analyse regexp -> no optimisation */
   return 0;
+}
+
+
+/* two monitoring functions */
+
+/**
+ * Reset the "success counter" for optimised regexes.
+ */
+void
+cl_regopt_count_reset(void)
+{
+  cl_regopt_successes = 0;
+}
+
+/**
+ * Get a reading from the "success counter" for optimised regexes.
+ *
+ * The counter is incremented by 1 every time the "grain" system
+ * is used to get a match successfully, avoiding use of the
+ * external regex library which is the fallback.
+ *
+ * Usage:
+ *
+ * cl_regopt_count_reset();
+ *
+ * for (i = 0, hits = 0; i < n; i++)
+ *   if (cl_regex_match(rx, haystacks[i]))
+ *     hits++;
+ *
+ * fprintf(stderr, "Found %d matches, %d of them using the regopt system",
+ *   hits, cl_regopt_count_get() );
+ *
+ * @see cl_regopt_count_reset
+ * @return an integer indicating the number of times a regular expression
+ *         has been matched using the regopt system of "grains", rather
+ *         than by calling an external regex library.
+ */
+int
+cl_regopt_count_get(void)
+{
+  return cl_regopt_successes;
 }

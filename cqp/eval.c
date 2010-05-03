@@ -1629,7 +1629,7 @@ Boolean calculate_initial_matchlist_1(Constrainttree ctptr,
               if (!Setop(matchlist, Complement, NULL))
                 return False;        /* Auswertung bei Speicherueberlauf abbrechen */
           }
-          return(True);
+          return True;
 
           break;
 
@@ -2601,9 +2601,9 @@ simulate_dfa(int envidx, int cut, int keep_old_ranges)
   Matchlist total_matchlist; 
 
   int *state_vector;            /* currently active states are marked with corresponding cpos */
-  int *target_vector;                /* target states when simulating transition */
+  int *target_vector;           /* target states when simulating transition */
   RefTab *reftab_vector;        /* the reference tables corresponding to the state vector */
-  RefTab *reftab_target_vector;        /* the reference tables corresponding to the target vector */
+  RefTab *reftab_target_vector; /* the reference tables corresponding to the target vector */
 
   int allocate_target_space;
 

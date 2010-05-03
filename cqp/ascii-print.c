@@ -474,6 +474,7 @@ ascii_print_aligned_line(FILE *stream,
  * Prints a concordance line.
  * (documentation not complete)_
  *
+ *
  */
 void 
 print_concordance_line(FILE *outfd,

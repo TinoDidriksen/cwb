@@ -48,10 +48,16 @@ typedef struct _print_option_rec_ {
 
 /**
  * The PrintDescriptionRecord object.
+ *
+ * Contains strings / function pointers that
+ *
+ * Note that currently it is not possible for these to be defined at
+ * runtime. It must be done at compile-time.
  */
 typedef struct _print_descr_rec_ {
 
-  char *CPOSPrintFormat;              /**< printf()-Formatting String */
+  char *CPOSPrintFormat;              /**< printf()-Formatting String for display of a corpus position
+                                           (needs a %d or %x or similar in it somewhere)               */
 
   char *BeforePrintStructures;        /**< to print before PS */
   char *PrintStructureSeparator;      /**< to print as separator */
@@ -67,7 +73,7 @@ typedef struct _print_descr_rec_ {
 
   char *BeforeToken;                  /**< what to print before a token */
   char *TokenSeparator;               /**< what to print between tokens */
-  char *AttributeSeparator;           /**< what to print as PA separator */
+  char *AttributeSeparator;           /**< what to print as p-att separator within tokens */
   char *AfterToken;                   /**< what to print after a token */
 
   char *BeforeField;                  /**< what to print before a field */

@@ -23,8 +23,8 @@
 #
 # CWB version
 #
-VERSION = 3.1.0
-# an actual first release for version 3.1! don't forget to increment last number on changing.
+VERSION = 3.2.b0
+# alpha / beta for the unicode support version, 3.2
 
 #
 # Check that required configuration variables are set
@@ -190,7 +190,7 @@ LDFLAGS += $(DEBUG_FLAGS) $(SITE_LDFLAGS)
 
 # termcap/curses/readline DISALLOWED under MinGW, even if set elsewhere
 # (because we don't want to link against a Unix libncurses, and editline
-# won't compile under MinGW.)
+# won't compile under MinGW.) cmd.exe gives us commandline editing anyway.
 ifdef __MINGW__
 READLINE_LIBS = 
 TERMCAP_LIBS =
@@ -215,7 +215,7 @@ INTERNAL_DEFINES = -DREGISTRY_DEFAULT_PATH=\""$(DEFAULT_REGISTRY)"\" -DCOMPILE_D
 LIBCL_PATH = $(TOP)/cl/libcl.a
 CL_LIBS = $(LIBCL_PATH) 
 
-# path to internal copy of GNU regex library for use in MinGW 
+# path to internal copy of GNU regex library for use in MinGW (to be removed once PCRE is working with Win)
 ifdef __MINGW__ 
 LIBREGEX_PATH = $(TOP)/mingw-libgnurx-2.5.1/libregex.a
 LIB_REGEX = $(LIBREGEX_PATH)
@@ -230,12 +230,13 @@ else
 DLLS_TO_INSTALL = 
 endif 
 
-## note. Might be worth having a LIBS_ALL variable (for easy specification of build rules)
+# Linker flags for libraries used by the CL (to be added to linking commands for all programs)
+LDFLAGS_LIBS = -lpcre
 
 # complete sets of compiler and linker flags (allows easy specification of specific build rules)
 CFLAGS_ALL = $(CFLAGS) $(INTERNAL_DEFINES) $(READLINE_DEFINES) $(TERMCAP_DEFINES)
 DEPEND_CFLAGS_ALL = $(DEPEND_CLAGS) $(INTERNAL_DEFINES) $(READLINE_DEFINES) $(TERMCAP_DEFINES)
-LDFLAGS_ALL = $(LDFLAGS)
+LDFLAGS_ALL = $(LDFLAGS) $(LDFLAGS_LIBS)
 
 # readline and termcap libraries are only needed for building CQP
 LDFLAGS_CQP =  $(READLINE_LIBS) $(TERMCAP_LIBS)

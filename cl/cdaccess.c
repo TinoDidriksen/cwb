@@ -1337,6 +1337,7 @@ cl_regex2id(Attribute *attribute, char *pattern, int flags, int *number_of_match
   int *table;                   /* list of matching IDs */
   int match_count;              /* count matches in local variable while scanning */
 
+  /* results are stored as a a bitmap: one bit per lexicon item */
   /* note that it would also be possible to use a Bitfield <bitfield.h>, but this custom implementation is somewhat more efficient */
   unsigned char *bitmap = NULL; /* use bitmap while scanning lexicon to reduce memory footprint and avoid large realloc() */
   int bitmap_size;              /* size of allocated bitmap in bytes */
@@ -1345,10 +1346,10 @@ cl_regex2id(Attribute *attribute, char *pattern, int flags, int *number_of_match
   /* TODO might move bitmap to static variable and re-allocate only when necessary ... */
   
   int regex_result, idx, i, len, lexsize;
-  int optimised, grain_match, grain_hits;
+  int optimised, grain_match;
 
   CL_Regex rx;
-  char *word, *iso_string;
+  char *word, *preprocessed_string;
 
   check_arg(attribute, ATT_POS, NULL);
 
@@ -1356,7 +1357,7 @@ cl_regex2id(Attribute *attribute, char *pattern, int flags, int *number_of_match
   lex = ensure_component(attribute, CompLexicon, 0);
   
   if ((lexidx == NULL) || (lex == NULL)) {
-    cderrno = CDA_ENODATA;
+    cl_errno = CDA_ENODATA;
     return NULL;
   }
   
@@ -1365,10 +1366,10 @@ cl_regex2id(Attribute *attribute, char *pattern, int flags, int *number_of_match
   lex_data = (char *) lex->data.data;
   match_count = 0;
 
-  rx = cl_new_regex(pattern, flags, latin1);
+  rx = cl_new_regex(pattern, flags, attribute->pos.mother->charset);
   if (rx == NULL) {
     fprintf(stderr, "Regex Compile Error: %s\n", cl_regex_error);
-    cderrno = CDA_EBADREGEX;
+    cl_errno = CDA_EBADREGEX;
     return NULL;
   }
   optimised = cl_regex_optimised(rx);
@@ -1379,84 +1380,31 @@ cl_regex2id(Attribute *attribute, char *pattern, int flags, int *number_of_match
   bitmap_offset = 0;
   bitmap_mask = 0x80;           /* start with MSB of first byte */
 
-  grain_hits = 0;               /* report how often we have a grain match when using optimised search */
+  cl_regopt_count_reset();      /* report how often we have a grain match when using optimised search */
+
+  /* for each index in the lexicon... */
   for (idx = 0; idx < lexsize; idx++) {
     int off_start, off_end;     /* start and end offset of current lexicon entry */
     char *p;
     int i;
 
-    /* compute start offset and length of current lexicon entry from lexidx, if possible) */
+    /* compute start offset and length of current lexicon entry from lexidx, if possible)
+     * // no longer necessary because we can't pass len to cl_regex_match
+     * // although 'twould be a good optimisation if possible to avoid calling strlen
+     * // pass in via a global variable cl_regopt_haystack_strlenin?*/
     off_start = ntohl(lexidx_data[idx]);
     word = lex_data + off_start;
     if (idx < lexsize-1) {
       off_end = ntohl(lexidx_data[idx + 1]) - 1;
-      len = off_end - off_start;
+      //len = off_end - off_start;
     }
     else {
-      len = strlen(word);
+      //len = strlen(word);
     }
 
-    /* make working copy of current lexicon entry if necessary */
-    if (rx->flags) {
-      iso_string = rx->iso_string; /* use pre-allocated buffer */
-      for (i = len, p = iso_string; i >= 0; i--) {
-        *(p++) = *(word++);     /* string copy includes NUL character */
-      }
-      cl_string_canonical(iso_string, rx->flags);
-    }
-    else {
-      iso_string = word;
-    }
-
-    /* the code below duplicates cl_regex_match() in order to reduce overhead and allow profiling */ 
-    grain_match = 0;
-    if (optimised) {
-      int i, di, k, max_i;
-      /* string offset where first character of each grain would be */
-      max_i = len - rx->grain_len; /* stop trying to match when i > max_i */
-      if (rx->anchor_end) 
-        i = (max_i >= 0) ? max_i : 0; /* if anchored at end, align grains with end of string */
-      else
-        i = 0;
-
-      while (i <= max_i) {
-        int jump = rx->jumptable[(unsigned char) iso_string[i + rx->grain_len - 1]];
-        if (jump > 0) {
-          i += jump;            /* Boyer-Moore search */
-        }
-        else {
-          for (k = 0; k < rx->grains; k++) {
-            char *grain = rx->grain[k];
-            di = 0;
-            while ((di < rx->grain_len) && (grain[di] == iso_string[i+di]))
-              di++;
-            if (di >= rx->grain_len) {
-              grain_match = 1;
-              break;            /* we have found a grain match and can quit the loop */
-            }
-          }
-          i++;
-        }
-        if (rx->anchor_start) break; /* if anchored at start, only the first iteration can match */
-      }
-      if (grain_match) grain_hits++;
-    }
-        
-    if (optimised && !grain_match) /* enabled since version 2.2.b94 (14 Feb 2006) -- before: && cl_optimize */
-      regex_result = REG_NOMATCH; /* according to POSIX.2 */
-    else
-      regex_result = regexec(&(rx->buffer), iso_string, 0, NULL, 0);
-    /* regex was compiled with start and end anchors, so we needn't check that the full string was matched */
-
-    if (regex_result == 0) {    /* regex match */
+    if (cl_regex_match(rx, word)) {    /* regex match */
       bitmap[bitmap_offset] |= bitmap_mask; /* set bit */
       match_count++;
-
-#if 0  /* debugging code used before version 2.2.b94 */
-      if (optimised && !grain_match) /* critical: optimiser didn't accept candidate, but regex matched */
-        fprintf(stderr, "CL ERROR: regex optimiser did not accept '%s' for regexp /%s/%s%s\n", 
-                iso_string, pattern, (rx->flags & IGNORE_CASE) ? "c" : "", (rx->flags & IGNORE_DIAC) ? "d" : "");
-#endif
     }
 
     bitmap_mask >>= 1;
@@ -1465,9 +1413,11 @@ cl_regex2id(Attribute *attribute, char *pattern, int flags, int *number_of_match
       bitmap_mask = 0x80;
     }
 
-  }
+  } /* endfor (loop across lexicon items) */
+
   if (cl_debug && optimised) 
-    fprintf(stderr, "CL: regexp optimiser found %d candidates out of %d strings\n", grain_hits, lexsize);
+    fprintf(stderr, "CL: regexp optimiser found %d candidates out of %d strings\n"
+        "    (%d matching strings in total) \n", cl_regopt_count_get(), lexsize, match_count);
 
   if (match_count == 0) {       /* no matches */
     table = NULL;
@@ -1494,7 +1444,7 @@ cl_regex2id(Attribute *attribute, char *pattern, int flags, int *number_of_match
 
   cl_free(bitmap);
   cl_delete_regex(rx);
-  cderrno = CDA_OK;
+  cl_errno = CDA_OK;
   return table;
 }
 
@@ -1525,16 +1475,16 @@ int cl_idlist2freq(Attribute *attribute,
   sum = 0;
 
   if (word_ids == NULL) {
-    cderrno = CDA_ENODATA;
+    cl_errno = CDA_ENODATA;
     return CDA_ENODATA;
   }
   else {
     for (k = 0; k < number_of_words; k++) {
-      sum += get_id_frequency(attribute, word_ids[k]);
-      if (cderrno != CDA_OK)
-        return cderrno;
+      sum += cl_id2freq(attribute, word_ids[k]);
+      if (cl_errno != CDA_OK)
+        return cl_errno;
     }
-    cderrno = CDA_OK;
+    cl_errno = CDA_OK;
     return sum;
   }
 
@@ -1542,7 +1492,7 @@ int cl_idlist2freq(Attribute *attribute,
   return 0;
 }
 
-/* this is the way qsort(..) is meant to be used: give it void* args
+/* this is the way qsort(..) is meant to be used: give it void * args
    and cast them to the actual type in the compare function;
    this definition conforms to ANSI and POSIX standards according to the LDP */
 /** internal function for use with qsort */

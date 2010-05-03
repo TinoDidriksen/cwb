@@ -14,7 +14,7 @@ then
 	exit
 fi
 
-apt-get install autoconf bison flex gcc libc6-dev libncurses5-dev make
+apt-get install autoconf bison flex gcc libc6-dev libncurses5-dev make libpcre3-dev
 
 ./install-scripts/cwb-config-basic
 

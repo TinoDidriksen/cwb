@@ -31,6 +31,9 @@ and ask your question there.
  - the ar and ranlib code archive utilities
  - GNU make or a compatible program
  - the ncurses library (or a similar terminal control library)
+ - the PCRE library (see notes below)
+ - the Glib library (see notes below)
+
 
         RECOMMENDED SOFTWARE (not essential)
 
@@ -265,6 +268,71 @@ variants:
 
  - Windows XP SP3 (32 bit)
  - [add others here: windows server, vista, 7, 64-bit windows?]
+ 
+ 
+        INSTALLING PREREQUISITE EXTERNAL LIBRARIES
+
+The Glib and PCRE libraries are needed to compile CWB. If you are using a 
+Linux flavour such as Debian, Fedora etc. then the easiest way to do this is
+via your package repository, which should almost certainly include both. 
+In fact, the auto-install scripts will actually check that you have got
+the packages in question using the package-management tool. So if you are
+using the auto-install scripts, you don't need to worry about it. 
+
+Otherwise, PCRE and Glib are available to download from these addresses:
+
+        http://www.pcre.org/
+        http://www.gtk.org/download.html
+
+Use the instructions included in the source code downloads to build the 
+libraries.
+
+For PCRE, at least version 7 is recommended. For Glib, at least version 2
+is required.
+
+Note that the CWB build process makes the following assumptions:
+
+ - that the libpcre.* file is installed in a directory in the linker's
+   library search path. If this is NOT the case, edit your configuration
+   file to add a -L<directory> command to the LDFLAGS variable to allow
+   the linker to find your libpcre.a
+ - that pcre.h and other PCRE header files can be found via the compiler's
+   include-path. If this is NOT the case, edit your configuration file 
+   to add a -I<directory> command to the CFLAGS variable to allow
+   the compiler to find your pcre.h
+ - that the location of header/library files for Glib can be discovered
+   using the pkg-config utility (should be the case if you have used the
+   standard installation procedure).
+
+~~~~~~~BEGIN INCOMPLETE SECTION
+When cross-compiling for Windows, things are a bit different: you need
+versions of these libraries that have been compiled *to run under Windows*,
+not the usual *nix versions. So you have two options.
+
+ - download the source of the libraries and use the MinGW cross-compiler to
+   build a copy of the library.
+ - download a precompiled binary. 
+
+ah - HAVE NOT BEEN ABLE TO GET EITHER VERSION WORKING YET
+
+some relevant links
+
+        http://gnuwin32.sourceforge.net/packages/pcre.htm
+        (see also http://gnuwin32.sourceforge.net/compile.html)
+        http://www.gtk.org/download-windows.html
+
+your library/header files need to be inserted into the MinGW
+compiler's library and include directories. This will usually be something 
+like
+
+        /$libdir/gcc/i586-mingw32msvc/$version
+        /$libdir/gcc/i586-mingw32msvc/$version/include
+
+where the default for $libdir is /usr/lib.  
+
+PCRE's install (see my other notes) does this for you
+
+~~~~~~~~~~~~END INCOMPLETE SECTION
 
 
         PACKAGE CONTENTS

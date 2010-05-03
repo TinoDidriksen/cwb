@@ -303,6 +303,7 @@ cl_string_maptable(CorpusCharset charset /*ignored*/, int flags)
  */
 void 
 cl_string_canonical(char *s, int flags)
+// TODO make this function utf8-compatible; we prob need the charset fr this
 {
   register unsigned char *p, *maptable;
 
@@ -360,11 +361,9 @@ cl_path_adjust_independent(char *path)
 
 
 
-/*
- */
 
 /**
- * Converts strings with latex-style blackslash escapes
+ * Converts ASCII strings with latex-style blackslash escapes
  * for accented characters to ISO-8859-1 (Latin-1).
  *
  * Syntax:
@@ -385,8 +384,8 @@ cl_path_adjust_independent(char *path)
  *                    you need to catch this and free it when no longer
  *                    needed).
  */
-char 
-*cl_string_latex2iso(char *str, char *result, int target_len)
+char *
+cl_string_latex2iso(char *str, char *result, int target_len)
 {
   /* the positions in the source and target strings */
   int src_pos = 0;

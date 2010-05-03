@@ -21,10 +21,12 @@
 
 /* include external regular expression library */
 #ifndef __MINGW__
-#include <regex.h>
+//#include <regex.h>
 #else
-#include "../mingw-libgnurx-2.5.1/regex.h"
+//#include "../mingw-libgnurx-2.5.1/regex.h"
 #endif
+
+#include <pcre.h>
 
 /**
  * Maximum number of grains of optimisation.
@@ -36,15 +38,18 @@
 /**
  * Underlying structure for CL_Regex object.
  *
- * TODO: change structure name as it breaks rules for ANSI reserved-words (uscore followed by ucase)
+ * TODO: change structure name as it breaks rules for ANSI reserved-words (uscore followed by uppercase)
  *
  * @see regopt.c
  */
 struct _CL_Regex {
-  regex_t buffer;                    /**< buffer for the actual regex (POSIX) */
+  pcre *needle;                      /**< buffer for the actual regex object (PCRE) */
+  pcre_extra *extra;                 /**< buffer for PCRE's internal optimisation data */
   CorpusCharset charset;             /**< the character set in use for this regex */
   int flags;                         /**< flags for this regex: can be IGNORE_CASE and/or IGNORE_DIAC */
-  char *iso_string;                  /**< a buffer of size MAX_LINE_LENGTH used for normalisation by cl_regex_match() */
+  char *haystack_buf;                /**< a buffer of size MAX_LINE_LENGTH used for normalisation by cl_regex_match().
+                                          It will be allocated iff one of the flags %c or %d is set.
+                                          Note this buffer is for the string being tested NOT for the regular expression. */
 
   /* data from optimiser (see global variables in regopt.c for comments) */
   int grains;                        /**< number of grains (0 = not optimised). @see cl_regopt_grains */
@@ -56,6 +61,9 @@ struct _CL_Regex {
 };
 
 
-/* interfaces function prototypes are defined in <cl.h> */
+/* interface function prototypes are in <cl.h>; internal functions declared here */
+
+void regopt_data_copy_to_regex_object(CL_Regex rx);
+int cl_regopt_analyse(char *regex);
 
 #endif
