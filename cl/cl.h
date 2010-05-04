@@ -366,7 +366,7 @@ typedef union _Attribute Attribute;
 #define ATT_DYN        (1<<6)
 
 /** shorthand for "any / all types of attribute" */
-/* TODO shouldn't ATT_ALL and ATT_REAL have brackets round them?? in case of higher-precedence operator */
+/* TODO shouldn't ATT_ALL and ATT_REAL have brackets round their expansions?? in case of higher-precedence operator */
 #define ATT_ALL        ATT_POS   | ATT_STRUC | ATT_ALIGN | ATT_DYN
 /** shorthand for "any / all types of attribute except dynamic" */
 #define ATT_REAL       ATT_POS   | ATT_STRUC | ATT_ALIGN

@@ -49,7 +49,8 @@ typedef struct _print_option_rec_ {
 /**
  * The PrintDescriptionRecord object.
  *
- * Contains strings / function pointers that
+ * Contains strings / function pointers that control the printing
+ * mode (esp. the format of an individual concordance line).
  *
  * Note that currently it is not possible for these to be defined at
  * runtime. It must be done at compile-time.

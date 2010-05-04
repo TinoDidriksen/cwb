@@ -22,6 +22,64 @@ rep="include \$(TOP)/config/site/windows-release"
 config_file=${config_file/"$target"/"$rep"}
 
 
+
+
+# find out where the dlls are, and save that folder
+
+# this is a lot easier said than done
+# we need to go through the directories in the library search path of the cross-compiler,
+# and if libpcre.la is there, we can try to extract its dlname= variable.
+# note, this will only work for this particular crosscompiler executable!
+
+paths=$(i586-mingw32msvc-gcc --print-search-dirs | grep "programs: =")
+paths=${paths/"programs: ="/" "}
+paths=$(echo $paths | tr ":" " ")
+
+for i in $paths
+do
+	echo "looking in ${i}libpcre.la ......"
+	if [ -f "${i}libpcre.la" ] ; then
+		echo "found!"
+		LIBPRCE_LA=$(cat "${i}libpcre.la")
+		LIBPCRE_LA_FOUND_IN=$i 
+		break
+	fi
+done
+
+# echo "$LIBPRCE_LA"
+
+if [ -n $LIBPCRE_LA ] ; then 
+	echo " "
+else 
+	echo "Couldn't find libpcre.la!! Script aborts"
+	exit
+fi
+
+# echo "-----------> $LIBPCRE_LA" 
+
+DLNAME_LINE=$(grep "^dlname='" < "${LIBPCRE_LA_FOUND_IN}libpcre.la")
+echo "dlname line == $DLNAME_LINE"
+DLNAME_LINE=$(echo $DLNAME_LINE | tr -d "'")
+dlname=${DLNAME_LINE/"dlname="/""}
+
+
+echo "$LIBPCRE_LA_FOUND_IN$dlname"
+deduced_path=$(dirname $LIBPCRE_LA_FOUND_IN$dlname)
+deduced_path=$(cd "$deduced_path" && pwd)
+
+echo "Deduced path to DLLS as $deduced_path..... "
+
+
+append=$( cat <<HERE
+
+LIBPCRE_DLL_PATH=$deduced_path
+
+HERE
+)
+
+config_file="$append
+$config_file" 
+
 # save config.mk
 mv config.mk config.mk.bak
 echo "$config_file" > config.mk
@@ -39,4 +97,4 @@ make cqp
 
 # and finally....
 
-make release
+LIBPCRE_DLL_PATH=$deduced_path && make release

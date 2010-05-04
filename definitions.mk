@@ -225,13 +225,20 @@ endif
 
 # paths to DLL files that need to be installed along with CWB binaries (win only)
 ifdef __MINGW__
-DLLS_TO_INSTALL = mingw-libgnurx-2.5.1/libgnurx-0.dll
+ifndef LIBPCRE_DLL_PATH
+$(error Configuration variable LIBPCRE_DLL_PATH is not set (directory containing MinGW-compiled libpcre-0.dll))
+endif
+DLLS_TO_INSTALL = mingw-libgnurx-2.5.1/libgnurx-0.dll $(LIBPCRE_DLL_PATH)/libpcre-0.dll $(LIBPCRE_DLL_PATH)/libpcreposix-0.dll 
 else
 DLLS_TO_INSTALL = 
 endif 
 
 # Linker flags for libraries used by the CL (to be added to linking commands for all programs)
+ifdef __MINGW__
+LDFLAGS_LIBS = -lpcre -lpcre.dll
+else
 LDFLAGS_LIBS = -lpcre
+endif 
 
 # complete sets of compiler and linker flags (allows easy specification of specific build rules)
 CFLAGS_ALL = $(CFLAGS) $(INTERNAL_DEFINES) $(READLINE_DEFINES) $(TERMCAP_DEFINES)
