@@ -832,7 +832,7 @@ print_tabulation(CorpusList *cl, int first, int last, struct Redir *rd) {
             if (string) {
               if (item->flags) {
                 char *copy = cl_strdup(string);
-                cl_string_canonical(copy, item->flags);
+                cl_string_canonical(copy, cl->corpus->charset, item->flags);
                 fprintf(rd->stream, "%s", copy);
                 cl_free(copy);
               }

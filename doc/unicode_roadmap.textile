@@ -52,10 +52,13 @@ h1. Implementation steps
 ** %{color:red}AH% I have added a command-line option for charset declaration to @cwb-encode@.
 # Upgrade *regular expression functions* in @cl/regopt.c@ to multi-charset implementation
 ** all regexp functionality in the CWB should already have been encapsulated in @CL_Regex@ objects (check!)
+*** %{color:red}AH% There was code in @cdaccess.c@ that duplicated this; it's now in the @CL_Regex@. There may be regex and/or other matching code in CQP. 
 ** regexp optimiser (@cl_regopt_analyse()@, @cl_regex_match()@) should work out of the box for all ASCII extensions (in particular, ISO-8859-X and UTF-8), even if it isn't aware of MBCs
 ** @cl_new_regex()@ has to make use of charset declaration, which is already part of the API
+*** %{color:red}AH% Done. All calls to @cl_new_regex@ have been checked for cases where @latin1@ is hard-coded as its second argument. This has now been removed.
 ** alternative API: regexp tied to corpus handle, can only be used to match strings from this corpus
 ** @cl_regex_match()@ should validate input strings for correct encoding if possible (esp. important with UTF-8, to avoid undefined behaviour in library functions)
+*** %{color:red}AH% PCRE can validate UTF8 strings it has been passed; I have switched this off, on the assumption that strings will be validated at a higher level i.e. upon input to the application. This is an assumption we may need to revisit later. 
 *** %{color:red}AH% suggests a new API function @int cl_string_validate_encoding(const char*, corpusCharset)@ to do this
 # All low-level CL functions must validate MBCs in UTF-8 input strings to ensure well-defined behaviour
 ** %{color:red}AH% ideally, this would be better done immediately on the string being taken into CWB, rather than repeatedly by different functions. So we should be able to assume that strings in indexed corpora are valid UTF8 (or whatever).
@@ -65,12 +68,16 @@ h1. Implementation steps
 ** in particular, @%c@ and @%d@ mappings must be implemented for all supported character sets
 ** for ISO-8859-X, *mapping tables* have to be declared in analogy to @latin1_nocase_tab@ and @latin1_nodiac_tab@
 *** %{color:red}SE% the corresponding normalisation functions have to be re-implemented so they can use arbitrary mapping tables
+*** %{color:red}AH% Data tables now exist for all the ISO-8859-X encodings - but they currnelty all duplicate the ASCII table, so knowledgeable people need to fill in the relevant mappings in the top half of each! Use of arbitrary mapping tables now implemented.
 ** for UTF-8, *case-folding* is handled by some external library (preferably with @towlower@, although Unicode defines a different folding algorithm, e.g. for German _Straße_ vs. _STRASSE_)
 *** %{color:red}SE% Point for discussion: Should case-insensitive matching of UTF-8 data use the correct algorithm (which compares case-folded strings) or just convert to lowercase (for consistency with current Latin1 behaviour)? In particular, @%c@ might end up working differently for the same corpus in ISO-8859-1 and UTF-8 encoding!
+*** %{color:red}AH% I have currently implemented the full case folding algorith, but we could revisit this.
 ** *accent-folding* in UTF-8 is tricky, and no support library seems to offer pre-defined functions for this operation; possible strategies: (1) decompose, strip combining characters, compose; (2) construct explicit mapping from Unicode name database
+*** %{color:red}AH% Done, using strategy (1)
 ** case-folding and esp. accent-folding in UTF-8 will be rather slow; future CWB versions may want to store normalised versions of lexicon files on disk
 # Revise *escape codes* for non-ASCII characters (@cl_string_latex2iso()@)
 ** existing latex escapes should be deactivated by default, but can be switched on for Latin1-encoded corpora with compatibility option
+*** %{color:red}AH% This is now done, although nothing has been added to CQP to create a command for turning it back on!
 ** note that latex escapes also make it impossible to quote an arbitrary input string (containing @'@ and @"@) safely
 ** new escape mechanism for non-ASCII characters: numeric codes (@\xNN@, @\uNNNN@) and possibly named characters in UTF-8 mode (@\N{LATIN SMALL LETTER A WITH GRAVE}@)
 *** %{color:red}AH% we should standardise to the escape codes used by libraries: for instance PCRE and ICU both use @\xNN@ and @\x{NNNN}@ . The named-characters way of doing it would be very slow due to the need to search the whole unicode database, but it could be sped up by using the first word of the name to skip to an appropriate starting point in the DB.
@@ -82,6 +89,7 @@ h1. Implementation steps
 ** recommended: canonical pre-composed form (*NFC*), which gives a more compact string representation (and seems to be used by most existing software)
 *** %{color:red}AH% concur for Latin, Greek etc. alphabets, but for Arabic the opposite is probably true - most software does not use the "presentation forms" which are precomposed
 *** %{color:red}SE% but I'd still recommend a consistent internal format, to reduce the probability of bugs creeping in.  Would internal storage of Unicode strings in NFC be problematic for Arabic corpora?
+*** %{color:red}AH% This is now implemented in cl_string_canonical, but it still needs to be ascertained that all strings entering the CWB are normalised with this function where necessary. The Arabic problem is... erm... probably not a problem; I suspect NFC does not affect presentation forms. We will have to see what happens...
 ** problem: many simple Unicode / regexp libraries don't offer normalisation functions
 *** %{color:red}AH% and if we write our own we have the difficulty of keeping it up to date with new versions of unicode
 *** %{color:red}SE% you just want to force us to use that dreadful ICU monster! ;-)
@@ -103,6 +111,7 @@ h1. Implementation steps
 ** "heavy" packages (e.g. Glib) consist of multiple shared libraries, data files, and configuration information (and may depend on further libraries, e.g. Glib requires @libgettext@)
 ** for a standalone package, complete installations of these libraries have to be included in the binary distribution; wrapper scripts must set appropriate paths for dynamic libraries etc. before calling CWB tools; direct linking of e.g. CL library into other applications (as used by @CWB::CL@) may be very difficult
 ** %{color:red}SE% If there are enough volunteers, we can probably work out suitable distribution formats for all major platforms (Ubuntu, Mac OS X, Windows).  Users of more arcane operating systems would just have to install from source and get hold of the necessary prerequisites.
+** %{color:red}AH% So far, I have tried to rewrite the makefiles so that the external libraries (PCRE, Glib) are statically linked wherever possible. So far it has worked!
 
 h1. Unicode software options (external libraries)
 
@@ -210,13 +219,13 @@ h1. Discussion of support libraries
 *** %{color:red}AH% I would be worried about this because of the need to keep up with unicode updates.
 *** %{color:red}SE% This applies to all specialised solutions suggested here, and basically leaves us with a choice between ICU and Glib.
 
-h1. Regex library benchmarking exercise [added 28-2-2010]
+h1. Regex library benchmarking exercise
 
 * How the exercise was done
 ** The following libraries were tested: *POSIX* as a baseline, *ICU* (with and without pre-mapping to UTF16), *Glib*, *PCRE* (the latter two in both UTF8 and Latin1 mode). 
-*** *Oniguruma* was not tested as getting it to link into the benchmark programpresented supreme difficulties; as it is nowhere near the level of de-facto standardisation that PCRE, Glib and ICU possess - and as it is apparently not being actively maintained - this is probably no loss.  
+*** *Oniguruma* was not tested as getting it to link into the benchmark program presented supreme difficulties; as it is nowhere near the level of de-facto standardisation that PCRE, Glib and ICU possess - and as it is apparently not being actively maintained - this is probably no loss.  
 ** The benchmarks were a list of 165 regexes from Hoffmann et al. "Corpus Linguistics with BNCweb"
-** The "haystack" was the complete lexicon of the @word@ attribute o fthe CWB-encoded British National Corpus.  
+** The "haystack" was the complete lexicon of the @word@ attribute of the CWB-encoded British National Corpus.  
 ** The time for each regular expression was calculated as follows:
 *** The time to compile the regular expression ten times plus
 *** The time to check the regular expression ten times against each string in the haystack.
@@ -226,7 +235,7 @@ h1. Regex library benchmarking exercise [added 28-2-2010]
 ** Highlights as follows:
 *** *PCRE* is the fastest of the unicode-aware libraries
 **** Its overall time for all checks is lowest, at only 50% more than POSIX.
-**** Its backwards-compatible non-UTF8 mode offers a speed boost over UTF8 mode which will be handy for non-Unicdoe corpora 
+**** Its backwards-compatible non-UTF8 mode offers a speed boost over UTF8 mode which will be handy for non-Unicode corpora 
 **** PCRE is also fastest on the majority of individual regexes (faster than POSIX in most cases). So there is no problem in *also* using PCRE when working with ASCII/Latin-1 corpora.
 *** *ICU* is slow, slow, slow.
 *** Although *Glib* uses PCRE, it seems to suffer an apparently pretty consistent speed penalty in the process of wrapping PCRE - and unlike PCRE it doesn't benefit when you revert to 8-bit mode.

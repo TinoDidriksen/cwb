@@ -58,7 +58,7 @@
 int generate_code;
 int within_gc;
 
-CYCtype last_cyc;                /* type of last corpus yielding command */
+CYCtype last_cyc;                /**< type of last corpus yielding command */
 
 CorpusList *query_corpus = NULL;
 CorpusList *old_query_corpus = NULL;
@@ -69,7 +69,12 @@ extern FILE *yyin;
 
 Context expansion;
 
+/** buffer for storing regex strings. As it says on the tin.
+ *
+ * Doesn't seem currently to be in use anywhere.
+ * */
 char regex_string[1024];
+/* index into the regex string buffer, storing a current position. @ see regex_string_pos */
 int regex_string_pos;
 int sslen;
 
@@ -81,6 +86,17 @@ char *mval_string_conversion(char *s);
 
 /* ======================================== Syntax rule: line -> command */
 
+/**
+ * Add a line of CQP input to the history file.
+ *
+ * Supports parser rule: line -> command
+ *
+ * The line that is added comes from QueryBuffer; the file it is
+ * written to is that named in cqp_history_file.
+ *
+ * @see QueryBuffer
+ * @see cqp_history_file
+ */
 void
 addHistoryLine(void)
 {
@@ -106,11 +122,18 @@ addHistoryLine(void)
   }
 }
 
+/**
+ * Empties the query buffer and sets to 0 the pointer.
+ *
+ * Supports parser rule: line -> command
+ *
+ * @see QueryBuffer
+ * @see QueryBufferP
+ */
 void
 resetQueryBuffer(void)
 {
-/*   fprintf(stderr, "+ Resetting Query Buffer\n"); */
-
+  /*   fprintf(stderr, "+ Resetting Query Buffer\n"); */
   QueryBufferP = 0;
   QueryBuffer[0] = '\0';
   QueryBufferOverflow = 0;
@@ -123,7 +146,8 @@ RaiseError(void)
   resetQueryBuffer();
 }
 
-void prepare_parse(void)
+void
+prepare_parse(void)
 {
   if (old_query_corpus != NULL) {
     query_corpus = old_query_corpus;
@@ -347,7 +371,8 @@ after_CorpusSetExpr(CorpusList *cl)
   return cl;
 }
 
-void prepare_Query()
+void
+prepare_Query()
 {
   generate_code = 1;
 
@@ -1178,7 +1203,7 @@ do_XMLTag(char *s_name, int is_closing, int op, char *regex, int flags)
           assert(0 && "do_mval_string(): illegal opcode (internal error)");
         }
 
-        rx = cl_new_regex(pattern, flags, latin1);
+        rx = cl_new_regex(pattern, flags, query_corpus->corpus->charset);
         if (rx == NULL) {
           cqpmessage(Error, "Illegal regular expression: %s", regex);
           generate_code = 0;
@@ -1631,7 +1656,8 @@ do_SimpleVariableReference(char *varName)
     return NULL;
 }
 
-void prepare_AlignmentConstraints(char *id)
+void
+prepare_AlignmentConstraints(char *id)
 {
   Attribute *algattr;
   CorpusList *cl;
@@ -2170,7 +2196,7 @@ do_flagged_string(char *s, int flags)
       
       res->leaf.pat_type = REGEXP;
       res->leaf.ctype.sconst = s;
-      res->leaf.rx = cl_new_regex(s, flags, latin1);
+      res->leaf.rx = cl_new_regex(s, flags, query_corpus->corpus->charset);
       if (res->leaf.rx == NULL) {
         cqpmessage(Error, "Illegal regular expression: %s", s);
         res->leaf.pat_type = NORMAL;
@@ -2338,7 +2364,8 @@ FunctionCall(char *f_name, ActualParamList *apl)
 }
 
 
-void do_Description(Context *context, int nr, char *name)
+void
+do_Description(Context *context, int nr, char *name)
 {
   context->type = word;
   context->attrib = NULL;
@@ -2405,7 +2432,8 @@ Evaltree do_MeetStatement(Evaltree left, Evaltree right, Context *context)
   return ev;
 }
 
-Evaltree do_UnionStatement(Evaltree left, Evaltree right)
+Evaltree
+do_UnionStatement(Evaltree left, Evaltree right)
 {
   Evaltree ev;
 
@@ -2425,7 +2453,8 @@ Evaltree do_UnionStatement(Evaltree left, Evaltree right)
   return ev;
 }
 
-void do_StructuralContext(Context *context, char *name)
+void
+do_StructuralContext(Context *context, char *name)
 {
   context->type = word;
   context->attrib = NULL;
@@ -2677,7 +2706,8 @@ do_AddSubVariables(char *var1Name, int add, char *var2Name)
 
 /* ======================================== PARSER UTILS */
 
-void prepare_input(void)
+void
+prepare_input(void)
 {
   regex_string_pos = 0;
   free_environments();
@@ -2688,7 +2718,8 @@ void prepare_input(void)
   LastExpression = NoExpression;
 }
 
-void expand_dataspace(CorpusList *cl)
+void
+expand_dataspace(CorpusList *cl)
 {
   int i, res;
 
@@ -2728,7 +2759,15 @@ void expand_dataspace(CorpusList *cl)
   }
 }
 
-void push_regchr(char c)
+/**
+ * Add a character (in the sense of a byte) to the regex_string buffer.
+ *
+ * Doesn't seem to currently be in use.
+ *
+ * @see regex_string
+ */
+void
+push_regchr(char c)
 {
   if (regex_string_pos < 1024) {
     regex_string[regex_string_pos] = c;
@@ -2742,7 +2781,8 @@ void push_regchr(char c)
   }
 }
 
-void debug_output(void)
+void
+debug_output(void)
 {
 
   int i;

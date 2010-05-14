@@ -147,12 +147,12 @@ depend:
 
 clean:
 	for i in $(SUBDIRS) $(EXTERNALS); do if [ -f "$$i/Makefile" ]; then $(MAKE) -C $$i clean; fi; done;
-	-$(RM) *~ config/*/*~ CQi/*~ CQi/*.o technical/*~ TAGS config.mk.bak
+	-$(RM) *~ config/*/*~ CQi/*~ CQi/*.o technical/*~ TAGS
 	-$(RM) -rf build
 
 realclean:	clean
 	for i in $(SUBDIRS) ; do $(MAKE) -C $$i realclean; done;
-	-$(RM) -rf editline/config.log editline/autom4te.cache editline/config.status editline/Makefile editline/editline_config.h
+	-$(RM) -rf editline/config.log editline/autom4te.cache editline/config.status editline/Makefile editline/editline_config.h config.mk.bak
 ifdef __MINGW__
 	-$(RM) -rf mingw-libgnurx-2.5.1/config.log mingw-libgnurx-2.5.1/config.status mingw-libgnurx-2.5.1/Makefile
 endif

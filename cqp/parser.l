@@ -59,7 +59,8 @@
    }
 
 /* new_string = strip_quotes(string); */
-/* Removes single or double quotes around string as well as doubling escapes inside (e.g. 'it''s' => it's), while keeping track of backslash escapes. */
+/* Removes single or double quotes around string as well as doubling escapes inside (e.g. 'it''s' => it's), 
+   while keeping track of backslash escapes. */
 char *
 strip_quotes(char *s) {
   char *t;
@@ -95,10 +96,15 @@ strip_quotes(char *s) {
 digits          [0-9]+
 exponent        [eE][+-]?{digits}
 floatconst      [+-]?{digits}[\.]{digits}{exponent}?
-letter          [a-zA-Z_À-ÿ]
-xletter         [a-zA-Z0-9_\-\.À-ÿ]
+letter          [a-zA-Z_\x80-\xff]
+xletter         [a-zA-Z0-9_\-\.\x80-\xff]
+idletter        [a-zA-Z_]
+xidletter       [a-zA-Z0-9_\-\.]
 var             \${letter}{xletter}*
+/* old identifiers:
 id              {letter}{xletter}*(:{xletter}+)?(^{xletter}+)?
+*/
+id              {idletter}{xidletter}*(:{xidletter}+)?(^{xidletter}+)?
 flags           %[a-z]+
 
 /* -- no idea why accents should be matched explicitly here, so just remove the rule */

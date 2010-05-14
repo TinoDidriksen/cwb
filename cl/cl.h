@@ -283,11 +283,10 @@ void cl_set_memory_limit(int megabytes);  /* 0 or less turns limit off */
 
 int cl_strcmp(char *s1, char *s2);
 
-/* string normalization features used by CL regexes and CQP (modify input string!) */
-void cl_string_canonical(char *s, int flags);  /* modifies string <s> in place; flags are IGNORE_CASE and IGNORE_DIAC */
 char *cl_string_latex2iso(char *str, char *result, int target_len);
 /* <result> points to buffer of appropriate size; auto-allocated if NULL;
    str == result is explicitly allowed; conveniently returns <result> */
+extern int cl_allow_latex2iso; /* cl_string_latex2iso will only change a string if this is true, it is false by default*/
 
 void cl_path_adjust_os(char *path);  /* normalises a path to Windowslike or Unixlike, depending on the build;
                                         string changed in place. */
@@ -651,26 +650,53 @@ char *cl_corpus_property(Corpus *corpus, char *property);
 /**
  * The CorpusCharset object:
  * an identifier for one of the character sets supported by CWB.
+ *
+ * (Note on adding new character sets: add them immediately before
+ * unknown_charset. Do not change the order of existing charsets.
+ * Remember to update the special-chars module if you do so.)
  */
 typedef enum ECorpusCharset {
-  ascii,
-  /* planned support for ISO-8859-* charsets; currently only latin1 is supported */
+  ascii = 0,
+
+  /* planned support for ISO-8859-* charsets; as of v3.2.x, only latin1, ascii and utf8 are supported */
+
   /* latin1 = 8859-1, latin2 = 8859-2, latin3 = 8859-3, latin4 = 8859-4, cyrillic = 8859-5,
      arabic = 8859-6, greek = 8859-7, hebrew = 8859-8, latin5 = 8859-9, latin6 = 8859-10,
      latin7 = 8859-13, latin8 = 8859-14, latin9 = 8859-15 */
   latin1, latin2, latin3, latin4, cyrillic,
   arabic, greek,  hebrew, latin5, latin6,
   latin7, latin8, latin9,
-  /* support for UTF-8 charset to be implemented as of v3.2.0 */
   utf8,
   /* everything else is 'unknown' .. client apps should check the corresponding property value */
   unknown_charset
 } CorpusCharset;
+
 /* ... and related functions */
 CorpusCharset cl_corpus_charset(Corpus *corpus);
 char *cl_charset_name(CorpusCharset id);
 CorpusCharset cl_charset_from_name(char *name);
 char *cl_charset_name_canonical(char *name_to_check);
+
+/* the main function for which CorpusCharset "matters" is the following... */
+
+/* the case/diacritic string normalization features used by CL regexes and CQP (modify input string!) */
+void cl_string_canonical(char *s, CorpusCharset charset, int flags);
+/* modifies string <s> in place; flags are IGNORE_CASE and IGNORE_DIAC */
+
+/**
+ * "Dummy" charset macro for calling cl_string_canonical
+ *
+ * We have a problem - CorpusCharsets are attached to corpora. So what charset do we use with
+ * cl_string_canonical if we are calling it on a string that does not (yet) have a corpus?
+ *
+ * The answer: CHARSET_FOR_IDENTIFIERS. This should only be used as the 2nd argument to
+ * cl_string_canonical when the string is an identifier for a corpus, attribute, or whatever.
+ *
+ * Note it is Ascii in v3.2.x+, breaking backwards compatibility with 2.2.x where Latin1 was
+ * allowed for identifiers.
+ */
+#define CHARSET_FOR_IDENTIFIERS ascii
+
 
 
 

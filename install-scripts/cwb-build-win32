@@ -98,3 +98,7 @@ make cqp
 # and finally....
 
 LIBPCRE_DLL_PATH=$deduced_path && make release
+
+# restore original state of config file (so subversion doesn't get confused if this is a checked-out version)
+rm config.mk
+mv config.mk.bak config.mk

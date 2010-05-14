@@ -402,7 +402,7 @@ cl_new_corpus(char *registry_dir, char *registry_name)
   cl_free(canonical_name); /* if necessary, free buffer allocated in previous call to setup_corpus() */
 
   canonical_name = cl_strdup(registry_name);
-  cl_string_canonical(canonical_name, IGNORE_CASE);
+  cl_string_canonical(canonical_name, CHARSET_FOR_IDENTIFIERS, IGNORE_CASE);
 
   /* ------------------------------------------------------------------ */
 

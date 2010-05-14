@@ -54,7 +54,7 @@ unescape_string (char *string) {
 
 %}
 
-id              [a-zA-Z0-9_\-/$À-ÿ][^ \t\n\r\(\)\:\,]*
+id              [a-zA-Z0-9_\-/$][^ \t\n\r\(\)\:\,]*
 path            [a-zA-Z0-9/$]+
 number          [0-9]+
 

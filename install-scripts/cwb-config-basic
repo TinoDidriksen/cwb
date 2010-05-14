@@ -43,6 +43,7 @@ echo "$target => $rep"
 
 config_file=${config_file/"$target"/"$rep"}
 
+rm -f config.mk.bak
 mv config.mk config.mk.bak
 echo "$config_file" > config.mk
 

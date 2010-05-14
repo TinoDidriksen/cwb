@@ -96,7 +96,8 @@ typedef struct cl {
   Boolean          loaded;       /**< is the corpus loaded?                      */
   Boolean          needs_update; /**< True iff saved & loaded & contents changed */
 
-  Corpus          *corpus;       /**< associated corpus data structure.          */
+  Corpus          *corpus;       /**< associated corpus data structure
+                                      (from the Corpus Library...).              */
 
   Range           *range;        /**< an array of corpus intervals.              */
   int              size;         /**< number of intervals.                       */

@@ -30,6 +30,8 @@ and ask your question there.
  - GCC 3.3 or newer recommended (other ANSI C compilers might also work)
  - the ar and ranlib code archive utilities
  - GNU make or a compatible program
+ - GNU bison & flex for updating automatically generated parsers
+ - the pkg-config program
  - the ncurses library (or a similar terminal control library)
  - the PCRE library (see notes below)
  - the Glib library (see notes below)
@@ -38,7 +40,6 @@ and ask your question there.
         RECOMMENDED SOFTWARE (not essential)
 
  - GNU install or a compatible program
- - GNU bison & flex for updating automatically generated parsers
  - Perl with pod2man script for rebuilding manual pages
  - GNU less pager for interactive display of query results in CQP
 
@@ -307,21 +308,27 @@ Note that the CWB build process makes the following assumptions:
 ~~~~~~~BEGIN INCOMPLETE SECTION
 When cross-compiling for Windows, things are a bit different: you need
 versions of these libraries that have been compiled *to run under Windows*,
-not the usual *nix versions. So you have two options.
+not the usual *nix versions. 
 
- - download the source of the libraries and use the MinGW cross-compiler to
-   build a copy of the library.
- - download a precompiled binary. 
+For PCRE, we have found it easiest to download the source of the library 
+and use the MinGW cross-compiler to build a copy of the library files. This
+then needs to be placed into the right library directory for the MinGW 
+cross-compiler to find it. The same applies to the header file. We have 
+found that PCRE's "make install" will do this for you, IF it has been
+configured with the right options (if you run the ./configure script wihtout
+the right options, it will be compiled for *nix and placed in the normal
+gcc places, possibly overwriting what you previously had there. If you move
+the libraries you have built manually to the cross-compiler's directories, 
+these are the files you must make sure get copied:
 
-ah - HAVE NOT BEEN ABLE TO GET EITHER VERSION WORKING YET
+ - pcre.h
+ - LIST THE OTHERS
 
-some relevant links
+Moving on to Glib: 
 
-        http://gnuwin32.sourceforge.net/packages/pcre.htm
-        (see also http://gnuwin32.sourceforge.net/compile.html)
-        http://www.gtk.org/download-windows.html
+SAY SOMETHING ABOUT GLIB.
 
-your library/header files need to be inserted into the MinGW
+Your library/header files need to be inserted into the MinGW
 compiler's library and include directories. This will usually be something 
 like
 
@@ -329,6 +336,14 @@ like
         /$libdir/gcc/i586-mingw32msvc/$version/include
 
 where the default for $libdir is /usr/lib.  
+
+Some other relevant links:
+
+        http://gnuwin32.sourceforge.net/packages/pcre.htm
+        (see also http://gnuwin32.sourceforge.net/compile.html)
+        http://www.gtk.org/download-windows.html
+
+
 
 PCRE's install (see my other notes) does this for you
 
@@ -352,9 +367,12 @@ config/                 platform and site configuration files
 
 instutils/              utilities for installing and binary packages
 
+install-scripts         scripts that automate building/installing for common
+                        systems
+
 cl/                     corpus library (CL) source code
-cqp/                    CQP query processor source code
-CQi/                    CQPserver (implements client-server interface CQi)
+cqp/                    corpus query processor (CQP) source code
+CQi/                    cqpserver source code (inc client-server interface CQi)
 utils/                  source code of command-line utilities
 
 man/                    manpages for CQP and the command-line utilities

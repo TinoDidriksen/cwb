@@ -434,6 +434,13 @@ LoadedCorpus(char *name,
 
 /* ---------------------------------------------------------------------- */
 
+/**
+ * Fu
+ *
+ * @param s
+ * @param type
+ * @param try_recursive_search
+ */
 CorpusList *
 findcorpus(char *s, CorpusType type, int try_recursive_search)
 {
@@ -545,6 +552,12 @@ findcorpus(char *s, CorpusType type, int try_recursive_search)
   return sp;
 }
 
+/**
+ * Remove a corpus from the global list of corpora.
+ *
+ * @see       corpuslist
+ * @param cl  The corpus to drop.
+ */
 void
 dropcorpus(CorpusList *cl)
 {
@@ -1637,6 +1650,12 @@ NextCorpusFromList(CorpusList *cl)
 }
 
 
+/**
+ * Assesses whether a specified corpus can be accessed.
+ *
+ * @param cl  A CorpusList specifying the corpus to check.
+ * @return    A boolean - true if cl can be accessed.
+ */
 Boolean
 access_corpus(CorpusList *cl)
 {
@@ -1666,8 +1685,15 @@ access_corpus(CorpusList *cl)
 }
 
 
-/* implements the search strategy for corpora */
-
+/**
+ * Find the CorpusList object corresponding to a corpus name.
+ *
+ * First the SUB corpora (created by queries) are searched,
+ * then the SYSTEM corproa.
+ *
+ * @param name  String containing name of corpus to find.
+ * @return      Pointer to desired CorpusList.
+ */
 CorpusList *
 search_corpus(char *name)
 {
@@ -1680,10 +1706,17 @@ search_corpus(char *name)
   return cl;
 }
 
-/* change_corpus takes as argument a corpus name and makes 
- * the corpus accessible
+/**
+ * Make a corpus accessible for searching.
+ *
+ * When a corpus is "made accessible", its name is checked for validity and
+ * availability; if all is OK, set_current_corpus is called on it.
+ *
+ * @param name    A string indicating the name of a corpus.
+ * @param silent  Boolean. Ignored.
+ * @return        Boolean. True if the corpus was set successfully, otherwise
+ *                false.
  */
-
 Boolean
 change_corpus(char *name, Boolean silent)
 {

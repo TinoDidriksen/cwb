@@ -137,7 +137,7 @@ CL_Regex cl_new_regex(char *regex, int flags, CorpusCharset charset)
 
   /* pre-process regular expression (translate latex escapes and normalise) */
   cl_string_latex2iso(regex, preprocessed_regex, l);
-  cl_string_canonical(preprocessed_regex, rx->flags);
+  cl_string_canonical(preprocessed_regex, charset, rx->flags);
 
   /* add start and end anchors to improve performance of regex matcher for expressions such as ".*ung" */
   sprintf(anchored_regex, "^(%s)$", preprocessed_regex);
@@ -230,10 +230,10 @@ cl_regex_match(CL_Regex rx, char *str)
   int grain_match, result;
   int ovector[30]; /* memory for pcre to use for back-references in pattern matches */
 
-  if (rx->flags) { /* normalise input string if necessary TODO */
+  if (rx->flags) { /* normalise input string if necessary */
     haystack = rx->haystack_buf;
     strcpy(haystack, str);
-    cl_string_canonical(haystack, rx->flags);
+    cl_string_canonical(haystack, rx->charset, rx->flags);
   }
   else
     haystack = str;
@@ -277,7 +277,7 @@ cl_regex_match(CL_Regex rx, char *str)
 
 
   if (optimised && !grain_match) /* enabled since version 2.2.b94 (14 Feb 2006) -- before: && cl_optimize */
-    result = REG_NOMATCH; /* according to POSIX.2 */ //TODO change to PCRE_ERROR_NOMATCH, whihc is PCRE's no-match code
+    result = PCRE_ERROR_NOMATCH; /* equiv to POSIX.2 REG_NOMATCH */
   else {
 #else
   if (1) { /* just to preserve structure of the ifs */
@@ -287,7 +287,7 @@ cl_regex_match(CL_Regex rx, char *str)
                        ovector, 30);
     if (result < PCRE_ERROR_NOMATCH && cl_debug)
       /* note, "no match" is a PCRE "error", but all actual errors are lower numbers */
-      fprintf(stderr, "Regex Execute Error no. %d (see `man pcreapi` for error codes)\n", result);
+      fprintf(stderr, "CL: Regex Execute Error no. %d (see `man pcreapi` for error codes)\n", result);
   }
 
 #if 0  /* debugging code used before version 2.2.b94, modified to pcre return values in 3.2.0 */

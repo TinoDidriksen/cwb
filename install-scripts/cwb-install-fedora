@@ -14,7 +14,7 @@ then
 	exit
 fi
 
-yum install autoconf bison flex gcc glibc glibc-common glibc-devel glibc-headers make ncurses ncurses-lib pcre pcre-devel
+yum install autoconf bison flex gcc pkgconfig glibc glibc-common glibc-devel glibc-headers make ncurses ncurses-lib pcre pcre-devel glib glib-devel
 
 ./install-scripts/cwb-config-basic
 
@@ -26,3 +26,7 @@ make utils
 make cqp
 
 make install
+
+# restore original state of config file (so subversion doesn't get confused if this is a checked-out version)
+rm config.mk
+mv config.mk.bak config.mk

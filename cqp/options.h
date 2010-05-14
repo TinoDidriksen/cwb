@@ -122,7 +122,7 @@ int auto_save;                    /**< automatically save subcorpora */
 int save_on_exit;                 /**< save unsaved subcorpora upon exit */
 char *cqp_init_file;              /**< changed from 'init_file' because of clash with a # define in {term.h} */
 char *macro_init_file;            /**< secondary init file for loading macro definitions (not read if macros are disabled) */
-char *cqp_history_file;           /**< CQP command history */
+char *cqp_history_file;           /**< filename where CQP command history will be saved */
 int write_history_file;           /**< Controls whether CQP command history is written to file */
 
 /* options which just shouldn't exist */

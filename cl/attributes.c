@@ -1250,7 +1250,8 @@ Attribute *loop_ptr;
  *
  * @return NULL if the corpus parameter is NULL; otherwise a pointer to Attribute.
  */
-Attribute *first_corpus_attribute(Corpus *corpus)
+Attribute *
+first_corpus_attribute(Corpus *corpus)
 {
   if (corpus)
     loop_ptr = corpus->attributes;
@@ -1263,7 +1264,8 @@ Attribute *first_corpus_attribute(Corpus *corpus)
 /**
  * Get a pointer to the next attribute on the list currently being processed.
  */
-Attribute *next_corpus_attribute()
+Attribute *
+next_corpus_attribute()
 {
   if (loop_ptr)
     loop_ptr = loop_ptr->any.next;
@@ -1276,7 +1278,8 @@ Attribute *next_corpus_attribute()
 /**
  * Prints a description of the attribute (inc.components) to STDOUT.
  */
-void describe_attribute(Attribute *attribute)
+void
+describe_attribute(Attribute *attribute)
 {
   DynArg *arg;
   ComponentID cid;
@@ -1309,7 +1312,8 @@ void describe_attribute(Attribute *attribute)
 /**
  * Prints a description of the component to STDOUT.
  */
-void describe_component(Component *component)
+void
+describe_component(Component *component)
 {
   printf("  Component %s:\n", cid_name(component->id));
   printf("    Attribute:   %s\n", component->attribute->any.name);
@@ -1359,7 +1363,7 @@ cl_make_set(char *s, int split)
   char *p, *mark, *set;
   int i, sl, length;
 
-  cderrno = CDA_OK;
+  cl_errno = CDA_OK;
 
   /* (1) split input string into set elements */
   if (split) {
@@ -1418,7 +1422,7 @@ cl_make_set(char *s, int split)
   if (!ok) {
     cl_delete_string_list(l);
     cl_free(copy);
-    cderrno = CDA_EFSETINV;
+    cl_errno = CDA_EFSETINV;
     return NULL;
   }
 
@@ -1461,9 +1465,9 @@ cl_set_size(char *s)
 {
   int count = 0;
 
-  cderrno = CDA_OK;
+  cl_errno = CDA_OK;
   if (*s++ != '|') {
-    cderrno = CDA_EFSETINV;
+    cl_errno = CDA_EFSETINV;
     return -1;
   }
   while (*s) {
@@ -1471,7 +1475,7 @@ cl_set_size(char *s)
     s++;
   }
   if (s[-1] != '|') {
-    cderrno = CDA_EFSETINV;
+    cl_errno = CDA_EFSETINV;
     return -1;
   }
   return count;
@@ -1496,14 +1500,14 @@ cl_set_intersection(char *result, const char *s1, const char *s2)
   char *p;
   int comparison;
 
-  cderrno = CDA_OK;
+  cl_errno = CDA_OK;
 
   if ((*s1++ != '|') || (*s2++ != '|')) {
-    cderrno = CDA_EFSETINV;
+    cl_errno = CDA_EFSETINV;
     return 0;
   }
   if (strlen(s1) >= CL_DYN_STRING_SIZE || strlen(s2) >= CL_DYN_STRING_SIZE) {
-    cderrno = CDA_EBUFFER;
+    cl_errno = CDA_EBUFFER;
     return 0;
   }
 
@@ -1515,7 +1519,7 @@ cl_set_intersection(char *result, const char *s1, const char *s2)
     if (*s1 != '|') { 
       for (p = f1; *s1 != '|'; s1++) {
         if (!*s1) {
-          cderrno = CDA_EFSETINV;
+          cl_errno = CDA_EFSETINV;
           return 0;     /* unexpected end of string */
         }
         *p++ = *s1;
@@ -1526,7 +1530,7 @@ cl_set_intersection(char *result, const char *s1, const char *s2)
     if (*s2 != '|') { 
       for (p = f2; *s2 != '|'; s2++) {
         if (!*s2) {
-          cderrno = CDA_EFSETINV;
+          cl_errno = CDA_EFSETINV;
           return 0;     /* unexpected end of string */
         }
         *p++ = *s2;

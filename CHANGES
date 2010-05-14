@@ -1,4 +1,18 @@
 
+Version 3.2
+-----------
+
+Version 3.2 of CWB (currently in beta) adds Unicode support (utf8). It also breaks backwards compatability in one,
+possibly important way: all "identifiers" (names of corpora, attributes, subciorpora etc.) must use ASCII characters
+only - no Latin1 accented vowels, for instance. This is necessary to avoid potential conflicts between Latin1 and
+UTF8 encodings in filenames and directory paths.
+
+As a result of the work on Unicode, character set awareness is now active throughout CWB. Also, the regular 
+expression language supported in the CL and through CQP has changed from POSIX-flavour regexes to PCRE regexes
+(Perl-compatible). In UTF8 corpora, all unicode properties, etc., can be used in regular expressions using the
+usual PCRE syntax.
+
+
 Version 3.1
 -----------
 

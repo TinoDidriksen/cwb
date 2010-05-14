@@ -20,7 +20,7 @@
 
 #define CQPRC_NAME ".cqprc"
 #define CQPMACRORC_NAME ".cqpmacros"
-/** The number of file handles CQP can store in its file-array (ie max number of nested files) @see cqp_parse_file ) */
+/** The number of file handles CQP can store in its file-array (ie max number of nested files) @see cqp_parse_file */
 #define MAXCQPFILES 20
 
 /** Size of the CQP query buffer. */
@@ -28,14 +28,22 @@
 
 #include <stdio.h>
 
-#define True 1
-#define False 0
 /**
  * DEPRACATED means of storing a Boolean value
  */
-typedef char Boolean;
+typedef int Boolean;
 /* typedef enum bool { False, True } Boolean; */
 
+/** DEPRACATED macros for Boolean true and false */
+#define True 1
+/** DEPRACATED macros for Boolean true and false */
+#define False 0
+
+/**
+ * The "corpus yielding command type" type.
+ * Each possible value of the enumeration represents a particular "type"
+ * of command that may potentially yield a corpus.
+ */
 typedef enum _cyctype {
   NoExpression, Query, Activation, SetOperation, Assignment
 } CYCtype;

@@ -410,10 +410,10 @@ is_regular(char *s)
 void
 add_key(char *key)
 {
-  char buf[MAX_LINE_LENGTH];        /* stores copy of <key> if we have to mess around with it */
+  char buf[MAX_LINE_LENGTH];    /* stores copy of <key> if we have to mess around with it */
   Attribute *att = NULL;        /* p-attribute object for attribute <att> */
-  int offset = 0;                /* offset obtained from [+<n>] part of key specifier */
-  char *regex = NULL;                /* <regex> from optional [=/<regex>/[cd]] part */
+  int offset = 0;               /* offset obtained from [+<n>] part of key specifier */
+  char *regex = NULL;           /* <regex> from optional [=/<regex>/[cd]] part */
   int flags = 0;                /* optional ignore case and/or diacritics flags ([cd]) */
   int is_constraint = 0;        /* just a constraint key? */
   int is_structural = 0;        /* positional or structural attribute? */

@@ -23,7 +23,7 @@
 #
 # CWB version
 #
-VERSION = 3.2.b0
+VERSION = 3.2.b1
 # alpha / beta for the unicode support version, 3.2
 
 #
@@ -208,6 +208,9 @@ ifdef READLINE_LIBS
 CFLAGS += -DUSE_READLINE
 endif
 
+# we always add Glib header file info to CFLAGS...
+CFLAGS += `pkg-config --cflags glib-2.0`
+
 # define macro variables for some global settings
 INTERNAL_DEFINES = -DREGISTRY_DEFAULT_PATH=\""$(DEFAULT_REGISTRY)"\" -DCOMPILE_DATE=\"$(COMPILE_DATE)\" -DVERSION=\"$(VERSION)\"
 
@@ -235,13 +238,14 @@ endif
 
 # Linker flags for libraries used by the CL (to be added to linking commands for all programs)
 ifdef __MINGW__
-LDFLAGS_LIBS = -lpcre -lpcre.dll
+LDFLAGS_LIBS = -lpcre -lpcre.dll `pkg-config --libs glib-2.0` 
+## !!!!!!!!!!!!!!!!!check - should be use pkg-config?? shouldn't we demand the header files to be in the i586-...-gcc's Include path?
 else
-LDFLAGS_LIBS = -lpcre
+LDFLAGS_LIBS = -lpcre `pkg-config --libs glib-2.0`
 endif 
 
 # complete sets of compiler and linker flags (allows easy specification of specific build rules)
-CFLAGS_ALL = $(CFLAGS) $(INTERNAL_DEFINES) $(READLINE_DEFINES) $(TERMCAP_DEFINES)
+CFLAGS_ALL = $(CFLAGS) $(INTERNAL_DEFINES) $(READLINE_DEFINES) $(TERMCAP_DEFINES) $(GLIB_DEFINES)
 DEPEND_CFLAGS_ALL = $(DEPEND_CLAGS) $(INTERNAL_DEFINES) $(READLINE_DEFINES) $(TERMCAP_DEFINES)
 LDFLAGS_ALL = $(LDFLAGS) $(LDFLAGS_LIBS)
 

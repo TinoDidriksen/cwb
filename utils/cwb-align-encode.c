@@ -262,7 +262,7 @@ main(int argc, char *argv[])
   source_corpus = (reverse) ? corpus2 : corpus1;
   source_corpus_name = (reverse) ? corpus2_name : corpus1_name;
   attribute_name = cl_strdup((reverse) ? corpus1_name : corpus2_name);
-  cl_string_canonical(attribute_name, IGNORE_CASE); /* fold attribute name to lowercase */
+  cl_string_canonical(attribute_name, CHARSET_FOR_IDENTIFIERS, IGNORE_CASE); /* fold attribute name to lowercase */
 
   /* with -D option, determine data file name(s) from actual source corpus;
      otherwise use directory specified with -d and the usual naming conventions */

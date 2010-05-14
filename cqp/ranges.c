@@ -1601,7 +1601,7 @@ SortSubcorpus(CorpusList *cl, SortClause sc, int count_mode, struct Redir *redir
             for (k = 0; k < len; k++) {
               int cpos = start + step * k;
               char *token = cl_strdup(cl_cpos2str(srt_attribute, cpos));
-              cl_string_canonical(token, sc->flags); /* normalise token if %cd was given */
+              cl_string_canonical(token, cl->corpus->charset, sc->flags); /* normalise token if %cd was given */
               if (srt_reverse) { /* token = reverse(token); */
                 int t_last = strlen(token) - 1; 
                 int t_i;
