@@ -61,6 +61,7 @@
 <p>Gets a specified character mapping table for use in regular expressions. </p>
 <p>Returns pointer to static mapping table for given flags (IGNORE_CASE and IGNORE_DIAC) and character set.</p>
 <p>Removed from the public API for 3.2.0 because there's no way for it to work if the CorpusCharset is UTF8. Prototype moved to <a class="el" href="special-chars_8h.html">special-chars.h</a></p>
+<p>Tables exist for all character sets, but for all except Latin1 and ASCII, they are currently identical to the ASCII tables (i.e. the awareness of case/accent relationships in the upper half of each character set have not yet been inserted).</p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>charset</em>&nbsp;</td><td>The character set of this corpus. Currently ignored. </td></tr>
@@ -68,16 +69,16 @@
   </table>
   </dd>
 </dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>Pointer to the appropriate mapping table. </dd></dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Pointer to the appropriate mapping table. DO NOT FREE this, or modify it, it is a CL-internal data blob. </dd></dl>
 
-<p>References <a class="el" href="cl_8h.html#a1f397c74f7f8ba3952858c70eb19d082">IGNORE_CASE</a>, <a class="el" href="cl_8h.html#a2e9f85ae8ad88191c60cf4269b9ab296">IGNORE_DIAC</a>, <a class="el" href="special-chars_8c.html#a579861a813bf52870db4cee5d394613f">latin1_identity_tab</a>, <a class="el" href="special-chars_8c.html#af9d731cf1a66b485fe8ea8f8dbad1f0a">latin1_identity_tab_init</a>, <a class="el" href="special-chars_8c.html#aa5d1aca60919553d2e2072893bc06ea6">latin1_nocase_nodiac_tab</a>, <a class="el" href="special-chars_8c.html#afc3f2cd0f93635c6b32d938e23d524fc">latin1_nocase_nodiac_tab_init</a>, <a class="el" href="special-chars_8c.html#a5e4cebe27c64e92dfd362a076ccfb659">latin1_nocase_tab</a>, and <a class="el" href="special-chars_8c.html#adc43a7ec5223ddca10d3ab81acd51591">latin1_nodiac_tab</a>.</p>
+<p>References <a class="el" href="cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa1fc467976b8e2979150a99beb709443e">ascii</a>, <a class="el" href="special-chars_8c.html#a4ded408d535e140c3ac78fc80ef2cdb9">identity_tab</a>, <a class="el" href="special-chars_8c.html#ab1ee167b08a952fc7127a54cd0e0050d">identity_tab_init</a>, <a class="el" href="cl_8h.html#a1f397c74f7f8ba3952858c70eb19d082">IGNORE_CASE</a>, <a class="el" href="cl_8h.html#a2e9f85ae8ad88191c60cf4269b9ab296">IGNORE_DIAC</a>, <a class="el" href="special-chars_8c.html#ad231313a944f572f2f254154b29b218d">maptable_init_both()</a>, <a class="el" href="special-chars_8c.html#afcffa063d633b3ad129a431a46dc0178">maptable_init_identity()</a>, <a class="el" href="special-chars_8c.html#a6189e4777f4ffea13a165e8e5a3ac33d">nocase_nodiac_tab</a>, <a class="el" href="special-chars_8c.html#a044e6db3cd5abd279287e08643090e47">nocase_nodiac_tab_init</a>, <a class="el" href="special-chars_8c.html#a2b1f0fe1f4b5806b7192aee9dd7bce3d">nocase_tab</a>, <a class="el" href="special-chars_8c.html#ad849bfade5bfd88a6959b24dec1743ca">nodiac_tab</a>, and <a class="el" href="cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa3946b00fe1f38206339d69285cda6b03">utf8</a>.</p>
 
-<p>Referenced by <a class="el" href="special-chars_8c.html#a012ffb5a06680b1985a6f08e739d45b0">cl_string_canonical()</a>, and <a class="el" href="ranges_8h.html#aaf5f006cef0ac7c1fdb5c9d55558c11a">SortSubcorpus()</a>.</p>
+<p>Referenced by <a class="el" href="special-chars_8c.html#a708281d7f482a1999c70df6c353d66e1">cl_string_canonical()</a>, and <a class="el" href="ranges_8h.html#aaf5f006cef0ac7c1fdb5c9d55558c11a">SortSubcorpus()</a>.</p>
 
 </div>
 </div>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on Mon Apr 19 21:37:25 2010 for CWB by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on Fri May 14 06:56:54 2010 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

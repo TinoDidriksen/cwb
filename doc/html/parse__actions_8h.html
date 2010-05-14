@@ -47,8 +47,8 @@
 <h2>Functions</h2>
 <ul>
 <li>void <a class="el" href="parse__actions_8h.html#a654e3871f21cd25d69bcdad009b89609">addHistoryLine</a> (void)
-<li>void <a class="el" href="parse__actions_8h.html#a2c318fce4990e95ca39b33cc7d985a96">resetQueryBuffer</a> (void)
-<li>void <a class="el" href="parse__actions_8h.html#a959b28b9603e1024a6b843485fbc34c9">prepare_parse</a> ()
+<dl class="el"><dd class="mdescRight">Add a line of CQP input to the history file.  <a href="#a654e3871f21cd25d69bcdad009b89609"></a><br/></dl><li>void <a class="el" href="parse__actions_8h.html#a2c318fce4990e95ca39b33cc7d985a96">resetQueryBuffer</a> (void)
+<dl class="el"><dd class="mdescRight">Empties the query buffer and sets to 0 the pointer.  <a href="#a2c318fce4990e95ca39b33cc7d985a96"></a><br/></dl><li>void <a class="el" href="parse__actions_8h.html#a959b28b9603e1024a6b843485fbc34c9">prepare_parse</a> ()
 <li><a class="el" href="structcl.html">CorpusList</a> * <a class="el" href="parse__actions_8h.html#a53f277e74f9797cafd18e94b3b617cd4">in_CorpusCommand</a> (char *id, <a class="el" href="structcl.html">CorpusList</a> *<a class="el" href="structcl.html">cl</a>)
 <li>void <a class="el" href="parse__actions_8h.html#a8da739ee55e71755361e95e2480aa088">after_CorpusCommand</a> (<a class="el" href="structcl.html">CorpusList</a> *<a class="el" href="structcl.html">cl</a>)
 <li><a class="el" href="structcl.html">CorpusList</a> * <a class="el" href="parse__actions_8h.html#a6a1f298130650e7411088d2833446352">in_UnnamedCorpusCommand</a> (<a class="el" href="structcl.html">CorpusList</a> *<a class="el" href="structcl.html">cl</a>)
@@ -112,7 +112,7 @@
 <li>void <a class="el" href="parse__actions_8h.html#ae325887e35ccdc326967fdbf370bbedd">do_SetVariableValue</a> (char *varName, char operator, char *varValues)
 <li>void <a class="el" href="parse__actions_8h.html#a2f1ff314ad45ddeb2c1a236742afdd0c">do_AddSubVariables</a> (char *var1Name, int add, char *var2Name)
 <li>void <a class="el" href="parse__actions_8h.html#ae1629d9cbfb89decbd61ec953c88c3fa">push_regchr</a> (char c)
-<li>void <a class="el" href="parse__actions_8h.html#a8fd8ea0c7037f747274aebbc254e47a2">prepare_input</a> (void)
+<dl class="el"><dd class="mdescRight">Add a character (in the sense of a byte) to the regex_string buffer.  <a href="#ae1629d9cbfb89decbd61ec953c88c3fa"></a><br/></dl><li>void <a class="el" href="parse__actions_8h.html#a8fd8ea0c7037f747274aebbc254e47a2">prepare_input</a> (void)
 <li>void <a class="el" href="parse__actions_8h.html#a332a182ad6240cb7c95c4cc8d8096a7d">expand_dataspace</a> (<a class="el" href="structcl.html">CorpusList</a> *ds)
 <li>void <a class="el" href="parse__actions_8h.html#afa4d950c9201e61e43350809acf16069">debug_output</a> (void)
 <li>void <a class="el" href="parse__actions_8h.html#ae18e2e1023535a490e7a3483a6f2630f">do_start_timer</a> (void)
@@ -126,7 +126,7 @@
 <li>int <a class="el" href="parse__actions_8h.html#a94611ab42fe855e3fd806aa23093701f">generate_code</a>
 <li>int <a class="el" href="parse__actions_8h.html#a0c6004890527e8c83195d6ed2717af3b">within_gc</a>
 <li><a class="el" href="cqp_8h.html#a5c98ff09ecea33c85a99a58ee1d2a6e6">CYCtype</a> <a class="el" href="parse__actions_8h.html#a3ece4b4635502acf4719c5dec4f522c6">last_cyc</a>
-<li><a class="el" href="structcl.html">CorpusList</a> * <a class="el" href="parse__actions_8h.html#a71aad927471fe56ead5ff11b7bffb003">query_corpus</a>
+<dl class="el"><dd class="mdescRight">type of last corpus yielding command  <a href="#a3ece4b4635502acf4719c5dec4f522c6"></a><br/></dl><li><a class="el" href="structcl.html">CorpusList</a> * <a class="el" href="parse__actions_8h.html#a71aad927471fe56ead5ff11b7bffb003">query_corpus</a>
 <li><a class="el" href="structcl.html">CorpusList</a> * <a class="el" href="parse__actions_8h.html#a112ca11ea3543de38241fb947b923a7a">old_query_corpus</a>
 <li><a class="el" href="corpmanag_8h.html#af1a7d1a8ccee70c4d8bc6c5302a0df0f">FieldType</a> <a class="el" href="parse__actions_8h.html#a4749b6338449043fa4f5e76081038090">field_to_set</a>
 <li><a class="el" href="targets_8h.html#a6331bc9efeca8bb7c91ea8d9261a4032">SearchStrategy</a> <a class="el" href="parse__actions_8h.html#ac765893be301cf0c15fb08fd7b60a8d6">strategy</a>
@@ -134,7 +134,7 @@
 <li>FILE * <a class="el" href="parse__actions_8h.html#a46af646807e0797e72b6e8945e7ea88b">yyin</a>
 <li><a class="el" href="structctxtsp.html">Context</a> <a class="el" href="parse__actions_8h.html#add0e26577827da76bf1276faa3f1f412">expansion</a>
 <li>char <a class="el" href="parse__actions_8h.html#ab9fbbe008558b273243a7fc89c50df0e">regex_string</a> []
-<li>int <a class="el" href="parse__actions_8h.html#ac898522de888d813413d450016d88c4e">regex_string_pos</a>
+<dl class="el"><dd class="mdescRight">buffer for storing regex strings.  <a href="#ab9fbbe008558b273243a7fc89c50df0e"></a><br/></dl><li>int <a class="el" href="parse__actions_8h.html#ac898522de888d813413d450016d88c4e">regex_string_pos</a>
 <li>int <a class="el" href="parse__actions_8h.html#af810c9ea45b039d0005a9f0e73acbac9">sslen</a>
 </ul>
 <hr/><h2>Define Documentation</h2>
@@ -294,6 +294,13 @@
       </table>
 </div>
 <div class="memdoc">
+
+<p>Add a line of CQP input to the history file. </p>
+<p>Supports parser rule: line -&gt; command</p>
+<p>The line that is added comes from QueryBuffer; the file it is written to is that named in cqp_history_file.</p>
+<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="cqp_8h.html#adfbde17c16a76552596e50bd3c371382" title="buffer for queries">QueryBuffer</a> </dd>
+<dd>
+<a class="el" href="options_8h.html#a12c2c66a93c271e107bb44f8b449b7fe" title="filename where CQP command history will be saved">cqp_history_file</a> </dd></dl>
 
 <p>References <a class="el" href="options_8h.html#a12c2c66a93c271e107bb44f8b449b7fe">cqp_history_file</a>, <a class="el" href="output_8c.html#ac523a4b34d2f925e027d8f433de703c9">cqpmessage()</a>, <a class="el" href="output_8h.html#a9c2eeea9cd09fb001747ef4cc99399a4a4dfd42ec49d09d8c6555c218301cc30f">Error</a>, <a class="el" href="output_8c.html#aefb91b47b9096051b7366d2332c17271">open_file()</a>, <a class="el" href="cqp_8c.html#adfbde17c16a76552596e50bd3c371382">QueryBuffer</a>, <a class="el" href="cqp_8c.html#a3818b52c87d9e25995878f0719a1f15e">reading_cqprc</a>, <a class="el" href="options_8h.html#a582e2ef9670c974c00e00ad10af0e629">silent</a>, and <a class="el" href="options_8h.html#ac6e855a8973a6f82ba35f4ee2927091e">write_history_file</a>.</p>
 
@@ -877,7 +884,7 @@
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="unionc__tree.html#a0e818a02b04731f1bff94e983f2b0b23">c_tree::canon</a>, <a class="el" href="cl_8h.html#a2c4607eb8e094b7699062df8eb744058">cl_new_regex()</a>, <a class="el" href="cl_8h.html#a8e3a6183c822cb47f163cc14d114f0d5">cl_string_latex2iso()</a>, <a class="el" href="output_8c.html#ac523a4b34d2f925e027d8f433de703c9">cqpmessage()</a>, <a class="el" href="unionc__tree.html#a3d32f90d3a29afc4e9ad8a7a457afa58">c_tree::ctype</a>, <a class="el" href="output_8h.html#a9c2eeea9cd09fb001747ef4cc99399a4a4dfd42ec49d09d8c6555c218301cc30f">Error</a>, <a class="el" href="parse__actions_8c.html#a94611ab42fe855e3fd806aa23093701f">generate_code</a>, <a class="el" href="cl_8h.html#ac6736b763df533659ab303a30c627519">IGNORE_REGEX</a>, <a class="el" href="cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaabb414040abfb032911b6a01ff3917217">latin1</a>, <a class="el" href="unionc__tree.html#a611d052170e924456c80020431b9b8fb">c_tree::leaf</a>, <a class="el" href="treemacros_8h.html#ac472768c69b7fbc6889ce022763555cd">NEW_BNODE</a>, <a class="el" href="eval_8h.html#a273fc8eeda0bc00d22e79af1069e1a93a50d1448013c6f17125caee18aa418af7">NORMAL</a>, <a class="el" href="unionc__tree.html#a290739d1469afa7e09e1aa2c84fdd517">c_tree::pat_type</a>, <a class="el" href="eval_8h.html#a273fc8eeda0bc00d22e79af1069e1a93a2485bd7fd93ee45c5ccae484bb512203">REGEXP</a>, <a class="el" href="unionc__tree.html#a2d5370a5171ae23de4e85f2898557ff6">c_tree::rx</a>, <a class="el" href="eval_8h.html#a6f43ac034105ecb23dc0b9aa5d845691a03e567d25e1954e9a18751aff1dbf139">string_leaf</a>, and <a class="el" href="unionc__tree.html#ab074407e0fcb8890024632da19c1d8a0">c_tree::type</a>.</p>
+<p>References <a class="el" href="unionc__tree.html#a0e818a02b04731f1bff94e983f2b0b23">c_tree::canon</a>, <a class="el" href="struct_t_corpus.html#ab7d33183c58d7df43cc5602b9c842b37">TCorpus::charset</a>, <a class="el" href="cl_8h.html#a2c4607eb8e094b7699062df8eb744058">cl_new_regex()</a>, <a class="el" href="cl_8h.html#a8e3a6183c822cb47f163cc14d114f0d5">cl_string_latex2iso()</a>, <a class="el" href="structcl.html#aca3a1fb765418f9b9b1d74051aa88667">cl::corpus</a>, <a class="el" href="output_8c.html#ac523a4b34d2f925e027d8f433de703c9">cqpmessage()</a>, <a class="el" href="unionc__tree.html#a3d32f90d3a29afc4e9ad8a7a457afa58">c_tree::ctype</a>, <a class="el" href="output_8h.html#a9c2eeea9cd09fb001747ef4cc99399a4a4dfd42ec49d09d8c6555c218301cc30f">Error</a>, <a class="el" href="parse__actions_8c.html#a94611ab42fe855e3fd806aa23093701f">generate_code</a>, <a class="el" href="cl_8h.html#ac6736b763df533659ab303a30c627519">IGNORE_REGEX</a>, <a class="el" href="unionc__tree.html#a611d052170e924456c80020431b9b8fb">c_tree::leaf</a>, <a class="el" href="treemacros_8h.html#ac472768c69b7fbc6889ce022763555cd">NEW_BNODE</a>, <a class="el" href="eval_8h.html#a273fc8eeda0bc00d22e79af1069e1a93a50d1448013c6f17125caee18aa418af7">NORMAL</a>, <a class="el" href="unionc__tree.html#a290739d1469afa7e09e1aa2c84fdd517">c_tree::pat_type</a>, <a class="el" href="eval_8h.html#a273fc8eeda0bc00d22e79af1069e1a93a2485bd7fd93ee45c5ccae484bb512203">REGEXP</a>, <a class="el" href="unionc__tree.html#a2d5370a5171ae23de4e85f2898557ff6">c_tree::rx</a>, <a class="el" href="eval_8h.html#a6f43ac034105ecb23dc0b9aa5d845691a03e567d25e1954e9a18751aff1dbf139">string_leaf</a>, and <a class="el" href="unionc__tree.html#ab074407e0fcb8890024632da19c1d8a0">c_tree::type</a>.</p>
 
 <p>Referenced by <a class="el" href="parse__actions_8h.html#ac5fbebcf44cd212f00f1890a6ab56a0a">do_flagged_re_variable()</a>, <a class="el" href="parse__actions_8h.html#aebbdee09270339c0b9e08de62ad01161">do_mval_string()</a>, and <a class="el" href="parse__actions_8h.html#a0765556ed474633536053be134d02d6c">do_StringConstraint()</a>.</p>
 
@@ -2081,7 +2088,7 @@
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="cl_8h.html#a81874b84793891ea3b8db58061820f1e">ATT_STRUC</a>, <a class="el" href="cl_8h.html#a9e15a3c725711d9effd623b2f3e225be">cl_free</a>, <a class="el" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="cl_8h.html#ae9e879605cdbdafc2a8939ae590b6aa0">cl_new_attribute</a>, <a class="el" href="cl_8h.html#a2c4607eb8e094b7699062df8eb744058">cl_new_regex()</a>, <a class="el" href="cl_8h.html#a6647d75d1d69c7d25447da514b7e4682">cl_strdup()</a>, <a class="el" href="cl_8h.html#a8e3a6183c822cb47f163cc14d114f0d5">cl_string_latex2iso()</a>, <a class="el" href="cdaccess_8c.html#a43a3631745e05f8fafe5006141d57663">cl_struc_values()</a>, <a class="el" href="structcl.html#aca3a1fb765418f9b9b1d74051aa88667">cl::corpus</a>, <a class="el" href="output_8c.html#ac523a4b34d2f925e027d8f433de703c9">cqpmessage()</a>, <a class="el" href="eval_8h.html#a972083d289d509372c6ace3f04b4e495">CurEnv</a>, <a class="el" href="output_8h.html#a9c2eeea9cd09fb001747ef4cc99399a4a4dfd42ec49d09d8c6555c218301cc30f">Error</a>, <a class="el" href="symtab_8c.html#a5f268916937d60f062425639f44297aa">findlabel()</a>, <a class="el" href="struct__label__entry.html#ac8bf36fe0577cba66bccda3a6f7e80a4">_label_entry::flags</a>, <a class="el" href="parse__actions_8c.html#a94611ab42fe855e3fd806aa23093701f">generate_code</a>, <a class="el" href="cl_8h.html#ac6736b763df533659ab303a30c627519">IGNORE_REGEX</a>, <a class="el" href="symtab_8h.html#a2d56f7ced81c60d6486eb1e9716500f7">LAB_DEFINED</a>, <a class="el" href="symtab_8h.html#a6312218a29837109d7bb90732a7a8c9b">LAB_RDAT</a>, <a class="el" href="symtab_8h.html#ab2866faf1a8020f22d4d2fb7677459dd">LAB_USED</a>, <a class="el" href="symtab_8c.html#ac0093e82d521c18e97808dece3977a8e">labellookup()</a>, <a class="el" href="structevalenv.html#ac454469f9e590a8290baac98ef0febf6">evalenv::labels</a>, <a class="el" href="cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaabb414040abfb032911b6a01ff3917217">latin1</a>, <a class="el" href="structevalenv.html#ae750cb43d0f9065d9d300131dda6ed1b">evalenv::MaxPatIndex</a>, <a class="el" href="eval_8h.html#a1e6bea1559293a28d8804cb1a04a568c">MAXPATTERNS</a>, <a class="el" href="output_8h.html#a9c2eeea9cd09fb001747ef4cc99399a4a2dfbf31ed014852927c31c352feac51f">Message</a>, <a class="el" href="parse__actions_8c.html#a3b90dd12b9afe53fc28299dc9b4337a2">mval_string_conversion()</a>, <a class="el" href="structcl.html#a5ac083a645d964373f022d03df4849c8">cl::name</a>, <a class="el" href="parse__actions_8h.html#a33725ca2d2513e4b00e806cef87a990c">OP_CONTAINS</a>, <a class="el" href="parse__actions_8h.html#a34fc2ad489f090d3500ea448f25582e9">OP_EQUAL</a>, <a class="el" href="parse__actions_8h.html#af9ebf67f954345c446dc1daa9b50b138">OP_MATCHES</a>, <a class="el" href="parse__actions_8h.html#ae1644092ddcfd072d2892e1b740431c1">OP_NOT</a>, <a class="el" href="parse__actions_8h.html#ac17b1bbc961ccb7e9989189204f2316f">OP_NOT_MASK</a>, <a class="el" href="structevalenv.html#ab6c120e7f1b88481b1a5cb90e3e30b0f">evalenv::patternlist</a>, <a class="el" href="options_8h.html#a1670d5b6643c0fb3167da51f13634ffa">strict_regions</a>, and <a class="el" href="eval_8h.html#a1a4ed8ed90aaf701ce0f18e9baec85aeabb232cda7a3449bab8bb1e1a23b22a4f">Tag</a>.</p>
+<p>References <a class="el" href="cl_8h.html#a81874b84793891ea3b8db58061820f1e">ATT_STRUC</a>, <a class="el" href="struct_t_corpus.html#ab7d33183c58d7df43cc5602b9c842b37">TCorpus::charset</a>, <a class="el" href="cl_8h.html#a9e15a3c725711d9effd623b2f3e225be">cl_free</a>, <a class="el" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="cl_8h.html#ae9e879605cdbdafc2a8939ae590b6aa0">cl_new_attribute</a>, <a class="el" href="cl_8h.html#a2c4607eb8e094b7699062df8eb744058">cl_new_regex()</a>, <a class="el" href="cl_8h.html#a6647d75d1d69c7d25447da514b7e4682">cl_strdup()</a>, <a class="el" href="cl_8h.html#a8e3a6183c822cb47f163cc14d114f0d5">cl_string_latex2iso()</a>, <a class="el" href="cdaccess_8c.html#a43a3631745e05f8fafe5006141d57663">cl_struc_values()</a>, <a class="el" href="structcl.html#aca3a1fb765418f9b9b1d74051aa88667">cl::corpus</a>, <a class="el" href="output_8c.html#ac523a4b34d2f925e027d8f433de703c9">cqpmessage()</a>, <a class="el" href="eval_8h.html#a972083d289d509372c6ace3f04b4e495">CurEnv</a>, <a class="el" href="output_8h.html#a9c2eeea9cd09fb001747ef4cc99399a4a4dfd42ec49d09d8c6555c218301cc30f">Error</a>, <a class="el" href="symtab_8c.html#a5f268916937d60f062425639f44297aa">findlabel()</a>, <a class="el" href="struct__label__entry.html#ac8bf36fe0577cba66bccda3a6f7e80a4">_label_entry::flags</a>, <a class="el" href="parse__actions_8c.html#a94611ab42fe855e3fd806aa23093701f">generate_code</a>, <a class="el" href="cl_8h.html#ac6736b763df533659ab303a30c627519">IGNORE_REGEX</a>, <a class="el" href="symtab_8h.html#a2d56f7ced81c60d6486eb1e9716500f7">LAB_DEFINED</a>, <a class="el" href="symtab_8h.html#a6312218a29837109d7bb90732a7a8c9b">LAB_RDAT</a>, <a class="el" href="symtab_8h.html#ab2866faf1a8020f22d4d2fb7677459dd">LAB_USED</a>, <a class="el" href="symtab_8c.html#ac0093e82d521c18e97808dece3977a8e">labellookup()</a>, <a class="el" href="structevalenv.html#ac454469f9e590a8290baac98ef0febf6">evalenv::labels</a>, <a class="el" href="structevalenv.html#ae750cb43d0f9065d9d300131dda6ed1b">evalenv::MaxPatIndex</a>, <a class="el" href="eval_8h.html#a1e6bea1559293a28d8804cb1a04a568c">MAXPATTERNS</a>, <a class="el" href="output_8h.html#a9c2eeea9cd09fb001747ef4cc99399a4a2dfbf31ed014852927c31c352feac51f">Message</a>, <a class="el" href="parse__actions_8c.html#a3b90dd12b9afe53fc28299dc9b4337a2">mval_string_conversion()</a>, <a class="el" href="structcl.html#a5ac083a645d964373f022d03df4849c8">cl::name</a>, <a class="el" href="parse__actions_8h.html#a33725ca2d2513e4b00e806cef87a990c">OP_CONTAINS</a>, <a class="el" href="parse__actions_8h.html#a34fc2ad489f090d3500ea448f25582e9">OP_EQUAL</a>, <a class="el" href="parse__actions_8h.html#af9ebf67f954345c446dc1daa9b50b138">OP_MATCHES</a>, <a class="el" href="parse__actions_8h.html#ae1644092ddcfd072d2892e1b740431c1">OP_NOT</a>, <a class="el" href="parse__actions_8h.html#ac17b1bbc961ccb7e9989189204f2316f">OP_NOT_MASK</a>, <a class="el" href="structevalenv.html#ab6c120e7f1b88481b1a5cb90e3e30b0f">evalenv::patternlist</a>, <a class="el" href="options_8h.html#a1670d5b6643c0fb3167da51f13634ffa">strict_regions</a>, and <a class="el" href="eval_8h.html#a1a4ed8ed90aaf701ce0f18e9baec85aeabb232cda7a3449bab8bb1e1a23b22a4f">Tag</a>.</p>
 
 </div>
 </div>
@@ -2337,6 +2344,10 @@
 </div>
 <div class="memdoc">
 
+<p>Add a character (in the sense of a byte) to the regex_string buffer. </p>
+<p>Doesn't seem to currently be in use.</p>
+<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="parse__actions_8h.html#ab9fbbe008558b273243a7fc89c50df0e" title="buffer for storing regex strings.">regex_string</a> </dd></dl>
+
 <p>References <a class="el" href="output_8c.html#ac523a4b34d2f925e027d8f433de703c9">cqpmessage()</a>, <a class="el" href="parse__actions_8c.html#a952862ad0854311ab22a5add1d093ee6">regex_string</a>, <a class="el" href="parse__actions_8c.html#ac898522de888d813413d450016d88c4e">regex_string_pos</a>, and <a class="el" href="output_8h.html#a9c2eeea9cd09fb001747ef4cc99399a4a48f2bb70fceb692a2dedd8cea496c44b">Warning</a>.</p>
 
 </div>
@@ -2415,6 +2426,12 @@
 </div>
 <div class="memdoc">
 
+<p>Empties the query buffer and sets to 0 the pointer. </p>
+<p>Supports parser rule: line -&gt; command</p>
+<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="cqp_8h.html#adfbde17c16a76552596e50bd3c371382" title="buffer for queries">QueryBuffer</a> </dd>
+<dd>
+<a class="el" href="cqp_8h.html#ac0d42ac5f8866bd18648afcc372e650c" title="pointer into this buffer, for appending">QueryBufferP</a> </dd></dl>
+
 <p>References <a class="el" href="cqp_8c.html#adfbde17c16a76552596e50bd3c371382">QueryBuffer</a>, <a class="el" href="cqp_8c.html#a54d95727d347da93ae0866f293f729c4">QueryBufferOverflow</a>, and <a class="el" href="cqp_8c.html#ac0d42ac5f8866bd18648afcc372e650c">QueryBufferP</a>.</p>
 
 <p>Referenced by <a class="el" href="parse__actions_8c.html#ade779a9c9b0f07d79081e39988311978">RaiseError()</a>.</p>
@@ -2491,6 +2508,8 @@
 </div>
 <div class="memdoc">
 
+<p>type of last corpus yielding command </p>
+
 <p>Referenced by <a class="el" href="parse__actions_8h.html#ace1b39efdca904c06d622eb6e3d8a804">ActivateCorpus()</a>, <a class="el" href="parse__actions_8h.html#a8da739ee55e71755361e95e2480aa088">after_CorpusCommand()</a>, <a class="el" href="parse__actions_8h.html#af66f0569a0ebda85699bcf7bbcb5adfb">after_CorpusSetExpr()</a>, <a class="el" href="parse__actions_8h.html#a3889058f05a543a8bdfbcd51a365c8b8">after_Query()</a>, <a class="el" href="parse__actions_8h.html#a53f277e74f9797cafd18e94b3b617cd4">in_CorpusCommand()</a>, <a class="el" href="parse__actions_8h.html#a6a1f298130650e7411088d2833446352">in_UnnamedCorpusCommand()</a>, and <a class="el" href="parse__actions_8h.html#a8fd8ea0c7037f747274aebbc254e47a2">prepare_input()</a>.</p>
 
 </div>
@@ -2533,6 +2552,10 @@
       </table>
 </div>
 <div class="memdoc">
+
+<p>buffer for storing regex strings. </p>
+<p>As it says on the tin.</p>
+<p>Doesn't seem currently to be in use anywhere. </p>
 
 <p>Referenced by <a class="el" href="parse__actions_8h.html#ae1629d9cbfb89decbd61ec953c88c3fa">push_regchr()</a>.</p>
 
@@ -2610,7 +2633,7 @@
 </div>
 </div>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on Mon Apr 19 21:37:26 2010 for CWB by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on Fri May 14 06:56:54 2010 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

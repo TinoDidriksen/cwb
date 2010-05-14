@@ -79,23 +79,23 @@
 <dl class="el"><dd class="mdescRight">Initialises the global corpus list (sets it to NULL, no matter what its value was).  <a href="#a03871eef560c68779ca07a668f27f603"></a><br/></dl><li>void <a class="el" href="corpmanag_8h.html#a204af03e1c4c39f8366a65fd927ab2a6">free_corpuslist</a> (void)
 <dl class="el"><dd class="mdescRight">Frees the global list of currently-loaded corpora.  <a href="#a204af03e1c4c39f8366a65fd927ab2a6"></a><br/></dl><li><a class="el" href="structcl.html">CorpusList</a> * <a class="el" href="corpmanag_8h.html#a083e2fc50265fe909261db284153f811">findcorpus</a> (char *s, enum <a class="el" href="corpmanag_8h.html#ab595f682e895370f86580c128681d88e">corpus_type</a> type, int try_recursive_search)
 <dl class="el"><dd class="mdescRight">finds the pointer to the corpus with name s (strcmp), no case conversion is done.  <a href="#a083e2fc50265fe909261db284153f811"></a><br/></dl><li>void <a class="el" href="corpmanag_8h.html#a411a4b044a2214dc19180334cbcd1601">dropcorpus</a> (<a class="el" href="structcl.html">CorpusList</a> *<a class="el" href="structcl.html">cl</a>)
-<li><a class="el" href="structcl.html">CorpusList</a> * <a class="el" href="corpmanag_8h.html#ab20d278862cada0d5427b8232a3b69ad">duplicate_corpus</a> (<a class="el" href="structcl.html">CorpusList</a> *<a class="el" href="structcl.html">cl</a>, char *new_name, <a class="el" href="cqp_8h.html#a2d275961e4a2bd704dde5f6a5d27f880">Boolean</a> force_overwrite)
+<dl class="el"><dd class="mdescRight">Remove a corpus from the global list of corpora.  <a href="#a411a4b044a2214dc19180334cbcd1601"></a><br/></dl><li><a class="el" href="structcl.html">CorpusList</a> * <a class="el" href="corpmanag_8h.html#ab20d278862cada0d5427b8232a3b69ad">duplicate_corpus</a> (<a class="el" href="structcl.html">CorpusList</a> *<a class="el" href="structcl.html">cl</a>, char *new_name, <a class="el" href="cqp_8h.html#a127a96e09108f503cca20256eaa4ddff">Boolean</a> force_overwrite)
 <li><a class="el" href="structcl.html">CorpusList</a> * <a class="el" href="corpmanag_8h.html#a3567391cc22d572100bf63c0733b87ff">make_temp_corpus</a> (<a class="el" href="structcl.html">CorpusList</a> *<a class="el" href="structcl.html">cl</a>, char *new_name)
 <li><a class="el" href="structcl.html">CorpusList</a> * <a class="el" href="corpmanag_8h.html#af5eed52e11c9ca3a493ab6176fb9af54">assign_temp_to_sub</a> (<a class="el" href="structcl.html">CorpusList</a> *tmp, char *subname)
 <li>void <a class="el" href="corpmanag_8h.html#a1b955ef83dbea1eee94b9406d9b646e2">drop_temp_corpora</a> (void)
-<li><a class="el" href="cqp_8h.html#a2d275961e4a2bd704dde5f6a5d27f880">Boolean</a> <a class="el" href="corpmanag_8h.html#a133d99a40e4b51fe8cad6362e8b4e737">access_corpus</a> (<a class="el" href="structcl.html">CorpusList</a> *<a class="el" href="structcl.html">cl</a>)
-<li><a class="el" href="cqp_8h.html#a2d275961e4a2bd704dde5f6a5d27f880">Boolean</a> <a class="el" href="corpmanag_8h.html#af79d0506b8ca791ff009faf17092d3e8">change_corpus</a> (char *name, <a class="el" href="cqp_8h.html#a2d275961e4a2bd704dde5f6a5d27f880">Boolean</a> <a class="el" href="cwb-s-encode_8c.html#a582e2ef9670c974c00e00ad10af0e629">silent</a>)
-<li>void <a class="el" href="corpmanag_8h.html#a7fe1322b68023d0c8969fac787155280">check_available_corpora</a> (enum <a class="el" href="corpmanag_8h.html#ab595f682e895370f86580c128681d88e">corpus_type</a> ct)
-<li><a class="el" href="cqp_8h.html#a2d275961e4a2bd704dde5f6a5d27f880">Boolean</a> <a class="el" href="corpmanag_8h.html#aeaedbbdc6a5276d3954fc75eb60426e6">valid_subcorpus_name</a> (char *corpusname)
-<li><a class="el" href="cqp_8h.html#a2d275961e4a2bd704dde5f6a5d27f880">Boolean</a> <a class="el" href="corpmanag_8h.html#aa5a6fe5bd7365a79df398ce420710304">is_qualified</a> (char *corpusname)
+<li><a class="el" href="cqp_8h.html#a127a96e09108f503cca20256eaa4ddff">Boolean</a> <a class="el" href="corpmanag_8h.html#a133d99a40e4b51fe8cad6362e8b4e737">access_corpus</a> (<a class="el" href="structcl.html">CorpusList</a> *<a class="el" href="structcl.html">cl</a>)
+<dl class="el"><dd class="mdescRight">Assesses whether a specified corpus can be accessed.  <a href="#a133d99a40e4b51fe8cad6362e8b4e737"></a><br/></dl><li><a class="el" href="cqp_8h.html#a127a96e09108f503cca20256eaa4ddff">Boolean</a> <a class="el" href="corpmanag_8h.html#af79d0506b8ca791ff009faf17092d3e8">change_corpus</a> (char *name, <a class="el" href="cqp_8h.html#a127a96e09108f503cca20256eaa4ddff">Boolean</a> <a class="el" href="cwb-s-encode_8c.html#a582e2ef9670c974c00e00ad10af0e629">silent</a>)
+<dl class="el"><dd class="mdescRight">Make a corpus accessible for searching.  <a href="#af79d0506b8ca791ff009faf17092d3e8"></a><br/></dl><li>void <a class="el" href="corpmanag_8h.html#a7fe1322b68023d0c8969fac787155280">check_available_corpora</a> (enum <a class="el" href="corpmanag_8h.html#ab595f682e895370f86580c128681d88e">corpus_type</a> ct)
+<li><a class="el" href="cqp_8h.html#a127a96e09108f503cca20256eaa4ddff">Boolean</a> <a class="el" href="corpmanag_8h.html#aeaedbbdc6a5276d3954fc75eb60426e6">valid_subcorpus_name</a> (char *corpusname)
+<li><a class="el" href="cqp_8h.html#a127a96e09108f503cca20256eaa4ddff">Boolean</a> <a class="el" href="corpmanag_8h.html#aa5a6fe5bd7365a79df398ce420710304">is_qualified</a> (char *corpusname)
 <li>char * <a class="el" href="corpmanag_8h.html#a42daf0609526717971c6ea704f544720">split_subcorpus_name</a> (char *corpusname, char *mother_name)
-<dl class="el"><dd class="mdescRight">Splits a query result corpus-name into qualifier and local name.  <a href="#a42daf0609526717971c6ea704f544720"></a><br/></dl><li><a class="el" href="cqp_8h.html#a2d275961e4a2bd704dde5f6a5d27f880">Boolean</a> <a class="el" href="corpmanag_8h.html#ae8901e96861c947b4fa68df2c2b423de">save_subcorpus</a> (<a class="el" href="structcl.html">CorpusList</a> *<a class="el" href="structcl.html">cl</a>, char *fname)
+<dl class="el"><dd class="mdescRight">Splits a query result corpus-name into qualifier and local name.  <a href="#a42daf0609526717971c6ea704f544720"></a><br/></dl><li><a class="el" href="cqp_8h.html#a127a96e09108f503cca20256eaa4ddff">Boolean</a> <a class="el" href="corpmanag_8h.html#ae8901e96861c947b4fa68df2c2b423de">save_subcorpus</a> (<a class="el" href="structcl.html">CorpusList</a> *<a class="el" href="structcl.html">cl</a>, char *fname)
 <li>void <a class="el" href="corpmanag_8h.html#ae509346bd5e7c713d70748e9926f1cdd">save_unsaved_subcorpora</a> ()
 <li><a class="el" href="structcl.html">CorpusList</a> * <a class="el" href="corpmanag_8h.html#a1af5319b5b9b70c3b0847c504252421e">FirstCorpusFromList</a> ()
 <dl class="el"><dd class="mdescRight">Gets the CorpusList pointer for the first corpus on the currently-loaded list.  <a href="#a1af5319b5b9b70c3b0847c504252421e"></a><br/></dl><li><a class="el" href="structcl.html">CorpusList</a> * <a class="el" href="corpmanag_8h.html#ac1186e909e920e22de20975a6a5f43f5">NextCorpusFromList</a> (<a class="el" href="structcl.html">CorpusList</a> *<a class="el" href="structcl.html">cl</a>)
 <dl class="el"><dd class="mdescRight">Gets the CorpusList pointer for the next corpus on the currently-loaded list.  <a href="#ac1186e909e920e22de20975a6a5f43f5"></a><br/></dl><li>int <a class="el" href="corpmanag_8h.html#a8620a08c033dbc0f5b90fc81a028ff14">set_current_corpus</a> (<a class="el" href="structcl.html">CorpusList</a> *cp, int force)
 <dl class="el"><dd class="mdescRight">Sets the current corpus (by pointer to the corpus).  <a href="#a8620a08c033dbc0f5b90fc81a028ff14"></a><br/></dl><li>int <a class="el" href="corpmanag_8h.html#a9ba7a43161a1082a4db9b0f4d1a47f48">set_current_corpus_name</a> (char *name, int force)
-<dl class="el"><dd class="mdescRight">Sets the current corpus (by name).  <a href="#a9ba7a43161a1082a4db9b0f4d1a47f48"></a><br/></dl><li><a class="el" href="cqp_8h.html#a2d275961e4a2bd704dde5f6a5d27f880">Boolean</a> <a class="el" href="corpmanag_8h.html#a3f5760d1adaed5f55433209860c70fc1">touch_corpus</a> (<a class="el" href="structcl.html">CorpusList</a> *cp)
+<dl class="el"><dd class="mdescRight">Sets the current corpus (by name).  <a href="#a9ba7a43161a1082a4db9b0f4d1a47f48"></a><br/></dl><li><a class="el" href="cqp_8h.html#a127a96e09108f503cca20256eaa4ddff">Boolean</a> <a class="el" href="corpmanag_8h.html#a3f5760d1adaed5f55433209860c70fc1">touch_corpus</a> (<a class="el" href="structcl.html">CorpusList</a> *cp)
 <dl class="el"><dd class="mdescRight">Touches a corpus, ie, marks it as changed.  <a href="#a3f5760d1adaed5f55433209860c70fc1"></a><br/></dl><li>void <a class="el" href="corpmanag_8h.html#a93a0fe59766df5ffa3e14b0fb7522971">show_corpora_files</a> (enum <a class="el" href="corpmanag_8h.html#ab595f682e895370f86580c128681d88e">corpus_type</a> type)
 </ul>
 <h2>Variables</h2>
@@ -260,7 +260,7 @@
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="cqp_8h.html#a2d275961e4a2bd704dde5f6a5d27f880">Boolean</a> access_corpus </td>
+          <td class="memname"><a class="el" href="cqp_8h.html#a127a96e09108f503cca20256eaa4ddff">Boolean</a> access_corpus </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structcl.html">CorpusList</a> *&nbsp;</td>
           <td class="paramname"> <em>cl</em></td>
@@ -270,6 +270,15 @@
       </table>
 </div>
 <div class="memdoc">
+
+<p>Assesses whether a specified corpus can be accessed. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em><a class="el" href="structcl.html" title="The CorpusList object records information on a corpus that CQP recognises.">cl</a></em>&nbsp;</td><td>A CorpusList specifying the corpus to check. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>A boolean - true if <a class="el" href="structcl.html" title="The CorpusList object records information on a corpus that CQP recognises.">cl</a> can be accessed. </dd></dl>
 
 <p>References <a class="el" href="corpmanag_8c.html#a5bd617c344c791d4cea751a4e043f2e3">attach_subcorpus()</a>, <a class="el" href="cqp_8h.html#a306ebd41c0cd1303b1372c6153f0caf8">False</a>, <a class="el" href="structcl.html#a57b5372d8f1a40be529f9ba7c2ece1ed">cl::loaded</a>, <a class="el" href="structcl.html#a9b09e2bd59ba8ed71d59933389faba1b">cl::range</a>, <a class="el" href="structcl.html#ab1f9d035161a53874c84ac68634b947a">cl::saved</a>, <a class="el" href="structcl.html#a439227feff9d7f55384e8780cfc2eb82">cl::size</a>, <a class="el" href="corpmanag_8h.html#ab595f682e895370f86580c128681d88ea12b733d4941495e86811fe6ceeeff9da">SUB</a>, <a class="el" href="corpmanag_8h.html#ab595f682e895370f86580c128681d88ea57cc238145ec1361c72c327674c0d754">SYSTEM</a>, <a class="el" href="corpmanag_8h.html#ab595f682e895370f86580c128681d88ea5937389a60030a604f0efdf5e3927325">TEMP</a>, <a class="el" href="cqp_8h.html#add3ca9eefe3b5b754426f51d3043e579">True</a>, and <a class="el" href="structcl.html#aaeb0da22893ef241c1ad027ca78da765">cl::type</a>.</p>
 
@@ -313,7 +322,7 @@
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="cqp_8h.html#a2d275961e4a2bd704dde5f6a5d27f880">Boolean</a> change_corpus </td>
+          <td class="memname"><a class="el" href="cqp_8h.html#a127a96e09108f503cca20256eaa4ddff">Boolean</a> change_corpus </td>
           <td>(</td>
           <td class="paramtype">char *&nbsp;</td>
           <td class="paramname"> <em>name</em>, </td>
@@ -321,7 +330,7 @@
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="cqp_8h.html#a2d275961e4a2bd704dde5f6a5d27f880">Boolean</a>&nbsp;</td>
+          <td class="paramtype"><a class="el" href="cqp_8h.html#a127a96e09108f503cca20256eaa4ddff">Boolean</a>&nbsp;</td>
           <td class="paramname"> <em>silent</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -332,6 +341,17 @@
       </table>
 </div>
 <div class="memdoc">
+
+<p>Make a corpus accessible for searching. </p>
+<p>When a corpus is "made accessible", its name is checked for validity and availability; if all is OK, set_current_corpus is called on it.</p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>name</em>&nbsp;</td><td>A string indicating the name of a corpus. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>silent</em>&nbsp;</td><td>Boolean. Ignored. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Boolean. True if the corpus was set successfully, otherwise false. </dd></dl>
 
 <p>References <a class="el" href="corpmanag_8c.html#a133d99a40e4b51fe8cad6362e8b4e737">access_corpus()</a>, <a class="el" href="cqp_8h.html#a306ebd41c0cd1303b1372c6153f0caf8">False</a>, <a class="el" href="structcl.html#a5ac083a645d964373f022d03df4849c8">cl::name</a>, <a class="el" href="corpmanag_8c.html#a82fddc9e324fffcce6129e4399e31cc8">search_corpus()</a>, <a class="el" href="corpmanag_8c.html#a8620a08c033dbc0f5b90fc81a028ff14">set_current_corpus()</a>, and <a class="el" href="cqp_8h.html#add3ca9eefe3b5b754426f51d3043e579">True</a>.</p>
 
@@ -397,6 +417,15 @@
 </div>
 <div class="memdoc">
 
+<p>Remove a corpus from the global list of corpora. </p>
+<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="corpmanag_8h.html#a220e504e73789733727e6565941ce2c0" title="Global pointer to the head of CQP&#39;s linked list of corpora.">corpuslist</a> </dd></dl>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em><a class="el" href="structcl.html" title="The CorpusList object records information on a corpus that CQP recognises.">cl</a></em>&nbsp;</td><td>The corpus to drop. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p>References <a class="el" href="corpmanag_8h.html#a1f1c9e6e4dec994353f8d8ee00f38faa">current_corpus</a>, <a class="el" href="corpmanag_8c.html#ac15e0e3266238b8728caa182e4b4407d">initialize_cl()</a>, <a class="el" href="structcl.html#afdcc09ad7f27c639d3bb56e7ac18c31c">cl::next</a>, <a class="el" href="corpmanag_8c.html#a8620a08c033dbc0f5b90fc81a028ff14">set_current_corpus()</a>, and <a class="el" href="cqp_8h.html#add3ca9eefe3b5b754426f51d3043e579">True</a>.</p>
 
 <p>Referenced by <a class="el" href="corpmanag_8h.html#af5eed52e11c9ca3a493ab6176fb9af54">assign_temp_to_sub()</a>, <a class="el" href="corpmanag_8c.html#a5bd617c344c791d4cea751a4e043f2e3">attach_subcorpus()</a>, <a class="el" href="ranges_8h.html#a78b58ed6800e15c907fb6f0a5da0ea67">copy_intervals()</a>, <a class="el" href="corpmanag_8c.html#a7ba6f73a68bee7724ef2ad17d6c2ee07">CorpusDiscard()</a>, <a class="el" href="cqpserver_8c.html#a6912e5826b0c2389d696760d1aecc59c">do_cqi_cqp_drop_subcorpus()</a>, <a class="el" href="corpmanag_8h.html#a1b955ef83dbea1eee94b9406d9b646e2">drop_temp_corpora()</a>, <a class="el" href="corpmanag_8c.html#abc4b504862b3c36cb40aa76dd8200395">ensure_corpus_size()</a>, and <a class="el" href="cqpserver_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
@@ -422,7 +451,7 @@
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="cqp_8h.html#a2d275961e4a2bd704dde5f6a5d27f880">Boolean</a>&nbsp;</td>
+          <td class="paramtype"><a class="el" href="cqp_8h.html#a127a96e09108f503cca20256eaa4ddff">Boolean</a>&nbsp;</td>
           <td class="paramname"> <em>force_overwrite</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -597,7 +626,7 @@
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="cqp_8h.html#a2d275961e4a2bd704dde5f6a5d27f880">Boolean</a> is_qualified </td>
+          <td class="memname"><a class="el" href="cqp_8h.html#a127a96e09108f503cca20256eaa4ddff">Boolean</a> is_qualified </td>
           <td>(</td>
           <td class="paramtype">char *&nbsp;</td>
           <td class="paramname"> <em>corpusname</em></td>
@@ -711,7 +740,7 @@
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="cqp_8h.html#a2d275961e4a2bd704dde5f6a5d27f880">Boolean</a> save_subcorpus </td>
+          <td class="memname"><a class="el" href="cqp_8h.html#a127a96e09108f503cca20256eaa4ddff">Boolean</a> save_subcorpus </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structcl.html">CorpusList</a> *&nbsp;</td>
           <td class="paramname"> <em>cl</em>, </td>
@@ -903,7 +932,7 @@
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="cqp_8h.html#a2d275961e4a2bd704dde5f6a5d27f880">Boolean</a> touch_corpus </td>
+          <td class="memname"><a class="el" href="cqp_8h.html#a127a96e09108f503cca20256eaa4ddff">Boolean</a> touch_corpus </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structcl.html">CorpusList</a> *&nbsp;</td>
           <td class="paramname"> <em>cp</em></td>
@@ -934,7 +963,7 @@
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="cqp_8h.html#a2d275961e4a2bd704dde5f6a5d27f880">Boolean</a> valid_subcorpus_name </td>
+          <td class="memname"><a class="el" href="cqp_8h.html#a127a96e09108f503cca20256eaa4ddff">Boolean</a> valid_subcorpus_name </td>
           <td>(</td>
           <td class="paramtype">char *&nbsp;</td>
           <td class="paramname"> <em>corpusname</em></td>
@@ -985,7 +1014,7 @@
 </div>
 </div>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on Mon Apr 19 21:37:26 2010 for CWB by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on Fri May 14 06:56:54 2010 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

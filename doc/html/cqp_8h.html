@@ -35,13 +35,13 @@
 <li>#define <a class="el" href="cqp_8h.html#ad5235aab566e2c8017152e458a348c6f">MAXCQPFILES</a>&nbsp;&nbsp;&nbsp;20
 <dl class="el"><dd class="mdescRight">The number of file handles CQP can store in its file-array (ie max number of nested files).  <a href="#ad5235aab566e2c8017152e458a348c6f"></a><br/></dl><li>#define <a class="el" href="cqp_8h.html#a3d65e5ebeda0733ad22f5f9ea26d76f4">QUERY_BUFFER_SIZE</a>&nbsp;&nbsp;&nbsp;2048
 <dl class="el"><dd class="mdescRight">Size of the CQP query buffer.  <a href="#a3d65e5ebeda0733ad22f5f9ea26d76f4"></a><br/></dl><li>#define <a class="el" href="cqp_8h.html#add3ca9eefe3b5b754426f51d3043e579">True</a>&nbsp;&nbsp;&nbsp;1
-<li>#define <a class="el" href="cqp_8h.html#a306ebd41c0cd1303b1372c6153f0caf8">False</a>&nbsp;&nbsp;&nbsp;0
-</ul>
+<dl class="el"><dd class="mdescRight">DEPRACATED macros for Boolean true and false.  <a href="#add3ca9eefe3b5b754426f51d3043e579"></a><br/></dl><li>#define <a class="el" href="cqp_8h.html#a306ebd41c0cd1303b1372c6153f0caf8">False</a>&nbsp;&nbsp;&nbsp;0
+<dl class="el"><dd class="mdescRight">DEPRACATED macros for Boolean true and false.  <a href="#a306ebd41c0cd1303b1372c6153f0caf8"></a><br/></dl></ul>
 <h2>Typedefs</h2>
 <ul>
-<li>typedef char <a class="el" href="cqp_8h.html#a2d275961e4a2bd704dde5f6a5d27f880">Boolean</a>
-<dl class="el"><dd class="mdescRight">DEPRACATED means of storing a Boolean value.  <a href="#a2d275961e4a2bd704dde5f6a5d27f880"></a><br/></dl><li>typedef enum <a class="el" href="cqp_8h.html#af8133f43ac67e891397455f831be1225">_cyctype</a> <a class="el" href="cqp_8h.html#a5c98ff09ecea33c85a99a58ee1d2a6e6">CYCtype</a>
-<li>typedef void(* <a class="el" href="cqp_8h.html#a8ecc4f9deea63ce7ebcf018b11c59673">InterruptCheckProc</a> )(void)
+<li>typedef int <a class="el" href="cqp_8h.html#a127a96e09108f503cca20256eaa4ddff">Boolean</a>
+<dl class="el"><dd class="mdescRight">DEPRACATED means of storing a Boolean value.  <a href="#a127a96e09108f503cca20256eaa4ddff"></a><br/></dl><li>typedef enum <a class="el" href="cqp_8h.html#af8133f43ac67e891397455f831be1225">_cyctype</a> <a class="el" href="cqp_8h.html#a5c98ff09ecea33c85a99a58ee1d2a6e6">CYCtype</a>
+<dl class="el"><dd class="mdescRight">The "corpus yielding command type" type.  <a href="#a5c98ff09ecea33c85a99a58ee1d2a6e6"></a><br/></dl><li>typedef void(* <a class="el" href="cqp_8h.html#a8ecc4f9deea63ce7ebcf018b11c59673">InterruptCheckProc</a> )(void)
 <dl class="el"><dd class="mdescRight">Interrupt callback functions are of this type.  <a href="#a8ecc4f9deea63ce7ebcf018b11c59673"></a><br/></dl></ul>
 <h2>Enumerations</h2>
 <ul>
@@ -54,7 +54,8 @@
 &nbsp;&nbsp;<a class="el" href="cqp_8h.html#af8133f43ac67e891397455f831be1225a4bd3cf0696f4df9a8e1411160dc5a506">Assignment</a>
 <br/>
  }
-</ul>
+<dl class="el"><dd class="mdescRight"><p>The "corpus yielding command type" type. </p>
+ <a href="cqp_8h.html#af8133f43ac67e891397455f831be1225">More...</a><br/></dl></ul>
 <h2>Functions</h2>
 <ul>
 <li>int <a class="el" href="cqp_8h.html#a313990999a7a7c5275682411e9b58c89">initialize_cqp</a> (int argc, char **argv)
@@ -120,6 +121,8 @@
 </div>
 <div class="memdoc">
 
+<p>DEPRACATED macros for Boolean true and false. </p>
+
 <p>Referenced by <a class="el" href="corpmanag_8h.html#a133d99a40e4b51fe8cad6362e8b4e737">access_corpus()</a>, <a class="el" href="corpmanag_8c.html#ae11471eefadf9070c8c174f35647ac10">accessible()</a>, <a class="el" href="parse__actions_8h.html#a8da739ee55e71755361e95e2480aa088">after_CorpusCommand()</a>, <a class="el" href="corpmanag_8h.html#af5eed52e11c9ca3a493ab6176fb9af54">assign_temp_to_sub()</a>, <a class="el" href="corpmanag_8c.html#a5bd617c344c791d4cea751a4e043f2e3">attach_subcorpus()</a>, <a class="el" href="eval_8c.html#aadbbf692b029374646a9baf9b53e2a90">calculate_initial_matchlist_1()</a>, <a class="el" href="ranges_8h.html#a17f4d887a7131c68696a7507effd5b91">calculate_ranges()</a>, <a class="el" href="builtins_8h.html#a58b600ee9f8c217ac9a71d26ad0c59e1">call_predefined_function()</a>, <a class="el" href="output_8h.html#a3705e2e9564604bb7378a724691cb97b">catalog_corpus()</a>, <a class="el" href="corpmanag_8h.html#af79d0506b8ca791ff009faf17092d3e8">change_corpus()</a>, <a class="el" href="ranges_8h.html#a78b58ed6800e15c907fb6f0a5da0ea67">copy_intervals()</a>, <a class="el" href="ranges_8h.html#a812cfca2bde8e3c60ef44bcefd213f5e">delete_interval()</a>, <a class="el" href="ranges_8h.html#a0e580152c4bc78d99ac20ea3445c9181">delete_intervals()</a>, <a class="el" href="parse__actions_8h.html#ad4b42dd005a14bd1014115d669f993ac">do_NamedWfPattern()</a>, <a class="el" href="parse__actions_8h.html#a7e4f1cbfcc87584152e6244f53203c42">do_WordformPattern()</a>, <a class="el" href="corpmanag_8h.html#ab20d278862cada0d5427b8232a3b69ad">duplicate_corpus()</a>, <a class="el" href="corpmanag_8c.html#abc4b504862b3c36cb40aa76dd8200395">ensure_corpus_size()</a>, <a class="el" href="eval_8h.html#a1c6b9087d4b9c61e2be81a7a68e174cc">eval_bool()</a>, <a class="el" href="eval_8c.html#aaf8dd0672a1325480955ab8397b1928b">eval_constraint()</a>, <a class="el" href="targets_8h.html#a8b35d277644a38526a9dd897fe1866f0">evaluate_target()</a>, <a class="el" href="parse__actions_8h.html#a332a182ad6240cb7c95c4cc8d8096a7d">expand_dataspace()</a>, <a class="el" href="corpmanag_8c.html#ac2bc10afb97f5bafaf76b5793d0e7471">findcorpus()</a>, <a class="el" href="eval_8h.html#af29e9f19b26beddcdba87657cc915704">free_environment()</a>, <a class="el" href="eval_8c.html#aead01bf924ccdd541a9018bf1d72730e">get_leaf_value()</a>, <a class="el" href="corpmanag_8c.html#a6971e7cc89868423f1044529eb3047da">GetSystemCorpus()</a>, <a class="el" href="corpmanag_8c.html#ac15e0e3266238b8728caa182e4b4407d">initialize_cl()</a>, <a class="el" href="corpmanag_8c.html#aa57f32e05db80db43f0f9e8b97bcf08d">load_corpusnames()</a>, <a class="el" href="corpmanag_8h.html#a3567391cc22d572100bf63c0733b87ff">make_temp_corpus()</a>, <a class="el" href="eval_8c.html#abcf01813cbf1161269761c3d6a2dc239">matchfirstpattern()</a>, <a class="el" href="corpmanag_8c.html#a29e8c045958457814bbb47c44cb6383e">NewCL()</a>, <a class="el" href="output_8h.html#a14e320f7e110fa3f4c81f78a09d41335">open_input_stream()</a>, <a class="el" href="output_8h.html#a8daf0f4a91a7fb631d27c19b8f75353b">open_stream()</a>, <a class="el" href="options_8c.html#a3b63ff1af997333f51cad78bf921732a">parse_options()</a>, <a class="el" href="regex2dfa_8h.html#a69e30286442eee48a3350d6da9bcd4d8">regex2dfa()</a>, <a class="el" href="corpmanag_8h.html#ae8901e96861c947b4fa68df2c2b423de">save_subcorpus()</a>, <a class="el" href="corpmanag_8h.html#ae509346bd5e7c713d70748e9926f1cdd">save_unsaved_subcorpora()</a>, <a class="el" href="corpmanag_8h.html#a3f5760d1adaed5f55433209860c70fc1">touch_corpus()</a>, <a class="el" href="corpmanag_8c.html#a199872250b8a9f1149437795bad0fe8f">valid_subcorpus_id()</a>, and <a class="el" href="corpmanag_8h.html#aeaedbbdc6a5276d3954fc75eb60426e6">valid_subcorpus_name()</a>.</p>
 
 </div>
@@ -136,7 +139,7 @@
 <div class="memdoc">
 
 <p>The number of file handles CQP can store in its file-array (ie max number of nested files). </p>
-<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="cqp_8h.html#a7c30de93f06347a9bc939e324afd1472" title="Parses a stream for CQP query syntax.">cqp_parse_file</a> ) </dd></dl>
+<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="cqp_8h.html#a7c30de93f06347a9bc939e324afd1472" title="Parses a stream for CQP query syntax.">cqp_parse_file</a> </dd></dl>
 
 <p>Referenced by <a class="el" href="cqp_8h.html#a7c30de93f06347a9bc939e324afd1472">cqp_parse_file()</a>.</p>
 
@@ -170,17 +173,19 @@
 </div>
 <div class="memdoc">
 
+<p>DEPRACATED macros for Boolean true and false. </p>
+
 <p>Referenced by <a class="el" href="corpmanag_8h.html#a133d99a40e4b51fe8cad6362e8b4e737">access_corpus()</a>, <a class="el" href="corpmanag_8c.html#ae11471eefadf9070c8c174f35647ac10">accessible()</a>, <a class="el" href="corpmanag_8h.html#af5eed52e11c9ca3a493ab6176fb9af54">assign_temp_to_sub()</a>, <a class="el" href="corpmanag_8c.html#a5bd617c344c791d4cea751a4e043f2e3">attach_subcorpus()</a>, <a class="el" href="eval_8c.html#aadbbf692b029374646a9baf9b53e2a90">calculate_initial_matchlist_1()</a>, <a class="el" href="ranges_8h.html#a17f4d887a7131c68696a7507effd5b91">calculate_ranges()</a>, <a class="el" href="builtins_8h.html#a58b600ee9f8c217ac9a71d26ad0c59e1">call_predefined_function()</a>, <a class="el" href="output_8h.html#a3705e2e9564604bb7378a724691cb97b">catalog_corpus()</a>, <a class="el" href="corpmanag_8h.html#af79d0506b8ca791ff009faf17092d3e8">change_corpus()</a>, <a class="el" href="corpmanag_8c.html#a7ba6f73a68bee7724ef2ad17d6c2ee07">CorpusDiscard()</a>, <a class="el" href="corpmanag_8c.html#a552710b0737ca3f560ec80fbeca819a3">CorpusDiscardTMPCorpora()</a>, <a class="el" href="corpmanag_8c.html#abf18505298c819417efe87507a5f5006">CorpusSaveAll()</a>, <a class="el" href="ranges_8h.html#a0e580152c4bc78d99ac20ea3445c9181">delete_intervals()</a>, <a class="el" href="parse__actions_8h.html#ad4b42dd005a14bd1014115d669f993ac">do_NamedWfPattern()</a>, <a class="el" href="corpmanag_8h.html#a1b955ef83dbea1eee94b9406d9b646e2">drop_temp_corpora()</a>, <a class="el" href="corpmanag_8h.html#a411a4b044a2214dc19180334cbcd1601">dropcorpus()</a>, <a class="el" href="corpmanag_8h.html#ab20d278862cada0d5427b8232a3b69ad">duplicate_corpus()</a>, <a class="el" href="corpmanag_8c.html#abc4b504862b3c36cb40aa76dd8200395">ensure_corpus_size()</a>, <a class="el" href="eval_8h.html#a1c6b9087d4b9c61e2be81a7a68e174cc">eval_bool()</a>, <a class="el" href="eval_8c.html#aaf8dd0672a1325480955ab8397b1928b">eval_constraint()</a>, <a class="el" href="parse__actions_8h.html#a332a182ad6240cb7c95c4cc8d8096a7d">expand_dataspace()</a>, <a class="el" href="corpmanag_8h.html#a204af03e1c4c39f8366a65fd927ab2a6">free_corpuslist()</a>, <a class="el" href="eval_8c.html#aead01bf924ccdd541a9018bf1d72730e">get_leaf_value()</a>, <a class="el" href="corpmanag_8c.html#a6971e7cc89868423f1044529eb3047da">GetSystemCorpus()</a>, <a class="el" href="parse__actions_8h.html#a53f277e74f9797cafd18e94b3b617cd4">in_CorpusCommand()</a>, <a class="el" href="corpmanag_8c.html#aa57f32e05db80db43f0f9e8b97bcf08d">load_corpusnames()</a>, <a class="el" href="corpmanag_8h.html#a3567391cc22d572100bf63c0733b87ff">make_temp_corpus()</a>, <a class="el" href="eval_8c.html#abcf01813cbf1161269761c3d6a2dc239">matchfirstpattern()</a>, <a class="el" href="output_8h.html#a14e320f7e110fa3f4c81f78a09d41335">open_input_stream()</a>, <a class="el" href="output_8h.html#a8daf0f4a91a7fb631d27c19b8f75353b">open_stream()</a>, <a class="el" href="options_8c.html#a3b63ff1af997333f51cad78bf921732a">parse_options()</a>, <a class="el" href="regex2dfa_8h.html#a69e30286442eee48a3350d6da9bcd4d8">regex2dfa()</a>, <a class="el" href="corpmanag_8h.html#ae8901e96861c947b4fa68df2c2b423de">save_subcorpus()</a>, <a class="el" href="eval_8c.html#a6d83579b3075256f14a62888a2e4b284">simulate_dfa()</a>, <a class="el" href="corpmanag_8h.html#a3f5760d1adaed5f55433209860c70fc1">touch_corpus()</a>, <a class="el" href="corpmanag_8c.html#a199872250b8a9f1149437795bad0fe8f">valid_subcorpus_id()</a>, and <a class="el" href="corpmanag_8h.html#aeaedbbdc6a5276d3954fc75eb60426e6">valid_subcorpus_name()</a>.</p>
 
 </div>
 </div>
 <hr/><h2>Typedef Documentation</h2>
-<a class="anchor" id="a2d275961e4a2bd704dde5f6a5d27f880"></a><!-- doxytag: member="cqp.h::Boolean" ref="a2d275961e4a2bd704dde5f6a5d27f880" args="" -->
+<a class="anchor" id="a127a96e09108f503cca20256eaa4ddff"></a><!-- doxytag: member="cqp.h::Boolean" ref="a127a96e09108f503cca20256eaa4ddff" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef char <a class="el" href="cqp_8h.html#a2d275961e4a2bd704dde5f6a5d27f880">Boolean</a></td>
+          <td class="memname">typedef int <a class="el" href="cqp_8h.html#a127a96e09108f503cca20256eaa4ddff">Boolean</a></td>
         </tr>
       </table>
 </div>
@@ -200,6 +205,9 @@
       </table>
 </div>
 <div class="memdoc">
+
+<p>The "corpus yielding command type" type. </p>
+<p>Each possible value of the enumeration represents a particular "type" of command that may potentially yield a corpus. </p>
 
 </div>
 </div>
@@ -229,6 +237,9 @@
       </table>
 </div>
 <div class="memdoc">
+
+<p>The "corpus yielding command type" type. </p>
+<p>Each possible value of the enumeration represents a particular "type" of command that may potentially yield a corpus. </p>
 <dl><dt><b>Enumerator: </b></dt><dd><table border="0" cellspacing="2" cellpadding="0">
 <tr><td valign="top"><em><a class="anchor" id="af8133f43ac67e891397455f831be1225a1234ae7cc2ff60f713d12929d7da6592"></a><!-- doxytag: member="NoExpression" ref="af8133f43ac67e891397455f831be1225a1234ae7cc2ff60f713d12929d7da6592" args="" -->NoExpression</em>&nbsp;</td><td>
 </td></tr>
@@ -629,7 +640,7 @@
 </div>
 </div>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on Mon Apr 19 21:37:26 2010 for CWB by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on Fri May 14 06:56:54 2010 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

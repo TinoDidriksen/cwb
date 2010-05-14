@@ -28,6 +28,7 @@
 </div>
 <div class="contents">
 <h1>special-chars.c File Reference</h1><code>#include &lt;ctype.h&gt;</code><br/>
+<code>#include &lt;glib.h&gt;</code><br/>
 <code>#include &quot;<a class="el" href="globals_8h.html">globals.h</a>&quot;</code><br/>
 <code>#include &quot;<a class="el" href="special-chars_8h.html">special-chars.h</a>&quot;</code><br/>
 <h2>Defines</h2>
@@ -37,9 +38,11 @@
 </ul>
 <h2>Functions</h2>
 <ul>
-<li>unsigned char * <a class="el" href="special-chars_8c.html#ae86d5e60c27778b82281ac1679409512">cl_string_maptable</a> (<a class="el" href="cl_8h.html#a3502421ae8eac74673133702852dde32">CorpusCharset</a> <a class="el" href="cwb-check-input_8c.html#ab7d33183c58d7df43cc5602b9c842b37">charset</a>, int flags)
-<dl class="el"><dd class="mdescRight">Gets a specified character mapping table for use in regular expressions.  <a href="#ae86d5e60c27778b82281ac1679409512"></a><br/></dl><li>void <a class="el" href="special-chars_8c.html#a012ffb5a06680b1985a6f08e739d45b0">cl_string_canonical</a> (char *s, int flags)
-<dl class="el"><dd class="mdescRight">Converts a string to canonical form.  <a href="#a012ffb5a06680b1985a6f08e739d45b0"></a><br/></dl><li>void <a class="el" href="special-chars_8c.html#a76a88a09e8eed393bae6ef422744dd84">cl_path_adjust_os</a> (char *path)
+<li>void <a class="el" href="special-chars_8c.html#afcffa063d633b3ad129a431a46dc0178">maptable_init_identity</a> (unsigned char *maptable)
+<dl class="el"><dd class="mdescRight">Initialise an "identity" mapping table.  <a href="#afcffa063d633b3ad129a431a46dc0178"></a><br/></dl><li>void <a class="el" href="special-chars_8c.html#ad231313a944f572f2f254154b29b218d">maptable_init_both</a> (unsigned char *maptable, const unsigned char *nocasetable, const unsigned char *nodiactable)
+<dl class="el"><dd class="mdescRight">Initialise a "fold both case and diacritics" mapping table.  <a href="#ad231313a944f572f2f254154b29b218d"></a><br/></dl><li>unsigned char * <a class="el" href="special-chars_8c.html#ae86d5e60c27778b82281ac1679409512">cl_string_maptable</a> (<a class="el" href="cl_8h.html#a3502421ae8eac74673133702852dde32">CorpusCharset</a> <a class="el" href="cwb-check-input_8c.html#ab7d33183c58d7df43cc5602b9c842b37">charset</a>, int flags)
+<dl class="el"><dd class="mdescRight">Gets a specified character mapping table for use in regular expressions.  <a href="#ae86d5e60c27778b82281ac1679409512"></a><br/></dl><li>void <a class="el" href="special-chars_8c.html#a708281d7f482a1999c70df6c353d66e1">cl_string_canonical</a> (char *s, <a class="el" href="cl_8h.html#a3502421ae8eac74673133702852dde32">CorpusCharset</a> <a class="el" href="cwb-check-input_8c.html#ab7d33183c58d7df43cc5602b9c842b37">charset</a>, int flags)
+<dl class="el"><dd class="mdescRight">Converts a string to canonical form.  <a href="#a708281d7f482a1999c70df6c353d66e1"></a><br/></dl><li>void <a class="el" href="special-chars_8c.html#a76a88a09e8eed393bae6ef422744dd84">cl_path_adjust_os</a> (char *path)
 <dl class="el"><dd class="mdescRight">Standardises subdirectory-dividers in a string that represents a path, in an OS-sensitive way.  <a href="#a76a88a09e8eed393bae6ef422744dd84"></a><br/></dl><li>void <a class="el" href="special-chars_8c.html#a30fe7bb88b656c3283346265a76a797f">cl_path_adjust_independent</a> (char *path)
 <dl class="el"><dd class="mdescRight">Standardises subdirectory-dividers in a string that represents a path into Unix-like form (ie with forward-slash), regardless of what OS we are in.  <a href="#a30fe7bb88b656c3283346265a76a797f"></a><br/></dl></ul>
 <tr><td colspan="2"><div class="groupHeader"></div></td></tr>
@@ -47,17 +50,24 @@
 <br/><br/></div></td></tr>
 <ul>
 <li>char * <a class="el" href="special-chars_8c.html#a8e3a6183c822cb47f163cc14d114f0d5">cl_string_latex2iso</a> (char *str, char *result, int target_len)
-<dl class="el"><dd class="mdescRight">Converts strings with latex-style blackslash escapes for accented characters to ISO-8859-1 (Latin-1).  <a href="#a8e3a6183c822cb47f163cc14d114f0d5"></a><br/></dl></ul>
+<dl class="el"><dd class="mdescRight">Converts ASCII strings with latex-style blackslash escapes for accented characters to ISO-8859-1 (Latin-1).  <a href="#a8e3a6183c822cb47f163cc14d114f0d5"></a><br/></dl></ul>
 <h2>Variables</h2>
 <ul>
-<li>unsigned char <a class="el" href="special-chars_8c.html#a5e4cebe27c64e92dfd362a076ccfb659">latin1_nocase_tab</a> [256]
+<li>const unsigned char <a class="el" href="special-chars_8c.html#a4ded408d535e140c3ac78fc80ef2cdb9">identity_tab</a> [unknown_charset][256]
+<dl class="el"><dd class="mdescRight">Array of mapping tables used when NEITHER case NOR diacritics are to be stripped.  <a href="#a4ded408d535e140c3ac78fc80ef2cdb9"></a><br/></dl><li>int <a class="el" href="special-chars_8c.html#ab1ee167b08a952fc7127a54cd0e0050d">identity_tab_init</a> [unknown_charset] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
+<li>unsigned char <a class="el" href="special-chars_8c.html#a6189e4777f4ffea13a165e8e5a3ac33d">nocase_nodiac_tab</a> [unknown_charset][256]
+<dl class="el"><dd class="mdescRight">Array of mapping tables used when BOTH case AND diacritics are to be stripped.  <a href="#a6189e4777f4ffea13a165e8e5a3ac33d"></a><br/></dl><li>int <a class="el" href="special-chars_8c.html#a044e6db3cd5abd279287e08643090e47">nocase_nodiac_tab_init</a> [unknown_charset] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
+<li>unsigned char <a class="el" href="special-chars_8c.html#ad849bfade5bfd88a6959b24dec1743ca">nodiac_tab</a> [unknown_charset][256]
+<dl class="el"><dd class="mdescRight">Array of tables mapping a character (the index) to the equivalent character without any accents (the value).  <a href="#ad849bfade5bfd88a6959b24dec1743ca"></a><br/></dl><li>unsigned char <a class="el" href="special-chars_8c.html#a2b1f0fe1f4b5806b7192aee9dd7bce3d">nocase_tab</a> [unknown_charset][256]
+<dl class="el"><dd class="mdescRight">Array of tables mapping a character (the index) to the equivalent character in lowercase (the value).  <a href="#a2b1f0fe1f4b5806b7192aee9dd7bce3d"></a><br/></dl><li>unsigned char <a class="el" href="special-chars_8c.html#a5e4cebe27c64e92dfd362a076ccfb659">latin1_nocase_tab</a> [256]
 <dl class="el"><dd class="mdescRight">Table which translates latin-1 characters to lowercase.  <a href="#a5e4cebe27c64e92dfd362a076ccfb659"></a><br/></dl><li>unsigned char <a class="el" href="special-chars_8c.html#adc43a7ec5223ddca10d3ab81acd51591">latin1_nodiac_tab</a> [256]
 <dl class="el"><dd class="mdescRight">Table which translates latin-1 characters with diacritics to their [A-Za-z] "equivalents", including ß-&gt;s, þ-&gt;t.  <a href="#adc43a7ec5223ddca10d3ab81acd51591"></a><br/></dl><li>unsigned char <a class="el" href="special-chars_8c.html#a21f538f88dc674bf41bf8f002a24df66">cp1251_nocase_tab</a> [256]
 <dl class="el"><dd class="mdescRight">Table which translates cp-1251 (ASCII + cyrillic) characters to lowercase.  <a href="#a21f538f88dc674bf41bf8f002a24df66"></a><br/></dl><li>unsigned char <a class="el" href="special-chars_8c.html#a579861a813bf52870db4cee5d394613f">latin1_identity_tab</a> [256]
 <dl class="el"><dd class="mdescRight">Table with identity mapping of latin-1 characters (no flags).  <a href="#a579861a813bf52870db4cee5d394613f"></a><br/></dl><li>int <a class="el" href="special-chars_8c.html#af9d731cf1a66b485fe8ea8f8dbad1f0a">latin1_identity_tab_init</a> = 0
 <li>unsigned char <a class="el" href="special-chars_8c.html#aa5d1aca60919553d2e2072893bc06ea6">latin1_nocase_nodiac_tab</a> [256]
 <dl class="el"><dd class="mdescRight">Table with mapping for the cd flag for latin-1 (no case, no diacritics).  <a href="#aa5d1aca60919553d2e2072893bc06ea6"></a><br/></dl><li>int <a class="el" href="special-chars_8c.html#afc3f2cd0f93635c6b32d938e23d524fc">latin1_nocase_nodiac_tab_init</a> = 0
-</ul>
+<li>int <a class="el" href="special-chars_8c.html#ae848442188523a8c628f85e74163a10f">cl_allow_latex2iso</a> = 0
+<dl class="el"><dd class="mdescRight">Boolean switch enabling/disabling latex-style escapes.  <a href="#ae848442188523a8c628f85e74163a10f"></a><br/></dl></ul>
 <hr/><h2>Define Documentation</h2>
 <a class="anchor" id="a79272991264b5559f333f8e72cea47ee"></a><!-- doxytag: member="special&#45;chars.c::popc" ref="a79272991264b5559f333f8e72cea47ee" args="(s, p)" -->
 <div class="memitem">
@@ -184,7 +194,7 @@
 
 </div>
 </div>
-<a class="anchor" id="a012ffb5a06680b1985a6f08e739d45b0"></a><!-- doxytag: member="special&#45;chars.c::cl_string_canonical" ref="a012ffb5a06680b1985a6f08e739d45b0" args="(char *s, int flags)" -->
+<a class="anchor" id="a708281d7f482a1999c70df6c353d66e1"></a><!-- doxytag: member="special&#45;chars.c::cl_string_canonical" ref="a708281d7f482a1999c70df6c353d66e1" args="(char *s, CorpusCharset charset, int flags)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -193,6 +203,12 @@
           <td>(</td>
           <td class="paramtype">char *&nbsp;</td>
           <td class="paramname"> <em>s</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="cl_8h.html#a3502421ae8eac74673133702852dde32">CorpusCharset</a>&nbsp;</td>
+          <td class="paramname"> <em>charset</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -211,18 +227,20 @@
 
 <p>Converts a string to canonical form. </p>
 <p>The "canonical form" of a string is for use in comparisons where case-insensitivity and/or diacritic insensitivity is desired.</p>
-<p>Note that the string s is modified in place.</p>
+<p>Note that the string s is modified in place. This means it must have enough memory to cope with any expansions made in Unicode case folding. Ideally, allocate double the length of the string (since case-folding doesn't include any one -&gt; more-than-two mappings so far as I know).</p>
+<p>Note also that the arguments of this string were changed in v3.2.1. Now, a CorpusCharset is needed. This is because string canonicalising works differently in UTF8. In UTF8, the "composed" status of ALL strings is standardised (this is not dependent on flags; so this function should always be called on all strings that are going to be inserted into or searched for within, an indexed corpus; then we know we are always dealing with maximally-precomposed strings). Then case folding / accent folding is done by calling Unicode-aware functions. This is in contrast to the process for Latin1, which just uses a straightforward mapping table for both sorts of folding.</p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>s</em>&nbsp;</td><td>The string (must be Latin-1!) </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>s</em>&nbsp;</td><td>The string (currently: must be Ascii, Latin-1, or UTF8!) </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>charset</em>&nbsp;</td><td>The character set to use in standardising. If this is utf8, complex accent and/or case folding will be done, as per the unicode standard. If it is anything else, the Latin1 mapping tables will be used (currently no other ISO mapping tables are built in to the CL). </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>flags</em>&nbsp;</td><td>The flags that specify which conversions are required. Can be IGNORE_CASE and/or IGNORE_DIAC. </td></tr>
   </table>
   </dd>
 </dl>
 
-<p>References <a class="el" href="special-chars_8c.html#ae86d5e60c27778b82281ac1679409512">cl_string_maptable()</a>, and <a class="el" href="cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaabb414040abfb032911b6a01ff3917217">latin1</a>.</p>
+<p>References <a class="el" href="cl_8h.html#a9e15a3c725711d9effd623b2f3e225be">cl_free</a>, <a class="el" href="special-chars_8c.html#ae86d5e60c27778b82281ac1679409512">cl_string_maptable()</a>, <a class="el" href="cl_8h.html#a1f397c74f7f8ba3952858c70eb19d082">IGNORE_CASE</a>, <a class="el" href="cl_8h.html#a2e9f85ae8ad88191c60cf4269b9ab296">IGNORE_DIAC</a>, and <a class="el" href="cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa3946b00fe1f38206339d69285cda6b03">utf8</a>.</p>
 
-<p>Referenced by <a class="el" href="corpus_8c.html#aee476e23a98efac85d9a9288f18fe686">cl_new_corpus()</a>, <a class="el" href="regopt_8c.html#a2c4607eb8e094b7699062df8eb744058">cl_new_regex()</a>, <a class="el" href="cl_8h.html#a6eb4641e0a1e14b63f2d5f2f5b6a8cea">cl_regex2id()</a>, <a class="el" href="regopt_8c.html#a7a9d3816260f385cf56e15839c518cee">cl_regex_match()</a>, <a class="el" href="cwb-align-encode_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>, <a class="el" href="output_8h.html#ab5e1d7c16acef5e942e242f803a494f9">print_tabulation()</a>, and <a class="el" href="ranges_8h.html#aaf5f006cef0ac7c1fdb5c9d55558c11a">SortSubcorpus()</a>.</p>
+<p>Referenced by <a class="el" href="corpus_8c.html#aee476e23a98efac85d9a9288f18fe686">cl_new_corpus()</a>, <a class="el" href="regopt_8c.html#a2c4607eb8e094b7699062df8eb744058">cl_new_regex()</a>, <a class="el" href="regopt_8c.html#a7a9d3816260f385cf56e15839c518cee">cl_regex_match()</a>, <a class="el" href="cwb-align-encode_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>, <a class="el" href="output_8h.html#ab5e1d7c16acef5e942e242f803a494f9">print_tabulation()</a>, and <a class="el" href="ranges_8h.html#aaf5f006cef0ac7c1fdb5c9d55558c11a">SortSubcorpus()</a>.</p>
 
 </div>
 </div>
@@ -257,26 +275,28 @@
 </div>
 <div class="memdoc">
 
-<p>Converts strings with latex-style blackslash escapes for accented characters to ISO-8859-1 (Latin-1). </p>
+<p>Converts ASCII strings with latex-style blackslash escapes for accented characters to ISO-8859-1 (Latin-1). </p>
 <p>Syntax:</p>
 <p>\[AaOoUus..] --&gt; corresponding ISO 8859-1 character</p>
 <p>octal} --&gt; ISO 8859-1 character</p>
+<p>Note that if cl_allow_latex2iso is FALSE, this function will simply copy the input to the output. So it is always safe to call this function.</p>
+<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="special-chars_8c.html#ae848442188523a8c628f85e74163a10f" title="Boolean switch enabling/disabling latex-style escapes.">cl_allow_latex2iso</a> </dd></dl>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>str</em>&nbsp;</td><td>The string to convert. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>result</em>&nbsp;</td><td>The location to put the altered string (which should be shorter, or at least no longer than, the input string. If this parameter is NULL, space is automatically allocated for the output. result is allowed to be the same as str. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>target_len</em>&nbsp;</td><td>The maximum length of the target string. If result is NULL, then this is set automatically. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>result</em>&nbsp;</td><td>The location to put the altered string (which should be shorter, or at least no longer than, the input string). If this parameter is NULL, space is automatically allocated for the output. result is allowed to be the same as str. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>target_len</em>&nbsp;</td><td>The maximum length of the target string. If result is NULL, then this is deduced automatically. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Pointer to the altered string (if result was NULL you need to catch this and free it when no longer needed). </dd></dl>
 
-<p><dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="special-chars_8c.html#a8e3a6183c822cb47f163cc14d114f0d5" title="Converts strings with latex-style blackslash escapes for accented characters to ISO-8859-1...">cl_string_latex2iso</a></dd>
+<p><dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="special-chars_8c.html#a8e3a6183c822cb47f163cc14d114f0d5" title="Converts ASCII strings with latex-style blackslash escapes for accented characters...">cl_string_latex2iso</a></dd>
 <dd>
-<a class="el" href="special-chars_8c.html#a8e3a6183c822cb47f163cc14d114f0d5" title="Converts strings with latex-style blackslash escapes for accented characters to ISO-8859-1...">cl_string_latex2iso</a> </dd></dl>
+<a class="el" href="special-chars_8c.html#a8e3a6183c822cb47f163cc14d114f0d5" title="Converts ASCII strings with latex-style blackslash escapes for accented characters...">cl_string_latex2iso</a> </dd></dl>
 </p>
 
-<p>References <a class="el" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="special-chars_8c.html#a79272991264b5559f333f8e72cea47ee">popc</a>, and <a class="el" href="special-chars_8c.html#ae2d18d971808bf2d30394ba43f80be6d">pushc</a>.</p>
+<p>References <a class="el" href="cl_8h.html#ae848442188523a8c628f85e74163a10f">cl_allow_latex2iso</a>, <a class="el" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="cl_8h.html#a6647d75d1d69c7d25447da514b7e4682">cl_strdup()</a>, <a class="el" href="special-chars_8c.html#a79272991264b5559f333f8e72cea47ee">popc</a>, and <a class="el" href="special-chars_8c.html#ae2d18d971808bf2d30394ba43f80be6d">pushc</a>.</p>
 
 <p>Referenced by <a class="el" href="regopt_8c.html#a2c4607eb8e094b7699062df8eb744058">cl_new_regex()</a>, <a class="el" href="parse__actions_8h.html#a6cc225469d64fbddecf2d9dce7e0a28d">do_flagged_string()</a>, <a class="el" href="parse__actions_8h.html#ae325887e35ccdc326967fdbf370bbedd">do_SetVariableValue()</a>, and <a class="el" href="parse__actions_8h.html#a4335ddbb14865c031041a194e182ed92">do_XMLTag()</a>.</p>
 
@@ -310,6 +330,7 @@
 <p>Gets a specified character mapping table for use in regular expressions. </p>
 <p>Returns pointer to static mapping table for given flags (IGNORE_CASE and IGNORE_DIAC) and character set.</p>
 <p>Removed from the public API for 3.2.0 because there's no way for it to work if the CorpusCharset is UTF8. Prototype moved to <a class="el" href="special-chars_8h.html">special-chars.h</a></p>
+<p>Tables exist for all character sets, but for all except Latin1 and ASCII, they are currently identical to the ASCII tables (i.e. the awareness of case/accent relationships in the upper half of each character set have not yet been inserted).</p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>charset</em>&nbsp;</td><td>The character set of this corpus. Currently ignored. </td></tr>
@@ -317,15 +338,94 @@
   </table>
   </dd>
 </dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>Pointer to the appropriate mapping table. </dd></dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Pointer to the appropriate mapping table. DO NOT FREE this, or modify it, it is a CL-internal data blob. </dd></dl>
 
-<p>References <a class="el" href="cl_8h.html#a1f397c74f7f8ba3952858c70eb19d082">IGNORE_CASE</a>, <a class="el" href="cl_8h.html#a2e9f85ae8ad88191c60cf4269b9ab296">IGNORE_DIAC</a>, <a class="el" href="special-chars_8c.html#a579861a813bf52870db4cee5d394613f">latin1_identity_tab</a>, <a class="el" href="special-chars_8c.html#af9d731cf1a66b485fe8ea8f8dbad1f0a">latin1_identity_tab_init</a>, <a class="el" href="special-chars_8c.html#aa5d1aca60919553d2e2072893bc06ea6">latin1_nocase_nodiac_tab</a>, <a class="el" href="special-chars_8c.html#afc3f2cd0f93635c6b32d938e23d524fc">latin1_nocase_nodiac_tab_init</a>, <a class="el" href="special-chars_8c.html#a5e4cebe27c64e92dfd362a076ccfb659">latin1_nocase_tab</a>, and <a class="el" href="special-chars_8c.html#adc43a7ec5223ddca10d3ab81acd51591">latin1_nodiac_tab</a>.</p>
+<p>References <a class="el" href="cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa1fc467976b8e2979150a99beb709443e">ascii</a>, <a class="el" href="special-chars_8c.html#a4ded408d535e140c3ac78fc80ef2cdb9">identity_tab</a>, <a class="el" href="special-chars_8c.html#ab1ee167b08a952fc7127a54cd0e0050d">identity_tab_init</a>, <a class="el" href="cl_8h.html#a1f397c74f7f8ba3952858c70eb19d082">IGNORE_CASE</a>, <a class="el" href="cl_8h.html#a2e9f85ae8ad88191c60cf4269b9ab296">IGNORE_DIAC</a>, <a class="el" href="special-chars_8c.html#ad231313a944f572f2f254154b29b218d">maptable_init_both()</a>, <a class="el" href="special-chars_8c.html#afcffa063d633b3ad129a431a46dc0178">maptable_init_identity()</a>, <a class="el" href="special-chars_8c.html#a6189e4777f4ffea13a165e8e5a3ac33d">nocase_nodiac_tab</a>, <a class="el" href="special-chars_8c.html#a044e6db3cd5abd279287e08643090e47">nocase_nodiac_tab_init</a>, <a class="el" href="special-chars_8c.html#a2b1f0fe1f4b5806b7192aee9dd7bce3d">nocase_tab</a>, <a class="el" href="special-chars_8c.html#ad849bfade5bfd88a6959b24dec1743ca">nodiac_tab</a>, and <a class="el" href="cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa3946b00fe1f38206339d69285cda6b03">utf8</a>.</p>
 
-<p>Referenced by <a class="el" href="special-chars_8c.html#a012ffb5a06680b1985a6f08e739d45b0">cl_string_canonical()</a>, and <a class="el" href="ranges_8h.html#aaf5f006cef0ac7c1fdb5c9d55558c11a">SortSubcorpus()</a>.</p>
+<p>Referenced by <a class="el" href="special-chars_8c.html#a708281d7f482a1999c70df6c353d66e1">cl_string_canonical()</a>, and <a class="el" href="ranges_8h.html#aaf5f006cef0ac7c1fdb5c9d55558c11a">SortSubcorpus()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ad231313a944f572f2f254154b29b218d"></a><!-- doxytag: member="special&#45;chars.c::maptable_init_both" ref="ad231313a944f572f2f254154b29b218d" args="(unsigned char *maptable, const unsigned char *nocasetable, const unsigned char *nodiactable)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void maptable_init_both </td>
+          <td>(</td>
+          <td class="paramtype">unsigned char *&nbsp;</td>
+          <td class="paramname"> <em>maptable</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const unsigned char *&nbsp;</td>
+          <td class="paramname"> <em>nocasetable</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const unsigned char *&nbsp;</td>
+          <td class="paramname"> <em>nodiactable</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Initialise a "fold both case and diacritics" mapping table. </p>
+
+<p>Referenced by <a class="el" href="special-chars_8h.html#ae86d5e60c27778b82281ac1679409512">cl_string_maptable()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="afcffa063d633b3ad129a431a46dc0178"></a><!-- doxytag: member="special&#45;chars.c::maptable_init_identity" ref="afcffa063d633b3ad129a431a46dc0178" args="(unsigned char *maptable)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void maptable_init_identity </td>
+          <td>(</td>
+          <td class="paramtype">unsigned char *&nbsp;</td>
+          <td class="paramname"> <em>maptable</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Initialise an "identity" mapping table. </p>
+
+<p>Referenced by <a class="el" href="special-chars_8h.html#ae86d5e60c27778b82281ac1679409512">cl_string_maptable()</a>.</p>
 
 </div>
 </div>
 <hr/><h2>Variable Documentation</h2>
+<a class="anchor" id="ae848442188523a8c628f85e74163a10f"></a><!-- doxytag: member="special&#45;chars.c::cl_allow_latex2iso" ref="ae848442188523a8c628f85e74163a10f" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="special-chars_8c.html#ae848442188523a8c628f85e74163a10f">cl_allow_latex2iso</a> = 0</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Boolean switch enabling/disabling latex-style escapes. </p>
+<p>By default, it is false; if programs wish to allow these escapes they need to offer some means of changing this variable.</p>
+<p>Note that enabling this variable may cause scrambling of the string for LatinX strings where X is not 1; and may cause undefined errors for UTF8 strings. In short, you should only activate it when you are working with a corpus whose charset is Latin1.</p>
+<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="cl_8h.html#a3502421ae8eac74673133702852dde32" title="The CorpusCharset object: an identifier for one of the character sets supported by...">CorpusCharset</a> </dd></dl>
+
+<p>Referenced by <a class="el" href="special-chars_8c.html#a8e3a6183c822cb47f163cc14d114f0d5">cl_string_latex2iso()</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="a21f538f88dc674bf41bf8f002a24df66"></a><!-- doxytag: member="special&#45;chars.c::cp1251_nocase_tab" ref="a21f538f88dc674bf41bf8f002a24df66" args="[256]" -->
 <div class="memitem">
 <div class="memproto">
@@ -340,6 +440,40 @@
 <p>Table which translates cp-1251 (ASCII + cyrillic) characters to lowercase. </p>
 <p>Use cl_string_maptable to access. </p>
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="special-chars_8h.html#ae86d5e60c27778b82281ac1679409512" title="Gets a specified character mapping table for use in regular expressions.">cl_string_maptable</a> </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a4ded408d535e140c3ac78fc80ef2cdb9"></a><!-- doxytag: member="special&#45;chars.c::identity_tab" ref="a4ded408d535e140c3ac78fc80ef2cdb9" args="[unknown_charset][256]" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const unsigned char <a class="el" href="special-chars_8c.html#a4ded408d535e140c3ac78fc80ef2cdb9">identity_tab</a>[unknown_charset][256]</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Array of mapping tables used when NEITHER case NOR diacritics are to be stripped. </p>
+<p>These are composite tables: they are only generated when needed (the corresponding identity_tab_init value is a boolean indicating whether this has been done yet).</p>
+<p>Use a CorpusCharset value as the index into this array. </p>
+
+<p>Referenced by <a class="el" href="special-chars_8h.html#ae86d5e60c27778b82281ac1679409512">cl_string_maptable()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ab1ee167b08a952fc7127a54cd0e0050d"></a><!-- doxytag: member="special&#45;chars.c::identity_tab_init" ref="ab1ee167b08a952fc7127a54cd0e0050d" args="[unknown_charset]" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="special-chars_8c.html#ab1ee167b08a952fc7127a54cd0e0050d">identity_tab_init</a>[unknown_charset] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Referenced by <a class="el" href="special-chars_8h.html#ae86d5e60c27778b82281ac1679409512">cl_string_maptable()</a>.</p>
 
 </div>
 </div>
@@ -358,8 +492,6 @@
 <p>Use cl_string_maptable to access. </p>
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="special-chars_8h.html#ae86d5e60c27778b82281ac1679409512" title="Gets a specified character mapping table for use in regular expressions.">cl_string_maptable</a> </dd></dl>
 
-<p>Referenced by <a class="el" href="special-chars_8h.html#ae86d5e60c27778b82281ac1679409512">cl_string_maptable()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="af9d731cf1a66b485fe8ea8f8dbad1f0a"></a><!-- doxytag: member="special&#45;chars.c::latin1_identity_tab_init" ref="af9d731cf1a66b485fe8ea8f8dbad1f0a" args="" -->
@@ -372,8 +504,6 @@
       </table>
 </div>
 <div class="memdoc">
-
-<p>Referenced by <a class="el" href="special-chars_8h.html#ae86d5e60c27778b82281ac1679409512">cl_string_maptable()</a>.</p>
 
 </div>
 </div>
@@ -392,8 +522,6 @@
 <p>Use cl_string_maptable to access. </p>
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="special-chars_8h.html#ae86d5e60c27778b82281ac1679409512" title="Gets a specified character mapping table for use in regular expressions.">cl_string_maptable</a> </dd></dl>
 
-<p>Referenced by <a class="el" href="special-chars_8h.html#ae86d5e60c27778b82281ac1679409512">cl_string_maptable()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="afc3f2cd0f93635c6b32d938e23d524fc"></a><!-- doxytag: member="special&#45;chars.c::latin1_nocase_nodiac_tab_init" ref="afc3f2cd0f93635c6b32d938e23d524fc" args="" -->
@@ -406,8 +534,6 @@
       </table>
 </div>
 <div class="memdoc">
-
-<p>Referenced by <a class="el" href="special-chars_8h.html#ae86d5e60c27778b82281ac1679409512">cl_string_maptable()</a>.</p>
 
 </div>
 </div>
@@ -426,8 +552,6 @@
 <p>Use cl_string_maptable to access. </p>
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="special-chars_8h.html#ae86d5e60c27778b82281ac1679409512" title="Gets a specified character mapping table for use in regular expressions.">cl_string_maptable</a> </dd></dl>
 
-<p>Referenced by <a class="el" href="special-chars_8h.html#ae86d5e60c27778b82281ac1679409512">cl_string_maptable()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="adc43a7ec5223ddca10d3ab81acd51591"></a><!-- doxytag: member="special&#45;chars.c::latin1_nodiac_tab" ref="adc43a7ec5223ddca10d3ab81acd51591" args="[256]" -->
@@ -445,12 +569,86 @@
 <p>Use cl_string_maptable to access. </p>
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="special-chars_8h.html#ae86d5e60c27778b82281ac1679409512" title="Gets a specified character mapping table for use in regular expressions.">cl_string_maptable</a> </dd></dl>
 
+</div>
+</div>
+<a class="anchor" id="a6189e4777f4ffea13a165e8e5a3ac33d"></a><!-- doxytag: member="special&#45;chars.c::nocase_nodiac_tab" ref="a6189e4777f4ffea13a165e8e5a3ac33d" args="[unknown_charset][256]" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned char <a class="el" href="special-chars_8c.html#a6189e4777f4ffea13a165e8e5a3ac33d">nocase_nodiac_tab</a>[unknown_charset][256]</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Array of mapping tables used when BOTH case AND diacritics are to be stripped. </p>
+<p>These are composite tables: they are only generated when needed (the corresponding identity_tab_init value is a boolean indicating whether this has been done yet).</p>
+<p>Use a CorpusCharset value as the index into this array. </p>
+
+<p>Referenced by <a class="el" href="special-chars_8h.html#ae86d5e60c27778b82281ac1679409512">cl_string_maptable()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a044e6db3cd5abd279287e08643090e47"></a><!-- doxytag: member="special&#45;chars.c::nocase_nodiac_tab_init" ref="a044e6db3cd5abd279287e08643090e47" args="[unknown_charset]" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="special-chars_8c.html#a044e6db3cd5abd279287e08643090e47">nocase_nodiac_tab_init</a>[unknown_charset] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Referenced by <a class="el" href="special-chars_8h.html#ae86d5e60c27778b82281ac1679409512">cl_string_maptable()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a2b1f0fe1f4b5806b7192aee9dd7bce3d"></a><!-- doxytag: member="special&#45;chars.c::nocase_tab" ref="a2b1f0fe1f4b5806b7192aee9dd7bce3d" args="[unknown_charset][256]" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned char <a class="el" href="special-chars_8c.html#a2b1f0fe1f4b5806b7192aee9dd7bce3d">nocase_tab</a>[unknown_charset][256]</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Array of tables mapping a character (the index) to the equivalent character in lowercase (the value). </p>
+<p>There are as many tables as there are possible values of CorpusCharset. Moreover, tables must always be in the same order as the values of CorpusCharset are declared in.</p>
+<p>This means starting at ascii == 0 and working up through the canonical order that is observable in <a class="el" href="cl_8h.html" title="This file contains the API for the CWB &quot;Corpus Library&quot; (CL).">cl.h</a></p>
+<p>Use a CorpusCharset value as the index into this array.</p>
+<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="cl_8h.html#a3502421ae8eac74673133702852dde32" title="The CorpusCharset object: an identifier for one of the character sets supported by...">CorpusCharset</a> </dd></dl>
+
+<p>Referenced by <a class="el" href="special-chars_8h.html#ae86d5e60c27778b82281ac1679409512">cl_string_maptable()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ad849bfade5bfd88a6959b24dec1743ca"></a><!-- doxytag: member="special&#45;chars.c::nodiac_tab" ref="ad849bfade5bfd88a6959b24dec1743ca" args="[unknown_charset][256]" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned char <a class="el" href="special-chars_8c.html#ad849bfade5bfd88a6959b24dec1743ca">nodiac_tab</a>[unknown_charset][256]</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Array of tables mapping a character (the index) to the equivalent character without any accents (the value). </p>
+<p>There are as many tables as there are possible values of CorpusCharset. Moreover, tables must always be in the same order as the values of CorpusCharset are declared in.</p>
+<p>This means stareting at ascii == 0 and working up through the canonical order that is observable in <a class="el" href="cl_8h.html" title="This file contains the API for the CWB &quot;Corpus Library&quot; (CL).">cl.h</a></p>
+<p>Use a CorpusCharset value as the index into this array.</p>
+<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="cl_8h.html#a3502421ae8eac74673133702852dde32" title="The CorpusCharset object: an identifier for one of the character sets supported by...">CorpusCharset</a> </dd></dl>
+
 <p>Referenced by <a class="el" href="special-chars_8h.html#ae86d5e60c27778b82281ac1679409512">cl_string_maptable()</a>.</p>
 
 </div>
 </div>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on Mon Apr 19 21:37:25 2010 for CWB by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on Fri May 14 06:56:54 2010 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

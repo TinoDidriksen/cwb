@@ -48,7 +48,9 @@
 <dl class="el"><dd class="mdescRight">Finds grains in a disjunction group - part of the CL Regex Optimiser.  <a href="#a4ebe3946882f5e63b53e059341d0b065"></a><br/></dl><li>void <a class="el" href="regopt_8c.html#a397a8686e22c556c60ed1eaec5da19da">update_grain_buffer</a> (int front_aligned, int anchored)
 <dl class="el"><dd class="mdescRight">Updates the public grain buffer -- part of the CL Regex Optimiser.  <a href="#a397a8686e22c556c60ed1eaec5da19da"></a><br/></dl><li>void <a class="el" href="regopt_8c.html#a1b1785e702fe108639b79a3fbf6ed84f">make_jump_table</a> (void)
 <dl class="el"><dd class="mdescRight">Computes a jump table for Boyer-Moore searches.  <a href="#a1b1785e702fe108639b79a3fbf6ed84f"></a><br/></dl><li>void <a class="el" href="regopt_8c.html#a697918b2f55aa6a0fd29906a934f5836">regopt_data_copy_to_regex_object</a> (<a class="el" href="struct___c_l___regex.html">CL_Regex</a> rx)
-<dl class="el"><dd class="mdescRight">Internal regopt function: copies optimiser data from internal global variables to the member variables of argument CL_Regex object.  <a href="#a697918b2f55aa6a0fd29906a934f5836"></a><br/></dl></ul>
+<dl class="el"><dd class="mdescRight">Internal regopt function: copies optimiser data from internal global variables to the member variables of argument CL_Regex object.  <a href="#a697918b2f55aa6a0fd29906a934f5836"></a><br/></dl><li>void <a class="el" href="regopt_8c.html#a5e4fbd44e2df4d0c89bc3d4633833dd1">cl_regopt_count_reset</a> (void)
+<dl class="el"><dd class="mdescRight">Reset the "success counter" for optimised regexes.  <a href="#a5e4fbd44e2df4d0c89bc3d4633833dd1"></a><br/></dl><li>int <a class="el" href="regopt_8c.html#ac579f14edd519c3f2aa4a4cb33c76fcb">cl_regopt_count_get</a> (void)
+<dl class="el"><dd class="mdescRight">Get a reading from the "success counter" for optimised regexes.  <a href="#ac579f14edd519c3f2aa4a4cb33c76fcb"></a><br/></dl></ul>
 <h2>Variables</h2>
 <ul>
 <li>char * <a class="el" href="regopt_8c.html#a17c41125f23920984f3734380cab57c4">cl_regopt_grain</a> [MAX_GRAINS]
@@ -61,8 +63,9 @@
 <dl class="el"><dd class="mdescRight">Intermediate buffer for grains.  <a href="#ae4d9d4be4e6b1ead777698efd2b39098"></a><br/></dl><li>int <a class="el" href="regopt_8c.html#a6572b918e13646e4ca08c5ce0e40ce8a">grain_buffer_grains</a> = 0
 <dl class="el"><dd class="mdescRight">The number of grains currently in the intermediate buffer.  <a href="#a6572b918e13646e4ca08c5ce0e40ce8a"></a><br/></dl><li>char <a class="el" href="regopt_8c.html#aff6734bd1a37cead5c8f5db81ed8e1f5">public_grain_data</a> [MAX_LINE_LENGTH]
 <dl class="el"><dd class="mdescRight">A buffer for grain strings.  <a href="#aff6734bd1a37cead5c8f5db81ed8e1f5"></a><br/></dl><li>char <a class="el" href="regopt_8c.html#a5f7ef246f02726564ffb216ee72bbdb7">local_grain_data</a> [MAX_LINE_LENGTH]
-<dl class="el"><dd class="mdescRight">A buffer for grain strings.  <a href="#a5f7ef246f02726564ffb216ee72bbdb7"></a><br/></dl><li>char <a class="el" href="regopt_8c.html#afda07c8975941828e9fc6d8df4d42780">cl_regex_error</a> [MAX_LINE_LENGTH]
-<dl class="el"><dd class="mdescRight">The error message from (POSIX) regex compilation are placed in this buffer if <a class="el" href="cl_8h.html#a2c4607eb8e094b7699062df8eb744058" title="Create a new CL_regex object (ie a regular expression buffer).">cl_new_regex()</a> fails.  <a href="#afda07c8975941828e9fc6d8df4d42780"></a><br/></dl></ul>
+<dl class="el"><dd class="mdescRight">A buffer for grain strings.  <a href="#a5f7ef246f02726564ffb216ee72bbdb7"></a><br/></dl><li>int <a class="el" href="regopt_8c.html#a2a1fce7eeb5bcc7601316ca301810a90">cl_regopt_successes</a> = 0
+<dl class="el"><dd class="mdescRight">A counter of how many times the "grain" system has found a match.  <a href="#a2a1fce7eeb5bcc7601316ca301810a90"></a><br/></dl><li>char <a class="el" href="regopt_8c.html#afda07c8975941828e9fc6d8df4d42780">cl_regex_error</a> [MAX_LINE_LENGTH]
+<dl class="el"><dd class="mdescRight">The error message from (PCRE) regex compilation are placed in this buffer if <a class="el" href="cl_8h.html#a2c4607eb8e094b7699062df8eb744058" title="Create a new CL_regex object (ie a regular expression buffer).">cl_new_regex()</a> fails.  <a href="#afda07c8975941828e9fc6d8df4d42780"></a><br/></dl></ul>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <p>The CL_Regex object, and the CL Regular Expression Optimiser. </p>
 <p>This is the CL front-end to POSIX regular expressions with CL semantics (most notably: CL regexes always match the entire string and NOT substrings.)</p>
@@ -88,6 +91,7 @@
 <div class="memdoc">
 
 <p>Deletes a CL_Regex object. </p>
+<p>Note that we use cl_free to deallocate the internal PCRE buffers, not pcre_free, for the simple reason that pcre_free is just a function pointer that will normally contain free, and thus we miss out on the checking that cl_free provides.</p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>rx</em>&nbsp;</td><td>The CL_Regex to delete. </td></tr>
@@ -95,7 +99,7 @@
   </dd>
 </dl>
 
-<p>References <a class="el" href="struct___c_l___regex.html#a2da1a7e0dbf0dbe41ff361876bf52235">_CL_Regex::buffer</a>, <a class="el" href="cl_8h.html#a9e15a3c725711d9effd623b2f3e225be">cl_free</a>, <a class="el" href="struct___c_l___regex.html#a343da7a5241d5dd4042b632f9c39006e">_CL_Regex::grain</a>, <a class="el" href="struct___c_l___regex.html#a809c37615b266e2fdd396ac191b9a93c">_CL_Regex::grains</a>, <a class="el" href="struct___c_l___regex.html#ab156ef2ac4fd5ff10d99ae66a846b4c2">_CL_Regex::iso_string</a>, and <a class="el" href="regcomp_8c.html#ad94d0de532eaa4fd959b8adde4d64898">regfree()</a>.</p>
+<p>References <a class="el" href="cl_8h.html#a9e15a3c725711d9effd623b2f3e225be">cl_free</a>, <a class="el" href="struct___c_l___regex.html#a0a0140b9b50c4e2d2d935f0211bcae5e">_CL_Regex::extra</a>, <a class="el" href="struct___c_l___regex.html#a343da7a5241d5dd4042b632f9c39006e">_CL_Regex::grain</a>, <a class="el" href="struct___c_l___regex.html#a809c37615b266e2fdd396ac191b9a93c">_CL_Regex::grains</a>, <a class="el" href="struct___c_l___regex.html#a6e12607ff9600c7fbf261725f217ec10">_CL_Regex::haystack_buf</a>, and <a class="el" href="struct___c_l___regex.html#a133399bb3ea4f4e15df4fc72188db775">_CL_Regex::needle</a>.</p>
 
 <p>Referenced by <a class="el" href="cl_8h.html#a6eb4641e0a1e14b63f2d5f2f5b6a8cea">cl_regex2id()</a>, <a class="el" href="tree_8h.html#a5e46fd61455c86e9a9011fd5cb094fd3">free_booltree()</a>, and <a class="el" href="eval_8h.html#af29e9f19b26beddcdba87657cc915704">free_environment()</a>.</p>
 
@@ -146,7 +150,7 @@
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The new CL_Regex object, or NULL in case of error. </dd></dl>
 
-<p>References <a class="el" href="struct___c_l___regex.html#a2da1a7e0dbf0dbe41ff361876bf52235">_CL_Regex::buffer</a>, <a class="el" href="cl_8h.html#af731838e4fa831743c660972c8499a14">CDA_EBADREGEX</a>, <a class="el" href="cl_8h.html#a1fa2e2ab47bd2c689b68a78bdac22028">CDA_OK</a>, <a class="el" href="struct___c_l___regex.html#ab7d33183c58d7df43cc5602b9c842b37">_CL_Regex::charset</a>, <a class="el" href="cdaccess_8c.html#af97f2ad4a69c7d0105f9cee4a51b29b8">cl_errno</a>, <a class="el" href="cl_8h.html#a9e15a3c725711d9effd623b2f3e225be">cl_free</a>, <a class="el" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="cl_8h.html#aff1d819a01c0ea804f724a85e14dc29e">cl_regex_error</a>, <a class="el" href="regopt_8c.html#ab312a681f0a8c861a08f9d26a3f4ab95">cl_regopt_analyse()</a>, <a class="el" href="cl_8h.html#a012ffb5a06680b1985a6f08e739d45b0">cl_string_canonical()</a>, <a class="el" href="cl_8h.html#a8e3a6183c822cb47f163cc14d114f0d5">cl_string_latex2iso()</a>, <a class="el" href="struct___c_l___regex.html#ac8bf36fe0577cba66bccda3a6f7e80a4">_CL_Regex::flags</a>, <a class="el" href="struct___c_l___regex.html#a809c37615b266e2fdd396ac191b9a93c">_CL_Regex::grains</a>, <a class="el" href="cl_8h.html#a1f397c74f7f8ba3952858c70eb19d082">IGNORE_CASE</a>, <a class="el" href="cl_8h.html#a2e9f85ae8ad88191c60cf4269b9ab296">IGNORE_DIAC</a>, <a class="el" href="struct___c_l___regex.html#ab156ef2ac4fd5ff10d99ae66a846b4c2">_CL_Regex::iso_string</a>, <a class="el" href="globals_8h.html#af0f2173e3b202ddf5756531b4471dcb2">MAX_LINE_LENGTH</a>, <a class="el" href="regex_8h.html#a5fc31e6da9b77e09ea62b4544ac4767f">REG_EXTENDED</a>, <a class="el" href="regex_8h.html#abb835c7fe6f1673fc0efeff0064510ab">REG_NOSUB</a>, <a class="el" href="regcomp_8c.html#ab9ce42647bc1d700e60ac3e69fcdc8e1">regcomp()</a>, <a class="el" href="regcomp_8c.html#aaed262e2283d72e55314935fcc7d045f">regerror()</a>, and <a class="el" href="regopt_8c.html#a697918b2f55aa6a0fd29906a934f5836">regopt_data_copy_to_regex_object()</a>.</p>
+<p>References <a class="el" href="cl_8h.html#af731838e4fa831743c660972c8499a14">CDA_EBADREGEX</a>, <a class="el" href="cl_8h.html#a1fa2e2ab47bd2c689b68a78bdac22028">CDA_OK</a>, <a class="el" href="struct___c_l___regex.html#ab7d33183c58d7df43cc5602b9c842b37">_CL_Regex::charset</a>, <a class="el" href="globals_8c.html#a5c4290325b240eac5fe1542a8743286a">cl_debug</a>, <a class="el" href="cdaccess_8c.html#af97f2ad4a69c7d0105f9cee4a51b29b8">cl_errno</a>, <a class="el" href="cl_8h.html#a9e15a3c725711d9effd623b2f3e225be">cl_free</a>, <a class="el" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="cl_8h.html#aff1d819a01c0ea804f724a85e14dc29e">cl_regex_error</a>, <a class="el" href="regopt_8c.html#ab312a681f0a8c861a08f9d26a3f4ab95">cl_regopt_analyse()</a>, <a class="el" href="cl_8h.html#a708281d7f482a1999c70df6c353d66e1">cl_string_canonical()</a>, <a class="el" href="cl_8h.html#a8e3a6183c822cb47f163cc14d114f0d5">cl_string_latex2iso()</a>, <a class="el" href="struct___c_l___regex.html#a0a0140b9b50c4e2d2d935f0211bcae5e">_CL_Regex::extra</a>, <a class="el" href="struct___c_l___regex.html#ac8bf36fe0577cba66bccda3a6f7e80a4">_CL_Regex::flags</a>, <a class="el" href="struct___c_l___regex.html#a809c37615b266e2fdd396ac191b9a93c">_CL_Regex::grains</a>, <a class="el" href="struct___c_l___regex.html#a6e12607ff9600c7fbf261725f217ec10">_CL_Regex::haystack_buf</a>, <a class="el" href="cl_8h.html#a1f397c74f7f8ba3952858c70eb19d082">IGNORE_CASE</a>, <a class="el" href="cl_8h.html#a2e9f85ae8ad88191c60cf4269b9ab296">IGNORE_DIAC</a>, <a class="el" href="globals_8h.html#af0f2173e3b202ddf5756531b4471dcb2">MAX_LINE_LENGTH</a>, <a class="el" href="struct___c_l___regex.html#a133399bb3ea4f4e15df4fc72188db775">_CL_Regex::needle</a>, <a class="el" href="regopt_8c.html#a697918b2f55aa6a0fd29906a934f5836">regopt_data_copy_to_regex_object()</a>, and <a class="el" href="cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa3946b00fe1f38206339d69285cda6b03">utf8</a>.</p>
 
 <p>Referenced by <a class="el" href="cwb-scan-corpus_8c.html#afc8b08c47e1422ae98e8bed30103ff1e">add_key()</a>, <a class="el" href="cl_8h.html#a6eb4641e0a1e14b63f2d5f2f5b6a8cea">cl_regex2id()</a>, <a class="el" href="parse__actions_8h.html#a6cc225469d64fbddecf2d9dce7e0a28d">do_flagged_string()</a>, and <a class="el" href="parse__actions_8h.html#a4335ddbb14865c031041a194e182ed92">do_XMLTag()</a>.</p>
 
@@ -188,9 +192,9 @@
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Boolean: true if the regex matched, otherwise false. </dd></dl>
 
-<p>References <a class="el" href="struct___c_l___regex.html#a93e5ad5e0410fdbd7c65a09793a14cb6">_CL_Regex::anchor_end</a>, <a class="el" href="struct___c_l___regex.html#a4e3ccc6f2ec66b18f80763c9101dc2a7">_CL_Regex::anchor_start</a>, <a class="el" href="struct___c_l___regex.html#a2da1a7e0dbf0dbe41ff361876bf52235">_CL_Regex::buffer</a>, <a class="el" href="cl_8h.html#a012ffb5a06680b1985a6f08e739d45b0">cl_string_canonical()</a>, <a class="el" href="struct___c_l___regex.html#ac8bf36fe0577cba66bccda3a6f7e80a4">_CL_Regex::flags</a>, <a class="el" href="struct___c_l___regex.html#a343da7a5241d5dd4042b632f9c39006e">_CL_Regex::grain</a>, <a class="el" href="struct___c_l___regex.html#a6f097fa6018c5b24ea16507555185feb">_CL_Regex::grain_len</a>, <a class="el" href="struct___c_l___regex.html#a809c37615b266e2fdd396ac191b9a93c">_CL_Regex::grains</a>, <a class="el" href="struct___c_l___regex.html#ab156ef2ac4fd5ff10d99ae66a846b4c2">_CL_Regex::iso_string</a>, <a class="el" href="struct___c_l___regex.html#a9da424d392549ca48c495ad456441139">_CL_Regex::jumptable</a>, <a class="el" href="regex_8h.html#a1a37133027e6fa3a5f31044f9a76c5aea4cc3b232a9ce92df5523d8c464c7beb2">REG_NOMATCH</a>, and <a class="el" href="regex_8h.html#a179877eb45bb29da01e5101325554d73">regexec()</a>.</p>
+<p>References <a class="el" href="struct___c_l___regex.html#a93e5ad5e0410fdbd7c65a09793a14cb6">_CL_Regex::anchor_end</a>, <a class="el" href="struct___c_l___regex.html#a4e3ccc6f2ec66b18f80763c9101dc2a7">_CL_Regex::anchor_start</a>, <a class="el" href="struct___c_l___regex.html#ab7d33183c58d7df43cc5602b9c842b37">_CL_Regex::charset</a>, <a class="el" href="globals_8c.html#a5c4290325b240eac5fe1542a8743286a">cl_debug</a>, <a class="el" href="regopt_8c.html#a2a1fce7eeb5bcc7601316ca301810a90">cl_regopt_successes</a>, <a class="el" href="cl_8h.html#a708281d7f482a1999c70df6c353d66e1">cl_string_canonical()</a>, <a class="el" href="struct___c_l___regex.html#a0a0140b9b50c4e2d2d935f0211bcae5e">_CL_Regex::extra</a>, <a class="el" href="struct___c_l___regex.html#ac8bf36fe0577cba66bccda3a6f7e80a4">_CL_Regex::flags</a>, <a class="el" href="struct___c_l___regex.html#a343da7a5241d5dd4042b632f9c39006e">_CL_Regex::grain</a>, <a class="el" href="struct___c_l___regex.html#a6f097fa6018c5b24ea16507555185feb">_CL_Regex::grain_len</a>, <a class="el" href="struct___c_l___regex.html#a809c37615b266e2fdd396ac191b9a93c">_CL_Regex::grains</a>, <a class="el" href="struct___c_l___regex.html#a6e12607ff9600c7fbf261725f217ec10">_CL_Regex::haystack_buf</a>, <a class="el" href="struct___c_l___regex.html#a9da424d392549ca48c495ad456441139">_CL_Regex::jumptable</a>, and <a class="el" href="struct___c_l___regex.html#a133399bb3ea4f4e15df4fc72188db775">_CL_Regex::needle</a>.</p>
 
-<p>Referenced by <a class="el" href="eval_8h.html#a1c6b9087d4b9c61e2be81a7a68e174cc">eval_bool()</a>, <a class="el" href="eval_8c.html#aaf8dd0672a1325480955ab8397b1928b">eval_constraint()</a>, <a class="el" href="cwb-scan-corpus_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>, and <a class="el" href="eval_8c.html#abcf01813cbf1161269761c3d6a2dc239">matchfirstpattern()</a>.</p>
+<p>Referenced by <a class="el" href="cl_8h.html#a6eb4641e0a1e14b63f2d5f2f5b6a8cea">cl_regex2id()</a>, <a class="el" href="eval_8h.html#a1c6b9087d4b9c61e2be81a7a68e174cc">eval_bool()</a>, <a class="el" href="eval_8c.html#aaf8dd0672a1325480955ab8397b1928b">eval_constraint()</a>, <a class="el" href="cwb-scan-corpus_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>, and <a class="el" href="eval_8c.html#abcf01813cbf1161269761c3d6a2dc239">matchfirstpattern()</a>.</p>
 
 </div>
 </div>
@@ -261,6 +265,61 @@
 
 </div>
 </div>
+<a class="anchor" id="ac579f14edd519c3f2aa4a4cb33c76fcb"></a><!-- doxytag: member="regopt.c::cl_regopt_count_get" ref="ac579f14edd519c3f2aa4a4cb33c76fcb" args="(void)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int cl_regopt_count_get </td>
+          <td>(</td>
+          <td class="paramtype">void&nbsp;</td>
+          <td class="paramname"></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Get a reading from the "success counter" for optimised regexes. </p>
+<p>The counter is incremented by 1 every time the "grain" system is used to get a match successfully, avoiding use of the external regex library which is the fallback.</p>
+<p>Usage:</p>
+<p><a class="el" href="cl_8h.html#a5e4fbd44e2df4d0c89bc3d4633833dd1" title="Reset the &quot;success counter&quot; for optimised regexes.">cl_regopt_count_reset()</a>;</p>
+<p>for (i = 0, hits = 0; i &lt; n; i++) if (cl_regex_match(rx, haystacks[i])) hits++;</p>
+<p>fprintf(stderr, "Found %d matches, %d of them using the regopt system", hits, <a class="el" href="cl_8h.html#ac579f14edd519c3f2aa4a4cb33c76fcb" title="Get a reading from the &quot;success counter&quot; for optimised regexes.">cl_regopt_count_get()</a> );</p>
+<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="regopt_8c.html#a5e4fbd44e2df4d0c89bc3d4633833dd1" title="Reset the &quot;success counter&quot; for optimised regexes.">cl_regopt_count_reset</a> </dd></dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>an integer indicating the number of times a regular expression has been matched using the regopt system of "grains", rather than by calling an external regex library. </dd></dl>
+
+<p>References <a class="el" href="regopt_8c.html#a2a1fce7eeb5bcc7601316ca301810a90">cl_regopt_successes</a>.</p>
+
+<p>Referenced by <a class="el" href="cl_8h.html#a6eb4641e0a1e14b63f2d5f2f5b6a8cea">cl_regex2id()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a5e4fbd44e2df4d0c89bc3d4633833dd1"></a><!-- doxytag: member="regopt.c::cl_regopt_count_reset" ref="a5e4fbd44e2df4d0c89bc3d4633833dd1" args="(void)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cl_regopt_count_reset </td>
+          <td>(</td>
+          <td class="paramtype">void&nbsp;</td>
+          <td class="paramname"></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Reset the "success counter" for optimised regexes. </p>
+
+<p>References <a class="el" href="regopt_8c.html#a2a1fce7eeb5bcc7601316ca301810a90">cl_regopt_successes</a>.</p>
+
+<p>Referenced by <a class="el" href="cl_8h.html#a6eb4641e0a1e14b63f2d5f2f5b6a8cea">cl_regex2id()</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="a9f79b3c3dcb006c8f3414cd6465ba7ec"></a><!-- doxytag: member="regopt.c::is_safe_char" ref="a9f79b3c3dcb006c8f3414cd6465ba7ec" args="(unsigned char c)" -->
 <div class="memitem">
 <div class="memproto">
@@ -278,9 +337,11 @@
 <div class="memdoc">
 
 <p>Is the given character a 'safe' character which will only match itself in a regex? </p>
+<p>What counts as safe: A to Z, a to z, 0 to 9, minus, quote marks, percent, ampersand, slashes, excl mark, colon, semi colon, character, underscore, any value over 0x7f.</p>
+<p>What counts as not safe therefore includes: brackets, braces, square brackets; questionmark, plus, and star; circumflex and dollar sign; dot; hash; etc.</p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>c</em>&nbsp;</td><td>The character </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>c</em>&nbsp;</td><td>The character (cast to unsigned for the comparison. </td></tr>
   </table>
   </dd>
 </dl>
@@ -480,6 +541,7 @@
 
 <p>Reads in a wildcard - part of the CL Regex Optimiser. </p>
 <p>This function reads in a wildcard segment matching arbitrary substring (but without a '|' <a class="el" href="structsymbol.html">symbol</a>); it returns a pointer to the first character after the wildcard segment.</p>
+<p>Note that effectively, wildcard equals matchall plus kleene.</p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>mark</em>&nbsp;</td><td>Pointer to location in the regex string from which to read. </td></tr>
@@ -572,7 +634,7 @@
 </div>
 <div class="memdoc">
 
-<p>The error message from (POSIX) regex compilation are placed in this buffer if <a class="el" href="cl_8h.html#a2c4607eb8e094b7699062df8eb744058" title="Create a new CL_regex object (ie a regular expression buffer).">cl_new_regex()</a> fails. </p>
+<p>The error message from (PCRE) regex compilation are placed in this buffer if <a class="el" href="cl_8h.html#a2c4607eb8e094b7699062df8eb744058" title="Create a new CL_regex object (ie a regular expression buffer).">cl_new_regex()</a> fails. </p>
 <p>This global variable is part of the CL_Regex object's API. </p>
 
 <p>Referenced by <a class="el" href="regopt_8c.html#a2c4607eb8e094b7699062df8eb744058">cl_new_regex()</a>, and <a class="el" href="cl_8h.html#a6eb4641e0a1e14b63f2d5f2f5b6a8cea">cl_regex2id()</a>.</p>
@@ -682,6 +744,24 @@
 
 </div>
 </div>
+<a class="anchor" id="a2a1fce7eeb5bcc7601316ca301810a90"></a><!-- doxytag: member="regopt.c::cl_regopt_successes" ref="a2a1fce7eeb5bcc7601316ca301810a90" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="regopt_8c.html#a2a1fce7eeb5bcc7601316ca301810a90">cl_regopt_successes</a> = 0</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>A counter of how many times the "grain" system has found a match. </p>
+<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="regopt_8c.html#ac579f14edd519c3f2aa4a4cb33c76fcb" title="Get a reading from the &quot;success counter&quot; for optimised regexes.">cl_regopt_count_get</a> </dd></dl>
+
+<p>Referenced by <a class="el" href="regopt_8c.html#a7a9d3816260f385cf56e15839c518cee">cl_regex_match()</a>, <a class="el" href="regopt_8c.html#ac579f14edd519c3f2aa4a4cb33c76fcb">cl_regopt_count_get()</a>, and <a class="el" href="regopt_8c.html#a5e4fbd44e2df4d0c89bc3d4633833dd1">cl_regopt_count_reset()</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="ae4d9d4be4e6b1ead777698efd2b39098"></a><!-- doxytag: member="regopt.c::grain_buffer" ref="ae4d9d4be4e6b1ead777698efd2b39098" args="[MAX_GRAINS]" -->
 <div class="memitem">
 <div class="memproto">
@@ -694,7 +774,7 @@
 <div class="memdoc">
 
 <p>Intermediate buffer for grains. </p>
-<p>When a regex is parsed, grains for each segment are written to this intermediate buffer; if the new set of grains is better than the current one, it is copied to the global variables. </p>
+<p>When a regex is parsed, grains for each segment are written to this intermediate buffer; if the new set of grains is better than the current one, it is copied to the cl_regopt_ variables. </p>
 
 <p>Referenced by <a class="el" href="regopt_8h.html#ab312a681f0a8c861a08f9d26a3f4ab95">cl_regopt_analyse()</a>, <a class="el" href="regopt_8c.html#a4ebe3946882f5e63b53e059341d0b065">read_disjunction()</a>, and <a class="el" href="regopt_8c.html#a397a8686e22c556c60ed1eaec5da19da">update_grain_buffer()</a>.</p>
 
@@ -755,7 +835,7 @@
 </div>
 </div>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on Mon Apr 19 21:37:25 2010 for CWB by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on Fri May 14 06:56:54 2010 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>
