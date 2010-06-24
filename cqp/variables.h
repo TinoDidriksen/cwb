@@ -25,25 +25,31 @@
 
 /* ---------------------------------------------------------------------- */
 
+/** VariableItem object: an item within a variable */
 typedef struct _variable_item {
   int free;
   char *sval;
   int ival;
 } VariableItem;
 
+/**
+ * The Variable object.
+ *
+ * (Plus also VariableBuffer: the former is a pointer to the latter)
+ */
 typedef struct _variable_buf {
 
-  int valid;			/* flag whether I'm valid or not */
-  char *my_name;		/* my name */
+  int valid;              /**< flag whether I'm valid or not */
+  char *my_name;          /**< my name */
 
-  char *my_corpus;		/* name of corpus I'm valid for */
-  char *my_attribute;		/* name of attribute I'm valid for */
+  char *my_corpus;        /**< name of corpus I'm valid for */
+  char *my_attribute;     /**< name of attribute I'm valid for */
 
-  int nr_valid_items;		/* only valid after validation */
+  int nr_valid_items;     /**< only valid after validation */
   int nr_invalid_items;
   
-  int nr_items;			/* number of items */
-  VariableItem *items;		/* set of items */
+  int nr_items;           /**< number of items */
+  VariableItem *items;    /**< set of items */
   
 } VariableBuffer, *Variable;
 
@@ -52,52 +58,44 @@ extern Variable *VariableSpace;
 
 /* ---------------------------------------------------------------------- */
 
-Variable
-FindVariable(char *varname);
+/* Variable methods */
 
-int
-VariableItemMember(Variable v, char *item);
+Variable FindVariable(char *varname);
 
-int
-VariableAddItem(Variable v, char *item);
+int VariableItemMember(Variable v, char *item);
 
-int
-VariableSubtractItem(Variable v, char *item);
+int VariableAddItem(Variable v, char *item);
 
-int
-VariableDeleteItems(Variable v);
+int VariableSubtractItem(Variable v, char *item);
 
-int
-DropVariable(Variable *vp);
+int VariableDeleteItems(Variable v);
 
-Variable
-NewVariable(char *varname);
+int DropVariable(Variable *vp);
+
+Variable NewVariable(char *varname);
 
 int
 SetVariableValue(char *varName, 
-		 char operator, 
-		 char *varValues);
+                 char operator,
+                 char *varValues);
 
 /* variable iterator functions */
 void variables_iterator_new(void);
-Variable variables_iterator_next(void);	/* returns NULL at end of list */
+Variable variables_iterator_next(void);
 
 
-/* check variable's strings against corpus.attribute lexicon */
 int
 VerifyVariable(Variable v, 
-	       Corpus *corpus, 
-	       Attribute *attribute);
+               Corpus *corpus,
+               Attribute *attribute);
 
-/* get lexicon IDs of variable's strings in corpus.attribute lexicon */
 int *
 GetVariableItems(Variable v, 
-		 Corpus *corpus, Attribute *attribute, 
-		 /* returned: */
-		 int *nr_items);
+                 Corpus *corpus,
+                 Attribute *attribute,
+                 /* returned: */
+                 int *nr_items);
 
-/* returns list of pointers to variable's strings */
-char **
-GetVariableStrings(Variable v, int *nr_items);
+char **GetVariableStrings(Variable v, int *nr_items);
 
 #endif

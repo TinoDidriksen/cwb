@@ -41,13 +41,13 @@ enum _which_app { undef, cqp, cqpcl, cqpserver} which_app;
  * CGI scripts should use the new query lock mode instead
  * [ insecure and inhibit_activation are kept for compatibility; inhibit_interactives has been removed ]
  */
-int insecure;                        /* != 0 means we should not allow pipes etc. (cgi) */
-int inhibit_activation;              /* inhibit corpus activations in parser */
+int insecure;                        /**< Boolean: != 0 means we should not allow pipes etc. (cgi) */
+int inhibit_activation;              /**< Boolean: inhibit corpus activations in parser */
 
 
 /* debugging options */
 int parseonly;
-int verbose_parser;
+int verbose_parser;               /**< if true, absolutely all messages from the parser get printed */
 int show_symtab;
 int show_gconstraints;
 int show_evaltree;

@@ -181,6 +181,10 @@ NewCL(void)
 
 /* ------------------------------------------------------------ */
 
+/**
+ * Returns a FieldType enumeration corresponding to the field name
+ * indicated by its stirng argument.
+ */
 FieldType 
 field_name_to_type(char *name)
 {
@@ -199,6 +203,10 @@ field_name_to_type(char *name)
     return NoField;
 }
 
+/**
+ * Returns a pointer to an internal constant string that labels
+ * the FieldType argument.
+ */
 char *
 field_type_to_name(FieldType ft) {
   switch (ft) {
@@ -218,7 +226,9 @@ field_type_to_name(FieldType ft) {
   }
 }
 
-
+/**
+ *
+ */
 int 
 NrFieldValues(CorpusList *cl, FieldType ft)
 {
@@ -435,11 +445,24 @@ LoadedCorpus(char *name,
 /* ---------------------------------------------------------------------- */
 
 /**
- * Fu
+ * Finds the pointer to the corpus with the given name.
  *
- * @param s
- * @param type
- * @param try_recursive_search
+ * When searching for s (name of corpus) strcmp() is used; no
+ * case conversion is done.
+ *
+ * If "type" is UNDEF, it returns the first
+ * corpus with matching name. Otherwise the returned corpus
+ * has the type "type".
+ *
+ * @param s                     name of the corpus to find (as string)
+ * @param type                  If this is UNDEF, all corpora are checked;
+ *                              if it is any other type, only corproa of that
+ *                              type are checked.
+ * @param try_recursive_search  Boolean: whether or not to try to find corpus
+ *                              through implicit expansion.
+ * @return                      Pointer to the CorpusList object for the
+ *                              specified corpus. NULL is returned when the
+ *                              corpus is not yet present.
  */
 CorpusList *
 findcorpus(char *s, CorpusType type, int try_recursive_search)
@@ -574,8 +597,7 @@ dropcorpus(CorpusList *cl)
       prev = prev->next;
 
     if (prev == NULL) {
-      fprintf(stderr, "%s:dropcorpus(): cl is not in list of loaded corpora\n",
-              __FILE__);
+      fprintf(stderr, "%s:dropcorpus(): cl is not in list of loaded corpora\n", __FILE__);
       cl = NULL;
     }
     else {
@@ -584,8 +606,7 @@ dropcorpus(CorpusList *cl)
     }
   }
   else {
-    fprintf(stderr, "%s:dropcorpus(): cl is not in list of loaded corpora (list empty)\n",
-            __FILE__);
+    fprintf(stderr, "%s:dropcorpus(): cl is not in list of loaded corpora (list empty)\n", __FILE__);
     cl = NULL;
   }
 
@@ -598,6 +619,25 @@ dropcorpus(CorpusList *cl)
   }
 }
 
+/**
+ * Duplicate a corpus via its CorpusList object.
+ *
+ * duplicate_corpus creates a copy of an existing corpus
+ * and casts its type to SUB. The new corpus is given the
+ * name "new_name". If a subcorpus of that name is already
+ * present, NULL is retured if force_overwrite is False. If
+ * force_overwrite is True, the old corpus is discarded.
+ *
+ * @param cl               The corpus to duplicate
+ * @param new_name         Name for the duplicated corpus.
+ * @param force_overwrite  Boolean: whether or not to force an
+ *                         overwrite if the subcorpus you are
+ *                         attempting to create already exists.
+ * @return                 NULL if you attempted to overwrite
+ *                         with force_overwrite == false.
+ *                         Otherwise, a CorpusList pointer to
+ *                         the new corpus.
+ */
 CorpusList *
 duplicate_corpus(CorpusList *cl,
                  char *new_name,
@@ -715,6 +755,19 @@ duplicate_corpus(CorpusList *cl,
   return newc;
 }
 
+/**
+ * Copy a corpus as type TEMP.
+ *
+ * make_temp_corpus makes a copy of the corpus in *cl
+ * into a corpus of type "TEMP" with name "new_name".
+ * If a temporary corpus with that name already exists,
+ * it is overwritten.
+ *
+ * @param cl         The corpus to copy.
+ * @param new_name   Name for the temporary copy.
+ * @return           NULL for error. Otherwise, a
+ *                   CorpusList pointer to the new corpus.
+ */
 CorpusList *
 make_temp_corpus(CorpusList *cl,
                  char *new_name)
@@ -808,6 +861,19 @@ make_temp_corpus(CorpusList *cl,
   return newc;
 }
 
+/**
+ * Convert a temporary corpus to a real subcorpus.
+ *
+ * assign_temp_to_sub assigns the temporary corpus in *tmp
+ * to a "real" subcorpus with name "subname". If such a
+ * subcorpus already exists, it is overwritten. The temporary
+ * corpus is deleted afterwards. The return value is the new
+ * subcorpus (which may be equal to tmp, but not necessarily).
+ *
+ * @param tmp      Temporary corpus to convert.
+ * @param subname  Name to use for new subcorpus.
+ * @return         Pointer to new subcorpus.
+ */
 CorpusList *
 assign_temp_to_sub(CorpusList *tmp, char *subname)
 {
@@ -881,6 +947,12 @@ assign_temp_to_sub(CorpusList *tmp, char *subname)
   return NULL;
 }
 
+/**
+ * Delete temproary corpora.
+ *
+ * drop_temp_corpora clears the list of corpora of all
+ * temporary stuff.
+ */
 void
 drop_temp_corpora(void)
 {
@@ -891,6 +963,7 @@ drop_temp_corpora(void)
    * since dropcorpus does the very same linear search
    * too), but keep this until I have some spare
    * time
+   * TODO
    */
   
   prev = NULL;
@@ -1653,6 +1726,9 @@ NextCorpusFromList(CorpusList *cl)
 /**
  * Assesses whether a specified corpus can be accessed.
  *
+ * That is, it makes sure that the data for corpus in
+ * "cl" is loaded and accessible.
+ *
  * @param cl  A CorpusList specifying the corpus to check.
  * @return    A boolean - true if cl can be accessed.
  */
@@ -1707,7 +1783,11 @@ search_corpus(char *name)
 }
 
 /**
- * Make a corpus accessible for searching.
+ * Make a corpus accessible for searching as the "current" corpus.
+ *
+ * change_corpus sets the current corpus to the corpus with
+ * name "name", first searching SUB corpora, then searching
+ * SYSTEM corpora.
  *
  * When a corpus is "made accessible", its name is checked for validity and
  * availability; if all is OK, set_current_corpus is called on it.
@@ -1739,17 +1819,22 @@ change_corpus(char *name, Boolean silent)
 }
 
 Boolean
-valid_subcorpus_id(char *corpusname) {
+valid_subcorpus_id(char *corpusname)
+{
   return (findcorpus(corpusname, SYSTEM, 0) ? False : True);
 }
 
+/** Checks whether corpusname is syntactically valid as a query result name */
 Boolean
-valid_subcorpus_name(char *corpusname) {
+valid_subcorpus_name(char *corpusname)
+{
   return ((split_subcorpus_name == NULL) ? False : True);
 }
 
+/** Checks whether corpusname is fully qualified (with name of mother corpus); does not imply syntatic validity */
 Boolean
-is_qualified(char *corpusname) {
+is_qualified(char *corpusname)
+{
   return (strchr(corpusname, COLON) == NULL ? 0 : 1);
 }
 
@@ -1890,6 +1975,8 @@ set_current_corpus_name(char *name, int force)
 
 /**
  * Internal function for sorting list of corpus names.
+ *
+ * @see show_corpora_files
  */
 static int
 show_corpora_files_sort(const void *p1, const void *p2)
@@ -1900,28 +1987,38 @@ show_corpora_files_sort(const void *p1, const void *p2)
   return result;
 }
 
+/**
+ * Function that does the work for show_corpora_files
+ *
+ * @see show_corpora_files
+ */
 void 
 show_corpora_files1(enum corpus_type ct)
 {
   CorpusList *cl;
-  char **list;                  /* list of corpus names */
+  char **list;                  /* list of corpus names (for qsort) */
   int i, N;
-  char initial = ' ';           /* inital character of corpus name (insert <br> before new initial letter) */
+  char initial = ' ';           /* inital character of corpus name
+                                 * (for use in case of indented list;
+                                 * insert <br> before new initial letter) */
   char label[4];
 
   if (ct == SYSTEM) {
-    if (pretty_print) printf("System corpora:\n");
     /* make list of corpus names, then qsort() and print */
-    N = 0;                      /* count nr of system corpora before allocating list */
-    for (cl = corpuslist; cl; cl = cl->next) 
-      if (cl->type == SYSTEM)  N++;
+    /* count nr of system corpora before allocating list */
+    for (cl = corpuslist, N = 0; cl; cl = cl->next)
+      if (cl->type == SYSTEM)
+        N++;
     list = (char **) cl_malloc(N * sizeof(char *)); /* allocate list */
     for (cl = corpuslist, i = 0; cl; cl = cl->next) /* compile list of corpus names */
-      if (cl->type == SYSTEM)  list[i++] = cl->name;
+      if (cl->type == SYSTEM)
+        list[i++] = cl->name;
     qsort(list, N, sizeof(char *), show_corpora_files_sort);
 
-    if (pretty_print) 
+    if (pretty_print) {
+      printf("System corpora:\n");
       start_indented_list(0,0,0);       /* now print sorted list */
+    }
     for (i = 0; i < N; i++) {
       if (pretty_print) {
         if (list[i][0] != initial) {
@@ -1941,32 +2038,36 @@ show_corpora_files1(enum corpus_type ct)
     free(list);
   }
   else if (ct == SUB) {
-    if (pretty_print) printf("Named Query Results:\n");
+    if (pretty_print)
+      printf("Named Query Results:\n");
     for (cl = corpuslist; cl; cl = cl->next)
-      if (cl->type == SUB) {
-        if (pretty_print) {
-          printf("   %c%c%c  %s:%s [%d]\n", 
+      if (cl->type == SUB)
+          printf(pretty_print ? "   %c%c%c  %s:%s [%d]\n" : "%c%c%c\t%s:%s\t%d\n",
                  cl->loaded ? 'm' : '-',
                  cl->saved ? 'd' : '-',
                  cl->needs_update ? '*' : '-',
                  cl->mother_name ? cl->mother_name : "???",
-                 cl->name, cl->size);
-        }
-        else {
-          printf("%c%c%c\t%s:%s\t%d\n", 
-                 cl->loaded ? 'm' : '-',
-                 cl->saved ? 'd' : '-',
-                 cl->needs_update ? '*' : '-',
-                 cl->mother_name ? cl->mother_name : "???",
-                 cl->name, cl->size);
-        }
-      }
+                 cl->name,
+                 cl->size);
   }
   else {
     assert(0 && "Invalid argument in show_corpora_files()<corpmanag.c>.");
   }
 }
 
+/**
+ * A function to print out a list of corpora currently available.
+ *
+ * "files" is a misnomer; it actually looks on the global list of currently
+ * loaded corpora, and prints their names.
+ *
+ * Either system corpora (SYSTEM) or subcorpora (SUB) can be shown, depending on ct. If
+ * ct is UNDEF, both are shown.
+ *
+ * For subcorpora, a bundle of other information is shown too.
+ *
+ * @param ct  Type of corpus to show (SUB, SYSTEM or UNDEF).
+ */
 void 
 show_corpora_files(enum corpus_type ct)
 {

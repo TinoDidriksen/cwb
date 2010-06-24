@@ -228,7 +228,7 @@ available via your path.
 Then manually edit config.mk to select "mingw" as the configuration file for 
 the "platform".
 
-When you have changed the config.mk file, builfing the CWB binaries is the same
+When you have changed the config.mk file, building the CWB binaries is the same
 as above:
 
         make clean

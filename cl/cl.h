@@ -677,11 +677,14 @@ char *cl_charset_name(CorpusCharset id);
 CorpusCharset cl_charset_from_name(char *name);
 char *cl_charset_name_canonical(char *name_to_check);
 
-/* the main function for which CorpusCharset "matters" is the following... */
+/* the main functions for which CorpusCharset "matters" are the following... */
 
 /* the case/diacritic string normalization features used by CL regexes and CQP (modify input string!) */
 void cl_string_canonical(char *s, CorpusCharset charset, int flags);
 /* modifies string <s> in place; flags are IGNORE_CASE and IGNORE_DIAC */
+
+/* boolean function, returns is string valid? */
+int cl_string_validate_encoding(const char *s, CorpusCharset charset);
 
 /**
  * "Dummy" charset macro for calling cl_string_canonical

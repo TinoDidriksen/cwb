@@ -201,14 +201,12 @@ Constrainttree FunctionCall(char *f_name, ActualParamList *apl);
 
 void do_Description(Context *context, int nr, char *name);
 
-Evaltree 
-do_MeetStatement(Evaltree left, 
-                 Evaltree right,
-                 Context *context);
+Evaltree do_MeetStatement(Evaltree left,
+                          Evaltree right,
+                          Context *context);
 
-Evaltree 
-do_UnionStatement(Evaltree left, 
-                  Evaltree right);
+Evaltree do_UnionStatement(Evaltree left,
+                           Evaltree right);
 
 
 void do_StructuralContext(Context *context, char *name);
@@ -249,7 +247,6 @@ void expand_dataspace(CorpusList *ds);
 void debug_output(void);
 
 /* timing query execution etc. (will do nothing if timing == False) */
-
 void do_start_timer(void);        /* call this to start the timer */
 void do_timing(char *msg);        /* call this to print elapsed time with msg (if timing == True) */
 
@@ -258,16 +255,8 @@ void do_timing(char *msg);        /* call this to print elapsed time with msg (i
 
 void do_size(CorpusList *cl, FieldType field);
 
-/* dump query result (or part of it) as TAB-delimited table of corpus positions */
 void do_dump(CorpusList *cl, int first, int last, struct Redir *rd);
 
-/* read TAB-delimited table of corpus positions and create named query result from it */
 int do_undump(char *corpname, int extension_fields, int sort_ranges, struct InputRedir *rd);
-/* acceptable values for <extension_fields> and corresponding row formats:
-   0 = match \t matchend
-   1 = match \t matchend \t target
-   2 = match \t matchend \t target \t keyword
-*/
-
 
 #endif

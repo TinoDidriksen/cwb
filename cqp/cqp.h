@@ -48,6 +48,7 @@ typedef enum _cyctype {
   NoExpression, Query, Activation, SetOperation, Assignment
 } CYCtype;
 
+/** Global variable indicating type (CYC) of last expression */
 CYCtype LastExpression;
 
 extern int reading_cqprc;

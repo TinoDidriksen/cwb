@@ -30,11 +30,13 @@
 #include "symtab.h"
 
 
-#define repeat_inf -1     /* constant which indicates 'infinite repetition' */
-#define repeat_none -2    /* constant which indicates 'no repetition'       */
+#define repeat_inf -1     /**< constant which indicates 'infinite repetition' */
+#define repeat_none -2    /**< constant which indicates 'no repetition'       */
 
+/** Number of AVStructures to put in each Patternlist */
 #define MAXPATTERNS 5000
 
+/** maximum number of EvalEnvironments iin the global array */
 #define MAXENVIRONMENT 10
 
 
@@ -105,7 +107,7 @@ typedef union c_tree {
                                                if present                        */
   }                node;
 
-  /** "constant" node in the evaluation tree                     */
+  /** "constant" node in the evaluation tree */
   struct {
     enum bnodetype type;                  /**< must be cnode                     */
     int            val;                   /**< Value of the constant: 1 or 0 for true or false */
@@ -190,7 +192,7 @@ typedef union c_tree {
 /**
  * The Constrainttree object.
  */
-typedef Constraint * Constrainttree;
+typedef Constraint *Constrainttree;
 
 
 /**
@@ -203,6 +205,7 @@ typedef struct _ActualParamList {
 } ActualParamList;
 
 
+/** Enumeration specifying different types of tree node */
 enum tnodetype { node, leaf, meet_union, tabular };
 
 enum re_ops  { re_od_concat,        /* order dependent concat.   */
@@ -222,97 +225,117 @@ typedef union e_tree *Evaltree;
 /* cross-check treemacros.h after changes of this data structure!!!
  * also check the print commands in tree.c */
 
-
+/**
+ * Underlying union for the Evaltree object.
+ *
+ * Consists of a number of anonymous-type structures
+ * (node, leaf, cooc, tab_el) that can be found in a tree.
+ *
+ * The type member is always accessible.
+ *
+ * @see tnodetype
+ */
 union e_tree {
+
+  /** What type of node does this union represent? */
   enum tnodetype type;
 
+  /** node type: node */
   struct {
     enum tnodetype type;
-    enum re_ops    op_id;      /* id_number of the RE operator */
-    Evaltree       left,       /* points to the first argument */
-                   right;      /* points to the second argument -- */
-                               /* if it exists.                    */
-    int            min,        /* minimum number of repetitions.  */
-                   max;        /* maximum number of repetitions.  */
+    enum re_ops    op_id;      /**< id_number of the RE operator */
+    Evaltree       left,       /**< points to the first argument */
+                   right;      /**< points to the second argument -- if it exists. */
+    int            min,        /**< minimum number of repetitions.  */
+                   max;        /**< maximum number of repetitions.  */
   }                node;
 
+  /** node type: leaf */
   struct {
     enum tnodetype type;
-    int            patindex;   /* index to the patternlist */
+    int            patindex;   /**< index to the patternlist */
   }                leaf;
 
+  /** node type: meet_union */
   struct {
-
     enum tnodetype type;
-    enum cooc_op op_id;
+    enum cooc_op   op_id;
     int            lw, rw;
     Attribute     *struc;
     Evaltree       left, right;
 
   }                cooc;
 
+  /** node type: tabular */
   struct {
     enum tnodetype type;
-
-    int patindex;                /* index into pattern list */
-    int min_dist;                /* minimal and maximal distance to next pattern */
-    int max_dist;
-    Evaltree       next;        /* next pattern */
+    int patindex;              /**< index into pattern list */
+    int min_dist;              /**< minimal distance to next pattern */
+    int max_dist;              /**< maximal distance to next pattern */
+    Evaltree       next;       /**< next pattern */
   }                tab_el;
 
 };
 
-/* definition of the patternlist, which builds the 'character set' for the */
-/* regular expressions of wordform patterns                                */
+/* definition of the patternlist, which builds the 'character set' for the
+ * regular expressions of wordform patterns
+ */
 
 typedef enum _avstype {
   Pattern, Tag, MatchAll, Anchor
 } AVSType;
 
+/**
+ * The AVStructure object.
+ *
+ * A union of structures with the type member always accessible.
+ */
 typedef union _avs {
 
+  /** What type of AV structure does this union represent? */
   AVSType type;
 
-  /* a matchall item */
+  /** a matchall item */
   struct {
     AVSType type;                /* MatchAll */
     LabelEntry label;
     Boolean is_target;
-    Boolean lookahead;                /* whether pattern is just a lookahead constraint */
+    Boolean lookahead;           /**< whether pattern is just a lookahead constraint */
   } matchall;
 
-  /* a constraint tree */
+  /** a constraint tree */
   struct {
     AVSType type;                /* Pattern */
     LabelEntry label;
     Constrainttree constraint;
     Boolean is_target;
-    Boolean lookahead;                /* whether pattern is just a lookahead constraint */
+    Boolean lookahead;           /**< whether pattern is just a lookahead constraint */
   } con;
 
-  /* a structure describing tag */
+  /** a structure describing tag */
   struct {
-    AVSType type;                /* Tag */
+    AVSType type;                /**< Tag */
     int is_closing;
     Attribute *attr;
-    char *constraint;                /* constraint for annotated value of region (string or regexp); NULL = no constraint */
-    int flags;                        /* flags passed to regexp or string constraint (information purposes only) */
-    CL_Regex rx;                /* if constraint is a regexp, this holds the compiled regexp; otherwise NULL */
-    int negated;                /* whether constraint is negated (!=, not matches, not contains) */
-    LabelEntry right_boundary;        /* label in RDAT namespace: contains right boundary of constraining region (in StrictRegions mode) */
+    char *constraint;            /**< constraint for annotated value of region (string or regexp); NULL = no constraint */
+    int flags;                   /**< flags passed to regexp or string constraint (information purposes only) */
+    CL_Regex rx;                 /**< if constraint is a regexp, this holds the compiled regexp; otherwise NULL */
+    int negated;                 /**< whether constraint is negated (!=, not matches, not contains) */
+    LabelEntry right_boundary;   /**< label in RDAT namespace: contains right boundary of constraining region (in StrictRegions mode) */
   } tag;
 
   /* an anchor point tag (used in subqueries) */
   struct {
-    AVSType type;                /* Anchor */
+    AVSType type;                /**< Anchor */
     int is_closing;
     FieldType field;
   } anchor;
 } AVStructure;
 
-typedef AVStructure * AVS;
+/** AVS is a pointer type for AVStructure */
+typedef AVStructure *AVS;
 
-
+/** Patternlist is an array of AVStructures */
 typedef AVStructure Patternlist[MAXPATTERNS];
 
 /* ====================================================================== */
@@ -320,18 +343,33 @@ typedef AVStructure Patternlist[MAXPATTERNS];
 enum ctxtdir { leftright, left, right };
 enum spacet { word, structure };
 
+/**
+ * The Context object.
+ *
+ * This stores information about contexts.
+ *
+ * "Context" here means the context for evaluation of a query result within
+ * a corpus. (???)
+ */
 typedef struct ctxtsp {
-  enum ctxtdir   direction;        /* direction of context expansion (if valid) */
-  enum spacet    type;                /* kind of space.                         */
-  Attribute     *attrib;        /* attribute representing the structure.  */
-  int            size;                /* size of space in number of structures. */
-  int            size2;                /* only for meet-context                  */
+  enum ctxtdir   direction;     /**< direction of context expansion (if valid).
+                                     Might be left, right, or leftright*/
+  enum spacet    type;          /**< kind of space (word or structure)         */
+  Attribute     *attrib;        /**< attribute representing the structure.     */
+  int            size;          /**< size of space in number of structures.    */
+  int            size2;         /**< only for meet-context                     */
 } Context;
 
 
 /* ====================================================================== */
 
-int eep;                            /**< eval environment pointer */
+/**
+ * Global eval environment pointer (actually an array index, not a pointer).
+ *
+ * eep contains the index of the highest currently-occupied slot within Environment.
+ * @see Environment
+ */
+int eep;
 
 /**
  * The EvalEnvironment object: environment variables for the evaluation of
@@ -373,6 +411,7 @@ typedef struct evalenv {
  */
 typedef EvalEnvironment *EEP;
 
+/** A global array of EvalEnvironment structures */
 EvalEnvironment Environment[MAXENVIRONMENT];
 
 EEP CurEnv, evalenv;

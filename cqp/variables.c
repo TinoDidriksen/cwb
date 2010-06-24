@@ -35,11 +35,16 @@
 
 /* ---------------------------------------------------------------------- */
 
+/** How many pointers to allocate space for at one time to a Variable's  ->items array*/
 #define ITEM_REALLOC 8
 
+/** How many pointers to allocate space for at one time to the gloval array VariableSpace */
 #define VARIABLE_REALLOC 16
 
+/** Number of variables in VariableArray (exported)*/
 int nr_variables = 0;
+
+/** Global array of Variables  (exported) */
 Variable *VariableSpace = NULL;
 
 
@@ -175,8 +180,7 @@ DropVariable(Variable *vp)
     }
 
   if (i >= nr_variables) {
-    fprintf(stderr, 
-            "Error #5 in variable logic. Please contact developer.\n");
+    fprintf(stderr, "Error #5 in variable logic. Please contact developer.\n");
   }
   
   *vp = NULL;
@@ -332,11 +336,19 @@ SetVariableValue(char *varName,
  */
 int variables_iterator_idx;
 
+/** Resets the variables iterator */
 void 
 variables_iterator_new(void) {
   variables_iterator_idx = 0;
 }
 
+/**
+ * Gets the next Variable pointer while iterating through the global array.
+ *
+ * Returns NULL at end of list.
+ *
+ * @see VariableSpace
+ */
 Variable 
 variables_iterator_next(void) {
   if (variables_iterator_idx < nr_variables) {
@@ -348,7 +360,7 @@ variables_iterator_next(void) {
 }
 
 
-
+/** check variable's strings against corpus.attribute lexicon */
 int
 VerifyVariable(Variable v, 
                Corpus *corpus,
@@ -407,24 +419,35 @@ VerifyVariable(Variable v,
 }
 
 
-/* comparison function for qsort() of id_list returned by GetVariableItems */
+/** comparison function for qsort() of id_list returned by GetVariableItems */
 static
 int intcompare(const void *i, const void *j)
 {
   return(*(int *)i - *(int *)j);
 }
 
+/**
+ * Get lexicon IDs of variable's strings in corpus.attribute lexicon.
+ *
+ * @param v         The Variable object.
+ * @param corpus    The corpus we are working with.
+ * @param attribute The attribute against which to verify the Variable's items
+ * @param nr_items  This will be set to the number of integers in the returned array.
+ * @return          Pointer to block of integers based on valid items from the variable;
+ *                  NULL if there were no valid items (i.e. items found in the
+ *                  attribute's lexicon).
+ */
 int *
 GetVariableItems(Variable v, 
-                 Corpus *corpus, Attribute *attribute,
+                 Corpus *corpus,
+                 Attribute *attribute,
                  /* returned: */
                  int *nr_items)
 {
+  int *items;
+  int i, ip;
+
   if (VerifyVariable(v, corpus, attribute)) {
-
-    int *items;
-    int i, ip;
-
     if (v->nr_valid_items > 0) {
       items = (int *)cl_malloc(v->nr_valid_items * sizeof(int));
       *nr_items = v->nr_valid_items;
@@ -433,8 +456,7 @@ GetVariableItems(Variable v,
       for (i = 0; i < v->nr_items; i++)
         if (!v->items[i].free && v->items[i].ival >= 0) {
           if (ip >= v->nr_valid_items)
-            fprintf(stderr,
-                    "Error #2 in variable logic. Please contact developer.\n");
+            fprintf(stderr, "Error #2 in variable logic. Please contact developer.\n");
           else {
             items[ip] = v->items[i].ival;
             ip++;
@@ -442,10 +464,9 @@ GetVariableItems(Variable v,
         }
 
       if (ip != v->nr_valid_items) 
-        fprintf(stderr,
-                "Error #3 in variable logic. Please contact developer.\n");
+        fprintf(stderr, "Error #3 in variable logic. Please contact developer.\n");
 
-      /* eval_bool() <eval.c> expects a sorted list of IDs (for binary search) */
+      /* eval_bool() expects a sorted list of IDs (for binary search) */
       qsort(items, *nr_items, sizeof(int), intcompare);
       return items;
     }
@@ -460,6 +481,7 @@ GetVariableItems(Variable v,
   }
 }
 
+/** returns list of pointers to variable's strings */
 char **
 GetVariableStrings(Variable v, 
                    /* returned: */

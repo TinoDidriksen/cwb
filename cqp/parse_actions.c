@@ -55,8 +55,14 @@
 
 /* ======================================== GLOBAL PARSER VARIABLES */
 
+/**
+ * TODO would be very useful to have a desc for this
+ *
+ * A boolean; seems to be some kind of error-indicator (set to true
+ * if a query worked, false if it didn't, things like that).
+ */
 int generate_code;
-int within_gc;
+int within_gc;                   /**< TODO would be very useful to have a desc for this */
 
 CYCtype last_cyc;                /**< type of last corpus yielding command */
 
@@ -65,14 +71,18 @@ CorpusList *old_query_corpus = NULL;
 
 int catch_unknown_ids = 0;
 
-extern FILE *yyin;
 
+/**
+ * This is used by the parser in response to CQP's "expand" operator,
+ * which incorporates context around the query hit into the match itself.
+ * Functions involved in carrying this out utilise info stored here by the parser.
+ */
 Context expansion;
-
-/** buffer for storing regex strings. As it says on the tin.
+/**
+ * Buffer for storing regex strings. As it says on the tin.
  *
  * Doesn't seem currently to be in use anywhere.
- * */
+ */
 char regex_string[1024];
 /* index into the regex string buffer, storing a current position. @ see regex_string_pos */
 int regex_string_pos;
@@ -182,13 +192,13 @@ in_CorpusCommand(char *id, CorpusList *cl)
   }
 }
 
-void after_CorpusCommand(CorpusList *cl)
+/**
+ * Set the current corpus and
+ * do the output if it was a query
+ */
+void
+after_CorpusCommand(CorpusList *cl)
 {
-  /*
-   * set the current corpus and
-   * do the output if it was a query
-   */
-
 #if defined(DEBUG_QB)
   if (QueryBufferOverflow) 
     fprintf(stderr, "+ Query Buffer overflow.\n");
@@ -249,7 +259,15 @@ void after_CorpusCommand(CorpusList *cl)
 
 /* ======================================== UnnamedCorpusCommand -> CYCommand ReStructure */
 
-CorpusList *in_UnnamedCorpusCommand(CorpusList *cl)
+/**
+ * This function is called after an UnnamedCorpusCommand rule is parsed.
+ * Seems to be a tidying=upfunction.
+ *
+ * @param cl  The result of the corpus-yielding command (first component of this syntax rule).
+ * @return    Modified valuse of cl. May be NULL.
+ */
+CorpusList *
+in_UnnamedCorpusCommand(CorpusList *cl)
 {
   CorpusList *res = NULL;
   
@@ -260,7 +278,9 @@ CorpusList *in_UnnamedCorpusCommand(CorpusList *cl)
     switch (last_cyc) {
     case Query:
       
-      assert(cl->type == TEMP);
+      /* the last command was a query */
+
+      assert(cl->type == TEMP); /* should be true since the last command was a query! */
       
       if (generate_code) {
 
@@ -268,6 +288,7 @@ CorpusList *in_UnnamedCorpusCommand(CorpusList *cl)
 
         do_timing("Query result computed"); /* timer must be started by each query execution command */
 
+        /* set the "corpus" created by the query to be the default "Last" subcorpus. */
         res = assign_temp_to_sub(cl, "Last");
       }
       else
@@ -279,16 +300,13 @@ CorpusList *in_UnnamedCorpusCommand(CorpusList *cl)
       
     case Activation:
       
-      /* it was no query, that is, an activation.
-       * We only have to copy if we want to
-       * expand the beast.
+      /* Last command was not a query, that is, it was a corpus activation.
+       * We only have to copy if we want to expand the beast.
        */
-      
       if (expansion.size > 0) {
 
         if (cl->type == SYSTEM) {
-          cqpmessage(Warning,
-                     "System corpora can't be expanded");
+          cqpmessage(Warning, "System corpora can't be expanded");
           res = cl;
         }
         else {
@@ -298,9 +316,7 @@ CorpusList *in_UnnamedCorpusCommand(CorpusList *cl)
         }
       }
       else {
-        /* a simple activation without
-         * restructuring
-         */
+        /* a simple activation without restructuring */
         res = cl;
       }
       break;
@@ -419,7 +435,8 @@ prepare_Query()
   within_gc = 0;
 }
 
-CorpusList *after_Query(CorpusList *cl)
+CorpusList *
+after_Query(CorpusList *cl)
 {
   last_cyc = Query;
 
@@ -1003,8 +1020,9 @@ do_MUQuery(Evaltree evalt, int keep_flag, int cut_value)
   return res;
 }
 
-void do_SearchPattern(Evaltree expr, /* $1 */
-                      Constrainttree constraint) /* $3 */
+void
+do_SearchPattern(Evaltree expr, /* $1 */
+                 Constrainttree constraint) /* $3 */
 {
   cqpmessage(Message, "SearchPattern");
 
@@ -2706,6 +2724,15 @@ do_AddSubVariables(char *var1Name, int add, char *var2Name)
 
 /* ======================================== PARSER UTILS */
 
+/**
+ * Get ready to parse a command.
+ *
+ * This function is called before the processing of each parsed line that is
+ * recognised as a command.
+ *
+ * Mostly it involves setting the global variables to their starting-state
+ * values.
+ */
 void
 prepare_input(void)
 {
@@ -2718,6 +2745,20 @@ prepare_input(void)
   LastExpression = NoExpression;
 }
 
+/**
+ * Expand the dataspace of a subcorpus.
+ *
+ * This is done, e.g., by the CQP-syntax "expand" command, to include context
+ * into the matches found by a query.
+ *
+ * Each corpus interval stored in the CorpusList is extended by an amount
+ * dependant on the information in the global
+ * variable "expansion", a Context object (which have been put there by the
+ * parser).
+ *
+ * @see       expansion
+ * @param cl  The subcorpus to expand.
+ */
 void
 expand_dataspace(CorpusList *cl)
 {
@@ -2725,10 +2766,10 @@ expand_dataspace(CorpusList *cl)
 
   if (cl == NULL)
     cqpmessage(Warning,
-             "The selected corpus is empty.");
+               "The selected corpus is empty.");
   else if (cl->type == SYSTEM)
     cqpmessage(Warning,
-             "You can only expand subcorpora, no system corpora (unchanged)");
+               "You can only expand subcorpora, no system corpora (unchanged)");
   else if (expansion.size > 0) {
 
     for (i = 0; i < cl->size; i++) {
@@ -2793,7 +2834,7 @@ debug_output(void)
 }
 
 
-/** local variable for timing functions */
+/** global variable for timing functions; not exported. @see do_start_timer @see do_timing */
 struct timeval timer_start_time;
 
 /**
@@ -2871,6 +2912,15 @@ do_size(CorpusList *cl, FieldType field)
   }
 }
 
+/**
+ * Dump query result (or part of it) as TAB-delimited table of corpus positions.
+ *
+ * @param cl       The result (as a subcorpus, naturally)
+ * @param first    Where in the result to begin dumping (index of cl->range)
+ * @param last     Where in the result to end dumping (index of cl->range)
+ * @param rd       Pointer to a Redir structure which contains information about
+ *                 where to dump to.
+ */
 void
 do_dump(CorpusList *cl, int first, int last, struct Redir *rd)
 {
@@ -2878,7 +2928,7 @@ do_dump(CorpusList *cl, int first, int last, struct Redir *rd)
   Range *rg;
 
   if (cl) {
-    if (! open_stream(rd, ascii)) {
+    if (! open_stream(rd, cl->corpus->charset)) {
       cqpmessage(Error, "Can't redirect output to file or pipe\n");
       return;
     }
@@ -2898,6 +2948,13 @@ do_dump(CorpusList *cl, int first, int last, struct Redir *rd)
   }
 }
 
+/** read TAB-delimited table of corpus positions and create named query result from it.
+ *
+ * acceptable values for extension_fields and corresponding row formats:
+ * 0 = match \t matchend
+ * 1 = match \t matchend \t target
+ * 2 = match \t matchend \t target \t keyword
+ */
 int
 do_undump(char *corpname, int extension_fields, int sort_ranges, struct InputRedir *rd)
 {

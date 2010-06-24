@@ -1014,12 +1014,12 @@ unsigned char nocase_tab[unknown_charset][256] = {
 
 /* following are old versions, should not be needed any longer */
 
-/**
+/* *
  * Table which translates latin-1 characters to lowercase.
  *
  * Use cl_string_maptable to access.
  * @see cl_string_maptable
- */
+ * /
 unsigned char latin1_nocase_tab[256] = {
     0,  
     1,  2,  3,  4,  5,  6,  7,  8,  9, 10,
@@ -1029,11 +1029,11 @@ unsigned char latin1_nocase_tab[256] = {
    41, 42, 43, 44, 45, 46, 47, 48, 49, 50,
    51, 52, 53, 54, 55, 56, 57, 58, 59, 60,
    61, 62, 63, 64,
-                   97, 98, 99,100,101,102, /* ABCDEF -> abcdef */
-  103,104,105,106,107,108,109,110,111,112, /* GHIJKLMNOP -> ghijklmnop */
-  113,114,115,116,117,118,119,120,121,122, /* QRSTUVWXYZ -> qrstuvwxyz */
+                   97, 98, 99,100,101,102, / * ABCDEF -> abcdef * /
+  103,104,105,106,107,108,109,110,111,112, / * GHIJKLMNOP -> ghijklmnop * /
+  113,114,115,116,117,118,119,120,121,122, / * QRSTUVWXYZ -> qrstuvwxyz * /
   
-   91, 92, 93, 94, 95, 96, 97, 98, 99,100, /* normal */
+   91, 92, 93, 94, 95, 96, 97, 98, 99,100, / * normal * /
   101,102,103,104,105,106,107,108,109,110,
   111,112,113,114,115,116,117,118,119,120,
   121,122,123,124,125,126,127,128,129,130,
@@ -1044,7 +1044,7 @@ unsigned char latin1_nocase_tab[256] = {
   171,172,173,174,175,176,177,178,179,180,
   181,182,183,184,185,186,187,188,189,190,
   191,
-      224,225,226,227,228,229,230,231,232, /* 192-222 -> x+32 but not 215 */
+      224,225,226,227,228,229,230,231,232, / * 192-222 -> x+32 but not 215 * /
   233,234,235,236,237,238,239,240,241,242,
   243,244,245,246,215,248,249,250,251,252,
   253,254,
@@ -1054,14 +1054,14 @@ unsigned char latin1_nocase_tab[256] = {
   251,252,253,254,255
 };
 
-/**
+/ **
  * Table which translates latin-1 characters
  * with diacritics to their [A-Za-z] "equivalents",
  * including ß->s, þ->t
  *
  * Use cl_string_maptable to access.
  * @see cl_string_maptable
- */
+ * /
 unsigned char latin1_nodiac_tab[256] = {
     0,  
     1,  2,  3,  4,  5,  6,  7,  8,  9, 10,
@@ -1084,23 +1084,23 @@ unsigned char latin1_nodiac_tab[256] = {
   171,172,173,174,175,176,177,178,179,180,
   181,182,183,184,185,186,187,188,189,190,
   191,
-       65, 65, 65, 65, 65, 65, 65, 67, 69, /* uppercase */
+       65, 65, 65, 65, 65, 65, 65, 67, 69, / * uppercase * /
    69, 69, 69, 73, 73, 73, 73, 68, 78, 79,
    79, 79, 79, 79,215, 79, 85, 85, 85, 85,
-   89, 84,115,                  /* thorn -> 'T', szlig -> 's' */
-               97, 97, 97, 97, 97, 97, 97, /* lowercase */
+   89, 84,115,                  / * thorn -> 'T', szlig -> 's' * /
+               97, 97, 97, 97, 97, 97, 97, / * lowercase * /
    99,101,101,101,101,105,105,105,105,100,
   110,111,111,111,111,111,247,111,117,117,
   117,117,121,116,121
 };
 
-/**
+/ *
  * Table which translates cp-1251 (ASCII +
  * cyrillic) characters to lowercase
  *
  * Use cl_string_maptable to access.
  * @see cl_string_maptable
- */
+ *
 unsigned char cp1251_nocase_tab[256] = {
     0,  
     1,  2,  3,  4,  5,  6,  7,  8,  9, 10,
@@ -1110,11 +1110,11 @@ unsigned char cp1251_nocase_tab[256] = {
    41, 42, 43, 44, 45, 46, 47, 48, 49, 50,
    51, 52, 53, 54, 55, 56, 57, 58, 59, 60,
    61, 62, 63, 64,
-                   97, 98, 99,100,101,102, /* ABCDEF -> abcdef */
-  103,104,105,106,107,108,109,110,111,112, /* GHIJKLMNOP -> ghijklmnop */
-  113,114,115,116,117,118,119,120,121,122, /* QRSTUVWXYZ -> qrstuvwxyz */
+                   97, 98, 99,100,101,102, / * ABCDEF -> abcdef * /
+  103,104,105,106,107,108,109,110,111,112, / * GHIJKLMNOP -> ghijklmnop * /
+  113,114,115,116,117,118,119,120,121,122, / * QRSTUVWXYZ -> qrstuvwxyz * /
   
-   91, 92, 93, 94, 95, 96, 97, 98, 99,100, /* normal */
+   91, 92, 93, 94, 95, 96, 97, 98, 99,100, / * normal * /
   101,102,103,104,105,106,107,108,109,110,
   111,112,113,114,115,116,117,118,119,120,
   121,122,123,124,125,126,127,144,131,130,
@@ -1133,7 +1133,7 @@ unsigned char cp1251_nocase_tab[256] = {
   251,252,253,254,255
 };
 
-/* cp-1251 (ASCII + cyrillic) diacritic-stripping is just the identity mapping */
+/ * cp-1251 (ASCII + cyrillic) diacritic-stripping is just the identity mapping */
 
 
 /*
@@ -1204,25 +1204,25 @@ unsigned char binary_nocase_tab[256] = {
 };
 ****/
 
-/**
+/* *
  * Table with identity mapping of latin-1 characters
  * (no flags)
  *
  * Use cl_string_maptable to access.
  * @see cl_string_maptable
- */
+ * /
 unsigned char latin1_identity_tab[256];
 int latin1_identity_tab_init = 0;
 
-/**
+/ **
  * Table with mapping for the %cd flag for latin-1
  * (no case, no diacritics).
  *
  * Use cl_string_maptable to access.
  * @see cl_string_maptable
- */
+ * /
 unsigned char latin1_nocase_nodiac_tab[256];
-int latin1_nocase_nodiac_tab_init = 0;
+int latin1_nocase_nodiac_tab_init = 0;*/
 
 
 
@@ -1329,9 +1329,126 @@ cl_string_maptable(CorpusCharset charset, int flags)
     }
     return latin1_identity_tab;
   }
-  // end old version */
+  end old version */
 }
 
+
+
+/**
+ * Checks the encoding of a string.
+ *
+ * This function looks for bad bytes (or byte sequences in the case of UTF8);
+ * if any are rpesent, it judges the string invalid.
+ *
+ * What counts as "bad" is of course relative to the character set that the
+ * string is encoded in - os this must be specified.
+ *
+ * @param s        Null-terminated string to check.
+ * @param charset  CorpusCharset of the string's encoding.
+ * @return         Boolean: true for valid, false for invalid.
+ */
+int
+cl_string_validate_encoding(const char *s, CorpusCharset charset)
+{
+  /* cast as unsigned string to allow hex comparisons,
+   * (but pass signed version to Glib for UTF8) */
+  unsigned char *str = (unsigned char *)s;
+
+  switch (charset) {
+  case utf8:
+    /* return using our own Boolean convention rather than Glib's */
+    return (g_utf8_validate((gchar *)str, -1, NULL) ? 1 : 0);
+
+  /* all the others are of the same pattern:
+     check each character in string, if in illegal zone, return false. */
+  case ascii:
+    for (; *str ; str++)
+      if ( *str > 0x7f )
+        return 0;
+    break;
+
+  /* character sets where anything is OK except 0x80 to 0x9f, like Latin1 */
+  case latin1:
+  case latin2:
+  case latin4:
+  case latin5:
+  case latin6:
+  case latin7:
+  case latin8:
+  case latin9:
+  case cyrillic:
+    for (; *str ; str++)
+      if (*str > 0x7f && *str < 0xa0)
+        return 0;
+    break;
+
+  /* latin3 has extra non-allowed characters */
+  case latin3:
+    for (; *str ; str++)
+      if (*str > 0x7f &&
+          ( *str < 0xa0 || *str == 0xa5 || *str == 0xae || *str == 0xbe
+                        || *str == 0xc3 || *str == 0xd0 || *str == 0xe3
+                        || *str == 0xf0
+          )
+        )
+        return 0;
+    break;
+
+  /* so does Greek! */
+  case greek:
+    for (; *str ; str++)
+      if (*str > 0x7f &&
+          ( *str < 0xa0 || *str == 0xae || *str == 0xd2 || *str == 0xff )
+        )
+        return 0;
+    break;
+
+  /* hebrew has a few more complexities */
+  case hebrew:
+    for (; *str ; str++)
+      if (*str > 0x7f &&
+          (   *str <  0xa0
+          ||  *str == 0xa1
+          || (*str >= 0xbf && *str <= 0xde)
+          ||  *str == 0xfb
+          ||  *str == 0xfc
+          ||  *str == 0xff
+          )
+        )
+        return 0;
+    break;
+
+  /* arabic has great swathes of non-allowed characters */
+  /* this may not be the most efficient set of tests */
+  case arabic:
+    for (; *str ; str++)
+      if (*str >  0x7f &&
+          (   *str <  0xa0
+          ||  *str == 0xa1
+          ||  *str == 0xa2
+          ||  *str == 0xa3
+          || (*str >= 0xa5 && *str <= 0xac)
+          || (*str >= 0xae && *str <= 0xba)
+          ||  *str == 0xbc
+          ||  *str == 0xbd
+          ||  *str == 0xbe
+          ||  *str == 0xc0
+          || (*str >= 0xdb && *str <= 0xf)
+          ||  *str >= 0xf3
+          )
+        )
+        return 0;
+    break;
+
+  default: /* unknown_charset, etc. */
+    fprintf(stderr, "CL: Error, unrecognised CorpusCharset in cl_string_validate_encoding.\n";
+    return 0;
+
+  } /* end switch */
+
+  /* if we've made it to here, the string is OK; return true. */
+  return 1;
+}
 
 
 

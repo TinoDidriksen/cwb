@@ -54,7 +54,8 @@
 
 /* ---------------------------------------------------------------------- */
 
-TabulationItem TabulationList = NULL; /* global list of tabulation items */
+/** Global list of tabulation items for use with the "tabulate" operator */
+TabulationItem TabulationList = NULL;
 
 /* ---------------------------------------------------------------------- */
 
@@ -115,10 +116,12 @@ print_corpus_info_header(CorpusList *cl,
  *
  * @see                   TEMPDIR_PATH
  * @see                   TEMP_FILENAME_BUFSIZE
- * @param tmp_nam_buffer  A buffer which will be overwritten with the name of the
- *                        temporary file. This should be at least
- *                        TEMP_FILENAME_BUFSIZE bytes in size.
- * @return                A stream (FILE *) to the opened temporary file.
+ * @param tmp_nam_buffer  A pre-allocated buffer which will be overwritten
+ *                        with the name of the temporary file. This should be at least
+ *                        TEMP_FILENAME_BUFSIZE bytes in size. If opening is unsuccessful,
+ *                        this will be set to "".
+ * @return                A stream (FILE *) to the opened temporary file, or NULL
+ *                        if unsuccessful.
  */
 FILE *
 open_temporary_file(char *tmp_name_buffer)
@@ -165,8 +168,7 @@ open_temporary_file(char *tmp_name_buffer)
 FILE *
 open_file(char *name, char *mode)
 {
-  if (name == NULL || mode == NULL || 
-      name[0] == '\0' || mode[0] == '\0')
+  if (name == NULL || mode == NULL || name[0] == '\0' || mode[0] == '\0')
     return NULL;
   else if (name[0] == '~' || (strncasecmp(name, "$home", 5) == 0)) {
 
@@ -194,35 +196,60 @@ open_file(char *name, char *mode)
     s[sp] = '\0';
     
     return fopen(s, mode);
-    
   }
   else
     return fopen(name, mode);
 }
 
 
-/* try to open pager <cmd> / if different from <tested_pager>, run a test first */
+/**
+ * Create a pipe to a new instance of a specified program to be used as
+ * an output pager.
+ *
+ * If cmd is different from the program specified in the global
+ * variable "tested_pager", run a test first.
+ *
+ * This would normally be something like "more" or "less".
+ *
+ * @see            tested_pager
+ * @see            less_charset_variable
+ * @param cmd      Program command to start pager procress.
+ * @param charset  Charset to which to set the pager-charset-environment variable
+ * @return         Writable stream for the pipe to the pager, or NULL if a
+ *                 test of the pager program failed.
+ */
 FILE *
 open_pager(char *cmd, CorpusCharset charset)
 {
   FILE *pipe;
 
   if ((tested_pager == NULL) || (strcmp(tested_pager, cmd) != 0)) {
+    /* this is a new pager, so test it */
     pipe = popen(cmd, "w");
     if ((pipe == NULL) || (pclose(pipe) != 0)) {
       return NULL;              /* new pager cmd doesn't work -> return error */
     }
     if (tested_pager != NULL)
-      free(tested_pager);
+      cl_free(tested_pager);
     tested_pager = cl_strdup(cmd);
   }
 
   /* if (less_charset_variable != "" and charset != ascii) set environment variable accordingly */
-  if (*less_charset_variable && charset != ascii) {     
-    char *new_value = "iso8859"; /* default setting is ISO-8859 */
+  if (*less_charset_variable && charset != ascii) {
+    char *new_value;
+
+    switch (charset){
+    case utf8:    new_value = "utf-8";    break;
+
+    /* TODO: insert other ISO charsets here. The strings needed for the environment val ARE NOT
+     * the same as those used internally by CWB to represent different charsets.
+     */
+
+    default:      new_value = "iso8859";  break; /* default non-ascii setting is ISO-8859 */
+    }
+
     char *current_value = getenv(less_charset_variable);
-    if (charset == utf8) 
-      new_value = "utf-8";      /* UTF-8 */
+
     /* call setenv() if variable is not set or different from desired value */
     if (!current_value || strcmp(current_value, new_value)) {
       setenv(less_charset_variable, new_value, 1);
@@ -233,6 +260,14 @@ open_pager(char *cmd, CorpusCharset charset)
   return pipe;                  /* NULL if popen() failed for some reason */
 }
 
+/**
+ * Open the stream within a Redir structure.
+ *
+ * @param rd       Redir structure to be opened.
+ * @param charset  The charset to be used. Only has an effect if the stream
+ *                 to be opened is to an output pager.
+ * @return         True for success, false for failure.
+ */
 int
 open_stream(struct Redir *rd, CorpusCharset charset)
 {
@@ -249,6 +284,7 @@ open_stream(struct Redir *rd, CorpusCharset charset)
         (rd->name[i+1] != '\0')) {
       
       if (insecure) {
+        /* set stream to NULL to force return value of 0 */
         rd->stream = NULL;
         rd->is_pipe = False;
         rd->is_paging = False;
@@ -256,7 +292,6 @@ open_stream(struct Redir *rd, CorpusCharset charset)
       else {
         
         /* we send the output to a pipe */
-
         rd->is_pipe = True;
         rd->is_paging = False;
         rd->stream = popen(rd->name+i+1, rd->mode);
@@ -265,17 +300,16 @@ open_stream(struct Redir *rd, CorpusCharset charset)
     else {
 
       /* normal output to file */
-      
       rd->is_pipe = False;
       rd->is_paging = False;
       rd->stream = open_file(rd->name, rd->mode);
-
     }
   }
-  else {
+  else { /* i.e. if rd->name is NULL */
     if (pager && paging && isatty(fileno(stdout))) {
       if (insecure) {
         cqpmessage(Error, "Insecure mode, paging not allowed.\n");
+        /* ... and default back to bare stdout */
         rd->stream = stdout;
         rd->is_paging = False;
         rd->is_pipe = False;
@@ -309,6 +343,14 @@ open_stream(struct Redir *rd, CorpusCharset charset)
   return (rd->stream == NULL ? 0 : 1);
 }
 
+/**
+ * Closes the stream within a Redir structure.
+ *
+ * @param rd  The Redir stream to close.
+ * @return    True for all OK, false if closing did not work. If rd does not
+ *            actually have an open stream, nothing is done, and that counts
+ *            as a success.
+ */
 int
 close_stream(struct Redir *rd)
 {
@@ -416,6 +458,9 @@ bp_signal_handler(int signum)
 
 /* ---------------------------------------------------------------------- */
 
+/* print_output():
+ * Ausgabe von CL, ohne Header, auf stream
+ */
 void 
 print_output(CorpusList *cl, 
              FILE *fd,
@@ -448,6 +493,7 @@ print_output(CorpusList *cl,
   }
 }
 
+/** prints matches #first..#last; use (0,-1) for entire corpus  */
 void 
 catalog_corpus(CorpusList *cl,
                struct Redir *rd,
@@ -550,6 +596,13 @@ catalog_corpus(CorpusList *cl,
   close_stream(rd);
 }
 
+/**
+ * Print a message to output (for instance a debug message).
+ *
+ * @see           MessageType
+ * @param type    Specifies what type of message (messages of some types are not always printed)/
+ * @param format  Format string (and ...) are passed as arguments to vfprintf().
+ */
 void 
 cqpmessage(MessageType type, char *format, ...)
 {
@@ -557,6 +610,7 @@ cqpmessage(MessageType type, char *format, ...)
 
   va_start(ap, format);
 
+  /* do not print MEssage unless parser is in verbose mode */
   if ((type != Message) || verbose_parser) {
     
     char *msg;
@@ -661,6 +715,7 @@ corpus_info(CorpusList *cl)
 
 /* ---------------------------------------------------------------------- */
 
+/** free global list of tabulation items (before building new one) */
 void 
 free_tabulation_list(void) {
   TabulationItem item = TabulationList;
@@ -676,6 +731,7 @@ free_tabulation_list(void) {
   TabulationList = NULL;
 }
 
+/** allocate and initialize new tabulation item */
 TabulationItem
 new_tabulation_item(void) {
   TabulationItem item = (TabulationItem) cl_malloc(sizeof(struct _TabulationItem));
@@ -691,6 +747,7 @@ new_tabulation_item(void) {
   return item;
 }
 
+/** append tabulation item to end of current list */
 void
 append_tabulation_item(TabulationItem item) {
   TabulationItem end = TabulationList;
@@ -766,8 +823,11 @@ pt_validate_anchor(CorpusList *cl, FieldType anchor) {
   return 1;
 }
 
+/* tabulate specified query result, using settings from global list of tabulation items;
+   return value indicates whether tabulation was successful (otherwise, generates error message) */
 int
-print_tabulation(CorpusList *cl, int first, int last, struct Redir *rd) {
+print_tabulation(CorpusList *cl, int first, int last, struct Redir *rd)
+{
   TabulationItem item = TabulationList;
   int current;
   

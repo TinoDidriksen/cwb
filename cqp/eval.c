@@ -1966,8 +1966,6 @@ Boolean matchfirstpattern(AVS pattern,
 }
 
 
-
-
 
 void simulate(Matchlist *matchlist, int *cut,
               int start_state, int start_offset, /* start_offset is always set to 0; no idea what it was meant for??? */
@@ -3203,7 +3201,17 @@ eval_mu_tree(Evaltree et, Matchlist* ml)
 
 /* ---------------------------------------------------------------------- */
 
-int next_environment(void)
+/**
+ * Sets up a new environment in the global array.
+ *
+ * The next slot upwards is used (and eep is incremented).
+ *
+ * @see     eep
+ * @see     Environment
+ * @return  True for all OK, false for an error (overflow of MAXENVIRONMENT).
+ */
+int
+next_environment(void)
 {
   if (eep >= MAXENVIRONMENT) {
     fprintf(stderr, "No more environments for evaluation (max %d exceeded)\n",
@@ -3246,6 +3254,10 @@ int next_environment(void)
 /**
  * Frees an evaluation environment.
  *
+ * The environment must be one currently occupied within the global array.
+ *
+ * @see            Environment
+ * @see            eep
  * @param thisenv  The eval environment to free.
  * @return         Boolean: true if the deletion went OK;
  *                 false if the environment to be freed was
@@ -3257,8 +3269,7 @@ free_environment(int thisenv)
   int i;
 
   if ((thisenv < 0) || (thisenv > eep)) {
-    fprintf(stderr, "Environment %d not occupied\n",
-            thisenv);
+    fprintf(stderr, "Environment %d not occupied\n", thisenv);
     return 0;
   }
   else {
@@ -3362,6 +3373,9 @@ show_environment(int thisenv)
   }
 }
 
+/**
+ * Frees all eval environments in the global array, and sets the eep pointer to -1
+ */
 void
 free_environments(void)
 {

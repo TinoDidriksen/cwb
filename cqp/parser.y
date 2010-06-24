@@ -355,13 +355,15 @@ synchronize(void)
 
 /* ============================================================ RULES */
 
+/* a note for the non-Bison/Yacc savvy: "epsilon" = an empty rule alternative */ 
+
 line:                                  { prepare_parse(); }
                   command              { if (generate_code)
                                            addHistoryLine();
                                          resetQueryBuffer();
                                          YYACCEPT; }
                 | ';'                 { YYACCEPT; }  /* empty command */
-                | /* eps */           { YYACCEPT; }
+                | /* epsilon */       { YYACCEPT; }
                 ;
 
 command:                                 { prepare_input(); }
@@ -771,7 +773,7 @@ TabulationRange:   Anchor
 
 OptAttributeSpec:    ID OptionalFlag
                        { $$.name = $1; $$.flags = $2; }
-                   | /* eps */
+                   | /* epsilon */
                        { $$.name = NULL; $$.flags = 0; }
                    ;
 
@@ -817,7 +819,7 @@ SortCmd:        SORT_SYM OptionalCID OptionalSortClause
 
 OptionalSortClause: 
                 SortClause              { $$ = $1; }
-              | /* eps */               { $$ = NULL; }
+              | /* epsilon */           { $$ = NULL; }
               ;
 
 SortClause:     BY_SYM ID OptionalFlag SortBoundaries SortDirection OptReverse
@@ -842,18 +844,18 @@ SortBoundaries: OptON Anchor { $$.anchor1 = $$.anchor2 = $2.anchor; $$.offset1 =
               | OptON Anchor OptELLIPSIS Anchor
                             { $$.anchor1 = $2.anchor; $$.offset1 = $2.offset;
                               $$.anchor2 = $4.anchor; $$.offset2 = $4.offset; } 
-              | /* eps */
+              | /* epsilon */
                             { $$.anchor1 = MatchField;    $$.offset1 = 0;
                               $$.anchor2 = MatchEndField; $$.offset2 = 0; }
               ;
 
-SortDirection:  ASC_SYM     { $$ = 1; }
-              | DESC_SYM    { $$ = 0; }
-              | /* eps */   { $$ = 1; }
+SortDirection:  ASC_SYM       { $$ = 1; }
+              | DESC_SYM      { $$ = 0; }
+              | /* epsilon */ { $$ = 1; }
               ;
 
-OptReverse:     REVERSE_SYM { $$ = 1; }
-              | /* eps */   { $$ = 0; }
+OptReverse:     REVERSE_SYM   { $$ = 1; }
+              | /* epsilon */ { $$ = 0; }
               ;
 
 /* ================================================== Deletions */
@@ -876,8 +878,8 @@ Reduction:        REDUCE_SYM OptionalCID TO_SYM INTEGER OptPercent
                                         }                                       
                 ;
         
-OptPercent:       '%'       { $$ = 1; }
-                | /* eps */ { $$ = 0; }
+OptPercent:       '%'           { $$ = 1; }
+                | /* epsilon */ { $$ = 0; }
                 ;
 
 Delete:           DELETE_SYM OptionalCID WITH_SYM FIELD
@@ -925,12 +927,12 @@ UndumpCmd: UNDUMP_SYM ID OptWithTargetKeyword OptAscending OptionalInputRedir
             { do_undump($2, $3, !$4, &($5)); cl_free($5.name); }
         ;
 
-OptAscending:  ASC_SYM    { $$ = 1; }
-             | /* eps */  { $$ = 0; }
+OptAscending:  ASC_SYM        { $$ = 1; }
+             | /* epsilon */  { $$ = 0; }
              ;
 
 OptWithTargetKeyword:
-          /* eps */     { $$ = 0; }
+          /* epsilon */       { $$ = 0; }
         | WITH_SYM FIELD        
           { 
             if ($2 == TargetField) { $$ = 1; }
@@ -1064,7 +1066,7 @@ XMLTag:           TAGSTART '>'          { $$ = do_XMLTag($1, 0, 0, NULL, 0); }
 RegexpOp:         MvalOp                { $$ = $1; }
                 | NEQ                   { $$ = OP_EQUAL | OP_NOT; }
                 | '='                   { $$ = OP_EQUAL; }
-                | /* eps */             { $$ = OP_EQUAL; }
+                | /* epsilon */         { $$ = OP_EQUAL; }
                 ;
 
 NamedWfPattern: OptTargetSign
@@ -1272,8 +1274,8 @@ MvalOp:   OptionalNot CONTAINS_SYM  {$$ = OP_CONTAINS | $1;}
         | OptionalNot MATCHES_SYM   {$$ = OP_MATCHES  | $1;}
 ;       
 
-OptionalNot:   NOT_SYM    {$$ = OP_NOT;}
-             | /* eps */  {$$ = 0;}
+OptionalNot:   NOT_SYM        {$$ = OP_NOT;}
+             | /* epsilon */  {$$ = 0;}
 ;
 
 RelLHS:           LabelReference        { $$ = do_LabelReference($1, 0); }  /* label reference "label.att"*/
@@ -1421,14 +1423,14 @@ TabOtherPatterns: TabOtherPatterns
                   OptDistance
                   NamedWfPattern        { $$ = add_tabular_pattern($1, &($2), $3); }
                   
-                | /* eps */             { $$ = NULL; }
+                | /* epsilon */         { $$ = NULL; }
                 ;
 
 OptDistance:      '{' INTEGER '}'       { do_OptDistance(&($$), $2, $2); }
                 | '{' INTEGER ',' OptMaxNumber '}'
                                         { do_OptDistance(&($$), $2, $4); }
                 | '{' ',' INTEGER '}'   { do_OptDistance(&($$), 0, $3); }
-                | /* eps */             { do_OptDistance(&($$), 0, 0); }
+                | /* epsilon */         { do_OptDistance(&($$), 0, 0); }
                 ;
 
 
@@ -1441,13 +1443,13 @@ AuthorizeCmd:     USER_SYM ID STRING    { add_user_to_list($2, $3); }
                 ;
 
 OptionalGrants:   '(' Grants ')'
-                | /* eps */
+                | /* epsilon */
                 ;
 
 /* add_grant_to_last_user() saves us the trouble of passing username from above */
 Grants:           Grants
                   ID                    { add_grant_to_last_user($2); }
-                | /* eps */
+                | /* epsilon */
                 ;
 
 /* macro definition */
@@ -1477,7 +1479,7 @@ Macro:            OptDEFINE_SYM MACRO_SYM
                 ;
 
 OptDEFINE_SYM:    DEFINE_SYM
-                | /* eps */
+                | /* epsilon */
                 ;
 
 /* displaying macros */
@@ -1515,25 +1517,25 @@ RandomizeCmd:     RANDOMIZE_SYM         { cl_randomize(); }  /* seed internal RN
                 | RANDOMIZE_SYM INTEGER { cl_set_seed($2); } /* set seed for internal RNG */
                 ;
 
-OtherCommand:   /* eps */
+OtherCommand:   /* epsilon */
                 ;
 
 
 /* optional symbols (as returned from flex) */
 OptionalFIELD:    FIELD                 { $$ = $1; }
-                | /* eps */             { $$ = NoField; }
+                | /* epsilon */         { $$ = NoField; }
                 ;
 OptON:            ON_SYM 
-                | /* eps */
+                | /* epsilon */
                 ;
 OptFROM:          FROM_SYM 
-                | /* eps */
+                | /* epsilon */
                 ;
 OptTO:            TO_SYM 
-                | /* eps */
+                | /* epsilon */
                 ;
 OptELLIPSIS:      ELLIPSIS 
-                | /* eps */
+                | /* epsilon */
                 ;
 
 /* anchor with optional offset:  e.g.  match:4  target:-1  matchend (== matchend:0) */

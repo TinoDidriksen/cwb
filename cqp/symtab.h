@@ -39,7 +39,7 @@
 #define LAB_RDAT    8
 
 /**
- * LabelEntry: the symbol tables are made up of two linked lists of
+ * LabelEntry: the symbol tables are made up of two linked lists of these objects.
  *
  * @see SymbolTable.
  */
@@ -54,7 +54,7 @@ typedef struct _label_entry {
 /**
  * The SymbolTable object.
  *
- * cqp-2.2 uses a global symbol table to store label references which gives erroneous
+ * cqp-2.2+ uses a global symbol table to store label references which gives erroneous
  * results for queries that contain optional elements. A proper treatment of labels requires
  * each of the simulations traversing the NFA in parallel to have its own symbol table.
  * Since the actual symbols are the same for all states, it is more efficient to split the
@@ -63,7 +63,7 @@ typedef struct _label_entry {
  * returns an _index_ into the data array. If a simulation branches -- which happens at the
  * left edge of alternatives or optional elements -- the symbol data array must be duplicated.
  *
- * A symbol table now contains multiple namespaces (accessed by flags such as LAB_RDAT
+ * A symbol table now contains multiple namespaces (accessed by flags such as LAB_RDAT)
  */
 typedef struct _symbol_table {
   LabelEntry  user;                /**< user namespace */
@@ -71,28 +71,18 @@ typedef struct _symbol_table {
   int next_index;                  /**< next free reference table index */
 } *SymbolTable;
 
-/* create new symbol table */
 SymbolTable new_symbol_table();
 
-/* delete symbol table (free all entries) */
 void delete_symbol_table(SymbolTable st);
 
-/* returns label entry, or NULL if undefined (flags are used _only_ to determine namespace) */
 LabelEntry findlabel(SymbolTable st, char *s, int flags);
 
-/* look up a label, add flags, and return label entry (NULL if undefined)
-   if create is set and label does not exist, it is added to the symbol table */
 LabelEntry labellookup(SymbolTable st, char *s, int flags, int create);
 
-/* drop a label from the symbol table (NB: its reference index can't be re-used) */
-/* WARNING: this function is not implemented (doesn't seem to be useful at the moment) */
 void droplabel(SymbolTable st, LabelEntry l);
 
-/* checks whether all used labels are defined (and vice versa)
- * [only non-special labels in the user namespace will be checked] */
 int check_labels(SymbolTable st);
 
-/* print symbol table contents (for debugging purposes) */
 void print_symbol_table(SymbolTable st);
 
 /* iterate through labels (visits only labels where the corresponding flags are set) */
@@ -108,25 +98,20 @@ LabelEntry symbol_table_iterator(LabelEntry prev, int flags);
 
 
 /**
- * The REfTab object (represents a reference table).
+ * The RefTab object (represents a reference table).
  */
 typedef struct _RefTab {
   int size;
   int *data;
 } *RefTab;
 
-/* create new reference table of required size for the given symbol table */
 RefTab new_reftab(SymbolTable st);
-/* NB If further labels are added to <st>, you must reallocate the reference table
-      to make room for the new reference indices */
 
-/* delete reference table */
+
 void delete_reftab(RefTab rt);
 
-/* copies <rt1> to <rt2>; doesn't allocate new reftab for efficiency reasons */
 void dup_reftab(RefTab rt1, RefTab rt2);
 
-/* resets all referenced corpus position to -1 -> undefine all references */
 void reset_reftab(RefTab rt);
 
 

@@ -25,32 +25,47 @@
 
 /* definition of the redirection data structures (used in the parser) */
 
+/**
+ * The Redir structure: contains information about
+ * redirecting output to a file or pipe.
+ */
 struct Redir {
-  char *name;			/* file name for redirection */
-  char *mode;			/* mode for redirection ("w" or "a") */
-  FILE *stream;
-  int is_pipe;
-  int is_paging;		/* true iff piping into default pager */
+  char *name;     /**< file name for redirection; if NULL, stdout is used */
+  char *mode;     /**< mode for redirection ("w" or "a") */
+  FILE *stream;   /**< the actual FILE object to write to. */
+  int is_pipe;    /**< true iff this is a pipe rather than a file. */
+  int is_paging;  /**< true iff piping into default pager */
 };
 
+/**
+ * The InputRedir structure: contains information about
+ * redirecting input so it reads from a file or pipe.
+ */
 struct InputRedir {
-  char *name;			/* file name for redirection */
-  FILE *stream;
-  int is_pipe;
+  char *name;     /**< file name for redirection */
+  FILE *stream;   /**< the actual FILE object to read. */
+  int is_pipe;    /**< true iff this is a pipe rather than a file. */
 };
 
-/* data structures and global list for "tabulate" command */
 
+/**
+ * TabulationItem object: contains the data structures needed by
+ * CQP's "tabulate" command.
+ *
+ * Note that TabulationItem is typedefed as a pointer-to-structure.
+ *
+ * @see TabulationList
+ */
 typedef struct _TabulationItem {
-  char *attribute_name;		/* attribute (name and handle) */
-  Attribute *attribute;
-  int attribute_type;		/* ATT_NONE = cpos, ATT_POS, ATT_STRUC */
-  int flags;			/* normalization flags (%c and %d) */
-  FieldType anchor1;		/* start of token sequence to be tabulated */
-  int offset1;
-  FieldType anchor2;		/* end of token sequence (may be identical to start) */
-  int offset2;
-  struct _TabulationItem *next;	/* next tabulation item */
+  char *attribute_name;                 /**< attribute (name) */
+  Attribute *attribute;                 /**< handle of said named attribute */
+  int attribute_type;                   /**< ATT_NONE = cpos, ATT_POS, ATT_STRUC */
+  int flags;                            /**< normalization flags (%c and %d) */
+  FieldType anchor1;                    /**< start of token sequence to be tabulated */
+  int offset1;                          /**< ??  */
+  FieldType anchor2;                    /**< end of token sequence (may be identical to start) */
+  int offset2;                          /**< ??  */
+  struct _TabulationItem *next;         /**< next tabulation item */
 } *TabulationItem;
 
 extern TabulationItem TabulationList;
@@ -61,89 +76,58 @@ extern int broken_pipe;
 
 /* ---------------------------------------------------------------------- */
 
-/* create temporary file in /tmp and open for writing; tmp_name_buffer
-must point to a pre-allocated buffer that can hold at least 32 characters; 
-if successful, returns an I/O stream object and copies the name of the 
-temporary file into tmp_name_buffer[]; otherwise, NULL is returned and the
-tmp_name_buffer[] contains an empty string */
-FILE *
-open_temporary_file(char *tmp_name_buffer);
 
-/* same as fopen, but supports ~ and $HOME syntax */
-FILE *
-open_file(char *name, char *mode);
+FILE *open_temporary_file(char *tmp_name_buffer);
 
-int 
-open_stream(struct Redir *rd, CorpusCharset charset);
+FILE *open_file(char *name, char *mode);
 
-int 
-close_stream(struct Redir *rd);
+int open_stream(struct Redir *rd, CorpusCharset charset);
 
-int 
-open_input_stream(struct InputRedir *rd);
+int close_stream(struct Redir *rd);
 
-int 
-close_input_stream(struct InputRedir *rd);
+int open_input_stream(struct InputRedir *rd);
 
-void 
-catalog_corpus(CorpusList *cl,
-	       struct Redir *rd,
-	       int first, int last, /* prints matches #first..#last; use (0,-1) for entire corpus  */
-	       PrintMode mode);
+int close_input_stream(struct InputRedir *rd);
+
+void catalog_corpus(CorpusList *cl,
+                    struct Redir *rd,
+                    int first,
+                    int last,
+                    PrintMode mode);
+
+void print_output(CorpusList *cl,
+                  FILE *fd,
+                  int interactive,
+                  ContextDescriptor *cd,
+                  int first, int last,
+                  PrintMode mode);
+
+void corpus_info(CorpusList *cl);
 
 
-
-/* print_output():
- * Ausgabe von CL, ohne Header, auf stream
- */
-
-void 
-print_output(CorpusList *cl, 
-	     FILE *fd,
-	     int interactive,
-	     ContextDescriptor *cd,
-	     int first, int last,
-	     PrintMode mode);
-
-void 
-corpus_info(CorpusList *cl);
-
-
-/* redirectable (error) messages & warnings */
+/** Enumeration specifying different types of redirectable (error) messages & warnings */
 typedef enum _msgtype {
-  Error,			/* error message (always displayed) */
-  Warning,			/* warning (not shown in silent mode) */
-  Message,			/* used for "-d VerboseParser" output only */
-  Info				/* user information (not shown in silent mode) */
+  Error,                        /**< error message (always displayed) */
+  Warning,                      /**< warning (not shown in silent mode) */
+  Message,                      /**< used for "-d VerboseParser" output only */
+  Info                          /**< user information (not shown in silent mode) */
 } MessageType;
 
-void 
-cqpmessage(MessageType type, 
-	   char *format, ...);
+void cqpmessage(MessageType type, char *format, ...);
 
-void 
-print_corpus_info_header(CorpusList *cl, 
-			 FILE *stream, 
-			 PrintMode mode,
-			 int force);
+void print_corpus_info_header(CorpusList *cl,
+                              FILE *stream,
+                              PrintMode mode,
+                              int force);
 
 /* ---------------------------------------------------------------------- */
 
-/* free global list of tabulation items (before building new one) */
-void
-free_tabulation_list(void);
+void free_tabulation_list(void);
 
-/* allocate and initialize new tabulation item */
-TabulationItem
-new_tabulation_item(void);
+TabulationItem new_tabulation_item(void);
 
-/* append tabulation item to end of current list */
-void
-append_tabulation_item(TabulationItem item);
+void append_tabulation_item(TabulationItem item);
 
-/* tabulate specified query result, using settings from global list of tabulation items;
-   return value indicates whether tabulation was successful (otherwise, generates error message) */
-int
-print_tabulation(CorpusList *cl, int first, int last, struct Redir *rd);  
+int print_tabulation(CorpusList *cl, int first, int last, struct Redir *rd);
 
 #endif
