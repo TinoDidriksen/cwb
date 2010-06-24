@@ -1441,7 +1441,7 @@ cl_string_validate_encoding(const char *s, CorpusCharset charset)
     break;
 
   default: /* unknown_charset, etc. */
-    fprintf(stderr, "CL: Error, unrecognised CorpusCharset in cl_string_validate_encoding.\n";
+    fprintf(stderr, "CL: Error, unrecognised CorpusCharset in cl_string_validate_encoding.\n");
     return 0;
 
   } /* end switch */

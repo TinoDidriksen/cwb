@@ -74,6 +74,8 @@ append=$( cat <<HERE
 
 LIBPCRE_DLL_PATH=$deduced_path
 
+
+
 HERE
 )
 
@@ -81,14 +83,16 @@ config_file="$append
 $config_file" 
 
 # save config.mk
+rm -f config.mk.bak
 mv config.mk config.mk.bak
 echo "$config_file" > config.mk
 
-
+if [ -f config.mk ] ; then echo "config.mk exists" ; else echo "config.mk doesn't exist" ; exit ; fi
+if [ -f config.mk.bak ] ; then echo "config.mk.bak exists" ; else echo "config.mk.bak doesn't exist" ; exit ; fi
 
 # make cwb
 
-make realclean
+make clean
 make depend
 make cl
 make mingw-libgnurx-2.5.1

@@ -219,27 +219,38 @@ LIBCL_PATH = $(TOP)/cl/libcl.a
 CL_LIBS = $(LIBCL_PATH) 
 
 # path to internal copy of GNU regex library for use in MinGW (to be removed once PCRE is working with Win)
-ifdef __MINGW__ 
-LIBREGEX_PATH = $(TOP)/mingw-libgnurx-2.5.1/libregex.a
-LIB_REGEX = $(LIBREGEX_PATH)
-else
-LIB_REGEX = 
-endif
+#ifdef __MINGW__ 
+#LIBREGEX_PATH = $(TOP)/mingw-libgnurx-2.5.1/libregex.a
+#LIB_REGEX = $(LIBREGEX_PATH)
+#else
+#LIB_REGEX = 
+#endif
 
 # paths to DLL files that need to be installed along with CWB binaries (win only)
 ifdef __MINGW__
-ifndef LIBPCRE_DLL_PATH
-$(error Configuration variable LIBPCRE_DLL_PATH is not set (directory containing MinGW-compiled libpcre-0.dll))
+ifdef  LIB_DLL_PATH
+# This general variable, if set, overrrides (and makes unnecessary) both the specific variables.
+LIB_PCRE_PATH = $(LIB_DLL_PATH)
+LIB_GLIB_PATH = $(LIB_DLL_PATH)
 endif
-DLLS_TO_INSTALL = mingw-libgnurx-2.5.1/libgnurx-0.dll $(LIBPCRE_DLL_PATH)/libpcre-0.dll $(LIBPCRE_DLL_PATH)/libpcreposix-0.dll 
+ifndef LIBGLIB_DLL_PATH
+#$(error Configuration variable LIBGLIB_DLL_PATH is not set (directory containing MinGW-compiled libpcre-0.dll))
+endif
+ifndef LIBPCRE_DLL_PATH
+$(error Configuration variable LIBPCRE_DLL_PATH is not set (directory containing MinGW-compiled libglib-2.0-0.dll))
+endif
+DLLS_TO_INSTALL =                            \
+    $(LIBPCRE_DLL_PATH)/libpcre-0.dll        \
+    $(LIBPCRE_DLL_PATH)/libpcreposix-0.dll   
+#    $(LIBGLIB_DLL_PATH)/libglib-2.0-0.dll    
+#    mingw-libgnurx-2.5.1/libgnurx-0.dll  
 else
 DLLS_TO_INSTALL = 
 endif 
 
 # Linker flags for libraries used by the CL (to be added to linking commands for all programs)
 ifdef __MINGW__
-LDFLAGS_LIBS = -lpcre -lpcre.dll `pkg-config --libs glib-2.0` 
-## !!!!!!!!!!!!!!!!!check - should be use pkg-config?? shouldn't we demand the header files to be in the i586-...-gcc's Include path?
+LDFLAGS_LIBS = -lpcre -lpcre.dll -lglib-2.0
 else
 LDFLAGS_LIBS = -lpcre `pkg-config --libs glib-2.0`
 endif 

@@ -30,11 +30,13 @@
 #include "../cl/macros.h"
 #include "../cl/corpus.h"
 
+/*
 #ifndef __MINGW__
-#include <regex.h>                /* use the CWB regex package! */
+#include <regex.h>                /* use the CWB regex package! * /
 #else
 #include "../mingw-libgnurx-2.5.1/regex.h"
 #endif
+*/
 
 #include "../cl/attributes.h"
 #include "../cl/cdaccess.h"

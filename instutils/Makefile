@@ -74,11 +74,12 @@ install:	install-cwb-win.bat
 	$(ECHO) "Installation is not possible when cross-compiling for Windows. Try ''make release'' instead..."
 
 install-cwb-win.bat:	install-cwb-win.bat.in
-	VERSION='$(VERSION)' PREFIX='$(PREFIX)' REGISTRY='$(DEFAULT_REGISTRY)' MANEXT='$(MANEXT)' sh install-cwb-win.bat.in > install-cwb-win.bat	
+	VERSION='$(VERSION)' PREFIX='$(PREFIX)' REGISTRY='$(DEFAULT_REGISTRY)' MANEXT='$(MANEXT)' bash install-cwb-win.bat.in > install-cwb-win.bat	
 
 release:	install-cwb-win.bat
 	for i in INSTALL; do $(INSTALL) $(INST_FLAGS_DATA) $$i "$(RELEASE_DIR)/$$i.txt"; done
 	for i in README COPYING AUTHORS CHANGES; do $(INSTALL) $(INST_FLAGS_DATA) ../$$i "$(RELEASE_DIR)/$$i.txt"; done
+	## PCRE licence?
 	for i in install-cwb-win.bat; do $(INSTALL) $(INST_FLAGS_BIN) $$i "$(RELEASE_DIR)"; done
 ifdef UNIX2DOS
 	for i in INSTALL README COPYING AUTHORS CHANGES; do  $(UNIX2DOS) "$(RELEASE_DIR)/$$i.txt"; done

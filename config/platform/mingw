@@ -25,6 +25,7 @@ __MINGW__ = 1
 ## if a "unix-to-dos" conversion program is specified here, it will be used when creating
 ## windows releases (for text files containing instructions e.g. README.txt, thus enabling
 ## Notepad.exe (inter alia) to read them without mangling the linebreaks).
+## Note that while unix2dos exists on many platforms, Ubuntu has removed it.
 UNIX2DOS = unix2dos
 
 ## C compiler

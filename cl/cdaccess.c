@@ -23,11 +23,13 @@
 #include "globals.h"
 
 #include "endian.h"
+/*
 #ifndef __MINGW__
 #include <regex.h>
 #else
 #include "../mingw-libgnurx-2.5.1/regex.h"
 #endif
+*/
 #include "macros.h"
 #include "attributes.h"
 #include "special-chars.h"

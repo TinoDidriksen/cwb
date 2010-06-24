@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# The script following this line produces a .bat file that will do the same (ish)
+# The script following the big line produces a .bat file that will do the same (ish)
 # on Windows as the install-cwb.sh script will on Unix.
 
 # note that we need to convert the registry variable from Unix-escapes to Windows-escapes

@@ -49,7 +49,7 @@ include $(TOP)/config.mk
 
 # targets for external libraries
 ifdef __MINGW__
-EXTERNALS = mingw-libgnurx-2.5.1
+#EXTERNALS = mingw-libgnurx-2.5.1
 else
 EXTERNALS = editline
 endif
@@ -70,8 +70,8 @@ default:
 	@$(ECHO) "  make release   create binary release in build/ directory"
 	@$(ECHO) ""
 	@$(ECHO) "  make editline  build included editline library for CQP"
-	@$(ECHO) "  make mingw-libgnurx-2.5.1  "
-	@$(ECHO) "                 build included mingw-libgnurx-2.5.1 (for Windows)"
+#	@$(ECHO) "  make mingw-libgnurx-2.5.1  "
+#	@$(ECHO) "                 build included mingw-libgnurx-2.5.1 (for Windows)"
 	@$(ECHO) "  make cl        build low-level corpus library (CL)"
 	@$(ECHO) "  make cqp       build CQP query processor"
 	@$(ECHO) "  make utils     build command-line utilities"
@@ -116,13 +116,13 @@ else
 #   which causes configure to hang (because Unix can't run *.exe files)
 endif
 
-mingw-libgnurx-2.5.1:
-ifdef __MINGW__
-	@$(ECHO) "--------------------------------- BUILDING MINGW-LIBGNURX LIBRARY"
-	(cd mingw-libgnurx-2.5.1 && ./configure CC="$(CC)" && $(MAKE))
-else
-	@$(ECHO) "Error: mingw-libgnurx-2.5.1 can only be built when targeting a Windows environment."
-endif
+#mingw-libgnurx-2.5.1:
+#ifdef __MINGW__
+#	@$(ECHO) "--------------------------------- BUILDING MINGW-LIBGNURX LIBRARY"
+#	(cd mingw-libgnurx-2.5.1 && ./configure CC="$(CC)" && $(MAKE))
+#else
+#	@$(ECHO) "Error: mingw-libgnurx-2.5.1 can only be built when targeting a Windows environment."
+#endif
 
 instutils:
 	@$(ECHO) "--------------------------------- CONFIGURING INSTUTILS"

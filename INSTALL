@@ -242,21 +242,28 @@ run
 
         make release
 
-This will generate the file cwb-win-transporter.zip in the "build" directory. 
+This will generate a zip file containing the binary release installer, in the
+"build" directory. Its name is of the form cwb-$version-windows-i586.zip.
 
 Once again, to speed up these steps there is a script which automates the changes
 to config.mk and the various steps of "making":
 
         ./install-scripts/cwb-build-win32
 
-When you take the "transporter" archive to a Windows system, you will probably
-want to follow these steps:
+To actually install, move the zip file to your Windows system, and decompress 
+it.
+
+Then run the install-cwb-win batch file. (If it doesn't find the folders it 
+expects to find, it may ask you some questions.) This script will
 
  - create a folder like C:\Program Files\CWB
- - put all the files from cwb-win-transporter.zip in there
- - add this folder to the PATH environment variable
- - put a copy of the PDF man files in some convenient place for the user's 
-   reference.
+ - put all the binary files (plus necessary DLLs) in its "bin" subdirectory
+ - also copy across include/library files (whether or not the latter will 
+   actually work if you try to link against them is untested).
+
+You might also want to
+ - add the "bin" sub-folder to your PATH environment variable
+ - move the PDF files from the "man" sub-folder to somewhere more convenient
 
 Note that so far, cross-compilation has been tested with the following 
 Unix-like starting points:
@@ -305,7 +312,9 @@ Note that the CWB build process makes the following assumptions:
    using the pkg-config utility (should be the case if you have used the
    standard installation procedure).
 
-~~~~~~~BEGIN INCOMPLETE SECTION
+If these assumptions are not true, you may need to hack some of the 
+makefile includes a bit to make things work.
+
 When cross-compiling for Windows, things are a bit different: you need
 versions of these libraries that have been compiled *to run under Windows*,
 not the usual *nix versions. 
@@ -315,37 +324,61 @@ and use the MinGW cross-compiler to build a copy of the library files. This
 then needs to be placed into the right library directory for the MinGW 
 cross-compiler to find it. The same applies to the header file. We have 
 found that PCRE's "make install" will do this for you, IF it has been
-configured with the right options (if you run the ./configure script wihtout
+configured with the right options (if you run the ./configure script without
 the right options, it will be compiled for *nix and placed in the normal
-gcc places, possibly overwriting what you previously had there. If you move
-the libraries you have built manually to the cross-compiler's directories, 
+gcc places, possibly overwriting what you previously had there). 
+
+The "right options" for configuring PCRE are something like the following 
+(assuming that the cross-compiler is i586-mingw32msvc-(gcc|ld|...):
+
+CC=i586-mingw32msvc-gcc CC_FOR_BUILD=gcc  ./configure                     \
+    --host=i586-mingw32msvc                                               \
+    --enable-utf8 --enable-unicode-properties                             \
+    --enable-newline-is-any --disable-cpp --enable-static                 \
+    --exec-prefix=$A_DUMMY_DIRECTORY_FOR_FILES_YOU_WILL_NOT_NEED          \
+    --prefix=$HOME_OF_CROSS_COMPILER_FILES                                \
+    --libdir=$HOME_OF_CROSS_COMPILER_LIB_FILES                            \
+    --oldincludedir=$HOME_OF_CROSS_COMPILER_INCLUDE_FILES
+
+If you don't use PCRE's "make install", but instead move the library/header 
+files  you have built manually to the cross-compiler's directories, 
 these are the files you must make sure get copied:
 
  - pcre.h
- - LIST THE OTHERS
+ - libpcre-0.dll
+ - libpcreposix-0.dll
+ 
+The directories they need to be inserted into are the MinGW compiler's library 
+and include directories. These will usually be something like
+
+        /$libdir/gcc/i586-mingw32msvc/$version
+        /$libdir/gcc/i586-mingw32msvc/$version/include
+
+and indeed these are the paths you would also specify as --libdir, --prefix, 
+and --oldincludedir when  building PCRE.
+
+But, in general, you should make sure to consult the PCRE documentation on
+building for cross-compilation. See http://www.pcre.org/readme.txt .
+
+~~~~~~~BEGIN INCOMPLETE SECTION
+For Glib, we have had success using the following procedure:
 
 Moving on to Glib: 
 
 SAY SOMETHING ABOUT GLIB.
 
-Your library/header files need to be inserted into the MinGW
-compiler's library and include directories. This will usually be something 
-like
 
-        /$libdir/gcc/i586-mingw32msvc/$version
-        /$libdir/gcc/i586-mingw32msvc/$version/include
 
 where the default for $libdir is /usr/lib.  
 
 Some other relevant links:
 
-        http://gnuwin32.sourceforge.net/packages/pcre.htm
-        (see also http://gnuwin32.sourceforge.net/compile.html)
+
+
         http://www.gtk.org/download-windows.html
 
 
 
-PCRE's install (see my other notes) does this for you
 
 ~~~~~~~~~~~~END INCOMPLETE SECTION
 
