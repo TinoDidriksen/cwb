@@ -61,7 +61,12 @@
 
 
 
-
+/**
+ * Counts the number of token positions encompassed by all members
+ * of the ->range array of the CorpusList argument.
+ *
+ * That is, in oher words, it tells you the size of this corpus.
+ */
 int
 nr_positions(CorpusList *cp)
 {
@@ -105,8 +110,10 @@ red_factor(CorpusList *cp, int *nr_pos)
   return (*nr_pos + 0.0) / (size + 0.0);
 }
 
-/* set the appropriate values to the corpus id (given by its pointer to */
-/* the symbol table).                                                   */
+/**
+ * Set the appropriate values to the corpus id (given by its pointer to
+ * the symbol table).
+ */
 void
 set_corpus_matchlists(CorpusList *cp,
                       Matchlist *matchlist,
@@ -194,7 +201,7 @@ set_corpus_matchlists(CorpusList *cp,
   }
 }
 
-
+
 
 int
 get_corpus_positions(Attribute *attribute,
@@ -236,15 +243,16 @@ get_corpus_positions(Attribute *attribute,
  * Get corpus positions matching a regular expression on a given attribute.
  *
  * get_matched_corpus_positions looks in a corpus which is to be loaded for
- * a regular expression 'regstr' of attribute 'attr' and returns the table
+ * a regular expression 'regstr' of a given p-attribute and returns the table
  * of matching start indices (start_table) and the tablesize (tabsize).
  *
- * @param attribute        The attribute to search on. May be NULL, in which case DEFAULT_ATT_NAME is used.
+ * @param attribute        The attribute to search on. May be NULL, in
+ *                         which case DEFAULT_ATT_NAME is used.
  * @param regstr           String containing the regular expression.
  * @param canonicalize     Flags to be passed to the CL regex engine.
  * @param matchlist        Location where the list of matches will be placed.
- * @param restrictor_list  ??
- * @param restrictor_size  ??
+ * @param restrictor_list  Passed to cl_idlist2cpos_oldstyle
+ * @param restrictor_size  Passed to cl_idlist2cpos_oldstyle
  * @return                 The number of matches found.
  */
 int
@@ -265,12 +273,13 @@ get_matched_corpus_positions(Attribute *attribute,
   if (attribute == NULL)
     attribute = find_attribute(evalenv->query_corpus->corpus,
                                DEFAULT_ATT_NAME,
-                               ATT_POS, NULL);
+                               ATT_POS,
+                               NULL);
 
   assert(attribute);
 
-  size = get_attribute_size(attribute);
-  range = get_id_range(attribute);
+  size = cl_max_cpos(attribute);
+  range = cl_max_id(attribute);
   
   /* changed .* / .+ optimization to .* only -- so "" will be handled correctly as an attribute value
      (will be standard in CWB 4.0, and may happen now if someone runs encode with -U "") */
@@ -290,20 +299,17 @@ get_matched_corpus_positions(Attribute *attribute,
     matchlist->matches_whole_corpus = 1;
   }
   else {
-    
     /* get the word ids of the word forms which are matched by the 
      * regular expression  'regstr' 
      */
 
-    word_ids = collect_matching_ids(attribute,
-                                    regstr,
-                                    canonicalize,
-                                    &nr_of_words);
+    word_ids = cl_regex2id(attribute,
+                           regstr,
+                           canonicalize,
+                           &nr_of_words);
 
     if (nr_of_words == range) {
-      
-      /* again, matches whole corpus. TODO: optimize.
-       */
+      /* again, matches whole corpus. TODO: optimize.  */
       
       matchlist->start = (int *)cl_malloc(sizeof(int) * size);
       
@@ -317,40 +323,39 @@ get_matched_corpus_positions(Attribute *attribute,
       matchlist->matches_whole_corpus = 1;
 
       cl_free(word_ids);
-
     }
     else if ((word_ids != NULL) && (nr_of_words > 0)) {
-
-      /* are there any matching word forms? */
+      /* Some matching wordforms have been found. */
       
       /* get the position numbers in the active corpus of the word ids */
-      matchlist->start = collect_matches(attribute,
-                                         word_ids,
-                                         nr_of_words,
-                                         1,
-                                         &(matchlist->tabsize),
-                                         restrictor_list,
-                                         restrictor_size);
+      matchlist->start = cl_idlist2cpos_oldstyle(attribute,
+                                                 word_ids,
+                                                 nr_of_words,
+                                                 1,
+                                                 &(matchlist->tabsize),
+                                                 restrictor_list,
+                                                 restrictor_size);
       cl_free(word_ids);
     }
     else {
+      /* no matching wordforms have been found. */
       matchlist->tabsize = 0;
       matchlist->matches_whole_corpus = 0;
     }
-  }
+  } /* end case where regstr is not ".*" */
 
+  /* finally, possibly print out a debug message (TODO: shouldn't this use cqpmessage()?)*/
   if (initial_matchlist_debug && 
       (matchlist->start != NULL) &&
       (matchlist->tabsize > 0) && !silent)
-    fprintf(stderr, "matched initial pattern for regex %s, "
-            "%d matches\n",
+    fprintf(stderr, "matched initial pattern for regex %s, %d matches\n",
             regstr,
             matchlist->tabsize);
 
   return(matchlist->tabsize);
 }
 
-
+
 
 /*
  * This is the function which evaluates an AVS to true or false.
@@ -755,8 +760,8 @@ get_leaf_value(Constrainttree ctptr,
  * "corppos" is the current corpus position 
  */
 
-static
-int
+/** Comparison function used when calling qsort(). */
+static int
 intcompare(const void *i, const void *j)
 {
   return(*(int *)i - *(int *)j);
@@ -1232,8 +1237,9 @@ eval_bool(Constrainttree ctptr, RefTab rt, int corppos)
 
 
 
-int mark_offrange_cells(Matchlist *matchlist, 
-                        CorpusList *corpus)
+int
+mark_offrange_cells(Matchlist *matchlist,
+                    CorpusList *corpus)
 {
   int rp, i, del;
 
@@ -1275,13 +1281,18 @@ int mark_offrange_cells(Matchlist *matchlist,
 
 
 
-
-Boolean calculate_initial_matchlist_1(Constrainttree ctptr, 
-                                      Matchlist *matchlist,
-                                      CorpusList *corpus)
+/**
+ *
+ * NB. This function is called recursively.
+ *
+ * @return  False iff something has gone wrong.
+ */
+Boolean
+calculate_initial_matchlist_1(Constrainttree ctptr,
+                              Matchlist *matchlist,
+                              CorpusList *corpus)
 {
-  int   i;
-
+  int i;
   Matchlist left, right;
 
   /* do NOT use free_matchlist here! */
@@ -1551,7 +1562,6 @@ Boolean calculate_initial_matchlist_1(Constrainttree ctptr,
 
             switch (ctptr->node.right->leaf.pat_type) {
             case REGEXP:
-
               /* check whether we have a ".+" or ".*" on the right --in this case
                * there is nothing to do (matched by everything)
                * TODO: change that in case "" may be returned by attribute access
@@ -1595,7 +1605,6 @@ Boolean calculate_initial_matchlist_1(Constrainttree ctptr,
               break;
 
             case NORMAL:
-
               get_corpus_positions(ctptr->node.left->pa_ref.attr,
                                    ctptr->node.right->leaf.ctype.sconst,
                                    matchlist);
@@ -1603,7 +1612,6 @@ Boolean calculate_initial_matchlist_1(Constrainttree ctptr,
               break;
 
             case CID:
-
               matchlist->start = get_positions(ctptr->node.left->pa_ref.attr,
                                                ctptr->node.right->leaf.ctype.cidconst,
                                                &(matchlist->tabsize),
@@ -1650,8 +1658,8 @@ Boolean calculate_initial_matchlist_1(Constrainttree ctptr,
         assert("Internal error in calculate_initial_matchlist_1(): Unknown comparison operator." && 0);
         break;
 
-      }     /* switch (ctptr->node.op_id) ... */
-    }       
+      }     /* endswitch (ctptr->node.op_id) ... */
+    } /* endif (ctptr->type == bnode) */
     else if (ctptr->type == cnode) {
 
       if (ctptr->constnode.val == 0) {
@@ -1729,26 +1737,31 @@ Boolean calculate_initial_matchlist_1(Constrainttree ctptr,
                  ctptr->type);
       return(False);
     }   /* if (ctptr->type == bnode) ... else if ...  */
-  }
+  } /* endif ctptr */
   else {
-
+    /* if ctptr is NULL */
     return(True);
-
-  }     /* if (ctptr) ...  */
-  
+  }
 
   assert("Internal error in calculate_initial_matchlist1(): went over the edge." && 0);
   return 0;
 }
 
-Boolean calculate_initial_matchlist(Constrainttree ctptr, 
-                                    Matchlist *matchlist,
-                                    CorpusList *corpus)
+/**
+ * Wrapper around calculate_initial_matchlist1, qv.
+ *
+ * @see calculate_initial_matchlist1
+ */
+Boolean
+calculate_initial_matchlist(Constrainttree ctptr,
+                            Matchlist *matchlist,
+                            CorpusList *corpus)
 {
   Boolean res;
 
   res = calculate_initial_matchlist_1(ctptr, matchlist, corpus);
 
+  /* i.e. if calling the main function worked, and a matchlist was created */
   if (res && matchlist) {
 
     if (matchlist->is_inverted) {
@@ -1764,13 +1777,16 @@ Boolean calculate_initial_matchlist(Constrainttree ctptr,
   return res;
 }
 
-
 
 
-/* try to match the given word form pattern and return success. */
-Boolean matchfirstpattern(AVS pattern, 
-                          Matchlist *matchlist,
-                          CorpusList *corpus)
+
+/*
+ * try to match the given word form pattern and return success.
+ */
+Boolean
+matchfirstpattern(AVS pattern,
+                  Matchlist *matchlist,
+                  CorpusList *corpus)
 {
   int nr_strucs, nr_ok, ok, i, k, start, end, nr_pos, cpos;
   Bitfield bf;
@@ -1899,6 +1915,8 @@ Boolean matchfirstpattern(AVS pattern,
     if (!Setop(matchlist, Reduce, NULL)) 
       return False;
     return True;
+
+    break; /* endcase Anchor */
     
   case Pattern:
 
@@ -1954,7 +1972,7 @@ Boolean matchfirstpattern(AVS pattern,
       return ok;
     }
 
-    break;
+    break; /* endcase Pattern */
 
   case MatchAll:
     get_matched_corpus_positions(NULL, ".*", 0, matchlist,
@@ -1969,11 +1987,12 @@ Boolean matchfirstpattern(AVS pattern,
 
 
 
-void simulate(Matchlist *matchlist, int *cut,
-              int start_state, int start_offset, /* start_offset is always set to 0; no idea what it was meant for??? */
-              int *state_vector, int *target_vector,
-              RefTab *reftab_vector, RefTab *reftab_target_vector,
-              int start_transition)
+void
+simulate(Matchlist *matchlist, int *cut,
+         int start_state, int start_offset, /* start_offset is always set to 0; no idea what it was meant for??? */
+         int *state_vector, int *target_vector,
+         RefTab *reftab_vector, RefTab *reftab_target_vector,
+         int start_transition)
 {
   int i, p, cpos, effective_cpos, rp;
   int strict_regions_ok, lookahead_constraint, zero_width_pattern;
@@ -2481,9 +2500,10 @@ void simulate(Matchlist *matchlist, int *cut,
 }
 
 
-
 
-int check_alignment_constraints(Matchlist *ml)
+
+int
+check_alignment_constraints(Matchlist *ml)
 {
   int mlp, envp, i;
   int as, ae, dum1, dum2, dum3;
@@ -2592,6 +2612,7 @@ int check_alignment_constraints(Matchlist *ml)
   return 0;
 }
 
+/* TODO what a very helpful documentation comment the following is.... (AH) */
 /* simulate the dfa */
 void
 simulate_dfa(int envidx, int cut, int keep_old_ranges)
@@ -2808,6 +2829,11 @@ simulate_dfa(int envidx, int cut, int keep_old_ranges)
   }
 }
 
+/**
+ * This function wraps round simulate_dfa (the only other thing it does is enforce the hard_cut limit)
+ * @see hard_cut
+ * @see simulate_dfa
+ */
 void
 cqp_run_query(int cut, int keep_old_ranges)
 {
@@ -3031,7 +3057,6 @@ meet_mu(Matchlist *list1, Matchlist *list2,
         int lw, int rw,
         Attribute *struc)
 {
-
   /* this is very similar to Setop(Intersection)/matchlist.c, but we
    * have to take care of the context (lw, rw, struc) */
 
@@ -3039,12 +3064,8 @@ meet_mu(Matchlist *list1, Matchlist *list2,
 
   int i, j, k, start, end;
 
-
   if ((list1->tabsize == 0) || (list2->tabsize == 0)) {
-
-    /*
-     * Bingo. one of the two is empty. So is their intersection.
-     */
+    /* Bingo. one of the two is empty. So is their intersection. */
 
     cl_free(list1->start);
     cl_free(list1->end);
@@ -3052,19 +3073,16 @@ meet_mu(Matchlist *list1, Matchlist *list2,
     list1->matches_whole_corpus = 0;
   }
   else {
-
-    /*
-     * We have to do some work now
-     */
+    /* We have to do some work now */
 
     tmp.tabsize = MIN(list1->tabsize, list2->tabsize);
     
     tmp.start = (int *)cl_malloc(sizeof(int) * tmp.tabsize);
     tmp.end = NULL;
     
-    i = 0;                        /* the position in list1 */
-    j = 0;                        /* the position in list2 */
-    k = 0;                        /* the insertion point in the result list */
+    i = 0;                /* the position in list1 */
+    j = 0;                /* the position in list2 */
+    k = 0;                /* the insertion point in the result list */
     
     while ((i < list1->tabsize) && (j < list2->tabsize)) {
       
@@ -3121,7 +3139,7 @@ meet_mu(Matchlist *list1, Matchlist *list2,
     list1->end   = NULL;
     list1->tabsize = k;
     list1->matches_whole_corpus = 0;
-  }
+  } /* end of case where neither of the two matchlists is empty */
 
   return 1;
 }

@@ -1049,7 +1049,7 @@ do_SearchPattern(Evaltree expr, /* $1 */
         regex2dfa(searchstr, &(CurEnv->dfa));
       cl_free(searchstr);
     }
-  }
+  } /* endif generate_code */
 }
 
 /* ======================================== Regular Expressions */

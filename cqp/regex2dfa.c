@@ -50,24 +50,20 @@ typedef struct exp *Exp;
 
 typedef struct equation *Equation;
 
-typedef enum 
-{ 
+typedef enum {
   SymX, ZeroX, OneX, AndX, OrX, StarX, PlusX, OptX 
 } ExpTag;
 
-typedef enum 
-{ 
+typedef enum {
   RULE, EQU, PAR, OPT, OR, AND 
 } StackTag;
 
-typedef struct 
-{ 
+typedef struct {
   StackTag Tag; 
   int Q; 
 } StackCard;
 
-typedef struct state 
-{
+typedef struct state {
   int Class, States, *SList;
   int Empty, Shifts;
   struct 
@@ -80,22 +76,19 @@ State STab = (State)NULL;
 int Ss;
 
 /* THE SCANNER */
-typedef enum 
-{
+typedef enum {
   EndT, CommaT, RParT, RBrT, EqualT, BarT,
   ZeroT, OneT, IdenT, LParT, LBrT, PlusT, StarT
 } Lexical;
 
-typedef struct item 
-{
+typedef struct item {
   Symbol LHS; 
   int Size, *RHS;
 } *Item;
 Item IBuf = (Item)NULL; 
 int Is, IMax;
 
-struct exp 
-{
+struct exp {
   ExpTag Tag; 
   int Hash, Class; 
   Exp Tail;
@@ -106,8 +99,7 @@ struct exp
     } Body;
 };
 
-struct symbol 
-{ 
+struct symbol {
   char *Name; 
   int Hash; 
   Symbol Next, Tail; 
@@ -170,11 +162,9 @@ int Es, EMax;
 
 int currpos;
 
-static int GET(void)
+static int
+GET(void)
 {
-  /* Thu Aug  3 13:25:13 1995 (oli) -- 
-   * minor changes */
-
   unsigned char ch;
 
   ch = searchstr[currpos];
@@ -187,14 +177,15 @@ static int GET(void)
   }
 }
 
-static void UNGET(int Ch)
+static void
+UNGET(int Ch)
 {
-
   if (currpos != 0)
     --currpos;
 }
 
-static void REGEX2DFA_ERROR(char *Format, ...)
+static void
+REGEX2DFA_ERROR(char *Format, ...)
 {
 
   va_list AP;
@@ -209,7 +200,8 @@ static void REGEX2DFA_ERROR(char *Format, ...)
   }
 }
 
-Lexical LEX(void) 
+Lexical
+LEX(void)
 {
 
   int Ch;
@@ -290,20 +282,25 @@ Lexical LEX(void)
   }
 }
 
-void *Allocate(unsigned Bytes) 
+/** TODO replace with macro, or actual cl_malloc calls? */
+void *
+Allocate(unsigned Bytes)
 {
   void *X = cl_malloc(Bytes);
   return X;
 }
 
-void *Reallocate(void *X, unsigned Bytes) 
+/** TODO replace with macro, or actual cl_realloc calls? */
+void *
+Reallocate(void *X, unsigned Bytes)
 {
-  
   X = cl_realloc(X, Bytes);
   return X;
 }
 
-char *CopyS(char *S) 
+/** TODO replace with macro, or actual cl_strdup calls? */
+char *
+CopyS(char *S)
 {
   char *NewS = (char *)Allocate(strlen(S) + 1);
   
@@ -311,9 +308,9 @@ char *CopyS(char *S)
   return NewS;
 }
 
-byte Hash(char *S) 
+byte
+Hash(char *S)
 {
-
   int H; 
   char *T;
   
@@ -322,9 +319,9 @@ byte Hash(char *S)
   return H&0xff;
 }
 
-Symbol LookUp(char *S) 
+Symbol
+LookUp(char *S)
 {
-  
   Symbol Sym; 
   byte H;
   
@@ -344,7 +341,8 @@ Symbol LookUp(char *S)
   return LastB = Sym;
 }
 
-int DUP(int A, int B) 
+int
+DUP(int A, int B)
 {
 
   long L, S;
@@ -361,7 +359,8 @@ int DUP(int A, int B)
   return (int)(L/NN);
 }
 
-void Store(Symbol S, int Q) 
+void
+Store(Symbol S, int Q)
 {
 
   int H = 0x100 + S->Hash; 
@@ -382,7 +381,8 @@ void Store(Symbol S, int Q)
   E->Class = Q;
 }
 
-int MakeExp(int Q, ExpTag Tag, ...) 
+int
+MakeExp(int Q, ExpTag Tag, ...)
 {
 
   va_list AP; 
@@ -498,7 +498,8 @@ int MakeExp(int Q, ExpTag Tag, ...)
   return Q;
 }
 
-void PUSH(StackTag Tag, int Q) 
+void
+PUSH(StackTag Tag, int Q)
 {
 
   if (SP >= Stack + STACK_MAX) 
@@ -515,8 +516,9 @@ void PUSH(StackTag Tag, int Q)
 #define TOP ((SP - 1)->Tag)
 #define POP() ((--SP)->Q)
 
-/* the parser proper */
-int Parse(void) 
+/** the regex parser proper */
+int
+Parse(void)
 {
   
   Lexical L; 
@@ -547,106 +549,104 @@ int Parse(void)
   else 
     PUSH(RULE, -1);
  EXP:
-  switch (L) 
-    {
-    case LParT: 
-      PUSH(PAR, -1); 
-      L = LEX(); 
-      goto EXP;
-    case LBrT: 
-      PUSH(OPT, -1); 
-      L = LEX(); 
-      goto EXP;
-    case ZeroT: 
-      RHS = MakeExp(-1, ZeroX); 
-      L = LEX(); 
-      goto END;
-    case OneT: 
-      RHS = MakeExp(-1, OneX); 
-      L = LEX(); 
-      goto END;
-    case IdenT: 
-      RHS = MakeExp(-1, SymX, LookUp(LastW)); 
-      L = LEX(); 
-      goto END;
-    default: 
-      REGEX2DFA_ERROR("Corrupt expression.");
-      return -1;
-    }
+  switch (L)   {
+  case LParT:
+    PUSH(PAR, -1);
+    L = LEX();
+    goto EXP;
+  case LBrT:
+    PUSH(OPT, -1);
+    L = LEX();
+    goto EXP;
+  case ZeroT:
+    RHS = MakeExp(-1, ZeroX);
+    L = LEX();
+    goto END;
+  case OneT:
+    RHS = MakeExp(-1, OneX);
+    L = LEX();
+    goto END;
+  case IdenT:
+    RHS = MakeExp(-1, SymX, LookUp(LastW));
+    L = LEX();
+    goto END;
+  default:
+    REGEX2DFA_ERROR("Corrupt expression.");
+    return -1;
+  }
   
  END:
-  switch (Action[TOP][L]) 
-    {
-    case 'A': 
-      REGEX2DFA_ERROR("Extra ','");
-      exit(1);
-    case 'B': 
-      REGEX2DFA_ERROR("Unmatched ).");
-      L = LEX(); 
-      goto END;
-    case 'C': 
-      REGEX2DFA_ERROR("Unmatched ].");
-      L = LEX(); 
-      goto END;
-    case 'D': 
-      REGEX2DFA_ERROR("Unmatched (.");
-      ignore_value = POP();
-      goto END;
-    case 'E': 
-      REGEX2DFA_ERROR("Unmatched [.");
-      goto MakeOpt;
-    case 'F': 
-      REGEX2DFA_ERROR("( ... ].");
-      ignore_value = POP(); 
-      L = LEX(); 
-      goto END;
-    case 'G': 
-      REGEX2DFA_ERROR("[ ... ).");
-      L = LEX(); 
-      goto MakeOpt;
-    case 'H': 
-      REGEX2DFA_ERROR("Left-hand side of '=' must be symbol.");
-      exit(1);
-    case 'I': 
-      REGEX2DFA_ERROR("Missing evaluation.");
-      exit(1);
-    case '.': 
-      ignore_value = POP(); 
-      return RHS;
-    case ')': 
-      ignore_value = POP(); 
-      L = LEX(); 
-      goto END;
-    case ']':
-      L = LEX();
-    MakeOpt:
-      ignore_value = POP(); 
-      RHS = MakeExp(-1, OptX, RHS);
-      goto END;
-    case '=': 
-      Store(ID, RHS); 
-      ignore_value = POP(); 
-      goto LHS;
-    case 'v': 
-      RHS = MakeExp(-1, OrX, POP(), RHS); 
-      goto END;
-    case 'x': 
-      RHS = MakeExp(-1, AndX, POP(), RHS); 
-      goto END;
-    case '*': 
-      RHS = MakeExp(-1, StarX, RHS); 
-      L = LEX(); 
-      goto END;
-    case '+': 
-      RHS = MakeExp(-1, PlusX, RHS); 
-      L = LEX(); 
-      goto END;
-    case '|': 
-      PUSH(OR, RHS); L = LEX(); 
-      goto EXP;
-    case '&': 
-      PUSH(AND, RHS); 
-      goto EXP;
+  switch (Action[TOP][L])  {
+  case 'A':
+    REGEX2DFA_ERROR("Extra ','");
+    exit(1);
+  case 'B':
+    REGEX2DFA_ERROR("Unmatched ).");
+    L = LEX();
+    goto END;
+  case 'C':
+    REGEX2DFA_ERROR("Unmatched ].");
+    L = LEX();
+    goto END;
+  case 'D':
+    REGEX2DFA_ERROR("Unmatched (.");
+    ignore_value = POP();
+    goto END;
+  case 'E':
+    REGEX2DFA_ERROR("Unmatched [.");
+    goto MakeOpt;
+  case 'F':
+    REGEX2DFA_ERROR("( ... ].");
+    ignore_value = POP();
+    L = LEX();
+    goto END;
+  case 'G':
+    REGEX2DFA_ERROR("[ ... ).");
+    L = LEX();
+    goto MakeOpt;
+  case 'H':
+    REGEX2DFA_ERROR("Left-hand side of '=' must be symbol.");
+    exit(1);
+  case 'I':
+    REGEX2DFA_ERROR("Missing evaluation.");
+    exit(1);
+  case '.':
+    ignore_value = POP();
+    return RHS;
+  case ')':
+    ignore_value = POP();
+    L = LEX();
+    goto END;
+  case ']':
+    L = LEX();
+  MakeOpt:
+    ignore_value = POP();
+    RHS = MakeExp(-1, OptX, RHS);
+    goto END;
+  case '=':
+    Store(ID, RHS);
+    ignore_value = POP();
+    goto LHS;
+  case 'v':
+    RHS = MakeExp(-1, OrX, POP(), RHS);
+    goto END;
+  case 'x':
+    RHS = MakeExp(-1, AndX, POP(), RHS);
+    goto END;
+  case '*':
+    RHS = MakeExp(-1, StarX, RHS);
+    L = LEX();
+    goto END;
+  case '+':
+    RHS = MakeExp(-1, PlusX, RHS);
+    L = LEX();
+    goto END;
+  case '|':
+    PUSH(OR, RHS); L = LEX();
+    goto EXP;
+  case '&':
+    PUSH(AND, RHS);
+    goto EXP;
   }
 
   assert(0 && "Not reached");
@@ -667,16 +667,18 @@ void PushQ(int Q)
   EquTab[Q].Stack = 1;
 }
 
-void PopQ(void) 
+void
+PopQ(void)
 {
 
-   int Q = XStack[--Xs];
+  int Q = XStack[--Xs];
 
-   EquTab[Q].Stack = 0;
+  EquTab[Q].Stack = 0;
 }
 
 
-int AddState(int States, int *SList) 
+int
+AddState(int States, int *SList)
 {
 
   int D, I; 
@@ -696,7 +698,8 @@ int AddState(int States, int *SList)
           return D; 
         }
     }
-  /* Brilliant ... the Reallocate() below might move the state table around in memory if it cannot
+  /* TODO
+   * Brilliant ... the Reallocate() below might move the state table around in memory if it cannot
      be expanded in place, breaking any pointers into the table held in local variables of the calling
      function.  Fortunately, AddState() is only called from FormState() in a loop that modifies 
      "embedded" variables, so that this bug only surfaces if the original memory location is overwritten
@@ -713,7 +716,8 @@ int AddState(int States, int *SList)
 }
 
 
-void AddBuf(Symbol LHS, int Q) 
+void
+AddBuf(Symbol LHS, int Q)
 {
 
   int Diff, I, J, S, T; 
@@ -752,7 +756,8 @@ void AddBuf(Symbol LHS, int Q)
   IP->RHS[S] = Q;
 }
 
-void FormState(int Q) 
+void
+FormState(int Q)
 {
 
   int I, S, S1, X; 
@@ -772,96 +777,93 @@ void FormState(int Q)
       SP = &STab[S];
       for (Xs = 0, S1 = 0; S1 < SP->States; S1++) 
         PushQ(SP->SList[S1]);
-      for (SP->Empty = 0, Is = 0, X = 0; X < Xs; X++) 
-        {
-          qX = XStack[X];
-        EVALUATE:
-          E = EquTab[qX].Value;
-          switch (E->Tag) 
-            {
-            case SymX: 
-              AddBuf(E->Body.Leaf, MakeExp(-1, OneX)); 
-              break;
-            case OneX: 
-              SP->Empty = 1; 
-              break;
-            case ZeroX: 
-              break;
-            case OptX:
-              Q1 = E->Body.Arg[0];
-              MakeExp(qX, OrX, MakeExp(-1, OneX), E->Body.Arg[0]);
-              goto EVALUATE;
-            case PlusX:
-              Q1 = E->Body.Arg[0];
-              MakeExp(qX, AndX, Q1, MakeExp(-1, StarX, Q1));
-              goto EVALUATE;
-            case StarX:
-              Q1 = E->Body.Arg[0];
-              MakeExp(qX, OrX, MakeExp(-1, OneX), MakeExp(-1, PlusX, Q1));
-              goto EVALUATE;
-            case OrX:
-              Q1 = E->Body.Arg[0]; 
-              Q2 = E->Body.Arg[1];
-              PushQ(Q1);
-              PushQ(Q2);
-              break;
-            case AndX: 
-              Q1 = E->Body.Arg[0], Q2 = E->Body.Arg[1];
-              E1 = EquTab[Q1].Value;
-              switch (E1->Tag) 
-                {
-                case SymX: 
-                  AddBuf(E1->Body.Leaf, Q2); 
-                  break;
-                case OneX: 
-                  EquTab[qX].Value = EquTab[Q2].Value; 
-                  goto EVALUATE;
-                case ZeroX: 
-                  MakeExp(qX, ZeroX); 
-                  break;
-                case OptX:
-                  A = E1->Body.Arg[0];
-                  MakeExp(qX, OrX, Q2, MakeExp(-1, AndX, A, Q2));
-                  goto EVALUATE;
-                case PlusX:
-                  A = E1->Body.Arg[0];
-                  MakeExp(qX, AndX, A, MakeExp(-1, OrX, Q2, qX));
-                  goto EVALUATE;
-                case StarX:
-                  A = E1->Body.Arg[0];
-                  MakeExp(qX, OrX, Q2, MakeExp(-1, AndX, A, qX));
-                  goto EVALUATE;
-                case OrX:
-                  A = E1->Body.Arg[0], B = E1->Body.Arg[1];
-                  MakeExp(qX, OrX,
-                          MakeExp(-1, AndX, A, Q2), MakeExp(-1, AndX, B, Q2));
-                  goto EVALUATE;
-                case AndX:
-                  A = E1->Body.Arg[0], B = E1->Body.Arg[1];
-                  MakeExp(qX, AndX, A, MakeExp(-1, AndX, B, Q2));
-                  goto EVALUATE;
-                }
-            }
+      for (SP->Empty = 0, Is = 0, X = 0; X < Xs; X++)  {
+        qX = XStack[X];
+      EVALUATE:
+        E = EquTab[qX].Value;
+        switch (E->Tag)  {
+        case SymX:
+          AddBuf(E->Body.Leaf, MakeExp(-1, OneX));
+          break;
+        case OneX:
+          SP->Empty = 1;
+          break;
+        case ZeroX:
+          break;
+        case OptX:
+          Q1 = E->Body.Arg[0];
+          MakeExp(qX, OrX, MakeExp(-1, OneX), E->Body.Arg[0]);
+          goto EVALUATE;
+        case PlusX:
+          Q1 = E->Body.Arg[0];
+          MakeExp(qX, AndX, Q1, MakeExp(-1, StarX, Q1));
+          goto EVALUATE;
+        case StarX:
+          Q1 = E->Body.Arg[0];
+          MakeExp(qX, OrX, MakeExp(-1, OneX), MakeExp(-1, PlusX, Q1));
+          goto EVALUATE;
+        case OrX:
+          Q1 = E->Body.Arg[0];
+          Q2 = E->Body.Arg[1];
+          PushQ(Q1);
+          PushQ(Q2);
+          break;
+        case AndX:
+          Q1 = E->Body.Arg[0], Q2 = E->Body.Arg[1];
+          E1 = EquTab[Q1].Value;
+          switch (E1->Tag) {
+          case SymX:
+            AddBuf(E1->Body.Leaf, Q2);
+            break;
+          case OneX:
+            EquTab[qX].Value = EquTab[Q2].Value;
+            goto EVALUATE;
+          case ZeroX:
+            MakeExp(qX, ZeroX);
+            break;
+          case OptX:
+            A = E1->Body.Arg[0];
+            MakeExp(qX, OrX, Q2, MakeExp(-1, AndX, A, Q2));
+            goto EVALUATE;
+          case PlusX:
+            A = E1->Body.Arg[0];
+            MakeExp(qX, AndX, A, MakeExp(-1, OrX, Q2, qX));
+            goto EVALUATE;
+          case StarX:
+            A = E1->Body.Arg[0];
+            MakeExp(qX, OrX, Q2, MakeExp(-1, AndX, A, qX));
+            goto EVALUATE;
+          case OrX:
+            A = E1->Body.Arg[0], B = E1->Body.Arg[1];
+            MakeExp(qX, OrX,
+                    MakeExp(-1, AndX, A, Q2), MakeExp(-1, AndX, B, Q2));
+            goto EVALUATE;
+          case AndX:
+            A = E1->Body.Arg[0], B = E1->Body.Arg[1];
+            MakeExp(qX, AndX, A, MakeExp(-1, AndX, B, Q2));
+            goto EVALUATE;
+          }
         }
+      }
       while (Xs > 0) 
         PopQ();
       SP->Shifts = Is;
       SP->ShList = Allocate(sizeof *SP->ShList * Is);
-      for (I = 0; I < Is; I++) 
-        {
-          int rhs_state = -1;
-          SP->ShList[I].LHS = IBuf[I].LHS;
-          rhs_state = AddState(IBuf[I].Size, IBuf[I].RHS);
-          SP = &STab[S];        /* AddState() might have reallocated state table -> update pointer */
-          SP->ShList[I].RHS = rhs_state;
-        }
+      for (I = 0; I < Is; I++)  {
+        int rhs_state = -1;
+        SP->ShList[I].LHS = IBuf[I].LHS;
+        rhs_state = AddState(IBuf[I].Size, IBuf[I].RHS);
+        SP = &STab[S];        /* AddState() might have reallocated state table -> update pointer */
+        SP->ShList[I].RHS = rhs_state;
+      }
     }
   free(IBuf);
   IBuf = 0;
   Is = IMax = 0;
 }
 
-void AddEquiv(int L, int R) 
+void
+AddEquiv(int L, int R)
 {
   int E; 
   State SL, SR;
@@ -883,19 +885,18 @@ void AddEquiv(int L, int R)
   for (E = 0; E < Es; E++)
     if (SL == ETab[E].L && SR == ETab[E].R) 
       return;
-  if (Es >= EMax)
-    {
-      EMax += 8;
-      ETab = Reallocate(ETab, sizeof *ETab * EMax);
-    }
+  if (Es >= EMax)     {
+    EMax += 8;
+    ETab = Reallocate(ETab, sizeof *ETab * EMax);
+  }
   ETab[Es].L = SL;
   ETab[Es].R = SR;
   Es++;
 }
 
-void MergeStates(void) 
+void
+MergeStates(void)
 {
-
   int Classes, S, S1, E, Sh; 
   State SP, SP1, QL, QR;
 
@@ -957,24 +958,23 @@ WriteStates(void)
         continue;
       Classes++;
       printf("s%d =", SP->Class);
-      if (SP->Empty) 
-        {
-          printf(" fin");
-          if (SP->Shifts > 0) 
-            printf(" |");
-        }
-      for (Sh = 0; Sh < SP->Shifts; Sh++) 
-        {
-          C = SP->ShList[Sh].RHS;
-          if (Sh > 0) 
-            printf(" |");
-          printf(" %s s%d", SP->ShList[Sh].LHS->Name, STab[C].Class);
-        }
+      if (SP->Empty) {
+        printf(" fin");
+        if (SP->Shifts > 0)
+          printf(" |");
+      }
+      for (Sh = 0; Sh < SP->Shifts; Sh++) {
+        C = SP->ShList[Sh].RHS;
+        if (Sh > 0)
+          printf(" |");
+        printf(" %s s%d", SP->ShList[Sh].LHS->Name, STab[C].Class);
+      }
       putchar('\n');
     }
 }
 
-void init_dfa(DFA *dfa)
+void
+init_dfa(DFA *dfa)
 {
   assert(dfa);
 
@@ -983,7 +983,8 @@ void init_dfa(DFA *dfa)
   dfa->Max_States = dfa->Max_Input = 0;
 }
 
-void free_dfa(DFA *dfa)
+void
+free_dfa(DFA *dfa)
 {
   
   int i;
@@ -1016,14 +1017,13 @@ show_complete_dfa(DFA dfa)
       printf("(final)");
     else
       putchar('\t');
-    for (j = 0; j < dfa.Max_Input; j++)
-      {
-        printf("\t%d -> ", j);
-        if (dfa.TransTable[i][j] == dfa.E_State)
-          printf("E\t");
-        else
-          printf("s%d,",dfa.TransTable[i][j]);
-      }
+    for (j = 0; j < dfa.Max_Input; j++)   {
+      printf("\t%d -> ", j);
+      if (dfa.TransTable[i][j] == dfa.E_State)
+        printf("E\t");
+      else
+        printf("s%d,",dfa.TransTable[i][j]);
+    }
     putchar('\n');
   }
 }
@@ -1107,15 +1107,13 @@ regex2dfa(char *rxs, DFA *automaton)
     WriteStates();
 
   /* allocate memory for the transition table and initialize it. */
-  automaton->TransTable = 
-    (int **)Allocate(sizeof(int *) * automaton->Max_States);
-  for (i = 0; i < Ss; i++)
-    {
-      automaton->TransTable[i] = 
-        (int *)Allocate(sizeof(int) * automaton->Max_Input);
-      for (j = 0; j < automaton->Max_Input; j++)
-        automaton->TransTable[i][j] = automaton->E_State;
-    }
+  automaton->TransTable = (int **)Allocate(sizeof(int *) * automaton->Max_States);
+  for (i = 0; i < Ss; i++)  {
+    automaton->TransTable[i] =
+      (int *)Allocate(sizeof(int) * automaton->Max_Input);
+    for (j = 0; j < automaton->Max_Input; j++)
+      automaton->TransTable[i][j] = automaton->E_State;
+  }
 
   /* allocate memory for the table of final states. */
   automaton->Final = (Boolean *)Allocate(sizeof(Boolean) * (Ss + 1));
@@ -1124,19 +1122,17 @@ regex2dfa(char *rxs, DFA *automaton)
   for (i = 0; i <= automaton->Max_States; i++)
     automaton->Final[i] = False;
 
-  for (S = Classes = 0; S < Ss; S++) 
-    {
-      SP = &STab[S];
-      if (SP->Class != Classes) 
-        continue;
-      Classes++;
-      if (SP->Empty) 
-        automaton->Final[SP->Class] = True;
-      for (Sh = 0; Sh < SP->Shifts; Sh++) 
-        {
-          C = SP->ShList[Sh].RHS;
-          automaton->TransTable[SP->Class][atoi(SP->ShList[Sh].LHS->Name)] = 
-            STab[C].Class;
-        }
+  for (S = Classes = 0; S < Ss; S++) {
+    SP = &STab[S];
+    if (SP->Class != Classes)
+      continue;
+    Classes++;
+    if (SP->Empty)
+      automaton->Final[SP->Class] = True;
+    for (Sh = 0; Sh < SP->Shifts; Sh++) {
+      C = SP->ShList[Sh].RHS;
+      automaton->TransTable[SP->Class][atoi(SP->ShList[Sh].LHS->Name)] =
+        STab[C].Class;
     }
+  }
 }

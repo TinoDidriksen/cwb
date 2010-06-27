@@ -411,5 +411,4 @@ utils/                  source code of command-line utilities
 man/                    manpages for CQP and the command-line utilities
 
 editline/               local copy of the CSTR Editline library used by CQP
-mingw-libgnurx-2.5.1/   local copy of the MinGW regex library (from GNU libc)
 

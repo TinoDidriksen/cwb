@@ -112,7 +112,8 @@ char cl_regex_error[MAX_LINE_LENGTH];
  * @param charset  The character set of the regex.
  * @return         The new CL_Regex object, or NULL in case of error.
  */
-CL_Regex cl_new_regex(char *regex, int flags, CorpusCharset charset)
+CL_Regex
+cl_new_regex(char *regex, int flags, CorpusCharset charset)
 {
   char *preprocessed_regex; /* allocate dynamically to support very long regexps (from RE() operator) */
   char *anchored_regex;
@@ -153,13 +154,16 @@ CL_Regex cl_new_regex(char *regex, int flags, CorpusCharset charset)
   rx->needle = pcre_compile(anchored_regex, options_for_pcre, &errstring_for_pcre, &erroffset_for_pcre, NULL);
   if (rx->needle == NULL) {
     strcpy(cl_regex_error, errstring_for_pcre);
-    fprintf(stderr, "Regex Compile Error: %s\n", cl_regex_error);
+    fprintf(stderr, "CL: Regex Compile Error: %s\n", cl_regex_error);
     cl_free(rx);
     cl_free(preprocessed_regex);
     cl_free(anchored_regex);
     cl_errno = CDA_EBADREGEX;
     return NULL;
   }
+  else if (cl_debug)
+    fprintf(stderr, "CL: Regex compiled successfully using PCRE library\n", errstring_for_pcre);
+
   /* always use pcre_study because nearly all our regexes are going to be used lots of times;
    * note that according to man pcre, the optimisation methods are different to those used by
    * the CL's regex optimiser. So it is all good. */
@@ -171,6 +175,8 @@ CL_Regex cl_new_regex(char *regex, int flags, CorpusCharset charset)
     /* note that failure of pcre_study is not a critical error, we can just continue without
        the extra info */
   }
+  if (cl_debug && rx->extra)
+    fprintf(stderr, "CL: calling pcre_study produced useful information...\n", errstring_for_pcre);
 
   /* allocate string buffer for cl_regex_match() function if flags are present */
   if (flags)
@@ -312,15 +318,23 @@ cl_regex_match(CL_Regex rx, char *str)
 void
 cl_delete_regex(CL_Regex rx)
 {
+  /* DON'T use cl_free() for PCRE opaque objects, just in case; use PCRE built-in
+   * pcre_free(). Note this will probably just be set to = free(). But it might not.
+   * We can let PCRE worry about that. That does mean, however, we should test the
+   * pointers for non-nullity before calling pcre_free. Normally we would also set the
+   * pointers to NULL after freeing the target. However, in this case, we know the
+   *  structure theybelong to will be freed by the end of the function, so no worries.
+   */
   int i;
-  cl_free(rx->needle);           /* free PCRE regex buffer */
+
+  if (rx->needle)
+    pcre_free(rx->needle);         /* free PCRE regex buffer */
   if (rx->extra)
-    cl_free(rx->extra->study_data);
-  /* don't need to free extra->tables or ->callout_data because we know we never use them in CL */
-  cl_free(rx->extra);
+    pcre_free(rx->extra);          /* and "extra" buffer */
   cl_free(rx->haystack_buf);       /* free string buffer if it was allocated */
   for (i = 0; i < rx->grains; i++)
     cl_free(rx->grain[i]);         /* free grain strings if regex was optimised */
+
   cl_free(rx);
 }
 

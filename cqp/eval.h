@@ -221,6 +221,11 @@ enum cooc_op { cooc_meet,
              };
 
 
+/**
+ * Evaltree object
+ *
+ * (TODO specify here what on earth one of these is)
+ */
 typedef union e_tree *Evaltree;
 
 
