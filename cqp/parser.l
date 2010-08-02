@@ -45,7 +45,7 @@
 #undef YY_INPUT
 
 /* replace YY_INPUT macro with call to yy_input_char() <macro.c> for
-   macro expansion  --  this version suffers from the ÿ2k-Bug anyway */
+   macro expansion  --  this version suffers from the 0xff2k-Bug anyway */
 /*
 #define YY_INPUT(buf,result,max_size) { \
      int c = (cqp_input_string ? cqp_input_string[cqp_input_string_position++] \

@@ -288,9 +288,40 @@ char *cl_string_latex2iso(char *str, char *result, int target_len);
    str == result is explicitly allowed; conveniently returns <result> */
 extern int cl_allow_latex2iso; /* cl_string_latex2iso will only change a string if this is true, it is false by default*/
 
+char *cl_xml_entity_decode(char *s); /* removes the four default XML entities from the string, in situ */
+/**
+ * For a given character, say whether it is legal for an XML name.
+ *
+ * TODO: Currently, anything in the upper half of the 8-bit range is
+ * allowed (in the old Latin1 days this was anything from 0xa0 to
+ * 0xff). This will work with anyt non-ascii character set, but
+ * is almost certainly too lax.
+ *
+ * @param c  Character to check. (It is expected to be a char,
+ *           so is typecase to unsigned char for comparison with
+ *           upper-128 hex values.)
+ */
+#define cl_xml_is_name_char(c)  ( ( c >= 'A'  && c <= 'Z')  ||       \
+                                  ( c >= 'a'  && c <= 'z')  ||       \
+                                  ( c >= '0'  && c <= '9')  ||       \
+                                  (    (unsigned char) c >= 0x80     \
+                                    && (unsigned char) c <= 0xff     \
+                                  ) ||                               \
+                                  ( c == '-') ||                     \
+                                  ( c == '_')                        \
+                                 )
+
 void cl_path_adjust_os(char *path);  /* normalises a path to Windowslike or Unixlike, depending on the build;
                                         string changed in place. */
 void cl_path_adjust_independent(char *path); /* makes a path Unixlike, regardless of the OS; string changed in place. */
+
+char *cl_path_registry_quote(char *path); /* adds registry-format quotes and slashes to a path where necessary;
+                                             a newly-allocated string is returned. */
+
+/* validate and manipulate strings that are (sub)corpus identifiers */
+int cl_id_validate(char *s);
+void cl_id_toupper(char *s);
+void cl_id_tolower(char *s);
 
 /* built-in support for handling feature set attributes */
 char *cl_make_set(char *s, int split);

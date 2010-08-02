@@ -48,7 +48,7 @@ extern int yyparse (void);
 extern void yyrestart(FILE *input_file);
 
 
-/** Array of file handles. */
+/** Array of file handles. Allows nested execution of "included" text files full of commands. */
 FILE *cqp_files[MAXCQPFILES];
 /** index-pointer into cqp_files. @see cqp_files */
 int cqp_file_p;
@@ -100,21 +100,6 @@ install_signal_handler(void)
   }
 }
 
-
-
-/*
- * Wrapper function: randomises the internal random number generator.
- *
- * @see cl_randomize
-
-Doesn't seem to be actually used anywhere, so commented out in anticipation
-of deletion; declaration in cqp.h file also commented out - AH 2/4/2010
-
-void
-cqp_randomize(void)
-{
-  cl_randomize();
-} */
 
 
 /**
@@ -315,6 +300,7 @@ cqp_parse_file(FILE *fd, int exit_on_parse_errors)
     yyin = fd;
     yyrestart(yyin);
 
+    /* main read-from-parser loop */
     while (ok && !feof(fd) && !exit_cqp) {
       if (child_process && ferror(fd)) {
         /* in child mode, abort on read errors (to avoid hang-up when parent has died etc.) */
@@ -371,7 +357,7 @@ cqp_parse_file(FILE *fd, int exit_on_parse_errors)
 }
 
 /**
- * Parses a stirng for CQP query syntax.
+ * Parses a string for CQP query syntax.
  *
  * @param s  The string to parse.
  * @return   Boolean: true = all ok, false = a problem.

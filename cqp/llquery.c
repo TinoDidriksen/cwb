@@ -305,8 +305,9 @@ ensure_semicolon (char *line) {
 
 
 
-/* this function replaces cqp_parse_file(stdin,0) if we're using GNU Readline */
-void readline_main(void)
+/** this function replaces cqp_parse_file(stdin,0) if we're using GNU Readline */
+void
+readline_main(void)
 {
   char prompt[512];
   char *input = NULL;

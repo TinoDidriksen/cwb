@@ -34,25 +34,27 @@
 #define MACRO_HASH_BUCKETS 8000
 
 
-extern FILE *yyin;		/* flex input when parsing file */
+extern FILE *yyin;                /* flex input when parsing file */
 extern int yylex(void);
 extern char *yytext;
 
 typedef struct _InputBuffer {
-  char *data;			/* the actual buffered input string */
-  int position;			/* current read position */
-  struct _MacroEntry *macro;	/* pointer to the macro which created this buffer */
-  struct _InputBuffer *next;	/* next buffer (will be read when current buffer has been completed) */
+  char *data;                      /**< the actual buffered input string */
+  int position;                    /**< current read position */
+  struct _MacroEntry *macro;       /**< pointer to the macro which created this buffer */
+  struct _InputBuffer *next;       /**< next buffer (will be read when current buffer has been completed) */
 } *InputBuffer;
 
-InputBuffer InputBufferList = NULL;		/* list of active input buffers */
+InputBuffer InputBufferList = NULL;                /**< list of active input buffers */
 
 
 /* 
  *  macro definitions & lookup hash
  */
 
-/* the macro replacement string is stored as a sequence of segments:
+/**
+ * the macro replacement string is stored as a sequence of segments:
+ *
  *   literal text ...  string = "...",  arg = -1
  *   argument ...      string = NULL,   arg = 0 .. 9
  *   pseudo arg ...    string = NULL,   arg = -1
@@ -63,17 +65,18 @@ typedef struct _MacroSegment {
   struct _MacroSegment *next;
 } *MacroSegment;
 
-/* an entry in the macro database */
+/** an entry in the macro database */
 typedef struct _MacroEntry {
-  char *name;			/* hash key is (name, #args) to allow overloading */
-  int args;			/* number of arguments */
-  char *argnames[10];		/* optional argument names (for information only) */
-  MacroSegment replacement;	/* macro replacement -> list of segments */
-  int active;			/* used to detect recursive macros */
+  char *name;                      /* hash key is (name, #args) to allow overloading */
+  int args;                        /* number of arguments */
+  char *argnames[10];              /* optional argument names (for information only) */
+  MacroSegment replacement;        /* macro replacement -> list of segments */
+  int active;                      /* used to detect recursive macros */
   struct _MacroEntry *next;
 } *MacroEntry;
 
-/* This hash implementation can hold multiple macro entries in a single bucket
+/**
+ * This hash implementation can hold multiple macro entries in a single bucket
  * in order to avoid cache overflow when _very_ many macros are defined. Since
  * we don't need to store any other information in the buckets, a bucket is
  * simply a pointer to a list of macro entries, i.e. a MacroEntry.
@@ -83,12 +86,13 @@ typedef struct _MacroHashTable {
   int size;
 } *MacroHashTable;
 
-MacroHashTable MacroHash = NULL;	/* our macro database */
+MacroHashTable MacroHash = NULL;        /* our macro database */
 
 
-/* indent macro expansion debugging output (according to # of active input buffers) */
+/** indent macro expansion debugging output (according to # of active input buffers) */
 void
-macro_debug_newline_indent(void) {
+macro_debug_newline_indent(void)
+{
   InputBuffer buf = InputBufferList;
 
   fprintf(stderr, "\n");
@@ -98,15 +102,16 @@ macro_debug_newline_indent(void) {
   }
 }
 
-/* push new input buffer (which can hold string of lenght <size>) on top of buffer list */
+/** push new input buffer (which can hold string of lenght <size>) on top of buffer list */
 InputBuffer
-PushInputBuffer(int size) {
+PushInputBuffer(int size)
+{
   InputBuffer new_buffer;
 
   new_buffer = (InputBuffer) cl_malloc(sizeof(struct _InputBuffer));
   new_buffer->data = (char *) cl_malloc(size + 1);
   new_buffer->position = 0;
-  new_buffer->data[0] = '\0';	/* <data> initialised to empty string */
+  new_buffer->data[0] = '\0';        /* <data> initialised to empty string */
   new_buffer->macro = NULL;
 
   new_buffer->next = InputBufferList;
@@ -115,9 +120,10 @@ PushInputBuffer(int size) {
   return new_buffer;
 }
 
-/* delete input buffer from top of list */
+/** delete input buffer from top of list */
 void
-PopInputBuffer(void) {
+PopInputBuffer(void)
+{
   InputBuffer temp;
 
   if (InputBufferList != NULL) {
@@ -125,12 +131,12 @@ PopInputBuffer(void) {
     InputBufferList = InputBufferList->next;
     free(temp->data);
     if (temp->macro != NULL)
-      temp->macro->active = 0;	/* reset macro to inactive state */
+      temp->macro->active = 0;        /* reset macro to inactive state */
     free(temp);
   }
 }
 
-/* has to be called once to initialise the hash */
+/** has to be called once to initialise the hash */
 void 
 MakeMacroHash(int size)
 {
@@ -172,7 +178,8 @@ MacroHashLookup(char *str, int args)
  *    hide the old one, in accordance with the macro redefinition strategy
  */
 MacroEntry
-MacroHashAdd(char *str, int args) {
+MacroHashAdd(char *str, int args)
+{
   MacroEntry new_macro;
   int offset, i;
 
@@ -211,17 +218,17 @@ MacroHashDelete(MacroEntry macro)
   if (p == macro) {
     MacroHash->hash[offset] = macro->next;
   }
-  else {			/* find macro's predecessor in this bucket */
+  else {                        /* find macro's predecessor in this bucket */
     while (p != NULL) {
       if (p->next == macro) 
-	break;
+        break;
       p = p->next;
     }
-    if (p == NULL) {		/* this REALLY shouldn't happen */
+    if (p == NULL) {                /* this REALLY shouldn't happen */
       cqpmessage(Error, "MacroHashDelete: MacroEntry not found in hash ???");
       exit(1);
     }
-    p->next = macro->next;	/* cut macro from list */
+    p->next = macro->next;        /* cut macro from list */
   }
   /* free macro's name, argument names, segments, and the macro struct itself */
   while (macro->replacement != NULL) {
@@ -237,11 +244,13 @@ MacroHashDelete(MacroEntry macro)
 }
 
 
-/* append segment to macro replacement string, 
+/**
+ * append segment to macro replacement string,
  * returns pointer to the new, initialised segment
  */
 MacroSegment
-MacroAddSegment(MacroEntry macro) {
+MacroAddSegment(MacroEntry macro)
+{
   MacroSegment seg, new_seg;
 
   assert(macro != NULL);
@@ -268,23 +277,33 @@ MacroAddSegment(MacroEntry macro) {
 
 
 
-/* read one character (byte) of input from
-     InputBufferList[top], ... , InputBufferList[bottom], cqp_input_string, yyin
-   in that order of precedence 
-   [adds character to query buffer] */
+/**
+ * Get a character for the lexer/parser.
+ *
+ * This function reads one character (byte) of input from
+ *   InputBufferList[top], ... , InputBufferList[bottom], cqp_input_string, yyin
+ * in that order of precedence.
+ *
+ * It adds the character to query buffer, and returns it.
+ *
+ * Used by the lexer to get its characters; see parser.l where YY_INPUT() is redefined
+ * to a macro calling this function.
+ * (Not clear why it's in macro.c when it is not specific to just macros.)
+ */
 int
-yy_input_char(void) {
+yy_input_char(void)
+{
   InputBuffer buf;
   int character;
 
-  buf = InputBufferList;	/* read from buffer on top of input buffer list */
+  buf = InputBufferList;        /* read from buffer on top of input buffer list */
   if (buf != NULL) {
     if (buf->data[buf->position] == '\0') {
       /* end of buffer reached -> pop it and try again */
       PopInputBuffer();
       if (macro_debug)
-	macro_debug_newline_indent(); /* start new line & indent in debugging output */
-      return yy_input_char();	/* will be added to query buffer in embedded call */
+        macro_debug_newline_indent(); /* start new line & indent in debugging output */
+      return yy_input_char();        /* will be added to query buffer in embedded call */
     }
     else {
       character = (unsigned char) buf->data[buf->position++];
@@ -302,16 +321,16 @@ yy_input_char(void) {
     /* (not turned off in silent mode (e.g. in child mode), so we get the location of parse errors!) */ 
     if (!reading_cqprc && !QueryBufferOverflow && (character >= 0)) {
       if ((QueryBufferP + 1) < QUERY_BUFFER_SIZE) {
-	QueryBuffer[QueryBufferP++] = character;
-	QueryBuffer[QueryBufferP] = '\0';
+        QueryBuffer[QueryBufferP++] = character;
+        QueryBuffer[QueryBufferP] = '\0';
       }
       else {
-	if (write_history_file)
-	  cqpmessage(Warning, 
-		     "Query buffer overflow: Last statement will not be added to query history.");
-	QueryBufferOverflow++;
-	QueryBufferP = 0;
-	QueryBuffer[0] = '\0';
+        if (write_history_file)
+          cqpmessage(Warning,
+                     "Query buffer overflow: Last statement will not be added to query history.");
+        QueryBufferOverflow++;
+        QueryBufferP = 0;
+        QueryBuffer[0] = '\0';
       }
     }
   }
@@ -322,92 +341,98 @@ yy_input_char(void) {
   return character;
 }
 
-/* check if input is being read from macro expansion */
+/** checks if input is being read from macro expansion */
 int 
-yy_input_from_macro(void) {
+yy_input_from_macro(void)
+{
   return (InputBufferList != NULL);
 }
 
-/* initialise macro hash and define built-in macros */
+/**
+ * Initialises the macro hash and defines built-in macros.
+ */
 void
-init_macros(void) {
+init_macros(void)
+{
   MakeMacroHash(MACRO_HASH_BUCKETS);
   /* standard built-in macros */
   if (! (
-	 /* unify feature vectors */
-	 define_macro("unify", 2, "$0=Att $1=Label", 
-		      "$1.$0") &&
-	 define_macro("unify", 3, "$0=Att $1=Lab1 $2=Lab2", 
-		      "unify($1.$0, /unify($0,'$2'))") &&
-	 define_macro("unify", 4, "$0=Att $1=Lab1 $2=Lab2 $3=Lab3", 
-		      "unify($1.$0, /unify($0,'$2','$3'))") &&
-	 define_macro("unify", 5, "$0=Att $1=Lab1 $2=Lab2 $3=Lab3 $4=Lab4", 
-		      "unify($1.$0, /unify($0,'$2','$3','$4'))") &&
-	 define_macro("unify", 6, "$0=Att $1=Lab1 $2=Lab2 $3=Lab3 $4=Lab4 $5=Lab5", 
-		      "unify($1.$0, /unify($0,'$2','$3','$4','$5'))") &&
-	 define_macro("unify", 7, "$0=Att $1=Lab1 $2=Lab2 $3=Lab3 $4=Lab4 $5=Lab5 $6=Lab6",
-		      "unify($1.$0, /unify($0,'$2','$3','$4','$5','$6'))") &&
-	 define_macro("unify", 8, "$0=Att $1=Lab1 $2=Lab2 $3=Lab3 $4=Lab4 $5=Lab5 $6=Lab6 $7=Lab7",
-		      "unify($1.$0, /unify($0,'$2','$3','$4','$5','$6','$7'))") &&
-	 define_macro("unify", 9, "$0=Att $1=Lab1 $2=Lab2 $3=Lab3 $4=Lab4 $5=Lab5 $6=Lab6 $7=Lab7 $8=Lab8",
-		      "unify($1.$0, /unify($0,'$2','$3','$4','$5','$6','$7','$8'))") &&
-	 define_macro("unify",10, "$0=Att $1=Lab1 $2=Lab2 $3=Lab3 $4=Lab4 $5=Lab5 $6=Lab6 $7=Lab7 $8=Lab8 $9=Lab9",
-		      "unify($1.$0, /unify($0,'$2','$3','$4','$5','$6','$7','$8','$9'))") &&
-	 /* match a single region (of a structural attribute) -- e.g. pre-parsed chunks */ 
-	 define_macro("region", 1, "$0=Tag",
-		      "(<$0> []* </$0>)") &&
-	 define_macro("region", 2, "$0=Tag $1=Label",
-		      "(<$0> $1:[] []* </$0>)") && 
-	 /* match a region containing a particular token; the full pattern matching the required token must be specified */ 
-	 define_macro("in_region", 2, "$0=Tag $1=Pattern",
-		      "(<$0> []* ($1) []* </$0>)") && 
-	 define_macro("in_region", 3, "$0=Tag $1=Pattern1 $2=Pattern2",
-		      "(<$0> []* ( ($1) []* ($2) | ($2) []* ($1) ) []* </$0>)") && 
-	 /* undefines Label(s) & returns true */
-	 define_macro("undef", 1, "$0=Label",
-		      "(ignore(~$0))") &&
-	 define_macro("undef", 2, "$0=Lab1 $1=Lab2",
-		      "(/undef($0) & /undef($1))") &&
-	 define_macro("undef", 3, "$0=Lab1 $1=Lab2 $2=Lab3",
-		      "(/undef($0) & /undef($1,$2))") &&
-	 define_macro("undef", 4, "$0=Lab1 $1=Lab2 $2=Lab3 $3=Lab4",
-		      "(/undef($0) & /undef($1,$2,$3))") &&
-	 define_macro("undef", 5, "$0=Lab1 $1=Lab2 $2=Lab3 $3=Lab4 $4=Lab5",
-		      "(/undef($0) & /undef($1,$2,$3,$4))") &&
-	 define_macro("undef", 6, "$0=Lab1 $1=Lab2 $2=Lab3 $3=Lab4 $4=Lab5 $5=Lab6",
-		      "(/undef($0) & /undef($1,$2,$3,$4,$5))") &&
-	 define_macro("undef", 7, "$0=Lab1 $1=Lab2 $2=Lab3 $3=Lab4 $4=Lab5 $5=Lab6 $6=Lab7",
-		      "(/undef($0) & /undef($1,$2,$3,$4,$5,$6))") &&
-	 define_macro("undef", 8, "$0=Lab1 $1=Lab2 $2=Lab3 $3=Lab4 $4=Lab5 $5=Lab6 $6=Lab7 $7=Lab8",
-		      "(/undef($0) & /undef($1,$2,$3,$4,$5,$6,$7))") &&
-	 define_macro("undef", 9, "$0=Lab1 $1=Lab2 $2=Lab3 $3=Lab4 $4=Lab5 $5=Lab6 $6=Lab7 $7=Lab8 $8=Lab9",
-		      "(/undef($0) & /undef($1,$2,$3,$4,$5,$6,$7,$8))") &&
-	 define_macro("undef",10, "$0=Lab1 $1=Lab2 $2=Lab3 $3=Lab4 $4=Lab5 $5=Lab6 $6=Lab7 $7=Lab8 $8=Lab9 $9=Lab10",
-		      "(/undef($0) & /undef($1,$2,$3,$4,$5,$6,$7,$8,$9))") &&
-	 /* distribution of attribute values for a given word form (generally, tokens with particular attribute value) -- sometimes called colligates */
-	 define_macro("codist", 2, "$0=Word $1=Att2",
-		      "/codist[word, '$0', $1]") &&
-	 define_macro("codist", 3, "$0=Att1 $1=Word $2=Att2",
-		      "_Codist_Results = [$0 = '$1']; group _Codist_Results match $2 by match $0; discard _Codist_Results;") &&
-	 1
-	 ))
+         /* unify feature vectors */
+         define_macro("unify", 2, "$0=Att $1=Label",
+                      "$1.$0") &&
+         define_macro("unify", 3, "$0=Att $1=Lab1 $2=Lab2",
+                      "unify($1.$0, /unify($0,'$2'))") &&
+         define_macro("unify", 4, "$0=Att $1=Lab1 $2=Lab2 $3=Lab3",
+                      "unify($1.$0, /unify($0,'$2','$3'))") &&
+         define_macro("unify", 5, "$0=Att $1=Lab1 $2=Lab2 $3=Lab3 $4=Lab4",
+                      "unify($1.$0, /unify($0,'$2','$3','$4'))") &&
+         define_macro("unify", 6, "$0=Att $1=Lab1 $2=Lab2 $3=Lab3 $4=Lab4 $5=Lab5",
+                      "unify($1.$0, /unify($0,'$2','$3','$4','$5'))") &&
+         define_macro("unify", 7, "$0=Att $1=Lab1 $2=Lab2 $3=Lab3 $4=Lab4 $5=Lab5 $6=Lab6",
+                      "unify($1.$0, /unify($0,'$2','$3','$4','$5','$6'))") &&
+         define_macro("unify", 8, "$0=Att $1=Lab1 $2=Lab2 $3=Lab3 $4=Lab4 $5=Lab5 $6=Lab6 $7=Lab7",
+                      "unify($1.$0, /unify($0,'$2','$3','$4','$5','$6','$7'))") &&
+         define_macro("unify", 9, "$0=Att $1=Lab1 $2=Lab2 $3=Lab3 $4=Lab4 $5=Lab5 $6=Lab6 $7=Lab7 $8=Lab8",
+                      "unify($1.$0, /unify($0,'$2','$3','$4','$5','$6','$7','$8'))") &&
+         define_macro("unify",10, "$0=Att $1=Lab1 $2=Lab2 $3=Lab3 $4=Lab4 $5=Lab5 $6=Lab6 $7=Lab7 $8=Lab8 $9=Lab9",
+                      "unify($1.$0, /unify($0,'$2','$3','$4','$5','$6','$7','$8','$9'))") &&
+         /* match a single region (of a structural attribute) -- e.g. pre-parsed chunks */
+         define_macro("region", 1, "$0=Tag",
+                      "(<$0> []* </$0>)") &&
+         define_macro("region", 2, "$0=Tag $1=Label",
+                      "(<$0> $1:[] []* </$0>)") &&
+         /* match a region containing a particular token; the full pattern matching the required token must be specified */
+         define_macro("in_region", 2, "$0=Tag $1=Pattern",
+                      "(<$0> []* ($1) []* </$0>)") &&
+         define_macro("in_region", 3, "$0=Tag $1=Pattern1 $2=Pattern2",
+                      "(<$0> []* ( ($1) []* ($2) | ($2) []* ($1) ) []* </$0>)") &&
+         /* undefines Label(s) & returns true */
+         define_macro("undef", 1, "$0=Label",
+                      "(ignore(~$0))") &&
+         define_macro("undef", 2, "$0=Lab1 $1=Lab2",
+                      "(/undef($0) & /undef($1))") &&
+         define_macro("undef", 3, "$0=Lab1 $1=Lab2 $2=Lab3",
+                      "(/undef($0) & /undef($1,$2))") &&
+         define_macro("undef", 4, "$0=Lab1 $1=Lab2 $2=Lab3 $3=Lab4",
+                      "(/undef($0) & /undef($1,$2,$3))") &&
+         define_macro("undef", 5, "$0=Lab1 $1=Lab2 $2=Lab3 $3=Lab4 $4=Lab5",
+                      "(/undef($0) & /undef($1,$2,$3,$4))") &&
+         define_macro("undef", 6, "$0=Lab1 $1=Lab2 $2=Lab3 $3=Lab4 $4=Lab5 $5=Lab6",
+                      "(/undef($0) & /undef($1,$2,$3,$4,$5))") &&
+         define_macro("undef", 7, "$0=Lab1 $1=Lab2 $2=Lab3 $3=Lab4 $4=Lab5 $5=Lab6 $6=Lab7",
+                      "(/undef($0) & /undef($1,$2,$3,$4,$5,$6))") &&
+         define_macro("undef", 8, "$0=Lab1 $1=Lab2 $2=Lab3 $3=Lab4 $4=Lab5 $5=Lab6 $6=Lab7 $7=Lab8",
+                      "(/undef($0) & /undef($1,$2,$3,$4,$5,$6,$7))") &&
+         define_macro("undef", 9, "$0=Lab1 $1=Lab2 $2=Lab3 $3=Lab4 $4=Lab5 $5=Lab6 $6=Lab7 $7=Lab8 $8=Lab9",
+                      "(/undef($0) & /undef($1,$2,$3,$4,$5,$6,$7,$8))") &&
+         define_macro("undef",10, "$0=Lab1 $1=Lab2 $2=Lab3 $3=Lab4 $4=Lab5 $5=Lab6 $6=Lab7 $7=Lab8 $8=Lab9 $9=Lab10",
+                      "(/undef($0) & /undef($1,$2,$3,$4,$5,$6,$7,$8,$9))") &&
+         /* distribution of attribute values for a given word form (generally, tokens with particular attribute value) -- sometimes called colligates */
+         define_macro("codist", 2, "$0=Word $1=Att2",
+                      "/codist[word, '$0', $1]") &&
+         define_macro("codist", 3, "$0=Att1 $1=Word $2=Att2",
+                      "_Codist_Results = [$0 = '$1']; group _Codist_Results match $2 by match $0; discard _Codist_Results;") &&
+         1
+         ))
     {
       cqpmessage(Error, "Error in definition of built-in macros. Contact support :o)");
     }
 }
 
 
-/* macro args are stored in a global array so we can always free() the memory */
+/** macro args are stored in a global array so we can always free() the memory */
 char *(macro_arg[10]) = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-unsigned int pseudo_arg_counter = 0; /* unique number for pseudo argument in each macro call */
+unsigned int pseudo_arg_counter = 0; /**< unique number for pseudo argument in each macro call */
 
-/* expand macro <name>:
+/**
+ * expand macro <name>:
  *   - read argument list using yy_input_char();
  *   - lookup macro as by <name> and <args> 
  *   - push subsituted string on top of input buffer list
  */
 int 
-expand_macro(char *name) {
+expand_macro(char *name)
+{
   MacroEntry macro;
   MacroSegment seg;
   int args = 0;
@@ -430,7 +455,7 @@ expand_macro(char *name) {
   for (token = yylex(); (token != ')') && (token != ']'); token = yylex()) {
     switch (token) {
     case INTEGER:
-      macro_arg[args++] = cl_strdup(yytext);	/* yytext should still contain the string representation of the integer value */
+      macro_arg[args++] = cl_strdup(yytext);        /* yytext should still contain the string representation of the integer value */
       break;
     case ID:
     case STRING:
@@ -444,7 +469,7 @@ expand_macro(char *name) {
       cqpmessage(Error, "Too many arguments in macro call.");
       return 0;
     }
-    token = yylex();		/* must be either ',' or ')'/']' */
+    token = yylex();                /* must be either ',' or ')'/']' */
     if ((token == ')') || (token ==  ']'))
       break;
     if (token != ',') {
@@ -462,39 +487,39 @@ expand_macro(char *name) {
 
     if (macro_debug) {
       if (InputBufferList == NULL) {
-	fprintf(stderr, "EXPAND MACRO %s(", name);
-	for (i = 0; i < args; i++) {
-	  fprintf(stderr, "%s", macro_arg[i]);
-	  if (i < (args-1)) fprintf(stderr, ", ");
-	}
-	fprintf(stderr, ")");
+        fprintf(stderr, "EXPAND MACRO %s(", name);
+        for (i = 0; i < args; i++) {
+          fprintf(stderr, "%s", macro_arg[i]);
+          if (i < (args-1)) fprintf(stderr, ", ");
+        }
+        fprintf(stderr, ")");
       }
     }
 
-    len = 0;			/* calculate length of replacement string first */
+    len = 0;                        /* calculate length of replacement string first */
     for (seg = macro->replacement; seg != NULL; seg = seg->next) {
       if (seg->arg >= 0)
-	len += strlen(macro_arg[seg->arg]);
+        len += strlen(macro_arg[seg->arg]);
       else if (seg->string != NULL)
-	len += strlen(seg->string);
+        len += strlen(seg->string);
       else
-	len += strlen(pseudo_arg);
+        len += strlen(pseudo_arg);
     }
     buffer = PushInputBuffer(len); /* allocate & fill buffer with macro replacement */
     if (macro_debug) {
-      fprintf(stderr, " ==>");	    /* symbolises macro expansion into next line */
+      fprintf(stderr, " ==>");            /* symbolises macro expansion into next line */
       macro_debug_newline_indent(); /* if debugging macro expansion, start new line & indent */
     }
     buffer->macro = macro;
-    macro->active = 1;		/* macro is activated now */
+    macro->active = 1;                /* macro is activated now */
     for (seg = macro->replacement, buf = buffer->data; seg != NULL; seg = seg->next) {
       if (seg->arg >= 0)
-	part = macro_arg[seg->arg];
+        part = macro_arg[seg->arg];
       else if (seg->string != NULL)
-	part = seg->string;
+        part = seg->string;
       else
-	part = pseudo_arg;
-      strcpy(buf, part);		/* insert segment into replacement string */
+        part = pseudo_arg;
+      strcpy(buf, part);                /* insert segment into replacement string */
       buf += strlen(part);
     }
     *buf = '\0';
@@ -509,7 +534,8 @@ expand_macro(char *name) {
 }
 
 
-/* define a new macro:
+/**
+ * define a new macro:
  *   name = macro name
  *   args = # of arguments (0 .. 9); 
  *     alternatively, specify:
@@ -519,24 +545,25 @@ expand_macro(char *name) {
  * returns 1 if macro definition was successful, 0 on syntax error
  */
 int 
-define_macro(char *name, int args, char *argstr, char *definition) {
+define_macro(char *name, int args, char *argstr, char *definition)
+{
   MacroEntry macro;
   MacroSegment seg;
-  char *point, *mark;		/* remember emacs? ;-) */
+  char *point, *mark;                /* remember emacs? ;-) */
   char *s;
   int argument, len;
 
-  if (argstr != NULL) {		/* <argstr> overrides <args> */
+  if (argstr != NULL) {                /* <argstr> overrides <args> */
     args = 0; /* -> count number of args specified in argstr */
     point = argstr;
     while (*point != 0) {
       if (*point == '$') {
-	point++;
-	if ((*point >= '0') && (*point <= '9')) {
-	  int n = (*point - '0') + 1;
-	  if (n > args)
-	    args = n;
-	}
+        point++;
+        if ((*point >= '0') && (*point <= '9')) {
+          int n = (*point - '0') + 1;
+          if (n > args)
+            args = n;
+        }
       }
       point++;
     }
@@ -553,54 +580,54 @@ define_macro(char *name, int args, char *argstr, char *definition) {
   }
 
   macro = MacroHashAdd(name, args);
-  if (argstr != NULL) {		/* if <argstr> was specified, extract argument names & check syntax */
-    point = argstr;		/* leading whitespace is not allowed! */
-    argument = 0;		/* next expected argument */
+  if (argstr != NULL) {                /* if <argstr> was specified, extract argument names & check syntax */
+    point = argstr;                /* leading whitespace is not allowed! */
+    argument = 0;                /* next expected argument */
     while (*point != 0) {
       if (*point == '$') {
-	point++;
-	if (*point == ('0' + argument)) {
-	  point++;
-	  if (*point == '=') {
-	    point++;
-	    mark = point;
-	    while ((*point >= 'A' && *point <= 'Z') || /* valid identifier characters */
-		   (*point >= 'a' && *point <= 'z') ||
-		   (*point >= '0' && *point <= '9') ||
-		   (*point == '_') || (*point == '-')) {
-	      point++;
-	    }
-	    len = (point - mark); /* string length of argument name */
-	    if (macro->argnames[argument] != NULL) {
-	      cqpmessage(Error, "Argument $%d defined twice in prototype %s(%s)", argument, name, argstr);
-	      MacroHashDelete(macro);
-	      return 0;
-	    }
-	    macro->argnames[argument] = (char *) cl_malloc(len + 1);
-	    strncpy(macro->argnames[argument], mark, len);
-	    (macro->argnames[argument])[len] = 0;
-	    argument++;
-	  }
-	  else {
-	    cqpmessage(Error, "Missing '=' in macro prototype %s(%s)", name, argstr);
-	    MacroHashDelete(macro);
-	    return 0;
-	  }
-	}
-	else {
-	  cqpmessage(Error, "Invalid argument $%c in macro prototype %s(%s)", *point, name, argstr);
-	  MacroHashDelete(macro);
-	  return 0;
-	}
+        point++;
+        if (*point == ('0' + argument)) {
+          point++;
+          if (*point == '=') {
+            point++;
+            mark = point;
+            while ((*point >= 'A' && *point <= 'Z') || /* valid identifier characters */
+                   (*point >= 'a' && *point <= 'z') ||
+                   (*point >= '0' && *point <= '9') ||
+                   (*point == '_') || (*point == '-')) {
+              point++;
+            }
+            len = (point - mark); /* string length of argument name */
+            if (macro->argnames[argument] != NULL) {
+              cqpmessage(Error, "Argument $%d defined twice in prototype %s(%s)", argument, name, argstr);
+              MacroHashDelete(macro);
+              return 0;
+            }
+            macro->argnames[argument] = (char *) cl_malloc(len + 1);
+            strncpy(macro->argnames[argument], mark, len);
+            (macro->argnames[argument])[len] = 0;
+            argument++;
+          }
+          else {
+            cqpmessage(Error, "Missing '=' in macro prototype %s(%s)", name, argstr);
+            MacroHashDelete(macro);
+            return 0;
+          }
+        }
+        else {
+          cqpmessage(Error, "Invalid argument $%c in macro prototype %s(%s)", *point, name, argstr);
+          MacroHashDelete(macro);
+          return 0;
+        }
       }
       else {
-	cqpmessage(Error, "Syntax error in macro prototype %s(%s)", name, argstr);
-	MacroHashDelete(macro);
-	return 0;
+        cqpmessage(Error, "Syntax error in macro prototype %s(%s)", name, argstr);
+        MacroHashDelete(macro);
+        return 0;
       }
       /* skip whitespace between arguments in prototype */
       while ((*point == ' ') || (*point == '\t'))
-	point++;
+        point++;
     }
   } /* if (argstr != NULL) ... */
 
@@ -614,44 +641,45 @@ define_macro(char *name, int args, char *argstr, char *definition) {
     /* scan string segment (ended by \000 or by $<n>) */
     for (mark = point; *point != '\0'; point++)
       if (*point == '$' && 
-	  (((*(point+1) >= '0') && (*(point+1) <= '9')) || *(point+1) == '$'))
-	break;
+          (((*(point+1) >= '0') && (*(point+1) <= '9')) || *(point+1) == '$'))
+        break;
     /* append string segment to replacement list unless it's empty */
     if (point > mark) {
       seg = MacroAddSegment(macro);
       seg->string = (char *) cl_malloc(point - mark + 1);
       for (s = seg->string; mark < point; mark++, s++)
-	*s = *mark;
+        *s = *mark;
       *s = '\0';
     }
     /* append argument segment if point is over '$' character */
     if (*point == '$') {
       if (*(point+1) == '$') {
-	seg = MacroAddSegment(macro); /* pseudo argument */
-	seg->arg = -1;
-	seg->string = NULL;
+        seg = MacroAddSegment(macro); /* pseudo argument */
+        seg->arg = -1;
+        seg->string = NULL;
       }
       else {
-	argument = *(point+1) - '0';
-	if (argument >= args) {
-	  cqpmessage(Error, "Invalid argument $%d in macro %s(%d).", argument, name, args);
-	  MacroHashDelete(macro);
-	  return 0;
-	}
-	seg = MacroAddSegment(macro);
-	seg->arg = argument;
+        argument = *(point+1) - '0';
+        if (argument >= args) {
+          cqpmessage(Error, "Invalid argument $%d in macro %s(%d).", argument, name, args);
+          MacroHashDelete(macro);
+          return 0;
+        }
+        seg = MacroAddSegment(macro);
+        seg->arg = argument;
       }
-      point += 2;		/* advance point past argument */
+      point += 2;                /* advance point past argument */
     }
   }
   return 1;
 }
 
-/* internal function for load_macro_file(): remove whitespace & comments from input line */
+/** internal function for load_macro_file(): remove whitespace & comments from input line */
 char *
-preprocess_input_line(char *line) {
+preprocess_input_line(char *line)
+{
   char *p;
-  char quote;		/* 0 -> not in string, ' -> single-quoted string, " -> double-quoted string */
+  char quote;                /* 0 -> not in string, ' -> single-quoted string, " -> double-quoted string */
 
   /* skip leading whitespace */
   while ((*line == ' ') || (*line == '\t'))
@@ -663,22 +691,22 @@ preprocess_input_line(char *line) {
     if (*p == '\\') {
       p++;
       if (*p == '\0')
-	return NULL;		/* backslash at end of line -> parse error */
+        return NULL;                /* backslash at end of line -> parse error */
     }
-    else if (quote) {		/* if we're in a string, look for end-of-string quote */
+    else if (quote) {                /* if we're in a string, look for end-of-string quote */
       if (*p == quote) {
-	quote = 0;
+        quote = 0;
       }
     }
     else if ((*p == '\'') || (*p == '"')) { /* otherwise, a quote starts a new string */
       quote = *p;
     }
-    else if (*p == '#') {	/* '#' char outside of string -> comment */
-      *p = '\0';		/* strip comment */
+    else if (*p == '#') {        /* '#' char outside of string -> comment */
+      *p = '\0';                 /* strip comment */
       break;
     }
   }
-  if (quote) return NULL;	/* unbalanced quotes -> parse error */
+  if (quote) return NULL;        /* unbalanced quotes -> parse error */
 
   /* remove trailing whitespace (usually including '\n' char) */
   p = line + strlen(line);
@@ -693,7 +721,8 @@ preprocess_input_line(char *line) {
  *              or: <whitespace> <identfifier> '(' <prototype> ')'  -> nr_of_args = 0,  prototype = copy of <prototype>
  * returns pointer to copy of <identifier> or NULL on parse error */
 char *
-parse_macro_name(char *text, int *nr_of_args, char **prototype) {
+parse_macro_name(char *text, int *nr_of_args, char **prototype)
+{
   char *p, *mark;
   int len, len_p;
 
@@ -723,7 +752,7 @@ parse_macro_name(char *text, int *nr_of_args, char **prototype) {
     if (!(*p++ == ')')) return NULL;
     if (!(*p == 0)) return NULL;
   }
-  else {			         /* format (b): '(' <prototype> ')' */
+  else {                                 /* format (b): '(' <prototype> ')' */
     mark = p;
     while (*p != ')') {
       if (*p == 0) return NULL; /* line ended before ')' */
@@ -754,16 +783,17 @@ parse_macro_name(char *text, int *nr_of_args, char **prototype) {
  * between the lines of a multi-line macro definition
  */
 void 
-load_macro_file(char *filename) {
+load_macro_file(char *filename)
+{
   char input_line[MACRO_FILE_MAX_LINE_LENGTH + 3]; /* line input buffer */
-  char *line;			/* pointer to input line after preprocessing */
-  char *macro_name;		/* name of macro currently being processed, NULL if not in definition body */
-  int macro_args;		/* number of arguments for current macro */
-  char *macro_prototype;	/* alternatively, a prototype might be given for the arguments */
-  char *body;			/* macro definition (re-allocated for multi-line definitions) */
-  int line_number;		/* current line in macro file (for error messages) */
-  FILE *fd;			/* macro file handle */
-  char *import_file;		/* filename of import file */
+  char *line;                    /* pointer to input line after preprocessing */
+  char *macro_name;              /* name of macro currently being processed, NULL if not in definition body */
+  int macro_args;                /* number of arguments for current macro */
+  char *macro_prototype;         /* alternatively, a prototype might be given for the arguments */
+  char *body;                    /* macro definition (re-allocated for multi-line definitions) */
+  int line_number;               /* current line in macro file (for error messages) */
+  FILE *fd;                      /* macro file handle */
+  char *import_file;             /* filename of import file */
 
   fd = fopen(filename, "r");
   if (fd == NULL) {
@@ -779,31 +809,31 @@ load_macro_file(char *filename) {
     line_number++;
     if (strlen(input_line) > MACRO_FILE_MAX_LINE_LENGTH + 1) {
       cqpmessage(Error, "Line exceeds maximum length of %d characters (file '%s', line %d)\n",
-		 MACRO_FILE_MAX_LINE_LENGTH, filename, line_number);
-      break;			/* stop processing file */
+                 MACRO_FILE_MAX_LINE_LENGTH, filename, line_number);
+      break;                        /* stop processing file */
     }
       
     line = preprocess_input_line(input_line);
     if (!line) {
       cqpmessage(Error, "Unbalanced quotation marks (file '%s', line %d)\n", filename, line_number);
-      break;			/* stop processing file */
+      break;                        /* stop processing file */
     }
 
     if (strncmp(line, "IMPORT", 6) == 0) {
       /* import another macro definition file */
       if (macro_name != NULL) {
-	cqpmessage(Error, "IMPORT directive in MACRO %s(%d) block (file '%s', line %d)\n",
-		   macro_name, macro_args, filename, line_number);
-	break;			/* stop processing file */
+        cqpmessage(Error, "IMPORT directive in MACRO %s(%d) block (file '%s', line %d)\n",
+                   macro_name, macro_args, filename, line_number);
+        break;                        /* stop processing file */
       }
       import_file = line + 6;
       /* skip whitespace after IMPORT keyword; trailing w.s. and comments have already been removed by preprocess_input_line() */
       while ((*import_file == ' ') || (*import_file == '\t'))
-	import_file++;
+        import_file++;
       if (strlen(import_file) == 0) {
-	cqpmessage(Error, "No filename specified in IMPORT directive (file '%s', line %d)\n", 
-		   filename, line_number);
-	break;
+        cqpmessage(Error, "No filename specified in IMPORT directive (file '%s', line %d)\n",
+                   filename, line_number);
+        break;
       }
       /* now import macro definition file */
       load_macro_file(import_file);
@@ -811,65 +841,65 @@ load_macro_file(char *filename) {
     else if (strncmp(line, "MACRO", 5) == 0) {
       /* start of macro definition block */
       if (macro_name != NULL) {
-	cqpmessage(Error, "New MACRO block before definition of MACRO %s(%d) ends (file '%s', line %d)\n",
-		   macro_name, macro_args, filename, line_number);
-	break;			/* stop processing file */
+        cqpmessage(Error, "New MACRO block before definition of MACRO %s(%d) ends (file '%s', line %d)\n",
+                   macro_name, macro_args, filename, line_number);
+        break;                        /* stop processing file */
       }
       macro_name = parse_macro_name(line+5, &macro_args, &macro_prototype);
       if (macro_name == NULL) {
-	cqpmessage(Error, "MACRO syntax error (file '%s', line %d)\n", filename, line_number);
-	break;			/* stop processing file */
+        cqpmessage(Error, "MACRO syntax error (file '%s', line %d)\n", filename, line_number);
+        break;                        /* stop processing file */
       }
     }
     else if (strcmp(line, ";") == 0) {
       /* end of macro definition block */
       if (macro_name == NULL) {
-	cqpmessage(Error, "No MACRO block to end here (file '%s', line %d)\n", filename, line_number);
-	break;			/* stop processing file */
+        cqpmessage(Error, "No MACRO block to end here (file '%s', line %d)\n", filename, line_number);
+        break;                        /* stop processing file */
       }
       if (body == NULL) {
-	cqpmessage(Error, "Definition of MACRO %s(%d) is empty (file '%s', line %d)\n", 
-		   macro_name, macro_args, filename, line_number);
-	break;			/* stop processing file */
+        cqpmessage(Error, "Definition of MACRO %s(%d) is empty (file '%s', line %d)\n",
+                   macro_name, macro_args, filename, line_number);
+        break;                        /* stop processing file */
       }
       if (!define_macro(macro_name, macro_args, macro_prototype, body)) {
-	cqpmessage(Error, "Syntax error in definition of MACRO %s(%d) (file '%s', definition ending on line %d)\n", 
-		   macro_name, macro_args, filename, line_number);
-	break;			/* stop processing file */
+        cqpmessage(Error, "Syntax error in definition of MACRO %s(%d) (file '%s', definition ending on line %d)\n",
+                   macro_name, macro_args, filename, line_number);
+        break;                        /* stop processing file */
       }
-      cl_free(macro_prototype);	/* may have been allocated by parse_macro_name */
+      cl_free(macro_prototype);        /* may have been allocated by parse_macro_name */
       cl_free(macro_name);
       cl_free(body);
     }
     else if (strlen(line) > 0) { /* skip empty lines */
       /* check that we're within macro definition & add this line to body */
       if (macro_name == NULL) {
-	cqpmessage(Error, "Missing MACRO block start (file '%s', line %d)\n", filename, line_number);
-	break;			/* stop processing file */
+        cqpmessage(Error, "Missing MACRO block start (file '%s', line %d)\n", filename, line_number);
+        break;                        /* stop processing file */
       }
       if (body == NULL) {
-	body = cl_strdup(line);	/* first line -> duplicate */
+        body = cl_strdup(line);        /* first line -> duplicate */
       }
-      else {			/* additional lines -> reallocate body & concatenate */
-	body = cl_realloc(body, strlen(body) + strlen(line) + 2);
-	strcat(body, " ");
-	strcat(body, line);
+      else {                        /* additional lines -> reallocate body & concatenate */
+        body = cl_realloc(body, strlen(body) + strlen(line) + 2);
+        strcat(body, " ");
+        strcat(body, line);
       }
     }
   }
 
   if (feof(fd) && (macro_name != NULL)) {
     cqpmessage(Error, "End of file while defining MACRO %s(%d) (file '%s')\n",
-	       macro_name, macro_args, filename);
+               macro_name, macro_args, filename);
   }
-  cl_free(macro_prototype);	/* may have been allocated by parse_macro_name */
+  cl_free(macro_prototype);        /* may have been allocated by parse_macro_name */
   cl_free(macro_name);
   cl_free(body);
   fclose(fd);
 }
 
 
-/* delete active input buffers */
+/** delete active input buffers */
 int 
 delete_macro_buffers(int trace) {
   int n = 0, i;
@@ -881,7 +911,7 @@ delete_macro_buffers(int trace) {
     if (trace) {
       fprintf(stderr, "%s(%d): ", InputBufferList->macro->name, InputBufferList->macro->args);
       for (i = 0; i < InputBufferList->position; i++) 
-	fprintf(stderr, "%c", InputBufferList->data[i]);
+        fprintf(stderr, "%c", InputBufferList->data[i]);
       fprintf(stderr, " <--\n");
     }
     PopInputBuffer();
@@ -891,18 +921,23 @@ delete_macro_buffers(int trace) {
 }
 
 /* macro iterator */
-int iterator_bucket = -1;	   /* current bucket */
-MacroEntry iterator_entry = NULL;  /* current entry in bucket (if NULL, go to next bucket) */
+int iterator_bucket = -1;           /**< current bucket in macro iterator */
+MacroEntry iterator_entry = NULL;   /**< current entry in bucket (if NULL, go to next bucket) @see iterator_bucket */
 
+/**
+ * Resets the module-global iterator_bucket and iterator_entry variables.
+ */
 void
-macro_iterator_new(void) {
+macro_iterator_new(void)
+{
   iterator_bucket = -1;
   iterator_entry = NULL;
 }
 
-/* internal iterator function used by macro_iterator_next() and macro_iterator_next_prototype() */
+/** internal iterator function used by macro_iterator_next() and macro_iterator_next_prototype() */
 MacroEntry
-macro_iterator_next_macro(char *prefix) {
+macro_iterator_next_macro(char *prefix)
+{
   int prefix_length;
 
   if (enable_macros && (MacroHash != NULL)) {
@@ -912,33 +947,34 @@ macro_iterator_next_macro(char *prefix) {
     if (prefix_length > 0) {
       char *first_paren = strchr(prefix, '[');
       if (first_paren != NULL) {
-	prefix_length = first_paren - prefix;
+        prefix_length = first_paren - prefix;
       }
     }
   
-    while (1) {			/* advance iterator until we find a (matching) macro entry or reach the end of the hash table */
+    while (1) {                        /* advance iterator until we find a (matching) macro entry or reach the end of the hash table */
       if (iterator_entry != NULL)
-	iterator_entry = iterator_entry->next;
+        iterator_entry = iterator_entry->next;
       while (iterator_entry == NULL) {
-	iterator_bucket++;
-	if (iterator_bucket >= MacroHash->size)
-	  return NULL;
-	else
-	  iterator_entry = MacroHash->hash[iterator_bucket];
+        iterator_bucket++;
+        if (iterator_bucket >= MacroHash->size)
+          return NULL;
+        else
+          iterator_entry = MacroHash->hash[iterator_bucket];
       }
       if ((prefix_length == 0) || (! strncmp(prefix, iterator_entry->name, prefix_length))) {
-	return iterator_entry;
+        return iterator_entry;
       }
       /* else continue the loop */
     }
   }
   else {
-    return NULL;		/* if macros are disabled or not initialised, iterator produces empty list */
+    return NULL;                /* if macros are disabled or not initialised, iterator produces empty list */
   }
 }
 
 char *
-macro_iterator_next(char *prefix, int *nargs) {
+macro_iterator_next(char *prefix, int *nargs)
+{
   MacroEntry macro;
 
   macro = macro_iterator_next_macro(prefix);
@@ -953,7 +989,8 @@ macro_iterator_next(char *prefix, int *nargs) {
 }
 
 char *
-macro_iterator_next_prototype(char *prefix) {
+macro_iterator_next_prototype(char *prefix)
+{
   MacroEntry macro;
   char *pt;
   int i, len;
@@ -965,19 +1002,19 @@ macro_iterator_next_prototype(char *prefix) {
     len = strlen(macro->name) + 4; /* first compute string length required for prototype */
     for (i = 0; i < macro->args; i++) {
       if (macro->argnames[i] == NULL) 
-	len += 2;
+        len += 2;
       else
-	len += strlen(macro->argnames[i]) + 1;
+        len += strlen(macro->argnames[i]) + 1;
     }
-    pt = (char *) cl_malloc(len);	   /* allocate macro prototype string */
+    pt = (char *) cl_malloc(len);           /* allocate macro prototype string */
     sprintf(pt, "/%s[", macro->name);
     for (i = 0; i < macro->args; i++) {
       if (macro->argnames[i] == NULL) 
-	strcat(pt, "_");
+        strcat(pt, "_");
       else
-	strcat(pt, macro->argnames[i]);
+        strcat(pt, macro->argnames[i]);
       if ((i+1) < macro->args)
-	strcat(pt, ",");	/* append ',' unless this is the last argument */
+        strcat(pt, ",");        /* append ',' unless this is the last argument */
     }
     strcat(pt, "]");
     return pt;
@@ -986,9 +1023,10 @@ macro_iterator_next_prototype(char *prefix) {
 
 
 
-/* internal function for sorting list of macros */
+/** internal function for sorting list of macros */
 static int
-list_macros_sort(const void *p1, const void *p2) {
+list_macros_sort(const void *p1, const void *p2)
+{
   char *name1 = *((char **) p1);
   char *name2 = *((char **) p2);
   int result = strcmp(name1, name2);
@@ -996,69 +1034,71 @@ list_macros_sort(const void *p1, const void *p2) {
 }
 
 
-/* list all defined macros on stdout */
+/** list all defined macros on stdout */
 void 
-list_macros(char *prefix) {
+list_macros(char *prefix)
+{
   int i, len, k, N, l;
   MacroEntry p;
   char *macro_name, initial = ' ', label[4];
-  char **list;		/* list of macro names matching prefix (will be sorted alphabetically) */
+  char **list;                /* list of macro names matching prefix (will be sorted alphabetically) */
 
   len = (prefix != NULL) ? strlen(prefix) : 0;
 
   if (enable_macros && (MacroHash != NULL)) {
-    N = 0;			/* first count macros matching prefix before allocating list */
+    N = 0;                        /* first count macros matching prefix before allocating list */
     for (i = MacroHash->size - 1; i >= 0; i--) {
       p = MacroHash->hash[i];
       while (p != NULL) {
-	if ((prefix == NULL) || (strncasecmp(p->name, prefix, len) == 0))
-	  N++;
-	p = p->next;
+        if ((prefix == NULL) || (strncasecmp(p->name, prefix, len) == 0))
+          N++;
+        p = p->next;
       }
     }
     list = (char **) cl_malloc(N * sizeof(char *)); /* allocate list */
-    k = 0;			/* compile list of macro names for output */
+    k = 0;                        /* compile list of macro names for output */
     for (i = MacroHash->size - 1; i >= 0; i--) {
       p = MacroHash->hash[i];
       while (p != NULL) {
-	if ((prefix == NULL) || (strncasecmp(p->name, prefix, len) == 0)) {
-	  l = strlen(p->name) + 8;
-	  macro_name = (char *) cl_malloc(l);
-	  sprintf(macro_name, "/%s(%d)", p->name, p->args);
-	  list[k++] = macro_name;
-	}
-	p = p->next;
+        if ((prefix == NULL) || (strncasecmp(p->name, prefix, len) == 0)) {
+          l = strlen(p->name) + 8;
+          macro_name = (char *) cl_malloc(l);
+          sprintf(macro_name, "/%s(%d)", p->name, p->args);
+          list[k++] = macro_name;
+        }
+        p = p->next;
       }
     }
     qsort(list, N, sizeof(char *), list_macros_sort); /* sort compiled list */
 
-    if (pretty_print)		/* now print sorted list (with pretty-printing if requested) */
+    if (pretty_print)                /* now print sorted list (with pretty-printing if requested) */
       start_indented_list(0,0,0);
     for (i = 0; i < N; i++) {
       if (pretty_print) {
-	if (list[i][1] != initial) {
-	  initial = list[i][1];
-	  sprintf(label, " %c:", initial);
-	  print_indented_list_br(label);
-	}
-	print_indented_list_item(list[i]);
+        if (list[i][1] != initial) {
+          initial = list[i][1];
+          sprintf(label, " %c:", initial);
+          print_indented_list_br(label);
+        }
+        print_indented_list_item(list[i]);
       }
       else {
-	printf("\t%s\n", list[i]);
+        printf("\t%s\n", list[i]);
       }
     }
     if (pretty_print)
       end_indented_list();
 
-    for (i = 0; i < N; i++)	/* free allocated strings */
+    for (i = 0; i < N; i++)        /* free allocated strings */
       free(list[i]);
     free(list);
   }
 }
 
-/* print definition of macro on stdout */
+/** print definition of macro on stdout */
 void 
-print_macro_definition(char *name, int args) {
+print_macro_definition(char *name, int args)
+{
   MacroEntry macro;
   MacroSegment seg;
   int i;
@@ -1074,39 +1114,40 @@ print_macro_definition(char *name, int args) {
     else {
       printf("/%s[", name);
       for (i = 0; i < args; i++) {
-	if (macro->argnames[i] != NULL) {
-	  printf("·%s·", macro->argnames[i]);
-	}
-	else {
-	  printf("·%d·", i);
-	}
-	if (i < (args-1)) printf(", ");
+        if (macro->argnames[i] != NULL) {
+          printf("·%s·", macro->argnames[i]);
+        }
+        else {
+          printf("·%d·", i);
+        }
+        if (i < (args-1)) printf(", ");
       }
       printf("] = \n");
       for (seg = macro->replacement; seg != NULL; seg = seg->next) {
-	if (seg->arg >= 0) {
-	  i = seg->arg;
-	  if (macro->argnames[i] != NULL) {
-	    printf("·%s·", macro->argnames[i]);
-	  }
-	  else {
-	    printf("·%d·", i);
-	  }
-	}
-	else if (seg->string != NULL)
-	  printf("%s", seg->string);
-	else 
-	  printf("·$$·");
+        if (seg->arg >= 0) {
+          i = seg->arg;
+          if (macro->argnames[i] != NULL) {
+            printf("·%s·", macro->argnames[i]);
+          }
+          else {
+            printf("·%d·", i);
+          }
+        }
+        else if (seg->string != NULL)
+          printf("%s", seg->string);
+        else
+          printf("·$$·");
       }
       printf("\n");
     }
   }
 }
 
-/* print macro hash statistics on stderr */
+/** print macro hash statistics on stderr */
 void 
-macro_statistics(void) {
-  int stat[4] = {0, 0, 0, 0};	/* count buckets: empty / one macro / two macros / more than two */
+macro_statistics(void)
+{
+  int stat[4] = {0, 0, 0, 0};        /* count buckets: empty / one macro / two macros / more than two */
   MacroEntry m;
   int i, count;
 
@@ -1115,7 +1156,7 @@ macro_statistics(void) {
   else {
     for (i = 0; i < MacroHash->size; i++) {
       for (count = 0, m = MacroHash->hash[i]; m != NULL; m = m->next)
-	count++;
+        count++;
       if (count > 3) count = 3;
       stat[count]++;
     }

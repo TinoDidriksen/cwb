@@ -19,7 +19,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include "../cl/cl.h"
+#include "../cl/globals.h"
 #include "../cl/storage.h"           /* for NwriteInt() function */
 #include "../cl/attributes.h"        /* for component_full_name() function */
 
@@ -40,10 +40,10 @@ int verbose = 0;                      /**< print some information about what fil
  * Prints a message describing how to use the program to STDERR and then exits.
  */
 void
-print_usage(void)
+alignencode_usage(void)
 {
   fprintf(stderr, "\n");
-  fprintf(stderr, "Usage: %s [options] <aligment file>\n\n", progname);
+  fprintf(stderr, "Usage: %s [options] <alignment file>\n\n", progname);
   fprintf(stderr, "\n");
   fprintf(stderr, "Adds an alignment attribute to an existing CWB corpus\n");
   fprintf(stderr, "\n");
@@ -122,12 +122,12 @@ parse_args(int ac, char *av[], int min_args)
     case 'h':
       /* unknown option: print usage */
     default:
-      print_usage();
+      alignencode_usage();
       break;
     }
 
   if (ac - optind != min_args)
-     print_usage();                /* no optional arguments in this case */
+    alignencode_usage();                /* no optional arguments in this case */
 
   if ((data_dir == NULL) && (! data_dir_from_corpus)) {
     fprintf(stderr, "%s: either -d or -D must be specified\n", progname);
@@ -262,7 +262,7 @@ main(int argc, char *argv[])
   source_corpus = (reverse) ? corpus2 : corpus1;
   source_corpus_name = (reverse) ? corpus2_name : corpus1_name;
   attribute_name = cl_strdup((reverse) ? corpus1_name : corpus2_name);
-  cl_string_canonical(attribute_name, CHARSET_FOR_IDENTIFIERS, IGNORE_CASE); /* fold attribute name to lowercase */
+  cl_id_tolower(attribute_name); /* fold attribute name to lowercase */
 
   /* with -D option, determine data file name(s) from actual source corpus;
      otherwise use directory specified with -d and the usual naming conventions */
@@ -291,13 +291,13 @@ main(int argc, char *argv[])
     }
   }
   else {
-    sprintf(alx_name, "%s/%s.alx", data_dir, attribute_name);
+    sprintf(alx_name, "%s" SUBDIR_SEP_STRING "%s.alx", data_dir, attribute_name);
     if (compatibility)
-      sprintf(alg_name, "%s/%s.alg", data_dir, attribute_name);
+      sprintf(alg_name, "%s" SUBDIR_SEP_STRING "%s.alg", data_dir, attribute_name);
   }
 
   /* now open output file(s) */
-  alx = fopen(alx_name, "w");
+  alx = fopen(alx_name, "wb");
   if (alx == NULL) {
     perror(alx_name);
     fprintf(stderr, "%s: can't write file %s\n", progname, alx_name);
@@ -307,7 +307,7 @@ main(int argc, char *argv[])
     printf("Writing file %s ...\n", alx_name);
 
   if (compatibility) {
-    alg = fopen(alg_name, "w");
+    alg = fopen(alg_name, "wb");
     if (alg == NULL) {
       perror(alg_name);
       fprintf(stderr, "%s: can't write file %s\n", progname, alg_name);

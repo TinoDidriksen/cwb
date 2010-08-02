@@ -402,30 +402,29 @@ cl_new_corpus(char *registry_dir, char *registry_name)
   cl_free(canonical_name); /* if necessary, free buffer allocated in previous call to setup_corpus() */
 
   canonical_name = cl_strdup(registry_name);
-  cl_string_canonical(canonical_name, CHARSET_FOR_IDENTIFIERS, IGNORE_CASE);
+  /* cl_string_canonical(canonical_name, CHARSET_FOR_IDENTIFIERS, IGNORE_CASE); */
+  /* new function replaces call to cl_string_canonical ... */
+  cl_id_tolower(canonical_name);
+  if (!cl_id_validate(canonical_name)) {
+    fprintf(stderr, "cl_new_corpus: <%s> is not a valid corpus name\n", registry_name);
+  }
 
   /* ------------------------------------------------------------------ */
 
   if ((corpus = find_corpus(registry_dir, canonical_name)) != NULL) {
-
     /* we already have the beast loaded, so just increment the references */
-
     corpus->nr_of_loads++;
-
   }
   else {
-
     /* it's not yet in memory, so create and load it */
 
     if (registry_dir == NULL)
-      registry_dir = central_corpus_directory();
+      registry_dir = cl_standard_registry();
 
-    cregin = find_corpus_registry(registry_dir, canonical_name,
-        &real_registry_name);
+    cregin = find_corpus_registry(registry_dir, canonical_name, &real_registry_name);
 
     if (cregin == NULL) {
-      fprintf(stderr, "setup_corpus: can't locate <%s> in %s\n", registry_name,
-          registry_dir);
+      fprintf(stderr, "cl_new_corpus: can't locate <%s> in %s\n", registry_name, registry_dir);
     }
     else {
       cregrestart(cregin);
@@ -447,7 +446,7 @@ cl_new_corpus(char *registry_dir, char *registry_name)
           }
         }
         else {
-          drop_corpus(cregcorpus);
+          cl_delete_corpus(cregcorpus);
         }
       }
       cregin_path = "";
@@ -457,7 +456,6 @@ cl_new_corpus(char *registry_dir, char *registry_name)
 
       fclose(cregin);
     }
-
   }
 
   /* Check access permissions */

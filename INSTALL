@@ -298,6 +298,10 @@ libraries.
 For PCRE, at least version 7 is recommended. For Glib, at least version 2
 is required.
 
+You must use a copy of PCRE which has been compiled with Unicode (UTF-8)
+support and Unicode properties support. (You can find out whether this is
+the case using the pcretest utility with the -C option.)
+
 Note that the CWB build process makes the following assumptions:
 
  - that the libpcre.* file is installed in a directory in the linker's
@@ -347,12 +351,15 @@ these are the files you must make sure get copied:
  - pcre.h
  - libpcre-0.dll
  - libpcreposix-0.dll
+ --> AND THE STATIC FILES??
  
 The directories they need to be inserted into are the MinGW compiler's library 
 and include directories. These will usually be something like
 
         /$libdir/gcc/i586-mingw32msvc/$version
         /$libdir/gcc/i586-mingw32msvc/$version/include
+        -->and bin??
+specify which files in which directories
 
 and indeed these are the paths you would also specify as --libdir, --prefix, 
 and --oldincludedir when  building PCRE.

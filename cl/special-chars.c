@@ -74,8 +74,8 @@ int nocase_nodiac_tab_init[unknown_charset] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 unsigned char nodiac_tab[unknown_charset][256] = {
 
     /* ASCII: identity as there are no accented chars less than 0x80;
-     * any bytes in the upper half are malfoprmed, so just pass them through;
-     * table only needed to make ythe array work correctly */
+     * any bytes in the upper half are malformed, so just pass them through;
+     * table only needed to make the array work correctly */
     {
         0,
         1,  2,  3,  4,  5,  6,  7,  8,  9, 10,
@@ -731,7 +731,7 @@ unsigned char nocase_tab[unknown_charset][256] = {
       241,242,243,244,245,246,247,248,249,250,
       251,252,253,254,255
     },
-    /* arabic : TODO currently the same as ASCII */
+    /* arabic : Arabic lacks case, so map everything in upper half to itself. */
     {
         0,
         1,  2,  3,  4,  5,  6,  7,  8,  9, 10,
@@ -795,7 +795,7 @@ unsigned char nocase_tab[unknown_charset][256] = {
       241,242,243,244,245,246,247,248,249,250,
       251,252,253,254,255
     },
-    /* hebrew : TODO currently the same as ASCII */
+    /* hebrew : Hebrew lacks case, so map everything in upper half to itself. */
     {
         0,
         1,  2,  3,  4,  5,  6,  7,  8,  9, 10,
@@ -1338,10 +1338,10 @@ cl_string_maptable(CorpusCharset charset, int flags)
  * Checks the encoding of a string.
  *
  * This function looks for bad bytes (or byte sequences in the case of UTF8);
- * if any are rpesent, it judges the string invalid.
+ * if any are present, it judges the string invalid.
  *
  * What counts as "bad" is of course relative to the character set that the
- * string is encoded in - os this must be specified.
+ * string is encoded in - so this must be specified.
  *
  * @param s        Null-terminated string to check.
  * @param charset  CorpusCharset of the string's encoding.
@@ -1419,7 +1419,7 @@ cl_string_validate_encoding(const char *s, CorpusCharset charset)
     break;
 
   /* arabic has great swathes of non-allowed characters */
-  /* this may not be the most efficient set of tests */
+  /* (this may not be the most efficient set of tests)  */
   case arabic:
     for (; *str ; str++)
       if (*str >  0x7f &&
@@ -1450,6 +1450,94 @@ cl_string_validate_encoding(const char *s, CorpusCharset charset)
   return 1;
 }
 
+/**
+ * Checks a string to see if it is a valid CWB identifier.
+ *
+ * The rules for these are as follows (see also the CQP lexer):
+ *
+ * * all characters must be ASCII, ie less than 0x80;
+ * * must be at least 1 character long (of course)
+ * * first character must be an uppercase or lowercase letter or underscore
+ * * second and subsequent characters may also be digits, hyphen or fullstop.
+ *
+ * TODO: should the CL registry lexer be amended ot reflect these restricitons?
+ * (ID there is rather laxer than this)
+ *
+ * @param s   The string to check.
+ * @return    A boolean. True if the string is a valid ID. Otherwise false.
+ */
+int
+cl_id_validate(char *s)
+{
+  if (s == NULL)
+    return 0;
+  /* check first char */
+  if ( ! (
+         (*s >= 'a' && *s <= 'z')
+      || (*s >= 'A' && *s <= 'Z')
+      || *s == '_'
+      ) )
+    return 0;
+
+  /* check other chars */
+  while (*(++s))
+    if ( ! (
+           (*s >= 'a' && *s <= 'z')
+        || (*s >= 'a' && *s <= 'z')
+        || *s == '_'
+        || *s == '.'
+        || *s == '-'
+        || (*s >= '0' && *s <= '9')
+        ) )
+      return 0;
+
+  return 1;
+}
+
+/**
+ * Converts a lowercase corpus name to an equivalent uppercase form.
+ *
+ * String is modified in situ. Only the ASCII characters are changed.
+ *
+ * Note, this function doesn't check for what is and is not an allowed
+ * CWB-corpus-name character.
+ *
+ * The old version of this code was a line in cwb-encode that used
+ * the library toupper to cope with Latin1 characters. But these are no
+ * longer allowed in identifiers, which must be ASCII only.
+ */
+void
+cl_id_toupper(char *s)
+{
+  int i;
+  i = strlen(s) - 1;
+  while (i >= 0) {
+    if (s[i] >= 'a' && s[i] <= 'z')
+      s[i] -= 0x20;
+    i--;
+  }
+}
+
+/**
+ * Converts an uppercase corpus name to an equivalent lowercase form.
+ *
+ * String is modified in situ. Only the ASCII characters are changed.
+ *
+ * Note, this function doesn't check for what is and is not an allowed
+ * CWB-corpus-name character.
+ */
+void
+cl_id_tolower(char * s)
+{
+  int i;
+  i = strlen(s) - 1;
+  while (i >= 0) {
+    if (s[i] >= 'A' && s[i] <= 'Z')
+      s[i] += 0x20;
+    i--;
+  }
+}
+
 
 
 /**
@@ -1474,20 +1562,20 @@ cl_string_validate_encoding(const char *s, CorpusCharset charset)
  * to the process for Latin1, which just uses a straightforward mapping
  * table for both sorts of folding.
  *
- * @param s        The string (currently: must be Ascii, Latin-1, or UTF8!)
+ * @param s        The string (currently: must be Ascii, Latin-1, or UTF8, but
+ *                 this is not checked for you!)
  * @param charset  The character set to use in standardising. If this is utf8,
  *                 complex accent and/or case folding will be done, as per the
  *                 unicode standard. If it is anything else, the Latin1 mapping
  *                 tables will be used (currently no other ISO mapping tables
- *                 are built in to the CL).
+ *                 are built in and activated in the CL).
  * @param flags    The flags that specify which conversions are required.
  *                 Can be IGNORE_CASE and/or IGNORE_DIAC.
  */
 void 
 cl_string_canonical(char *s, CorpusCharset charset, int flags)
 {
-
-  /* this function has two branches controlle dby an if: (a) utf8, (b) everything else. */
+  /* this function has two branches controlled by an if: (a) utf8, (b) everything else. */
   if (charset == utf8) {
 
     /* pointers for UTF8 processing */
@@ -1560,7 +1648,7 @@ cl_string_canonical(char *s, CorpusCharset charset, int flags)
         *p = maptable[*p];
       }
     }
-  }
+  } /* end else for non-utf8 encodings */
 }
 
 
@@ -1606,6 +1694,68 @@ cl_path_adjust_independent(char *path)
   for ( ; *path != '\0' ; path++ )
     if (*path == SUBDIR_SEPARATOR)
       *path = '/';
+}
+
+/**
+ * Add quotes and escape slashes to a file path if necessary.
+ *
+ * This is for the HOME and INFO fields of the registry file.
+ *
+ * If either field contains any characters that can't be
+ * treated as an "ID" token by the registry parser, then we
+ * make sure it is treated as a string (quoted) instead, and make
+ * all appropriate substitutions
+ *
+ * For consistency, this function always returns a newly
+ * allocated string, regardless of whether changes have been made.
+ *
+ * Note that the way the registry parser works, it is quite happy
+ * with either "C:\dir\subdir" or "C:\\dir\\subdir" as a path for
+ * HOME or INFO.
+ *
+ * @param path  String containing the path to quotify.
+ * @return      The quotified string (newly allocated).
+ */
+char *
+cl_path_registry_quote(char *path)
+{
+  char *p, *q, *quoted_path;
+  int need_quotes = 0;
+
+  for (p = path; *p; p++) {
+    if ((*p >= 'A' && *p <= 'Z') ||
+        (*p >= 'a' && *p <= 'z') ||
+        (*p >= '0' && *p <= '9') ||
+        (*p == '-') || (*p == '_') || (*p == '/') ||
+        (p > path && (*p == '.' || *p == '\\'))
+       )
+      /* pass */ ;
+    else
+      need_quotes = 1;
+  }
+
+  if (need_quotes) {
+    int num_escapes = 0; /* double quotes and backslashes in path name need to be escaped */
+    for (p = path; *p; p++) {
+      if (*p == '"' || *p == '\\')
+        num_escapes++;
+    }
+    quoted_path = (char *) cl_malloc(strlen(path) + num_escapes + 3);
+    q = quoted_path;
+    *q++ = '"';
+    for (p = path; *p; p++, q++) {
+      if (*p == '"' || *p == '\\')
+        *q++ = '\\';
+      *q = *p;
+    }
+    *q++ = '"';
+    *q = '\0';
+  }
+  else {
+    quoted_path = cl_strdup(path);
+  }
+
+  return(quoted_path);
 }
 
 
@@ -1820,5 +1970,62 @@ endloop:
   return result;
 }
 
-
-
+/**
+ * Decode XML entities in a string.
+ *
+ * This function decodes pre-defined XML entities in string s.
+ * It overwrites the input string s and also returns s for convenience.
+ *
+ * (The entities are &amp;lt; &amp;gt; &amp;amp; &amp;quot; &amp;apos;).
+ *
+ * TODO -- numeric entities?
+ *
+ * If passed NULL, it will not fall over - it will just pass NULL back!
+ *
+ * This function is safe for strings in any encoding. The returned string
+ * will be at the same memory location and will always be the same length
+ * or shorter after the decoding of entities.
+ *
+ * @param s  A string to decode.
+ * @return   The string (rewritten in situ).
+ */
+char *
+cl_xml_entity_decode(char *s)
+{
+  char *read, *write;
+  if (s != NULL) {
+    read = write = s;
+    while (*read) {
+      if (*read == '&') {
+        if (strncmp(read, "&lt;", 4) == 0) {
+          *(write++) = '<';
+          read += 4;
+        }
+        else if (strncmp(read, "&gt;", 4) == 0) {
+          *(write++) = '>';
+          read += 4;
+        }
+        else if (strncmp(read, "&amp;", 5) == 0) {
+          *(write++) = '&';
+          read += 5;
+        }
+        else if (strncmp(read, "&quot;", 6) == 0) {
+          *(write++) = '"';
+          read += 6;
+        }
+        else if (strncmp(read, "&apos;", 6) == 0) {
+          *(write++) = '\'';
+          read += 6;
+        }
+        else {
+          *(write++) = *(read++); /* no known entity after all  */
+        }
+      }
+      else {
+        *(write++) = *(read++); /* simply copy char */
+      }
+    } /* endwhile */
+    *write = '\0';              /* terminate result string */
+  }
+  return s;
+}

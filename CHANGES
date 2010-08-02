@@ -3,14 +3,25 @@ Version 3.2
 -----------
 
 Version 3.2 of CWB (currently in beta) adds Unicode support (utf8). It also breaks backwards compatability in one,
-possibly important way: all "identifiers" (names of corpora, attributes, subciorpora etc.) must use ASCII characters
-only - no Latin1 accented vowels, for instance. This is necessary to avoid potential conflicts between Latin1 and
-UTF8 encodings in filenames and directory paths.
+possibly important way: all "identifiers" (names of corpora, attributes, subcorpora etc.) must use ASCII characters
+only - no Latin1 accented letters, for instance. This is necessary to avoid potential conflicts between Latin1 and
+UTF8 encodings in filenames and directory paths. Any corpora you have from earlier versions which use accented 
+letters in their "identifiers" must be reindexed to work with version 3.2 or above.
 
 As a result of the work on Unicode, character set awareness is now active throughout CWB. Also, the regular 
 expression language supported in the CL and through CQP has changed from POSIX-flavour regexes to PCRE regexes
 (Perl-compatible). In UTF8 corpora, all unicode properties, etc., can be used in regular expressions using the
 usual PCRE syntax.
+
+Other changes:
+
+ - cwb-encode now validates the encoding of files as it imports them against the corpus character set. Invalid
+   bytes or byte sequences lead to an abort. The default character set is Latin1, this can be changed with
+   the -c option.
+   
+ - the Corpus Library (CL) has been reorganised to make programming against it easier, and it now contains 
+   several more utility functions.
+   
 
 
 Version 3.1
@@ -25,8 +36,8 @@ Version 3.0
 -----------
 
 This will be the first official release of the IMS Open Corpus Workbench.
- - should be released as soon as possible, after some testing by developer community (and perhaps an overhaul of installation procedure)
- - hopefully, binary packages for various platforms will be contributed by volunteers
+ - released April 2010, after some testing by developer community (and perhaps an overhaul of installation procedure)
+ - binary packages for various platforms (but not all) are available as well as the source.
 
 New features:
 

@@ -45,6 +45,7 @@ extern size_t cl_memory_limit;
  * and delete these two macros.
  */
 #ifndef __MINGW__
+    /* Unix */
 /** character used to separate different paths in a string variable */
 #define PATH_SEPARATOR ':'
 /** character used to delimit subdirectories in a path */
@@ -53,11 +54,12 @@ extern size_t cl_memory_limit;
 #define SUBDIR_SEP_STRING "/"
 /** name of directory for temporary files (as string, absolute path) */
 #define TEMPDIR_PATH "/tmp"
+    /* Windows */
 #else
 #define PATH_SEPARATOR ';'
 #define SUBDIR_SEPARATOR '\\'
 #define SUBDIR_SEP_STRING "\\"
-#define TEMPDIR_PATH "." /* A CQP user may not have access to C:\Temp, which is where they SHOULD fo */
+#define TEMPDIR_PATH "." /* A CQP user may not have access to C:\Temp, which is where they SHOULD go */
 #endif
 /**
  * size in bytes of string buffers capable of holding absolute paths

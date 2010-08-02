@@ -120,8 +120,7 @@ addHistoryLine(void)
       FILE *fd;
 
       if (!(fd = open_file(cqp_history_file, "a"))) {
-        cqpmessage(Error, "Can't open history file %s\n",
-                   cqp_history_file);
+        cqpmessage(Error, "Can't open history file %s\n", cqp_history_file);
       }
       else {
         fputs(QueryBuffer, fd);
@@ -387,6 +386,20 @@ after_CorpusSetExpr(CorpusList *cl)
   return cl;
 }
 
+/**
+ * This function sets things up to run a query.
+ *
+ * It is called as an "action" before any detected Query in the parser.
+ *
+ * [AH 2010/8/2: I have added the code checking input character encoding.
+ * Anything that is not part of a query should be plain ASCII - if not,
+ * then the lexer/parser should pick it up as bad. Filenames, etc. are
+ * obvious exceptions - but we can't check the encoding of those, because
+ * there's no guarantee it will be the same as that of the corpus, which
+ * is the only thing whose encoding we know. So it's up to the user to
+ * type filenames in an encoding their OS will accept!
+ * Canonicalisation is done within the CL_Regex, not here.]
+ */
 void
 prepare_Query()
 {
@@ -401,13 +414,20 @@ prepare_Query()
     cqpmessage(Error, "Current corpus can't be accessed");
     generate_code = 0;
   }
-  
+
+  /* validate character encoding according to that corpus, now we know it's loaded */
+  if (!cl_string_validate_encoding(QueryBuffer, current_corpus->corpus->charset)) {
+    cqpmessage(Error, "Query includes a character or character sequence that is invalid\n"
+        "in the encoding specified for this corpus");
+    generate_code = 0;
+  }
+
   if (generate_code) {
     
     assert(current_corpus->corpus != NULL);
     assert(searchstr == NULL);
     assert(eep == -1);
-    
+
     if (!next_environment()) {
       cqpmessage(Error, "Can't allocate another evaluation environment");
       generate_code = 0;
@@ -419,8 +439,7 @@ prepare_Query()
       assert(eep == 0);
       assert(CurEnv == &(Environment[0]));
       
-      query_corpus = make_temp_corpus(current_corpus,
-                                      "RHS");
+      query_corpus = make_temp_corpus(current_corpus, "RHS");
       CurEnv->query_corpus = query_corpus;
 
       /* subqueries don't work properly if the mother corpus has overlapping regions -> delete and warn */
@@ -428,7 +447,8 @@ prepare_Query()
       RangeSetop(query_corpus, RNonOverlapping, NULL, NULL);
       after = query_corpus->size;
       if (after < before) {
-        cqpmessage(Warning, "Overlapping matches in %s:%s deleted for subquery execution.", query_corpus->mother_name, query_corpus->name);
+        cqpmessage(Warning, "Overlapping matches in %s:%s deleted for subquery execution.",
+                   query_corpus->mother_name, query_corpus->name);
       }
     }
   }
@@ -682,7 +702,9 @@ do_sleep(int duration)
   }
 }
 
-
+/**
+ * Execute the commands contained within a specified text file.
+ */
 void
 do_exec(char *fname)
 {
@@ -691,15 +713,13 @@ do_exec(char *fname)
   cqpmessage(Message, "exec cmd: %s\n", fname);
   
   if (1) {
-    cqpmessage(Error,
-               "The source statement is not yet supported");
+    cqpmessage(Error, "The source statement is not yet supported");
     generate_code = 0;
   }
   else {
     if ((f = open_file(fname, "r")) != NULL) {
       if (!cqp_parse_file(f, 1)) {
-        cqpmessage(Error,
-                   "Errors in exec'ed file %s\n", fname);
+        cqpmessage(Error, "Errors in exec'ed file %s\n", fname);
         generate_code = 0;
       }
     }
@@ -1027,7 +1047,6 @@ do_SearchPattern(Evaltree expr, /* $1 */
   cqpmessage(Message, "SearchPattern");
 
   if (generate_code) {
-    
     CurEnv->evaltree = expr;
     CurEnv->gconstraint = constraint;
     

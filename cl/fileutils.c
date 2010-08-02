@@ -142,7 +142,7 @@ is_file(char *path)
  * Checks whether the specified path indicates a link.
  *
  * Note this function always returns false in Windows, because Windows
- * doesn't have Unix-style links.
+ * doesn't have Unix-style links. (.lnk files don't count.)
  *
  * @param path  Path to check.
  * @return      Boolean. (Also false if there's an error.)

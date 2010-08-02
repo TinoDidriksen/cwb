@@ -997,6 +997,7 @@ drop_temp_corpora(void)
 
 /* ---------------------------------------------------------------------- */
 
+// TODO change to use cl_id_toupper/cl_id_tolower ???
 static char *
 changecase_string(char *str, enum case_mode mode)
 {
