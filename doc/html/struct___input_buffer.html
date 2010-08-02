@@ -29,10 +29,10 @@
 <h1>_InputBuffer Struct Reference</h1><!-- doxytag: class="_InputBuffer" --><h2>Data Fields</h2>
 <ul>
 <li>char * <a class="el" href="struct___input_buffer.html#a91a70b77df95bd8b0830b49a094c2acb">data</a>
-<li>int <a class="el" href="struct___input_buffer.html#a401e942526aac47cef94f478182486e7">position</a>
-<li>struct <a class="el" href="struct___macro_entry.html">_MacroEntry</a> * <a class="el" href="struct___input_buffer.html#a86f65b6040271e8fa9a14d8127dd3e30">macro</a>
-<li>struct <a class="el" href="struct___input_buffer.html">_InputBuffer</a> * <a class="el" href="struct___input_buffer.html#a387f92b636d7ea2c2147dc6c576533dc">next</a>
-</ul>
+<dl class="el"><dd class="mdescRight">the actual buffered input string  <a href="#a91a70b77df95bd8b0830b49a094c2acb"></a><br/></dl><li>int <a class="el" href="struct___input_buffer.html#a401e942526aac47cef94f478182486e7">position</a>
+<dl class="el"><dd class="mdescRight">current read position  <a href="#a401e942526aac47cef94f478182486e7"></a><br/></dl><li>struct <a class="el" href="struct___macro_entry.html">_MacroEntry</a> * <a class="el" href="struct___input_buffer.html#a86f65b6040271e8fa9a14d8127dd3e30">macro</a>
+<dl class="el"><dd class="mdescRight">pointer to the macro which created this buffer  <a href="#a86f65b6040271e8fa9a14d8127dd3e30"></a><br/></dl><li>struct <a class="el" href="struct___input_buffer.html">_InputBuffer</a> * <a class="el" href="struct___input_buffer.html#a387f92b636d7ea2c2147dc6c576533dc">next</a>
+<dl class="el"><dd class="mdescRight">next buffer (will be read when current buffer has been completed)  <a href="#a387f92b636d7ea2c2147dc6c576533dc"></a><br/></dl></ul>
 <hr/><h2>Field Documentation</h2>
 <a class="anchor" id="a91a70b77df95bd8b0830b49a094c2acb"></a><!-- doxytag: member="_InputBuffer::data" ref="a91a70b77df95bd8b0830b49a094c2acb" args="" -->
 <div class="memitem">
@@ -44,6 +44,8 @@
       </table>
 </div>
 <div class="memdoc">
+
+<p>the actual buffered input string </p>
 
 <p>Referenced by <a class="el" href="macro_8h.html#a20609770576af56b3e76f794a708c0d6">delete_macro_buffers()</a>, <a class="el" href="macro_8h.html#aa343c98285f1a32ef30f8da7cd1ce4a8">expand_macro()</a>, <a class="el" href="macro_8c.html#ab23e61d8567abf8809651b2213aa7f35">PopInputBuffer()</a>, <a class="el" href="macro_8c.html#a69a970691e1befae1add259bcf41f66b">PushInputBuffer()</a>, and <a class="el" href="macro_8h.html#a01ff9eb9b38042da7ebaffa9f379a6d2">yy_input_char()</a>.</p>
 
@@ -60,6 +62,8 @@
 </div>
 <div class="memdoc">
 
+<p>pointer to the macro which created this buffer </p>
+
 <p>Referenced by <a class="el" href="macro_8h.html#a20609770576af56b3e76f794a708c0d6">delete_macro_buffers()</a>, <a class="el" href="macro_8h.html#aa343c98285f1a32ef30f8da7cd1ce4a8">expand_macro()</a>, <a class="el" href="macro_8c.html#ab23e61d8567abf8809651b2213aa7f35">PopInputBuffer()</a>, and <a class="el" href="macro_8c.html#a69a970691e1befae1add259bcf41f66b">PushInputBuffer()</a>.</p>
 
 </div>
@@ -74,6 +78,8 @@
       </table>
 </div>
 <div class="memdoc">
+
+<p>next buffer (will be read when current buffer has been completed) </p>
 
 <p>Referenced by <a class="el" href="macro_8c.html#ae8b3dfc31cbe868863e5e653d61edf7b">macro_debug_newline_indent()</a>, <a class="el" href="macro_8c.html#ab23e61d8567abf8809651b2213aa7f35">PopInputBuffer()</a>, and <a class="el" href="macro_8c.html#a69a970691e1befae1add259bcf41f66b">PushInputBuffer()</a>.</p>
 
@@ -90,6 +96,8 @@
 </div>
 <div class="memdoc">
 
+<p>current read position </p>
+
 <p>Referenced by <a class="el" href="macro_8h.html#a20609770576af56b3e76f794a708c0d6">delete_macro_buffers()</a>, <a class="el" href="macro_8c.html#a69a970691e1befae1add259bcf41f66b">PushInputBuffer()</a>, and <a class="el" href="macro_8h.html#a01ff9eb9b38042da7ebaffa9f379a6d2">yy_input_char()</a>.</p>
 
 </div>
@@ -98,7 +106,7 @@
 <li>cqp/<a class="el" href="macro_8c.html">macro.c</a></li>
 </ul>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Thu Jun 24 06:38:27 2010 for CWB by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Mon Aug 2 06:46:58 2010 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

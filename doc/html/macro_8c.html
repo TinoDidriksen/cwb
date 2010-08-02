@@ -45,9 +45,9 @@
 <ul>
 <li>struct <a class="el" href="struct___input_buffer.html">_InputBuffer</a>
 <li>struct <a class="el" href="struct___macro_segment.html">_MacroSegment</a>
-<li>struct <a class="el" href="struct___macro_entry.html">_MacroEntry</a>
-<li>struct <a class="el" href="struct___macro_hash_table.html">_MacroHashTable</a>
-</ul>
+<dl class="el"><dd class="mdescRight">the macro replacement string is stored as a sequence of segments:  <a href="struct___macro_segment.html#_details">More...</a><br/></dl><li>struct <a class="el" href="struct___macro_entry.html">_MacroEntry</a>
+<dl class="el"><dd class="mdescRight">an entry in the macro database  <a href="struct___macro_entry.html#_details">More...</a><br/></dl><li>struct <a class="el" href="struct___macro_hash_table.html">_MacroHashTable</a>
+<dl class="el"><dd class="mdescRight">This hash implementation can hold multiple macro entries in a single bucket in order to avoid cache overflow when _very_ many macros are defined.  <a href="struct___macro_hash_table.html#_details">More...</a><br/></dl></ul>
 <h2>Defines</h2>
 <ul>
 <li>#define <a class="el" href="macro_8c.html#a1ff84e85833bd3ab041c539d93314f0f">MACRO_HASH_BUCKETS</a>&nbsp;&nbsp;&nbsp;8000
@@ -56,49 +56,55 @@
 <ul>
 <li>typedef struct <a class="el" href="struct___input_buffer.html">_InputBuffer</a> * <a class="el" href="macro_8c.html#a0e6ae2cf8df1188f1cfd37eee0506fa3">InputBuffer</a>
 <li>typedef struct <a class="el" href="struct___macro_segment.html">_MacroSegment</a> * <a class="el" href="macro_8c.html#a815d704b3d3bd0dd7988d2316138b1f4">MacroSegment</a>
-<li>typedef struct <a class="el" href="struct___macro_entry.html">_MacroEntry</a> * <a class="el" href="macro_8c.html#a3fee609f5ac8fabca5c305bf716a2169">MacroEntry</a>
-<li>typedef struct <a class="el" href="struct___macro_hash_table.html">_MacroHashTable</a> * <a class="el" href="macro_8c.html#ada87415d84f8f7c23a42f352f7b8de22">MacroHashTable</a>
-</ul>
+<dl class="el"><dd class="mdescRight">the macro replacement string is stored as a sequence of segments:  <a href="#a815d704b3d3bd0dd7988d2316138b1f4"></a><br/></dl><li>typedef struct <a class="el" href="struct___macro_entry.html">_MacroEntry</a> * <a class="el" href="macro_8c.html#a3fee609f5ac8fabca5c305bf716a2169">MacroEntry</a>
+<dl class="el"><dd class="mdescRight">an entry in the macro database  <a href="#a3fee609f5ac8fabca5c305bf716a2169"></a><br/></dl><li>typedef struct <a class="el" href="struct___macro_hash_table.html">_MacroHashTable</a> * <a class="el" href="macro_8c.html#ada87415d84f8f7c23a42f352f7b8de22">MacroHashTable</a>
+<dl class="el"><dd class="mdescRight">This hash implementation can hold multiple macro entries in a single bucket in order to avoid cache overflow when _very_ many macros are defined.  <a href="#ada87415d84f8f7c23a42f352f7b8de22"></a><br/></dl></ul>
 <h2>Functions</h2>
 <ul>
 <li>int <a class="el" href="macro_8c.html#a9a7bd1b3d14701eb97c03f3ef34deff1">yylex</a> (void)
 <li>void <a class="el" href="macro_8c.html#ae8b3dfc31cbe868863e5e653d61edf7b">macro_debug_newline_indent</a> (void)
-<li><a class="el" href="struct___input_buffer.html">InputBuffer</a> <a class="el" href="macro_8c.html#a69a970691e1befae1add259bcf41f66b">PushInputBuffer</a> (int size)
-<li>void <a class="el" href="macro_8c.html#ab23e61d8567abf8809651b2213aa7f35">PopInputBuffer</a> (void)
-<li>void <a class="el" href="macro_8c.html#a603effb8b3d1fa34860f313311e1dcef">MakeMacroHash</a> (int size)
-<li><a class="el" href="struct___macro_entry.html">MacroEntry</a> <a class="el" href="macro_8c.html#a7012ba1ab91c600418b5d2f72c57f338">MacroHashLookup</a> (char *str, int args)
+<dl class="el"><dd class="mdescRight">indent macro expansion debugging output (according to # of active input buffers)  <a href="#ae8b3dfc31cbe868863e5e653d61edf7b"></a><br/></dl><li><a class="el" href="struct___input_buffer.html">InputBuffer</a> <a class="el" href="macro_8c.html#a69a970691e1befae1add259bcf41f66b">PushInputBuffer</a> (int size)
+<dl class="el"><dd class="mdescRight">push new input buffer (which can hold string of lenght &lt;size&gt;) on top of buffer list  <a href="#a69a970691e1befae1add259bcf41f66b"></a><br/></dl><li>void <a class="el" href="macro_8c.html#ab23e61d8567abf8809651b2213aa7f35">PopInputBuffer</a> (void)
+<dl class="el"><dd class="mdescRight">delete input buffer from top of list  <a href="#ab23e61d8567abf8809651b2213aa7f35"></a><br/></dl><li>void <a class="el" href="macro_8c.html#a603effb8b3d1fa34860f313311e1dcef">MakeMacroHash</a> (int size)
+<dl class="el"><dd class="mdescRight">has to be called once to initialise the hash  <a href="#a603effb8b3d1fa34860f313311e1dcef"></a><br/></dl><li><a class="el" href="struct___macro_entry.html">MacroEntry</a> <a class="el" href="macro_8c.html#a7012ba1ab91c600418b5d2f72c57f338">MacroHashLookup</a> (char *str, int args)
 <li><a class="el" href="struct___macro_entry.html">MacroEntry</a> <a class="el" href="macro_8c.html#ad85b0a62b3c11de0400169eab0dd1890">MacroHashAdd</a> (char *str, int args)
 <li>void <a class="el" href="macro_8c.html#aab0b83115e0361b06e31bc0aaca9bf9d">MacroHashDelete</a> (<a class="el" href="struct___macro_entry.html">MacroEntry</a> macro)
 <li><a class="el" href="struct___macro_segment.html">MacroSegment</a> <a class="el" href="macro_8c.html#a1f1488f174c35f4ec98d39451707dad1">MacroAddSegment</a> (<a class="el" href="struct___macro_entry.html">MacroEntry</a> macro)
-<li>int <a class="el" href="macro_8c.html#a01ff9eb9b38042da7ebaffa9f379a6d2">yy_input_char</a> (void)
-<li>int <a class="el" href="macro_8c.html#a05dd77e46fd92990ba3fc5c8d72d6d8a">yy_input_from_macro</a> (void)
-<li>void <a class="el" href="macro_8c.html#a46c1888ead3a4dd40dff9eb80c4d7c97">init_macros</a> (void)
-<li>int <a class="el" href="macro_8c.html#aa343c98285f1a32ef30f8da7cd1ce4a8">expand_macro</a> (char *name)
-<li>int <a class="el" href="macro_8c.html#ab59abd6d37fac294aedb96f14fc21f82">define_macro</a> (char *name, int args, char *argstr, char *definition)
-<li>char * <a class="el" href="macro_8c.html#ad72fedf399fdc042a3cde2723dde11a6">preprocess_input_line</a> (char *<a class="el" href="cwb-s-encode_8c.html#a41ebd28ef1d7c6ade45642cb6acc1039">line</a>)
-<li>char * <a class="el" href="macro_8c.html#a866134319e613786515f4524eff22cb7">parse_macro_name</a> (char *text, int *nr_of_args, char **prototype)
+<dl class="el"><dd class="mdescRight">append segment to macro replacement string, returns pointer to the new, initialised segment  <a href="#a1f1488f174c35f4ec98d39451707dad1"></a><br/></dl><li>int <a class="el" href="macro_8c.html#a01ff9eb9b38042da7ebaffa9f379a6d2">yy_input_char</a> (void)
+<dl class="el"><dd class="mdescRight">Get a character for the lexer/parser.  <a href="#a01ff9eb9b38042da7ebaffa9f379a6d2"></a><br/></dl><li>int <a class="el" href="macro_8c.html#a05dd77e46fd92990ba3fc5c8d72d6d8a">yy_input_from_macro</a> (void)
+<dl class="el"><dd class="mdescRight">checks if input is being read from macro expansion  <a href="#a05dd77e46fd92990ba3fc5c8d72d6d8a"></a><br/></dl><li>void <a class="el" href="macro_8c.html#a46c1888ead3a4dd40dff9eb80c4d7c97">init_macros</a> (void)
+<dl class="el"><dd class="mdescRight">Initialises the macro hash and defines built-in macros.  <a href="#a46c1888ead3a4dd40dff9eb80c4d7c97"></a><br/></dl><li>int <a class="el" href="macro_8c.html#aa343c98285f1a32ef30f8da7cd1ce4a8">expand_macro</a> (char *name)
+<dl class="el"><dd class="mdescRight">expand macro &lt;name&gt;:</p>
+<ul>
+<li>read argument list using <a class="el" href="macro_8c.html#a01ff9eb9b38042da7ebaffa9f379a6d2" title="Get a character for the lexer/parser.">yy_input_char()</a>;</li>
+<li>lookup macro as by &lt;name&gt; and &lt;args&gt;</li>
+<li>push subsituted string on top of input buffer list </li>
+</ul>
+ <a href="#aa343c98285f1a32ef30f8da7cd1ce4a8"></a><br/></dl><li>int <a class="el" href="macro_8c.html#ab59abd6d37fac294aedb96f14fc21f82">define_macro</a> (char *name, int args, char *argstr, char *definition)
+<dl class="el"><dd class="mdescRight">define a new macro: name = macro name args = # of arguments (0 .  <a href="#ab59abd6d37fac294aedb96f14fc21f82"></a><br/></dl><li>char * <a class="el" href="macro_8c.html#ad72fedf399fdc042a3cde2723dde11a6">preprocess_input_line</a> (char *<a class="el" href="cwb-s-encode_8c.html#a41ebd28ef1d7c6ade45642cb6acc1039">line</a>)
+<dl class="el"><dd class="mdescRight">internal function for <a class="el" href="macro_8c.html#af99f13ee64b445e067e4c5a27dbd2cbb">load_macro_file()</a>: remove whitespace &amp; comments from input line  <a href="#ad72fedf399fdc042a3cde2723dde11a6"></a><br/></dl><li>char * <a class="el" href="macro_8c.html#a866134319e613786515f4524eff22cb7">parse_macro_name</a> (char *text, int *nr_of_args, char **prototype)
 <li>void <a class="el" href="macro_8c.html#af99f13ee64b445e067e4c5a27dbd2cbb">load_macro_file</a> (char *filename)
 <li>int <a class="el" href="macro_8c.html#a20609770576af56b3e76f794a708c0d6">delete_macro_buffers</a> (int trace)
-<li>void <a class="el" href="macro_8c.html#a4c2ac9e2d45b589a4a40c66ca2c85a2b">macro_iterator_new</a> (void)
-<li><a class="el" href="struct___macro_entry.html">MacroEntry</a> <a class="el" href="macro_8c.html#a89664201326c8b44d67a69a3d0474e1a">macro_iterator_next_macro</a> (char *prefix)
-<li>char * <a class="el" href="macro_8c.html#adfd92c0f6945e6e4193edc2367a58071">macro_iterator_next</a> (char *prefix, int *nargs)
+<dl class="el"><dd class="mdescRight">delete active input buffers  <a href="#a20609770576af56b3e76f794a708c0d6"></a><br/></dl><li>void <a class="el" href="macro_8c.html#a4c2ac9e2d45b589a4a40c66ca2c85a2b">macro_iterator_new</a> (void)
+<dl class="el"><dd class="mdescRight">Resets the module-global iterator_bucket and iterator_entry variables.  <a href="#a4c2ac9e2d45b589a4a40c66ca2c85a2b"></a><br/></dl><li><a class="el" href="struct___macro_entry.html">MacroEntry</a> <a class="el" href="macro_8c.html#a89664201326c8b44d67a69a3d0474e1a">macro_iterator_next_macro</a> (char *prefix)
+<dl class="el"><dd class="mdescRight">internal iterator function used by <a class="el" href="macro_8c.html#adfd92c0f6945e6e4193edc2367a58071">macro_iterator_next()</a> and <a class="el" href="macro_8c.html#a2096a56771ccb4bd3851cf351a5a8310">macro_iterator_next_prototype()</a>  <a href="#a89664201326c8b44d67a69a3d0474e1a"></a><br/></dl><li>char * <a class="el" href="macro_8c.html#adfd92c0f6945e6e4193edc2367a58071">macro_iterator_next</a> (char *prefix, int *nargs)
 <li>char * <a class="el" href="macro_8c.html#a2096a56771ccb4bd3851cf351a5a8310">macro_iterator_next_prototype</a> (char *prefix)
 <li>static int <a class="el" href="macro_8c.html#a5469149a69e323e2d965f7bcfce934d5">list_macros_sort</a> (const void *p1, const void *p2)
-<li>void <a class="el" href="macro_8c.html#a23de683b4d0fd2cc39ba4a0ba668c179">list_macros</a> (char *prefix)
-<li>void <a class="el" href="macro_8c.html#a4616f0c49fbab950e4530fb7c4f8a260">print_macro_definition</a> (char *name, int args)
-<li>void <a class="el" href="macro_8c.html#a85802d14f3195882d3e1be796d722fd0">macro_statistics</a> (void)
-</ul>
+<dl class="el"><dd class="mdescRight">internal function for sorting list of macros  <a href="#a5469149a69e323e2d965f7bcfce934d5"></a><br/></dl><li>void <a class="el" href="macro_8c.html#a23de683b4d0fd2cc39ba4a0ba668c179">list_macros</a> (char *prefix)
+<dl class="el"><dd class="mdescRight">list all defined macros on stdout  <a href="#a23de683b4d0fd2cc39ba4a0ba668c179"></a><br/></dl><li>void <a class="el" href="macro_8c.html#a4616f0c49fbab950e4530fb7c4f8a260">print_macro_definition</a> (char *name, int args)
+<dl class="el"><dd class="mdescRight">print definition of macro on stdout  <a href="#a4616f0c49fbab950e4530fb7c4f8a260"></a><br/></dl><li>void <a class="el" href="macro_8c.html#a85802d14f3195882d3e1be796d722fd0">macro_statistics</a> (void)
+<dl class="el"><dd class="mdescRight">print macro hash statistics on stderr  <a href="#a85802d14f3195882d3e1be796d722fd0"></a><br/></dl></ul>
 <h2>Variables</h2>
 <ul>
 <li>FILE * <a class="el" href="macro_8c.html#a46af646807e0797e72b6e8945e7ea88b">yyin</a>
 <li>char * <a class="el" href="macro_8c.html#ad9264b77d56b6971f29739e2bda77f51">yytext</a>
 <li><a class="el" href="struct___input_buffer.html">InputBuffer</a> <a class="el" href="macro_8c.html#ae685ce5893cca50a3d34c96da3fed907">InputBufferList</a> = NULL
-<li><a class="el" href="struct___macro_hash_table.html">MacroHashTable</a> <a class="el" href="macro_8c.html#accee2e538fd6ce95f96066a3028d7dc4">MacroHash</a> = NULL
+<dl class="el"><dd class="mdescRight">list of active input buffers  <a href="#ae685ce5893cca50a3d34c96da3fed907"></a><br/></dl><li><a class="el" href="struct___macro_hash_table.html">MacroHashTable</a> <a class="el" href="macro_8c.html#accee2e538fd6ce95f96066a3028d7dc4">MacroHash</a> = NULL
 <li>char * <a class="el" href="macro_8c.html#abd428d2d996fa2ca5a16deaee5f15788">macro_arg</a> [10] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL}
-<li>unsigned int <a class="el" href="macro_8c.html#ad1f498387be877df02325a013b67840f">pseudo_arg_counter</a> = 0
-<li>int <a class="el" href="macro_8c.html#a63f983f3dcf52707eed5f88c66152771">iterator_bucket</a> = -1
-<li><a class="el" href="struct___macro_entry.html">MacroEntry</a> <a class="el" href="macro_8c.html#adb5707675db10c3235ef39a9ecd130b0">iterator_entry</a> = NULL
-</ul>
+<dl class="el"><dd class="mdescRight">macro args are stored in a global array so we can always free() the memory  <a href="#abd428d2d996fa2ca5a16deaee5f15788"></a><br/></dl><li>unsigned int <a class="el" href="macro_8c.html#ad1f498387be877df02325a013b67840f">pseudo_arg_counter</a> = 0
+<dl class="el"><dd class="mdescRight">unique number for pseudo argument in each macro call  <a href="#ad1f498387be877df02325a013b67840f"></a><br/></dl><li>int <a class="el" href="macro_8c.html#a63f983f3dcf52707eed5f88c66152771">iterator_bucket</a> = -1
+<dl class="el"><dd class="mdescRight">current bucket in macro iterator  <a href="#a63f983f3dcf52707eed5f88c66152771"></a><br/></dl><li><a class="el" href="struct___macro_entry.html">MacroEntry</a> <a class="el" href="macro_8c.html#adb5707675db10c3235ef39a9ecd130b0">iterator_entry</a> = NULL
+<dl class="el"><dd class="mdescRight">current entry in bucket (if NULL, go to next bucket)  <a href="#adb5707675db10c3235ef39a9ecd130b0"></a><br/></dl></ul>
 <hr/><h2>Define Documentation</h2>
 <a class="anchor" id="a1ff84e85833bd3ab041c539d93314f0f"></a><!-- doxytag: member="macro.c::MACRO_HASH_BUCKETS" ref="a1ff84e85833bd3ab041c539d93314f0f" args="" -->
 <div class="memitem">
@@ -140,6 +146,8 @@
 </div>
 <div class="memdoc">
 
+<p>an entry in the macro database </p>
+
 </div>
 </div>
 <a class="anchor" id="ada87415d84f8f7c23a42f352f7b8de22"></a><!-- doxytag: member="macro.c::MacroHashTable" ref="ada87415d84f8f7c23a42f352f7b8de22" args="" -->
@@ -153,6 +161,9 @@
 </div>
 <div class="memdoc">
 
+<p>This hash implementation can hold multiple macro entries in a single bucket in order to avoid cache overflow when _very_ many macros are defined. </p>
+<p>Since we don't need to store any other information in the buckets, a bucket is simply a pointer to a list of macro entries, i.e. a MacroEntry. </p>
+
 </div>
 </div>
 <a class="anchor" id="a815d704b3d3bd0dd7988d2316138b1f4"></a><!-- doxytag: member="macro.c::MacroSegment" ref="a815d704b3d3bd0dd7988d2316138b1f4" args="" -->
@@ -165,6 +176,9 @@
       </table>
 </div>
 <div class="memdoc">
+
+<p>the macro replacement string is stored as a sequence of segments: </p>
+<p>literal text ... string = "...", arg = -1 argument ... string = NULL, arg = 0 .. 9 pseudo arg ... string = NULL, arg = -1 </p>
 
 </div>
 </div>
@@ -206,6 +220,9 @@
 </div>
 <div class="memdoc">
 
+<p>define a new macro: name = macro name args = # of arguments (0 . </p>
+<p>. 9); alternatively, specify: argstr = macro argument string (e.g. ``$0=name $1=label'') definition = macro definition ... this string is substituted for /&lt;name&gt;(...) $0 .. $9 refer to the macro's arguments and CAN NOT be escaped returns 1 if macro definition was successful, 0 on syntax error </p>
+
 <p>References <a class="el" href="struct___macro_segment.html#af09bff4320de23f28f0d261c3b124d6b">_MacroSegment::arg</a>, <a class="el" href="struct___macro_entry.html#a3a4a662b17bba5a82ee5d46790de93d9">_MacroEntry::argnames</a>, <a class="el" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="output_8c.html#ac523a4b34d2f925e027d8f433de703c9">cqpmessage()</a>, <a class="el" href="output_8h.html#a9c2eeea9cd09fb001747ef4cc99399a4a4dfd42ec49d09d8c6555c218301cc30f">Error</a>, <a class="el" href="macro_8c.html#a1f1488f174c35f4ec98d39451707dad1">MacroAddSegment()</a>, <a class="el" href="macro_8c.html#ad85b0a62b3c11de0400169eab0dd1890">MacroHashAdd()</a>, <a class="el" href="macro_8c.html#aab0b83115e0361b06e31bc0aaca9bf9d">MacroHashDelete()</a>, <a class="el" href="macro_8c.html#a7012ba1ab91c600418b5d2f72c57f338">MacroHashLookup()</a>, <a class="el" href="options_8h.html#a582e2ef9670c974c00e00ad10af0e629">silent</a>, and <a class="el" href="struct___macro_segment.html#aed1cfb225a5fb77461e7972691e68a72">_MacroSegment::string</a>.</p>
 
 <p>Referenced by <a class="el" href="macro_8h.html#a46c1888ead3a4dd40dff9eb80c4d7c97">init_macros()</a>, and <a class="el" href="macro_8h.html#a3c545105614ab570fcbd3aa56a77b971">load_macro_file()</a>.</p>
@@ -228,6 +245,8 @@
 </div>
 <div class="memdoc">
 
+<p>delete active input buffers </p>
+
 <p>References <a class="el" href="struct___macro_entry.html#a1bd7a8575ca2650132d636d65dcda2f6">_MacroEntry::args</a>, <a class="el" href="struct___input_buffer.html#a91a70b77df95bd8b0830b49a094c2acb">_InputBuffer::data</a>, <a class="el" href="struct___input_buffer.html#a86f65b6040271e8fa9a14d8127dd3e30">_InputBuffer::macro</a>, <a class="el" href="struct___macro_entry.html#a5ac083a645d964373f022d03df4849c8">_MacroEntry::name</a>, <a class="el" href="macro_8c.html#ab23e61d8567abf8809651b2213aa7f35">PopInputBuffer()</a>, and <a class="el" href="struct___input_buffer.html#a401e942526aac47cef94f478182486e7">_InputBuffer::position</a>.</p>
 
 </div>
@@ -248,6 +267,14 @@
 </div>
 <div class="memdoc">
 
+<p>expand macro &lt;name&gt;:</p>
+<ul>
+<li>read argument list using <a class="el" href="macro_8c.html#a01ff9eb9b38042da7ebaffa9f379a6d2" title="Get a character for the lexer/parser.">yy_input_char()</a>;</li>
+<li>lookup macro as by &lt;name&gt; and &lt;args&gt;</li>
+<li>push subsituted string on top of input buffer list </li>
+</ul>
+</p>
+
 <p>References <a class="el" href="struct___macro_entry.html#aa5805c5e936174e5092bf7a5b78e7e64">_MacroEntry::active</a>, <a class="el" href="struct___macro_segment.html#af09bff4320de23f28f0d261c3b124d6b">_MacroSegment::arg</a>, <a class="el" href="cwb-itoa_8c.html#a2993e80915962c80bdbd46c0f8d554b3">buf</a>, <a class="el" href="cl_8h.html#a9e15a3c725711d9effd623b2f3e225be">cl_free</a>, <a class="el" href="cl_8h.html#a6647d75d1d69c7d25447da514b7e4682">cl_strdup()</a>, <a class="el" href="output_8c.html#ac523a4b34d2f925e027d8f433de703c9">cqpmessage()</a>, <a class="el" href="struct___input_buffer.html#a91a70b77df95bd8b0830b49a094c2acb">_InputBuffer::data</a>, <a class="el" href="output_8h.html#a9c2eeea9cd09fb001747ef4cc99399a4a4dfd42ec49d09d8c6555c218301cc30f">Error</a>, <a class="el" href="struct___input_buffer.html#a86f65b6040271e8fa9a14d8127dd3e30">_InputBuffer::macro</a>, <a class="el" href="macro_8c.html#abd428d2d996fa2ca5a16deaee5f15788">macro_arg</a>, <a class="el" href="options_8h.html#ab6b7da74334ef7947beb950a49bd49f5">macro_debug</a>, <a class="el" href="macro_8c.html#ae8b3dfc31cbe868863e5e653d61edf7b">macro_debug_newline_indent()</a>, <a class="el" href="macro_8c.html#a7012ba1ab91c600418b5d2f72c57f338">MacroHashLookup()</a>, <a class="el" href="struct___macro_segment.html#a942facbda952c1fb5cf24c2337fed25d">_MacroSegment::next</a>, <a class="el" href="macro_8c.html#ad1f498387be877df02325a013b67840f">pseudo_arg_counter</a>, <a class="el" href="macro_8c.html#a69a970691e1befae1add259bcf41f66b">PushInputBuffer()</a>, <a class="el" href="struct___macro_entry.html#a816ae50b6a3787ea398b6c36a95c02ad">_MacroEntry::replacement</a>, <a class="el" href="struct___macro_segment.html#aed1cfb225a5fb77461e7972691e68a72">_MacroSegment::string</a>, <a class="el" href="macro_8c.html#a9a7bd1b3d14701eb97c03f3ef34deff1">yylex()</a>, and <a class="el" href="macro_8c.html#ad9264b77d56b6971f29739e2bda77f51">yytext</a>.</p>
 
 </div>
@@ -267,6 +294,8 @@
       </table>
 </div>
 <div class="memdoc">
+
+<p>Initialises the macro hash and defines built-in macros. </p>
 
 <p>References <a class="el" href="output_8c.html#ac523a4b34d2f925e027d8f433de703c9">cqpmessage()</a>, <a class="el" href="macro_8c.html#ab59abd6d37fac294aedb96f14fc21f82">define_macro()</a>, <a class="el" href="output_8h.html#a9c2eeea9cd09fb001747ef4cc99399a4a4dfd42ec49d09d8c6555c218301cc30f">Error</a>, <a class="el" href="macro_8c.html#a1ff84e85833bd3ab041c539d93314f0f">MACRO_HASH_BUCKETS</a>, and <a class="el" href="macro_8c.html#a603effb8b3d1fa34860f313311e1dcef">MakeMacroHash()</a>.</p>
 
@@ -289,6 +318,8 @@
       </table>
 </div>
 <div class="memdoc">
+
+<p>list all defined macros on stdout </p>
 
 <p>References <a class="el" href="struct___macro_entry.html#a1bd7a8575ca2650132d636d65dcda2f6">_MacroEntry::args</a>, <a class="el" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="options_8h.html#abb9f00607f69c02d395e8219f8f08b8c">enable_macros</a>, <a class="el" href="macros_8c.html#a41bcc7ad3a75561243f1a5b02fa7e474">end_indented_list()</a>, <a class="el" href="struct___macro_hash_table.html#ad6de3bc4531a963bd66f9c2e576a226d">_MacroHashTable::hash</a>, <a class="el" href="macro_8c.html#a5469149a69e323e2d965f7bcfce934d5">list_macros_sort()</a>, <a class="el" href="struct___macro_entry.html#a5ac083a645d964373f022d03df4849c8">_MacroEntry::name</a>, <a class="el" href="struct___macro_entry.html#a73b7c6858ac6cdc4af77d1646ae19ace">_MacroEntry::next</a>, <a class="el" href="options_8h.html#a257bb056aaee026d2574fd4d834e2101">pretty_print</a>, <a class="el" href="macros_8c.html#a1b27ed98d3464dc245eba9bb74fe5df5">print_indented_list_br()</a>, <a class="el" href="macros_8c.html#acef8ddea11d09bf367bba1e5b1c344d2">print_indented_list_item()</a>, <a class="el" href="struct___macro_hash_table.html#a439227feff9d7f55384e8780cfc2eb82">_MacroHashTable::size</a>, and <a class="el" href="macros_8c.html#ae4547421b721416673d9597c563951a5">start_indented_list()</a>.</p>
 
@@ -318,6 +349,8 @@
       </table>
 </div>
 <div class="memdoc">
+
+<p>internal function for sorting list of macros </p>
 
 <p>Referenced by <a class="el" href="macro_8h.html#a23de683b4d0fd2cc39ba4a0ba668c179">list_macros()</a>.</p>
 
@@ -361,6 +394,8 @@
 </div>
 <div class="memdoc">
 
+<p>indent macro expansion debugging output (according to # of active input buffers) </p>
+
 <p>References <a class="el" href="cwb-itoa_8c.html#a2993e80915962c80bdbd46c0f8d554b3">buf</a>, and <a class="el" href="struct___input_buffer.html#a387f92b636d7ea2c2147dc6c576533dc">_InputBuffer::next</a>.</p>
 
 <p>Referenced by <a class="el" href="macro_8h.html#aa343c98285f1a32ef30f8da7cd1ce4a8">expand_macro()</a>, and <a class="el" href="macro_8h.html#a01ff9eb9b38042da7ebaffa9f379a6d2">yy_input_char()</a>.</p>
@@ -382,6 +417,8 @@
       </table>
 </div>
 <div class="memdoc">
+
+<p>Resets the module-global iterator_bucket and iterator_entry variables. </p>
 
 <p>References <a class="el" href="macro_8c.html#a63f983f3dcf52707eed5f88c66152771">iterator_bucket</a>.</p>
 
@@ -432,6 +469,8 @@
 </div>
 <div class="memdoc">
 
+<p>internal iterator function used by <a class="el" href="macro_8c.html#adfd92c0f6945e6e4193edc2367a58071">macro_iterator_next()</a> and <a class="el" href="macro_8c.html#a2096a56771ccb4bd3851cf351a5a8310">macro_iterator_next_prototype()</a> </p>
+
 <p>References <a class="el" href="options_8h.html#abb9f00607f69c02d395e8219f8f08b8c">enable_macros</a>, <a class="el" href="struct___macro_hash_table.html#ad6de3bc4531a963bd66f9c2e576a226d">_MacroHashTable::hash</a>, <a class="el" href="macro_8c.html#a63f983f3dcf52707eed5f88c66152771">iterator_bucket</a>, <a class="el" href="struct___macro_entry.html#a5ac083a645d964373f022d03df4849c8">_MacroEntry::name</a>, <a class="el" href="struct___macro_entry.html#a73b7c6858ac6cdc4af77d1646ae19ace">_MacroEntry::next</a>, and <a class="el" href="struct___macro_hash_table.html#a439227feff9d7f55384e8780cfc2eb82">_MacroHashTable::size</a>.</p>
 
 <p>Referenced by <a class="el" href="macro_8h.html#adfd92c0f6945e6e4193edc2367a58071">macro_iterator_next()</a>, and <a class="el" href="macro_8h.html#a2096a56771ccb4bd3851cf351a5a8310">macro_iterator_next_prototype()</a>.</p>
@@ -474,6 +513,8 @@
 </div>
 <div class="memdoc">
 
+<p>print macro hash statistics on stderr </p>
+
 <p>References <a class="el" href="struct___macro_hash_table.html#ad6de3bc4531a963bd66f9c2e576a226d">_MacroHashTable::hash</a>, <a class="el" href="struct___macro_entry.html#a73b7c6858ac6cdc4af77d1646ae19ace">_MacroEntry::next</a>, and <a class="el" href="struct___macro_hash_table.html#a439227feff9d7f55384e8780cfc2eb82">_MacroHashTable::size</a>.</p>
 
 <p>Referenced by <a class="el" href="llquery_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
@@ -495,6 +536,8 @@
       </table>
 </div>
 <div class="memdoc">
+
+<p>append segment to macro replacement string, returns pointer to the new, initialised segment </p>
 
 <p>References <a class="el" href="struct___macro_segment.html#af09bff4320de23f28f0d261c3b124d6b">_MacroSegment::arg</a>, <a class="el" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="struct___macro_segment.html#a942facbda952c1fb5cf24c2337fed25d">_MacroSegment::next</a>, <a class="el" href="struct___macro_entry.html#a816ae50b6a3787ea398b6c36a95c02ad">_MacroEntry::replacement</a>, and <a class="el" href="struct___macro_segment.html#aed1cfb225a5fb77461e7972691e68a72">_MacroSegment::string</a>.</p>
 
@@ -602,6 +645,8 @@
 </div>
 <div class="memdoc">
 
+<p>has to be called once to initialise the hash </p>
+
 <p>References <a class="el" href="server_8c.html#a3e18e5ab1201e205ce88c473a2f4bf99">bytes</a>, <a class="el" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="lexhash_8c.html#a6bb4d75c3e8354cff3efd98002335877">find_prime()</a>, <a class="el" href="struct___macro_hash_table.html#ad6de3bc4531a963bd66f9c2e576a226d">_MacroHashTable::hash</a>, and <a class="el" href="struct___macro_hash_table.html#a439227feff9d7f55384e8780cfc2eb82">_MacroHashTable::size</a>.</p>
 
 <p>Referenced by <a class="el" href="macro_8h.html#a46c1888ead3a4dd40dff9eb80c4d7c97">init_macros()</a>.</p>
@@ -661,6 +706,8 @@
 </div>
 <div class="memdoc">
 
+<p>delete input buffer from top of list </p>
+
 <p>References <a class="el" href="struct___macro_entry.html#aa5805c5e936174e5092bf7a5b78e7e64">_MacroEntry::active</a>, <a class="el" href="struct___input_buffer.html#a91a70b77df95bd8b0830b49a094c2acb">_InputBuffer::data</a>, <a class="el" href="struct___input_buffer.html#a86f65b6040271e8fa9a14d8127dd3e30">_InputBuffer::macro</a>, and <a class="el" href="struct___input_buffer.html#a387f92b636d7ea2c2147dc6c576533dc">_InputBuffer::next</a>.</p>
 
 <p>Referenced by <a class="el" href="macro_8h.html#a20609770576af56b3e76f794a708c0d6">delete_macro_buffers()</a>, and <a class="el" href="macro_8h.html#a01ff9eb9b38042da7ebaffa9f379a6d2">yy_input_char()</a>.</p>
@@ -682,6 +729,8 @@
       </table>
 </div>
 <div class="memdoc">
+
+<p>internal function for <a class="el" href="macro_8c.html#af99f13ee64b445e067e4c5a27dbd2cbb">load_macro_file()</a>: remove whitespace &amp; comments from input line </p>
 
 <p>Referenced by <a class="el" href="macro_8h.html#a3c545105614ab570fcbd3aa56a77b971">load_macro_file()</a>.</p>
 
@@ -712,6 +761,8 @@
 </div>
 <div class="memdoc">
 
+<p>print definition of macro on stdout </p>
+
 <p>References <a class="el" href="struct___macro_segment.html#af09bff4320de23f28f0d261c3b124d6b">_MacroSegment::arg</a>, <a class="el" href="struct___macro_entry.html#a3a4a662b17bba5a82ee5d46790de93d9">_MacroEntry::argnames</a>, <a class="el" href="output_8c.html#ac523a4b34d2f925e027d8f433de703c9">cqpmessage()</a>, <a class="el" href="options_8h.html#abb9f00607f69c02d395e8219f8f08b8c">enable_macros</a>, <a class="el" href="output_8h.html#a9c2eeea9cd09fb001747ef4cc99399a4a4dfd42ec49d09d8c6555c218301cc30f">Error</a>, <a class="el" href="macro_8c.html#a7012ba1ab91c600418b5d2f72c57f338">MacroHashLookup()</a>, <a class="el" href="struct___macro_segment.html#a942facbda952c1fb5cf24c2337fed25d">_MacroSegment::next</a>, <a class="el" href="struct___macro_entry.html#a816ae50b6a3787ea398b6c36a95c02ad">_MacroEntry::replacement</a>, and <a class="el" href="struct___macro_segment.html#aed1cfb225a5fb77461e7972691e68a72">_MacroSegment::string</a>.</p>
 
 </div>
@@ -731,6 +782,8 @@
       </table>
 </div>
 <div class="memdoc">
+
+<p>push new input buffer (which can hold string of lenght &lt;size&gt;) on top of buffer list </p>
 
 <p>References <a class="el" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="struct___input_buffer.html#a91a70b77df95bd8b0830b49a094c2acb">_InputBuffer::data</a>, <a class="el" href="struct___input_buffer.html#a86f65b6040271e8fa9a14d8127dd3e30">_InputBuffer::macro</a>, <a class="el" href="struct___input_buffer.html#a387f92b636d7ea2c2147dc6c576533dc">_InputBuffer::next</a>, and <a class="el" href="struct___input_buffer.html#a401e942526aac47cef94f478182486e7">_InputBuffer::position</a>.</p>
 
@@ -754,6 +807,11 @@
 </div>
 <div class="memdoc">
 
+<p>Get a character for the lexer/parser. </p>
+<p>This function reads one character (byte) of input from InputBufferList[top], ... , InputBufferList[bottom], cqp_input_string, yyin in that order of precedence.</p>
+<p>It adds the character to query buffer, and returns it.</p>
+<p>Used by the lexer to get its characters; see parser.l where YY_INPUT() is redefined to a macro calling this function. (Not clear why it's in <a class="el" href="macro_8c.html">macro.c</a> when it is not specific to just macros.) </p>
+
 <p>References <a class="el" href="cwb-itoa_8c.html#a2993e80915962c80bdbd46c0f8d554b3">buf</a>, <a class="el" href="cqp_8h.html#a27d0516bdf945bd7f60c3c9b66be0145">cqp_input_string</a>, <a class="el" href="cqp_8h.html#a099bf71badf39387256aa765f798e608">cqp_input_string_position</a>, <a class="el" href="output_8c.html#ac523a4b34d2f925e027d8f433de703c9">cqpmessage()</a>, <a class="el" href="struct___input_buffer.html#a91a70b77df95bd8b0830b49a094c2acb">_InputBuffer::data</a>, <a class="el" href="options_8h.html#ab6b7da74334ef7947beb950a49bd49f5">macro_debug</a>, <a class="el" href="macro_8c.html#ae8b3dfc31cbe868863e5e653d61edf7b">macro_debug_newline_indent()</a>, <a class="el" href="macro_8c.html#ab23e61d8567abf8809651b2213aa7f35">PopInputBuffer()</a>, <a class="el" href="struct___input_buffer.html#a401e942526aac47cef94f478182486e7">_InputBuffer::position</a>, <a class="el" href="cqp_8h.html#a3d65e5ebeda0733ad22f5f9ea26d76f4">QUERY_BUFFER_SIZE</a>, <a class="el" href="cqp_8c.html#adfbde17c16a76552596e50bd3c371382">QueryBuffer</a>, <a class="el" href="cqp_8c.html#a54d95727d347da93ae0866f293f729c4">QueryBufferOverflow</a>, <a class="el" href="cqp_8c.html#ac0d42ac5f8866bd18648afcc372e650c">QueryBufferP</a>, <a class="el" href="cqp_8c.html#a3818b52c87d9e25995878f0719a1f15e">reading_cqprc</a>, <a class="el" href="output_8h.html#a9c2eeea9cd09fb001747ef4cc99399a4a48f2bb70fceb692a2dedd8cea496c44b">Warning</a>, <a class="el" href="options_8h.html#ac6e855a8973a6f82ba35f4ee2927091e">write_history_file</a>, <a class="el" href="macro_8c.html#a01ff9eb9b38042da7ebaffa9f379a6d2">yy_input_char()</a>, and <a class="el" href="cqp_8c.html#a46af646807e0797e72b6e8945e7ea88b">yyin</a>.</p>
 
 <p>Referenced by <a class="el" href="macro_8h.html#a01ff9eb9b38042da7ebaffa9f379a6d2">yy_input_char()</a>.</p>
@@ -775,6 +833,8 @@
       </table>
 </div>
 <div class="memdoc">
+
+<p>checks if input is being read from macro expansion </p>
 
 </div>
 </div>
@@ -810,6 +870,8 @@
 </div>
 <div class="memdoc">
 
+<p>list of active input buffers </p>
+
 </div>
 </div>
 <a class="anchor" id="a63f983f3dcf52707eed5f88c66152771"></a><!-- doxytag: member="macro.c::iterator_bucket" ref="a63f983f3dcf52707eed5f88c66152771" args="" -->
@@ -822,6 +884,8 @@
       </table>
 </div>
 <div class="memdoc">
+
+<p>current bucket in macro iterator </p>
 
 <p>Referenced by <a class="el" href="macro_8h.html#a4c2ac9e2d45b589a4a40c66ca2c85a2b">macro_iterator_new()</a>, and <a class="el" href="macro_8c.html#a89664201326c8b44d67a69a3d0474e1a">macro_iterator_next_macro()</a>.</p>
 
@@ -838,6 +902,9 @@
 </div>
 <div class="memdoc">
 
+<p>current entry in bucket (if NULL, go to next bucket) </p>
+<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="macro_8c.html#a63f983f3dcf52707eed5f88c66152771" title="current bucket in macro iterator">iterator_bucket</a> </dd></dl>
+
 </div>
 </div>
 <a class="anchor" id="abd428d2d996fa2ca5a16deaee5f15788"></a><!-- doxytag: member="macro.c::macro_arg" ref="abd428d2d996fa2ca5a16deaee5f15788" args="[10]" -->
@@ -850,6 +917,8 @@
       </table>
 </div>
 <div class="memdoc">
+
+<p>macro args are stored in a global array so we can always free() the memory </p>
 
 <p>Referenced by <a class="el" href="macro_8h.html#aa343c98285f1a32ef30f8da7cd1ce4a8">expand_macro()</a>.</p>
 
@@ -878,6 +947,8 @@
       </table>
 </div>
 <div class="memdoc">
+
+<p>unique number for pseudo argument in each macro call </p>
 
 <p>Referenced by <a class="el" href="macro_8h.html#aa343c98285f1a32ef30f8da7cd1ce4a8">expand_macro()</a>.</p>
 
@@ -912,7 +983,7 @@
 </div>
 </div>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Thu Jun 24 06:38:27 2010 for CWB by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Mon Aug 2 06:46:58 2010 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

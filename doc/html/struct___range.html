@@ -50,7 +50,7 @@
 <dl class="el"><dd class="mdescRight">lexicon hash for attribute values  <a href="#ac76b62d6b0e85ad3157ebd69613a63be"></a><br/></dl><li>int <a class="el" href="struct___range.html#abb239165b69928cd5f437ee058b1eda8">has_children</a>
 <dl class="el"><dd class="mdescRight">whether attribute values of XML elements are stored in s-attribute 'children'  <a href="#abb239165b69928cd5f437ee058b1eda8"></a><br/></dl><li><a class="el" href="struct__cl__lexhash.html">cl_lexhash</a> <a class="el" href="struct___range.html#a015f02a34bc9fa09f2f3d83f02541c5a">el_attributes</a>
 <dl class="el"><dd class="mdescRight">maps XML element attribute names to the appropriate s-attribute 'children' (<a class="el" href="struct_range.html">Range</a> *)  <a href="#a015f02a34bc9fa09f2f3d83f02541c5a"></a><br/></dl><li><a class="el" href="struct__cl__string__list.html">cl_string_list</a> <a class="el" href="struct___range.html#a3f6c95ba6fdb3e510206a81228b22c81">el_atts_list</a>
-<dl class="el"><dd class="mdescRight">list of declared element attribute names, required by <a class="el" href="cwb-encode_8c.html#ab80a63938c6804f9600afdf8ccb6bfc0" title="Closes a currently open instance of an S-attribute.">close_range()</a> function  <a href="#a3f6c95ba6fdb3e510206a81228b22c81"></a><br/></dl><li><a class="el" href="struct__cl__lexhash.html">cl_lexhash</a> <a class="el" href="struct___range.html#a20fb9a5816393db2d1681565f9e359d6">el_undeclared_attributes</a>
+<dl class="el"><dd class="mdescRight">list of declared element attribute names, required by <a class="el" href="cwb-encode_8c.html#a7b5a2adf15771a1d43017518ed35a52d" title="Closes a currently open instance of an S-attribute.">range_close()</a> function  <a href="#a3f6c95ba6fdb3e510206a81228b22c81"></a><br/></dl><li><a class="el" href="struct__cl__lexhash.html">cl_lexhash</a> <a class="el" href="struct___range.html#a20fb9a5816393db2d1681565f9e359d6">el_undeclared_attributes</a>
 <dl class="el"><dd class="mdescRight">remembers undeclared element attributes, so warnings will be issued only once  <a href="#a20fb9a5816393db2d1681565f9e359d6"></a><br/></dl><li>int <a class="el" href="struct___range.html#a431cfba1205405fb43a6d645af4474bd">max_recursion</a>
 <dl class="el"><dd class="mdescRight">maximum auto-recursion level; 0 = no recursion (maximal regions), -1 = assume flat structure  <a href="#a431cfba1205405fb43a6d645af4474bd"></a><br/></dl><li>int <a class="el" href="struct___range.html#abf23e1bc2707763a1f3d81923752358c">recursion_level</a>
 <dl class="el"><dd class="mdescRight">keeps track of level of embedding when auto-recursion is activated  <a href="#abf23e1bc2707763a1f3d81923752358c"></a><br/></dl><li>int <a class="el" href="struct___range.html#af69647958cbe1931821113efeb7fb5af">element_drop_count</a>
@@ -62,7 +62,7 @@
 <dl class="el"><dd class="mdescRight">number of current (if this-&gt;is_open) or next structure  <a href="#a86cf672daa4e0ad11ad10efc894d19c8"></a><br/></dl></ul>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <p>The <a class="el" href="struct_range.html">Range</a> object represents a range of corpus positions - for instance, the range enclosed by an instance of an s-attribute. </p>
-<p><a class="el" href="struct_range.html">Range</a> object: represents an S-attribute being encoded. </p>
+<p><a class="el" href="struct_range.html">Range</a> object: represents an S-attribute being encoded, and holds some information about the currently-being-processed instance of that S-attribute. </p>
 <hr/><h2>Field Documentation</h2>
 <a class="anchor" id="a3b3be9087a468fe688fe72b348317b70"></a><!-- doxytag: member="_Range::annot" ref="a3b3be9087a468fe688fe72b348317b70" args="" -->
 <div class="memitem">
@@ -165,7 +165,7 @@
 </div>
 <div class="memdoc">
 
-<p>list of declared element attribute names, required by <a class="el" href="cwb-encode_8c.html#ab80a63938c6804f9600afdf8ccb6bfc0" title="Closes a currently open instance of an S-attribute.">close_range()</a> function </p>
+<p>list of declared element attribute names, required by <a class="el" href="cwb-encode_8c.html#a7b5a2adf15771a1d43017518ed35a52d" title="Closes a currently open instance of an S-attribute.">range_close()</a> function </p>
 
 </div>
 </div>
@@ -459,7 +459,7 @@
 <li>utils/<a class="el" href="cwb-encode_8c.html">cwb-encode.c</a></li>
 </ul>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Thu Jun 24 06:38:27 2010 for CWB by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Mon Aug 2 06:46:58 2010 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

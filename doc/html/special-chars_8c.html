@@ -42,16 +42,21 @@
 <dl class="el"><dd class="mdescRight">Initialise an "identity" mapping table.  <a href="#afcffa063d633b3ad129a431a46dc0178"></a><br/></dl><li>void <a class="el" href="special-chars_8c.html#ad231313a944f572f2f254154b29b218d">maptable_init_both</a> (unsigned char *maptable, const unsigned char *nocasetable, const unsigned char *nodiactable)
 <dl class="el"><dd class="mdescRight">Initialise a "fold both case and diacritics" mapping table.  <a href="#ad231313a944f572f2f254154b29b218d"></a><br/></dl><li>unsigned char * <a class="el" href="special-chars_8c.html#ae86d5e60c27778b82281ac1679409512">cl_string_maptable</a> (<a class="el" href="cl_8h.html#a3502421ae8eac74673133702852dde32">CorpusCharset</a> <a class="el" href="cwb-check-input_8c.html#ab7d33183c58d7df43cc5602b9c842b37">charset</a>, int flags)
 <dl class="el"><dd class="mdescRight">Gets a specified character mapping table for use in regular expressions.  <a href="#ae86d5e60c27778b82281ac1679409512"></a><br/></dl><li>int <a class="el" href="special-chars_8c.html#af34751536a9d871c29ef937d6c61f4a0">cl_string_validate_encoding</a> (const char *s, <a class="el" href="cl_8h.html#a3502421ae8eac74673133702852dde32">CorpusCharset</a> <a class="el" href="cwb-check-input_8c.html#ab7d33183c58d7df43cc5602b9c842b37">charset</a>)
-<dl class="el"><dd class="mdescRight">Checks the encoding of a string.  <a href="#af34751536a9d871c29ef937d6c61f4a0"></a><br/></dl><li>void <a class="el" href="special-chars_8c.html#a708281d7f482a1999c70df6c353d66e1">cl_string_canonical</a> (char *s, <a class="el" href="cl_8h.html#a3502421ae8eac74673133702852dde32">CorpusCharset</a> <a class="el" href="cwb-check-input_8c.html#ab7d33183c58d7df43cc5602b9c842b37">charset</a>, int flags)
+<dl class="el"><dd class="mdescRight">Checks the encoding of a string.  <a href="#af34751536a9d871c29ef937d6c61f4a0"></a><br/></dl><li>int <a class="el" href="special-chars_8c.html#ab4264f7bac736ccbd6d45cde96ab2599">cl_id_validate</a> (char *s)
+<dl class="el"><dd class="mdescRight">Checks a string to see if it is a valid CWB identifier.  <a href="#ab4264f7bac736ccbd6d45cde96ab2599"></a><br/></dl><li>void <a class="el" href="special-chars_8c.html#a07e27dfd6e9b452c314b687ace4566b5">cl_id_toupper</a> (char *s)
+<dl class="el"><dd class="mdescRight">Converts a lowercase corpus name to an equivalent uppercase form.  <a href="#a07e27dfd6e9b452c314b687ace4566b5"></a><br/></dl><li>void <a class="el" href="special-chars_8c.html#abbca7dd33033692ebc4ee7d98390694c">cl_id_tolower</a> (char *s)
+<dl class="el"><dd class="mdescRight">Converts an uppercase corpus name to an equivalent lowercase form.  <a href="#abbca7dd33033692ebc4ee7d98390694c"></a><br/></dl><li>void <a class="el" href="special-chars_8c.html#a708281d7f482a1999c70df6c353d66e1">cl_string_canonical</a> (char *s, <a class="el" href="cl_8h.html#a3502421ae8eac74673133702852dde32">CorpusCharset</a> <a class="el" href="cwb-check-input_8c.html#ab7d33183c58d7df43cc5602b9c842b37">charset</a>, int flags)
 <dl class="el"><dd class="mdescRight">Converts a string to canonical form.  <a href="#a708281d7f482a1999c70df6c353d66e1"></a><br/></dl><li>void <a class="el" href="special-chars_8c.html#a76a88a09e8eed393bae6ef422744dd84">cl_path_adjust_os</a> (char *path)
 <dl class="el"><dd class="mdescRight">Standardises subdirectory-dividers in a string that represents a path, in an OS-sensitive way.  <a href="#a76a88a09e8eed393bae6ef422744dd84"></a><br/></dl><li>void <a class="el" href="special-chars_8c.html#a30fe7bb88b656c3283346265a76a797f">cl_path_adjust_independent</a> (char *path)
-<dl class="el"><dd class="mdescRight">Standardises subdirectory-dividers in a string that represents a path into Unix-like form (ie with forward-slash), regardless of what OS we are in.  <a href="#a30fe7bb88b656c3283346265a76a797f"></a><br/></dl></ul>
+<dl class="el"><dd class="mdescRight">Standardises subdirectory-dividers in a string that represents a path into Unix-like form (ie with forward-slash), regardless of what OS we are in.  <a href="#a30fe7bb88b656c3283346265a76a797f"></a><br/></dl><li>char * <a class="el" href="special-chars_8c.html#a4c23e0ddc6fcab7c4b7048dcb3eb605d">cl_path_registry_quote</a> (char *path)
+<dl class="el"><dd class="mdescRight">Add quotes and escape slashes to a file path if necessary.  <a href="#a4c23e0ddc6fcab7c4b7048dcb3eb605d"></a><br/></dl></ul>
 <tr><td colspan="2"><div class="groupHeader"></div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrpd41d8cd98f00b204e9800998ecf8427e"></a> </p>
 </div></td></tr>
 <ul>
 <li>char * <a class="el" href="special-chars_8c.html#a8e3a6183c822cb47f163cc14d114f0d5">cl_string_latex2iso</a> (char *str, char *result, int target_len)
-<dl class="el"><dd class="mdescRight">Converts ASCII strings with latex-style blackslash escapes for accented characters to ISO-8859-1 (Latin-1).  <a href="#a8e3a6183c822cb47f163cc14d114f0d5"></a><br/></dl></ul>
+<dl class="el"><dd class="mdescRight">Converts ASCII strings with latex-style blackslash escapes for accented characters to ISO-8859-1 (Latin-1).  <a href="#a8e3a6183c822cb47f163cc14d114f0d5"></a><br/></dl><li>char * <a class="el" href="special-chars_8c.html#a355935fd8812aa21e339dd725da6cc92">cl_xml_entity_decode</a> (char *s)
+<dl class="el"><dd class="mdescRight">Decode XML entities in a string.  <a href="#a355935fd8812aa21e339dd725da6cc92"></a><br/></dl></ul>
 <h2>Variables</h2>
 <ul>
 <li>const unsigned char <a class="el" href="special-chars_8c.html#a4ded408d535e140c3ac78fc80ef2cdb9">identity_tab</a> [unknown_charset][256]
@@ -124,6 +129,87 @@
 </div>
 </div>
 <hr/><h2>Function Documentation</h2>
+<a class="anchor" id="abbca7dd33033692ebc4ee7d98390694c"></a><!-- doxytag: member="special&#45;chars.c::cl_id_tolower" ref="abbca7dd33033692ebc4ee7d98390694c" args="(char *s)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cl_id_tolower </td>
+          <td>(</td>
+          <td class="paramtype">char *&nbsp;</td>
+          <td class="paramname"> <em>s</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Converts an uppercase corpus name to an equivalent lowercase form. </p>
+<p>String is modified in situ. Only the ASCII characters are changed.</p>
+<p>Note, this function doesn't check for what is and is not an allowed CWB-corpus-name character. </p>
+
+<p>Referenced by <a class="el" href="corpus_8c.html#aee476e23a98efac85d9a9288f18fe686">cl_new_corpus()</a>, <a class="el" href="cwb-encode_8c.html#a5f95d4bd20c852ebbd303e0eb43d7d11">encode_generate_registry_file()</a>, and <a class="el" href="cwb-align-encode_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a07e27dfd6e9b452c314b687ace4566b5"></a><!-- doxytag: member="special&#45;chars.c::cl_id_toupper" ref="a07e27dfd6e9b452c314b687ace4566b5" args="(char *s)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cl_id_toupper </td>
+          <td>(</td>
+          <td class="paramtype">char *&nbsp;</td>
+          <td class="paramname"> <em>s</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Converts a lowercase corpus name to an equivalent uppercase form. </p>
+<p>String is modified in situ. Only the ASCII characters are changed.</p>
+<p>Note, this function doesn't check for what is and is not an allowed CWB-corpus-name character.</p>
+<p>The old version of this code was a line in cwb-encode that used the library toupper to cope with Latin1 characters. But these are no longer allowed in identifiers, which must be ASCII only. </p>
+
+<p>Referenced by <a class="el" href="cwb-encode_8c.html#a5f95d4bd20c852ebbd303e0eb43d7d11">encode_generate_registry_file()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ab4264f7bac736ccbd6d45cde96ab2599"></a><!-- doxytag: member="special&#45;chars.c::cl_id_validate" ref="ab4264f7bac736ccbd6d45cde96ab2599" args="(char *s)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int cl_id_validate </td>
+          <td>(</td>
+          <td class="paramtype">char *&nbsp;</td>
+          <td class="paramname"> <em>s</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Checks a string to see if it is a valid CWB identifier. </p>
+<p>The rules for these are as follows (see also the CQP lexer):</p>
+<p>* all characters must be ASCII, ie less than 0x80; * must be at least 1 character long (of course) * first character must be an uppercase or lowercase letter or underscore * second and subsequent characters may also be digits, hyphen or fullstop.</p>
+<p>TODO: should the CL registry lexer be amended ot reflect these restricitons? (ID there is rather laxer than this)</p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>s</em>&nbsp;</td><td>The string to check. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>A boolean. True if the string is a valid ID. Otherwise false. </dd></dl>
+
+<p>Referenced by <a class="el" href="corpus_8c.html#aee476e23a98efac85d9a9288f18fe686">cl_new_corpus()</a>, and <a class="el" href="cwb-encode_8c.html#a5f95d4bd20c852ebbd303e0eb43d7d11">encode_generate_registry_file()</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="a30fe7bb88b656c3283346265a76a797f"></a><!-- doxytag: member="special&#45;chars.c::cl_path_adjust_independent" ref="a30fe7bb88b656c3283346265a76a797f" args="(char *path)" -->
 <div class="memitem">
 <div class="memproto">
@@ -188,6 +274,41 @@
 
 </div>
 </div>
+<a class="anchor" id="a4c23e0ddc6fcab7c4b7048dcb3eb605d"></a><!-- doxytag: member="special&#45;chars.c::cl_path_registry_quote" ref="a4c23e0ddc6fcab7c4b7048dcb3eb605d" args="(char *path)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">char* cl_path_registry_quote </td>
+          <td>(</td>
+          <td class="paramtype">char *&nbsp;</td>
+          <td class="paramname"> <em>path</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Add quotes and escape slashes to a file path if necessary. </p>
+<p>This is for the HOME and INFO fields of the registry file.</p>
+<p>If either field contains any characters that can't be treated as an "ID" token by the registry parser, then we make sure it is treated as a string (quoted) instead, and make all appropriate substitutions</p>
+<p>For consistency, this function always returns a newly allocated string, regardless of whether changes have been made.</p>
+<p>Note that the way the registry parser works, it is quite happy with either "C:\dir\subdir" or "C:\\dir\\subdir" as a path for HOME or INFO.</p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>path</em>&nbsp;</td><td>String containing the path to quotify. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>The quotified string (newly allocated). </dd></dl>
+
+<p>References <a class="el" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, and <a class="el" href="cl_8h.html#a6647d75d1d69c7d25447da514b7e4682">cl_strdup()</a>.</p>
+
+<p>Referenced by <a class="el" href="cwb-encode_8c.html#a5f95d4bd20c852ebbd303e0eb43d7d11">encode_generate_registry_file()</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="a708281d7f482a1999c70df6c353d66e1"></a><!-- doxytag: member="special&#45;chars.c::cl_string_canonical" ref="a708281d7f482a1999c70df6c353d66e1" args="(char *s, CorpusCharset charset, int flags)" -->
 <div class="memitem">
 <div class="memproto">
@@ -225,8 +346,8 @@
 <p>Note also that the arguments of this string were changed in v3.2.1. Now, a CorpusCharset is needed. This is because string canonicalising works differently in UTF8. In UTF8, the "composed" status of ALL strings is standardised (this is not dependent on flags; so this function should always be called on all strings that are going to be inserted into or searched for within, an indexed corpus; then we know we are always dealing with maximally-precomposed strings). Then case folding / accent folding is done by calling Unicode-aware functions. This is in contrast to the process for Latin1, which just uses a straightforward mapping table for both sorts of folding.</p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>s</em>&nbsp;</td><td>The string (currently: must be Ascii, Latin-1, or UTF8!) </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>charset</em>&nbsp;</td><td>The character set to use in standardising. If this is utf8, complex accent and/or case folding will be done, as per the unicode standard. If it is anything else, the Latin1 mapping tables will be used (currently no other ISO mapping tables are built in to the CL). </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>s</em>&nbsp;</td><td>The string (currently: must be Ascii, Latin-1, or UTF8, but this is not checked for you!) </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>charset</em>&nbsp;</td><td>The character set to use in standardising. If this is utf8, complex accent and/or case folding will be done, as per the unicode standard. If it is anything else, the Latin1 mapping tables will be used (currently no other ISO mapping tables are built in and activated in the CL). </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>flags</em>&nbsp;</td><td>The flags that specify which conversions are required. Can be IGNORE_CASE and/or IGNORE_DIAC. </td></tr>
   </table>
   </dd>
@@ -234,7 +355,7 @@
 
 <p>References <a class="el" href="cl_8h.html#a9e15a3c725711d9effd623b2f3e225be">cl_free</a>, <a class="el" href="special-chars_8c.html#ae86d5e60c27778b82281ac1679409512">cl_string_maptable()</a>, <a class="el" href="cl_8h.html#a1f397c74f7f8ba3952858c70eb19d082">IGNORE_CASE</a>, <a class="el" href="cl_8h.html#a2e9f85ae8ad88191c60cf4269b9ab296">IGNORE_DIAC</a>, and <a class="el" href="cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa3946b00fe1f38206339d69285cda6b03">utf8</a>.</p>
 
-<p>Referenced by <a class="el" href="corpus_8c.html#aee476e23a98efac85d9a9288f18fe686">cl_new_corpus()</a>, <a class="el" href="regopt_8c.html#a2c4607eb8e094b7699062df8eb744058">cl_new_regex()</a>, <a class="el" href="regopt_8c.html#a7a9d3816260f385cf56e15839c518cee">cl_regex_match()</a>, <a class="el" href="cwb-align-encode_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>, <a class="el" href="output_8h.html#ab5e1d7c16acef5e942e242f803a494f9">print_tabulation()</a>, and <a class="el" href="ranges_8h.html#aaf5f006cef0ac7c1fdb5c9d55558c11a">SortSubcorpus()</a>.</p>
+<p>Referenced by <a class="el" href="regopt_8c.html#a2c4607eb8e094b7699062df8eb744058">cl_new_regex()</a>, <a class="el" href="regopt_8c.html#a7a9d3816260f385cf56e15839c518cee">cl_regex_match()</a>, <a class="el" href="cwb-encode_8c.html#a4179bb576944f012092322c5f446b0a8">encode_get_input_line()</a>, <a class="el" href="output_8h.html#ab5e1d7c16acef5e942e242f803a494f9">print_tabulation()</a>, and <a class="el" href="ranges_8h.html#aaf5f006cef0ac7c1fdb5c9d55558c11a">SortSubcorpus()</a>.</p>
 
 </div>
 </div>
@@ -366,8 +487,8 @@
 <div class="memdoc">
 
 <p>Checks the encoding of a string. </p>
-<p>This function looks for bad bytes (or byte sequences in the case of UTF8); if any are rpesent, it judges the string invalid.</p>
-<p>What counts as "bad" is of course relative to the character set that the string is encoded in - os this must be specified.</p>
+<p>This function looks for bad bytes (or byte sequences in the case of UTF8); if any are present, it judges the string invalid.</p>
+<p>What counts as "bad" is of course relative to the character set that the string is encoded in - so this must be specified.</p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>s</em>&nbsp;</td><td>Null-terminated string to check. </td></tr>
@@ -378,6 +499,42 @@
 <dl class="return"><dt><b>Returns:</b></dt><dd>Boolean: true for valid, false for invalid. </dd></dl>
 
 <p>References <a class="el" href="cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa98383b9510ede128be820594e072f901">arabic</a>, <a class="el" href="cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa1fc467976b8e2979150a99beb709443e">ascii</a>, <a class="el" href="cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa841e717cfee614d106a0f8899c6ba639">cyrillic</a>, <a class="el" href="cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa1e664ae89ee112a145ec85d1e895ae50">greek</a>, <a class="el" href="cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa285886ef566374280cceb0a4e18561c0">hebrew</a>, <a class="el" href="cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaabb414040abfb032911b6a01ff3917217">latin1</a>, <a class="el" href="cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa724c1992a8e61d82725c22a9da6ddefe">latin2</a>, <a class="el" href="cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaae3652cea785fa2b69d22555ab515f002">latin3</a>, <a class="el" href="cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa07077e48dfd29feb9f45eb2406bca765">latin4</a>, <a class="el" href="cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa234f500c041b73aabc6fbd8eee10ab6d">latin5</a>, <a class="el" href="cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa10478439f5f44a25543bbd052c4200af">latin6</a>, <a class="el" href="cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa0683b667b8aabe54030680aadd3b5ee7">latin7</a>, <a class="el" href="cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaaf2ba2e166095a0cf8a4ccdb6d1937f83">latin8</a>, <a class="el" href="cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa7ecb9db6bf20631b7ce70e796df4a7bf">latin9</a>, and <a class="el" href="cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa3946b00fe1f38206339d69285cda6b03">utf8</a>.</p>
+
+<p>Referenced by <a class="el" href="cwb-encode_8c.html#a4179bb576944f012092322c5f446b0a8">encode_get_input_line()</a>, and <a class="el" href="parse__actions_8h.html#a0cd76ad97a709afa3bd6610768e1d39d">prepare_Query()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a355935fd8812aa21e339dd725da6cc92"></a><!-- doxytag: member="special&#45;chars.c::cl_xml_entity_decode" ref="a355935fd8812aa21e339dd725da6cc92" args="(char *s)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">char* cl_xml_entity_decode </td>
+          <td>(</td>
+          <td class="paramtype">char *&nbsp;</td>
+          <td class="paramname"> <em>s</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Decode XML entities in a string. </p>
+<p>This function decodes pre-defined XML entities in string s. It overwrites the input string s and also returns s for convenience.</p>
+<p>(The entities are &amp;lt; &amp;gt; &amp;amp; &amp;quot; &amp;apos;).</p>
+<p>TODO -- numeric entities?</p>
+<p>If passed NULL, it will not fall over - it will just pass NULL back!</p>
+<p>This function is safe for strings in any encoding. The returned string will be at the same memory location and will always be the same length or shorter after the decoding of entities.</p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>s</em>&nbsp;</td><td>A string to decode. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>The string (rewritten in situ). </dd></dl>
+
+<p>Referenced by <a class="el" href="cwb-encode_8c.html#adc6d582037bec1ccba6ab40a9ddbbf87">encode_add_wattr_line()</a>, and <a class="el" href="cwb-encode_8c.html#a0365f60206bd41cdb976e2e7d9641731">range_open()</a>.</p>
 
 </div>
 </div>
@@ -572,7 +729,7 @@
 </div>
 </div>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Thu Jun 24 06:38:27 2010 for CWB by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Mon Aug 2 06:46:58 2010 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

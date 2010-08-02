@@ -32,7 +32,7 @@
 <dl class="el"><dd class="mdescRight">directory where this range is stored  <a href="#a73da71b9c136e698a3ccaa1366e455a8"></a><br/></dl><li>char * <a class="el" href="struct_range.html#a5ac083a645d964373f022d03df4849c8">name</a>
 <dl class="el"><dd class="mdescRight">range name  <a href="#a5ac083a645d964373f022d03df4849c8"></a><br/></dl><li>int <a class="el" href="struct_range.html#a840e275845c4374a4384021cb20a3eb4">store_values</a>
 <dl class="el"><dd class="mdescRight">flag indicating whether to store values  <a href="#a840e275845c4374a4384021cb20a3eb4"></a><br/></dl><li>int <a class="el" href="struct_range.html#a4adb4fb035eed17910c98225be64ec83">ready</a>
-<dl class="el"><dd class="mdescRight">flag indicates whether <a class="el" href="cwb-encode_8c.html#adff58f0a1109dd9e778ba480c6b33327" title="Opens an instance of the given S-attribute.">open_range()</a> has already been called  <a href="#a4adb4fb035eed17910c98225be64ec83"></a><br/></dl><li>FILE * <a class="el" href="struct_range.html#a600b792d6d2ff2e71096dfa60d97a3b0">fd</a>
+<dl class="el"><dd class="mdescRight">flag indicates whether <a class="el" href="cwb-s-encode_8c.html#ab2929450457ff7b240510be66a7ffdbd">open_range()</a> has already been called  <a href="#a4adb4fb035eed17910c98225be64ec83"></a><br/></dl><li>FILE * <a class="el" href="struct_range.html#a600b792d6d2ff2e71096dfa60d97a3b0">fd</a>
 <dl class="el"><dd class="mdescRight">fd of x.rng (bin mode)  <a href="#a600b792d6d2ff2e71096dfa60d97a3b0"></a><br/></dl><li>FILE * <a class="el" href="struct_range.html#a67794439930965560937a2118457f964">avx</a>
 <dl class="el"><dd class="mdescRight">the attribute value index (text mode)  <a href="#a67794439930965560937a2118457f964"></a><br/></dl><li>FILE * <a class="el" href="struct_range.html#a00ab813696887d5d4d44ed94b8656b22">avs</a>
 <dl class="el"><dd class="mdescRight">the attribute values (bin mode)  <a href="#a00ab813696887d5d4d44ed94b8656b22"></a><br/></dl><li>int <a class="el" href="struct_range.html#af763c756953f5d71796b837caa7f94c3">last_cpos</a>
@@ -53,7 +53,7 @@
 
 <p>the attribute values (bin mode) </p>
 
-<p>Referenced by <a class="el" href="cwb-encode_8c.html#ab80a63938c6804f9600afdf8ccb6bfc0">close_range()</a>, <a class="el" href="cwb-encode_8c.html#a24c98c7fc24344b98cf63c129d68d066">declare_range()</a>, <a class="el" href="cwb-encode_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>, <a class="el" href="cwb-s-encode_8c.html#ab2929450457ff7b240510be66a7ffdbd">open_range()</a>, and <a class="el" href="cwb-s-encode_8c.html#ac5af382b8e183eeafb5671e7f33619bd">write_region_to_disk()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-s-encode_8c.html#a8c17bfc44258ded87aef006065d81803">close_range()</a>, <a class="el" href="cwb-s-encode_8c.html#a308b8a258931e50ec1999b718db816ad">declare_range()</a>, <a class="el" href="cwb-encode_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>, <a class="el" href="cwb-s-encode_8c.html#ab2929450457ff7b240510be66a7ffdbd">open_range()</a>, <a class="el" href="cwb-encode_8c.html#a7b5a2adf15771a1d43017518ed35a52d">range_close()</a>, <a class="el" href="cwb-encode_8c.html#a4d8ab2954e3fc7fc015616effbaa046d">range_declare()</a>, and <a class="el" href="cwb-s-encode_8c.html#ac5af382b8e183eeafb5671e7f33619bd">write_region_to_disk()</a>.</p>
 
 </div>
 </div>
@@ -70,7 +70,7 @@
 
 <p>the attribute value index (text mode) </p>
 
-<p>Referenced by <a class="el" href="cwb-encode_8c.html#ab80a63938c6804f9600afdf8ccb6bfc0">close_range()</a>, <a class="el" href="cwb-encode_8c.html#a24c98c7fc24344b98cf63c129d68d066">declare_range()</a>, <a class="el" href="cwb-encode_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>, <a class="el" href="cwb-s-encode_8c.html#ab2929450457ff7b240510be66a7ffdbd">open_range()</a>, and <a class="el" href="cwb-s-encode_8c.html#ac5af382b8e183eeafb5671e7f33619bd">write_region_to_disk()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-s-encode_8c.html#a8c17bfc44258ded87aef006065d81803">close_range()</a>, <a class="el" href="cwb-s-encode_8c.html#a308b8a258931e50ec1999b718db816ad">declare_range()</a>, <a class="el" href="cwb-encode_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>, <a class="el" href="cwb-s-encode_8c.html#ab2929450457ff7b240510be66a7ffdbd">open_range()</a>, <a class="el" href="cwb-encode_8c.html#a7b5a2adf15771a1d43017518ed35a52d">range_close()</a>, <a class="el" href="cwb-encode_8c.html#a4d8ab2954e3fc7fc015616effbaa046d">range_declare()</a>, and <a class="el" href="cwb-s-encode_8c.html#ac5af382b8e183eeafb5671e7f33619bd">write_region_to_disk()</a>.</p>
 
 </div>
 </div>
@@ -87,7 +87,7 @@
 
 <p>directory where this range is stored </p>
 
-<p>Referenced by <a class="el" href="cwb-encode_8c.html#a24c98c7fc24344b98cf63c129d68d066">declare_range()</a>, and <a class="el" href="cwb-s-encode_8c.html#ab2929450457ff7b240510be66a7ffdbd">open_range()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-s-encode_8c.html#a308b8a258931e50ec1999b718db816ad">declare_range()</a>, <a class="el" href="cwb-s-encode_8c.html#ab2929450457ff7b240510be66a7ffdbd">open_range()</a>, and <a class="el" href="cwb-encode_8c.html#a4d8ab2954e3fc7fc015616effbaa046d">range_declare()</a>.</p>
 
 </div>
 </div>
@@ -104,7 +104,7 @@
 
 <p>fd of x.rng (bin mode) </p>
 
-<p>Referenced by <a class="el" href="cwb-encode_8c.html#ab80a63938c6804f9600afdf8ccb6bfc0">close_range()</a>, <a class="el" href="cwb-encode_8c.html#a24c98c7fc24344b98cf63c129d68d066">declare_range()</a>, <a class="el" href="cwb-encode_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>, <a class="el" href="cwb-s-encode_8c.html#ab2929450457ff7b240510be66a7ffdbd">open_range()</a>, and <a class="el" href="cwb-s-encode_8c.html#ac5af382b8e183eeafb5671e7f33619bd">write_region_to_disk()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-s-encode_8c.html#a8c17bfc44258ded87aef006065d81803">close_range()</a>, <a class="el" href="cwb-s-encode_8c.html#a308b8a258931e50ec1999b718db816ad">declare_range()</a>, <a class="el" href="cwb-encode_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>, <a class="el" href="cwb-s-encode_8c.html#ab2929450457ff7b240510be66a7ffdbd">open_range()</a>, <a class="el" href="cwb-encode_8c.html#a7b5a2adf15771a1d43017518ed35a52d">range_close()</a>, <a class="el" href="cwb-encode_8c.html#a4d8ab2954e3fc7fc015616effbaa046d">range_declare()</a>, and <a class="el" href="cwb-s-encode_8c.html#ac5af382b8e183eeafb5671e7f33619bd">write_region_to_disk()</a>.</p>
 
 </div>
 </div>
@@ -138,7 +138,7 @@
 
 <p>range name </p>
 
-<p>Referenced by <a class="el" href="cwb-encode_8c.html#ab80a63938c6804f9600afdf8ccb6bfc0">close_range()</a>, <a class="el" href="cwb-encode_8c.html#a24c98c7fc24344b98cf63c129d68d066">declare_range()</a>, <a class="el" href="cwb-encode_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>, <a class="el" href="cwb-encode_8c.html#adff58f0a1109dd9e778ba480c6b33327">open_range()</a>, <a class="el" href="cwb-s-encode_8c.html#a0318e97f40679e849d9259e5edb4dfce">parse_options()</a>, and <a class="el" href="cwb-encode_8c.html#ae5c2bb32a75d86bb872cc2887476d60b">print_range_registry_line()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-s-encode_8c.html#a308b8a258931e50ec1999b718db816ad">declare_range()</a>, <a class="el" href="cwb-encode_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>, <a class="el" href="cwb-s-encode_8c.html#ab2929450457ff7b240510be66a7ffdbd">open_range()</a>, <a class="el" href="cwb-s-encode_8c.html#a0318e97f40679e849d9259e5edb4dfce">parse_options()</a>, <a class="el" href="cwb-encode_8c.html#a7b5a2adf15771a1d43017518ed35a52d">range_close()</a>, <a class="el" href="cwb-encode_8c.html#a4d8ab2954e3fc7fc015616effbaa046d">range_declare()</a>, <a class="el" href="cwb-encode_8c.html#a0365f60206bd41cdb976e2e7d9641731">range_open()</a>, and <a class="el" href="cwb-encode_8c.html#af8eaa961b2d2f64c333378cf9414839b">range_print_registry_line()</a>.</p>
 
 </div>
 </div>
@@ -155,7 +155,7 @@
 
 <p>the next will be the num-th structure </p>
 
-<p>Referenced by <a class="el" href="cwb-encode_8c.html#ab80a63938c6804f9600afdf8ccb6bfc0">close_range()</a>, <a class="el" href="cwb-encode_8c.html#a24c98c7fc24344b98cf63c129d68d066">declare_range()</a>, and <a class="el" href="cwb-s-encode_8c.html#ac5af382b8e183eeafb5671e7f33619bd">write_region_to_disk()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-s-encode_8c.html#a308b8a258931e50ec1999b718db816ad">declare_range()</a>, <a class="el" href="cwb-encode_8c.html#a7b5a2adf15771a1d43017518ed35a52d">range_close()</a>, <a class="el" href="cwb-encode_8c.html#a4d8ab2954e3fc7fc015616effbaa046d">range_declare()</a>, and <a class="el" href="cwb-s-encode_8c.html#ac5af382b8e183eeafb5671e7f33619bd">write_region_to_disk()</a>.</p>
 
 </div>
 </div>
@@ -172,7 +172,7 @@
 
 <p>string offset for next string </p>
 
-<p>Referenced by <a class="el" href="cwb-encode_8c.html#ab80a63938c6804f9600afdf8ccb6bfc0">close_range()</a>, <a class="el" href="cwb-encode_8c.html#a24c98c7fc24344b98cf63c129d68d066">declare_range()</a>, and <a class="el" href="cwb-s-encode_8c.html#ac5af382b8e183eeafb5671e7f33619bd">write_region_to_disk()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-s-encode_8c.html#a308b8a258931e50ec1999b718db816ad">declare_range()</a>, <a class="el" href="cwb-encode_8c.html#a7b5a2adf15771a1d43017518ed35a52d">range_close()</a>, <a class="el" href="cwb-encode_8c.html#a4d8ab2954e3fc7fc015616effbaa046d">range_declare()</a>, and <a class="el" href="cwb-s-encode_8c.html#ac5af382b8e183eeafb5671e7f33619bd">write_region_to_disk()</a>.</p>
 
 </div>
 </div>
@@ -187,7 +187,7 @@
 </div>
 <div class="memdoc">
 
-<p>flag indicates whether <a class="el" href="cwb-encode_8c.html#adff58f0a1109dd9e778ba480c6b33327" title="Opens an instance of the given S-attribute.">open_range()</a> has already been called </p>
+<p>flag indicates whether <a class="el" href="cwb-s-encode_8c.html#ab2929450457ff7b240510be66a7ffdbd">open_range()</a> has already been called </p>
 
 <p>Referenced by <a class="el" href="cwb-s-encode_8c.html#a8c17bfc44258ded87aef006065d81803">close_range()</a>, <a class="el" href="cwb-s-encode_8c.html#a308b8a258931e50ec1999b718db816ad">declare_range()</a>, <a class="el" href="cwb-s-encode_8c.html#ab2929450457ff7b240510be66a7ffdbd">open_range()</a>, and <a class="el" href="cwb-s-encode_8c.html#ac5af382b8e183eeafb5671e7f33619bd">write_region_to_disk()</a>.</p>
 
@@ -206,7 +206,7 @@
 
 <p>flag indicating whether to store values </p>
 
-<p>Referenced by <a class="el" href="cwb-encode_8c.html#ab80a63938c6804f9600afdf8ccb6bfc0">close_range()</a>, <a class="el" href="cwb-encode_8c.html#a24c98c7fc24344b98cf63c129d68d066">declare_range()</a>, <a class="el" href="cwb-encode_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>, <a class="el" href="cwb-encode_8c.html#adff58f0a1109dd9e778ba480c6b33327">open_range()</a>, <a class="el" href="cwb-encode_8c.html#ae5c2bb32a75d86bb872cc2887476d60b">print_range_registry_line()</a>, and <a class="el" href="cwb-s-encode_8c.html#ac5af382b8e183eeafb5671e7f33619bd">write_region_to_disk()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-s-encode_8c.html#a308b8a258931e50ec1999b718db816ad">declare_range()</a>, <a class="el" href="cwb-encode_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>, <a class="el" href="cwb-s-encode_8c.html#ab2929450457ff7b240510be66a7ffdbd">open_range()</a>, <a class="el" href="cwb-encode_8c.html#a7b5a2adf15771a1d43017518ed35a52d">range_close()</a>, <a class="el" href="cwb-encode_8c.html#a4d8ab2954e3fc7fc015616effbaa046d">range_declare()</a>, <a class="el" href="cwb-encode_8c.html#a0365f60206bd41cdb976e2e7d9641731">range_open()</a>, <a class="el" href="cwb-encode_8c.html#af8eaa961b2d2f64c333378cf9414839b">range_print_registry_line()</a>, and <a class="el" href="cwb-s-encode_8c.html#ac5af382b8e183eeafb5671e7f33619bd">write_region_to_disk()</a>.</p>
 
 </div>
 </div>
@@ -214,7 +214,7 @@
 <li>utils/<a class="el" href="cwb-s-encode_8c.html">cwb-s-encode.c</a></li>
 </ul>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Thu Jun 24 06:38:27 2010 for CWB by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Mon Aug 2 06:46:58 2010 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

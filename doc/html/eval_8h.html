@@ -53,7 +53,7 @@
 <dl class="el"><dd class="mdescRight">Union of structures underlying the Constraint / Constrainttree objects.  <a href="#aebe526a3970050a766f66f1b9ddebafe"></a><br/></dl><li>typedef <a class="el" href="unionc__tree.html">Constraint</a> * <a class="el" href="eval_8h.html#ac7cae695f376793e8337bd28ec585681">Constrainttree</a>
 <dl class="el"><dd class="mdescRight">The Constrainttree object.  <a href="#ac7cae695f376793e8337bd28ec585681"></a><br/></dl><li>typedef struct <a class="el" href="struct___actual_param_list.html">_ActualParamList</a> <a class="el" href="eval_8h.html#a82736acf5f05c85567fe863d4e4db389">ActualParamList</a>
 <dl class="el"><dd class="mdescRight">The ActualParamList object: used to build a linked list of parameters, each one of which is a Constrainttree.  <a href="#a82736acf5f05c85567fe863d4e4db389"></a><br/></dl><li>typedef union <a class="el" href="unione__tree.html">e_tree</a> * <a class="el" href="eval_8h.html#a209e0154b0f7a1d4deae16df9d3c2067">Evaltree</a>
-<li>typedef enum <a class="el" href="eval_8h.html#a1a4ed8ed90aaf701ce0f18e9baec85ae">_avstype</a> <a class="el" href="eval_8h.html#ad9674a46e471b0276768ffc3c66bb664">AVSType</a>
+<dl class="el"><dd class="mdescRight">Evaltree object.  <a href="#a209e0154b0f7a1d4deae16df9d3c2067"></a><br/></dl><li>typedef enum <a class="el" href="eval_8h.html#a1a4ed8ed90aaf701ce0f18e9baec85ae">_avstype</a> <a class="el" href="eval_8h.html#ad9674a46e471b0276768ffc3c66bb664">AVSType</a>
 <li>typedef union <a class="el" href="union__avs.html">_avs</a> <a class="el" href="eval_8h.html#a1ee10173839e0d7a68fb7e73bea691b6">AVStructure</a>
 <dl class="el"><dd class="mdescRight">The AVStructure object.  <a href="#a1ee10173839e0d7a68fb7e73bea691b6"></a><br/></dl><li>typedef <a class="el" href="union__avs.html">AVStructure</a> * <a class="el" href="eval_8h.html#ab393041bbf2aaabb2a348ec56b8961a0">AVS</a>
 <dl class="el"><dd class="mdescRight">AVS is a pointer type for AVStructure.  <a href="#ab393041bbf2aaabb2a348ec56b8961a0"></a><br/></dl><li>typedef <a class="el" href="union__avs.html">AVStructure</a> <a class="el" href="eval_8h.html#ada0e8a9c24a481dd0a446bbc84a29261">Patternlist</a> [MAXPATTERNS]
@@ -134,7 +134,7 @@
 <li>int <a class="el" href="eval_8h.html#aa86d4404d808161292634a1c1e62871d">next_environment</a> ()
 <dl class="el"><dd class="mdescRight">Sets up a new environment in the global array.  <a href="#aa86d4404d808161292634a1c1e62871d"></a><br/></dl><li><a class="el" href="cqp_8h.html#a127a96e09108f503cca20256eaa4ddff">Boolean</a> <a class="el" href="eval_8h.html#a1c6b9087d4b9c61e2be81a7a68e174cc">eval_bool</a> (<a class="el" href="unionc__tree.html">Constrainttree</a> ctptr, <a class="el" href="struct___ref_tab.html">RefTab</a> rt, int corppos)
 <li>void <a class="el" href="eval_8h.html#ac4acd9505bca0be517a9fd5b5a9a09d3">cqp_run_query</a> (int cut, int keep_old_ranges)
-<li>void <a class="el" href="eval_8h.html#a8040881844328772004bc1980c4fea1a">cqp_run_mu_query</a> (int keep_old_ranges, int cut_value)
+<dl class="el"><dd class="mdescRight">This function wraps round simulate_dfa (the only other thing it does is enforce the hard_cut limit).  <a href="#ac4acd9505bca0be517a9fd5b5a9a09d3"></a><br/></dl><li>void <a class="el" href="eval_8h.html#a8040881844328772004bc1980c4fea1a">cqp_run_mu_query</a> (int keep_old_ranges, int cut_value)
 <li>void <a class="el" href="eval_8h.html#a00fa95009fb1f64cd7c16bfe5841a741">cqp_run_tab_query</a> (int implode)
 <li>int <a class="el" href="eval_8h.html#af29e9f19b26beddcdba87657cc915704">free_environment</a> (int thisenv)
 <dl class="el"><dd class="mdescRight">Frees an evaluation environment.  <a href="#af29e9f19b26beddcdba87657cc915704"></a><br/></dl><li>void <a class="el" href="eval_8h.html#a956720cedd2f011e8f87d8b981901ece">show_environment</a> (int thisenv)
@@ -364,6 +364,9 @@
       </table>
 </div>
 <div class="memdoc">
+
+<p>Evaltree object. </p>
+<p>(TODO specify here what on earth one of these is) </p>
 
 </div>
 </div>
@@ -711,6 +714,11 @@
 </div>
 <div class="memdoc">
 
+<p>This function wraps round simulate_dfa (the only other thing it does is enforce the hard_cut limit). </p>
+<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="options_8h.html#a556de4e8937a0479d5968f565569f6a1" title="Query option: use hard cut value for all queries (cannot be changed).">hard_cut</a> </dd>
+<dd>
+<a class="el" href="eval_8c.html#a6d83579b3075256f14a62888a2e4b284">simulate_dfa</a> </dd></dl>
+
 <p>References <a class="el" href="eval_8h.html#a4fc26b79d5e2fea9774fdf3c7b17d1b8">eep</a>, <a class="el" href="options_8h.html#a556de4e8937a0479d5968f565569f6a1">hard_cut</a>, and <a class="el" href="eval_8c.html#a6d83579b3075256f14a62888a2e4b284">simulate_dfa()</a>.</p>
 
 <p>Referenced by <a class="el" href="parse__actions_8h.html#a2aaabbb6bcc4e5210745065baaaf715c">do_StandardQuery()</a>.</p>
@@ -950,7 +958,7 @@
 </div>
 </div>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Thu Jun 24 06:38:27 2010 for CWB by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Mon Aug 2 06:46:58 2010 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

@@ -61,7 +61,7 @@
 <li>int <a class="el" href="cqp_8h.html#a313990999a7a7c5275682411e9b58c89">initialize_cqp</a> (int argc, char **argv)
 <dl class="el"><dd class="mdescRight">Initialises the CQP program.  <a href="#a313990999a7a7c5275682411e9b58c89"></a><br/></dl><li>int <a class="el" href="cqp_8h.html#a7c30de93f06347a9bc939e324afd1472">cqp_parse_file</a> (FILE *fd, int exit_on_parse_errors)
 <dl class="el"><dd class="mdescRight">Parses a stream for CQP query syntax.  <a href="#a7c30de93f06347a9bc939e324afd1472"></a><br/></dl><li>int <a class="el" href="cqp_8h.html#aec03e7fa64e8cbd8372b7a586057fc0b">cqp_parse_string</a> (char *s)
-<dl class="el"><dd class="mdescRight">Parses a stirng for CQP query syntax.  <a href="#aec03e7fa64e8cbd8372b7a586057fc0b"></a><br/></dl><li>int <a class="el" href="cqp_8h.html#ada0b8c6476799a6aa1bb22cb48b7ab1d">setInterruptCallback</a> (<a class="el" href="cqp_8h.html#a8ecc4f9deea63ce7ebcf018b11c59673">InterruptCheckProc</a> f)
+<dl class="el"><dd class="mdescRight">Parses a string for CQP query syntax.  <a href="#aec03e7fa64e8cbd8372b7a586057fc0b"></a><br/></dl><li>int <a class="el" href="cqp_8h.html#ada0b8c6476799a6aa1bb22cb48b7ab1d">setInterruptCallback</a> (<a class="el" href="cqp_8h.html#a8ecc4f9deea63ce7ebcf018b11c59673">InterruptCheckProc</a> f)
 <dl class="el"><dd class="mdescRight">Sets the interrupt callback function.  <a href="#ada0b8c6476799a6aa1bb22cb48b7ab1d"></a><br/></dl><li>void <a class="el" href="cqp_8h.html#a89535598e0344df2438777230713cb8b">CheckForInterrupts</a> ()
 <dl class="el"><dd class="mdescRight">Calls the interrupt callback function, if set.  <a href="#a89535598e0344df2438777230713cb8b"></a><br/></dl><li>void <a class="el" href="cqp_8h.html#abc72b12c7959ec9a5b3aa5269e4f7063">install_signal_handler</a> (void)
 <dl class="el"><dd class="mdescRight">Installs the interrupt signal handler function with the OS.  <a href="#abc72b12c7959ec9a5b3aa5269e4f7063"></a><br/></dl></ul>
@@ -339,7 +339,7 @@
 </div>
 <div class="memdoc">
 
-<p>Parses a stirng for CQP query syntax. </p>
+<p>Parses a string for CQP query syntax. </p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>s</em>&nbsp;</td><td>The string to parse. </td></tr>
@@ -551,7 +551,7 @@
 
 <p>buffer for queries </p>
 
-<p>Referenced by <a class="el" href="parse__actions_8h.html#a654e3871f21cd25d69bcdad009b89609">addHistoryLine()</a>, <a class="el" href="parse__actions_8h.html#a8da739ee55e71755361e95e2480aa088">after_CorpusCommand()</a>, <a class="el" href="parse__actions_8h.html#a3889058f05a543a8bdfbcd51a365c8b8">after_Query()</a>, <a class="el" href="parse__actions_8h.html#a2c318fce4990e95ca39b33cc7d985a96">resetQueryBuffer()</a>, and <a class="el" href="macro_8h.html#a01ff9eb9b38042da7ebaffa9f379a6d2">yy_input_char()</a>.</p>
+<p>Referenced by <a class="el" href="parse__actions_8h.html#a654e3871f21cd25d69bcdad009b89609">addHistoryLine()</a>, <a class="el" href="parse__actions_8h.html#a8da739ee55e71755361e95e2480aa088">after_CorpusCommand()</a>, <a class="el" href="parse__actions_8h.html#a3889058f05a543a8bdfbcd51a365c8b8">after_Query()</a>, <a class="el" href="parse__actions_8h.html#a0cd76ad97a709afa3bd6610768e1d39d">prepare_Query()</a>, <a class="el" href="parse__actions_8h.html#a2c318fce4990e95ca39b33cc7d985a96">resetQueryBuffer()</a>, and <a class="el" href="macro_8h.html#a01ff9eb9b38042da7ebaffa9f379a6d2">yy_input_char()</a>.</p>
 
 </div>
 </div>
@@ -642,7 +642,7 @@
 </div>
 </div>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Thu Jun 24 06:38:27 2010 for CWB by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Mon Aug 2 06:46:58 2010 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

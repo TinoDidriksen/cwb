@@ -119,16 +119,16 @@
 <li>static void <a class="el" href="regex2dfa_8c.html#af1954d75ca1f8a905a989759ab99ef38">REGEX2DFA_ERROR</a> (char *Format,...)
 <li><a class="el" href="regex2dfa_8c.html#a85e55e51529e83620c77e05854041f8c">Lexical</a> <a class="el" href="regex2dfa_8c.html#a5241ab804487d705a2d196269abc4fd5">LEX</a> (void)
 <li>void * <a class="el" href="regex2dfa_8c.html#a01b2aff7068366c448834355a0de88e5">Allocate</a> (unsigned Bytes)
-<li>void * <a class="el" href="regex2dfa_8c.html#a59a03c6c0148d8bb164bdae60fc9122a">Reallocate</a> (void *X, unsigned Bytes)
-<li>char * <a class="el" href="regex2dfa_8c.html#a5a606fb88b13eee151e00fcfbbd130af">CopyS</a> (char *S)
-<li><a class="el" href="regex2dfa_8c.html#a0c8186d9b9b7880309c27230bbb5e69d">byte</a> <a class="el" href="regex2dfa_8c.html#a6bad0ab1a08bc253f829b23abe41cc56">Hash</a> (char *S)
+<dl class="el"><dd class="mdescRight">TODO replace with macro, or actual cl_malloc calls?  <a href="#a01b2aff7068366c448834355a0de88e5"></a><br/></dl><li>void * <a class="el" href="regex2dfa_8c.html#a59a03c6c0148d8bb164bdae60fc9122a">Reallocate</a> (void *X, unsigned Bytes)
+<dl class="el"><dd class="mdescRight">TODO replace with macro, or actual cl_realloc calls?  <a href="#a59a03c6c0148d8bb164bdae60fc9122a"></a><br/></dl><li>char * <a class="el" href="regex2dfa_8c.html#a5a606fb88b13eee151e00fcfbbd130af">CopyS</a> (char *S)
+<dl class="el"><dd class="mdescRight">TODO replace with macro, or actual cl_strdup calls?  <a href="#a5a606fb88b13eee151e00fcfbbd130af"></a><br/></dl><li><a class="el" href="regex2dfa_8c.html#a0c8186d9b9b7880309c27230bbb5e69d">byte</a> <a class="el" href="regex2dfa_8c.html#a6bad0ab1a08bc253f829b23abe41cc56">Hash</a> (char *S)
 <li><a class="el" href="structsymbol.html">Symbol</a> <a class="el" href="regex2dfa_8c.html#a6ed0508c2a6d62b74d1f15523f531553">LookUp</a> (char *S)
 <li>int <a class="el" href="regex2dfa_8c.html#a8f3fa23ac2d62f853feff77cac02be4d">DUP</a> (int A, int B)
 <li>void <a class="el" href="regex2dfa_8c.html#a81d9e475b256d59dec2074d8df383214">Store</a> (<a class="el" href="structsymbol.html">Symbol</a> S, int Q)
 <li>int <a class="el" href="regex2dfa_8c.html#a39875b8f99c45b1cdb767af2b00e7dde">MakeExp</a> (int Q, <a class="el" href="regex2dfa_8c.html#a596bacb68a080d7ff2ec635c3a3ad8f8">ExpTag</a> Tag,...)
 <li>void <a class="el" href="regex2dfa_8c.html#a408542da0dbfe158bea4aa31c401e4ba">PUSH</a> (<a class="el" href="regex2dfa_8c.html#acaf25879c0ef2805e354bdfe64a33f53">StackTag</a> Tag, int Q)
 <li>int <a class="el" href="regex2dfa_8c.html#abdcca4fd4a2fb73d22de1e1be17141d8">Parse</a> (void)
-<li>void <a class="el" href="regex2dfa_8c.html#a143d11dfd129b7f10c8edf7f1e5e2af8">PushQ</a> (int Q)
+<dl class="el"><dd class="mdescRight">the regex parser proper  <a href="#abdcca4fd4a2fb73d22de1e1be17141d8"></a><br/></dl><li>void <a class="el" href="regex2dfa_8c.html#a143d11dfd129b7f10c8edf7f1e5e2af8">PushQ</a> (int Q)
 <li>void <a class="el" href="regex2dfa_8c.html#ab172b17ed86c9d78de6403d5e35b602f">PopQ</a> (void)
 <li>int <a class="el" href="regex2dfa_8c.html#afab20bb699ee65f6e6f9a08895cf34f1">AddState</a> (int States, int *SList)
 <li>void <a class="el" href="regex2dfa_8c.html#ad1726f759733fdcfeb370bb1692eea0d">AddBuf</a> (<a class="el" href="structsymbol.html">Symbol</a> LHS, int Q)
@@ -609,6 +609,8 @@
 </div>
 <div class="memdoc">
 
+<p>TODO replace with macro, or actual cl_malloc calls? </p>
+
 <p>References <a class="el" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>.</p>
 
 <p>Referenced by <a class="el" href="regex2dfa_8c.html#a5a606fb88b13eee151e00fcfbbd130af">CopyS()</a>, <a class="el" href="regex2dfa_8c.html#a1784bd4a21538796cff0bb6e08a17aa9">FormState()</a>, <a class="el" href="regex2dfa_8c.html#a6ed0508c2a6d62b74d1f15523f531553">LookUp()</a>, <a class="el" href="regex2dfa_8c.html#a39875b8f99c45b1cdb767af2b00e7dde">MakeExp()</a>, <a class="el" href="regex2dfa_8h.html#a69e30286442eee48a3350d6da9bcd4d8">regex2dfa()</a>, and <a class="el" href="regex2dfa_8c.html#a81d9e475b256d59dec2074d8df383214">Store()</a>.</p>
@@ -630,6 +632,8 @@
       </table>
 </div>
 <div class="memdoc">
+
+<p>TODO replace with macro, or actual cl_strdup calls? </p>
 
 <p>References <a class="el" href="regex2dfa_8c.html#a01b2aff7068366c448834355a0de88e5">Allocate()</a>.</p>
 
@@ -915,6 +919,8 @@
 </div>
 <div class="memdoc">
 
+<p>the regex parser proper </p>
+
 <p>References <a class="el" href="regex2dfa_8c.html#a561e28f7d2c546a733a55f8c6cb650c8">Action</a>, <a class="el" href="regex2dfa_8c.html#acaf25879c0ef2805e354bdfe64a33f53a865555c9f2e0458a7078486aa1b3254f">AND</a>, <a class="el" href="regex2dfa_8c.html#a596bacb68a080d7ff2ec635c3a3ad8f8a8082313d780e0436f515057c62b055b7">AndX</a>, <a class="el" href="regex2dfa_8c.html#acaf25879c0ef2805e354bdfe64a33f53aa7db066a95277c0ad6aedf5eb9879072">EQU</a>, <a class="el" href="regex2dfa_8c.html#a85e55e51529e83620c77e05854041f8ca5eec64443af31930009eda225ba0ede1">EqualT</a>, <a class="el" href="regex2dfa_8c.html#a85e55e51529e83620c77e05854041f8ca0dcaad4253931166f4951fc26cc72304">IdenT</a>, <a class="el" href="regex2dfa_8c.html#a59cecbf88b195c287c24994a7eadeb1d">LastW</a>, <a class="el" href="regex2dfa_8c.html#a85e55e51529e83620c77e05854041f8cacb1cfa887906873d63c9c24dc3efbfc1">LBrT</a>, <a class="el" href="regex2dfa_8c.html#a5241ab804487d705a2d196269abc4fd5">LEX()</a>, <a class="el" href="regex2dfa_8c.html#a6ed0508c2a6d62b74d1f15523f531553">LookUp()</a>, <a class="el" href="regex2dfa_8c.html#a85e55e51529e83620c77e05854041f8ca0326dc54f2dc055b7c82b693b9015721">LParT</a>, <a class="el" href="regex2dfa_8c.html#a39875b8f99c45b1cdb767af2b00e7dde">MakeExp()</a>, <a class="el" href="regex2dfa_8c.html#a85e55e51529e83620c77e05854041f8ca33046f06443d5a96d2bdd1df60e2eb8c">OneT</a>, <a class="el" href="regex2dfa_8c.html#a596bacb68a080d7ff2ec635c3a3ad8f8a631c6aaf86fb1d620716a5700aedbe8d">OneX</a>, <a class="el" href="regex2dfa_8c.html#acaf25879c0ef2805e354bdfe64a33f53afbd0f14f73cfbbf6b15ca1b4418a6209">OPT</a>, <a class="el" href="regex2dfa_8c.html#a596bacb68a080d7ff2ec635c3a3ad8f8ad06fc8ab18343fcdfde42b5a9d441afc">OptX</a>, <a class="el" href="regex2dfa_8c.html#acaf25879c0ef2805e354bdfe64a33f53a96727447c0ad447987df1c6415aef074">OR</a>, <a class="el" href="regex2dfa_8c.html#a596bacb68a080d7ff2ec635c3a3ad8f8ab317a36f4776939cba804563669ea54c">OrX</a>, <a class="el" href="regex2dfa_8c.html#acaf25879c0ef2805e354bdfe64a33f53a757f5788c17d7ed4b90b65476ac0fc4b">PAR</a>, <a class="el" href="regex2dfa_8c.html#a596bacb68a080d7ff2ec635c3a3ad8f8a623c970eb0ee28f35d28ed8f60378a9b">PlusX</a>, <a class="el" href="regex2dfa_8c.html#a2106695e949772f765546777ef34690e">POP</a>, <a class="el" href="regex2dfa_8c.html#a408542da0dbfe158bea4aa31c401e4ba">PUSH()</a>, <a class="el" href="regex2dfa_8c.html#af1954d75ca1f8a905a989759ab99ef38">REGEX2DFA_ERROR()</a>, <a class="el" href="regex2dfa_8c.html#acaf25879c0ef2805e354bdfe64a33f53aeaa16db28c9626eefe199d718901e291">RULE</a>, <a class="el" href="regex2dfa_8c.html#a596bacb68a080d7ff2ec635c3a3ad8f8a63f49312ea0b86e6aaf46ddc75f52eb0">StarX</a>, <a class="el" href="regex2dfa_8c.html#a81d9e475b256d59dec2074d8df383214">Store()</a>, <a class="el" href="regex2dfa_8c.html#a596bacb68a080d7ff2ec635c3a3ad8f8a730fa278d3988c92b330ea6cb843a422">SymX</a>, <a class="el" href="regex2dfa_8c.html#afc0eef637f1016e8786e45e106a4881e">TOP</a>, <a class="el" href="regex2dfa_8c.html#a85e55e51529e83620c77e05854041f8ca1157804c77f8b3bf80bb9b73553d4d12">ZeroT</a>, and <a class="el" href="regex2dfa_8c.html#a596bacb68a080d7ff2ec635c3a3ad8f8a544e1a7313e13a0df9528420b6250247">ZeroX</a>.</p>
 
 <p>Referenced by <a class="el" href="regex2dfa_8h.html#a69e30286442eee48a3350d6da9bcd4d8">regex2dfa()</a>.</p>
@@ -1020,6 +1026,8 @@
       </table>
 </div>
 <div class="memdoc">
+
+<p>TODO replace with macro, or actual cl_realloc calls? </p>
 
 <p>References <a class="el" href="cl_8h.html#a7480d6ea66599014088f218912ddb89f">cl_realloc()</a>.</p>
 
@@ -1607,7 +1615,7 @@
 </div>
 </div>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Thu Jun 24 06:38:27 2010 for CWB by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Mon Aug 2 06:46:58 2010 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>
