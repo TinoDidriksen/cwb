@@ -1121,7 +1121,7 @@ SortExternally(void)
         if (srt_flags) {
           token = p1start;
           for (l=1 ; l <= plen ; l++) {
-            unsigned char *value = (unsigned char *) cl_cpos2str(srt_attribute, token);
+            char *value = cl_cpos2str(srt_attribute, token);
             int del_value = 0;
 
             if (value) {
@@ -1135,7 +1135,7 @@ SortExternally(void)
                 value = newvalue;
               }
               if (srt_reverse) {
-                char *newvalue = (unsigned char *)cl_string_reverse((char *)value, srt_cl->corpus->charset);
+                char *newvalue = cl_string_reverse(value, srt_cl->corpus->charset);
                 if (del_value)
                   cl_free(value);
                 value = newvalue;
@@ -1148,7 +1148,7 @@ SortExternally(void)
                   fputc(srt_maptable[value[i]], fd);
               }*/
               for (i = 0; i < p; i++)
-                fputc(value[i], fd);
+                fputc((unsigned char) value[i], fd);
 
               fputc(' ', fd);       
               if (del_value)
@@ -1162,7 +1162,7 @@ SortExternally(void)
         /* print sequence of tokens in sort interval */
         token = p1start;
         for (l = 1 ; l <= plen ; l++) {
-          unsigned char *value = (unsigned char *) cl_cpos2str(srt_attribute, token);
+          char *value = cl_cpos2str(srt_attribute, token);
           int del_value = 0;
 
           if (value) {
@@ -1170,7 +1170,7 @@ SortExternally(void)
 
             if (srt_reverse) {
               del_value = 1;
-              value = (unsigned char *)cl_string_reverse((char *)value, srt_cl->corpus->charset);
+              value = cl_string_reverse(value, srt_cl->corpus->charset);
             }
             /*old version
              if (srt_reverse) {
@@ -1178,7 +1178,7 @@ SortExternally(void)
                 fputc(value[i], fd);
             } */
             for (i = 0; i < p; i++)
-              fputc(value[i], fd);
+              fputc((unsigned char) value[i], fd);
             fputc(' ', fd);
             if (del_value)
               cl_free(value);
@@ -1422,11 +1422,11 @@ i2compare(const void *vidx1, const void *vidx2)
 
         if (pass == 1)
           /* compare normalised strings in first pass (srt_flags are set in this case) */
-          comp = cl_string_qsort_compare(s1, s2, srt_cl->corpus->charset, srt_flags, srt_reverse);
+          comp = cl_string_qsort_compare((char *)s1, (char *)s2, srt_cl->corpus->charset, srt_flags, srt_reverse);
           /* old version: comp = srt_strcmp(s1, s2, srt_maptable, srt_reverse); */
         else
           /* in pass 2, compare without flags. */
-          comp = cl_string_qsort_compare(s1, s2, srt_cl->corpus->charset, 0,         srt_reverse);
+          comp = cl_string_qsort_compare((char *)s1, (char *)s2, srt_cl->corpus->charset, 0,         srt_reverse);
           /* old version: comp = srt_strcmp(s1, s2, NULL, srt_reverse); */
       }
 

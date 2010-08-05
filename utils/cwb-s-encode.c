@@ -66,7 +66,7 @@
 /* configuration variables // command-line switches */
 int debug = 0;                  /** debug mode on/off */
 int silent = 0;                 /**< avoid messages in -M / -a modes */
-/* int strip_blanks_in_values = 0; / * Wow, this is unused :o) */
+int strip_blanks_in_values = 0; /* Wow, this is unused :o) */
 int set_syntax_strict = 0;      /**< check that set attributes are always given in the same syntax */
 int in_memory = 0;              /**< create list of regions in memory (allowing non-linear input), then write to disk */
 int add_to_existing = 0;        /**< add to existing attribute: implies in_memory; existing regions are automatically

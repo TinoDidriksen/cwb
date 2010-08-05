@@ -284,7 +284,7 @@ compress_reversed_index(Attribute *attr, char *output_fn)
     for (k = 0; k < element_freq; k++) {
       if (1 != ReadPositionStream(PStream, &new_pos, 1)) {
         cl_error("(aborting) index read error\n");
-        cleanup(1);
+        compressrdx_cleanup(1);
       }
       
       gap = new_pos - last_pos;
@@ -350,13 +350,13 @@ decompress_check_reversed_index(Attribute *attr, char *output_fn)
   nr_elements = cl_max_id(attr);
   if ((nr_elements <= 0) || (cl_errno != CDA_OK)) {
     cl_error("(aborting) cl_max_id() failed");
-    cleanup(1);
+    compressrdx_cleanup(1);
   }
 
   corpus_size = cl_max_cpos(attr);
   if ((corpus_size <= 0) || (cl_errno != CDA_OK)) {
     cl_error("(aborting) cl_max_cpos() failed");
-    cleanup(1);
+    compressrdx_cleanup(1);
   }
 
   if (output_fn) {
@@ -376,14 +376,14 @@ decompress_check_reversed_index(Attribute *attr, char *output_fn)
   if (! BFopen(data_fname, "r", &data_file)) {
     fprintf(stderr, "ERROR: can't open file %s\n", data_fname);
     perror(data_fname);
-    cleanup(1);
+    compressrdx_cleanup(1);
   }
   printf("- reading compressed index from %s\n", data_fname);
   
   if ((index_file = fopen(index_fname, "r")) == NULL) {
     fprintf(stderr, "ERROR: can't open file %s\n", index_fname);
     perror(index_fname);
-    cleanup(1);
+    compressrdx_cleanup(1);
   }
   printf("- reading compressed index offsets from %s\n", index_fname);
 
@@ -393,13 +393,13 @@ decompress_check_reversed_index(Attribute *attr, char *output_fn)
     element_freq = cl_id2freq(attr, i);
     if ((element_freq == 0) || (cl_errno != CDA_OK)) {
       cl_error("(aborting) token frequency == 0\n");
-      cleanup(1);
+      compressrdx_cleanup(1);
     }
 
     PStream = cl_new_stream(attr, i);
     if ((PStream == NULL) || (cl_errno != CDA_OK)) {
       cl_error("(aborting) index read error");
-      cleanup(1);
+      compressrdx_cleanup(1);
     }
 
     b = compute_ba(element_freq, corpus_size);
@@ -416,12 +416,12 @@ decompress_check_reversed_index(Attribute *attr, char *output_fn)
 
       if (1 != cl_read_stream(PStream, &true_pos, 1)) {
         cl_error("(aborting) index read error\n");
-        cleanup(1);
+        compressrdx_cleanup(1);
       }
       if (pos != true_pos) {
         fprintf(stderr, "ERROR: wrong occurrence of token #%d at cpos %d (correct cpos: %d). Aborted.\n",
               i, pos, true_pos);
-        cleanup(1);
+        compressrdx_cleanup(1);
       }
 
     }
@@ -473,7 +473,7 @@ compressrdx_usage(char *msg, int error_code)
   fprintf(stderr, "  -h        this help page\n\n");
   fprintf(stderr, "Part of the IMS Open Corpus Workbench v" VERSION "\n\n");
 
-  cleanup(error_code);
+  compressrdx_cleanup(error_code);
 }
 
 /**
@@ -547,7 +547,7 @@ main(int argc, char **argv) {
         registry_directory = optarg;
       else {
         fprintf(stderr, "%s: -r option used twice\n", progname);
-        cleanup(2);
+        compressrdx_cleanup(2);
       }
       break;
       
@@ -590,7 +590,7 @@ main(int argc, char **argv) {
     else if ((debug_output = fopen(debug_fn, "w")) == NULL) {
       fprintf(stderr, "Can't write debug output to file %s. Aborted.", debug_fn);
       perror(debug_fn);
-      cleanup(1);
+      compressrdx_cleanup(1);
     }
   }
 
@@ -611,7 +611,7 @@ main(int argc, char **argv) {
             corpus_id,
             (registry_directory ? registry_directory
              : central_corpus_directory()));
-    cleanup(1);
+    compressrdx_cleanup(1);
   }
 
   if (all_attributes) {
@@ -626,13 +626,13 @@ main(int argc, char **argv) {
     if ((attr = find_attribute(corpus, attr_name, ATT_POS, NULL)) == NULL) {
       fprintf(stderr, "Attribute %s.%s doesn't exist. Aborted.\n", 
               corpus_id, attr_name);
-      cleanup(1);
+      compressrdx_cleanup(1);
     }
     compress_reversed_index(attr, output_fn);
     if (! i_want_to_believe) 
       decompress_check_reversed_index(attr, output_fn);
   }
   
-  cleanup(0);
+  compressrdx_cleanup(0);
   return 0;                        /* to keep gcc from complaining */
 }

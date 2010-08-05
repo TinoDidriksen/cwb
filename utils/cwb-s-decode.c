@@ -133,7 +133,7 @@ main(int argc, char **argv)
 
   /* second argument: -S */
   if (strcmp(argv[optind++], "-S") != 0)
-    usage();
+    sdecode_usage();
 
   /* third argument: attribute name */
   attr_name = argv[optind];
