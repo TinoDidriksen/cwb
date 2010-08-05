@@ -24,7 +24,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-/** magic number of the subcropus file format */
+/** magic number of the subcorpus file format */
 #define SUBCORPMAGIC 36193928
 
 /** Boolean: controls whether a "registry" header in the subcorpus file gets printed or not */

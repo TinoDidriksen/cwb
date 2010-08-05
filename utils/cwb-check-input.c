@@ -15,6 +15,23 @@
  *  WWW at http://www.gnu.org/copyleft/gpl.html).
  */
 
+
+/**
+ * @file
+ *
+ *
+ *
+ * This was a temporary, experuimental "fiddle" with unicode programming.
+ *
+ *
+ *
+ */
+
+
+
+
+
+
 /* includes */
 
 #include <glib.h>

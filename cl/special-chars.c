@@ -1451,6 +1451,184 @@ cl_string_validate_encoding(const char *s, CorpusCharset charset)
 }
 
 /**
+ * Creates a "backwards" version of the specified string.
+ *
+ * The memory for the reversed string is newly allocated.
+ * (This is potentially wasteful, but it occurs in the
+ * depths of GLib, so short of reinventing the wheel we
+ * have to live with it.)
+ *
+ * @param s        String to reverse.
+ * @param charset  The character set of the string.
+ * @return         Pointer to the new string.
+ */
+char *
+cl_string_reverse(const char *s, CorpusCharset charset)
+{
+  char *reversed;
+
+  if (charset != utf8) {
+    reversed = cl_strdup(s);
+    g_strreverse((gchar *)s);
+  }
+  else {
+    reversed = (char *)g_utf8_strreverse((gchar *)s, -1);
+  }
+  return reversed;
+}
+
+/**
+ * Compares two strings in a qsort-stylie!
+ *
+ * This function is designed to be suitable for use as a callback
+ * with qsort(). As such, its return values are negative if s1 is "less than"
+ * s2; zero if the two strings are the same; and positive if s2 is "greater
+ * than" s2. But of course you can also use it on its own.
+ *
+ * You cannot use it directly with qsort as its parameters are wrong. It
+ * needs to be wrapped in another function that (at least) provides the
+ * charset, flags and reverse arguments (e.g. from global variables or by
+ * calling other functions).
+ *
+ * The two strings must be in the same character set. Both will be made
+ * canonical in accordance with the flags argument if it is set. Also, the
+ * comparison can be done on reverse-order strings.
+ *
+ * Note that if either flags or reverse is non-zero, then memory allocation
+ * will be necessary. If you are calling this function in a loop, that
+ * could quickly get costly. To avoid this, a pair of one-time-allocated
+ * buffers are used - but this doesn't dispense with all need for allocation.
+ * [Another option would be to allow a buffer to be optionally supplied....]
+ *
+ * @param s1       First string to compare.
+ * @param s2       Second string to compare.
+ * @param charset  Character set of the two strings.
+ * @param flags    IGNORE_CASE, IGNORE_DIAC, both, or neither.
+ * @param reverse  Boolean: if true, strings are compared from end to beginning,
+ *                 rather than beginning to end.
+ * @return         0 if the strings are the same. 1 if s1 is greater.
+ *                 -1 if s2 is greater.
+ */
+int
+cl_string_qsort_compare(const char *s1,
+                        const char *s2,
+                        CorpusCharset charset,
+                        int flags,
+                        int reverse)
+{
+  static char *buffer1;
+  static char *buffer2;
+  static int   buffers_allocated = 0;
+
+  char *comp1;
+  char *comp2;
+
+  /* preparatory string manipulation... */
+  if (!flags && !reverse) {
+    comp1 = s1;
+    comp2 = s2;
+  }
+  else {
+
+    /* allocate the static buffers once and for all */
+    if (! buffers_allocated) {
+      /* a normalised string cannot possibly be longer than (MAX_LINE_LENGTH * 2) */
+      buffer1 = (char *) cl_malloc(MAX_LINE_LENGTH * 2);
+      buffer2 = (char *) cl_malloc(MAX_LINE_LENGTH * 2);
+      buffers_allocated = 1;
+      /* alternative would be to allocate 2 * strlen(s1 or s2), and reallocate
+       * whenever more is needed */
+      /* note also that this memory will NEVER be freed before the rpogram exits.*/
+    }
+
+    strcpy(buffer1, s1);
+    strcpy(buffer2, s2);
+
+    /* canonicalise BEFORE reversing (may not work as expected after reversing utf8! */
+    if (flags) {
+      cl_string_canonical(buffer1, charset, flags);
+      cl_string_canonical(buffer2, charset, flags);
+    }
+    if (reverse) {
+      char *temp;
+      strcpy(buffer1, (temp = cl_string_reverse(buffer1, charset)) );
+      free(temp);
+      strcpy(buffer2, (temp = cl_string_reverse(buffer2, charset)) );
+      free(temp);
+    }
+    /* in either case, we compare the buffers, not the orig string */
+    comp1 = buffer1;
+    comp2 = buffer2;
+  }
+  /* at this point, straight comparison is all we need */
+
+
+  /* the actual comparison begins here. There are two versions:
+   * 8-bit (binary compare) and utf8 (depends on GLib and on the current locale). */
+  if (charset != utf8) {
+    /* 8 bit mode */
+    int l1, l2, minl, i;
+    unsigned char *p1, *p2;
+
+    l1 = strlen(comp1);
+    l2 = strlen(comp2);
+    /* pointers set to first character of the string */
+    p1 = (unsigned char *)comp1;
+    p2 = (unsigned char *)comp2;
+
+    minl = MIN(l1, l2);
+
+    /* count up to minimum length with i, also increment pointers */
+    for (i = 1; i <= minl; i++, p1++, p2++) {
+      /* if there is a difference (based on binary order
+       * of *p1 and *p2) return it */
+      if (*p1 < *p2)
+        return -1;
+      else if (*p1 > *p2)
+        return 1;
+    }
+    /* if we're here, then the whole minl length was the same */
+    if (l1 < l2)
+      return -1;
+    else if (l1 > l2)
+      return 1;
+    else
+      return 0;
+  }
+  else {
+    /* utf8 mode */
+    int result = (int)g_utf8_collate((gchar *)s1, (gchar *)s2);
+    /* TODO: for now we are using the collate function from GLib.
+     * In practice, this may not be appropriate as it is locale-dependent -
+     * so, for example, it may impose case-insensitivity or accent-insensitivity
+     * if the locale says it is appropriate to do so,
+     * even if we avoided these things above!
+     *
+     * This is because GLib does not do its own collation, but passes off to
+     * strcoll() or to wcscoll() (or at least, a poke at GLib's internals certainly
+     * suggests that's what's going on) -- which are opaque and may vary across systems.
+     * All GLib does is wrap around these functions to standardise how they need to be
+     * called.
+     * Would binary comparison for UTF8 (as with the 8 bit charsets) be better?
+     * It would give odd results for sorting (e.g. Urdu letters after entire
+     * Arabic alphabet; all Latin1 accented characters at the end of the
+     * alphabet) but we wouldn't have to worry about a-acute and a-grave being
+     * grouped together for counting purposes.
+     *
+     * Offer utf8_as_binary as an option to this function?????
+     */
+    if (result < 0)
+      return -1;
+    else if (result > 0)
+      return 1;
+    else
+      return 0;
+  }
+
+  /* this point not reached */
+}
+
+/**
  * Checks a string to see if it is a valid CWB identifier.
  *
  * The rules for these are as follows (see also the CQP lexer):

@@ -32,13 +32,18 @@
 #include <stdlib.h>
 #include <assert.h>
 
+#include "../cl/globals.h"
 #include "../cl/macros.h"
 
 #include "eval.h"
 #include "options.h"
 #include "regex2dfa.h"
 
-
+/**
+ * Global variable containing a search string that is to be converted to a DFA.
+ * (Needs to be global; functions using the DFA write to it, and then the DFA
+ * parser reads from it. Declared as an external global in cqp.h.
+ */
 char *searchstr;
 
 /* DATA STRUCTURES */
@@ -123,13 +128,18 @@ char *LastW;
 static char ChArr[MAX_CHAR];
 char *ChP;
 
-int LINE, ERRORS;
+int LINE;
 
+/** The number of errors enocuntered while parsing a regex to a DFA */
+int ERRORS;
+
+/** The maximum number of erros that the regex2dfa module will allow before killing the program */
 #define MAX_ERRORS 25
 
 #define HASH_MAX 0x200
 Symbol HashTab[HASH_MAX], FirstB, LastB;
 
+/** TODO needs a comment! */
 #define NN 0x200
 Exp ExpHash[NN];
 
@@ -160,8 +170,17 @@ struct Equiv
 
 int Es, EMax;
 
+/** Index into searchstr showing the next character that will be read. */
 int currpos;
 
+/**
+ * Gets the next character from the searchstr, and
+ * increments its pointer; returns EOF if we are at
+ * the end of the string.
+ *
+ * @see searchstr
+ * @see currpos
+ */
 static int
 GET(void)
 {
@@ -184,10 +203,13 @@ UNGET(int Ch)
     --currpos;
 }
 
+/**
+ * Prints an error message to stdout, and
+ * exits the program if there are now just too many errors.
+ */
 static void
 REGEX2DFA_ERROR(char *Format, ...)
 {
-
   va_list AP;
   
   fprintf(stderr, "[%d] ", LINE);
@@ -200,10 +222,10 @@ REGEX2DFA_ERROR(char *Format, ...)
   }
 }
 
+/** Gets the Lexical symbol corresponding to the next non-whitespace character in the searchstr. */
 Lexical
 LEX(void)
 {
-
   int Ch;
 
   do {
@@ -282,7 +304,7 @@ LEX(void)
   }
 }
 
-/** TODO replace with macro, or actual cl_malloc calls? */
+/** TODO delete: has been replaced throughout with cl_malloc */
 void *
 Allocate(unsigned Bytes)
 {
@@ -290,7 +312,7 @@ Allocate(unsigned Bytes)
   return X;
 }
 
-/** TODO replace with macro, or actual cl_realloc calls? */
+/** TODO delete: has been replaced throughout with cl_realloc */
 void *
 Reallocate(void *X, unsigned Bytes)
 {
@@ -298,16 +320,17 @@ Reallocate(void *X, unsigned Bytes)
   return X;
 }
 
-/** TODO replace with macro, or actual cl_strdup calls? */
+/** TODO delete: has been replaced throughout with cl_strdup (was only used once anyway) */
 char *
 CopyS(char *S)
 {
-  char *NewS = (char *)Allocate(strlen(S) + 1);
+  char *NewS = (char *)cl_malloc(strlen(S) + 1);
   
   strcpy(NewS, S); 
   return NewS;
 }
 
+/** create a one-byte hash of the string S */
 byte
 Hash(char *S)
 {
@@ -328,8 +351,8 @@ LookUp(char *S)
   for (H = Hash(S), Sym = HashTab[H]; Sym != 0; Sym = Sym->Next)
     if (strcmp(Sym->Name, S) == 0) 
       return Sym;
-  Sym = (Symbol)Allocate(sizeof *Sym);
-  Sym->Name = CopyS(S);
+  Sym = (Symbol)cl_malloc(sizeof *Sym);
+  Sym->Name = cl_strdup(S);
   Sym->Hash = H;
   Sym->Next = HashTab[H];
   HashTab[H] = Sym;
@@ -371,7 +394,7 @@ Store(Symbol S, int Q)
       break;
   if (E == 0) 
     {
-      E = (Exp)Allocate(sizeof *E);
+      E = (Exp)cl_malloc(sizeof *E);
       E->Tag = SymX;
       E->Body.Leaf = S;
       E->Hash = H;
@@ -467,13 +490,13 @@ MakeExp(int Q, ExpTag Tag, ...)
       break;
     }
   va_end(AP);
-  E = (Exp)Allocate(sizeof *E);
+  E = (Exp)cl_malloc(sizeof *E);
   E->Tag = Tag;
   if (Tag == SymX) 
     E->Body.Leaf = Sym;
   else 
     {
-      E->Body.Arg = (int *) ((Args > 0) ? Allocate(Args*sizeof(int)) : NULL);
+      E->Body.Arg = (int *) ((Args > 0) ? cl_malloc(Args*sizeof(int)) : NULL);
       if (Args > 0) 
         E->Body.Arg[0] = Q0;
       if (Args > 1) 
@@ -487,7 +510,7 @@ MakeExp(int Q, ExpTag Tag, ...)
       if (Equs == EquMax) 
         {
           EquMax += EQU_EXTEND;
-          EquTab = (Equation)Reallocate(EquTab, sizeof *EquTab * EquMax);
+          EquTab = (Equation)cl_realloc(EquTab, sizeof *EquTab * EquMax);
         }
       EquTab[Equs].Hash = H;
       EquTab[Equs].Stack = 0;
@@ -501,7 +524,6 @@ MakeExp(int Q, ExpTag Tag, ...)
 void
 PUSH(StackTag Tag, int Q)
 {
-
   if (SP >= Stack + STACK_MAX) 
     {
       REGEX2DFA_ERROR("Expression too complex ... aborting.");
@@ -516,11 +538,10 @@ PUSH(StackTag Tag, int Q)
 #define TOP ((SP - 1)->Tag)
 #define POP() ((--SP)->Q)
 
-/** the regex parser proper */
+/** the regex parser proper: private function */
 int
 Parse(void)
 {
-  
   Lexical L; 
   Symbol ID = NULL; 
   int RHS; 
@@ -529,6 +550,7 @@ Parse(void)
 
   SP = Stack;
  LHS:
+  /* get next symbol from the lexer */
   L = LEX();
   if (L == IdenT) 
     {
@@ -661,7 +683,7 @@ void PushQ(int Q)
   if (Xs == XMax)
     {
       XMax += X_EXTEND;
-      XStack = Reallocate(XStack, sizeof *XStack * XMax);
+      XStack = cl_realloc(XStack, sizeof *XStack * XMax);
     }
   XStack[Xs++] = Q; 
   EquTab[Q].Stack = 1;
@@ -699,7 +721,7 @@ AddState(int States, int *SList)
         }
     }
   /* TODO
-   * Brilliant ... the Reallocate() below might move the state table around in memory if it cannot
+   * Brilliant ... the cl_realloc() below might move the state table around in memory if it cannot
      be expanded in place, breaking any pointers into the table held in local variables of the calling
      function.  Fortunately, AddState() is only called from FormState() in a loop that modifies 
      "embedded" variables, so that this bug only surfaces if the original memory location is overwritten
@@ -708,7 +730,7 @@ AddState(int States, int *SList)
      on a PowerPC G4 running Mac OS X 10.4 (God knows why it happens in this configuration).
      To avoid the problem, local pointers into STab[] should be updated after every call to AddState(). */
   if ((Ss&7) == 0) 
-    STab = Reallocate(STab, sizeof *STab * (Ss + 8));
+    STab = cl_realloc(STab, sizeof *STab * (Ss + 8));
   STab[Ss].Class = Ss;
   STab[Ss].States = States;
   STab[Ss].SList = SList;
@@ -734,7 +756,7 @@ AddBuf(Symbol LHS, int Q)
   if (Is >= IMax)
     { 
       IMax += 8;
-      IBuf = Reallocate(IBuf, sizeof *IBuf * IMax);
+      IBuf = cl_realloc(IBuf, sizeof *IBuf * IMax);
     }
   for (J = Is++; J > I; J--) 
     IBuf[J] = IBuf[J - 1];
@@ -750,7 +772,7 @@ AddBuf(Symbol LHS, int Q)
         break;
     }
   if ((IP->Size&7) == 0)
-    IP->RHS = Reallocate(IP->RHS, sizeof *IP->RHS * (IP->Size + 8));
+    IP->RHS = cl_realloc(IP->RHS, sizeof *IP->RHS * (IP->Size + 8));
   for (T = IP->Size++; T > S; T--) 
     IP->RHS[T] = IP->RHS[T - 1];
   IP->RHS[S] = Q;
@@ -848,7 +870,7 @@ FormState(int Q)
       while (Xs > 0) 
         PopQ();
       SP->Shifts = Is;
-      SP->ShList = Allocate(sizeof *SP->ShList * Is);
+      SP->ShList = cl_malloc(sizeof *SP->ShList * Is);
       for (I = 0; I < Is; I++)  {
         int rhs_state = -1;
         SP->ShList[I].LHS = IBuf[I].LHS;
@@ -887,7 +909,7 @@ AddEquiv(int L, int R)
       return;
   if (Es >= EMax)     {
     EMax += 8;
-    ETab = Reallocate(ETab, sizeof *ETab * EMax);
+    ETab = cl_realloc(ETab, sizeof *ETab * EMax);
   }
   ETab[Es].L = SL;
   ETab[Es].R = SR;
@@ -944,6 +966,7 @@ MergeStates(void)
     }
 }
 
+/** Write states to stdout. */
 void
 WriteStates(void)
 {
@@ -973,6 +996,7 @@ WriteStates(void)
     }
 }
 
+/** Initialises the members of the given DFA object. */
 void
 init_dfa(DFA *dfa)
 {
@@ -983,6 +1007,7 @@ init_dfa(DFA *dfa)
   dfa->Max_States = dfa->Max_Input = 0;
 }
 
+/** Frees all the memory associated with this DFA. */
 void
 free_dfa(DFA *dfa)
 {
@@ -1006,6 +1031,7 @@ free_dfa(DFA *dfa)
   dfa->Max_Input = 0;
 }
 
+/** Prints the contents of a DFA to stdout. */
 void
 show_complete_dfa(DFA dfa)
 {
@@ -1028,6 +1054,9 @@ show_complete_dfa(DFA dfa)
   }
 }
 
+/**
+ * Initialises the global variables in the regex2dfa module.
+ */
 void
 init(void)
 {
@@ -1107,16 +1136,15 @@ regex2dfa(char *rxs, DFA *automaton)
     WriteStates();
 
   /* allocate memory for the transition table and initialize it. */
-  automaton->TransTable = (int **)Allocate(sizeof(int *) * automaton->Max_States);
+  automaton->TransTable = (int **)cl_malloc(sizeof(int *) * automaton->Max_States);
   for (i = 0; i < Ss; i++)  {
-    automaton->TransTable[i] =
-      (int *)Allocate(sizeof(int) * automaton->Max_Input);
+    automaton->TransTable[i] = (int *)cl_malloc(sizeof(int) * automaton->Max_Input);
     for (j = 0; j < automaton->Max_Input; j++)
       automaton->TransTable[i][j] = automaton->E_State;
   }
 
   /* allocate memory for the table of final states. */
-  automaton->Final = (Boolean *)Allocate(sizeof(Boolean) * (Ss + 1));
+  automaton->Final = (Boolean *)cl_malloc(sizeof(Boolean) * (Ss + 1));
 
   /* initialize the table of final states. */
   for (i = 0; i <= automaton->Max_States; i++)

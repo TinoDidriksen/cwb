@@ -209,15 +209,15 @@ cl_id2str(Attribute *attribute, int id)
   lexidx = ensure_component(attribute, CompLexiconIdx, 0);
 
   if ((lex == NULL) || (lexidx == NULL)) {
-    cderrno = CDA_ENODATA;
+    cl_errno = CDA_ENODATA;
     return NULL;
   }
   else if ((id < 0) || (id >= lexidx->size)) {
-    cderrno = CDA_EIDORNG;
+    cl_errno = CDA_EIDORNG;
     return NULL;
   }
   else {
-    cderrno = CDA_OK;
+    cl_errno = CDA_OK;
     return ((char *)lex->data.data + ntohl(lexidx->data.data[id]));
   }
 
@@ -231,7 +231,8 @@ cl_id2str(Attribute *attribute, int id)
  *
  * @param attribute  The (positional) Attribute to look the string up on
  * @param id_string  The string of an item on this attribute
- * @return           Either the integer ID of the item, or an error code (if less than 0)
+ * @return           Either the integer ID of the item, or an error code (if less than 0).
+ *                   In the latter case, the error code will also be written to cl_errno.
  */
 int
 cl_str2id(Attribute *attribute, char *id_string)
@@ -252,8 +253,8 @@ cl_str2id(Attribute *attribute, char *id_string)
   lex =  ensure_component(attribute, CompLexicon, 0);
 
   if ((lexidx == NULL) || (lexsrt == NULL) || (lex == NULL)) {
-    cderrno = CDA_ENODATA;
-    return CDA_ENODATA;
+    cl_errno = CDA_ENODATA;
+    return cl_errno;
   }
   else {
     low = 0;
@@ -265,8 +266,8 @@ cl_str2id(Attribute *attribute, char *id_string)
       if (nr >= 1000000) {
         fprintf(stderr, "get_id_of_string: too many comparisons with %s\n",
                 id_string);
-        cderrno = CDA_EOTHER;
-        return CDA_EOTHER;
+        cl_errno = CDA_EOTHER;
+        return cl_errno;
       }
 
       mid = low + (high - low)/2;
@@ -277,12 +278,12 @@ cl_str2id(Attribute *attribute, char *id_string)
       comp = cl_strcmp(id_string, str2);
 
       if(comp == 0) {
-        cderrno = CDA_OK;
+        cl_errno = CDA_OK;
         return ntohl(lexsrt->data.data[mid]);
       }
       if(mid == low) {
-        cderrno = CDA_ENOSTRING;
-        return cderrno;
+        cl_errno = CDA_ENOSTRING;
+        return cl_errno;
       }
       if(comp > 0)
         low = mid;
@@ -1418,8 +1419,8 @@ cl_regex2id(Attribute *attribute, char *pattern, int flags, int *number_of_match
   } /* endfor (loop across lexicon items) */
 
   if (cl_debug && optimised) 
-    fprintf(stderr, "CL: regexp optimiser found %d candidates out of %d strings\n"
-        "    (%d matching strings in total) \n", cl_regopt_count_get(), lexsize, match_count);
+    fprintf(stderr, "CL: regexp optimiser avoided calling regex engine for %d candidates out of %d strings\n"
+                    "    (%d matching strings in total) \n", cl_regopt_count_get(), lexsize, match_count);
 
   if (match_count == 0) {       /* no matches */
     table = NULL;

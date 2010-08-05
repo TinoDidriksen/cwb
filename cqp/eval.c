@@ -202,30 +202,39 @@ set_corpus_matchlists(CorpusList *cp,
 }
 
 
-
+/**
+ * Gets a list of corpus positions where the given p-attribute has
+ * the specified form.
+ *
+ * Positions are placed into the "start" array of the matchlist.
+ *
+ * @param attribute  The p-attribute to search.
+ * @param wordform   The form to search for.
+ * @param matchlist  Where to put the results.
+ * @return           The size of the resulting matchlist table
+ *                   (also stored in its tabsize member).
+ */
 int
 get_corpus_positions(Attribute *attribute,
                      char *wordform,
                      Matchlist *matchlist)
 {
-
   int word_id;
 
   assert(attribute);
   assert(matchlist);
   assert(matchlist->start == NULL);
 
-  word_id = get_id_of_string(attribute, wordform);
+  word_id = cl_str2id(attribute, wordform);
   
-  if ((word_id >= 0) && (cderrno == CDA_OK)) {
+  if ((word_id >= 0) && (cl_errno == CDA_OK)) {
 
     /* get the positions of the id in the attribute */
-    matchlist->start = collect_matches(attribute,
-                                       &word_id,
-                                       1,
-                                       1,
-                                       &(matchlist->tabsize),
-                                       NULL, 0);
+    matchlist->start = cl_idlist2cpos(attribute,
+                                      &word_id,
+                                      1,
+                                      1,
+                                      &(matchlist->tabsize));
     matchlist->matches_whole_corpus = 0;
   }
 
@@ -1282,6 +1291,7 @@ mark_offrange_cells(Matchlist *matchlist,
 
 
 /**
+ * Gets the inital list of matches for a query.
  *
  * NB. This function is called recursively.
  *
@@ -1310,7 +1320,7 @@ calculate_initial_matchlist_1(Constrainttree ctptr,
         assert(ctptr->node.left && ctptr->node.right);
 
         /* just the beginnings of an implementation for the b_and operator (by oli);
-           never mind, the entire <eval.c> code will have to be rewritten for CWB-3.0
+           never mind, the entire <eval.c> code will have to be rewritten at some point
            TODO */
 #ifdef INITIAL_MATCH_BY_MU
 
@@ -2830,7 +2840,8 @@ simulate_dfa(int envidx, int cut, int keep_old_ranges)
 }
 
 /**
- * This function wraps round simulate_dfa (the only other thing it does is enforce the hard_cut limit)
+ * This function wraps round simulate_dfa (the only other thing it does is enforce the hard_cut limit).
+ *
  * @see hard_cut
  * @see simulate_dfa
  */

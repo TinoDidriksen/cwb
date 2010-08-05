@@ -276,7 +276,7 @@ do_attribute(Attribute *attr, ComponentID cid, int validate)
  * Prints a usage message and exits the program.
  */
 void
-usage(void)
+makeall_usage(void)
 {
   fprintf(stderr, "\n");
   fprintf(stderr, "Usage:  %s [options] <corpus> [<attribute> ...] \n", progname);
@@ -333,7 +333,7 @@ main(int argc, char **argv)
   validate = 0;
 
   /* parse arguments */
-  while ((c = getopt(argc, argv, "+r:c:P:hDM:V")) != EOF)
+  while ((c = getopt(argc, argv, "+r:c:P:hDM:V")) != EOF) {
     switch (c) {
 
     /* r: registry directory */
@@ -368,8 +368,9 @@ main(int argc, char **argv)
 
     case 'h':
     default:
-      usage();
+      makeall_usage();
     }
+  }
 
   if (optind >= argc) {
     fprintf(stderr, "Missing argument, try \"%s -h\" for more information.\n", progname);

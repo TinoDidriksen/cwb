@@ -24,29 +24,21 @@
  */
 
 
-/* 
- * set operations on (initial) matchlists
+/**
+ * The Matchlist object.
+ *
+ * This is a table of integers describing matches to a query.
  */
-
-typedef enum ml_setops {
-  Union,
-  Intersection,
-  Complement,
-  Identity,			/* create a copy */
-  Uniq,				/* make unique lists (also called "sets" :-)) */
-  Reduce			/* delete -1 items */
-} MLSetOp;
-
-
 typedef struct _Matchlist
 {
-  int  *start;
-  int  *end;
-  int  *target_positions;
-  int tabsize;
-  int matches_whole_corpus;	/* avoid copying then. 0 for no, 1 for yes */
-  int is_inverted;		/* contains ``inverted'' positions, that is,
-				 * positions which do NOT match */
+  int *start;                       /**< Table of match start points (corpus posiitons) */
+  int *end;                         /**< Table of match end points (cirpus positions) */
+  int *target_positions;            /**< Table of match end points (cirpus positions) */
+  int  tabsize;                     /**< Number of integers in each of the three arrays */
+  int  matches_whole_corpus;        /**< Boolean: if true, every position in the cirpus matches.
+                                         In this case, we avoid copying.*/
+  int is_inverted;                  /**< Boolean: if true, this matchilist contains ``inverted''
+                                         positions, that is,positions which do NOT match */
 } Matchlist;
 
 
@@ -59,6 +51,17 @@ void show_matchlist_firstelements(Matchlist matchlist);
 
 void free_matchlist(Matchlist *matchlist);
 
+/**
+ * Set operations which can be performed on (initial) matchlists.
+ */
+typedef enum ml_setops {
+  Union,
+  Intersection,
+  Complement,
+  Identity,                     /**< create a copy */
+  Uniq,                         /**< make unique lists (also called "sets" :-)) */
+  Reduce                        /**< delete -1 items */
+} MLSetOp;
 
 int Setop(Matchlist *list1, MLSetOp operation, Matchlist *list2);
 

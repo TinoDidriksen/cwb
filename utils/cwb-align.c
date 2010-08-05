@@ -102,7 +102,7 @@ char *registry_directory = NULL; /** string containing location of the registry 
  * Prints a message describing how to use the program to STDERR and then exits.
  */
 void
-print_usage(void)
+align_usage(void)
 {
   int i;
 
@@ -152,7 +152,7 @@ print_usage(void)
  * Parses the program's commandline arguments.
  *
  * Usage:
- * optindex = parse_args(argc, argv, required_arguments);
+ * optindex = align_parse_args(argc, argv, required_arguments);
  *
  * @param ac        The program's argc
  * @param av        The program's argv
@@ -161,7 +161,7 @@ print_usage(void)
  *                  ie the index of the first argument in argv[]
  */
 int
-parse_args(int ac, char *av[], int min_args)
+align_parse_args(int ac, char *av[], int min_args)
 {
   extern int optind;            /* getopt() interface */
   extern char *optarg;          /* getopt() interface */
@@ -195,7 +195,7 @@ parse_args(int ac, char *av[], int min_args)
         if (1 == sscanf(optarg, "%lf", &factor))
           split_factor = factor;
         else
-          print_usage();
+          align_usage();
         break;
       }
       /* -w: beam width */
@@ -206,7 +206,7 @@ parse_args(int ac, char *av[], int min_args)
             && (width > 10))
           beam_width = width;
         else
-          print_usage();
+          align_usage();
         break;
       }
       /* -v : verbose */
@@ -226,11 +226,11 @@ parse_args(int ac, char *av[], int min_args)
     case 'h':
       /* unknown option: print usage */
     default:
-      print_usage();
+      align_usage();
     }
 
   if (ac - optind < min_args)
-     print_usage();
+    align_usage();
 
   return(optind);               /* return index of first argument in argv[] */
 }
@@ -250,7 +250,7 @@ parse_args(int ac, char *av[], int min_args)
  *   [140,169] and [137,180] form a 1:2 alignment pair .
  *
  * Usage:
- * print_align_line(fd, f1, l1, f2, l2, quality);
+ * align_print_line(fd, f1, l1, f2, l2, quality);
  *
  * @param fd       File handle to print to.
  * @param f1       First cpos in source corpus.
@@ -261,7 +261,7 @@ parse_args(int ac, char *av[], int min_args)
  *
  */
 void
-print_align_line(FILE *fd, int f1, int l1, int f2, int l2, int quality)
+align_print_line(FILE *fd, int f1, int l1, int f2, int l2, int quality)
 {
   int step1 = l1 - f1, step2 = l2 - f2;
   int wf1, wl1, wf2, wl2, dummy;
@@ -290,7 +290,7 @@ print_align_line(FILE *fd, int f1, int l1, int f2, int l2, int quality)
  * (in .align format).
  *
  * Usage:
- * steps = do_alignment(FMS, f1, l1, f2, l2, outfile);
+ * steps = align_do_alignment(FMS, f1, l1, f2, l2, outfile);
  *
  * @param fms      The feature map to use in best_path alignment.
  * @param if1      First cpos in source corpus.
@@ -300,7 +300,7 @@ print_align_line(FILE *fd, int f1, int l1, int f2, int l2, int quality)
  * @param outfile  File handle to print the alignment lines to.
  */
 int
-do_alignment(FMS fms, int if1, int il1, int if2, int il2, FILE *outfile) {
+align_do_alignment(FMS fms, int if1, int il1, int if2, int il2, FILE *outfile) {
   int steps, *out1, *out2, *quality;    /* return values of best_path() */
   int f1 = 0, l1 = 0, f2 = 0, l2 = 0;
   int q1 = 0, q2 = 0;
@@ -320,14 +320,14 @@ do_alignment(FMS fms, int if1, int il1, int if2, int il2, FILE *outfile) {
       /* combined quality of two 1:1 alignments */
       if (quality[i] <= split_factor * (q1 + q2)) {
         /* split */
-        print_align_line(outfile, f1, f1+1, f2, f2+1, q1);
-        print_align_line(outfile, f1+1, l1, f2+1, l2, q2);
+        align_print_line(outfile, f1, f1+1, f2, f2+1, q1);
+        align_print_line(outfile, f1+1, l1, f2+1, l2, q2);
         steps_created += 2;
         continue;
       }
       /* else go on and print 2:2 alignment */
     }
-    print_align_line(outfile, f1, l1, f2, l2, quality[i]);
+    align_print_line(outfile, f1, l1, f2, l2, quality[i]);
     steps_created++;
   }
   return steps_created;
@@ -356,7 +356,7 @@ main(int argc, char *argv[]) {
   int l;
 
   /* parse command line and read arguments */
-  argindex = parse_args(argc, argv, 3);
+  argindex = align_parse_args(argc, argv, 3);
   corpus1_name = argv[argindex++];
   corpus2_name = argv[argindex++];
   s_name = argv[argindex++];
@@ -506,7 +506,7 @@ main(int argc, char *argv[]) {
   if (prealign1 == NULL) {
     /* neither -S nor -V used: just do a global alignment */
     printf("Running global alignment, please be patient ...\n");
-    steps = do_alignment(fms, 0, size1 - 1, 0, size2 - 1, of);
+    steps = align_do_alignment(fms, 0, size1 - 1, 0, size2 - 1, of);
   } /* end of global alignment */
 
   else if (!prealign_has_values) {
@@ -548,7 +548,7 @@ main(int argc, char *argv[]) {
 
       printf("Aligning <%s> region #%d = [%d, %d] x [%d, %d]\n",
              prealign_name, i, f1, l1, f2, l2);
-      steps += do_alignment(fms, f1, l1, f2, l2, of);
+      steps += align_do_alignment(fms, f1, l1, f2, l2, of);
     }
   } /* end of -S type alignment */
 
@@ -596,7 +596,7 @@ main(int argc, char *argv[]) {
 
         printf("Aligning <%s %s> regions = [%d, %d] x [%d, %d]\n",
                prealign_name, value, f1, l1, f2, l2);
-        steps += do_alignment(fms, f1, l1, f2, l2, of);
+        steps += align_do_alignment(fms, f1, l1, f2, l2, of);
         j++;                    /* go to next target region */
       }
     }

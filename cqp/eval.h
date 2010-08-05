@@ -304,7 +304,7 @@ typedef union _avs {
 
   /** a matchall item */
   struct {
-    AVSType type;                /* MatchAll */
+    AVSType type;                /* set to MatchAll */
     LabelEntry label;
     Boolean is_target;
     Boolean lookahead;           /**< whether pattern is just a lookahead constraint */
@@ -312,7 +312,7 @@ typedef union _avs {
 
   /** a constraint tree */
   struct {
-    AVSType type;                /* Pattern */
+    AVSType type;                /* set to Pattern */
     LabelEntry label;
     Constrainttree constraint;
     Boolean is_target;
@@ -321,7 +321,7 @@ typedef union _avs {
 
   /** a structure describing tag */
   struct {
-    AVSType type;                /**< Tag */
+    AVSType type;                /* set to Tag */
     int is_closing;
     Attribute *attr;
     char *constraint;            /**< constraint for annotated value of region (string or regexp); NULL = no constraint */
@@ -333,7 +333,7 @@ typedef union _avs {
 
   /* an anchor point tag (used in subqueries) */
   struct {
-    AVSType type;                /**< Anchor */
+    AVSType type;                /* set to Anchor */
     int is_closing;
     FieldType field;
   } anchor;
@@ -402,7 +402,8 @@ typedef struct evalenv {
   int has_target_indicator;         /**< is there a target mark ('@') in the query? */
   LabelEntry target_label;          /**< targets are implemented as a special label "target" now */
 
-  LabelEntry match_label;           /**< special "match" and "matchend"-Labels for access to start & end of match within query */
+  LabelEntry match_label;           /**< special "match" and "matchend"-Labels for access
+                                         to start & end of match within query */
   LabelEntry matchend_label;
 
   Context search_context;           /**< the search context (within...) */

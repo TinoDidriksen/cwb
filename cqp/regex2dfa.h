@@ -24,10 +24,18 @@
  * The DFA object.
  *
  * A Deterministic Finite Automaton: into which a regular expression can be converted.
+ *
+ * (Note this is regular expression across tokens, not single-string regexes, which
+ * are dealt with by functions in the corpus library.)
+ *
+ * TODO: rename the functions and make this more object-oriented.
+ * Ideally, this should be a cleanly separated module, with "in" and "out" only
+ * via the methods declared here. Currently it's not like that - info
+ * is passed in via global variables, most blatantly searchstr.
  */
 typedef struct dfa {
-  int Max_States;         /**< max number of states of the current dfa.      */
-                          /**< state no. 0 is the initial state.             */
+  int Max_States;         /**< max number of states of the current dfa;
+                               state no. 0 is the initial state.             */
   int Max_Input;          /**< max number of input chars of the current dfa. */
   int **TransTable;       /**< state transition table of the current dfa.    */
   Boolean *Final;         /**< set of final states.                          */

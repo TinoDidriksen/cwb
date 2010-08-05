@@ -27,6 +27,8 @@
  *
  * Exists only to call other functions, with silent set to true.
  *
+ * Note that cqpcl is DEPRACATED.
+ *
  * @see silent
  * @param argc  Number of commandline arguments.
  * @param argv  Pointer to array of commandline arguments.
@@ -62,5 +64,5 @@ main(int argc, char *argv[])
       }
   }
 
-  return (0);
+  return 0;
 }

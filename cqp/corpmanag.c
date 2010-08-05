@@ -1894,15 +1894,14 @@ split_subcorpus_name(char *corpusname, char *mother_name)
  * @param cp  The corpus to touch. This must be of type SUB.
  * @return    Boolean: true if the touch worked, otherwise false.
  */
-Boolean
+int
 touch_corpus(CorpusList *cp)
 {
-  if ((!cp) ||
-      (cp->type != SUB))
-    return False;
+  if ((!cp) || (cp->type != SUB))
+    return 0;
   else {
-    cp->saved = False;
-    cp->needs_update = True;
+    cp->saved = 0;
+    cp->needs_update = 1;
 
     return 1;
   }

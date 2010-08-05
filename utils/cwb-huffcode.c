@@ -38,7 +38,7 @@ char *corpus_id = NULL;
 
 int debug = 0;
 
-void usage(char *msg, int error_code);
+void huffcode_usage(char *msg, int error_code);
 
 /* ---------------------------------------------------------------------- */
 
@@ -911,7 +911,7 @@ decode_check_huff(Attribute *attr, char *fname)
  * @param error_code  Value to be returned by the program when it exits.
  */
 void 
-usage(char *msg, int error_code)
+huffcode_usage(char *msg, int error_code)
 {
   if (msg)
     fprintf(stderr, "Usage error: %s\n", msg);
@@ -949,7 +949,8 @@ usage(char *msg, int error_code)
  * @param argv   Command-line arguments.
  */
 int 
-main(int argc, char **argv) {
+main(int argc, char **argv)
+{
   char *registry_directory = NULL;
   char *output_fn = NULL;
   char *attr_name = DEFAULT_ATT_NAME;
@@ -971,7 +972,7 @@ main(int argc, char **argv) {
   progname = argv[0];
 
   /* parse arguments */
-  while ((c = getopt(argc, argv, "+TvP:r:f:dAh")) != EOF)
+  while ((c = getopt(argc, argv, "+TvP:r:f:dAh")) != EOF) {
     switch (c) {
 
       /* T: skip decompression / error checking pass ("I trust you")  */
@@ -1016,24 +1017,25 @@ main(int argc, char **argv) {
 
       /* h: help page */
     case 'h':
-      usage(NULL, 2);
+      huffcode_usage(NULL, 2);
       break;
 
     default: 
-      usage("illegal option.", 2);
+      huffcode_usage("illegal option.", 2);
       break;
     }
+  }
   
   /* single argument: corpus id */
   if (optind < argc) {
     corpus_id = argv[optind++];
   }
   else {
-    usage("corpus not specified (missing argument)", 1);
+    huffcode_usage("corpus not specified (missing argument)", 1);
   }
 
   if (optind < argc) {
-    usage("Too many arguments", 1);
+    huffcode_usage("Too many arguments", 1);
   }
   
   if ((corpus = cl_new_corpus(registry_directory, corpus_id)) == NULL) {

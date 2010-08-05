@@ -76,7 +76,9 @@ char local_grain_data[MAX_LINE_LENGTH];
 int cl_regopt_analyse(char *regex);
 
 /**
- * A counter of how many times the "grain" system has found a match.
+ * A counter of how many times the "grain" system has allwoed us to avoid
+ * calling the regex engine.
+ *
  * @see cl_regopt_count_get
  */
 int cl_regopt_successes = 0;
@@ -245,11 +247,10 @@ cl_regex_match(CL_Regex rx, char *str)
     haystack = str;
   len = strlen(haystack);
 
-  grain_match = 0;
-#if 0 /* disable optimised regex matching while developing utf8 matching */
   if (optimised) {
     /* this 'optimised' matcher may look fairly bloated, but it's still way ahead of POSIX regexen */
     /* string offset where first character of each grain would be */
+    grain_match = 0;
     max_i = len - rx->grain_len; /* stop trying to match when i > max_i */
     if (rx->anchor_end)
       i = (max_i >= 0) ? max_i : 0; /* if anchored at end, align grains with end of string */
@@ -277,16 +278,24 @@ cl_regex_match(CL_Regex rx, char *str)
       if (rx->anchor_start)
         break; /* if anchored at start, only the first iteration can match */
     }
-    if (grain_match)
-      cl_regopt_successes++;
   } /* endif optimised */
+  else
+    /* if the regex is not optimised, always behave as if a grain was matched */
+    grain_match = 1;
 
+  /* if there was a grain-match, we call pcre_exec, which might match or might notfind a match in the end;
+   * but if there wasn't a grain-match, we know that pcre won't match; so we don't bother calling it. */
 
-  if (optimised && !grain_match) /* enabled since version 2.2.b94 (14 Feb 2006) -- before: && cl_optimize */
-    result = PCRE_ERROR_NOMATCH; /* equiv to POSIX.2 REG_NOMATCH */
+  if (!grain_match) { /* enabled since version 2.2.b94 (14 Feb 2006) -- before: && cl_optimize */
+    cl_regopt_successes++;
+    result = PCRE_ERROR_NOMATCH;  /* the return code from PCRE when there is, um, no match */
+  }
+#if 0
+  /* for debug purposes: always call pcre regardless of whether the grains matched. */
+  /* this allows the code in the below #if 1 to check whether or not grains are behaving as they should. */
   else {
 #else
-  if (1) { /* just to preserve structure of the ifs */
+  if (1) {
 #endif
     result = pcre_exec(rx->needle, rx->extra, haystack,
                        len, 0, PCRE_NO_UTF8_CHECK,
@@ -296,10 +305,12 @@ cl_regex_match(CL_Regex rx, char *str)
       fprintf(stderr, "CL: Regex Execute Error no. %d (see `man pcreapi` for error codes)\n", result);
   }
 
-#if 0  /* debugging code used before version 2.2.b94, modified to pcre return values in 3.2.0 */
-  /* critical: optimiser didn't accept candidate, but regex matched */
-  if ((result > 0) && optimised && !grain_match)
-  fprintf(stderr, "CL ERROR: regex optimiser did not accept '%s' although it should have!\n", haystack);
+
+#if 1
+  /* debugging code used before version 2.2.b94, modified to pcre return values & re-enabled in 3.2.b3 */
+  /* check for critical error: optimiser didn't accept candidate, but regex matched */
+  if ((result > 0) && !grain_match)
+    fprintf(stderr, "CL ERROR: regex optimiser did not accept '%s' although it should have!\n", haystack);
 #endif
 
   return (result > 0); /* return true if regular expression matched */
@@ -323,7 +334,7 @@ cl_delete_regex(CL_Regex rx)
    * We can let PCRE worry about that. That does mean, however, we should test the
    * pointers for non-nullity before calling pcre_free. Normally we would also set the
    * pointers to NULL after freeing the target. However, in this case, we know the
-   *  structure theybelong to will be freed by the end of the function, so no worries.
+   * structure they belong to will be freed by the end of the function, so no worries.
    */
   int i;
 
@@ -348,10 +359,12 @@ cl_delete_regex(CL_Regex rx)
  *
  * What counts as safe: A to Z, a to z, 0 to 9, minus, quote marks, percent,
  * ampersand, slashes, excl mark, colon, semi colon, character, underscore,
- * any  value over 0x7f.
+ * any value over 0x7f.
  *
  * What counts as not safe therefore includes: brackets, braces, square brackets;
  * questionmark, plus, and star; circumflex and dollar sign; dot; hash; etc.
+ *
+ * (But, in UTF8, Unicode PUNC area equivalents of these characters will be safe.)
  *
  * @param c  The character (cast to unsigned for the comparison.
  * @return   True for non-special characters; false for special characters.
@@ -371,7 +384,7 @@ is_safe_char(unsigned char c)
         c == '&' || c == '/' || c == '_'  || c == '!' ||
         c == ':' || c == ';' || c == ','
       ) ||
-      (c >= 128 /* && c <= 255 */)
+      (c >= 128)
     )   {
     return 1;
   }
@@ -391,7 +404,7 @@ is_safe_char(unsigned char c)
  * @param mark  Pointer to location in the regex string from
  *              which to read.
  * @return      Pointer to the first character after the grain
- *              it has read in (or the original  "mark" pointer
+ *              it has read in (or the original "mark" pointer
  *              if no grain is found).
  */
 char *
@@ -401,9 +414,11 @@ read_grain(char *mark)
   int last_char_escaped = 0, glen;
 
   glen = 0; /* effective length of grain */
-  while (is_safe_char(*point) || ((*point == '\\') && (point[1]))) {
+  while ( is_safe_char(*point) || (*point == '\\' && point[1]) ) {
     if (*point == '\\') {
-      /* skip backslash and escaped character (but not at end of string)*/
+      /* skip backslash and escaped character
+       * (but not at end of string; backslash at
+       * end of string really is backslash). */
       point++;
       last_char_escaped = 1;
     }
@@ -444,22 +459,32 @@ char *
 read_matchall(char *mark)
 {
   if (*mark == '.') {
+    /* read the matchall diot */
     return mark + 1;
   }
   else if (*mark == '[') {
     char *point = mark + 1;
-    /* according to the POSIX standard, \ does not have a special meaning in a character class;
-     we won't skip it or any other special characters with possibly messy results;
-     we just accept | as a special optimisation for the matches and contains operators in CQP */
-    while (*point != ']' && *point != '\\' && *point != '[' && *point != '\0') {
+    /* [AH: the original list, and the original comment to go with them ]:
+    * according to the POSIX standard, \ does not have a special meaning in a character class;
+       we won't skip it or any other special characters with possibly messy results;
+       we just accept | as a special optimisation for the matches and contains operators in CQP
+    while (*point != ']' && *point != '\\' && *point != '[' && *point != '\0') { */
+    /* [AH: new version] the following characters are "not safe-looking" within a character class in PCRE: */
+    while (*point != ']' && *point != '\\' && *point != '[' && *point != '\0'
+            && *point != '-' && point != '^') {
       point++;
     }
+    /* if we got to ] without hitting a "messy" character, read the entire character class.
+     * otherwise read nothing.  */
     return (*point == ']') ? point + 1 : mark;
   }
   else if (is_safe_char(*mark)) {
     return mark + 1;
   }
   else if (*mark == '\\') {      /* outside a character class, \ always escapes to literal meaning */
+    /* TODO: problem, in PCRE a \ can escape not just the following letter, but a sequence after it;
+     * will this break the grain-finder? (Overgenerating grains merely results in extra calls to the
+     * regex engine, lowering the effect of the optimsiation, but not giving false matches)*/
     return mark + 2;
   }
   else {
@@ -606,7 +631,7 @@ read_disjunction(char *mark, int *align_start, int *align_end)
         point++;                   /* continue with next alternative */
       else
         break;                     /* abort scanning */
-    }
+    } /* endwhile loop over alternatives in disjunction */
 
     if (*point == ')' && !failed) {
       /* if point is at ) character, we've successfully read the entire disjunction */
@@ -706,12 +731,13 @@ make_jump_table(void)
   unsigned int ch;
   unsigned char *grain; /* want unsigned char to compare with unsigned int ch */
 
+  /* clear the jump table */
   for (ch = 0; ch < 256; ch++)
     cl_regopt_jumptable[ch] = 0;
 
   if (cl_regopt_grains > 0) {
     /* compute smallest jump distance for each character (0 -> matches last character of one or more grains) */
-    for (ch = 32; ch < 256; ch++) {
+    for (ch = 0; ch < 256; ch++) {
       jump = cl_regopt_grain_len; /* if character isn't contained in any of the grains, jump by grain length */
 
       for (k = 0; k < cl_regopt_grains; k++) { /* for each grain... */
@@ -729,7 +755,7 @@ make_jump_table(void)
     }
     if (cl_debug) { /* in debug mode, print out the entire jumptable */
       fprintf(stderr, "CL: cl_regopt_jumptable for Boyer-Moore search is\n");
-      for (k = 32; k < 256; k += 16) {
+      for (k = 0; k < 256; k += 16) {
         fprintf(stderr, "CL: ");
         for (j = 0; j < 15; j++) {
           ch = k + j;
@@ -919,8 +945,9 @@ cl_regopt_count_reset(void)
  * Get a reading from the "success counter" for optimised regexes.
  *
  * The counter is incremented by 1 every time the "grain" system
- * is used to get a match successfully, avoiding use of the
- * external regex library which is the fallback.
+ * is used successfully to avoid calling PCRE. That is, it is
+ * incremented every time a string is scrutinised and found to
+ * contain none of the grains.
  *
  * Usage:
  *
@@ -930,8 +957,9 @@ cl_regopt_count_reset(void)
  *   if (cl_regex_match(rx, haystacks[i]))
  *     hits++;
  *
- * fprintf(stderr, "Found %d matches, %d of them using the regopt system",
- *   hits, cl_regopt_count_get() );
+ * fprintf(stderr,
+ *         "Found %d matches; avoided regex matching %d times out of %d trials",
+ *         hits, cl_regopt_count_get(), n );
  *
  * @see cl_regopt_count_reset
  * @return an integer indicating the number of times a regular expression

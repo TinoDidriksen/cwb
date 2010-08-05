@@ -89,6 +89,12 @@ sigINT_signal_handler(int signum)
 
 /**
  * Installs the interrupt signal handler function with the OS.
+ *
+ * This function installs a Ctrl-C interrupt handler (clears
+ * EvaluationIsRunning flag). The function installed is
+ * sigINT_signal_handler.
+ *
+ * @see sigINT_signal_handler
  */
 void
 install_signal_handler(void)
@@ -103,7 +109,7 @@ install_signal_handler(void)
 
 
 /**
- * Initialises the CQP program.
+ * Initialises the CQP program (or cqpserver or cqpcl).
  *
  * This function:
  * - initialises the global variables;
@@ -129,9 +135,7 @@ initialize_cqp(int argc, char **argv)
 
   extern int yydebug;
 
-  /*
-   * initialize global variables
-   */
+  /* initialize global variables */
 
   exit_cqp = 0;
   cqp_file_p = 0;
@@ -140,22 +144,13 @@ initialize_cqp(int argc, char **argv)
 
   eep = -1;
 
-  /*
-   * intialise built-in random number generator
-   */
-
+  /* intialise built-in random number generator */
   cl_randomize();
 
-  /*
-   * initialise macro database
-   */
-
+  /* initialise macro database */
   init_macros();
 
-  /*
-   * parse program options
-   */
-
+  /* parse program options */
   parse_options(argc, argv);
 
   /* let's always run stdout unbuffered */
@@ -165,10 +160,7 @@ initialize_cqp(int argc, char **argv)
 
   yydebug = parser_debug;
 
-  /*
-   * read initialization file
-   */
-
+  /* read initialization file */
   if (cqp_init_file ||
       (!child_process && (!batchmode || (batchfd == NULL)) && !(which_app == cqpserver))
       ) {

@@ -113,7 +113,7 @@ cl_realloc(void *block, size_t bytes) {
 }
 
 /**
- * safely duplicates a string.
+ * Safely duplicates a string.
  *
  * @see cl_malloc
  * @param string  Pointer to the original string

@@ -463,9 +463,7 @@ after_Query(CorpusList *cl)
   within_gc = 0;
 
   if (generate_code) {
-
     if (cl) {
-
       cl_free(cl->query_text);
       cl_free(cl->query_corpus);
 
@@ -926,6 +924,7 @@ do_group(CorpusList *cl,
   }
 }
 
+/** Like do_group, but with no source */
 void 
 do_group2(CorpusList *cl,
           FieldType target, int target_offset, char *t_att,
@@ -968,13 +967,13 @@ do_StandardQuery(int cut_value, int keep_flag)
     /* the new matching strategies require post-processing of the query result */
     switch (matching_strategy) {
     case shortest_match:
-      RangeSetop(res, RMinimalMatches, NULL, NULL);        /* select shortest from several nested matches */
+      RangeSetop(res, RMinimalMatches, NULL, NULL);         /* select shortest from several nested matches */
       break;
     case standard_match:
-      RangeSetop(res, RLeftMaximalMatches, NULL, NULL);        /* reduce multiple matches created by optional query prefix */
+      RangeSetop(res, RLeftMaximalMatches, NULL, NULL);     /* reduce multiple matches created by optional query prefix */
       break;
     case longest_match:
-      RangeSetop(res, RMaximalMatches, NULL, NULL);      /* select longest from several nested matches */
+      RangeSetop(res, RMaximalMatches, NULL, NULL);         /* select longest from several nested matches */
       break;
     case traditional:
     default:

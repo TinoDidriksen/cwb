@@ -15,7 +15,23 @@
  *  WWW at http://www.gnu.org/copyleft/gpl.html).
  */
 
-
+/**
+ * @file
+ *
+ * cwb-s-encode adds an s-attribute to an existing corpus.
+ *
+ * Input:  a list of regions (on stdin or in the file specified in the first argument
+ *         to the program name) with lines in the following format:
+ *
+ * start TAB end [ TAB annotation ]
+ *
+ * start      = corpus position of first token in region (integer as text)
+ * end        = corpus position of last token in region (integer as text)
+ * annotation = annotation text (only if s-attribute was specified with -V)
+ *
+ * Output: file att.rng (plus att.avs, att.avx for -V attributes) where att is the
+ * specified attribute name.
+ */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -28,7 +44,6 @@
 #include "../cl/globals.h"
 #include "../cl/endian.h"
 #include "../cl/macros.h"
-#include "../cl/cl.h"
 #include "../cl/storage.h"      /* for NwriteInt() */
 #include "../cl/lexhash.h"
 
@@ -36,44 +51,49 @@
 
 #define UMASK              0644
 
-/* file storing ranges of given structural attribute */
-#define RNG_RNG "%s/%s.rng"
+/** printf format string for path of file storing ranges of given structural attribute */
+#define RNG_RNG "%s" SUBDIR_SEP_STRING "%s.rng"
 
-/* attribute value index of a given structural attribute */
-#define RNG_AVX "%s/%s.avx"
+/** printf format string for path of attribute value index of a given structural attribute */
+#define RNG_AVX "%s" SUBDIR_SEP_STRING "%s.avx"
 
-/* attribute values of a given structural attribute */
-#define RNG_AVS "%s/%s.avs"
+/** printf format string for path of attribute values of a given structural attribute */
+#define RNG_AVS "%s" SUBDIR_SEP_STRING "%s.avs"
 
 
 /* ---------------------------------------------------------------------- */
 
 /* configuration variables // command-line switches */
-int debug = 0;
-int silent = 0;                 /* avoid messages in -M / -a modes */
-int strip_blanks_in_values = 0; /* Wow, this is unused :o) */
-int set_syntax_strict = 0;      /* check that set attributes are always given in the same syntax */
-int in_memory = 0;              /* create list of regions in memory (allowing non-linear input), then write to disk */
-int add_to_existing = 0;        /* add to existing attribute: implies <in_memory>, existing regions are automatically inserted at startup */
-FILE *text_fd = NULL;
+int debug = 0;                  /** debug mode on/off */
+int silent = 0;                 /**< avoid messages in -M / -a modes */
+/* int strip_blanks_in_values = 0; / * Wow, this is unused :o) */
+int set_syntax_strict = 0;      /**< check that set attributes are always given in the same syntax */
+int in_memory = 0;              /**< create list of regions in memory (allowing non-linear input), then write to disk */
+int add_to_existing = 0;        /**< add to existing attribute: implies in_memory; existing regions are automatically
+                                     inserted at startup */
+FILE *text_fd = NULL;           /**< stream handle for file to read from. */
 
 /* global variables */
-Corpus *corpus = NULL;          /* corpus we're working on; at the moment, this is only required for <add_to_existing> */
-int line = 0;
+Corpus *corpus = NULL;          /**< corpus we're working on; at the moment, this is only required for add_to_existing */
+
 enum {
   set_none, set_any, set_regular, set_whitespace
-} set_att = set_none;           /* set attributes */
+} set_att = set_none;           /**< set attributes */
 
 
 /* ---------------------------------------------------------------------- */
 
+/**
+ * SencodeRange object - distinct from the Range object in cwb-encode.
+ *
+ */
 typedef struct {
   char *dir;                    /**< directory where this range is stored */
   char *name;                   /**< range name */
 
   int store_values;             /**< flag indicating whether to store values */
 
-  int ready;                    /**< flag indicates whether open_range() has already been called */
+  int ready;                    /**< flag indicates whether sencode_range_open() has already been called */
   FILE *fd;                     /**< fd of x.rng (bin mode) */
   FILE *avx;                    /**< the attribute value index (text mode)*/
   FILE *avs;                    /**< the attribute values (bin mode)*/
@@ -81,9 +101,14 @@ typedef struct {
   int last_cpos;                /**< end of last region (consistency checking) */
   int num;                      /**< the next will be the num-th structure */
   int offset;                   /**< string offset for next string */
-} Range;
+} SencodeRange;
 
-Range range;
+/**
+ * Global (and only) instance of the cwb-s-encode SencodeRange object.
+ *
+ * Contains information on the s-attribute (aka "range") being coded.
+ */
+SencodeRange range;
 
 /* ---------------------------------------------------------------------- */
 
@@ -91,7 +116,8 @@ char *progname = NULL;
 
 /* ---------------------------------------------------------------------- */
 
-/* The "structure list" data type is used for 'adding' regions (-a).
+/**
+ * The "structure list" data type is used for 'adding' regions (-a).
  * In this case, all existing regions are read into an ordered, bidirectional list;
  * new regions are inserted into that list (overlaps are automatically resolved
  * in favour of the 'earlier' region; if start point is identical, the longer
@@ -100,15 +126,15 @@ char *progname = NULL;
  */
 
 typedef struct _SL {
-  int start;                    /* start of region */
-  int end;                      /* end of region */
-  char *annot;                  /* annotated string */
+  int start;                    /**< start of region */
+  int end;                      /**< end of region */
+  char *annot;                  /**< annotated string */
   struct _SL *prev;
   struct _SL *next;
 } *SL;
 
-SL StructureList = NULL;        /* (single) global list */
-SL SL_Point = NULL;             /* pointer into list; NULL = start of list; linear search starts from SL_Point */
+SL StructureList = NULL;        /**< (single) global list */
+SL SL_Point = NULL;             /**< pointer into global list; NULL = start of list; linear search starts from SL_Point */
 
 /* SL functions:
  *  item = SL_seek(cpos);           (find region containing (or preceding) cpos; NULL = start of list; sets SL_Point to returned value)
@@ -119,13 +145,23 @@ SL SL_Point = NULL;             /* pointer into list; NULL = start of list; line
  *  item = SL_next();               (returns item marked by point, then advances point to next item; NULL at end of list)
  */
 
+/**
+ * Rewind the index-pointer to the start of the global structure list.
+ */
 void
-SL_rewind(void) {
+SL_rewind(void)
+{
   SL_Point = StructureList;
 }
 
+/**
+ * Gets a pointer to the next available structure on the global structure list.
+ *
+ * Returns NULL if we're at the end of the list.
+ */
 SL
-SL_next(void) {
+SL_next(void)
+{
   SL item;
 
   item = SL_Point;
@@ -134,8 +170,12 @@ SL_next(void) {
   return item;
 }
 
+/**
+ * Find region containing (or preceding) cpos; NULL = start of list; sets SL_Point to returned value.
+ */
 SL
-SL_seek(int cpos) {
+SL_seek(int cpos)
+{
   if (SL_Point == NULL)          /* start-of-list case */
     SL_Point = StructureList;
 
@@ -155,8 +195,12 @@ SL_seek(int cpos) {
   return NULL;
 }
 
+/**
+ * insert region [start, end, annot] after SL_Point; no overlap/position checking
+ */
 SL
-SL_insert_after_point(int start, int end, char *annot) {
+SL_insert_after_point(int start, int end, char *annot)
+{
   /* allocate and initialise new item to insert into list */
   SL item = (SL) cl_malloc(sizeof(struct _SL));
   item->start = start;
@@ -192,8 +236,12 @@ SL_insert_after_point(int start, int end, char *annot) {
   return SL_Point;
 }
 
+/**
+ * delete region from list; updates SL_Point if it happened to point at item
+ */
 void
-SL_delete(SL item) {
+SL_delete(SL item)
+{
   /* unlink item ... we have to handle a few special cases again */
   if (item->prev == NULL) {     /* delete first list element */
     StructureList = item->next;
@@ -214,8 +262,14 @@ SL_delete(SL item) {
   free(item);
 }
 
+/**
+ * Inserts an item into the global structure list.
+ *
+ * Combines SL_seek(), SL_insert_at_point() and ambiguity resolution
+ */
 void
-SL_insert(int start, int end, char *annot) {
+SL_insert(int start, int end, char *annot)
+{
   SL point, item;
 
   point = SL_seek(start);
@@ -249,11 +303,23 @@ SL_insert(int start, int end, char *annot) {
 
 
 
-/* ok = parse_line(char *line, int *start, int *end, char **annot);
-   parse input line; expects standard TAB-separated format;
-   first two fields must be numbers, optional third field is returned in <annot> */
+/**
+ * Parse an input line into cwb-s-encode.
+ *
+ * Usage:
+ *
+ * ok = sencode_parse_line(char *line, int *start, int *end, char **annot);
+ *
+ * Expects standard TAB-separated format; first two fields must be numbers,
+ * optional third field is returned in annot
+ *
+ *
+ * @param
+ * @return Boolean; true for all OK, false for error.
+ */
 int
-parse_line(char *line, int *start, int *end, char **annot) {
+sencode_parse_line(char *line, int *start, int *end, char **annot)
+{
   char *field, *field_end;
   char *line_copy = cl_strdup(line); /* work on copy to retain original for error messages */
   int has_annotation = 1;
@@ -315,14 +381,24 @@ parse_line(char *line, int *start, int *end, char **annot) {
 
 /* ---------------------------------------------------------------------- */
 
-/* annot = check_set(char *annot);
-   changes annotation string <annot> to standard set attribute syntax; on first call,
-   checks whether annotations are already given in '|'-delimited form, otherwise it will
-   always split on whitespace;
-   the string <annot> may be reallocated (i.e. caller must use & free the returned value);
-   if there are syntax errors, check_set() returns NULL */
+/**
+ * Changes annotation string to standard set attribute syntax.
+ *
+ * On first call, checks whether annotations are already given in
+ * '|'-delimited form, otherwise it will always split on whitespace;
+ *
+ * the string may be reallocated (i.e. caller must use & free
+ * the returned value);
+ *
+ * if there are syntax errors, returns NULL
+ *
+ * Usage:  * annot = sencode_check_set(char *annot);
+ *
+ * @param annot  The annotation string to check.
+ */
 char *
-check_set(char *annot) {
+sencode_check_set(char *annot)
+{
   char *set;
   int split;                    /* need to split on whitespace? */
 
@@ -347,10 +423,12 @@ check_set(char *annot) {
 
 /* ---------------------------------------------------------------------- */
 
-/* ======================================== print usage message and exit */
-
+/**
+ * print usage message and exit
+ */
 void
-usage() {
+sencode_usage(void)
+{
   fprintf(stderr, "\n");
   fprintf(stderr, "Usage:  %s [options] (-S <att> | -V <att>)\n", progname);
   fprintf(stderr, "\n");
@@ -374,11 +452,13 @@ usage() {
   exit(2);
 }
 
-/* =================================================== declare_range() / open_range() / close_range() */
 
-/* initialise range and set name/directory */
+
+/**
+ * Initialises the "range" variable for the s-attribute to be encoded,
+ * and sets name/directory */
 void
-declare_range(char *name, char *directory, int store_values)
+sencode_range_declare(char *name, char *directory, int store_values)
 {
   range.name = cl_strdup(name);
   range.dir = cl_strdup(directory);
@@ -394,9 +474,9 @@ declare_range(char *name, char *directory, int store_values)
   range.avx = NULL;
 }
 
-/* open disk files for declared range */
+/** Open disk files for the s-attribute being encoded (must have been declared first). */
 void
-open_range(void)
+sencode_range_open(void)
 {
   char buf[MAX_LINE_LENGTH];
 
@@ -423,9 +503,9 @@ open_range(void)
   range.ready = 1;
 }
 
-/* close disk files of open range */
+/** Close the disk files for the s-attribute being encoded. */
 void
-close_range(void)
+sencode_range_close(void)
 {
   if (range.ready) {
     if (EOF == fclose(range.fd)) {
@@ -452,10 +532,11 @@ close_range(void)
 }
 
 
-/* ======================================== parse options and set global vars */
-
+/**
+ * Parse options and set global variables
+ */
 void
-parse_options(int argc, char **argv)
+sencode_parse_options(int argc, char **argv)
 {
   int c;
   extern char *optarg;
@@ -541,7 +622,7 @@ parse_options(int argc, char **argv)
 
       /* S: s-attribute without annotations */
     case 'S':
-      declare_range(optarg, directory, 0);
+      sencode_range_declare(optarg, directory, 0);
       if (optind < argc) {
         fprintf(stderr, "Error: -S <att> must be last flag on command line.\n\n");
         exit(1);
@@ -550,7 +631,7 @@ parse_options(int argc, char **argv)
 
       /* V: s-attribute with annotations */
     case 'V':
-      declare_range(optarg, directory, 1);
+      sencode_range_declare(optarg, directory, 1);
       if (optind < argc) {
         fprintf(stderr, "Error: -V <att> must be last flag on command line.\n\n");
         exit(1);
@@ -560,7 +641,7 @@ parse_options(int argc, char **argv)
     /* default or -h: error */
     case 'h':
     default:
-      usage();
+      sencode_usage();
       break;
     }
 
@@ -588,14 +669,18 @@ parse_options(int argc, char **argv)
 }
 
 
-/* ======================================== write region data to disk files (as defined in global variable <range>) */
+/* ======================================== */
 
 cl_lexhash LH = NULL;           /* use lexhash to avoid multiple copies of annotations (-m mode) */
 
+/**
+ * Write data about a region to disk files (as defined in global variable range).
+ */
 void
-write_region_to_disk(int start, int end, char *annot) {
+sencode_range_write(int start, int end, char *annot)
+{
   if (!range.ready)
-    open_range();
+    sencode_range_open();
   if (range.store_values && (LH == NULL))
     LH = cl_new_lexhash(0);
 
@@ -638,18 +723,7 @@ write_region_to_disk(int start, int end, char *annot) {
 
 
 
-/*
 
-  Input:  a list of regions (on stdin or in the file specified in the first argument
-          to the program name) with lines in the folling format:
-  <start> TAB <end> [ TAB <annotation> ]
-
-  <start> = corpus position of first token in region
-  <end> = corpus position of last token in region
-  <annotation> = annotation text (only if s-attribute was specified with -V)
-
-  Output: file <att>.rng (plus <att>.avs, <att>.avx for -V attributes)
-*/
 
 /**
  * Main function for cwb-s-encode.
@@ -669,7 +743,7 @@ main(int argc, char **argv)
   int i, N;
 
   progname = argv[0];
-  parse_options(argc, argv);
+  sencode_parse_options(argc, argv);
 
   /* -a mode: read existing regions into memory */
   if (add_to_existing) {
@@ -719,7 +793,7 @@ main(int argc, char **argv)
       exit(1);
     }
 
-    if (! parse_line(buf, &start, &end, &annot)) {
+    if (! sencode_parse_line(buf, &start, &end, &annot)) {
       fprintf(stderr, "FORMAT ERROR on line #%d:\n>> %s", input_line, buf);
       exit(1);
     }
@@ -738,7 +812,7 @@ main(int argc, char **argv)
     }
     if (annot != NULL && set_att != set_none) {
       /* convert set annotation into standard syntax */
-      annot = check_set(annot);
+      annot = sencode_check_set(annot);
       if (annot == NULL) {
         fprintf(stderr, "SET ANNOTATION SYNTAX ERROR on line #%d:\n>> %s", input_line, buf);
         exit(1);
@@ -758,7 +832,7 @@ main(int argc, char **argv)
     if (in_memory)
       SL_insert(start, end, annot);
     else
-      write_region_to_disk(start, end, annot);
+      sencode_range_write(start, end, annot);
 
     cl_free(annot);
   }
@@ -771,11 +845,11 @@ main(int argc, char **argv)
       printf("[Creating encoded disk file(s)]\n");
     SL_rewind();
     while ((item = SL_next()) != NULL)
-      write_region_to_disk(item->start, item->end, item->annot);
+      sencode_range_write(item->start, item->end, item->annot);
   }
 
   /* close files */
-  close_range();
+  sencode_range_close();
 
   if (S_annotations_dropped > 0)
     fprintf(stderr, "Warning: %d annotation values dropped for -S attribute '%s'.\n", S_annotations_dropped, range.name);

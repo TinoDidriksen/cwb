@@ -182,9 +182,9 @@ int set_current_corpus(CorpusList *cp, int force);
 
 int set_current_corpus_name(char *name, int force);
 
-Boolean touch_corpus(CorpusList *cp);
+int touch_corpus(CorpusList *cp);
 
-/* IO/Functions */
+/* IO Functions */
 
 void show_corpora_files(enum corpus_type type);
 

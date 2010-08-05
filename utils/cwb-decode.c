@@ -80,7 +80,7 @@ int xml_compatible = 0;         /* EncodeMode only, selected by option -Cx */
  * @param error_code  Value to be returned by the program when it exits.
  */
 void
-cleanup(int error_code)
+decode_cleanup(int error_code)
 {
   if (corpus != NULL)
     drop_corpus(corpus);
@@ -93,7 +93,7 @@ cleanup(int error_code)
  * @param exit_code  Value to be returned by the program when it exits.
  */
 void
-usage(int exit_code) {
+decode_usage(int exit_code) {
   fprintf(stderr, "\n");
   fprintf(stderr, "Usage:  %s [options] <corpus> [flags]\n\n", progname);
   fprintf(stderr, "Decodes CWB corpus as plain text (or in various other text formats).\n");
@@ -126,7 +126,7 @@ usage(int exit_code) {
   fprintf(stderr, "  -c <att>  expand ranges to full <att> region (matchlist mode)\n\n");
   fprintf(stderr, "Part of the IMS Open Corpus Workbench v" VERSION "\n\n");
 
-  cleanup(exit_code);
+  decode_cleanup(exit_code);
 }
 
 /**
@@ -328,7 +328,7 @@ add_attribute(Attribute *attr)
   else {
     fprintf(stderr, "Too many attributes (maximum is %d). Aborted.\n",
             MAX_ATTRS);
-    cleanup(2);
+    decode_cleanup(2);
     return 0;
   }
 }
@@ -621,7 +621,7 @@ show_position_values(int start_position, int end_position, Attribute *context) {
           }
         else {
           cdperror("(aborting) cl_cpos2str() failed");
-          cleanup(1);
+          decode_cleanup(1);
         }
         break;
 
@@ -644,7 +644,7 @@ show_position_values(int start_position, int end_position, Attribute *context) {
           }
           else if (cderrno != CDA_OK) {
             cdperror("(aborting) alignment error");
-            cleanup(1);
+            decode_cleanup(1);
           }
         }
         break;
@@ -853,13 +853,13 @@ main(int argc, char **argv)
 
       /* h: help page */
     case 'h':
-      usage(2);
+      decode_usage(2);
       break;
 
     default:
       fprintf(stderr, "Illegal option. Try \"%s -h\" for more information.\n", progname);
       fprintf(stderr, "[remember that options go before the corpus name, and flags after it!]\n");
-      cleanup(2);
+      decode_cleanup(2);
     }
 
   /* required argument: corpus id */
@@ -871,12 +871,12 @@ main(int argc, char **argv)
               corpus_id,
               (registry_directory ? registry_directory
                : central_corpus_directory()));
-      cleanup(1);
+      decode_cleanup(1);
     }
   }
   else {
     fprintf(stderr, "Missing argument. Try \"%s -h\" for more information.\n", progname);
-    cleanup(2);
+    decode_cleanup(2);
   }
 
 
@@ -888,7 +888,7 @@ main(int argc, char **argv)
            cl_new_attribute(corpus, argv[++cnt], ATT_STRUC)) == NULL) {
         fprintf(stderr, "Can't open s-attribute %s.%s . Aborted.\n",
                 corpus_id, argv[cnt]);
-        cleanup(1);
+        decode_cleanup(1);
       }
 
     }
@@ -897,7 +897,7 @@ main(int argc, char **argv)
       if ((attr = cl_new_attribute(corpus, argv[++cnt], ATT_POS)) == NULL) {
         fprintf(stderr, "Can't open p-attribute %s.%s . Aborted.\n",
                 corpus_id, argv[cnt]);
-        cleanup(1);
+        decode_cleanup(1);
       }
       else {
         if (cl_max_cpos(attr) > 0) {
@@ -908,7 +908,7 @@ main(int argc, char **argv)
         else {
           fprintf(stderr, "Attribute %s.%s is declared, but not accessible (missing data?). Aborted.\n",
                   corpus_id, argv[cnt]);
-          cleanup(1);
+          decode_cleanup(1);
         }
       }
 
@@ -929,7 +929,7 @@ main(int argc, char **argv)
     else if (strcmp(argv[cnt], "-D") == 0) {    /* -D: dynamic attribute (not implemented) */
 
       fprintf(stderr, "Sorry, dynamic attributes are not implemented. Aborting.\n");
-      cleanup(2);
+      decode_cleanup(2);
 
     }
     else if (strcmp(argv[cnt], "-A") == 0) {    /* -A: alignment attribute */
@@ -937,7 +937,7 @@ main(int argc, char **argv)
       if ((attr = cl_new_attribute(corpus, argv[++cnt], ATT_ALIGN)) == NULL) {
         fprintf(stderr, "Can't open a-attribute %s.%s . Aborted.\n",
                 corpus_id, argv[cnt]);
-        cleanup(1);
+        decode_cleanup(1);
       }
       else
         add_attribute(attr);
@@ -947,7 +947,7 @@ main(int argc, char **argv)
       if ((attr = cl_new_attribute(corpus, argv[++cnt], ATT_STRUC)) == NULL) {
         fprintf(stderr, "Can't open s-attribute %s.%s . Aborted.\n",
                 corpus_id, argv[cnt]);
-        cleanup(1);
+        decode_cleanup(1);
       }
       else
         add_attribute(attr);
@@ -958,16 +958,16 @@ main(int argc, char **argv)
       if ((attr = cl_new_attribute(corpus, argv[++cnt], ATT_STRUC)) == NULL) {
         fprintf(stderr, "Can't open s-attribute %s.%s . Aborted.\n",
                 corpus_id, argv[cnt]);
-        cleanup(1);
+        decode_cleanup(1);
       }
       else if (!cl_struc_values(attr)) {
         fprintf(stderr, "S-attribute %s.%s does not have annotations. Aborted.\n",
                 corpus_id, argv[cnt]);
-        cleanup(1);
+        decode_cleanup(1);
       }
       else if (printValuesIndex >= MAX_PRINT_VALUES) {
         fprintf(stderr, "Too many -V attributes, sorry. Aborted.\n");
-        cleanup(1);
+        decode_cleanup(1);
       }
       else
         printValues[printValuesIndex++] = attr;
@@ -976,7 +976,7 @@ main(int argc, char **argv)
     else {
 
       fprintf(stderr, "Unknown flag: %s\n", argv[cnt]);
-      cleanup(2);
+      decode_cleanup(2);
 
     }
   }
@@ -999,7 +999,7 @@ main(int argc, char **argv)
 
     if (maxlast < 0) {
       fprintf(stderr, "Need at least one p-attribute (-P flag). Aborted.\n");
-      cleanup(2);
+      decode_cleanup(2);
     }
 
     if ((first_token < 0) || (first_token >= maxlast))
@@ -1010,7 +1010,7 @@ main(int argc, char **argv)
 
     if (last < first_token) {
       fprintf(stderr, "Warning: output range #%d..#%d is empty. No output.\n", first_token, last);
-      cleanup(2);
+      decode_cleanup(2);
     }
 
     if ( (mode == XMLMode) ||
@@ -1051,7 +1051,7 @@ main(int argc, char **argv)
         if ((token = strtok(NULL, " \t\n")) != NULL) {
           if (!is_num(token)) {
             fprintf(stderr, "Invalid corpus position #%s . Aborted.\n", token);
-            cleanup(1);
+            decode_cleanup(1);
           }
           else
             ep = atoi(token);
@@ -1081,7 +1081,7 @@ main(int argc, char **argv)
       }
       else {
         fprintf(stderr, "Invalid corpus position #%s . Aborted.\n", s);
-        cleanup(1);
+        decode_cleanup(1);
       }
     }
 
@@ -1094,6 +1094,6 @@ main(int argc, char **argv)
     }
   }
 
-  cleanup(0);
+  decode_cleanup(0);
   return 0;                     /* just to keep gcc from complaining */
 }

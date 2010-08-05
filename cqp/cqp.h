@@ -28,11 +28,9 @@
 
 #include <stdio.h>
 
-/**
- * DEPRACATED means of storing a Boolean value
- */
+/** DEPRACATED means of storing a Boolean value  */
 typedef int Boolean;
-/* typedef enum bool { False, True } Boolean; */
+/* an even more depracated version: typedef enum bool { False, True } Boolean; */
 
 /** DEPRACATED macros for Boolean true and false */
 #define True 1
@@ -41,11 +39,16 @@ typedef int Boolean;
 
 /**
  * The "corpus yielding command type" type.
+ *
  * Each possible value of the enumeration represents a particular "type"
- * of command that may potentially yield a corpus.
+ * of command that may potentially yield a (sub)corpus.
  */
 typedef enum _cyctype {
-  NoExpression, Query, Activation, SetOperation, Assignment
+  NoExpression,
+  Query,                  /**< A query (yielding a query-result subcorpus) */
+  Activation,             /**< A corpus-activation command. */
+  SetOperation,
+  Assignment
 } CYCtype;
 
 /** Global variable indicating type (CYC) of last expression */
@@ -64,14 +67,13 @@ extern int QueryBufferOverflow;
 
 /* ======================================== Other global variables */
 
-char *searchstr;                /**< needs to be global, unfortunately */
+extern char *searchstr;         /* needs to be global, unfortunately */
 int exit_cqp;                   /**< 1 iff exit-command was issued while parsing */
 
 char *cqp_input_string;
 int cqp_input_string_position;
 
 int initialize_cqp(int argc, char **argv);
-
 
 int cqp_parse_file(FILE *fd, int exit_on_parse_errors);
 
@@ -84,15 +86,23 @@ int cqp_parse_string(char *s);
  */
 typedef void (*InterruptCheckProc)(void);
 
+/**
+ * Boolean indicating that an interruptible process is currently running.
+ *
+ * The process in question is one that may be expected to be non-instantaneous.
+ * This variable is turned off by the Ctrl+C interrupt handler.
+ *
+ * @see sigINT_signal_handler
+ */
 int EvaluationIsRunning;
 
 int setInterruptCallback(InterruptCheckProc f);
 
-void CheckForInterrupts();
+void CheckForInterrupts(void);
 
 int signal_handler_is_installed;
 
-void install_signal_handler(void); /* install Ctrl-C interrupt handler (clears EvaluationIsRunning flag) */
+void install_signal_handler(void);
 
 
 /* ====================================================================== */

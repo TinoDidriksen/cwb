@@ -28,7 +28,7 @@ char *progname = NULL;
  * Prints a message describing how to use the program to STDERR and then exits.
  */
 void
-usage(void)
+describecorpus_usage(void)
 {
   fprintf(stderr, "\n");
   fprintf(stderr, "Usage:  %s [flags] <corpus> [<corpus> ...] \n", progname);
@@ -51,7 +51,7 @@ usage(void)
  *                one of the constants in cl.h (ATT_POS etc.)
  */
 void
-show_attribute_names (Corpus *corpus, int type)
+describecorpus_show_attribute_names (Corpus *corpus, int type)
 {
   Attribute *a;
 
@@ -74,7 +74,7 @@ show_attribute_names (Corpus *corpus, int type)
  *
  */
 void
-show_basic_info (Corpus *corpus, int with_attribute_names)
+describecorpus_show_basic_info (Corpus *corpus, int with_attribute_names)
 {
   Attribute *word, *a;
   int p_atts = 0, s_atts = 0, a_atts = 0;
@@ -107,13 +107,13 @@ show_basic_info (Corpus *corpus, int with_attribute_names)
   }
   printf("%3d positional attributes%s\n", p_atts, colon);
   if (with_attribute_names)
-    show_attribute_names(corpus, ATT_POS);
+    describecorpus_show_attribute_names(corpus, ATT_POS);
   printf("%3d structural attributes%s\n", s_atts, colon);
   if (with_attribute_names)
-    show_attribute_names(corpus, ATT_STRUC);
+    describecorpus_show_attribute_names(corpus, ATT_STRUC);
   printf("%3d alignment  attributes%s\n", a_atts, colon);
   if (with_attribute_names)
-    show_attribute_names(corpus, ATT_ALIGN);
+    describecorpus_show_attribute_names(corpus, ATT_ALIGN);
   printf("\n");
 }
 
@@ -128,7 +128,7 @@ show_basic_info (Corpus *corpus, int with_attribute_names)
  * @param corpus  The corpus to analyse.
  */
 void 
-show_statistics (Corpus *corpus)
+describecorpus_show_statistics (Corpus *corpus)
 {
   Attribute *a;
   int tokens, types, regions, blocks;
@@ -209,7 +209,8 @@ main(int argc, char **argv)
       
       /* -r <dir>: change registry directory */
     case 'r':
-      if (registry == NULL) registry = optarg;
+      if (registry == NULL)
+        registry = optarg;
       else {
         fprintf(stderr, "%s: -r option used twice\n", progname);
         exit(2);
@@ -229,7 +230,7 @@ main(int argc, char **argv)
       /* -h: help page */
     case 'h':
     default:
-      usage();
+      describecorpus_usage();
       break;
     }
 
@@ -250,18 +251,18 @@ main(int argc, char **argv)
     printf("Corpus: %s\n", argv[i]);
     printf("============================================================\n\n");
 
-    show_basic_info(corpus, !(show_stats || show_details));
+    describecorpus_show_basic_info(corpus, !(show_stats || show_details));
     /* show attribute names only if no other options are selected */
 
     if (show_stats) {
-      show_statistics(corpus);
+      describecorpus_show_statistics(corpus);
     }
 
     if (show_details) {
       describe_corpus(corpus);
     }
   
-    drop_corpus(corpus);
+    cl_delete_corpus(corpus);
   }
 
   return 0;

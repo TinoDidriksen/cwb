@@ -95,7 +95,7 @@ int quiet = 0;               /**< if set, don't show progress information on std
  * Prints a usage message and exits the program.
  */
 void
-usage(void)
+scancorpus_usage(void)
 {
   fprintf(stderr, "\n");
   fprintf(stderr, "Usage: %s [options] <corpus> <key1> <key2> ... \n\n", progname);
@@ -136,13 +136,13 @@ usage(void)
  * @return      The value of global optind after the function has run.
  */
 int
-parse_options(int argc, char *argv[])
+scancorpus_parse_options(int argc, char *argv[])
 {
   extern int optind;
   extern char *optarg;
   int c;
 
-  while ((c = getopt(argc, argv, "+r:b:o:f:F:Cs:e:R:qh")) != EOF)
+  while ((c = getopt(argc, argv, "+r:b:o:f:F:Cs:e:R:qh")) != EOF) {
     switch (c) {
     case 'r':                        /* -r <dir> */
       if (reg_dir == NULL)
@@ -196,8 +196,9 @@ parse_options(int argc, char *argv[])
       break;
     case 'h':                       /* -h */
     default:                        /* unknown option: print usage info */
-      usage();
+      scancorpus_usage();
     }
+  }
 
   return(optind);
 }
@@ -593,9 +594,9 @@ main (int argc, char *argv[])
   /* parse command line options */
   Hash.buckets = DEFAULT_BUCKETS;  /* must pre-initialise Hash.buckets */
   progname = argv[0];
-  argind = parse_options(argc, argv);
+  argind = scancorpus_parse_options(argc, argv);
   if ((argc - argind) < 2) {
-    usage();                       /* not enough arguments -> print usage info */
+    scancorpus_usage();                       /* not enough arguments -> print usage info */
   }
 
   /* initialise hash */

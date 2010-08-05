@@ -67,7 +67,7 @@ alignencode_usage(void)
  * Parses the program's commandline arguments.
  *
  * Usage:
- * optindex = parse_args(argc, argv, required_arguments);
+ * optindex = alignencode_parse_args(argc, argv, required_arguments);
  *
  * @param ac        The program's argc
  * @param av        The program's argv
@@ -76,7 +76,7 @@ alignencode_usage(void)
  *                  ie the index of the first argument in argv[]
  */
 int
-parse_args(int ac, char *av[], int min_args)
+alignencode_parse_args(int ac, char *av[], int min_args)
 {
   extern int optind;                  /* getopt() interface */
   extern char *optarg;                /* getopt() interface */
@@ -188,7 +188,7 @@ main(int argc, char *argv[])
   progname = argv[0];
 
   /* parse command line and read arguments */
-  argindex = parse_args(argc, argv, 1);
+  argindex = alignencode_parse_args(argc, argv, 1);
   align_name = argv[argindex];
 
   /* open alignment file and parse header; .gz files are automatically decompressed */

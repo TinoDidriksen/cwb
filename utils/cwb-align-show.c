@@ -58,7 +58,7 @@ int COL_SEP = 2;                   /**< column separator (blanks) */
  * Lists interactive commands on STDERR.
  */
 void
-print_help(void)
+alignshow_print_help(void)
 {
   fprintf(stderr, "  RET    show next aligned region\n");
   fprintf(stderr, "  p <n>  print next <n> regions\n");
@@ -71,7 +71,7 @@ print_help(void)
  * Prints a message describing how to use the program to STDERR and then exits.
  */
 void
-print_usage(void)
+alignshow_usage(void)
 {
   fprintf(stderr, "\n");
   fprintf(stderr, "Usage: %s [options] <alignment file>\n\n", progname);
@@ -84,7 +84,7 @@ print_usage(void)
   fprintf(stderr, "Displays alignment results in terminal. Aligned regions are\n");
   fprintf(stderr, "displayed side-by-side, one region at a time. The following\n");
   fprintf(stderr, "interactive commands are available:\n\n");
-  print_help();
+  alignshow_print_help();
   fprintf(stderr, "\n");
   fprintf(stderr, "Part of the IMS Open Corpus Workbench v" VERSION "\n\n");
   exit(1);
@@ -95,7 +95,7 @@ print_usage(void)
  * Parses the program's commandline arguments.
  *
  * Usage:
- * optindex = parse_args(argc, argv, required_arguments);
+ * optindex = alignshow_parse_args(argc, argv, required_arguments);
  *
  * @param ac        The program's argc
  * @param av        The program's argv
@@ -104,7 +104,7 @@ print_usage(void)
  *                  ie the index of the first argument in argv[]
  */
 int
-parse_args(int ac, char *av[], int min_args)
+alignshow_parse_args(int ac, char *av[], int min_args)
 {
   extern int optind;                  /* getopt() interface */
   extern char *optarg;                /* getopt() interface */
@@ -129,7 +129,7 @@ parse_args(int ac, char *av[], int min_args)
       /* -w: column width */
     case 'w':
       if (1 != sscanf(optarg, "%d", &n))
-        print_usage();
+        alignshow_usage();
       if ((n < MIN_COL_WIDTH) || (n > MAX_COL_WIDTH)) {
         fprintf(stderr, "%s: column width must be in range %d .. %d\n",
                 progname, MIN_COL_WIDTH, MAX_COL_WIDTH);
@@ -142,7 +142,7 @@ parse_args(int ac, char *av[], int min_args)
       /* -s: column separator */
     case 's':
       if (1 != sscanf(optarg, "%d", &n))
-        print_usage();
+        alignshow_usage();
       COL_SEP = n;
       break;
       /* -W: wide display */
@@ -153,11 +153,11 @@ parse_args(int ac, char *av[], int min_args)
       /* -h : help page = usage */
     case 'h':
     default:
-      print_usage();
+      alignshow_usage();
     }
 
   if (ac - optind < min_args)
-     print_usage();
+     alignshow_usage();
 
   return(optind);                /* return index of first argument in argv[] */
 }
@@ -170,7 +170,7 @@ parse_args(int ac, char *av[], int min_args)
  * @param error_level  The exit code that is returned to the OS.
  */
 void
-goodbye(int error_level)
+alignshow_goodbye(int error_level)
 {
   if (af != NULL) {
     if (af_is_pipe) {
@@ -198,7 +198,7 @@ void
 end_of_alignment(void)
 {
   printf("=========================== END OF ALIGNMENT FILE ============================\n");
-  goodbye(0);
+  alignshow_goodbye(0);
 }
 
 
@@ -213,7 +213,8 @@ skip_next_region(FILE *f)
 {
   char line[4096];
 
-  if (feof(f)) end_of_alignment();
+  if (feof(f))
+    end_of_alignment();
   fgets(line, 4096, f);
 }
 
@@ -239,8 +240,10 @@ print_next_region(FILE *f)
 
 
   /* get next alignment region */
-  if (feof(f)) end_of_alignment();
-  if (NULL == fgets(line, 4096, f)) end_of_alignment();
+  if (feof(f))
+    end_of_alignment();
+  if (NULL == fgets(line, 4096, f))
+    end_of_alignment();
   if (5 > (args = sscanf(line, "%d %d %d %d %s %d", &f1, &l1, &f2, &l2, type, &quality))) {
     fprintf(stderr, "%s: format error in line\n\t%s", progname, line);
     fprintf(stderr, "*** IGNORED ***\n");
@@ -322,15 +325,15 @@ print_next_region(FILE *f)
 int
 main(int argc, char** argv)
 {
-  int argindex;                        /* index of first argument in argv[] */
-  char line[4096];                /* input buffer for .align file */
+  int argindex;                  /* index of first argument in argv[] */
+  char line[4096];               /* input buffer for .align file */
   char cmd[4096];                /* interactive command input */
   int l;
 
   progname = argv[0];
 
   /* parse command line and read arguments */
-  argindex = parse_args(argc, argv, 1);
+  argindex = alignshow_parse_args(argc, argv, 1);
   align_name = argv[argindex];
 
   /* open alignment file and parse header; .gz files are automatically decompressed */
@@ -362,35 +365,35 @@ main(int argc, char** argv)
   if (4 != sscanf(line, "%s %s %s %s", corpus1_name, s1_name, corpus2_name, s2_name)) {
     fprintf(stderr, "%s: %s not in .align format\n", progname, align_name);
     fprintf(stderr, "wrong header: %s", line);
-    goodbye(1);
+    alignshow_goodbye(1);
   }
 
   /* open corpus and attributes */
   if (NULL == (corpus1 = cl_new_corpus(registry_dir, corpus1_name))) {
     fprintf(stderr, "%s: can't open corpus %s\n", progname, corpus1_name);
-    goodbye(1);
+    alignshow_goodbye(1);
   }
   if (NULL == (corpus2 = cl_new_corpus(registry_dir, corpus2_name))) {
     fprintf(stderr, "%s: can't open corpus %s\n", progname, corpus2_name);
-    goodbye(1);
+    alignshow_goodbye(1);
   }
   if (NULL == (w1 = cl_new_attribute(corpus1, word_name, ATT_POS))) {
     fprintf(stderr, "%s: can't open p-attribute %s.%s\n", progname, corpus1_name, word_name);
-    goodbye(1);
+    alignshow_goodbye(1);
   }
   if (NULL == (w2 = cl_new_attribute(corpus2, word_name, ATT_POS))) {
     fprintf(stderr, "%s: can't open p-attribute %s.%s\n", progname, corpus2_name, word_name);
-    goodbye(1);
+    alignshow_goodbye(1);
   }
   if (NULL == (s1 = cl_new_attribute(corpus1, s1_name, ATT_STRUC))) {
     fprintf(stderr, "%s: can't open s-attribute %s.%s\n",
             progname, corpus1_name, s1_name);
-    goodbye(1);
+    alignshow_goodbye(1);
   }
   if (NULL == (s2 = cl_new_attribute(corpus2, s2_name, ATT_STRUC))) {
     fprintf(stderr, "%s: can't open s-attribute %s.%s\n",
             progname, corpus2_name, s2_name);
-    goodbye(1);
+    alignshow_goodbye(1);
   }
 
   printf("Displaying alignment for [%s, %s] from file %s\n",
@@ -429,10 +432,10 @@ main(int argc, char** argv)
         break;
       }
     case 'h':
-      print_help();
+      alignshow_print_help();
       break;
     case 'q': case 'x':
-      goodbye(0);
+      alignshow_goodbye(0);
     default:
       fprintf(stderr, "UNKNOWN COMMAND. Type 'h' for list of commands.\n");
     }
@@ -440,7 +443,7 @@ main(int argc, char** argv)
   }
 
   /* that's it (we shouldn't reach this point) */
-  goodbye(0);
+  alignshow_goodbye(0);
 }
 
 

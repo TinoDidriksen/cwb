@@ -717,6 +717,15 @@ void cl_string_canonical(char *s, CorpusCharset charset, int flags);
 /* boolean function, returns is string valid? */
 int cl_string_validate_encoding(const char *s, CorpusCharset charset);
 
+/* various functions related to sorting/grouping... */
+char *cl_string_reverse(const char *s, CorpusCharset charset); /* creates a new string */
+
+int cl_string_qsort_compare(const char *s1,
+                            const char *s2,
+                            CorpusCharset charset,
+                            int flags,
+                            int reverse);
+
 /**
  * "Dummy" charset macro for calling cl_string_canonical
  *

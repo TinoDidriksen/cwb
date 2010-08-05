@@ -201,7 +201,7 @@ do_show(char *attr_name, char *rx, int rx_flags)
  * Prints a message describing how to use the program to STDERR and then exits.
  */
 void
-usage(void)
+lexdecode_usage(void)
 {
   fprintf(stderr, "\n");
   fprintf(stderr, "Usage:  %s [options] <corpus>\n\n", progname);
@@ -255,7 +255,7 @@ main(int argc, char **argv) {
   progname = argv[0];
 
   if (argc == 1)
-    usage();
+    lexdecode_usage();
 
   /* parse arguments */
   while ((c = getopt(argc, argv, "+P:Sr:fnlsp:cdF:O0Nh")) != EOF) {
@@ -326,7 +326,7 @@ main(int argc, char **argv) {
 
     default:
     case 'h':
-      usage();
+      lexdecode_usage();
       break;
     }
 
