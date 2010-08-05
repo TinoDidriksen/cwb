@@ -26,14 +26,20 @@
   </div>
 </div>
 <div class="contents">
-<h1>_SL Struct Reference</h1><!-- doxytag: class="_SL" --><h2>Data Fields</h2>
+<h1>_SL Struct Reference</h1><!-- doxytag: class="_SL" -->
+<p>The "structure list" data type is used for 'adding' regions (-a).  
+<a href="#_details">More...</a></p>
+<h2>Data Fields</h2>
 <ul>
 <li>int <a class="el" href="struct___s_l.html#a37722a150250e2a5a98e5e0d11e53449">start</a>
-<li>int <a class="el" href="struct___s_l.html#abce9f5dc9c83f2639b72024fdee5d388">end</a>
-<li>char * <a class="el" href="struct___s_l.html#a3b3be9087a468fe688fe72b348317b70">annot</a>
-<li>struct <a class="el" href="struct___s_l.html">_SL</a> * <a class="el" href="struct___s_l.html#a27056cdc7363a3cc19e1579d3f4376dd">prev</a>
+<dl class="el"><dd class="mdescRight">start of region  <a href="#a37722a150250e2a5a98e5e0d11e53449"></a><br/></dl><li>int <a class="el" href="struct___s_l.html#abce9f5dc9c83f2639b72024fdee5d388">end</a>
+<dl class="el"><dd class="mdescRight">end of region  <a href="#abce9f5dc9c83f2639b72024fdee5d388"></a><br/></dl><li>char * <a class="el" href="struct___s_l.html#a3b3be9087a468fe688fe72b348317b70">annot</a>
+<dl class="el"><dd class="mdescRight">annotated string  <a href="#a3b3be9087a468fe688fe72b348317b70"></a><br/></dl><li>struct <a class="el" href="struct___s_l.html">_SL</a> * <a class="el" href="struct___s_l.html#a27056cdc7363a3cc19e1579d3f4376dd">prev</a>
 <li>struct <a class="el" href="struct___s_l.html">_SL</a> * <a class="el" href="struct___s_l.html#a0560490d232c720e5d5cd0d9ba5575d5">next</a>
 </ul>
+<hr/><a name="_details"></a><h2>Detailed Description</h2>
+<p>The "structure list" data type is used for 'adding' regions (-a). </p>
+<p>In this case, all existing regions are read into an ordered, bidirectional list; new regions are inserted into that list (overlaps are automatically resolved in favour of the 'earlier' region; if start point is identical, the longer region is retained). Only when the entire input has been read, the data will be actually encoded and stored on disk. </p>
 <hr/><h2>Field Documentation</h2>
 <a class="anchor" id="a3b3be9087a468fe688fe72b348317b70"></a><!-- doxytag: member="_SL::annot" ref="a3b3be9087a468fe688fe72b348317b70" args="" -->
 <div class="memitem">
@@ -45,6 +51,8 @@
       </table>
 </div>
 <div class="memdoc">
+
+<p>annotated string </p>
 
 <p>Referenced by <a class="el" href="cwb-s-encode_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>, <a class="el" href="cwb-s-encode_8c.html#aa1140468f4b3774b2135eee4a42a78a8">SL_delete()</a>, and <a class="el" href="cwb-s-encode_8c.html#aaa1fe19da0a3acca96e84533fd318722">SL_insert_after_point()</a>.</p>
 
@@ -60,6 +68,8 @@
       </table>
 </div>
 <div class="memdoc">
+
+<p>end of region </p>
 
 <p>Referenced by <a class="el" href="cwb-s-encode_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>, <a class="el" href="cwb-s-encode_8c.html#ac45ab6169870998a619acf738ee9e29e">SL_insert()</a>, <a class="el" href="cwb-s-encode_8c.html#aaa1fe19da0a3acca96e84533fd318722">SL_insert_after_point()</a>, and <a class="el" href="cwb-s-encode_8c.html#a8ee1353a177c2d08bdf5b41b13010d5f">SL_seek()</a>.</p>
 
@@ -106,6 +116,8 @@
 </div>
 <div class="memdoc">
 
+<p>start of region </p>
+
 <p>Referenced by <a class="el" href="cwb-s-encode_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>, <a class="el" href="cwb-s-encode_8c.html#ac45ab6169870998a619acf738ee9e29e">SL_insert()</a>, <a class="el" href="cwb-s-encode_8c.html#aaa1fe19da0a3acca96e84533fd318722">SL_insert_after_point()</a>, and <a class="el" href="cwb-s-encode_8c.html#a8ee1353a177c2d08bdf5b41b13010d5f">SL_seek()</a>.</p>
 
 </div>
@@ -114,7 +126,7 @@
 <li>utils/<a class="el" href="cwb-s-encode_8c.html">cwb-s-encode.c</a></li>
 </ul>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Mon Aug 2 06:46:58 2010 for CWB by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Thu Aug 5 03:44:32 2010 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

@@ -32,7 +32,7 @@
 <ul>
 <li>#define <a class="el" href="macros_8h.html#a5d50d900b1dc525df2581585e1b9d477">new</a>(T)&nbsp;&nbsp;&nbsp;(T *)cl_malloc(sizeof(T))
 <dl class="el"><dd class="mdescRight">Allocates a new object.  <a href="#a5d50d900b1dc525df2581585e1b9d477"></a><br/></dl><li>#define <a class="el" href="macros_8h.html#a1064d02af1aefec3388cb9b9581c9190">New</a>(P, T)&nbsp;&nbsp;&nbsp;P = (T *)cl_malloc(sizeof(T))
-<dl class="el"><dd class="mdescRight">Synonym for new (making it case-insensitive).  <a href="#a1064d02af1aefec3388cb9b9581c9190"></a><br/></dl><li>#define <a class="el" href="macros_8h.html#aedf9a4cdd75e574d55f252e31d2ec453">STREQ</a>(a, b)
+<dl class="el"><dd class="mdescRight">New-object allocator with alternative syntax.  <a href="#a1064d02af1aefec3388cb9b9581c9190"></a><br/></dl><li>#define <a class="el" href="macros_8h.html#aedf9a4cdd75e574d55f252e31d2ec453">STREQ</a>(a, b)
 <dl class="el"><dd class="mdescRight">Tests two strings for equality.  <a href="#aedf9a4cdd75e574d55f252e31d2ec453"></a><br/></dl><li>#define <a class="el" href="macros_8h.html#a3acffbd305ee72dcd4593c0d8af64a4f">MIN</a>(a, b)&nbsp;&nbsp;&nbsp;((a)&lt;(b) ? (a) : (b))
 <dl class="el"><dd class="mdescRight">Evaluates to the smaller of two integer arguments.  <a href="#a3acffbd305ee72dcd4593c0d8af64a4f"></a><br/></dl><li>#define <a class="el" href="macros_8h.html#afa99ec4acc4ecb2dc3c2d05da15d0e3f">MAX</a>(a, b)&nbsp;&nbsp;&nbsp;((a)&gt;(b) ? (a) : (b))
 <dl class="el"><dd class="mdescRight">Evaluates to the greater of two integer arguments.  <a href="#afa99ec4acc4ecb2dc3c2d05da15d0e3f"></a><br/></dl><li>#define <a class="el" href="macros_8h.html#a52cbe80f24d0e9f178f5d4884d559c13">ilist_start</a>(lw, ts, id)&nbsp;&nbsp;&nbsp;start_indented_list(lw, ts, id)
@@ -200,7 +200,7 @@
 
 <p>Evaluates to the greater of two integer arguments. </p>
 
-<p>Referenced by <a class="el" href="ranges_8h.html#a17f4d887a7131c68696a7507effd5b91">calculate_ranges()</a>, <a class="el" href="concordance_8h.html#a56419cf83985974f599ea0fa65f554ce">compose_kwic_line()</a>, and <a class="el" href="targets_8h.html#a8b35d277644a38526a9dd897fe1866f0">evaluate_target()</a>.</p>
+<p>Referenced by <a class="el" href="ranges_8h.html#a84d66c9e816d5a41ad2a419915e422a2">calculate_ranges()</a>, <a class="el" href="concordance_8h.html#a56419cf83985974f599ea0fa65f554ce">compose_kwic_line()</a>, and <a class="el" href="targets_8h.html#a8b35d277644a38526a9dd897fe1866f0">evaluate_target()</a>.</p>
 
 </div>
 </div>
@@ -227,7 +227,7 @@
 
 <p>Evaluates to the smaller of two integer arguments. </p>
 
-<p>Referenced by <a class="el" href="ranges_8h.html#a17f4d887a7131c68696a7507effd5b91">calculate_ranges()</a>, <a class="el" href="concordance_8h.html#a56419cf83985974f599ea0fa65f554ce">compose_kwic_line()</a>, <a class="el" href="ranges_8c.html#ab219ee0392ac5d55d43c014e9f42e044">i2compare()</a>, <a class="el" href="eval_8c.html#ad49aedc126aa9ab11de81b6c5d62db6a">meet_mu()</a>, <a class="el" href="matchlist_8h.html#aceac8bbec1e489f033a2bee302b1b193">Setop()</a>, <a class="el" href="eval_8c.html#adb7ad0a24759f5f36340f8b66bb70d79">simulate()</a>, and <a class="el" href="ranges_8c.html#acaf44817c0945551b1efa5d7cedf0dc2">srt_strcmp()</a>.</p>
+<p>Referenced by <a class="el" href="ranges_8h.html#a84d66c9e816d5a41ad2a419915e422a2">calculate_ranges()</a>, <a class="el" href="special-chars_8c.html#a7e46e4e07cae0f3d6f7a244b305cc83e">cl_string_qsort_compare()</a>, <a class="el" href="concordance_8h.html#a56419cf83985974f599ea0fa65f554ce">compose_kwic_line()</a>, <a class="el" href="ranges_8c.html#ab219ee0392ac5d55d43c014e9f42e044">i2compare()</a>, <a class="el" href="eval_8c.html#ad49aedc126aa9ab11de81b6c5d62db6a">meet_mu()</a>, <a class="el" href="matchlist_8h.html#aceac8bbec1e489f033a2bee302b1b193">Setop()</a>, <a class="el" href="eval_8c.html#adb7ad0a24759f5f36340f8b66bb70d79">simulate()</a>, and <a class="el" href="ranges_8c.html#acaf44817c0945551b1efa5d7cedf0dc2">srt_strcmp()</a>.</p>
 
 </div>
 </div>
@@ -252,7 +252,7 @@
 </div>
 <div class="memdoc">
 
-<p>Synonym for new (making it case-insensitive). </p>
+<p>New-object allocator with alternative syntax. </p>
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="macros_8h.html#a5d50d900b1dc525df2581585e1b9d477" title="Allocates a new object.">new</a> </dd></dl>
 
 <p>Referenced by <a class="el" href="corpmanag_8c.html#a6971e7cc89868423f1044529eb3047da">GetSystemCorpus()</a>, and <a class="el" href="corpmanag_8c.html#a29e8c045958457814bbb47c44cb6383e">NewCL()</a>.</p>
@@ -283,7 +283,7 @@
   </table>
   </dd>
 </dl>
-<dl class="return"><dt><b>Returns:</b></dt><dd>A pointer to the new "object" memory allocation macros </dd></dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>A pointer to the new "object" </dd></dl>
 
 <p>Referenced by <a class="el" href="parse__actions_8h.html#a4d494e76da98d09f20a77d1dfb9b7fd2">do_undump()</a>.</p>
 
@@ -410,7 +410,7 @@
 
 <p>References <a class="el" href="macros_8c.html#ae9f8d30066d27bcbfdc9f8a24d9b44e3">ilist_cursor</a>, <a class="el" href="macros_8c.html#a665f5d4921b4373a213f6063a7f7a2fe">ilist_linewidth</a>, <a class="el" href="macros_8c.html#a2f86fe2e6cb748049ab2527320f7ff4e">ilist_tab</a>, and <a class="el" href="macros_8c.html#a1b27ed98d3464dc245eba9bb74fe5df5">print_indented_list_br()</a>.</p>
 
-<p>Referenced by <a class="el" href="macro_8h.html#a23de683b4d0fd2cc39ba4a0ba668c179">list_macros()</a>, <a class="el" href="parse__actions_8c.html#a0bcea45b7581bd6cbc9a79972c8ffe7f">printSingleVariableValue()</a>, <a class="el" href="cwb-describe-corpus_8c.html#a5af56c0efa9b66a03a273253a5221e4a">show_attribute_names()</a>, and <a class="el" href="corpmanag_8c.html#a0cbf57d76b0c6eece0dc3fd61aa7eb92">show_corpora_files1()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-describe-corpus_8c.html#a7e8fd5e0d125d848233198d5275f18d7">describecorpus_show_attribute_names()</a>, <a class="el" href="macro_8h.html#a23de683b4d0fd2cc39ba4a0ba668c179">list_macros()</a>, <a class="el" href="parse__actions_8c.html#a0bcea45b7581bd6cbc9a79972c8ffe7f">printSingleVariableValue()</a>, and <a class="el" href="corpmanag_8c.html#a0cbf57d76b0c6eece0dc3fd61aa7eb92">show_corpora_files1()</a>.</p>
 
 </div>
 </div>
@@ -597,12 +597,12 @@
 
 <p>References <a class="el" href="macros_8c.html#ae9f8d30066d27bcbfdc9f8a24d9b44e3">ilist_cursor</a>, <a class="el" href="macros_8h.html#abd0bddac9cb876352871f36c6b6b61b4">ILIST_INDENT</a>, <a class="el" href="macros_8c.html#aee846f6bd52ddc31bb8390d164932b74">ilist_indent</a>, <a class="el" href="macros_8h.html#ad08588fb87525f5b575939a5232b6004">ILIST_LINEWIDTH</a>, <a class="el" href="macros_8c.html#a665f5d4921b4373a213f6063a7f7a2fe">ilist_linewidth</a>, <a class="el" href="macros_8c.html#a597bd71e7ba8bfaa813c8b83f82bd6ad">ilist_print_blanks()</a>, <a class="el" href="macros_8h.html#a5977776356033be05ee5f73a6dec12b3">ILIST_TAB</a>, and <a class="el" href="macros_8c.html#a2f86fe2e6cb748049ab2527320f7ff4e">ilist_tab</a>.</p>
 
-<p>Referenced by <a class="el" href="macro_8h.html#a23de683b4d0fd2cc39ba4a0ba668c179">list_macros()</a>, <a class="el" href="parse__actions_8c.html#a0bcea45b7581bd6cbc9a79972c8ffe7f">printSingleVariableValue()</a>, <a class="el" href="cwb-describe-corpus_8c.html#a5af56c0efa9b66a03a273253a5221e4a">show_attribute_names()</a>, and <a class="el" href="corpmanag_8c.html#a0cbf57d76b0c6eece0dc3fd61aa7eb92">show_corpora_files1()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-describe-corpus_8c.html#a7e8fd5e0d125d848233198d5275f18d7">describecorpus_show_attribute_names()</a>, <a class="el" href="macro_8h.html#a23de683b4d0fd2cc39ba4a0ba668c179">list_macros()</a>, <a class="el" href="parse__actions_8c.html#a0bcea45b7581bd6cbc9a79972c8ffe7f">printSingleVariableValue()</a>, and <a class="el" href="corpmanag_8c.html#a0cbf57d76b0c6eece0dc3fd61aa7eb92">show_corpora_files1()</a>.</p>
 
 </div>
 </div>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Mon Aug 2 06:46:58 2010 for CWB by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Thu Aug 5 03:44:32 2010 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

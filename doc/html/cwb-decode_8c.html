@@ -60,9 +60,9 @@
 </ul>
 <h2>Functions</h2>
 <ul>
-<li>void <a class="el" href="cwb-decode_8c.html#a919b69e333b16392f3afa989c19765fa">cleanup</a> (int error_code)
-<dl class="el"><dd class="mdescRight">Cleans up memory prior to an error-prompted exit.  <a href="#a919b69e333b16392f3afa989c19765fa"></a><br/></dl><li>void <a class="el" href="cwb-decode_8c.html#af80413ba5688ac7960468de778e6f12b">usage</a> (int exit_code)
-<dl class="el"><dd class="mdescRight">Prints a usage message and exits the program.  <a href="#af80413ba5688ac7960468de778e6f12b"></a><br/></dl><li>int <a class="el" href="cwb-decode_8c.html#a5ea55cc614294723f5f189166a290525">is_num</a> (char *s)
+<li>void <a class="el" href="cwb-decode_8c.html#a54f67f8a8844e932573da86037cf4d15">decode_cleanup</a> (int error_code)
+<dl class="el"><dd class="mdescRight">Cleans up memory prior to an error-prompted exit.  <a href="#a54f67f8a8844e932573da86037cf4d15"></a><br/></dl><li>void <a class="el" href="cwb-decode_8c.html#af5f2bf327a0159297c449e347860adbe">decode_usage</a> (int exit_code)
+<dl class="el"><dd class="mdescRight">Prints a usage message and exits the program.  <a href="#af5f2bf327a0159297c449e347860adbe"></a><br/></dl><li>int <a class="el" href="cwb-decode_8c.html#a5ea55cc614294723f5f189166a290525">is_num</a> (char *s)
 <dl class="el"><dd class="mdescRight">Check whether a string represents a number.  <a href="#a5ea55cc614294723f5f189166a290525"></a><br/></dl><li>char * <a class="el" href="cwb-decode_8c.html#a0ed6494b0edce9f87ee21a9d38b08523">lisp_string</a> (char *s)
 <li>char * <a class="el" href="cwb-decode_8c.html#ab71db87d9e68160272bec013ccefff40">xml_string</a> (char *s)
 <li>void <a class="el" href="cwb-decode_8c.html#a4645a3249d8e4194b9eddc886ccc759f">print_xml_declaration</a> (void)
@@ -199,7 +199,7 @@
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="union___attribute.html#a92ee130caba4408ab4de51c602910107">_Attribute::any</a>, <a class="el" href="cwb-decode_8c.html#a3c6853c4db2a817f151355b7f338c10c">attr_member()</a>, <a class="el" href="cwb-compress-rdx_8c.html#a919b69e333b16392f3afa989c19765fa">cleanup()</a>, <a class="el" href="cwb-compress-rdx_8c.html#a0360462590048e1a217c595d8ec3ad5b">corpus_id</a>, <a class="el" href="cwb-decode_8c.html#a34a7d47b1d3fe7b2a401f99657966a7b">MAX_ATTRS</a>, and <a class="el" href="cwb-decode_8c.html#a57b9291b1a68436afd2693c3bf68dcc6">print_list_index</a>.</p>
+<p>References <a class="el" href="union___attribute.html#a92ee130caba4408ab4de51c602910107">_Attribute::any</a>, <a class="el" href="cwb-decode_8c.html#a3c6853c4db2a817f151355b7f338c10c">attr_member()</a>, <a class="el" href="cwb-compress-rdx_8c.html#a0360462590048e1a217c595d8ec3ad5b">corpus_id</a>, <a class="el" href="cwb-decode_8c.html#a54f67f8a8844e932573da86037cf4d15">decode_cleanup()</a>, <a class="el" href="cwb-decode_8c.html#a34a7d47b1d3fe7b2a401f99657966a7b">MAX_ATTRS</a>, and <a class="el" href="cwb-decode_8c.html#a57b9291b1a68436afd2693c3bf68dcc6">print_list_index</a>.</p>
 
 <p>Referenced by <a class="el" href="cwb-decode_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>.</p>
 
@@ -240,12 +240,12 @@
 
 </div>
 </div>
-<a class="anchor" id="a919b69e333b16392f3afa989c19765fa"></a><!-- doxytag: member="cwb&#45;decode.c::cleanup" ref="a919b69e333b16392f3afa989c19765fa" args="(int error_code)" -->
+<a class="anchor" id="a54f67f8a8844e932573da86037cf4d15"></a><!-- doxytag: member="cwb&#45;decode.c::decode_cleanup" ref="a54f67f8a8844e932573da86037cf4d15" args="(int error_code)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void cleanup </td>
+          <td class="memname">void decode_cleanup </td>
           <td>(</td>
           <td class="paramtype">int&nbsp;</td>
           <td class="paramname"> <em>error_code</em></td>
@@ -265,6 +265,38 @@
 </dl>
 
 <p>References <a class="el" href="cl_8h.html#a84e9c1d8aa172754ce5ed2d5d5b2be8c">drop_corpus</a>.</p>
+
+<p>Referenced by <a class="el" href="cwb-decode_8c.html#a5be28e38d8bc087ba46da1238a5f8d1c">add_attribute()</a>, <a class="el" href="cwb-decode_8c.html#af5f2bf327a0159297c449e347860adbe">decode_usage()</a>, <a class="el" href="cwb-decode_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>, and <a class="el" href="cwb-decode_8c.html#ae319baa29bcce4fc1184bda24e29f12f">show_position_values()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="af5f2bf327a0159297c449e347860adbe"></a><!-- doxytag: member="cwb&#45;decode.c::decode_usage" ref="af5f2bf327a0159297c449e347860adbe" args="(int exit_code)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void decode_usage </td>
+          <td>(</td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>exit_code</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Prints a usage message and exits the program. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>exit_code</em>&nbsp;</td><td>Value to be returned by the program when it exits. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>References <a class="el" href="cwb-decode_8c.html#a54f67f8a8844e932573da86037cf4d15">decode_cleanup()</a>, and <a class="el" href="options_8h.html#ab9e1449fd00c98428516f0b41eddcb10">progname</a>.</p>
+
+<p>Referenced by <a class="el" href="cwb-decode_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>.</p>
 
 </div>
 </div>
@@ -353,7 +385,7 @@
   </dd>
 </dl>
 
-<p>References <a class="el" href="cwb-decode_8c.html#a5be28e38d8bc087ba46da1238a5f8d1c">add_attribute()</a>, <a class="el" href="union___attribute.html#a92ee130caba4408ab4de51c602910107">_Attribute::any</a>, <a class="el" href="cl_8h.html#a52408881c837f635016f788716c715f8">ATT_ALIGN</a>, <a class="el" href="cl_8h.html#a3b60fdde6a7c8fbc535efaf526dbcb78">ATT_POS</a>, <a class="el" href="cl_8h.html#a81874b84793891ea3b8db58061820f1e">ATT_STRUC</a>, <a class="el" href="struct_t_corpus.html#a97504befdc17001f29ab2a0aa50d5c1f">TCorpus::attributes</a>, <a class="el" href="cl_8h.html#a8788fa329cb487fb06fe050207769061">central_corpus_directory</a>, <a class="el" href="cdaccess_8c.html#ae9db76b80522e91e2735414a079e952b">cl_max_cpos()</a>, <a class="el" href="cl_8h.html#ae9e879605cdbdafc2a8939ae590b6aa0">cl_new_attribute</a>, <a class="el" href="cl_8h.html#aee476e23a98efac85d9a9288f18fe686">cl_new_corpus()</a>, <a class="el" href="cdaccess_8c.html#a43a3631745e05f8fafe5006141d57663">cl_struc_values()</a>, <a class="el" href="cwb-compress-rdx_8c.html#a919b69e333b16392f3afa989c19765fa">cleanup()</a>, <a class="el" href="cwb-decode_8c.html#a0af77925a490c13d34e06331f645138ea72df35c09a4164230098ad841688145f">ConclineMode</a>, <a class="el" href="cwb-compress-rdx_8c.html#a0360462590048e1a217c595d8ec3ad5b">corpus_id</a>, <a class="el" href="cwb-decode_8c.html#a0af77925a490c13d34e06331f645138eaaf4168a2031b7c4e5953c7690084392c">EncodeMode</a>, <a class="el" href="cwb-decode_8c.html#a9e8860bc46a9418756cc7b3ce481bfac">first_token</a>, <a class="el" href="cwb-check-input_8c.html#aa4f3a15de34c409bdec6ceacf93078ed">input_file</a>, <a class="el" href="cwb-lexdecode_8c.html#a8d01b74eac291eef6efa6f9d9857cd77">input_filename</a>, <a class="el" href="cwb-decode_8c.html#a5ea55cc614294723f5f189166a290525">is_num()</a>, <a class="el" href="cwb-decode_8c.html#a72e27dee31b1c4c6a504fbed29542d97">last</a>, <a class="el" href="cwb-decode_8c.html#a0af77925a490c13d34e06331f645138eaaf661c73cedf308f83181716e4e65787">LispMode</a>, <a class="el" href="cwb-decode_8c.html#adec43c9afe5c0094c40258d1169d26e2">MAX_PRINT_VALUES</a>, <a class="el" href="cwb-decode_8c.html#a5c5e9396ccdacc39d63ba2fa75979207">maxlast</a>, <a class="el" href="cwb-decode_8c.html#a1ea5d0cb93f22f7d0fdf804bd68c3326">mode</a>, <a class="el" href="cwb-decode_8c.html#a4645a3249d8e4194b9eddc886ccc759f">print_xml_declaration()</a>, <a class="el" href="cwb-decode_8c.html#a73e194c34e06d4be3b6df34421543443">printnum</a>, <a class="el" href="cwb-decode_8c.html#ab580315536405e5bc7e5d6453c9914e0">printValuesIndex</a>, <a class="el" href="options_8h.html#ab9e1449fd00c98428516f0b41eddcb10">progname</a>, <a class="el" href="cwb-align_8c.html#a9008cc92c9f9b4e6f09d0886e865c657">registry_directory</a>, <a class="el" href="cwb-decode_8c.html#ae319baa29bcce4fc1184bda24e29f12f">show_position_values()</a>, <a class="el" href="cwb-decode_8c.html#ab71929c7ca2eeeb5884e72551465195f">showSurroundingStructureValues()</a>, <a class="el" href="options_8c.html#ae8605e2b78cd4a81b6c6b5c30cb7366a">usage()</a>, <a class="el" href="cwb-decode_8c.html#ab60dec8c10f8636e9145733b0416a531">verify_print_value_list()</a>, <a class="el" href="cwb-decode_8c.html#a9b893f3996c4fc03d4b94fed6a02b62b">xml_compatible</a>, and <a class="el" href="cwb-decode_8c.html#a0af77925a490c13d34e06331f645138ead0b96059ec780d9d0d26d8c6ea9d8cb4">XMLMode</a>.</p>
+<p>References <a class="el" href="cwb-decode_8c.html#a5be28e38d8bc087ba46da1238a5f8d1c">add_attribute()</a>, <a class="el" href="union___attribute.html#a92ee130caba4408ab4de51c602910107">_Attribute::any</a>, <a class="el" href="cl_8h.html#a52408881c837f635016f788716c715f8">ATT_ALIGN</a>, <a class="el" href="cl_8h.html#a3b60fdde6a7c8fbc535efaf526dbcb78">ATT_POS</a>, <a class="el" href="cl_8h.html#a81874b84793891ea3b8db58061820f1e">ATT_STRUC</a>, <a class="el" href="struct_t_corpus.html#a97504befdc17001f29ab2a0aa50d5c1f">TCorpus::attributes</a>, <a class="el" href="cl_8h.html#a8788fa329cb487fb06fe050207769061">central_corpus_directory</a>, <a class="el" href="cdaccess_8c.html#ae9db76b80522e91e2735414a079e952b">cl_max_cpos()</a>, <a class="el" href="cl_8h.html#ae9e879605cdbdafc2a8939ae590b6aa0">cl_new_attribute</a>, <a class="el" href="cl_8h.html#aee476e23a98efac85d9a9288f18fe686">cl_new_corpus()</a>, <a class="el" href="cdaccess_8c.html#a43a3631745e05f8fafe5006141d57663">cl_struc_values()</a>, <a class="el" href="cwb-decode_8c.html#a0af77925a490c13d34e06331f645138ea72df35c09a4164230098ad841688145f">ConclineMode</a>, <a class="el" href="cwb-compress-rdx_8c.html#a0360462590048e1a217c595d8ec3ad5b">corpus_id</a>, <a class="el" href="cwb-decode_8c.html#a54f67f8a8844e932573da86037cf4d15">decode_cleanup()</a>, <a class="el" href="cwb-decode_8c.html#af5f2bf327a0159297c449e347860adbe">decode_usage()</a>, <a class="el" href="cwb-decode_8c.html#a0af77925a490c13d34e06331f645138eaaf4168a2031b7c4e5953c7690084392c">EncodeMode</a>, <a class="el" href="cwb-decode_8c.html#a9e8860bc46a9418756cc7b3ce481bfac">first_token</a>, <a class="el" href="cwb-check-input_8c.html#aa4f3a15de34c409bdec6ceacf93078ed">input_file</a>, <a class="el" href="cwb-lexdecode_8c.html#a8d01b74eac291eef6efa6f9d9857cd77">input_filename</a>, <a class="el" href="cwb-decode_8c.html#a5ea55cc614294723f5f189166a290525">is_num()</a>, <a class="el" href="cwb-decode_8c.html#a72e27dee31b1c4c6a504fbed29542d97">last</a>, <a class="el" href="cwb-decode_8c.html#a0af77925a490c13d34e06331f645138eaaf661c73cedf308f83181716e4e65787">LispMode</a>, <a class="el" href="cwb-decode_8c.html#adec43c9afe5c0094c40258d1169d26e2">MAX_PRINT_VALUES</a>, <a class="el" href="cwb-decode_8c.html#a5c5e9396ccdacc39d63ba2fa75979207">maxlast</a>, <a class="el" href="cwb-decode_8c.html#a1ea5d0cb93f22f7d0fdf804bd68c3326">mode</a>, <a class="el" href="cwb-decode_8c.html#a4645a3249d8e4194b9eddc886ccc759f">print_xml_declaration()</a>, <a class="el" href="cwb-decode_8c.html#a73e194c34e06d4be3b6df34421543443">printnum</a>, <a class="el" href="cwb-decode_8c.html#ab580315536405e5bc7e5d6453c9914e0">printValuesIndex</a>, <a class="el" href="options_8h.html#ab9e1449fd00c98428516f0b41eddcb10">progname</a>, <a class="el" href="cwb-align_8c.html#a9008cc92c9f9b4e6f09d0886e865c657">registry_directory</a>, <a class="el" href="cwb-decode_8c.html#ae319baa29bcce4fc1184bda24e29f12f">show_position_values()</a>, <a class="el" href="cwb-decode_8c.html#ab71929c7ca2eeeb5884e72551465195f">showSurroundingStructureValues()</a>, <a class="el" href="cwb-decode_8c.html#ab60dec8c10f8636e9145733b0416a531">verify_print_value_list()</a>, <a class="el" href="cwb-decode_8c.html#a9b893f3996c4fc03d4b94fed6a02b62b">xml_compatible</a>, and <a class="el" href="cwb-decode_8c.html#a0af77925a490c13d34e06331f645138ead0b96059ec780d9d0d26d8c6ea9d8cb4">XMLMode</a>.</p>
 
 </div>
 </div>
@@ -410,7 +442,7 @@
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="struct_s_att_region.html#af00339ab2b93314bfe3875960b78db02">SAttRegion::annot</a>, <a class="el" href="union___attribute.html#a92ee130caba4408ab4de51c602910107">_Attribute::any</a>, <a class="el" href="cl_8h.html#a52408881c837f635016f788716c715f8">ATT_ALIGN</a>, <a class="el" href="cl_8h.html#a2c160b428bf385a597f51dcfaa38d9cc">ATT_DYN</a>, <a class="el" href="cl_8h.html#a3b60fdde6a7c8fbc535efaf526dbcb78">ATT_POS</a>, <a class="el" href="cl_8h.html#a81874b84793891ea3b8db58061820f1e">ATT_STRUC</a>, <a class="el" href="cl_8h.html#a1fa2e2ab47bd2c689b68a78bdac22028">CDA_OK</a>, <a class="el" href="cl_8h.html#a8807f044dd47ab4d1f1c3eba26b2646c">cderrno</a>, <a class="el" href="cl_8h.html#a33429ad7ed835fc0490b87153b7acc03">cdperror</a>, <a class="el" href="cdaccess_8c.html#a5e8f82bb50cbb95415de2af1e910e1ff">cl_alg2cpos()</a>, <a class="el" href="cdaccess_8c.html#addbf0e574a3e8e68431b86ffd7cac8ad">cl_cpos2alg()</a>, <a class="el" href="cdaccess_8c.html#a1fc39a03758d250ec06499a0692da6ff">cl_cpos2str()</a>, <a class="el" href="cdaccess_8c.html#ab9dfb6cb8218e98068496f9dccd17243">cl_cpos2struc()</a>, <a class="el" href="cdaccess_8c.html#ae8f5999fc90bbcd27d47126a48e83adb">cl_cpos2struc2cpos()</a>, <a class="el" href="cdaccess_8c.html#af0793556b93840555bca436b399a00bd">cl_struc2cpos()</a>, <a class="el" href="cdaccess_8c.html#a68c164c901d2ec3304e981bc85320bf5">cl_struc2str()</a>, <a class="el" href="cdaccess_8c.html#a43a3631745e05f8fafe5006141d57663">cl_struc_values()</a>, <a class="el" href="cwb-compress-rdx_8c.html#a919b69e333b16392f3afa989c19765fa">cleanup()</a>, <a class="el" href="cwb-decode_8c.html#a0af77925a490c13d34e06331f645138ea72df35c09a4164230098ad841688145f">ConclineMode</a>, <a class="el" href="cwb-decode_8c.html#a0af77925a490c13d34e06331f645138eaaf4168a2031b7c4e5953c7690084392c">EncodeMode</a>, <a class="el" href="struct_s_att_region.html#abce9f5dc9c83f2639b72024fdee5d388">SAttRegion::end</a>, <a class="el" href="cl_8h.html#a1ba4bdbcb598ddac7ed04f53349046d2">get_struc_attribute</a>, <a class="el" href="cwb-decode_8c.html#a0ed6494b0edce9f87ee21a9d38b08523">lisp_string()</a>, <a class="el" href="cwb-decode_8c.html#a0af77925a490c13d34e06331f645138eaaf661c73cedf308f83181716e4e65787">LispMode</a>, <a class="el" href="cwb-decode_8c.html#a1ea5d0cb93f22f7d0fdf804bd68c3326">mode</a>, <a class="el" href="concordance_8c.html#ab6f8c360879da990ff0392572f3bf5fa">N_sar</a>, <a class="el" href="struct_s_att_region.html#ad547fb8186b526cb1b588daad4334fbe">SAttRegion::name</a>, <a class="el" href="cwb-decode_8c.html#a57b9291b1a68436afd2693c3bf68dcc6">print_list_index</a>, <a class="el" href="cwb-decode_8c.html#a73e194c34e06d4be3b6df34421543443">printnum</a>, <a class="el" href="concordance_8c.html#a6dd13315790061e19994ae094815df88">sar_sort_index</a>, <a class="el" href="concordance_8c.html#a208ca1c02f1d4343a36e6606c17fbaee">sort_s_att_regions()</a>, <a class="el" href="cwb-decode_8c.html#a0af77925a490c13d34e06331f645138ea9e43d0724b62b80f529e5afc8c364a47">StandardMode</a>, <a class="el" href="struct_s_att_region.html#a37722a150250e2a5a98e5e0d11e53449">SAttRegion::start</a>, <a class="el" href="union___attribute.html#ac765329451135abec74c45e1897abf26">_Attribute::type</a>, <a class="el" href="cwb-decode_8c.html#a9b893f3996c4fc03d4b94fed6a02b62b">xml_compatible</a>, <a class="el" href="cwb-decode_8c.html#ab71db87d9e68160272bec013ccefff40">xml_string()</a>, and <a class="el" href="cwb-decode_8c.html#a0af77925a490c13d34e06331f645138ead0b96059ec780d9d0d26d8c6ea9d8cb4">XMLMode</a>.</p>
+<p>References <a class="el" href="struct_s_att_region.html#af00339ab2b93314bfe3875960b78db02">SAttRegion::annot</a>, <a class="el" href="union___attribute.html#a92ee130caba4408ab4de51c602910107">_Attribute::any</a>, <a class="el" href="cl_8h.html#a52408881c837f635016f788716c715f8">ATT_ALIGN</a>, <a class="el" href="cl_8h.html#a2c160b428bf385a597f51dcfaa38d9cc">ATT_DYN</a>, <a class="el" href="cl_8h.html#a3b60fdde6a7c8fbc535efaf526dbcb78">ATT_POS</a>, <a class="el" href="cl_8h.html#a81874b84793891ea3b8db58061820f1e">ATT_STRUC</a>, <a class="el" href="cl_8h.html#a1fa2e2ab47bd2c689b68a78bdac22028">CDA_OK</a>, <a class="el" href="cl_8h.html#a8807f044dd47ab4d1f1c3eba26b2646c">cderrno</a>, <a class="el" href="cl_8h.html#a33429ad7ed835fc0490b87153b7acc03">cdperror</a>, <a class="el" href="cdaccess_8c.html#a5e8f82bb50cbb95415de2af1e910e1ff">cl_alg2cpos()</a>, <a class="el" href="cdaccess_8c.html#addbf0e574a3e8e68431b86ffd7cac8ad">cl_cpos2alg()</a>, <a class="el" href="cdaccess_8c.html#a1fc39a03758d250ec06499a0692da6ff">cl_cpos2str()</a>, <a class="el" href="cdaccess_8c.html#ab9dfb6cb8218e98068496f9dccd17243">cl_cpos2struc()</a>, <a class="el" href="cdaccess_8c.html#ae8f5999fc90bbcd27d47126a48e83adb">cl_cpos2struc2cpos()</a>, <a class="el" href="cdaccess_8c.html#af0793556b93840555bca436b399a00bd">cl_struc2cpos()</a>, <a class="el" href="cdaccess_8c.html#a68c164c901d2ec3304e981bc85320bf5">cl_struc2str()</a>, <a class="el" href="cdaccess_8c.html#a43a3631745e05f8fafe5006141d57663">cl_struc_values()</a>, <a class="el" href="cwb-decode_8c.html#a0af77925a490c13d34e06331f645138ea72df35c09a4164230098ad841688145f">ConclineMode</a>, <a class="el" href="cwb-decode_8c.html#a54f67f8a8844e932573da86037cf4d15">decode_cleanup()</a>, <a class="el" href="cwb-decode_8c.html#a0af77925a490c13d34e06331f645138eaaf4168a2031b7c4e5953c7690084392c">EncodeMode</a>, <a class="el" href="struct_s_att_region.html#abce9f5dc9c83f2639b72024fdee5d388">SAttRegion::end</a>, <a class="el" href="cl_8h.html#a1ba4bdbcb598ddac7ed04f53349046d2">get_struc_attribute</a>, <a class="el" href="cwb-decode_8c.html#a0ed6494b0edce9f87ee21a9d38b08523">lisp_string()</a>, <a class="el" href="cwb-decode_8c.html#a0af77925a490c13d34e06331f645138eaaf661c73cedf308f83181716e4e65787">LispMode</a>, <a class="el" href="cwb-decode_8c.html#a1ea5d0cb93f22f7d0fdf804bd68c3326">mode</a>, <a class="el" href="concordance_8c.html#ab6f8c360879da990ff0392572f3bf5fa">N_sar</a>, <a class="el" href="struct_s_att_region.html#ad547fb8186b526cb1b588daad4334fbe">SAttRegion::name</a>, <a class="el" href="cwb-decode_8c.html#a57b9291b1a68436afd2693c3bf68dcc6">print_list_index</a>, <a class="el" href="cwb-decode_8c.html#a73e194c34e06d4be3b6df34421543443">printnum</a>, <a class="el" href="concordance_8c.html#a6dd13315790061e19994ae094815df88">sar_sort_index</a>, <a class="el" href="concordance_8c.html#a208ca1c02f1d4343a36e6606c17fbaee">sort_s_att_regions()</a>, <a class="el" href="cwb-decode_8c.html#a0af77925a490c13d34e06331f645138ea9e43d0724b62b80f529e5afc8c364a47">StandardMode</a>, <a class="el" href="struct_s_att_region.html#a37722a150250e2a5a98e5e0d11e53449">SAttRegion::start</a>, <a class="el" href="union___attribute.html#ac765329451135abec74c45e1897abf26">_Attribute::type</a>, <a class="el" href="cwb-decode_8c.html#a9b893f3996c4fc03d4b94fed6a02b62b">xml_compatible</a>, <a class="el" href="cwb-decode_8c.html#ab71db87d9e68160272bec013ccefff40">xml_string()</a>, and <a class="el" href="cwb-decode_8c.html#a0af77925a490c13d34e06331f645138ead0b96059ec780d9d0d26d8c6ea9d8cb4">XMLMode</a>.</p>
 
 <p>Referenced by <a class="el" href="cwb-decode_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>.</p>
 
@@ -455,34 +487,6 @@
 <div class="memdoc">
 
 <p>References <a class="el" href="struct_s_att_region.html#abce9f5dc9c83f2639b72024fdee5d388">SAttRegion::end</a>, <a class="el" href="concordance_8c.html#ab6f8c360879da990ff0392572f3bf5fa">N_sar</a>, <a class="el" href="concordance_8c.html#a6dd13315790061e19994ae094815df88">sar_sort_index</a>, and <a class="el" href="struct_s_att_region.html#a37722a150250e2a5a98e5e0d11e53449">SAttRegion::start</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="af80413ba5688ac7960468de778e6f12b"></a><!-- doxytag: member="cwb&#45;decode.c::usage" ref="af80413ba5688ac7960468de778e6f12b" args="(int exit_code)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void usage </td>
-          <td>(</td>
-          <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>exit_code</em></td>
-          <td>&nbsp;)&nbsp;</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Prints a usage message and exits the program. </p>
-<dl><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>exit_code</em>&nbsp;</td><td>Value to be returned by the program when it exits. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p>References <a class="el" href="cwb-compress-rdx_8c.html#a919b69e333b16392f3afa989c19765fa">cleanup()</a>, and <a class="el" href="options_8h.html#ab9e1449fd00c98428516f0b41eddcb10">progname</a>.</p>
 
 </div>
 </div>
@@ -776,7 +780,7 @@
 </div>
 </div>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Mon Aug 2 06:46:58 2010 for CWB by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Thu Aug 5 03:44:32 2010 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

@@ -40,11 +40,11 @@
 <dl class="el"><dd class="mdescRight">number of config lines in the default config  <a href="#aeec628bc091f9e132870620cdc05c574"></a><br/></dl></ul>
 <h2>Functions</h2>
 <ul>
-<li>void <a class="el" href="cwb-align_8c.html#aa1187b70998f73cdb598833d6afaa30a">print_usage</a> (void)
-<dl class="el"><dd class="mdescRight">string containing location of the registry directory.  <a href="#aa1187b70998f73cdb598833d6afaa30a"></a><br/></dl><li>int <a class="el" href="cwb-align_8c.html#a06d3f055c2f30330b96d8ea5368b33a2">parse_args</a> (int ac, char *av[], int min_args)
-<dl class="el"><dd class="mdescRight">Parses the program's commandline arguments.  <a href="#a06d3f055c2f30330b96d8ea5368b33a2"></a><br/></dl><li>void <a class="el" href="cwb-align_8c.html#ab1ff1ba5f8cb7592c9e649eaba0ce02f">print_align_line</a> (FILE *fd, int f1, int l1, int f2, int l2, int quality)
-<dl class="el"><dd class="mdescRight">Prints an alignment line.  <a href="#ab1ff1ba5f8cb7592c9e649eaba0ce02f"></a><br/></dl><li>int <a class="el" href="cwb-align_8c.html#acceb1d5f58c5176ea7d0cffe04cc5fa3">do_alignment</a> (<a class="el" href="structfeature__maps__t.html">FMS</a> fms, int if1, int il1, int if2, int il2, FILE *outfile)
-<dl class="el"><dd class="mdescRight">Actually does the alignment.  <a href="#acceb1d5f58c5176ea7d0cffe04cc5fa3"></a><br/></dl><li>int <a class="el" href="cwb-align_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main</a> (int argc, char *argv[])
+<li>void <a class="el" href="cwb-align_8c.html#ae1e0d84cd7430ed154bfacc29bdbb1be">align_usage</a> (void)
+<dl class="el"><dd class="mdescRight">string containing location of the registry directory.  <a href="#ae1e0d84cd7430ed154bfacc29bdbb1be"></a><br/></dl><li>int <a class="el" href="cwb-align_8c.html#a17371073c35237e8b8ab22fca70902d1">align_parse_args</a> (int ac, char *av[], int min_args)
+<dl class="el"><dd class="mdescRight">Parses the program's commandline arguments.  <a href="#a17371073c35237e8b8ab22fca70902d1"></a><br/></dl><li>void <a class="el" href="cwb-align_8c.html#a8e8f950082808b27f2e35821a6a1d52c">align_print_line</a> (FILE *fd, int f1, int l1, int f2, int l2, int quality)
+<dl class="el"><dd class="mdescRight">Prints an alignment line.  <a href="#a8e8f950082808b27f2e35821a6a1d52c"></a><br/></dl><li>int <a class="el" href="cwb-align_8c.html#ae0e843e0355a620061045ce69974e007">align_do_alignment</a> (<a class="el" href="structfeature__maps__t.html">FMS</a> fms, int if1, int il1, int if2, int il2, FILE *outfile)
+<dl class="el"><dd class="mdescRight">Actually does the alignment.  <a href="#ae0e843e0355a620061045ce69974e007"></a><br/></dl><li>int <a class="el" href="cwb-align_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main</a> (int argc, char *argv[])
 <dl class="el"><dd class="mdescRight">Main function for cwb-align.  <a href="#a0ddf1224851353fc92bfbff6f499fa97"></a><br/></dl></ul>
 <h2>Variables</h2>
 <ul>
@@ -92,17 +92,17 @@
 
 <p>number of config lines in the default config </p>
 
-<p>Referenced by <a class="el" href="cwb-align_8c.html#aa1187b70998f73cdb598833d6afaa30a">print_usage()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-align_8c.html#ae1e0d84cd7430ed154bfacc29bdbb1be">align_usage()</a>.</p>
 
 </div>
 </div>
 <hr/><h2>Function Documentation</h2>
-<a class="anchor" id="acceb1d5f58c5176ea7d0cffe04cc5fa3"></a><!-- doxytag: member="cwb&#45;align.c::do_alignment" ref="acceb1d5f58c5176ea7d0cffe04cc5fa3" args="(FMS fms, int if1, int il1, int if2, int il2, FILE *outfile)" -->
+<a class="anchor" id="ae0e843e0355a620061045ce69974e007"></a><!-- doxytag: member="cwb&#45;align.c::align_do_alignment" ref="ae0e843e0355a620061045ce69974e007" args="(FMS fms, int if1, int il1, int if2, int il2, FILE *outfile)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int do_alignment </td>
+          <td class="memname">int align_do_alignment </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="structfeature__maps__t.html">FMS</a>&nbsp;</td>
           <td class="paramname"> <em>fms</em>, </td>
@@ -148,7 +148,7 @@
 
 <p>Actually does the alignment. </p>
 <p>This function run a best_path alignment on sentence regions [f1,l1]x[f2,l2] and writes the result to {outfile} (in .align format).</p>
-<p>Usage: steps = do_alignment(FMS, f1, l1, f2, l2, outfile);</p>
+<p>Usage: steps = align_do_alignment(FMS, f1, l1, f2, l2, outfile);</p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>fms</em>&nbsp;</td><td>The feature map to use in best_path alignment. </td></tr>
@@ -161,56 +161,18 @@
   </dd>
 </dl>
 
-<p>References <a class="el" href="cwb-align_8c.html#a4b5a7d3f565a28f87e850d34d009fb7f">beam_width</a>, <a class="el" href="feature__maps_8c.html#ae625acd3e78c025421432ee6d4b61553">best_path()</a>, <a class="el" href="feature__maps_8c.html#a9c4519fb53f3d68a463eca149fdad7e8">feature_match()</a>, <a class="el" href="cwb-align_8c.html#ab1ff1ba5f8cb7592c9e649eaba0ce02f">print_align_line()</a>, <a class="el" href="cwb-align_8c.html#a0c7aa4cf390a8f1f87a4f550a77c5c04">split_factor</a>, and <a class="el" href="cwb-align-encode_8c.html#a0b2caeb4b6f130be43e5a2f0267dd453">verbose</a>.</p>
+<p>References <a class="el" href="cwb-align_8c.html#a8e8f950082808b27f2e35821a6a1d52c">align_print_line()</a>, <a class="el" href="cwb-align_8c.html#a4b5a7d3f565a28f87e850d34d009fb7f">beam_width</a>, <a class="el" href="feature__maps_8c.html#ae625acd3e78c025421432ee6d4b61553">best_path()</a>, <a class="el" href="feature__maps_8c.html#a9c4519fb53f3d68a463eca149fdad7e8">feature_match()</a>, <a class="el" href="cwb-align_8c.html#a0c7aa4cf390a8f1f87a4f550a77c5c04">split_factor</a>, and <a class="el" href="cwb-align-encode_8c.html#a0b2caeb4b6f130be43e5a2f0267dd453">verbose</a>.</p>
 
 <p>Referenced by <a class="el" href="cwb-align_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a0ddf1224851353fc92bfbff6f499fa97"></a><!-- doxytag: member="cwb&#45;align.c::main" ref="a0ddf1224851353fc92bfbff6f499fa97" args="(int argc, char *argv[])" -->
+<a class="anchor" id="a17371073c35237e8b8ab22fca70902d1"></a><!-- doxytag: member="cwb&#45;align.c::align_parse_args" ref="a17371073c35237e8b8ab22fca70902d1" args="(int ac, char *av[], int min_args)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int main </td>
-          <td>(</td>
-          <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>argc</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">char *&nbsp;</td>
-          <td class="paramname"> <em>argv</em>[]</td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Main function for cwb-align. </p>
-<dl><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>argc</em>&nbsp;</td><td>Number of command-line arguments. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>argv</em>&nbsp;</td><td>Command-line arguments. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p>References <a class="el" href="cl_8h.html#a3b60fdde6a7c8fbc535efaf526dbcb78">ATT_POS</a>, <a class="el" href="cl_8h.html#a81874b84793891ea3b8db58061820f1e">ATT_STRUC</a>, <a class="el" href="cdaccess_8c.html#ab9dfb6cb8218e98068496f9dccd17243">cl_cpos2struc()</a>, <a class="el" href="cl_8h.html#a8e1f661b560fe3c7f17c891bdc5d5313">cl_delete_lexhash()</a>, <a class="el" href="cl_8h.html#a9e15a3c725711d9effd623b2f3e225be">cl_free</a>, <a class="el" href="cl_8h.html#a02b492683c9ea02da72c5716120d95f7">cl_lexhash_add()</a>, <a class="el" href="cl_8h.html#a40ecd11b83d5d4e90a47dbbc448de7e2">cl_lexhash_find()</a>, <a class="el" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="cdaccess_8c.html#ae9db76b80522e91e2735414a079e952b">cl_max_cpos()</a>, <a class="el" href="cdaccess_8c.html#a95ec41c7bd08fce95418a10c0d5c2da2">cl_max_struc()</a>, <a class="el" href="cl_8h.html#ae9e879605cdbdafc2a8939ae590b6aa0">cl_new_attribute</a>, <a class="el" href="cl_8h.html#aee476e23a98efac85d9a9288f18fe686">cl_new_corpus()</a>, <a class="el" href="cl_8h.html#a44f2692c5af7f16fc46640e31c7ae192">cl_new_lexhash()</a>, <a class="el" href="cdaccess_8c.html#af0793556b93840555bca436b399a00bd">cl_struc2cpos()</a>, <a class="el" href="cdaccess_8c.html#a68c164c901d2ec3304e981bc85320bf5">cl_struc2str()</a>, <a class="el" href="cdaccess_8c.html#a43a3631745e05f8fafe5006141d57663">cl_struc_values()</a>, <a class="el" href="cwb-align_8c.html#ac33cd46fdc13e84798f29ba36fca7c49">config</a>, <a class="el" href="cwb-align_8c.html#af9e9b17b172c26928f89b715e5502f7a">config_lines</a>, <a class="el" href="cwb-align-show_8c.html#a9aa8fde7b69fa0a8004b2b7ab6c0185c">corpus1_name</a>, <a class="el" href="cwb-align-show_8c.html#a5bb1f1f8d56854a17cb18018d2235b61">corpus2_name</a>, <a class="el" href="feature__maps_8c.html#a26d7a123154f8cd5cbb70da2c744af58">create_feature_maps()</a>, <a class="el" href="struct__cl__lexhash__entry.html#a22cfc15110f0fbe32289d1946195400b">_cl_lexhash_entry::data</a>, <a class="el" href="cwb-align_8c.html#acceb1d5f58c5176ea7d0cffe04cc5fa3">do_alignment()</a>, <a class="el" href="struct__cl__lexhash__entry_1_1__cl__lexhash__entry__data.html#adece183191b0e700e039e59101e06105">_cl_lexhash_entry_data::integer</a>, <a class="el" href="cwb-align_8c.html#a4359501f2d2bb2989ba32c3fc8c20278">outfile_name</a>, <a class="el" href="cwb-align-encode_8c.html#a06d3f055c2f30330b96d8ea5368b33a2">parse_args()</a>, <a class="el" href="cwb-align_8c.html#a95801f45a4e65616a77c9f92a80a13fd">pre1</a>, <a class="el" href="cwb-align_8c.html#a86ede747fb0237f46293e42d1908db50">pre2</a>, <a class="el" href="cwb-align_8c.html#ae118e756d68442942e48260a87cfdfeb">prealign_has_values</a>, <a class="el" href="cwb-align_8c.html#a2c3cc009bcc8aca0d7bf21f169b38f8e">prealign_name</a>, <a class="el" href="options_8h.html#ab9e1449fd00c98428516f0b41eddcb10">progname</a>, <a class="el" href="cwb-align_8c.html#a9008cc92c9f9b4e6f09d0886e865c657">registry_directory</a>, <a class="el" href="cwb-align_8c.html#a6c480a00c7475fce44b4175337e1bd6b">s_name</a>, <a class="el" href="cwb-align_8c.html#af68f0dccfb25d93948b065a91f6b8860">size1</a>, <a class="el" href="cwb-align_8c.html#a5174cedb24f38902087f99eb8a24bd14">size2</a>, <a class="el" href="cwb-align-show_8c.html#ad8e9d64c19879c6038f85aafd76e7ec3">word_name</a>, <a class="el" href="cwb-align_8c.html#a3ae3e10ca42453882be45010085fd2c7">ws1</a>, and <a class="el" href="cwb-align_8c.html#a99fa04c458a387b5dcb6ba6f120242a3">ws2</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a06d3f055c2f30330b96d8ea5368b33a2"></a><!-- doxytag: member="cwb&#45;align.c::parse_args" ref="a06d3f055c2f30330b96d8ea5368b33a2" args="(int ac, char *av[], int min_args)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int parse_args </td>
+          <td class="memname">int align_parse_args </td>
           <td>(</td>
           <td class="paramtype">int&nbsp;</td>
           <td class="paramname"> <em>ac</em>, </td>
@@ -237,7 +199,7 @@
 <div class="memdoc">
 
 <p>Parses the program's commandline arguments. </p>
-<p>Usage: optindex = parse_args(argc, argv, required_arguments);</p>
+<p>Usage: optindex = align_parse_args(argc, argv, required_arguments);</p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>ac</em>&nbsp;</td><td>The program's argc </td></tr>
@@ -248,16 +210,18 @@
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The value of optind after parsing, ie the index of the first argument in argv[] </dd></dl>
 
-<p>References <a class="el" href="cwb-align_8c.html#a4b5a7d3f565a28f87e850d34d009fb7f">beam_width</a>, <a class="el" href="cwb-align_8c.html#a4359501f2d2bb2989ba32c3fc8c20278">outfile_name</a>, <a class="el" href="cwb-align_8c.html#ae118e756d68442942e48260a87cfdfeb">prealign_has_values</a>, <a class="el" href="cwb-align_8c.html#a2c3cc009bcc8aca0d7bf21f169b38f8e">prealign_name</a>, <a class="el" href="cwb-align-show_8c.html#aa1187b70998f73cdb598833d6afaa30a">print_usage()</a>, <a class="el" href="options_8h.html#ab9e1449fd00c98428516f0b41eddcb10">progname</a>, <a class="el" href="cwb-align_8c.html#a9008cc92c9f9b4e6f09d0886e865c657">registry_directory</a>, <a class="el" href="cwb-align_8c.html#a0c7aa4cf390a8f1f87a4f550a77c5c04">split_factor</a>, <a class="el" href="cwb-align-encode_8c.html#a0b2caeb4b6f130be43e5a2f0267dd453">verbose</a>, and <a class="el" href="cwb-align-show_8c.html#ad8e9d64c19879c6038f85aafd76e7ec3">word_name</a>.</p>
+<p>References <a class="el" href="cwb-align_8c.html#ae1e0d84cd7430ed154bfacc29bdbb1be">align_usage()</a>, <a class="el" href="cwb-align_8c.html#a4b5a7d3f565a28f87e850d34d009fb7f">beam_width</a>, <a class="el" href="cwb-align_8c.html#a4359501f2d2bb2989ba32c3fc8c20278">outfile_name</a>, <a class="el" href="cwb-align_8c.html#ae118e756d68442942e48260a87cfdfeb">prealign_has_values</a>, <a class="el" href="cwb-align_8c.html#a2c3cc009bcc8aca0d7bf21f169b38f8e">prealign_name</a>, <a class="el" href="options_8h.html#ab9e1449fd00c98428516f0b41eddcb10">progname</a>, <a class="el" href="cwb-align_8c.html#a9008cc92c9f9b4e6f09d0886e865c657">registry_directory</a>, <a class="el" href="cwb-align_8c.html#a0c7aa4cf390a8f1f87a4f550a77c5c04">split_factor</a>, <a class="el" href="cwb-align-encode_8c.html#a0b2caeb4b6f130be43e5a2f0267dd453">verbose</a>, and <a class="el" href="cwb-align-show_8c.html#ad8e9d64c19879c6038f85aafd76e7ec3">word_name</a>.</p>
+
+<p>Referenced by <a class="el" href="cwb-align_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ab1ff1ba5f8cb7592c9e649eaba0ce02f"></a><!-- doxytag: member="cwb&#45;align.c::print_align_line" ref="ab1ff1ba5f8cb7592c9e649eaba0ce02f" args="(FILE *fd, int f1, int l1, int f2, int l2, int quality)" -->
+<a class="anchor" id="a8e8f950082808b27f2e35821a6a1d52c"></a><!-- doxytag: member="cwb&#45;align.c::align_print_line" ref="a8e8f950082808b27f2e35821a6a1d52c" args="(FILE *fd, int f1, int l1, int f2, int l2, int quality)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void print_align_line </td>
+          <td class="memname">void align_print_line </td>
           <td>(</td>
           <td class="paramtype">FILE *&nbsp;</td>
           <td class="paramname"> <em>fd</em>, </td>
@@ -304,7 +268,7 @@
 <p>Prints an alignment line. </p>
 <p>This function writes the given information to the specified file handle as a .align format line.</p>
 <p>A .align line looks like this: {f1} {l1} {f2} {l2} {type} [{quality}] eg. "140 169 137 180 1:2" means that corpus (position) ranges [140,169] and [137,180] form a 1:2 alignment pair .</p>
-<p>Usage: print_align_line(fd, f1, l1, f2, l2, quality);</p>
+<p>Usage: align_print_line(fd, f1, l1, f2, l2, quality);</p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>fd</em>&nbsp;</td><td>File handle to print to. </td></tr>
@@ -319,16 +283,16 @@
 
 <p>References <a class="el" href="cdaccess_8c.html#af0793556b93840555bca436b399a00bd">cl_struc2cpos()</a>.</p>
 
-<p>Referenced by <a class="el" href="cwb-align_8c.html#acceb1d5f58c5176ea7d0cffe04cc5fa3">do_alignment()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-align_8c.html#ae0e843e0355a620061045ce69974e007">align_do_alignment()</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="aa1187b70998f73cdb598833d6afaa30a"></a><!-- doxytag: member="cwb&#45;align.c::print_usage" ref="aa1187b70998f73cdb598833d6afaa30a" args="(void)" -->
+<a class="anchor" id="ae1e0d84cd7430ed154bfacc29bdbb1be"></a><!-- doxytag: member="cwb&#45;align.c::align_usage" ref="ae1e0d84cd7430ed154bfacc29bdbb1be" args="(void)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void print_usage </td>
+          <td class="memname">void align_usage </td>
           <td>(</td>
           <td class="paramtype">void&nbsp;</td>
           <td class="paramname"></td>
@@ -343,6 +307,46 @@
 <p>Prints a message describing how to use the program to STDERR and then exits. </p>
 
 <p>References <a class="el" href="cwb-align_8c.html#a9b0fad173d12ac0805a35dcb8ffdb49d">default_config</a>, <a class="el" href="cwb-align_8c.html#aeec628bc091f9e132870620cdc05c574">DEFAULT_CONFIG_LINES</a>, and <a class="el" href="options_8h.html#ab9e1449fd00c98428516f0b41eddcb10">progname</a>.</p>
+
+<p>Referenced by <a class="el" href="cwb-align_8c.html#a17371073c35237e8b8ab22fca70902d1">align_parse_args()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a0ddf1224851353fc92bfbff6f499fa97"></a><!-- doxytag: member="cwb&#45;align.c::main" ref="a0ddf1224851353fc92bfbff6f499fa97" args="(int argc, char *argv[])" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int main </td>
+          <td>(</td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>argc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&nbsp;</td>
+          <td class="paramname"> <em>argv</em>[]</td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Main function for cwb-align. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>argc</em>&nbsp;</td><td>Number of command-line arguments. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>argv</em>&nbsp;</td><td>Command-line arguments. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>References <a class="el" href="cwb-align_8c.html#ae0e843e0355a620061045ce69974e007">align_do_alignment()</a>, <a class="el" href="cwb-align_8c.html#a17371073c35237e8b8ab22fca70902d1">align_parse_args()</a>, <a class="el" href="cl_8h.html#a3b60fdde6a7c8fbc535efaf526dbcb78">ATT_POS</a>, <a class="el" href="cl_8h.html#a81874b84793891ea3b8db58061820f1e">ATT_STRUC</a>, <a class="el" href="cdaccess_8c.html#ab9dfb6cb8218e98068496f9dccd17243">cl_cpos2struc()</a>, <a class="el" href="cl_8h.html#a8e1f661b560fe3c7f17c891bdc5d5313">cl_delete_lexhash()</a>, <a class="el" href="cl_8h.html#a9e15a3c725711d9effd623b2f3e225be">cl_free</a>, <a class="el" href="cl_8h.html#a02b492683c9ea02da72c5716120d95f7">cl_lexhash_add()</a>, <a class="el" href="cl_8h.html#a40ecd11b83d5d4e90a47dbbc448de7e2">cl_lexhash_find()</a>, <a class="el" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="cdaccess_8c.html#ae9db76b80522e91e2735414a079e952b">cl_max_cpos()</a>, <a class="el" href="cdaccess_8c.html#a95ec41c7bd08fce95418a10c0d5c2da2">cl_max_struc()</a>, <a class="el" href="cl_8h.html#ae9e879605cdbdafc2a8939ae590b6aa0">cl_new_attribute</a>, <a class="el" href="cl_8h.html#aee476e23a98efac85d9a9288f18fe686">cl_new_corpus()</a>, <a class="el" href="cl_8h.html#a44f2692c5af7f16fc46640e31c7ae192">cl_new_lexhash()</a>, <a class="el" href="cdaccess_8c.html#af0793556b93840555bca436b399a00bd">cl_struc2cpos()</a>, <a class="el" href="cdaccess_8c.html#a68c164c901d2ec3304e981bc85320bf5">cl_struc2str()</a>, <a class="el" href="cdaccess_8c.html#a43a3631745e05f8fafe5006141d57663">cl_struc_values()</a>, <a class="el" href="cwb-align_8c.html#ac33cd46fdc13e84798f29ba36fca7c49">config</a>, <a class="el" href="cwb-align_8c.html#af9e9b17b172c26928f89b715e5502f7a">config_lines</a>, <a class="el" href="cwb-align-show_8c.html#a9aa8fde7b69fa0a8004b2b7ab6c0185c">corpus1_name</a>, <a class="el" href="cwb-align-show_8c.html#a5bb1f1f8d56854a17cb18018d2235b61">corpus2_name</a>, <a class="el" href="feature__maps_8c.html#a26d7a123154f8cd5cbb70da2c744af58">create_feature_maps()</a>, <a class="el" href="struct__cl__lexhash__entry.html#a22cfc15110f0fbe32289d1946195400b">_cl_lexhash_entry::data</a>, <a class="el" href="struct__cl__lexhash__entry_1_1__cl__lexhash__entry__data.html#adece183191b0e700e039e59101e06105">_cl_lexhash_entry_data::integer</a>, <a class="el" href="cwb-align_8c.html#a4359501f2d2bb2989ba32c3fc8c20278">outfile_name</a>, <a class="el" href="cwb-align_8c.html#a95801f45a4e65616a77c9f92a80a13fd">pre1</a>, <a class="el" href="cwb-align_8c.html#a86ede747fb0237f46293e42d1908db50">pre2</a>, <a class="el" href="cwb-align_8c.html#ae118e756d68442942e48260a87cfdfeb">prealign_has_values</a>, <a class="el" href="cwb-align_8c.html#a2c3cc009bcc8aca0d7bf21f169b38f8e">prealign_name</a>, <a class="el" href="options_8h.html#ab9e1449fd00c98428516f0b41eddcb10">progname</a>, <a class="el" href="cwb-align_8c.html#a9008cc92c9f9b4e6f09d0886e865c657">registry_directory</a>, <a class="el" href="cwb-align_8c.html#a6c480a00c7475fce44b4175337e1bd6b">s_name</a>, <a class="el" href="cwb-align_8c.html#af68f0dccfb25d93948b065a91f6b8860">size1</a>, <a class="el" href="cwb-align_8c.html#a5174cedb24f38902087f99eb8a24bd14">size2</a>, <a class="el" href="cwb-align-show_8c.html#ad8e9d64c19879c6038f85aafd76e7ec3">word_name</a>, <a class="el" href="cwb-align_8c.html#a3ae3e10ca42453882be45010085fd2c7">ws1</a>, and <a class="el" href="cwb-align_8c.html#a99fa04c458a387b5dcb6ba6f120242a3">ws2</a>.</p>
 
 </div>
 </div>
@@ -360,7 +364,7 @@
 
 <p>best path search beam width </p>
 
-<p>Referenced by <a class="el" href="barlib_8h.html#ac695ffba5e269641abf859eeaa5de3e2">BAR_write()</a>, <a class="el" href="cwb-align_8c.html#acceb1d5f58c5176ea7d0cffe04cc5fa3">do_alignment()</a>, and <a class="el" href="cwb-align_8c.html#a06d3f055c2f30330b96d8ea5368b33a2">parse_args()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-align_8c.html#ae0e843e0355a620061045ce69974e007">align_do_alignment()</a>, <a class="el" href="cwb-align_8c.html#a17371073c35237e8b8ab22fca70902d1">align_parse_args()</a>, and <a class="el" href="barlib_8h.html#ac695ffba5e269641abf859eeaa5de3e2">BAR_write()</a>.</p>
 
 </div>
 </div>
@@ -485,7 +489,7 @@
 <li>4-grams get 2*3 + 4 = 10 units </li>
 </ul>
 
-<p>Referenced by <a class="el" href="cwb-align_8c.html#aa1187b70998f73cdb598833d6afaa30a">print_usage()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-align_8c.html#ae1e0d84cd7430ed154bfacc29bdbb1be">align_usage()</a>.</p>
 
 </div>
 </div>
@@ -502,7 +506,7 @@
 
 <p>name of the output file </p>
 
-<p>Referenced by <a class="el" href="cwb-align_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>, and <a class="el" href="cwb-align_8c.html#a06d3f055c2f30330b96d8ea5368b33a2">parse_args()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-align_8c.html#a17371073c35237e8b8ab22fca70902d1">align_parse_args()</a>, and <a class="el" href="cwb-align_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
 
 </div>
 </div>
@@ -583,7 +587,7 @@
 
 <p>boolean: if 1, regions with same ID values are pre-aligned </p>
 
-<p>Referenced by <a class="el" href="cwb-align_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>, and <a class="el" href="cwb-align_8c.html#a06d3f055c2f30330b96d8ea5368b33a2">parse_args()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-align_8c.html#a17371073c35237e8b8ab22fca70902d1">align_parse_args()</a>, and <a class="el" href="cwb-align_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
 
 </div>
 </div>
@@ -600,7 +604,7 @@
 
 <p>pre-alignment given by structural attribute </p>
 
-<p>Referenced by <a class="el" href="cwb-align_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>, and <a class="el" href="cwb-align_8c.html#a06d3f055c2f30330b96d8ea5368b33a2">parse_args()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-align_8c.html#a17371073c35237e8b8ab22fca70902d1">align_parse_args()</a>, and <a class="el" href="cwb-align_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
 
 </div>
 </div>
@@ -630,7 +634,7 @@
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="cwb-align_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>, and <a class="el" href="cwb-align_8c.html#a06d3f055c2f30330b96d8ea5368b33a2">parse_args()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-align_8c.html#a17371073c35237e8b8ab22fca70902d1">align_parse_args()</a>, and <a class="el" href="cwb-align_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
 
 </div>
 </div>
@@ -728,7 +732,7 @@
 
 <p>2:2 alignment split factor </p>
 
-<p>Referenced by <a class="el" href="cwb-align_8c.html#acceb1d5f58c5176ea7d0cffe04cc5fa3">do_alignment()</a>, and <a class="el" href="cwb-align_8c.html#a06d3f055c2f30330b96d8ea5368b33a2">parse_args()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-align_8c.html#ae0e843e0355a620061045ce69974e007">align_do_alignment()</a>, and <a class="el" href="cwb-align_8c.html#a17371073c35237e8b8ab22fca70902d1">align_parse_args()</a>.</p>
 
 </div>
 </div>
@@ -833,7 +837,7 @@
 </div>
 </div>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Mon Aug 2 06:46:58 2010 for CWB by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Thu Aug 5 03:44:32 2010 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

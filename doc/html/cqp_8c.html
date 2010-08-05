@@ -52,7 +52,7 @@
 <dl class="el"><dd class="mdescRight">restarts the CQP-query-language parser.  <a href="#ab657ddef65d43cc3ab8dfc2cad0ac5b8"></a><br/></dl><li>static void <a class="el" href="cqp_8c.html#a92701d8f60df8dd491de169a8a59a4f3">sigINT_signal_handler</a> (int signum)
 <dl class="el"><dd class="mdescRight">This is the signal handler function that is used for the interrupt signal (CTRL+C).  <a href="#a92701d8f60df8dd491de169a8a59a4f3"></a><br/></dl><li>void <a class="el" href="cqp_8c.html#abc72b12c7959ec9a5b3aa5269e4f7063">install_signal_handler</a> (void)
 <dl class="el"><dd class="mdescRight">Installs the interrupt signal handler function with the OS.  <a href="#abc72b12c7959ec9a5b3aa5269e4f7063"></a><br/></dl><li>int <a class="el" href="cqp_8c.html#a313990999a7a7c5275682411e9b58c89">initialize_cqp</a> (int argc, char **argv)
-<dl class="el"><dd class="mdescRight">Initialises the CQP program.  <a href="#a313990999a7a7c5275682411e9b58c89"></a><br/></dl><li>int <a class="el" href="cqp_8c.html#a7c30de93f06347a9bc939e324afd1472">cqp_parse_file</a> (FILE *fd, int exit_on_parse_errors)
+<dl class="el"><dd class="mdescRight">Initialises the CQP program (or cqpserver or cqpcl).  <a href="#a313990999a7a7c5275682411e9b58c89"></a><br/></dl><li>int <a class="el" href="cqp_8c.html#a7c30de93f06347a9bc939e324afd1472">cqp_parse_file</a> (FILE *fd, int exit_on_parse_errors)
 <dl class="el"><dd class="mdescRight">Parses a stream for CQP query syntax.  <a href="#a7c30de93f06347a9bc939e324afd1472"></a><br/></dl><li>int <a class="el" href="cqp_8c.html#aec03e7fa64e8cbd8372b7a586057fc0b">cqp_parse_string</a> (char *s)
 <dl class="el"><dd class="mdescRight">Parses a string for CQP query syntax.  <a href="#aec03e7fa64e8cbd8372b7a586057fc0b"></a><br/></dl><li>int <a class="el" href="cqp_8c.html#ada0b8c6476799a6aa1bb22cb48b7ab1d">setInterruptCallback</a> (<a class="el" href="cqp_8h.html#a8ecc4f9deea63ce7ebcf018b11c59673">InterruptCheckProc</a> f)
 <dl class="el"><dd class="mdescRight">Sets the interrupt callback function.  <a href="#ada0b8c6476799a6aa1bb22cb48b7ab1d"></a><br/></dl><li>void <a class="el" href="cqp_8c.html#ad9ad6575c276e42520539bb5b24246d7">CheckForInterrupts</a> (void)
@@ -191,7 +191,7 @@
 </div>
 <div class="memdoc">
 
-<p>Initialises the CQP program. </p>
+<p>Initialises the CQP program (or cqpserver or cqpcl). </p>
 <p>This function:</p>
 <ul>
 <li>initialises the global variables;</li>
@@ -234,6 +234,8 @@
 <div class="memdoc">
 
 <p>Installs the interrupt signal handler function with the OS. </p>
+<p>This function installs a Ctrl-C interrupt handler (clears EvaluationIsRunning flag). The function installed is sigINT_signal_handler.</p>
+<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="cqp_8c.html#a92701d8f60df8dd491de169a8a59a4f3" title="This is the signal handler function that is used for the interrupt signal (CTRL+C)...">sigINT_signal_handler</a> </dd></dl>
 
 <p>References <a class="el" href="output_8c.html#ac523a4b34d2f925e027d8f433de703c9">cqpmessage()</a>, <a class="el" href="cqp_8c.html#a92701d8f60df8dd491de169a8a59a4f3">sigINT_signal_handler()</a>, <a class="el" href="cqp_8h.html#a0468a49be67766bbb6399dca8289dc79">signal_handler_is_installed</a>, and <a class="el" href="output_8h.html#a9c2eeea9cd09fb001747ef4cc99399a4a48f2bb70fceb692a2dedd8cea496c44b">Warning</a>.</p>
 
@@ -394,7 +396,7 @@
 
 <p>Pointer for the interrupt callback function. </p>
 
-<p>Referenced by <a class="el" href="cqp_8h.html#a89535598e0344df2438777230713cb8b">CheckForInterrupts()</a>, and <a class="el" href="cqp_8h.html#ada0b8c6476799a6aa1bb22cb48b7ab1d">setInterruptCallback()</a>.</p>
+<p>Referenced by <a class="el" href="cqp_8h.html#ad9ad6575c276e42520539bb5b24246d7">CheckForInterrupts()</a>, and <a class="el" href="cqp_8h.html#ada0b8c6476799a6aa1bb22cb48b7ab1d">setInterruptCallback()</a>.</p>
 
 </div>
 </div>
@@ -487,7 +489,7 @@
 </div>
 </div>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Mon Aug 2 06:46:58 2010 for CWB by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Thu Aug 5 03:44:32 2010 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

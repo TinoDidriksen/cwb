@@ -79,11 +79,14 @@
 : <a class="el" href="attributes_8c.html#adef8f9aa77aeaedd53f49996ed69bdc6">attributes.c</a>
 , <a class="el" href="attributes_8h.html#adef8f9aa77aeaedd53f49996ed69bdc6">attributes.h</a>
 </li>
-<li>declare_range()
-: <a class="el" href="cwb-s-encode_8c.html#a308b8a258931e50ec1999b718db816ad">cwb-s-encode.c</a>
-</li>
 <li>decode_check_huff()
 : <a class="el" href="cwb-huffcode_8c.html#a774e9c4cc2dd18b1e82c4db3cc464395">cwb-huffcode.c</a>
+</li>
+<li>decode_cleanup()
+: <a class="el" href="cwb-decode_8c.html#a54f67f8a8844e932573da86037cf4d15">cwb-decode.c</a>
+</li>
+<li>decode_usage()
+: <a class="el" href="cwb-decode_8c.html#af5f2bf327a0159297c449e347860adbe">cwb-decode.c</a>
 </li>
 <li>decompress_check_reversed_index()
 : <a class="el" href="cwb-compress-rdx_8c.html#a6e572abf235d74b194d259cb97476a28">cwb-compress-rdx.c</a>
@@ -93,12 +96,12 @@
 , <a class="el" href="macro_8h.html#ab59abd6d37fac294aedb96f14fc21f82">macro.h</a>
 </li>
 <li>delete_interval()
-: <a class="el" href="ranges_8c.html#a3cbd7b5d080d6a90f71426cb6e061f11">ranges.c</a>
-, <a class="el" href="ranges_8h.html#a812cfca2bde8e3c60ef44bcefd213f5e">ranges.h</a>
+: <a class="el" href="ranges_8c.html#a169ecc0b1080da9e5a695c31fd43ccf4">ranges.c</a>
+, <a class="el" href="ranges_8h.html#a018ec0219a3460b29980c4c6e217b16b">ranges.h</a>
 </li>
 <li>delete_intervals()
-: <a class="el" href="ranges_8c.html#a58473513ba624d78b56c9424e790e50d">ranges.c</a>
-, <a class="el" href="ranges_8h.html#a0e580152c4bc78d99ac20ea3445c9181">ranges.h</a>
+: <a class="el" href="ranges_8h.html#a380a0ffa5288d08f4304bf0256230f90">ranges.h</a>
+, <a class="el" href="ranges_8c.html#aea1c8f1fab2d8c84e574fc1ac2948363">ranges.c</a>
 </li>
 <li>delete_macro_buffers()
 : <a class="el" href="macro_8c.html#a20609770576af56b3e76f794a708c0d6">macro.c</a>
@@ -127,13 +130,25 @@
 : <a class="el" href="corpus_8c.html#a5703da86de0749c60df13c9f6bc96c54">corpus.c</a>
 , <a class="el" href="corpus_8h.html#a5703da86de0749c60df13c9f6bc96c54">corpus.h</a>
 </li>
+<li>describecorpus_show_attribute_names()
+: <a class="el" href="cwb-describe-corpus_8c.html#a7e8fd5e0d125d848233198d5275f18d7">cwb-describe-corpus.c</a>
+</li>
+<li>describecorpus_show_basic_info()
+: <a class="el" href="cwb-describe-corpus_8c.html#a883ac2a03c2c5a982d37bb2cc0a51a59">cwb-describe-corpus.c</a>
+</li>
+<li>describecorpus_show_statistics()
+: <a class="el" href="cwb-describe-corpus_8c.html#a9feb4bfd0366c731ebddd2e7014a6f50">cwb-describe-corpus.c</a>
+</li>
+<li>describecorpus_usage()
+: <a class="el" href="cwb-describe-corpus_8c.html#af6030de411ccb672b3c31e9020db724d">cwb-describe-corpus.c</a>
+</li>
 <li>destroy_bitfield()
 : <a class="el" href="bitfields_8c.html#a203675ec8c83546558603bf24be6d938">bitfields.c</a>
 , <a class="el" href="bitfields_8h.html#a203675ec8c83546558603bf24be6d938">bitfields.h</a>
 </li>
 <li>DestroyAttributeList()
-: <a class="el" href="attlist_8h.html#ac69cc92e385b1dd966796466b80835f1">attlist.h</a>
-, <a class="el" href="attlist_8c.html#ac69cc92e385b1dd966796466b80835f1">attlist.c</a>
+: <a class="el" href="attlist_8c.html#ac69cc92e385b1dd966796466b80835f1">attlist.c</a>
+, <a class="el" href="attlist_8h.html#ac69cc92e385b1dd966796466b80835f1">attlist.h</a>
 </li>
 <li>dlclose()
 : <a class="el" href="dl__stub_8c.html#ae312d37cba783fc09132525164579287">dl_stub.c</a>
@@ -150,9 +165,6 @@
 <li>do_AddSubVariables()
 : <a class="el" href="parse__actions_8c.html#a2f1ff314ad45ddeb2c1a236742afdd0c">parse_actions.c</a>
 , <a class="el" href="parse__actions_8h.html#a2f1ff314ad45ddeb2c1a236742afdd0c">parse_actions.h</a>
-</li>
-<li>do_alignment()
-: <a class="el" href="cwb-align_8c.html#acceb1d5f58c5176ea7d0cffe04cc5fa3">cwb-align.c</a>
 </li>
 <li>do_AnchorPoint()
 : <a class="el" href="parse__actions_8c.html#a67ab4efdad31a2ff3c09fb171d7f40c3">parse_actions.c</a>
@@ -354,8 +366,8 @@
 , <a class="el" href="parse__actions_8h.html#a2d2735c622403fc1509ad9273e2cf368">parse_actions.h</a>
 </li>
 <li>do_RelExExpr()
-: <a class="el" href="parse__actions_8c.html#ad67ac0776cdb48adabee296796f0bb4b">parse_actions.c</a>
-, <a class="el" href="parse__actions_8h.html#ad67ac0776cdb48adabee296796f0bb4b">parse_actions.h</a>
+: <a class="el" href="parse__actions_8h.html#ad67ac0776cdb48adabee296796f0bb4b">parse_actions.h</a>
+, <a class="el" href="parse__actions_8c.html#ad67ac0776cdb48adabee296796f0bb4b">parse_actions.c</a>
 </li>
 <li>do_RelExpr()
 : <a class="el" href="parse__actions_8c.html#a2b9ea94991dbd56dc08e70795dfda1b5">parse_actions.c</a>
@@ -374,8 +386,8 @@
 , <a class="el" href="parse__actions_8c.html#ad4da04de5a7605db3ea12ef83dedb22b">parse_actions.c</a>
 </li>
 <li>do_set_target()
-: <a class="el" href="parse__actions_8c.html#aa1ebad48632aee98d703a98bfd8f0b43">parse_actions.c</a>
-, <a class="el" href="parse__actions_8h.html#aa1ebad48632aee98d703a98bfd8f0b43">parse_actions.h</a>
+: <a class="el" href="parse__actions_8h.html#aa1ebad48632aee98d703a98bfd8f0b43">parse_actions.h</a>
+, <a class="el" href="parse__actions_8c.html#aa1ebad48632aee98d703a98bfd8f0b43">parse_actions.c</a>
 </li>
 <li>do_setop()
 : <a class="el" href="parse__actions_8h.html#a8116142d45ab88ccc5a0920bdc5414b9">parse_actions.h</a>
@@ -389,8 +401,8 @@
 : <a class="el" href="cwb-lexdecode_8c.html#a21e71f17ac00f605db9328ae3148978c">cwb-lexdecode.c</a>
 </li>
 <li>do_SimpleVariableReference()
-: <a class="el" href="parse__actions_8c.html#af406a8af9cff2bd31c198317a544abd2">parse_actions.c</a>
-, <a class="el" href="parse__actions_8h.html#af406a8af9cff2bd31c198317a544abd2">parse_actions.h</a>
+: <a class="el" href="parse__actions_8h.html#af406a8af9cff2bd31c198317a544abd2">parse_actions.h</a>
+, <a class="el" href="parse__actions_8c.html#af406a8af9cff2bd31c198317a544abd2">parse_actions.c</a>
 </li>
 <li>do_size()
 : <a class="el" href="parse__actions_8h.html#ab66066aec7d7ed3395b865054960b1f3">parse_actions.h</a>
@@ -401,8 +413,8 @@
 , <a class="el" href="parse__actions_8h.html#abef33e4cd74e2930879529d33e18ede2">parse_actions.h</a>
 </li>
 <li>do_StandardQuery()
-: <a class="el" href="parse__actions_8h.html#a2aaabbb6bcc4e5210745065baaaf715c">parse_actions.h</a>
-, <a class="el" href="parse__actions_8c.html#a2aaabbb6bcc4e5210745065baaaf715c">parse_actions.c</a>
+: <a class="el" href="parse__actions_8c.html#a2aaabbb6bcc4e5210745065baaaf715c">parse_actions.c</a>
+, <a class="el" href="parse__actions_8h.html#a2aaabbb6bcc4e5210745065baaaf715c">parse_actions.h</a>
 </li>
 <li>do_start_timer()
 : <a class="el" href="parse__actions_8c.html#ae18e2e1023535a490e7a3483a6f2630f">parse_actions.c</a>
@@ -429,8 +441,8 @@
 , <a class="el" href="parse__actions_8c.html#a06c98c00bf6b4a96dbb6f20573a0c823">parse_actions.c</a>
 </li>
 <li>do_undump()
-: <a class="el" href="parse__actions_8h.html#a4d494e76da98d09f20a77d1dfb9b7fd2">parse_actions.h</a>
-, <a class="el" href="parse__actions_8c.html#a4d494e76da98d09f20a77d1dfb9b7fd2">parse_actions.c</a>
+: <a class="el" href="parse__actions_8c.html#a4d494e76da98d09f20a77d1dfb9b7fd2">parse_actions.c</a>
+, <a class="el" href="parse__actions_8h.html#a4d494e76da98d09f20a77d1dfb9b7fd2">parse_actions.h</a>
 </li>
 <li>do_UnionStatement()
 : <a class="el" href="parse__actions_8c.html#ab82ef271cc57700c4ae5549b919ecdc5">parse_actions.c</a>
@@ -444,16 +456,16 @@
 , <a class="el" href="parse__actions_8c.html#a7e4f1cbfcc87584152e6244f53203c42">parse_actions.c</a>
 </li>
 <li>do_XMLTag()
-: <a class="el" href="parse__actions_8h.html#a4335ddbb14865c031041a194e182ed92">parse_actions.h</a>
-, <a class="el" href="parse__actions_8c.html#a4335ddbb14865c031041a194e182ed92">parse_actions.c</a>
+: <a class="el" href="parse__actions_8c.html#a4335ddbb14865c031041a194e182ed92">parse_actions.c</a>
+, <a class="el" href="parse__actions_8h.html#a4335ddbb14865c031041a194e182ed92">parse_actions.h</a>
 </li>
 <li>drop_attribute()
 : <a class="el" href="attributes_8c.html#a926e9ecbe39d1cc48da5c6cd51a72a3d">attributes.c</a>
 , <a class="el" href="attributes_8h.html#a926e9ecbe39d1cc48da5c6cd51a72a3d">attributes.h</a>
 </li>
 <li>drop_component()
-: <a class="el" href="attributes_8h.html#ada208038f859d8e209fcaa4652153d88">attributes.h</a>
-, <a class="el" href="attributes_8c.html#a66619eaebc7dda823553ecbb76f86b89">attributes.c</a>
+: <a class="el" href="attributes_8c.html#a66619eaebc7dda823553ecbb76f86b89">attributes.c</a>
+, <a class="el" href="attributes_8h.html#ada208038f859d8e209fcaa4652153d88">attributes.h</a>
 </li>
 <li>drop_mapping()
 : <a class="el" href="class-mapping_8c.html#adf0c4c450ecd53d223c6c67c0bf63f92">class-mapping.c</a>
@@ -463,20 +475,20 @@
 : <a class="el" href="class-mapping_8c.html#a1b37040fc40f81cb1e5c735a914da79b">class-mapping.c</a>
 </li>
 <li>drop_temp_corpora()
-: <a class="el" href="corpmanag_8c.html#a1b955ef83dbea1eee94b9406d9b646e2">corpmanag.c</a>
-, <a class="el" href="corpmanag_8h.html#a1b955ef83dbea1eee94b9406d9b646e2">corpmanag.h</a>
+: <a class="el" href="corpmanag_8h.html#a1b955ef83dbea1eee94b9406d9b646e2">corpmanag.h</a>
+, <a class="el" href="corpmanag_8c.html#a1b955ef83dbea1eee94b9406d9b646e2">corpmanag.c</a>
 </li>
 <li>dropcorpus()
 : <a class="el" href="corpmanag_8h.html#a411a4b044a2214dc19180334cbcd1601">corpmanag.h</a>
 , <a class="el" href="corpmanag_8c.html#a411a4b044a2214dc19180334cbcd1601">corpmanag.c</a>
 </li>
 <li>droplabel()
-: <a class="el" href="symtab_8h.html#a6bef4ae75a3c342bc70d649d0df0d2c3">symtab.h</a>
-, <a class="el" href="symtab_8c.html#a6bef4ae75a3c342bc70d649d0df0d2c3">symtab.c</a>
+: <a class="el" href="symtab_8c.html#a6bef4ae75a3c342bc70d649d0df0d2c3">symtab.c</a>
+, <a class="el" href="symtab_8h.html#a6bef4ae75a3c342bc70d649d0df0d2c3">symtab.h</a>
 </li>
 <li>DropVariable()
-: <a class="el" href="variables_8c.html#a22f430e88ceb4ff011df266e2a078669">variables.c</a>
-, <a class="el" href="variables_8h.html#a22f430e88ceb4ff011df266e2a078669">variables.h</a>
+: <a class="el" href="variables_8h.html#a22f430e88ceb4ff011df266e2a078669">variables.h</a>
+, <a class="el" href="variables_8c.html#a22f430e88ceb4ff011df266e2a078669">variables.c</a>
 </li>
 <li>dump_heap()
 : <a class="el" href="cwb-huffcode_8c.html#aa5b0f382c2a477ae4fc0c0c3e356f0ce">cwb-huffcode.c</a>
@@ -485,16 +497,16 @@
 : <a class="el" href="regex2dfa_8c.html#a8f3fa23ac2d62f853feff77cac02be4d">regex2dfa.c</a>
 </li>
 <li>dup_reftab()
-: <a class="el" href="symtab_8h.html#ad710a07c833b7bbb5103038456f49dc0">symtab.h</a>
-, <a class="el" href="symtab_8c.html#ad710a07c833b7bbb5103038456f49dc0">symtab.c</a>
+: <a class="el" href="symtab_8c.html#ad710a07c833b7bbb5103038456f49dc0">symtab.c</a>
+, <a class="el" href="symtab_8h.html#ad710a07c833b7bbb5103038456f49dc0">symtab.h</a>
 </li>
 <li>duplicate_corpus()
-: <a class="el" href="corpmanag_8c.html#ab20d278862cada0d5427b8232a3b69ad">corpmanag.c</a>
-, <a class="el" href="corpmanag_8h.html#ab20d278862cada0d5427b8232a3b69ad">corpmanag.h</a>
+: <a class="el" href="corpmanag_8h.html#ab20d278862cada0d5427b8232a3b69ad">corpmanag.h</a>
+, <a class="el" href="corpmanag_8c.html#ab20d278862cada0d5427b8232a3b69ad">corpmanag.c</a>
 </li>
 </ul>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Mon Aug 2 06:46:58 2010 for CWB by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Thu Aug 5 03:44:32 2010 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

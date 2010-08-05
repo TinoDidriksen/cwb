@@ -97,11 +97,14 @@ Here is a list of all functions, variables, defines, enums, and typedefs with li
 : <a class="el" href="attributes_8c.html#adef8f9aa77aeaedd53f49996ed69bdc6">attributes.c</a>
 , <a class="el" href="attributes_8h.html#adef8f9aa77aeaedd53f49996ed69bdc6">attributes.h</a>
 </li>
-<li>declare_range()
-: <a class="el" href="cwb-s-encode_8c.html#a308b8a258931e50ec1999b718db816ad">cwb-s-encode.c</a>
-</li>
 <li>decode_check_huff()
 : <a class="el" href="cwb-huffcode_8c.html#a774e9c4cc2dd18b1e82c4db3cc464395">cwb-huffcode.c</a>
+</li>
+<li>decode_cleanup()
+: <a class="el" href="cwb-decode_8c.html#a54f67f8a8844e932573da86037cf4d15">cwb-decode.c</a>
+</li>
+<li>decode_usage()
+: <a class="el" href="cwb-decode_8c.html#af5f2bf327a0159297c449e347860adbe">cwb-decode.c</a>
 </li>
 <li>decompress_check_reversed_index()
 : <a class="el" href="cwb-compress-rdx_8c.html#a6e572abf235d74b194d259cb97476a28">cwb-compress-rdx.c</a>
@@ -153,12 +156,12 @@ Here is a list of all functions, variables, defines, enums, and typedefs with li
 , <a class="el" href="macro_8h.html#ab59abd6d37fac294aedb96f14fc21f82">macro.h</a>
 </li>
 <li>delete_interval()
-: <a class="el" href="ranges_8c.html#a3cbd7b5d080d6a90f71426cb6e061f11">ranges.c</a>
-, <a class="el" href="ranges_8h.html#a812cfca2bde8e3c60ef44bcefd213f5e">ranges.h</a>
+: <a class="el" href="ranges_8c.html#a169ecc0b1080da9e5a695c31fd43ccf4">ranges.c</a>
+, <a class="el" href="ranges_8h.html#a018ec0219a3460b29980c4c6e217b16b">ranges.h</a>
 </li>
 <li>delete_intervals()
-: <a class="el" href="ranges_8c.html#a58473513ba624d78b56c9424e790e50d">ranges.c</a>
-, <a class="el" href="ranges_8h.html#a0e580152c4bc78d99ac20ea3445c9181">ranges.h</a>
+: <a class="el" href="ranges_8c.html#aea1c8f1fab2d8c84e574fc1ac2948363">ranges.c</a>
+, <a class="el" href="ranges_8h.html#a380a0ffa5288d08f4304bf0256230f90">ranges.h</a>
 </li>
 <li>delete_macro_buffers()
 : <a class="el" href="macro_8c.html#a20609770576af56b3e76f794a708c0d6">macro.c</a>
@@ -189,6 +192,18 @@ Here is a list of all functions, variables, defines, enums, and typedefs with li
 <li>describe_corpus()
 : <a class="el" href="corpus_8c.html#a5703da86de0749c60df13c9f6bc96c54">corpus.c</a>
 , <a class="el" href="corpus_8h.html#a5703da86de0749c60df13c9f6bc96c54">corpus.h</a>
+</li>
+<li>describecorpus_show_attribute_names()
+: <a class="el" href="cwb-describe-corpus_8c.html#a7e8fd5e0d125d848233198d5275f18d7">cwb-describe-corpus.c</a>
+</li>
+<li>describecorpus_show_basic_info()
+: <a class="el" href="cwb-describe-corpus_8c.html#a883ac2a03c2c5a982d37bb2cc0a51a59">cwb-describe-corpus.c</a>
+</li>
+<li>describecorpus_show_statistics()
+: <a class="el" href="cwb-describe-corpus_8c.html#a9feb4bfd0366c731ebddd2e7014a6f50">cwb-describe-corpus.c</a>
+</li>
+<li>describecorpus_usage()
+: <a class="el" href="cwb-describe-corpus_8c.html#af6030de411ccb672b3c31e9020db724d">cwb-describe-corpus.c</a>
 </li>
 <li>destroy_bitfield()
 : <a class="el" href="bitfields_8c.html#a203675ec8c83546558603bf24be6d938">bitfields.c</a>
@@ -225,9 +240,6 @@ Here is a list of all functions, variables, defines, enums, and typedefs with li
 <li>do_AddSubVariables()
 : <a class="el" href="parse__actions_8c.html#a2f1ff314ad45ddeb2c1a236742afdd0c">parse_actions.c</a>
 , <a class="el" href="parse__actions_8h.html#a2f1ff314ad45ddeb2c1a236742afdd0c">parse_actions.h</a>
-</li>
-<li>do_alignment()
-: <a class="el" href="cwb-align_8c.html#acceb1d5f58c5176ea7d0cffe04cc5fa3">cwb-align.c</a>
 </li>
 <li>do_AnchorPoint()
 : <a class="el" href="parse__actions_8c.html#a67ab4efdad31a2ff3c09fb171d7f40c3">parse_actions.c</a>
@@ -357,8 +369,8 @@ Here is a list of all functions, variables, defines, enums, and typedefs with li
 , <a class="el" href="parse__actions_8h.html#abe73248f4ec4aa811360f0694f1927d6">parse_actions.h</a>
 </li>
 <li>do_dump()
-: <a class="el" href="parse__actions_8c.html#aa407cf20505f657f679f9b7d233f92c7">parse_actions.c</a>
-, <a class="el" href="parse__actions_8h.html#aa407cf20505f657f679f9b7d233f92c7">parse_actions.h</a>
+: <a class="el" href="parse__actions_8h.html#aa407cf20505f657f679f9b7d233f92c7">parse_actions.h</a>
+, <a class="el" href="parse__actions_8c.html#aa407cf20505f657f679f9b7d233f92c7">parse_actions.c</a>
 </li>
 <li>do_exec()
 : <a class="el" href="parse__actions_8c.html#a2363fefd627b915196f40595618e521b">parse_actions.c</a>
@@ -381,8 +393,8 @@ Here is a list of all functions, variables, defines, enums, and typedefs with li
 , <a class="el" href="parse__actions_8h.html#a64741e9dd97bfd6254ffdcd14466be3b">parse_actions.h</a>
 </li>
 <li>do_IDReference()
-: <a class="el" href="parse__actions_8h.html#a53aef5872fed91559eba1f0082c41bf1">parse_actions.h</a>
-, <a class="el" href="parse__actions_8c.html#a53aef5872fed91559eba1f0082c41bf1">parse_actions.c</a>
+: <a class="el" href="parse__actions_8c.html#a53aef5872fed91559eba1f0082c41bf1">parse_actions.c</a>
+, <a class="el" href="parse__actions_8h.html#a53aef5872fed91559eba1f0082c41bf1">parse_actions.h</a>
 </li>
 <li>do_info()
 : <a class="el" href="parse__actions_8c.html#aa251d021165ac10e14d62484b1b290ee">parse_actions.c</a>
@@ -428,12 +440,12 @@ Here is a list of all functions, variables, defines, enums, and typedefs with li
 : <a class="el" href="cwb-huffcode_8c.html#ad4490a56cd36bf476e48a3ff4d9e6697">cwb-huffcode.c</a>
 </li>
 <li>do_reduce()
-: <a class="el" href="parse__actions_8c.html#a2d2735c622403fc1509ad9273e2cf368">parse_actions.c</a>
-, <a class="el" href="parse__actions_8h.html#a2d2735c622403fc1509ad9273e2cf368">parse_actions.h</a>
+: <a class="el" href="parse__actions_8h.html#a2d2735c622403fc1509ad9273e2cf368">parse_actions.h</a>
+, <a class="el" href="parse__actions_8c.html#a2d2735c622403fc1509ad9273e2cf368">parse_actions.c</a>
 </li>
 <li>do_RelExExpr()
-: <a class="el" href="parse__actions_8c.html#ad67ac0776cdb48adabee296796f0bb4b">parse_actions.c</a>
-, <a class="el" href="parse__actions_8h.html#ad67ac0776cdb48adabee296796f0bb4b">parse_actions.h</a>
+: <a class="el" href="parse__actions_8h.html#ad67ac0776cdb48adabee296796f0bb4b">parse_actions.h</a>
+, <a class="el" href="parse__actions_8c.html#ad67ac0776cdb48adabee296796f0bb4b">parse_actions.c</a>
 </li>
 <li>do_RelExpr()
 : <a class="el" href="parse__actions_8c.html#a2b9ea94991dbd56dc08e70795dfda1b5">parse_actions.c</a>
@@ -444,8 +456,8 @@ Here is a list of all functions, variables, defines, enums, and typedefs with li
 , <a class="el" href="parse__actions_8c.html#a863a4b0d6264b91ccaae33822e3d709f">parse_actions.c</a>
 </li>
 <li>do_SearchPattern()
-: <a class="el" href="parse__actions_8h.html#a1fb802bc0071a3b18f2992ea2388211d">parse_actions.h</a>
-, <a class="el" href="parse__actions_8c.html#a1fb802bc0071a3b18f2992ea2388211d">parse_actions.c</a>
+: <a class="el" href="parse__actions_8c.html#a1fb802bc0071a3b18f2992ea2388211d">parse_actions.c</a>
+, <a class="el" href="parse__actions_8h.html#a1fb802bc0071a3b18f2992ea2388211d">parse_actions.h</a>
 </li>
 <li>do_set_complex_target()
 : <a class="el" href="parse__actions_8h.html#aa927164e795c6122984e4de2def9ab0e">parse_actions.h</a>
@@ -479,36 +491,36 @@ Here is a list of all functions, variables, defines, enums, and typedefs with li
 , <a class="el" href="parse__actions_8h.html#abef33e4cd74e2930879529d33e18ede2">parse_actions.h</a>
 </li>
 <li>do_StandardQuery()
-: <a class="el" href="parse__actions_8h.html#a2aaabbb6bcc4e5210745065baaaf715c">parse_actions.h</a>
-, <a class="el" href="parse__actions_8c.html#a2aaabbb6bcc4e5210745065baaaf715c">parse_actions.c</a>
+: <a class="el" href="parse__actions_8c.html#a2aaabbb6bcc4e5210745065baaaf715c">parse_actions.c</a>
+, <a class="el" href="parse__actions_8h.html#a2aaabbb6bcc4e5210745065baaaf715c">parse_actions.h</a>
 </li>
 <li>do_start_timer()
-: <a class="el" href="parse__actions_8h.html#ae18e2e1023535a490e7a3483a6f2630f">parse_actions.h</a>
-, <a class="el" href="parse__actions_8c.html#ae18e2e1023535a490e7a3483a6f2630f">parse_actions.c</a>
+: <a class="el" href="parse__actions_8c.html#ae18e2e1023535a490e7a3483a6f2630f">parse_actions.c</a>
+, <a class="el" href="parse__actions_8h.html#ae18e2e1023535a490e7a3483a6f2630f">parse_actions.h</a>
 </li>
 <li>do_StringConstraint()
 : <a class="el" href="parse__actions_8c.html#a0765556ed474633536053be134d02d6c">parse_actions.c</a>
 , <a class="el" href="parse__actions_8h.html#a0765556ed474633536053be134d02d6c">parse_actions.h</a>
 </li>
 <li>do_StructuralContext()
-: <a class="el" href="parse__actions_8c.html#afad20fde8138986737853aa2d5c08f4f">parse_actions.c</a>
-, <a class="el" href="parse__actions_8h.html#afad20fde8138986737853aa2d5c08f4f">parse_actions.h</a>
+: <a class="el" href="parse__actions_8h.html#afad20fde8138986737853aa2d5c08f4f">parse_actions.h</a>
+, <a class="el" href="parse__actions_8c.html#afad20fde8138986737853aa2d5c08f4f">parse_actions.c</a>
 </li>
 <li>do_subset()
 : <a class="el" href="parse__actions_8h.html#ae769bcb9354bdf6c682f5c61f0a44213">parse_actions.h</a>
 , <a class="el" href="parse__actions_8c.html#ae769bcb9354bdf6c682f5c61f0a44213">parse_actions.c</a>
 </li>
 <li>do_TABQuery()
-: <a class="el" href="parse__actions_8h.html#aaeff68a9cd1b640ec8e075f3ac53f003">parse_actions.h</a>
-, <a class="el" href="parse__actions_8c.html#aaeff68a9cd1b640ec8e075f3ac53f003">parse_actions.c</a>
+: <a class="el" href="parse__actions_8c.html#aaeff68a9cd1b640ec8e075f3ac53f003">parse_actions.c</a>
+, <a class="el" href="parse__actions_8h.html#aaeff68a9cd1b640ec8e075f3ac53f003">parse_actions.h</a>
 </li>
 <li>do_timing()
-: <a class="el" href="parse__actions_8h.html#a06c98c00bf6b4a96dbb6f20573a0c823">parse_actions.h</a>
-, <a class="el" href="parse__actions_8c.html#a06c98c00bf6b4a96dbb6f20573a0c823">parse_actions.c</a>
+: <a class="el" href="parse__actions_8c.html#a06c98c00bf6b4a96dbb6f20573a0c823">parse_actions.c</a>
+, <a class="el" href="parse__actions_8h.html#a06c98c00bf6b4a96dbb6f20573a0c823">parse_actions.h</a>
 </li>
 <li>do_undump()
-: <a class="el" href="parse__actions_8c.html#a4d494e76da98d09f20a77d1dfb9b7fd2">parse_actions.c</a>
-, <a class="el" href="parse__actions_8h.html#a4d494e76da98d09f20a77d1dfb9b7fd2">parse_actions.h</a>
+: <a class="el" href="parse__actions_8h.html#a4d494e76da98d09f20a77d1dfb9b7fd2">parse_actions.h</a>
+, <a class="el" href="parse__actions_8c.html#a4d494e76da98d09f20a77d1dfb9b7fd2">parse_actions.c</a>
 </li>
 <li>do_UnionStatement()
 : <a class="el" href="parse__actions_8c.html#ab82ef271cc57700c4ae5549b919ecdc5">parse_actions.c</a>
@@ -518,16 +530,16 @@ Here is a list of all functions, variables, defines, enums, and typedefs with li
 : <a class="el" href="parse__actions_8h.html#a4ac7de0c82468f69423538386b436fe9">parse_actions.h</a>
 </li>
 <li>do_WordformPattern()
-: <a class="el" href="parse__actions_8h.html#a7e4f1cbfcc87584152e6244f53203c42">parse_actions.h</a>
-, <a class="el" href="parse__actions_8c.html#a7e4f1cbfcc87584152e6244f53203c42">parse_actions.c</a>
+: <a class="el" href="parse__actions_8c.html#a7e4f1cbfcc87584152e6244f53203c42">parse_actions.c</a>
+, <a class="el" href="parse__actions_8h.html#a7e4f1cbfcc87584152e6244f53203c42">parse_actions.h</a>
 </li>
 <li>do_XMLTag()
-: <a class="el" href="parse__actions_8c.html#a4335ddbb14865c031041a194e182ed92">parse_actions.c</a>
-, <a class="el" href="parse__actions_8h.html#a4335ddbb14865c031041a194e182ed92">parse_actions.h</a>
+: <a class="el" href="parse__actions_8h.html#a4335ddbb14865c031041a194e182ed92">parse_actions.h</a>
+, <a class="el" href="parse__actions_8c.html#a4335ddbb14865c031041a194e182ed92">parse_actions.c</a>
 </li>
 <li>drop_attribute()
-: <a class="el" href="attributes_8c.html#a926e9ecbe39d1cc48da5c6cd51a72a3d">attributes.c</a>
-, <a class="el" href="attributes_8h.html#a926e9ecbe39d1cc48da5c6cd51a72a3d">attributes.h</a>
+: <a class="el" href="attributes_8h.html#a926e9ecbe39d1cc48da5c6cd51a72a3d">attributes.h</a>
+, <a class="el" href="attributes_8c.html#a926e9ecbe39d1cc48da5c6cd51a72a3d">attributes.c</a>
 </li>
 <li>drop_component()
 : <a class="el" href="attributes_8c.html#a66619eaebc7dda823553ecbb76f86b89">attributes.c</a>
@@ -537,8 +549,8 @@ Here is a list of all functions, variables, defines, enums, and typedefs with li
 : <a class="el" href="cl_8h.html#a84e9c1d8aa172754ce5ed2d5d5b2be8c">cl.h</a>
 </li>
 <li>drop_mapping()
-: <a class="el" href="class-mapping_8h.html#adf0c4c450ecd53d223c6c67c0bf63f92">class-mapping.h</a>
-, <a class="el" href="class-mapping_8c.html#adf0c4c450ecd53d223c6c67c0bf63f92">class-mapping.c</a>
+: <a class="el" href="class-mapping_8c.html#adf0c4c450ecd53d223c6c67c0bf63f92">class-mapping.c</a>
+, <a class="el" href="class-mapping_8h.html#adf0c4c450ecd53d223c6c67c0bf63f92">class-mapping.h</a>
 </li>
 <li>drop_single_mapping()
 : <a class="el" href="class-mapping_8c.html#a1b37040fc40f81cb1e5c735a914da79b">class-mapping.c</a>
@@ -556,8 +568,8 @@ Here is a list of all functions, variables, defines, enums, and typedefs with li
 , <a class="el" href="symtab_8c.html#a6bef4ae75a3c342bc70d649d0df0d2c3">symtab.c</a>
 </li>
 <li>DropVariable()
-: <a class="el" href="variables_8h.html#a22f430e88ceb4ff011df266e2a078669">variables.h</a>
-, <a class="el" href="variables_8c.html#a22f430e88ceb4ff011df266e2a078669">variables.c</a>
+: <a class="el" href="variables_8c.html#a22f430e88ceb4ff011df266e2a078669">variables.c</a>
+, <a class="el" href="variables_8h.html#a22f430e88ceb4ff011df266e2a078669">variables.h</a>
 </li>
 <li>dump_heap()
 : <a class="el" href="cwb-huffcode_8c.html#aa5b0f382c2a477ae4fc0c0c3e356f0ce">cwb-huffcode.c</a>
@@ -581,7 +593,7 @@ Here is a list of all functions, variables, defines, enums, and typedefs with li
 </li>
 </ul>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Mon Aug 2 06:46:58 2010 for CWB by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Thu Aug 5 03:44:32 2010 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

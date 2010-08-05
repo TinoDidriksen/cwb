@@ -41,9 +41,9 @@
 </ul>
 <h2>Functions</h2>
 <ul>
-<li>void <a class="el" href="cwb-compress-rdx_8c.html#ac896e7e59472ff8e2d14ac44f0e23634">usage</a> (char *msg, int error_code)
-<dl class="el"><dd class="mdescRight">Prints a usage message and exits the program.  <a href="#ac896e7e59472ff8e2d14ac44f0e23634"></a><br/></dl><li>void <a class="el" href="cwb-compress-rdx_8c.html#a919b69e333b16392f3afa989c19765fa">cleanup</a> (int error_code)
-<dl class="el"><dd class="mdescRight">Cleans up memory prior to an error-prompted exit.  <a href="#a919b69e333b16392f3afa989c19765fa"></a><br/></dl><li>void <a class="el" href="cwb-compress-rdx_8c.html#ada27dd0455655c13cd8dca8259eefbfb">compress_reversed_index</a> (<a class="el" href="union___attribute.html">Attribute</a> *attr, char *output_fn)
+<li>void <a class="el" href="cwb-compress-rdx_8c.html#a48c580680a1c3e3bebdcb1af8426496d">compressrdx_usage</a> (char *msg, int error_code)
+<dl class="el"><dd class="mdescRight">Prints a usage message and exits the program.  <a href="#a48c580680a1c3e3bebdcb1af8426496d"></a><br/></dl><li>void <a class="el" href="cwb-compress-rdx_8c.html#a9bf44db1f081bb32a0303e5c150d609f">compressrdx_cleanup</a> (int error_code)
+<dl class="el"><dd class="mdescRight">Cleans up memory prior to an error-prompted exit.  <a href="#a9bf44db1f081bb32a0303e5c150d609f"></a><br/></dl><li>void <a class="el" href="cwb-compress-rdx_8c.html#ada27dd0455655c13cd8dca8259eefbfb">compress_reversed_index</a> (<a class="el" href="union___attribute.html">Attribute</a> *attr, char *output_fn)
 <dl class="el"><dd class="mdescRight">Compresses the reversed index of a p-attribute.  <a href="#ada27dd0455655c13cd8dca8259eefbfb"></a><br/></dl><li>void <a class="el" href="cwb-compress-rdx_8c.html#a6e572abf235d74b194d259cb97476a28">decompress_check_reversed_index</a> (<a class="el" href="union___attribute.html">Attribute</a> *attr, char *output_fn)
 <dl class="el"><dd class="mdescRight">Checks a compressed reversed index for errors by decompressing it.  <a href="#a6e572abf235d74b194d259cb97476a28"></a><br/></dl><li>int <a class="el" href="cwb-compress-rdx_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main</a> (int argc, char **argv)
 <dl class="el"><dd class="mdescRight">Main function for cwb-compress-rdx.  <a href="#a3c04138a5bfe5d72780bb7e82a18e627"></a><br/></dl></ul>
@@ -76,36 +76,6 @@
 </div>
 </div>
 <hr/><h2>Function Documentation</h2>
-<a class="anchor" id="a919b69e333b16392f3afa989c19765fa"></a><!-- doxytag: member="cwb&#45;compress&#45;rdx.c::cleanup" ref="a919b69e333b16392f3afa989c19765fa" args="(int error_code)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void cleanup </td>
-          <td>(</td>
-          <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>error_code</em></td>
-          <td>&nbsp;)&nbsp;</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Cleans up memory prior to an error-prompted exit. </p>
-<dl><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>error_code</em>&nbsp;</td><td>Value to be returned by the program when it exits. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p>References <a class="el" href="cwb-compress-rdx_8c.html#a304c9ed7a3d86e5f709099dfc8f152e7">debug_output</a>, and <a class="el" href="cl_8h.html#a84e9c1d8aa172754ce5ed2d5d5b2be8c">drop_corpus</a>.</p>
-
-<p>Referenced by <a class="el" href="cwb-decode_8c.html#a5be28e38d8bc087ba46da1238a5f8d1c">add_attribute()</a>, <a class="el" href="cwb-compress-rdx_8c.html#ada27dd0455655c13cd8dca8259eefbfb">compress_reversed_index()</a>, <a class="el" href="cwb-compress-rdx_8c.html#a6e572abf235d74b194d259cb97476a28">decompress_check_reversed_index()</a>, <a class="el" href="cwb-compress-rdx_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>, <a class="el" href="cwb-decode_8c.html#ae319baa29bcce4fc1184bda24e29f12f">show_position_values()</a>, and <a class="el" href="cwb-compress-rdx_8c.html#ac896e7e59472ff8e2d14ac44f0e23634">usage()</a>.</p>
-
-</div>
-</div>
 <a class="anchor" id="ada27dd0455655c13cd8dca8259eefbfb"></a><!-- doxytag: member="cwb&#45;compress&#45;rdx.c::compress_reversed_index" ref="ada27dd0455655c13cd8dca8259eefbfb" args="(Attribute *attr, char *output_fn)" -->
 <div class="memitem">
 <div class="memproto">
@@ -140,7 +110,77 @@
   </dd>
 </dl>
 
-<p>References <a class="el" href="union___attribute.html#a92ee130caba4408ab4de51c602910107">_Attribute::any</a>, <a class="el" href="bitio_8c.html#a04d5562b530acc3e364f5ec7d1d0292d">BFclose()</a>, <a class="el" href="bitio_8c.html#aed66972c0fb2c592485c2950ef943186">BFflush()</a>, <a class="el" href="bitio_8c.html#a7a29ed721336791868ff232d01c55f40">BFopen()</a>, <a class="el" href="bitio_8c.html#ae3206a0bf17674c68cd0d6fdf6cb6934">BFposition()</a>, <a class="el" href="cl_8h.html#a1fa2e2ab47bd2c689b68a78bdac22028">CDA_OK</a>, <a class="el" href="cl_8h.html#a33429ad7ed835fc0490b87153b7acc03">cdperror</a>, <a class="el" href="cdaccess_8c.html#af97f2ad4a69c7d0105f9cee4a51b29b8">cl_errno</a>, <a class="el" href="cdaccess_8c.html#a96decca6cc290275c02aa48ebf943aa9">cl_id2freq()</a>, <a class="el" href="cdaccess_8c.html#ae9db76b80522e91e2735414a079e952b">cl_max_cpos()</a>, <a class="el" href="cdaccess_8c.html#a80f6431eb356913b2d3b84b9cbfaae37">cl_max_id()</a>, <a class="el" href="cwb-compress-rdx_8c.html#a919b69e333b16392f3afa989c19765fa">cleanup()</a>, <a class="el" href="cl_8h.html#a2c373820e1cd51d14e42a0f7e264c29f">ClosePositionStream</a>, <a class="el" href="cwb-compress-rdx_8c.html#a1cbaab006ad3891bc7022d0f3476aa81">codepos</a>, <a class="el" href="attributes_8h.html#a990b084a9fbbdb7ea6b9defb1073706aa7a654786f29519738cec784c0f9cff56">CompCompRF</a>, <a class="el" href="attributes_8h.html#a990b084a9fbbdb7ea6b9defb1073706aa3f60160cecf0b2ca33619d7d60a4b151">CompCompRFX</a>, <a class="el" href="attributes_8c.html#aaafe0ee7afc6fa17742ab775bcd85485">component_full_name()</a>, <a class="el" href="attributes_8h.html#a990b084a9fbbdb7ea6b9defb1073706aaef0fbb5f21771ec8e21535861fec655d">CompRevCorpus</a>, <a class="el" href="attributes_8h.html#a990b084a9fbbdb7ea6b9defb1073706aa470b24f5e73b6d9909a95584fe563930">CompRevCorpusIdx</a>, <a class="el" href="compression_8c.html#a77d2f7ecda5957f4b9d1adfccc294ac1">compute_ba()</a>, <a class="el" href="cwb-compress-rdx_8c.html#a0360462590048e1a217c595d8ec3ad5b">corpus_id</a>, <a class="el" href="cwb-compress-rdx_8c.html#ac3e1795766a80ec63b157951b4b9a7d4">debug</a>, <a class="el" href="cwb-compress-rdx_8c.html#a304c9ed7a3d86e5f709099dfc8f152e7">debug_output</a>, <a class="el" href="attributes_8c.html#a4810d7a6ab0920ad1af05e2095cc1841">ensure_component()</a>, <a class="el" href="storage_8c.html#a8b3939b07c9383d22e90973183f655ef">NwriteInt()</a>, <a class="el" href="cl_8h.html#ab1bc5dead9f22c3d79e82698a759f0f7">OpenPositionStream</a>, <a class="el" href="cl_8h.html#aa21e6ecf20b6066920a124ae612a2e5b">ReadPositionStream</a>, and <a class="el" href="compression_8c.html#ac807b3a121cf89179e84aa098461c59a">write_golomb_code()</a>.</p>
+<p>References <a class="el" href="union___attribute.html#a92ee130caba4408ab4de51c602910107">_Attribute::any</a>, <a class="el" href="bitio_8c.html#a04d5562b530acc3e364f5ec7d1d0292d">BFclose()</a>, <a class="el" href="bitio_8c.html#aed66972c0fb2c592485c2950ef943186">BFflush()</a>, <a class="el" href="bitio_8c.html#a7a29ed721336791868ff232d01c55f40">BFopen()</a>, <a class="el" href="bitio_8c.html#ae3206a0bf17674c68cd0d6fdf6cb6934">BFposition()</a>, <a class="el" href="cl_8h.html#a1fa2e2ab47bd2c689b68a78bdac22028">CDA_OK</a>, <a class="el" href="cl_8h.html#a33429ad7ed835fc0490b87153b7acc03">cdperror</a>, <a class="el" href="cdaccess_8c.html#ad3c0e9b45a28325018899dc8aef4474d">cl_delete_stream()</a>, <a class="el" href="cdaccess_8c.html#af97f2ad4a69c7d0105f9cee4a51b29b8">cl_errno</a>, <a class="el" href="cdaccess_8c.html#ac0132825a090837c68bdfc59df00e0b8">cl_error()</a>, <a class="el" href="cdaccess_8c.html#a96decca6cc290275c02aa48ebf943aa9">cl_id2freq()</a>, <a class="el" href="cdaccess_8c.html#ae9db76b80522e91e2735414a079e952b">cl_max_cpos()</a>, <a class="el" href="cdaccess_8c.html#a80f6431eb356913b2d3b84b9cbfaae37">cl_max_id()</a>, <a class="el" href="cwb-compress-rdx_8c.html#a1cbaab006ad3891bc7022d0f3476aa81">codepos</a>, <a class="el" href="attributes_8h.html#a990b084a9fbbdb7ea6b9defb1073706aa7a654786f29519738cec784c0f9cff56">CompCompRF</a>, <a class="el" href="attributes_8h.html#a990b084a9fbbdb7ea6b9defb1073706aa3f60160cecf0b2ca33619d7d60a4b151">CompCompRFX</a>, <a class="el" href="attributes_8c.html#aaafe0ee7afc6fa17742ab775bcd85485">component_full_name()</a>, <a class="el" href="cwb-compress-rdx_8c.html#a9bf44db1f081bb32a0303e5c150d609f">compressrdx_cleanup()</a>, <a class="el" href="attributes_8h.html#a990b084a9fbbdb7ea6b9defb1073706aaef0fbb5f21771ec8e21535861fec655d">CompRevCorpus</a>, <a class="el" href="attributes_8h.html#a990b084a9fbbdb7ea6b9defb1073706aa470b24f5e73b6d9909a95584fe563930">CompRevCorpusIdx</a>, <a class="el" href="compression_8c.html#a77d2f7ecda5957f4b9d1adfccc294ac1">compute_ba()</a>, <a class="el" href="cwb-compress-rdx_8c.html#a0360462590048e1a217c595d8ec3ad5b">corpus_id</a>, <a class="el" href="cwb-compress-rdx_8c.html#ac3e1795766a80ec63b157951b4b9a7d4">debug</a>, <a class="el" href="cwb-compress-rdx_8c.html#a304c9ed7a3d86e5f709099dfc8f152e7">debug_output</a>, <a class="el" href="attributes_8c.html#a4810d7a6ab0920ad1af05e2095cc1841">ensure_component()</a>, <a class="el" href="storage_8c.html#a8b3939b07c9383d22e90973183f655ef">NwriteInt()</a>, <a class="el" href="cl_8h.html#ab1bc5dead9f22c3d79e82698a759f0f7">OpenPositionStream</a>, <a class="el" href="cl_8h.html#aa21e6ecf20b6066920a124ae612a2e5b">ReadPositionStream</a>, and <a class="el" href="compression_8c.html#ac807b3a121cf89179e84aa098461c59a">write_golomb_code()</a>.</p>
+
+<p>Referenced by <a class="el" href="cwb-compress-rdx_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a9bf44db1f081bb32a0303e5c150d609f"></a><!-- doxytag: member="cwb&#45;compress&#45;rdx.c::compressrdx_cleanup" ref="a9bf44db1f081bb32a0303e5c150d609f" args="(int error_code)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void compressrdx_cleanup </td>
+          <td>(</td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>error_code</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Cleans up memory prior to an error-prompted exit. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>error_code</em>&nbsp;</td><td>Value to be returned by the program when it exits. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>References <a class="el" href="cwb-compress-rdx_8c.html#a304c9ed7a3d86e5f709099dfc8f152e7">debug_output</a>, and <a class="el" href="cl_8h.html#a84e9c1d8aa172754ce5ed2d5d5b2be8c">drop_corpus</a>.</p>
+
+<p>Referenced by <a class="el" href="cwb-compress-rdx_8c.html#ada27dd0455655c13cd8dca8259eefbfb">compress_reversed_index()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a48c580680a1c3e3bebdcb1af8426496d"></a><!-- doxytag: member="cwb&#45;compress&#45;rdx.c::compressrdx_usage" ref="a48c580680a1c3e3bebdcb1af8426496d" args="(char *msg, int error_code)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void compressrdx_usage </td>
+          <td>(</td>
+          <td class="paramtype">char *&nbsp;</td>
+          <td class="paramname"> <em>msg</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>error_code</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Prints a usage message and exits the program. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>msg</em>&nbsp;</td><td>A message about the error. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>error_code</em>&nbsp;</td><td>Value to be returned by the program when it exits. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>References <a class="el" href="options_8h.html#ab9e1449fd00c98428516f0b41eddcb10">progname</a>.</p>
 
 <p>Referenced by <a class="el" href="cwb-compress-rdx_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>.</p>
 
@@ -181,7 +221,7 @@
   </dd>
 </dl>
 
-<p>References <a class="el" href="union___attribute.html#a92ee130caba4408ab4de51c602910107">_Attribute::any</a>, <a class="el" href="bitio_8c.html#a04d5562b530acc3e364f5ec7d1d0292d">BFclose()</a>, <a class="el" href="bitio_8c.html#aed66972c0fb2c592485c2950ef943186">BFflush()</a>, <a class="el" href="bitio_8c.html#a7a29ed721336791868ff232d01c55f40">BFopen()</a>, <a class="el" href="cl_8h.html#a1fa2e2ab47bd2c689b68a78bdac22028">CDA_OK</a>, <a class="el" href="cl_8h.html#a33429ad7ed835fc0490b87153b7acc03">cdperror</a>, <a class="el" href="cdaccess_8c.html#ad3c0e9b45a28325018899dc8aef4474d">cl_delete_stream()</a>, <a class="el" href="cdaccess_8c.html#af97f2ad4a69c7d0105f9cee4a51b29b8">cl_errno</a>, <a class="el" href="cdaccess_8c.html#ac0132825a090837c68bdfc59df00e0b8">cl_error()</a>, <a class="el" href="cdaccess_8c.html#a96decca6cc290275c02aa48ebf943aa9">cl_id2freq()</a>, <a class="el" href="cdaccess_8c.html#ae9db76b80522e91e2735414a079e952b">cl_max_cpos()</a>, <a class="el" href="cdaccess_8c.html#a80f6431eb356913b2d3b84b9cbfaae37">cl_max_id()</a>, <a class="el" href="cdaccess_8c.html#ac00f99db989ee6dd4554e5fb3ef89359">cl_new_stream()</a>, <a class="el" href="cdaccess_8c.html#a429c82e314be4714ea85585d7cc88005">cl_read_stream()</a>, <a class="el" href="cwb-compress-rdx_8c.html#a919b69e333b16392f3afa989c19765fa">cleanup()</a>, <a class="el" href="attributes_8h.html#a990b084a9fbbdb7ea6b9defb1073706aa7a654786f29519738cec784c0f9cff56">CompCompRF</a>, <a class="el" href="attributes_8h.html#a990b084a9fbbdb7ea6b9defb1073706aa3f60160cecf0b2ca33619d7d60a4b151">CompCompRFX</a>, <a class="el" href="attributes_8c.html#aaafe0ee7afc6fa17742ab775bcd85485">component_full_name()</a>, <a class="el" href="attributes_8h.html#a990b084a9fbbdb7ea6b9defb1073706aaef0fbb5f21771ec8e21535861fec655d">CompRevCorpus</a>, <a class="el" href="attributes_8h.html#a990b084a9fbbdb7ea6b9defb1073706aa470b24f5e73b6d9909a95584fe563930">CompRevCorpusIdx</a>, <a class="el" href="compression_8c.html#a77d2f7ecda5957f4b9d1adfccc294ac1">compute_ba()</a>, <a class="el" href="cwb-compress-rdx_8c.html#a0360462590048e1a217c595d8ec3ad5b">corpus_id</a>, <a class="el" href="cwb-compress-rdx_8c.html#ac3e1795766a80ec63b157951b4b9a7d4">debug</a>, <a class="el" href="cwb-compress-rdx_8c.html#a304c9ed7a3d86e5f709099dfc8f152e7">debug_output</a>, and <a class="el" href="compression_8c.html#a621d04fc3f390b645607e4eb5a4ff52f">read_golomb_code_bf()</a>.</p>
+<p>References <a class="el" href="union___attribute.html#a92ee130caba4408ab4de51c602910107">_Attribute::any</a>, <a class="el" href="bitio_8c.html#a04d5562b530acc3e364f5ec7d1d0292d">BFclose()</a>, <a class="el" href="bitio_8c.html#aed66972c0fb2c592485c2950ef943186">BFflush()</a>, <a class="el" href="bitio_8c.html#a7a29ed721336791868ff232d01c55f40">BFopen()</a>, <a class="el" href="cl_8h.html#a1fa2e2ab47bd2c689b68a78bdac22028">CDA_OK</a>, <a class="el" href="cdaccess_8c.html#ad3c0e9b45a28325018899dc8aef4474d">cl_delete_stream()</a>, <a class="el" href="cdaccess_8c.html#af97f2ad4a69c7d0105f9cee4a51b29b8">cl_errno</a>, <a class="el" href="cdaccess_8c.html#ac0132825a090837c68bdfc59df00e0b8">cl_error()</a>, <a class="el" href="cdaccess_8c.html#a96decca6cc290275c02aa48ebf943aa9">cl_id2freq()</a>, <a class="el" href="cdaccess_8c.html#ae9db76b80522e91e2735414a079e952b">cl_max_cpos()</a>, <a class="el" href="cdaccess_8c.html#a80f6431eb356913b2d3b84b9cbfaae37">cl_max_id()</a>, <a class="el" href="cdaccess_8c.html#ac00f99db989ee6dd4554e5fb3ef89359">cl_new_stream()</a>, <a class="el" href="cdaccess_8c.html#a429c82e314be4714ea85585d7cc88005">cl_read_stream()</a>, <a class="el" href="attributes_8h.html#a990b084a9fbbdb7ea6b9defb1073706aa7a654786f29519738cec784c0f9cff56">CompCompRF</a>, <a class="el" href="attributes_8h.html#a990b084a9fbbdb7ea6b9defb1073706aa3f60160cecf0b2ca33619d7d60a4b151">CompCompRFX</a>, <a class="el" href="attributes_8c.html#aaafe0ee7afc6fa17742ab775bcd85485">component_full_name()</a>, <a class="el" href="attributes_8h.html#a990b084a9fbbdb7ea6b9defb1073706aaef0fbb5f21771ec8e21535861fec655d">CompRevCorpus</a>, <a class="el" href="attributes_8h.html#a990b084a9fbbdb7ea6b9defb1073706aa470b24f5e73b6d9909a95584fe563930">CompRevCorpusIdx</a>, <a class="el" href="compression_8c.html#a77d2f7ecda5957f4b9d1adfccc294ac1">compute_ba()</a>, <a class="el" href="cwb-compress-rdx_8c.html#a0360462590048e1a217c595d8ec3ad5b">corpus_id</a>, <a class="el" href="cwb-compress-rdx_8c.html#ac3e1795766a80ec63b157951b4b9a7d4">debug</a>, <a class="el" href="cwb-compress-rdx_8c.html#a304c9ed7a3d86e5f709099dfc8f152e7">debug_output</a>, and <a class="el" href="compression_8c.html#a621d04fc3f390b645607e4eb5a4ff52f">read_golomb_code_bf()</a>.</p>
 
 <p>Referenced by <a class="el" href="cwb-compress-rdx_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>.</p>
 
@@ -221,45 +261,7 @@
   </dd>
 </dl>
 
-<p>References <a class="el" href="union___attribute.html#a92ee130caba4408ab4de51c602910107">_Attribute::any</a>, <a class="el" href="cl_8h.html#a3b60fdde6a7c8fbc535efaf526dbcb78">ATT_POS</a>, <a class="el" href="struct_t_corpus.html#a97504befdc17001f29ab2a0aa50d5c1f">TCorpus::attributes</a>, <a class="el" href="cl_8h.html#a8788fa329cb487fb06fe050207769061">central_corpus_directory</a>, <a class="el" href="cl_8h.html#aee476e23a98efac85d9a9288f18fe686">cl_new_corpus()</a>, <a class="el" href="cwb-compress-rdx_8c.html#a919b69e333b16392f3afa989c19765fa">cleanup()</a>, <a class="el" href="cwb-compress-rdx_8c.html#ada27dd0455655c13cd8dca8259eefbfb">compress_reversed_index()</a>, <a class="el" href="cwb-compress-rdx_8c.html#a0360462590048e1a217c595d8ec3ad5b">corpus_id</a>, <a class="el" href="cwb-compress-rdx_8c.html#ac3e1795766a80ec63b157951b4b9a7d4">debug</a>, <a class="el" href="cwb-compress-rdx_8c.html#a304c9ed7a3d86e5f709099dfc8f152e7">debug_output</a>, <a class="el" href="cwb-compress-rdx_8c.html#a6e572abf235d74b194d259cb97476a28">decompress_check_reversed_index()</a>, <a class="el" href="attributes_8h.html#a0f022cbfe7890834b65ea9542eb4f50c">DEFAULT_ATT_NAME</a>, <a class="el" href="cl_8h.html#a9c45657143514f1e869cae165ab47c44">find_attribute</a>, <a class="el" href="options_8h.html#ab9e1449fd00c98428516f0b41eddcb10">progname</a>, <a class="el" href="cwb-align_8c.html#a9008cc92c9f9b4e6f09d0886e865c657">registry_directory</a>, and <a class="el" href="options_8c.html#ae8605e2b78cd4a81b6c6b5c30cb7366a">usage()</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="ac896e7e59472ff8e2d14ac44f0e23634"></a><!-- doxytag: member="cwb&#45;compress&#45;rdx.c::usage" ref="ac896e7e59472ff8e2d14ac44f0e23634" args="(char *msg, int error_code)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void usage </td>
-          <td>(</td>
-          <td class="paramtype">char *&nbsp;</td>
-          <td class="paramname"> <em>msg</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>error_code</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Prints a usage message and exits the program. </p>
-<dl><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>msg</em>&nbsp;</td><td>A message about the error. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>error_code</em>&nbsp;</td><td>Value to be returned by the program when it exits. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p>References <a class="el" href="cwb-compress-rdx_8c.html#a919b69e333b16392f3afa989c19765fa">cleanup()</a>, and <a class="el" href="options_8h.html#ab9e1449fd00c98428516f0b41eddcb10">progname</a>.</p>
+<p>References <a class="el" href="union___attribute.html#a92ee130caba4408ab4de51c602910107">_Attribute::any</a>, <a class="el" href="cl_8h.html#a3b60fdde6a7c8fbc535efaf526dbcb78">ATT_POS</a>, <a class="el" href="struct_t_corpus.html#a97504befdc17001f29ab2a0aa50d5c1f">TCorpus::attributes</a>, <a class="el" href="cl_8h.html#a8788fa329cb487fb06fe050207769061">central_corpus_directory</a>, <a class="el" href="cl_8h.html#aee476e23a98efac85d9a9288f18fe686">cl_new_corpus()</a>, <a class="el" href="cwb-compress-rdx_8c.html#ada27dd0455655c13cd8dca8259eefbfb">compress_reversed_index()</a>, <a class="el" href="cwb-compress-rdx_8c.html#a48c580680a1c3e3bebdcb1af8426496d">compressrdx_usage()</a>, <a class="el" href="cwb-compress-rdx_8c.html#a0360462590048e1a217c595d8ec3ad5b">corpus_id</a>, <a class="el" href="cwb-compress-rdx_8c.html#ac3e1795766a80ec63b157951b4b9a7d4">debug</a>, <a class="el" href="cwb-compress-rdx_8c.html#a304c9ed7a3d86e5f709099dfc8f152e7">debug_output</a>, <a class="el" href="cwb-compress-rdx_8c.html#a6e572abf235d74b194d259cb97476a28">decompress_check_reversed_index()</a>, <a class="el" href="attributes_8h.html#a0f022cbfe7890834b65ea9542eb4f50c">DEFAULT_ATT_NAME</a>, <a class="el" href="cl_8h.html#a9c45657143514f1e869cae165ab47c44">find_attribute</a>, <a class="el" href="options_8h.html#ab9e1449fd00c98428516f0b41eddcb10">progname</a>, and <a class="el" href="cwb-align_8c.html#a9008cc92c9f9b4e6f09d0886e865c657">registry_directory</a>.</p>
 
 </div>
 </div>
@@ -328,7 +330,7 @@
 
 <p>debug level </p>
 
-<p>Referenced by <a class="el" href="cwb-compress-rdx_8c.html#ada27dd0455655c13cd8dca8259eefbfb">compress_reversed_index()</a>, <a class="el" href="cwb-compress-rdx_8c.html#a6e572abf235d74b194d259cb97476a28">decompress_check_reversed_index()</a>, <a class="el" href="cwb-encode_8c.html#a5f95d4bd20c852ebbd303e0eb43d7d11">encode_generate_registry_file()</a>, <a class="el" href="cwb-encode_8c.html#aa0f8374cf6b11c64c60b4fe305815334">encode_parse_options()</a>, <a class="el" href="cwb-compress-rdx_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>, <a class="el" href="cwb-s-encode_8c.html#a0318e97f40679e849d9259e5edb4dfce">parse_options()</a>, and <a class="el" href="cwb-encode_8c.html#a4d8ab2954e3fc7fc015616effbaa046d">range_declare()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-compress-rdx_8c.html#ada27dd0455655c13cd8dca8259eefbfb">compress_reversed_index()</a>, <a class="el" href="cwb-compress-rdx_8c.html#a6e572abf235d74b194d259cb97476a28">decompress_check_reversed_index()</a>, <a class="el" href="cwb-encode_8c.html#a5f95d4bd20c852ebbd303e0eb43d7d11">encode_generate_registry_file()</a>, <a class="el" href="cwb-encode_8c.html#aa0f8374cf6b11c64c60b4fe305815334">encode_parse_options()</a>, <a class="el" href="cwb-compress-rdx_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>, <a class="el" href="cwb-encode_8c.html#a4d8ab2954e3fc7fc015616effbaa046d">range_declare()</a>, and <a class="el" href="cwb-s-encode_8c.html#af03b28b7de6e87eb57fedd7aae5d8a5b">sencode_parse_options()</a>.</p>
 
 </div>
 </div>
@@ -345,7 +347,7 @@
 
 <p>where debug messages are to be sent to (stderr) </p>
 
-<p>Referenced by <a class="el" href="cwb-compress-rdx_8c.html#a919b69e333b16392f3afa989c19765fa">cleanup()</a>, <a class="el" href="cwb-compress-rdx_8c.html#ada27dd0455655c13cd8dca8259eefbfb">compress_reversed_index()</a>, <a class="el" href="cwb-compress-rdx_8c.html#a6e572abf235d74b194d259cb97476a28">decompress_check_reversed_index()</a>, <a class="el" href="parse__actions_8h.html#ad54cd36f0dadd371fa6a84e03a4c989c">do_MUQuery()</a>, <a class="el" href="parse__actions_8h.html#a2aaabbb6bcc4e5210745065baaaf715c">do_StandardQuery()</a>, <a class="el" href="parse__actions_8h.html#aaeff68a9cd1b640ec8e075f3ac53f003">do_TABQuery()</a>, and <a class="el" href="cwb-compress-rdx_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-compress-rdx_8c.html#ada27dd0455655c13cd8dca8259eefbfb">compress_reversed_index()</a>, <a class="el" href="cwb-compress-rdx_8c.html#a9bf44db1f081bb32a0303e5c150d609f">compressrdx_cleanup()</a>, <a class="el" href="cwb-compress-rdx_8c.html#a6e572abf235d74b194d259cb97476a28">decompress_check_reversed_index()</a>, <a class="el" href="parse__actions_8h.html#ad54cd36f0dadd371fa6a84e03a4c989c">do_MUQuery()</a>, <a class="el" href="parse__actions_8h.html#a2aaabbb6bcc4e5210745065baaaf715c">do_StandardQuery()</a>, <a class="el" href="parse__actions_8h.html#aaeff68a9cd1b640ec8e075f3ac53f003">do_TABQuery()</a>, and <a class="el" href="cwb-compress-rdx_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>.</p>
 
 </div>
 </div>
@@ -365,7 +367,7 @@
 </div>
 </div>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Mon Aug 2 06:46:58 2010 for CWB by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Thu Aug 5 03:44:32 2010 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

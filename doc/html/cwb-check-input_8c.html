@@ -27,7 +27,10 @@
   </div>
 </div>
 <div class="contents">
-<h1>cwb-check-input.c File Reference</h1><code>#include &lt;glib.h&gt;</code><br/>
+<h1>cwb-check-input.c File Reference</h1>
+<p>This was a temporary, experuimental "fiddle" with unicode programming.  
+<a href="#_details">More...</a></p>
+<code>#include &lt;glib.h&gt;</code><br/>
 <code>#include &quot;../cl/globals.h&quot;</code><br/>
 <code>#include &quot;../cl/list.h&quot;</code><br/>
 <h2>Defines</h2>
@@ -42,7 +45,7 @@
 <li>int <a class="el" href="cwb-check-input_8c.html#ad2687aac534572677608876812c71548">cwbci_begins_with_blank</a> (char *str)
 <dl class="el"><dd class="mdescRight">Function for inner-loop in cwbci_check_lin().  <a href="#ad2687aac534572677608876812c71548"></a><br/></dl><li>void <a class="el" href="cwb-check-input_8c.html#a5cae4a860a8bafbba63a628aa8c416af">cwbci_report_error_fixable</a> (char *msg)
 <li>void <a class="el" href="cwb-check-input_8c.html#a19659c297d93b9720ca7685303462c2e">cwbci_report_error_unfixable</a> (char *msg)
-<li>void <a class="el" href="cwb-check-input_8c.html#ad30128c41534a2a49d336ab9c617fe0d">cwbci_check_line</a> (char *<a class="el" href="cwb-s-encode_8c.html#a41ebd28ef1d7c6ade45642cb6acc1039">line</a>)
+<li>void <a class="el" href="cwb-check-input_8c.html#ad30128c41534a2a49d336ab9c617fe0d">cwbci_check_line</a> (char *<a class="el" href="cwb-encode_8c.html#a41ebd28ef1d7c6ade45642cb6acc1039">line</a>)
 <li>void <a class="el" href="cwb-check-input_8c.html#a21977d52fb361d62e5fce123d7596f97">cwbci_usage</a> (void)
 <li>void <a class="el" href="cwb-check-input_8c.html#a8bc1180195e9821ecbeb25553f61e8c0">cwbci_parse_options</a> (int argc, char **argv)
 <dl class="el"><dd class="mdescRight">Parses commandline options for cwb-check-input and sets global variables accordingly.  <a href="#a8bc1180195e9821ecbeb25553f61e8c0"></a><br/></dl><li>int <a class="el" href="cwb-check-input_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main</a> (int argc, char **argv)
@@ -69,6 +72,8 @@
 <dl class="el"><dd class="mdescRight">character set used for checking encoding  <a href="#ab7d33183c58d7df43cc5602b9c842b37"></a><br/></dl><li><a class="el" href="struct__cl__string__list.html">cl_string_list</a> <a class="el" href="cwb-check-input_8c.html#a6c3579a4fffd9b73d9b7d9096e0fd9ec">hierarchy</a> = NULL
 <dl class="el"><dd class="mdescRight">string list for keeping track of the XML hierarchy  <a href="#a6c3579a4fffd9b73d9b7d9096e0fd9ec"></a><br/></dl><li>char * <a class="el" href="cwb-check-input_8c.html#ab9e1449fd00c98428516f0b41eddcb10">progname</a> = NULL
 <dl class="el"><dd class="mdescRight">name of the currently running program  <a href="#ab9e1449fd00c98428516f0b41eddcb10"></a><br/></dl></ul>
+<hr/><a name="_details"></a><h2>Detailed Description</h2>
+<p>This was a temporary, experuimental "fiddle" with unicode programming. </p>
 <hr/><h2>Define Documentation</h2>
 <a class="anchor" id="a2b91c102d99f87cb38b711cc0e7a0a25"></a><!-- doxytag: member="cwb&#45;check&#45;input.c::MAX_INPUT_LINE_LENGTH" ref="a2b91c102d99f87cb38b711cc0e7a0a25" args="" -->
 <div class="memitem">
@@ -516,7 +521,7 @@
 
 <p>filename of the output file </p>
 
-<p>Referenced by <a class="el" href="cwb-check-input_8c.html#a063ed0ebdc11aec16f686da99d19382d">cwbci_file_write_abort()</a>, <a class="el" href="cwb-check-input_8c.html#a8bc1180195e9821ecbeb25553f61e8c0">cwbci_parse_options()</a>, <a class="el" href="cwb-check-input_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>, and <a class="el" href="cwb-scan-corpus_8c.html#a533d8ed350c93589b514cc9b2d7ec4e6">parse_options()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-check-input_8c.html#a063ed0ebdc11aec16f686da99d19382d">cwbci_file_write_abort()</a>, <a class="el" href="cwb-check-input_8c.html#a8bc1180195e9821ecbeb25553f61e8c0">cwbci_parse_options()</a>, <a class="el" href="cwb-check-input_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>, and <a class="el" href="cwb-scan-corpus_8c.html#a291e5974237485d06cc8da932a1d98a0">scancorpus_parse_options()</a>.</p>
 
 </div>
 </div>
@@ -651,7 +656,7 @@
 </div>
 </div>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Mon Aug 2 06:46:58 2010 for CWB by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Thu Aug 5 03:44:32 2010 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

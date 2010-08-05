@@ -27,18 +27,24 @@
 </div>
 <div class="contents">
 <h1>_sort_clause Struct Reference</h1><!-- doxytag: class="_sort_clause" -->
+<p>The SortClause object (and underlying SortClauseBuffer).  
+<a href="#_details">More...</a></p>
+
 <p><code>#include &lt;ranges.h&gt;</code></p>
 <h2>Data Fields</h2>
 <ul>
 <li>char * <a class="el" href="struct__sort__clause.html#acedb3b60601feb1c5ec9217986991f46">attribute_name</a>
-<li>int <a class="el" href="struct__sort__clause.html#ac8bf36fe0577cba66bccda3a6f7e80a4">flags</a>
-<li><a class="el" href="corpmanag_8h.html#af1a7d1a8ccee70c4d8bc6c5302a0df0f">FieldType</a> <a class="el" href="struct__sort__clause.html#a589921f1e3759f30c477448d007bc091">anchor1</a>
-<li>int <a class="el" href="struct__sort__clause.html#aee7f28409ab837ab7ab64c0cb1a2dafb">offset1</a>
-<li><a class="el" href="corpmanag_8h.html#af1a7d1a8ccee70c4d8bc6c5302a0df0f">FieldType</a> <a class="el" href="struct__sort__clause.html#acae226ab88c9ea3a2703582d0856edfa">anchor2</a>
-<li>int <a class="el" href="struct__sort__clause.html#aed6fb01d8bf85735a69307c7795f89bd">offset2</a>
-<li>int <a class="el" href="struct__sort__clause.html#a550ce40498031ba44d533f90fd268295">sort_ascending</a>
-<li>int <a class="el" href="struct__sort__clause.html#aa5e8e1004470bf030980f7c50174c9f1">sort_reverse</a>
-</ul>
+<dl class="el"><dd class="mdescRight">attribute on which to sort  <a href="#acedb3b60601feb1c5ec9217986991f46"></a><br/></dl><li>int <a class="el" href="struct__sort__clause.html#ac8bf36fe0577cba66bccda3a6f7e80a4">flags</a>
+<dl class="el"><dd class="mdescRight">constants indicating the cd flags, if present  <a href="#ac8bf36fe0577cba66bccda3a6f7e80a4"></a><br/></dl><li><a class="el" href="corpmanag_8h.html#af1a7d1a8ccee70c4d8bc6c5302a0df0f">FieldType</a> <a class="el" href="struct__sort__clause.html#a589921f1e3759f30c477448d007bc091">anchor1</a>
+<dl class="el"><dd class="mdescRight">Field type of the start of sort region.  <a href="#a589921f1e3759f30c477448d007bc091"></a><br/></dl><li>int <a class="el" href="struct__sort__clause.html#aee7f28409ab837ab7ab64c0cb1a2dafb">offset1</a>
+<dl class="el"><dd class="mdescRight">Offset of the start of sort region.  <a href="#aee7f28409ab837ab7ab64c0cb1a2dafb"></a><br/></dl><li><a class="el" href="corpmanag_8h.html#af1a7d1a8ccee70c4d8bc6c5302a0df0f">FieldType</a> <a class="el" href="struct__sort__clause.html#acae226ab88c9ea3a2703582d0856edfa">anchor2</a>
+<dl class="el"><dd class="mdescRight">Field type of the end of sort region.  <a href="#acae226ab88c9ea3a2703582d0856edfa"></a><br/></dl><li>int <a class="el" href="struct__sort__clause.html#aed6fb01d8bf85735a69307c7795f89bd">offset2</a>
+<dl class="el"><dd class="mdescRight">Offset of the end of sort region.  <a href="#aed6fb01d8bf85735a69307c7795f89bd"></a><br/></dl><li>int <a class="el" href="struct__sort__clause.html#a550ce40498031ba44d533f90fd268295">sort_ascending</a>
+<dl class="el"><dd class="mdescRight">Boolean: sort direction (ascending true/descending false).  <a href="#a550ce40498031ba44d533f90fd268295"></a><br/></dl><li>int <a class="el" href="struct__sort__clause.html#aa5e8e1004470bf030980f7c50174c9f1">sort_reverse</a>
+<dl class="el"><dd class="mdescRight">Boolean: reverse sort? (sort reversed character sequences).  <a href="#aa5e8e1004470bf030980f7c50174c9f1"></a><br/></dl></ul>
+<hr/><a name="_details"></a><h2>Detailed Description</h2>
+<p>The SortClause object (and underlying SortClauseBuffer). </p>
+<p>Contains information about a sort to be applied to a query. </p>
 <hr/><h2>Field Documentation</h2>
 <a class="anchor" id="a589921f1e3759f30c477448d007bc091"></a><!-- doxytag: member="_sort_clause::anchor1" ref="a589921f1e3759f30c477448d007bc091" args="" -->
 <div class="memitem">
@@ -50,6 +56,8 @@
       </table>
 </div>
 <div class="memdoc">
+
+<p>Field type of the start of sort region. </p>
 
 <p>Referenced by <a class="el" href="ranges_8h.html#aaf5f006cef0ac7c1fdb5c9d55558c11a">SortSubcorpus()</a>.</p>
 
@@ -66,6 +74,8 @@
 </div>
 <div class="memdoc">
 
+<p>Field type of the end of sort region. </p>
+
 <p>Referenced by <a class="el" href="ranges_8h.html#aaf5f006cef0ac7c1fdb5c9d55558c11a">SortSubcorpus()</a>.</p>
 
 </div>
@@ -80,6 +90,8 @@
       </table>
 </div>
 <div class="memdoc">
+
+<p>attribute on which to sort </p>
 
 <p>Referenced by <a class="el" href="ranges_8h.html#af07571c4f777e6bb22bdb6b47e71b594">FreeSortClause()</a>, and <a class="el" href="ranges_8h.html#aaf5f006cef0ac7c1fdb5c9d55558c11a">SortSubcorpus()</a>.</p>
 
@@ -96,6 +108,8 @@
 </div>
 <div class="memdoc">
 
+<p>constants indicating the cd flags, if present </p>
+
 <p>Referenced by <a class="el" href="ranges_8h.html#aaf5f006cef0ac7c1fdb5c9d55558c11a">SortSubcorpus()</a>.</p>
 
 </div>
@@ -110,6 +124,8 @@
       </table>
 </div>
 <div class="memdoc">
+
+<p>Offset of the start of sort region. </p>
 
 <p>Referenced by <a class="el" href="ranges_8h.html#aaf5f006cef0ac7c1fdb5c9d55558c11a">SortSubcorpus()</a>.</p>
 
@@ -126,6 +142,8 @@
 </div>
 <div class="memdoc">
 
+<p>Offset of the end of sort region. </p>
+
 <p>Referenced by <a class="el" href="ranges_8h.html#aaf5f006cef0ac7c1fdb5c9d55558c11a">SortSubcorpus()</a>.</p>
 
 </div>
@@ -140,6 +158,8 @@
       </table>
 </div>
 <div class="memdoc">
+
+<p>Boolean: sort direction (ascending true/descending false). </p>
 
 <p>Referenced by <a class="el" href="ranges_8h.html#aaf5f006cef0ac7c1fdb5c9d55558c11a">SortSubcorpus()</a>.</p>
 
@@ -156,6 +176,8 @@
 </div>
 <div class="memdoc">
 
+<p>Boolean: reverse sort? (sort reversed character sequences). </p>
+
 <p>Referenced by <a class="el" href="ranges_8h.html#aaf5f006cef0ac7c1fdb5c9d55558c11a">SortSubcorpus()</a>.</p>
 
 </div>
@@ -164,7 +186,7 @@
 <li>cqp/<a class="el" href="ranges_8h.html">ranges.h</a></li>
 </ul>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Mon Aug 2 06:46:58 2010 for CWB by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Thu Aug 5 03:44:32 2010 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>
