@@ -146,6 +146,24 @@ include $(TOP)/config/site/standard
 
 
 #
+# WINDOWS-ONLY CONFIGURATION
+#
+# If you are building a Windows release, then the make system needs to know where to find
+# the library DLLs to add to the release. If you use the auto-build script, it will insert
+# a "guess" as to where they might be. Define the following variables if (a) you want to
+# override the guess or (b) you want to make for Windows without using the auto-build script.
+#
+
+## Path to the directory containing libpcre-0.dll
+# LIBPCRE_DLL_PATH = 
+## Path to the directory containing libglib-2.0-0.dll
+# LIBGLIB_DLL_PATH =
+## If they are in the same place, just define this variable (overrides the preceding two)
+# LIB_DLL_PATH =
+
+
+
+#
 # ***** Do NOT edit anything below this point! *****
 #
 

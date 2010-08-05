@@ -179,7 +179,7 @@ release:
 	$(MAKE) -C instutils all
 	$(MAKE) -C instutils release
 ifdef __MINGW__
-# we also need DLL file(s) 
+# we also need DLL file(s)
 	for i in $(DLLS_TO_INSTALL); do $(INSTALL) $(INST_FLAGS_DATA) $$i "$(RELEASE_DIR)/bin"; done
 endif
 	if [ -f "$(RELEASE_COMPRESSED_FILENAME)" ]; then $(RM) "$(RELEASE_COMPRESSED_FILENAME)"; fi

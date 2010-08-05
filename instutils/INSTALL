@@ -29,14 +29,14 @@ you want to install on Windows, first make sure that you have unzipped the
 .zip file that CWB came in, and then run the "install-cwb-win" program 
 contained in the same folder as this text file.
 
-Important Note: you will probably need admin rights to do this.
+Important Note: your username will probably need admin rights to do this.
 
 You can do this either by (a) double-clicking on "install-cwb-win"
 or (b) opening a command prompt, navigating to this folder, and 
 typing "install-cwb-win". 
 
 Note that the program will display as "install-cwb-win.bat" if you have 
-turned off the Widnows "Hide File Extensions" option. If you don't know what
+turned off the Windows "Hide File Extensions" option. If you don't know what
 the preceding sentence means, you may safely ignore it.
 
 You will also need to add the "binary" directory -- which is usually 

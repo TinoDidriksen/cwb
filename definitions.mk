@@ -230,8 +230,8 @@ CL_LIBS = $(LIBCL_PATH)
 ifdef __MINGW__
 ifdef  LIB_DLL_PATH
 # This general variable, if set, overrrides (and makes unnecessary) both the specific variables.
-LIB_PCRE_PATH = $(LIB_DLL_PATH)
-LIB_GLIB_PATH = $(LIB_DLL_PATH)
+LIBPCRE_DLL_PATH = $(LIB_DLL_PATH)
+LIBGLIB_DLL_PATH = $(LIB_DLL_PATH)
 endif
 ifndef LIBGLIB_DLL_PATH
 #$(error Configuration variable LIBGLIB_DLL_PATH is not set (directory containing MinGW-compiled libpcre-0.dll))
@@ -241,8 +241,8 @@ $(error Configuration variable LIBPCRE_DLL_PATH is not set (directory containing
 endif
 DLLS_TO_INSTALL =                            \
     $(LIBPCRE_DLL_PATH)/libpcre-0.dll        \
-    $(LIBPCRE_DLL_PATH)/libpcreposix-0.dll   
-#    $(LIBGLIB_DLL_PATH)/libglib-2.0-0.dll    
+    $(LIBPCRE_DLL_PATH)/libpcreposix-0.dll   \
+    $(LIBGLIB_DLL_PATH)/libglib-2.0-0.dll    
 #    mingw-libgnurx-2.5.1/libgnurx-0.dll  
 else
 DLLS_TO_INSTALL = 

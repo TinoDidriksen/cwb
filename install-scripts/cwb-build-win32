@@ -22,8 +22,6 @@ rep="include \$(TOP)/config/site/windows-release"
 config_file=${config_file/"$target"/"$rep"}
 
 
-
-
 # find out where the dlls are, and save that folder
 
 # this is a lot easier said than done
@@ -46,41 +44,40 @@ do
 	fi
 done
 
-# echo "$LIBPRCE_LA"
+if [ -n "$LIBPCRE_LA_FOUND_IN" ] ; then 
+	echo "-----------> $LIBPCRE_LA_FOUND_IN" 
+	
+	DLNAME_LINE=$(grep "^dlname='" < "${LIBPCRE_LA_FOUND_IN}libpcre.la")
+	echo "dlname line == $DLNAME_LINE"
+	DLNAME_LINE=$(echo $DLNAME_LINE | tr -d "'")
+	dlname=${DLNAME_LINE/"dlname="/""}
+	
+	
+	echo "$LIBPCRE_LA_FOUND_IN$dlname"
+	deduced_path=$(dirname $LIBPCRE_LA_FOUND_IN$dlname)
+	deduced_path=$(cd "$deduced_path" && pwd)
+	
+	echo "Deduced path to DLLS as $deduced_path..... "
+	
+	# if either (LIBPCRE_DLL_PATH and LIBGLIB_DLL_PATH) or LIB_DLL_PATH are set
+	# in the config file, our guess for the dll location will be overridden,
+	# because we put it at the beginning of the config.mk file.
+	
+	prepend=$( cat <<HERE
 
-if [ -n $LIBPCRE_LA ] ; then 
-	echo " "
-else 
-	echo "Couldn't find libpcre.la!! Script aborts"
-	exit
-fi
-
-# echo "-----------> $LIBPCRE_LA" 
-
-DLNAME_LINE=$(grep "^dlname='" < "${LIBPCRE_LA_FOUND_IN}libpcre.la")
-echo "dlname line == $DLNAME_LINE"
-DLNAME_LINE=$(echo $DLNAME_LINE | tr -d "'")
-dlname=${DLNAME_LINE/"dlname="/""}
-
-
-echo "$LIBPCRE_LA_FOUND_IN$dlname"
-deduced_path=$(dirname $LIBPCRE_LA_FOUND_IN$dlname)
-deduced_path=$(cd "$deduced_path" && pwd)
-
-echo "Deduced path to DLLS as $deduced_path..... "
-
-
-append=$( cat <<HERE
-
-LIBPCRE_DLL_PATH=$deduced_path
-
+LIB_DLL_PATH=$deduced_path
 
 
 HERE
-)
-
-config_file="$append
+	)
+	config_file="$prepend
 $config_file" 
+
+else 
+	echo "Couldn't find libpcre.la!! If you did not specify dll paths in your config.mk, then make will fail."
+fi
+
+
 
 # save config.mk
 rm -f config.mk.bak
@@ -101,8 +98,8 @@ make cqp
 
 # and finally....
 
-LIBPCRE_DLL_PATH=$deduced_path && make release
+make release
 
-# restore original state of config file (so subversion doesn't get confused if this is a checked-out version)
+# restore original state of config file (so subversion doesn't get confused if this directory is under version control)
 rm config.mk
 mv config.mk.bak config.mk

@@ -318,6 +318,9 @@ Note that the CWB build process makes the following assumptions:
 
 If these assumptions are not true, you may need to hack some of the 
 makefile includes a bit to make things work.
+ 
+ 
+        PREREQUISITE EXTERNAL LIBRARIES FOR WIN32 BUILD
 
 When cross-compiling for Windows, things are a bit different: you need
 versions of these libraries that have been compiled *to run under Windows*,
@@ -348,46 +351,107 @@ If you don't use PCRE's "make install", but instead move the library/header
 files  you have built manually to the cross-compiler's directories, 
 these are the files you must make sure get copied:
 
- - pcre.h
- - libpcre-0.dll
- - libpcreposix-0.dll
- --> AND THE STATIC FILES??
+ - Library files:
+    - libpcre.a 
+    - libpcre.dll.a
+    - libpcre.la
+    - libpcreposix.a
+    - libpcreposix.dll.a
+    - libpcreposix.la
+ - Header file:
+    - pcre.h
+ - Dynamic link libraries:
+    - libpcre-0.dll
+    - libpcreposix-0.dll
  
 The directories they need to be inserted into are the MinGW compiler's library 
 and include directories. These will usually be something like
 
         /$libdir/gcc/i586-mingw32msvc/$version
         /$libdir/gcc/i586-mingw32msvc/$version/include
-        -->and bin??
-specify which files in which directories
+        /$libdir/gcc/i586-mingw32msvc/bin
 
-and indeed these are the paths you would also specify as --libdir, --prefix, 
-and --oldincludedir when  building PCRE.
+... for library, header, and DLL files respectively (and indeed these are the 
+paths you would also need to specify as --libdir, --prefix, 
+and --oldincludedir when  building PCRE), where the default for $libdir is 
+/usr/lib .  
 
 But, in general, you should make sure to consult the PCRE documentation on
 building for cross-compilation. See http://www.pcre.org/readme.txt .
 
-~~~~~~~BEGIN INCOMPLETE SECTION
-For Glib, we have had success using the following procedure:
-
-Moving on to Glib: 
-
-SAY SOMETHING ABOUT GLIB.
-
-
-
-where the default for $libdir is /usr/lib.  
-
-Some other relevant links:
-
-
+For Glib, we have had success using pre-built Windows DLL files made available
+by the GTK project, available at 
 
         http://www.gtk.org/download-windows.html
 
+but building Glib from source using the cross-compiler, as with PCRE, might
+also be an option. We used the following procedure:
 
+ - download the binary release (glib_$version_win32.zip) from gtk.org
+ - download the dev release (glib-dev_$version_win32.zip) from gtk.org
+ - extract the list of header, library and DLL files below from the two
+   download zips, and place them into the appopriate places in the
+   cross-compiler's tree.
+ - cross your fingers and build!
 
+The files to extract are listed below. Note this is a maximal, "better safe
+than sorry" list, to avoid problems based on intra-Glib dependencies; ypackagesou
+might also be able to build with a more limited set of files.
 
-~~~~~~~~~~~~END INCOMPLETE SECTION
+ - Library files (from glib-dev_$version_win32.zip/lib):
+    - gio-2.0.lib
+    - glib-2.0.lib
+    - gmodule-2.0.lib
+    - gobject-2.0.lib 
+    - gthread-2.0.lib
+    - libgio-2.0.dll.a
+    - libglib-2.0.dll.a
+    - libgmodule-2.0.dll.a
+    - libgobject-2.0.dll.a
+    - libgthread-2.0.dll.a 
+ - Header files (from glib-dev_$version_win32.zip/include/glib-2.0) :
+    - gio/*
+    - glib/*
+    - gobject/*
+    - glib-object.h
+    - glib.h
+    - gmodule.h
+ - Dynamic link libraries (from glib_$version_win32.zip/bin):
+    - libgio-2.0-0.dll
+    - libglib-2.0-0.dll
+    - libgmodule-2.0-0.dll
+    - libgobject-2.0-0.dll
+    - libgthread-2.0-0.dll
+
+The appropriate places for these files will be, in general, the same as for 
+the PCRE files; see above.
+
+It is important to note that if you have a *nix system and you have Glib 
+installed with pkg-config, then the results you get back from pkg-config WILL 
+NOT WORK for the cross-compiler. pkg-config will always tell you about
+the files/directories for the *nix system itself, not the differently-
+compiled files you need for the cross-compiler.
+
+For both PCRE and Glib, the cross-compiler needs to know where the header and
+library files are. Assuming you have followed the procedure above, they will
+be in places the cross-compiler checks anyway. But if not, then you may need 
+to add extra compiler/linker flags in the config file to inform it about their
+location.
+
+The cross-compiler doesn't need to know about the location of the DLLs, 
+because it doesn't use them. Instead, they are actually copied into the 
+release file as part of the "make release" command. So the location of 
+the DLLs needs to be available as part of the makefile system. 
+
+You can specify this yourself by adding the appropriate information to 
+your config.mk file (as explained in the comments to that file). You need to
+set either LIB_DLL_PATH (path to a directory containing both PCRE and Glib
+DLLs) or both LIBPCRE_DLL_PATH and LIBGLIB_DLL_PATH.
+ 
+If you are using the auto-build script (./install-scripts/cwb-build-win32),
+this script will make a "guess" as to the location of the DLLs. So in this
+case, there is no need to set LIB(PCRE|GLIB|)_DLL_PATH - but if you do, 
+whatever you specify will override the "guess".
 
 
         PACKAGE CONTENTS
@@ -407,8 +471,8 @@ config/                 platform and site configuration files
 
 instutils/              utilities for installing and binary packages
 
-install-scripts         scripts that automate building/installing for common
-                        systems
+install-scripts         shell scripts that automate building/installing for
+                        common systems
 
 cl/                     corpus library (CL) source code
 cqp/                    corpus query processor (CQP) source code
