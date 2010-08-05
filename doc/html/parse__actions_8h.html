@@ -73,7 +73,7 @@
 <li>void <a class="el" href="parse__actions_8h.html#aa251d021165ac10e14d62484b1b290ee">do_info</a> (<a class="el" href="structcl.html">CorpusList</a> *<a class="el" href="structcl.html">cl</a>)
 <li>void <a class="el" href="parse__actions_8h.html#a60e72a59d4ef3384264822c390ef6e37">do_group</a> (<a class="el" href="structcl.html">CorpusList</a> *<a class="el" href="structcl.html">cl</a>, <a class="el" href="corpmanag_8h.html#af1a7d1a8ccee70c4d8bc6c5302a0df0f">FieldType</a> target, int target_offset, char *t_att, <a class="el" href="corpmanag_8h.html#af1a7d1a8ccee70c4d8bc6c5302a0df0f">FieldType</a> source, int source_offset, char *s_att, int cut, int expand, struct <a class="el" href="struct_redir.html">Redir</a> *redir)
 <li>void <a class="el" href="parse__actions_8h.html#a64741e9dd97bfd6254ffdcd14466be3b">do_group2</a> (<a class="el" href="structcl.html">CorpusList</a> *<a class="el" href="structcl.html">cl</a>, <a class="el" href="corpmanag_8h.html#af1a7d1a8ccee70c4d8bc6c5302a0df0f">FieldType</a> target, int target_offset, char *t_att, int cut, int expand, struct <a class="el" href="struct_redir.html">Redir</a> *r)
-<li><a class="el" href="structcl.html">CorpusList</a> * <a class="el" href="parse__actions_8h.html#a2aaabbb6bcc4e5210745065baaaf715c">do_StandardQuery</a> (int cut_value, int keep_flag)
+<dl class="el"><dd class="mdescRight">Like do_group, but with no source.  <a href="#a64741e9dd97bfd6254ffdcd14466be3b"></a><br/></dl><li><a class="el" href="structcl.html">CorpusList</a> * <a class="el" href="parse__actions_8h.html#a2aaabbb6bcc4e5210745065baaaf715c">do_StandardQuery</a> (int cut_value, int keep_flag)
 <li><a class="el" href="structcl.html">CorpusList</a> * <a class="el" href="parse__actions_8h.html#ad54cd36f0dadd371fa6a84e03a4c989c">do_MUQuery</a> (<a class="el" href="unione__tree.html">Evaltree</a> evalt, int keep_flag, int cut_value)
 <li>void <a class="el" href="parse__actions_8h.html#a1fb802bc0071a3b18f2992ea2388211d">do_SearchPattern</a> (<a class="el" href="unione__tree.html">Evaltree</a> expr, <a class="el" href="unionc__tree.html">Constrainttree</a> constraint)
 <li><a class="el" href="unione__tree.html">Evaltree</a> <a class="el" href="parse__actions_8h.html#adbafcf108f171ba7195acec8281a6625">reg_disj</a> (<a class="el" href="unione__tree.html">Evaltree</a> left, <a class="el" href="unione__tree.html">Evaltree</a> right)
@@ -1036,6 +1036,8 @@
       </table>
 </div>
 <div class="memdoc">
+
+<p>Like do_group, but with no source. </p>
 
 <p>References <a class="el" href="groups_8c.html#a1e8f0dbf75269530b413a3aff966d326">compute_grouping()</a>, <a class="el" href="parse__actions_8c.html#ae18e2e1023535a490e7a3483a6f2630f">do_start_timer()</a>, <a class="el" href="parse__actions_8c.html#a06c98c00bf6b4a96dbb6f20573a0c823">do_timing()</a>, <a class="el" href="groups_8c.html#a74cca697a80bcc3362945f9b6dd1f3d7">free_group()</a>, <a class="el" href="corpmanag_8h.html#ad831993de681337ae44f6bcccbc42d8cae1b5487a3a59e85cdef93ded06a9144e">NoField</a>, and <a class="el" href="groups_8c.html#a933562d9aaeb1eda69430555ed28e62b">print_group()</a>.</p>
 
@@ -2688,7 +2690,7 @@
 </div>
 </div>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Thu Aug 5 03:44:32 2010 for CWB by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Thu Aug 5 17:10:08 2010 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

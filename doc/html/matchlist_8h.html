@@ -30,12 +30,12 @@
 <h1>matchlist.h File Reference</h1><h2>Data Structures</h2>
 <ul>
 <li>struct <a class="el" href="struct___matchlist.html">_Matchlist</a>
-</ul>
+<dl class="el"><dd class="mdescRight">The Matchlist object.  <a href="struct___matchlist.html#_details">More...</a><br/></dl></ul>
 <h2>Typedefs</h2>
 <ul>
-<li>typedef enum <a class="el" href="matchlist_8h.html#a4d573330ec7dc65b6a4bb9624374d417">ml_setops</a> <a class="el" href="matchlist_8h.html#ab76e3f5deb829618f591eb6e92fb5a28">MLSetOp</a>
 <li>typedef struct <a class="el" href="struct___matchlist.html">_Matchlist</a> <a class="el" href="matchlist_8h.html#a3efbddec69d043c7c63e5238a31149e7">Matchlist</a>
-</ul>
+<dl class="el"><dd class="mdescRight">The Matchlist object.  <a href="#a3efbddec69d043c7c63e5238a31149e7"></a><br/></dl><li>typedef enum <a class="el" href="matchlist_8h.html#a4d573330ec7dc65b6a4bb9624374d417">ml_setops</a> <a class="el" href="matchlist_8h.html#ab76e3f5deb829618f591eb6e92fb5a28">MLSetOp</a>
+<dl class="el"><dd class="mdescRight">Set operations which can be performed on (initial) matchlists.  <a href="#ab76e3f5deb829618f591eb6e92fb5a28"></a><br/></dl></ul>
 <h2>Enumerations</h2>
 <ul>
 <li>enum <a class="el" href="matchlist_8h.html#a4d573330ec7dc65b6a4bb9624374d417">ml_setops</a> { <br/>
@@ -48,15 +48,16 @@
 <a class="el" href="matchlist_8h.html#a4d573330ec7dc65b6a4bb9624374d417a09fc96752855892343a3ec4bb6291c80">Reduce</a>
 <br/>
  }
-</ul>
+<dl class="el"><dd class="mdescRight"><p>Set operations which can be performed on (initial) matchlists. </p>
+ <a href="matchlist_8h.html#a4d573330ec7dc65b6a4bb9624374d417">More...</a><br/></dl></ul>
 <h2>Functions</h2>
 <ul>
 <li>void <a class="el" href="matchlist_8h.html#adcf5e03e33505f67f3af93af20003cea">init_matchlist</a> (<a class="el" href="struct___matchlist.html">Matchlist</a> *matchlist)
-<li>void <a class="el" href="matchlist_8h.html#a4d136c3893f86c4693ded2f8f1756f15">show_matchlist</a> (<a class="el" href="struct___matchlist.html">Matchlist</a> matchlist)
-<li>void <a class="el" href="matchlist_8h.html#a926180b42e5f8594158e50b7361b22f4">show_matchlist_firstelements</a> (<a class="el" href="struct___matchlist.html">Matchlist</a> matchlist)
-<li>void <a class="el" href="matchlist_8h.html#a794e90c60dc18409402211b8be91c0a4">free_matchlist</a> (<a class="el" href="struct___matchlist.html">Matchlist</a> *matchlist)
-<li>int <a class="el" href="matchlist_8h.html#aceac8bbec1e489f033a2bee302b1b193">Setop</a> (<a class="el" href="struct___matchlist.html">Matchlist</a> *list1, <a class="el" href="matchlist_8h.html#ab76e3f5deb829618f591eb6e92fb5a28">MLSetOp</a> operation, <a class="el" href="struct___matchlist.html">Matchlist</a> *list2)
-</ul>
+<dl class="el"><dd class="mdescRight">Initialise the memebrs of the given Matchlist object.  <a href="#adcf5e03e33505f67f3af93af20003cea"></a><br/></dl><li>void <a class="el" href="matchlist_8h.html#a4d136c3893f86c4693ded2f8f1756f15">show_matchlist</a> (<a class="el" href="struct___matchlist.html">Matchlist</a> matchlist)
+<dl class="el"><dd class="mdescRight">Prints the entire contents of a Matchlist to stdout.  <a href="#a4d136c3893f86c4693ded2f8f1756f15"></a><br/></dl><li>void <a class="el" href="matchlist_8h.html#a926180b42e5f8594158e50b7361b22f4">show_matchlist_firstelements</a> (<a class="el" href="struct___matchlist.html">Matchlist</a> matchlist)
+<dl class="el"><dd class="mdescRight">Prints the first few elements of a matchlist to stdout.  <a href="#a926180b42e5f8594158e50b7361b22f4"></a><br/></dl><li>void <a class="el" href="matchlist_8h.html#a794e90c60dc18409402211b8be91c0a4">free_matchlist</a> (<a class="el" href="struct___matchlist.html">Matchlist</a> *matchlist)
+<dl class="el"><dd class="mdescRight">Frees all the memory used within a matchlist, and re-initialises all its variables.  <a href="#a794e90c60dc18409402211b8be91c0a4"></a><br/></dl><li>int <a class="el" href="matchlist_8h.html#aceac8bbec1e489f033a2bee302b1b193">Setop</a> (<a class="el" href="struct___matchlist.html">Matchlist</a> *list1, <a class="el" href="matchlist_8h.html#ab76e3f5deb829618f591eb6e92fb5a28">MLSetOp</a> operation, <a class="el" href="struct___matchlist.html">Matchlist</a> *list2)
+<dl class="el"><dd class="mdescRight">Perform "operation" on the two match lists (can be initial).  <a href="#aceac8bbec1e489f033a2bee302b1b193"></a><br/></dl></ul>
 <hr/><h2>Typedef Documentation</h2>
 <a class="anchor" id="a3efbddec69d043c7c63e5238a31149e7"></a><!-- doxytag: member="matchlist.h::Matchlist" ref="a3efbddec69d043c7c63e5238a31149e7" args="" -->
 <div class="memitem">
@@ -68,6 +69,9 @@
       </table>
 </div>
 <div class="memdoc">
+
+<p>The Matchlist object. </p>
+<p>This is a table of integers describing matches to a query. </p>
 
 </div>
 </div>
@@ -82,6 +86,8 @@
 </div>
 <div class="memdoc">
 
+<p>Set operations which can be performed on (initial) matchlists. </p>
+
 </div>
 </div>
 <hr/><h2>Enumeration Type Documentation</h2>
@@ -95,6 +101,8 @@
       </table>
 </div>
 <div class="memdoc">
+
+<p>Set operations which can be performed on (initial) matchlists. </p>
 <dl><dt><b>Enumerator: </b></dt><dd><table border="0" cellspacing="2" cellpadding="0">
 <tr><td valign="top"><em><a class="anchor" id="a4d573330ec7dc65b6a4bb9624374d417a8b8b090d04260fea32aac10ccc01175f"></a><!-- doxytag: member="Union" ref="a4d573330ec7dc65b6a4bb9624374d417a8b8b090d04260fea32aac10ccc01175f" args="" -->Union</em>&nbsp;</td><td>
 </td></tr>
@@ -103,10 +111,13 @@
 <tr><td valign="top"><em><a class="anchor" id="a4d573330ec7dc65b6a4bb9624374d417a477de256cc7c0352da3d343a7ec48257"></a><!-- doxytag: member="Complement" ref="a4d573330ec7dc65b6a4bb9624374d417a477de256cc7c0352da3d343a7ec48257" args="" -->Complement</em>&nbsp;</td><td>
 </td></tr>
 <tr><td valign="top"><em><a class="anchor" id="a4d573330ec7dc65b6a4bb9624374d417a24f669631df31da9ebff42fc3b49b8df"></a><!-- doxytag: member="Identity" ref="a4d573330ec7dc65b6a4bb9624374d417a24f669631df31da9ebff42fc3b49b8df" args="" -->Identity</em>&nbsp;</td><td>
+<p>create a copy </p>
 </td></tr>
 <tr><td valign="top"><em><a class="anchor" id="a4d573330ec7dc65b6a4bb9624374d417a699b9ad2f87a9e68e8f442bcdbe034e2"></a><!-- doxytag: member="Uniq" ref="a4d573330ec7dc65b6a4bb9624374d417a699b9ad2f87a9e68e8f442bcdbe034e2" args="" -->Uniq</em>&nbsp;</td><td>
+<p>make unique lists (also called "sets" :-)) </p>
 </td></tr>
 <tr><td valign="top"><em><a class="anchor" id="a4d573330ec7dc65b6a4bb9624374d417a09fc96752855892343a3ec4bb6291c80"></a><!-- doxytag: member="Reduce" ref="a4d573330ec7dc65b6a4bb9624374d417a09fc96752855892343a3ec4bb6291c80" args="" -->Reduce</em>&nbsp;</td><td>
+<p>delete -1 items </p>
 </td></tr>
 </table>
 </dd>
@@ -131,6 +142,8 @@
 </div>
 <div class="memdoc">
 
+<p>Frees all the memory used within a matchlist, and re-initialises all its variables. </p>
+
 <p>References <a class="el" href="cl_8h.html#a9e15a3c725711d9effd623b2f3e225be">cl_free</a>, <a class="el" href="struct___matchlist.html#a5fccd2713eeb2915db0d8484e2b9bd77">_Matchlist::end</a>, <a class="el" href="matchlist_8c.html#adcf5e03e33505f67f3af93af20003cea">init_matchlist()</a>, <a class="el" href="struct___matchlist.html#ad54a35243a6782fc034de0eed398eeaf">_Matchlist::start</a>, and <a class="el" href="struct___matchlist.html#a3b2128b6a9aa23f1462b93176bad3596">_Matchlist::target_positions</a>.</p>
 
 <p>Referenced by <a class="el" href="eval_8c.html#aadbbf692b029374646a9baf9b53e2a90">calculate_initial_matchlist_1()</a>, <a class="el" href="eval_8c.html#a6b88f677ea68fdf529f6588033930492">check_alignment_constraints()</a>, <a class="el" href="eval_8h.html#a8040881844328772004bc1980c4fea1a">cqp_run_mu_query()</a>, <a class="el" href="eval_8h.html#a00fa95009fb1f64cd7c16bfe5841a741">cqp_run_tab_query()</a>, <a class="el" href="eval_8c.html#ae380a9021dec38269904aff4791541fc">eval_mu_tree()</a>, <a class="el" href="matchlist_8h.html#aceac8bbec1e489f033a2bee302b1b193">Setop()</a>, <a class="el" href="eval_8c.html#adb7ad0a24759f5f36340f8b66bb70d79">simulate()</a>, <a class="el" href="eval_8c.html#a6d83579b3075256f14a62888a2e4b284">simulate_dfa()</a>, and <a class="el" href="tree_8h.html#a28175b9d3283db5580269676c3f60b9c">try_optimization()</a>.</p>
@@ -152,6 +165,8 @@
       </table>
 </div>
 <div class="memdoc">
+
+<p>Initialise the memebrs of the given Matchlist object. </p>
 
 <p>References <a class="el" href="struct___matchlist.html#a5fccd2713eeb2915db0d8484e2b9bd77">_Matchlist::end</a>, <a class="el" href="struct___matchlist.html#aee496ef583f57a209998af42057fb4d9">_Matchlist::is_inverted</a>, <a class="el" href="struct___matchlist.html#a4a39c3b3795df9e3e8e38aba660308ba">_Matchlist::matches_whole_corpus</a>, <a class="el" href="struct___matchlist.html#ad54a35243a6782fc034de0eed398eeaf">_Matchlist::start</a>, <a class="el" href="struct___matchlist.html#a148f69d27122888cf958f4aa979bbe95">_Matchlist::tabsize</a>, and <a class="el" href="struct___matchlist.html#a3b2128b6a9aa23f1462b93176bad3596">_Matchlist::target_positions</a>.</p>
 
@@ -190,7 +205,13 @@
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="corpmanag_8c.html#a133d99a40e4b51fe8cad6362e8b4e737">access_corpus()</a>, <a class="el" href="cl_8h.html#a3b60fdde6a7c8fbc535efaf526dbcb78">ATT_POS</a>, <a class="el" href="cl_8h.html#a1fa2e2ab47bd2c689b68a78bdac22028">CDA_OK</a>, <a class="el" href="cl_8h.html#a8807f044dd47ab4d1f1c3eba26b2646c">cderrno</a>, <a class="el" href="cl_8h.html#a9e15a3c725711d9effd623b2f3e225be">cl_free</a>, <a class="el" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="cl_8h.html#a7480d6ea66599014088f218912ddb89f">cl_realloc()</a>, <a class="el" href="matchlist_8h.html#a4d573330ec7dc65b6a4bb9624374d417a477de256cc7c0352da3d343a7ec48257">Complement</a>, <a class="el" href="attributes_8h.html#a0f022cbfe7890834b65ea9542eb4f50c">DEFAULT_ATT_NAME</a>, <a class="el" href="struct___matchlist.html#a5fccd2713eeb2915db0d8484e2b9bd77">_Matchlist::end</a>, <a class="el" href="cl_8h.html#a9c45657143514f1e869cae165ab47c44">find_attribute</a>, <a class="el" href="matchlist_8c.html#a794e90c60dc18409402211b8be91c0a4">free_matchlist()</a>, <a class="el" href="cl_8h.html#a04030b086f967a4ea6e69042c05b67be">get_attribute_size</a>, <a class="el" href="matchlist_8h.html#a4d573330ec7dc65b6a4bb9624374d417a24f669631df31da9ebff42fc3b49b8df">Identity</a>, <a class="el" href="matchlist_8h.html#a4d573330ec7dc65b6a4bb9624374d417ac852ba2c20196516a8b943442128d21c">Intersection</a>, <a class="el" href="struct___matchlist.html#aee496ef583f57a209998af42057fb4d9">_Matchlist::is_inverted</a>, <a class="el" href="struct___matchlist.html#a4a39c3b3795df9e3e8e38aba660308ba">_Matchlist::matches_whole_corpus</a>, <a class="el" href="macros_8h.html#a3acffbd305ee72dcd4593c0d8af64a4f">MIN</a>, <a class="el" href="matchlist_8h.html#a4d573330ec7dc65b6a4bb9624374d417a09fc96752855892343a3ec4bb6291c80">Reduce</a>, <a class="el" href="matchlist_8c.html#aceac8bbec1e489f033a2bee302b1b193">Setop()</a>, <a class="el" href="struct___matchlist.html#ad54a35243a6782fc034de0eed398eeaf">_Matchlist::start</a>, <a class="el" href="struct___matchlist.html#a148f69d27122888cf958f4aa979bbe95">_Matchlist::tabsize</a>, <a class="el" href="struct___matchlist.html#a3b2128b6a9aa23f1462b93176bad3596">_Matchlist::target_positions</a>, <a class="el" href="matchlist_8h.html#a4d573330ec7dc65b6a4bb9624374d417a8b8b090d04260fea32aac10ccc01175f">Union</a>, and <a class="el" href="matchlist_8h.html#a4d573330ec7dc65b6a4bb9624374d417a699b9ad2f87a9e68e8f442bcdbe034e2">Uniq</a>.</p>
+<p>Perform "operation" on the two match lists (can be initial). </p>
+<p>The result is assigned to list1.</p>
+<p>this whole code is WRONG when one of the matchlists is inverted TODO!</p>
+<p>Also TODO: give it a better name.</p>
+<p>This contains, by far, most of the code in the Matchlist module. </p>
+
+<p>References <a class="el" href="corpmanag_8c.html#a133d99a40e4b51fe8cad6362e8b4e737">access_corpus()</a>, <a class="el" href="cl_8h.html#a3b60fdde6a7c8fbc535efaf526dbcb78">ATT_POS</a>, <a class="el" href="cl_8h.html#a1fa2e2ab47bd2c689b68a78bdac22028">CDA_OK</a>, <a class="el" href="cdaccess_8c.html#af97f2ad4a69c7d0105f9cee4a51b29b8">cl_errno</a>, <a class="el" href="cl_8h.html#a9e15a3c725711d9effd623b2f3e225be">cl_free</a>, <a class="el" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="cdaccess_8c.html#ae9db76b80522e91e2735414a079e952b">cl_max_cpos()</a>, <a class="el" href="cl_8h.html#a7480d6ea66599014088f218912ddb89f">cl_realloc()</a>, <a class="el" href="matchlist_8h.html#a4d573330ec7dc65b6a4bb9624374d417a477de256cc7c0352da3d343a7ec48257">Complement</a>, <a class="el" href="attributes_8h.html#a0f022cbfe7890834b65ea9542eb4f50c">DEFAULT_ATT_NAME</a>, <a class="el" href="struct___matchlist.html#a5fccd2713eeb2915db0d8484e2b9bd77">_Matchlist::end</a>, <a class="el" href="cl_8h.html#a9c45657143514f1e869cae165ab47c44">find_attribute</a>, <a class="el" href="matchlist_8c.html#a794e90c60dc18409402211b8be91c0a4">free_matchlist()</a>, <a class="el" href="matchlist_8h.html#a4d573330ec7dc65b6a4bb9624374d417a24f669631df31da9ebff42fc3b49b8df">Identity</a>, <a class="el" href="matchlist_8h.html#a4d573330ec7dc65b6a4bb9624374d417ac852ba2c20196516a8b943442128d21c">Intersection</a>, <a class="el" href="struct___matchlist.html#aee496ef583f57a209998af42057fb4d9">_Matchlist::is_inverted</a>, <a class="el" href="struct___matchlist.html#a4a39c3b3795df9e3e8e38aba660308ba">_Matchlist::matches_whole_corpus</a>, <a class="el" href="macros_8h.html#a3acffbd305ee72dcd4593c0d8af64a4f">MIN</a>, <a class="el" href="matchlist_8h.html#a4d573330ec7dc65b6a4bb9624374d417a09fc96752855892343a3ec4bb6291c80">Reduce</a>, <a class="el" href="matchlist_8c.html#aceac8bbec1e489f033a2bee302b1b193">Setop()</a>, <a class="el" href="struct___matchlist.html#ad54a35243a6782fc034de0eed398eeaf">_Matchlist::start</a>, <a class="el" href="struct___matchlist.html#a148f69d27122888cf958f4aa979bbe95">_Matchlist::tabsize</a>, <a class="el" href="struct___matchlist.html#a3b2128b6a9aa23f1462b93176bad3596">_Matchlist::target_positions</a>, <a class="el" href="matchlist_8h.html#a4d573330ec7dc65b6a4bb9624374d417a8b8b090d04260fea32aac10ccc01175f">Union</a>, and <a class="el" href="matchlist_8h.html#a4d573330ec7dc65b6a4bb9624374d417a699b9ad2f87a9e68e8f442bcdbe034e2">Uniq</a>.</p>
 
 <p>Referenced by <a class="el" href="eval_8c.html#a3cbd66771df1d8c87901c9e6bf814a83">calculate_initial_matchlist()</a>, <a class="el" href="eval_8c.html#aadbbf692b029374646a9baf9b53e2a90">calculate_initial_matchlist_1()</a>, <a class="el" href="eval_8h.html#a8040881844328772004bc1980c4fea1a">cqp_run_mu_query()</a>, <a class="el" href="eval_8h.html#a00fa95009fb1f64cd7c16bfe5841a741">cqp_run_tab_query()</a>, <a class="el" href="eval_8c.html#ae380a9021dec38269904aff4791541fc">eval_mu_tree()</a>, <a class="el" href="eval_8c.html#abcf01813cbf1161269761c3d6a2dc239">matchfirstpattern()</a>, <a class="el" href="matchlist_8h.html#aceac8bbec1e489f033a2bee302b1b193">Setop()</a>, <a class="el" href="eval_8c.html#a6d83579b3075256f14a62888a2e4b284">simulate_dfa()</a>, and <a class="el" href="tree_8h.html#a28175b9d3283db5580269676c3f60b9c">try_optimization()</a>.</p>
 
@@ -211,6 +232,8 @@
       </table>
 </div>
 <div class="memdoc">
+
+<p>Prints the entire contents of a Matchlist to stdout. </p>
 
 <p>References <a class="el" href="struct___matchlist.html#a5fccd2713eeb2915db0d8484e2b9bd77">_Matchlist::end</a>, <a class="el" href="struct___matchlist.html#aee496ef583f57a209998af42057fb4d9">_Matchlist::is_inverted</a>, <a class="el" href="struct___matchlist.html#ad54a35243a6782fc034de0eed398eeaf">_Matchlist::start</a>, <a class="el" href="struct___matchlist.html#a148f69d27122888cf958f4aa979bbe95">_Matchlist::tabsize</a>, and <a class="el" href="struct___matchlist.html#a3b2128b6a9aa23f1462b93176bad3596">_Matchlist::target_positions</a>.</p>
 
@@ -234,6 +257,10 @@
 </div>
 <div class="memdoc">
 
+<p>Prints the first few elements of a matchlist to stdout. </p>
+<p>"First few" equals up to 1000.</p>
+<p>Only the start positions are printed. </p>
+
 <p>References <a class="el" href="struct___matchlist.html#ad54a35243a6782fc034de0eed398eeaf">_Matchlist::start</a>, and <a class="el" href="struct___matchlist.html#a148f69d27122888cf958f4aa979bbe95">_Matchlist::tabsize</a>.</p>
 
 <p>Referenced by <a class="el" href="eval_8c.html#a6d83579b3075256f14a62888a2e4b284">simulate_dfa()</a>.</p>
@@ -241,7 +268,7 @@
 </div>
 </div>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Thu Aug 5 03:44:32 2010 for CWB by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Thu Aug 5 17:10:07 2010 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

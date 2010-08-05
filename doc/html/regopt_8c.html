@@ -64,7 +64,7 @@
 <dl class="el"><dd class="mdescRight">The number of grains currently in the intermediate buffer.  <a href="#a6572b918e13646e4ca08c5ce0e40ce8a"></a><br/></dl><li>char <a class="el" href="regopt_8c.html#aff6734bd1a37cead5c8f5db81ed8e1f5">public_grain_data</a> [MAX_LINE_LENGTH]
 <dl class="el"><dd class="mdescRight">A buffer for grain strings.  <a href="#aff6734bd1a37cead5c8f5db81ed8e1f5"></a><br/></dl><li>char <a class="el" href="regopt_8c.html#a5f7ef246f02726564ffb216ee72bbdb7">local_grain_data</a> [MAX_LINE_LENGTH]
 <dl class="el"><dd class="mdescRight">A buffer for grain strings.  <a href="#a5f7ef246f02726564ffb216ee72bbdb7"></a><br/></dl><li>int <a class="el" href="regopt_8c.html#a2a1fce7eeb5bcc7601316ca301810a90">cl_regopt_successes</a> = 0
-<dl class="el"><dd class="mdescRight">A counter of how many times the "grain" system has found a match.  <a href="#a2a1fce7eeb5bcc7601316ca301810a90"></a><br/></dl><li>char <a class="el" href="regopt_8c.html#afda07c8975941828e9fc6d8df4d42780">cl_regex_error</a> [MAX_LINE_LENGTH]
+<dl class="el"><dd class="mdescRight">A counter of how many times the "grain" system has allwoed us to avoid calling the regex engine.  <a href="#a2a1fce7eeb5bcc7601316ca301810a90"></a><br/></dl><li>char <a class="el" href="regopt_8c.html#afda07c8975941828e9fc6d8df4d42780">cl_regex_error</a> [MAX_LINE_LENGTH]
 <dl class="el"><dd class="mdescRight">The error message from (PCRE) regex compilation are placed in this buffer if <a class="el" href="cl_8h.html#a2c4607eb8e094b7699062df8eb744058" title="Create a new CL_regex object (ie a regular expression buffer).">cl_new_regex()</a> fails.  <a href="#afda07c8975941828e9fc6d8df4d42780"></a><br/></dl></ul>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <p>The CL_Regex object, and the CL Regular Expression Optimiser. </p>
@@ -282,11 +282,11 @@
 <div class="memdoc">
 
 <p>Get a reading from the "success counter" for optimised regexes. </p>
-<p>The counter is incremented by 1 every time the "grain" system is used to get a match successfully, avoiding use of the external regex library which is the fallback.</p>
+<p>The counter is incremented by 1 every time the "grain" system is used successfully to avoid calling PCRE. That is, it is incremented every time a string is scrutinised and found to contain none of the grains.</p>
 <p>Usage:</p>
 <p><a class="el" href="cl_8h.html#a5e4fbd44e2df4d0c89bc3d4633833dd1" title="Reset the &quot;success counter&quot; for optimised regexes.">cl_regopt_count_reset()</a>;</p>
 <p>for (i = 0, hits = 0; i &lt; n; i++) if (cl_regex_match(rx, haystacks[i])) hits++;</p>
-<p>fprintf(stderr, "Found %d matches, %d of them using the regopt system", hits, <a class="el" href="cl_8h.html#ac579f14edd519c3f2aa4a4cb33c76fcb" title="Get a reading from the &quot;success counter&quot; for optimised regexes.">cl_regopt_count_get()</a> );</p>
+<p>fprintf(stderr, "Found %d matches; avoided regex matching %d times out of %d trials", hits, <a class="el" href="cl_8h.html#ac579f14edd519c3f2aa4a4cb33c76fcb" title="Get a reading from the &quot;success counter&quot; for optimised regexes.">cl_regopt_count_get()</a>, n );</p>
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="regopt_8c.html#a5e4fbd44e2df4d0c89bc3d4633833dd1" title="Reset the &quot;success counter&quot; for optimised regexes.">cl_regopt_count_reset</a> </dd></dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>an integer indicating the number of times a regular expression has been matched using the regopt system of "grains", rather than by calling an external regex library. </dd></dl>
 
@@ -339,6 +339,7 @@
 <p>Is the given character a 'safe' character which will only match itself in a regex? </p>
 <p>What counts as safe: A to Z, a to z, 0 to 9, minus, quote marks, percent, ampersand, slashes, excl mark, colon, semi colon, character, underscore, any value over 0x7f.</p>
 <p>What counts as not safe therefore includes: brackets, braces, square brackets; questionmark, plus, and star; circumflex and dollar sign; dot; hash; etc.</p>
+<p>(But, in UTF8, Unicode PUNC area equivalents of these characters will be safe.)</p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>c</em>&nbsp;</td><td>The character (cast to unsigned for the comparison. </td></tr>
@@ -755,7 +756,7 @@
 </div>
 <div class="memdoc">
 
-<p>A counter of how many times the "grain" system has found a match. </p>
+<p>A counter of how many times the "grain" system has allwoed us to avoid calling the regex engine. </p>
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="regopt_8c.html#ac579f14edd519c3f2aa4a4cb33c76fcb" title="Get a reading from the &quot;success counter&quot; for optimised regexes.">cl_regopt_count_get</a> </dd></dl>
 
 <p>Referenced by <a class="el" href="regopt_8c.html#a7a9d3816260f385cf56e15839c518cee">cl_regex_match()</a>, <a class="el" href="regopt_8c.html#ac579f14edd519c3f2aa4a4cb33c76fcb">cl_regopt_count_get()</a>, and <a class="el" href="regopt_8c.html#a5e4fbd44e2df4d0c89bc3d4633833dd1">cl_regopt_count_reset()</a>.</p>
@@ -835,7 +836,7 @@
 </div>
 </div>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Thu Aug 5 03:44:32 2010 for CWB by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Thu Aug 5 17:10:07 2010 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

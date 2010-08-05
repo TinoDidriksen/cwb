@@ -73,7 +73,7 @@
 <dl class="el"><dd class="mdescRight">buffer for queries  <a href="#adfbde17c16a76552596e50bd3c371382"></a><br/></dl><li>int <a class="el" href="cqp_8h.html#ac0d42ac5f8866bd18648afcc372e650c">QueryBufferP</a>
 <dl class="el"><dd class="mdescRight">pointer into this buffer, for appending  <a href="#ac0d42ac5f8866bd18648afcc372e650c"></a><br/></dl><li>int <a class="el" href="cqp_8h.html#a54d95727d347da93ae0866f293f729c4">QueryBufferOverflow</a>
 <dl class="el"><dd class="mdescRight">flag which signals buffer overflows  <a href="#a54d95727d347da93ae0866f293f729c4"></a><br/></dl><li>char * <a class="el" href="cqp_8h.html#a73e30a4cafb3e8b359d93c3f5c4bc986">searchstr</a>
-<dl class="el"><dd class="mdescRight">needs to be global, unfortunately  <a href="#a73e30a4cafb3e8b359d93c3f5c4bc986"></a><br/></dl><li>int <a class="el" href="cqp_8h.html#a6da4fd2cde8ab5a835a44764d35cf337">exit_cqp</a>
+<dl class="el"><dd class="mdescRight">Global variable containing a search string that is to be converted to a DFA.  <a href="#a73e30a4cafb3e8b359d93c3f5c4bc986"></a><br/></dl><li>int <a class="el" href="cqp_8h.html#a6da4fd2cde8ab5a835a44764d35cf337">exit_cqp</a>
 <dl class="el"><dd class="mdescRight">1 iff exit-command was issued while parsing  <a href="#a6da4fd2cde8ab5a835a44764d35cf337"></a><br/></dl><li>char * <a class="el" href="cqp_8h.html#a27d0516bdf945bd7f60c3c9b66be0145">cqp_input_string</a>
 <li>int <a class="el" href="cqp_8h.html#a099bf71badf39387256aa765f798e608">cqp_input_string_position</a>
 <li>int <a class="el" href="cqp_8h.html#a7bb3c47930435c0d1da71fbc5107e981">EvaluationIsRunning</a>
@@ -629,7 +629,8 @@
 </div>
 <div class="memdoc">
 
-<p>needs to be global, unfortunately </p>
+<p>Global variable containing a search string that is to be converted to a DFA. </p>
+<p>(Needs to be global; functions using the DFA write to it, and then the DFA parser reads from it. Declared as an external global in <a class="el" href="cqp_8h.html">cqp.h</a>. </p>
 
 <p>Referenced by <a class="el" href="parse__actions_8h.html#a1fb802bc0071a3b18f2992ea2388211d">do_SearchPattern()</a>, <a class="el" href="parse__actions_8h.html#a2aaabbb6bcc4e5210745065baaaf715c">do_StandardQuery()</a>, <a class="el" href="regex2dfa_8c.html#abb03850a8ac96371276164681d7f9865">GET()</a>, <a class="el" href="parse__actions_8h.html#a8fd8ea0c7037f747274aebbc254e47a2">prepare_input()</a>, <a class="el" href="parse__actions_8h.html#a0cd76ad97a709afa3bd6610768e1d39d">prepare_Query()</a>, and <a class="el" href="regex2dfa_8h.html#a69e30286442eee48a3350d6da9bcd4d8">regex2dfa()</a>.</p>
 
@@ -651,7 +652,7 @@
 </div>
 </div>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Thu Aug 5 03:44:32 2010 for CWB by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Thu Aug 5 17:10:07 2010 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

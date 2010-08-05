@@ -54,15 +54,19 @@ h1. Implementation steps
 ** all regexp functionality in the CWB should already have been encapsulated in @CL_Regex@ objects (check!)
 *** %{color:red}AH% There was code in @cdaccess.c@ that duplicated this; it's now in the @CL_Regex@. There may be regex and/or other matching code in CQP. 
 ** regexp optimiser (@cl_regopt_analyse()@, @cl_regex_match()@) should work out of the box for all ASCII extensions (in particular, ISO-8859-X and UTF-8), even if it isn't aware of MBCs
+*** %{color:red}AH% Some adjustments had to be made because of assumtions made re: metacahracters which aren't true for PCRE. These are now done.
 ** @cl_new_regex()@ has to make use of charset declaration, which is already part of the API
 *** %{color:red}AH% Done. All calls to @cl_new_regex@ have been checked for cases where @latin1@ is hard-coded as its second argument. This has now been removed.
 ** alternative API: regexp tied to corpus handle, can only be used to match strings from this corpus
 ** @cl_regex_match()@ should validate input strings for correct encoding if possible (esp. important with UTF-8, to avoid undefined behaviour in library functions)
 *** %{color:red}AH% PCRE can validate UTF8 strings it has been passed; I have switched this off, on the assumption that strings will be validated at a higher level i.e. upon input to the application. This is an assumption we may need to revisit later. 
+*** %{color:red}AH% All strings are now validated either (a) when they are cwb-encode'd or (b) when the query enters CQP.
 *** %{color:red}AH% suggests a new API function @int cl_string_validate_encoding(const char*, corpusCharset)@ to do this
+**** %{color:red}AH% done
 # All low-level CL functions must validate MBCs in UTF-8 input strings to ensure well-defined behaviour
 ** %{color:red}AH% ideally, this would be better done immediately on the string being taken into CWB, rather than repeatedly by different functions. So we should be able to assume that strings in indexed corpora are valid UTF8 (or whatever).
 *** %{color:red}SE% Of course, that's the task of @cwb-encode@. What I meant here is that the CL functions must validate strings passed as arguments for wellformedness
+*** %{color:red}AH% Now done
 ** virtually all functions are linked to a corpus handle, from which they obtain their expected character set
 # Extend code in @cl/special_chars.c@ to support multiple character sets
 ** in particular, @%c@ and @%d@ mappings must be implemented for all supported character sets
@@ -90,6 +94,7 @@ h1. Implementation steps
 *** %{color:red}AH% concur for Latin, Greek etc. alphabets, but for Arabic the opposite is probably true - most software does not use the "presentation forms" which are precomposed
 *** %{color:red}SE% but I'd still recommend a consistent internal format, to reduce the probability of bugs creeping in.  Would internal storage of Unicode strings in NFC be problematic for Arabic corpora?
 *** %{color:red}AH% This is now implemented in cl_string_canonical, but it still needs to be ascertained that all strings entering the CWB are normalised with this function where necessary. The Arabic problem is... erm... probably not a problem; I suspect NFC does not affect presentation forms. We will have to see what happens...
+**** %{color:red}AH% All strings entering CWB should now be normalised at point of entry.
 ** problem: many simple Unicode / regexp libraries don't offer normalisation functions
 *** %{color:red}AH% and if we write our own we have the difficulty of keeping it up to date with new versions of unicode
 *** %{color:red}SE% you just want to force us to use that dreadful ICU monster! ;-)
@@ -99,6 +104,7 @@ h1. Implementation steps
 *** again I think relying on locales could be dodgy for many languages...  
 **** %{color:red}SE% define "dodgy"
 **** %{color:red}AH% "dodgy" == "prone to variable behaviour across different OS that we will find it difficult to fully account for"; see "for instance":http://library.gnome.org/devel/glib/2.22/glib-running.html#setlocale  
+** %{color:red}AH% It turned out that @sort@ and @count@ both bypassed the CL public API and used string-folding mapping-tables directly - a big, big no-no with UTF-8 - as well as doing byte-by-byte string reversal (even worse). A new "qsort collate" function has been added to the CL API to support @sort@ and @count@ and the @cqp/ranges.c@ adjusted to suit. One potential problem is that collation in UTF8 uses the Glib function g_utf8_collate, which is locale-dependent. SO, if the locale specifies (say) case-and-accent insensitivity, we might end up with case/accent insensitive sort *even if* %c and %d are off. 
 # If CQP defines built-in functions for string processing (@cqp/builtins.c@), they must also be adapted to multiple character sets
 # Proper handling of fixed-character context in *kwic output* (@cat@) will require a major rewrite
 ** affects all kwic-formatting code in @cqp/output.c@, @cqp/print-modes.c@, @ascii-print.c@, @html-print.c@, @latex-print.c@, @sgml-print.c@, etc.
@@ -112,6 +118,7 @@ h1. Implementation steps
 ** for a standalone package, complete installations of these libraries have to be included in the binary distribution; wrapper scripts must set appropriate paths for dynamic libraries etc. before calling CWB tools; direct linking of e.g. CL library into other applications (as used by @CWB::CL@) may be very difficult
 ** %{color:red}SE% If there are enough volunteers, we can probably work out suitable distribution formats for all major platforms (Ubuntu, Mac OS X, Windows).  Users of more arcane operating systems would just have to install from source and get hold of the necessary prerequisites.
 ** %{color:red}AH% So far, I have tried to rewrite the makefiles so that the external libraries (PCRE, Glib) are statically linked wherever possible. So far it has worked!
+*** %{color:red}AH% Under Win32, hwoever, PCRE adn Glib DLLs need to be included in the binary release. This is now done.
 
 h1. Unicode software options (external libraries)
 
@@ -243,7 +250,7 @@ h1. Regex library benchmarking exercise
 *** @141: ".{3,}(ness(es)?|it(y|ies)|(tion|ment)s?)"@
 *** @145: ".*(a|e|i|o|u){4,}.*"@
 *** @151: "([^t]*(t[^t]*){3}|[^r]*(r[^r]*){3})"@
-** The common factor seems to be a string of "almost anything" at the start of the regex. Since CQP's regex matching is always anchored at the beginning and end of the regex, i.e. always a full p-attribute not part of a p-attribute, this may not present problemsfor us  (? - I think) 
+** The common factor seems to be a string of "almost anything" at the start of the regex. Since CQP's regex matching is always anchored at the beginning and end of the regex, i.e. always a full p-attribute not part of a p-attribute, this may not present problems for us  (? - I think) 
 
 * Conclusion
 ** Use *PCRE* for regex matching; speed combined with its implementation of a very well-known regex dialect (Perl) make it the best choice.

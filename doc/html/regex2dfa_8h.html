@@ -40,9 +40,9 @@
 <ul>
 <li>void <a class="el" href="regex2dfa_8h.html#a69e30286442eee48a3350d6da9bcd4d8">regex2dfa</a> (char *rxs, <a class="el" href="structdfa.html">DFA</a> *<a class="el" href="structdfa.html">dfa</a>)
 <dl class="el"><dd class="mdescRight">Converts a regular expression to a DFA.  <a href="#a69e30286442eee48a3350d6da9bcd4d8"></a><br/></dl><li>void <a class="el" href="regex2dfa_8h.html#af850e7f80ec40d5a2d5cc49027fc3bab">init_dfa</a> (<a class="el" href="structdfa.html">DFA</a> *<a class="el" href="structdfa.html">dfa</a>)
-<li>void <a class="el" href="regex2dfa_8h.html#aa55b1bb98a8db993375c6683f145a1d9">free_dfa</a> (<a class="el" href="structdfa.html">DFA</a> *<a class="el" href="structdfa.html">dfa</a>)
-<li>void <a class="el" href="regex2dfa_8h.html#ab7827b454b4605ccfe01459f50fa04ad">show_complete_dfa</a> (<a class="el" href="structdfa.html">DFA</a> <a class="el" href="structdfa.html">dfa</a>)
-</ul>
+<dl class="el"><dd class="mdescRight">Initialises the members of the given DFA object.  <a href="#af850e7f80ec40d5a2d5cc49027fc3bab"></a><br/></dl><li>void <a class="el" href="regex2dfa_8h.html#aa55b1bb98a8db993375c6683f145a1d9">free_dfa</a> (<a class="el" href="structdfa.html">DFA</a> *<a class="el" href="structdfa.html">dfa</a>)
+<dl class="el"><dd class="mdescRight">Frees all the memory associated with this DFA.  <a href="#aa55b1bb98a8db993375c6683f145a1d9"></a><br/></dl><li>void <a class="el" href="regex2dfa_8h.html#ab7827b454b4605ccfe01459f50fa04ad">show_complete_dfa</a> (<a class="el" href="structdfa.html">DFA</a> <a class="el" href="structdfa.html">dfa</a>)
+<dl class="el"><dd class="mdescRight">Prints the contents of a DFA to stdout.  <a href="#ab7827b454b4605ccfe01459f50fa04ad"></a><br/></dl></ul>
 <hr/><h2>Typedef Documentation</h2>
 <a class="anchor" id="a16064d3c0361ff039162ee8d0341f304"></a><!-- doxytag: member="regex2dfa.h::DFA" ref="a16064d3c0361ff039162ee8d0341f304" args="" -->
 <div class="memitem">
@@ -56,7 +56,9 @@
 <div class="memdoc">
 
 <p>The DFA object. </p>
-<p>A Deterministic Finite Automaton: into which a regular expression can be converted. </p>
+<p>A Deterministic Finite Automaton: into which a regular expression can be converted.</p>
+<p>(Note this is regular expression across tokens, not single-string regexes, which are dealt with by functions in the corpus library.)</p>
+<p>TODO: rename the functions and make this more object-oriented. Ideally, this should be a cleanly separated module, with "in" and "out" only via the methods declared here. Currently it's not like that - info is passed in via global variables, most blatantly searchstr. </p>
 
 </div>
 </div>
@@ -76,6 +78,8 @@
       </table>
 </div>
 <div class="memdoc">
+
+<p>Frees all the memory associated with this DFA. </p>
 
 <p>References <a class="el" href="structdfa.html#a7e2d4ac1a0a606c961a5e45b2e470865">dfa::Final</a>, <a class="el" href="structdfa.html#a527218880bb5117e62de1e786c263044">dfa::Max_Input</a>, <a class="el" href="structdfa.html#a4e13df223e06eeb511ea4cf8fd211ffb">dfa::Max_States</a>, and <a class="el" href="structdfa.html#a39a9c7689219c7bc954d8f096cff9454">dfa::TransTable</a>.</p>
 
@@ -98,6 +102,8 @@
       </table>
 </div>
 <div class="memdoc">
+
+<p>Initialises the members of the given DFA object. </p>
 
 <p>References <a class="el" href="structdfa.html#a7e2d4ac1a0a606c961a5e45b2e470865">dfa::Final</a>, <a class="el" href="structdfa.html#a527218880bb5117e62de1e786c263044">dfa::Max_Input</a>, <a class="el" href="structdfa.html#a4e13df223e06eeb511ea4cf8fd211ffb">dfa::Max_States</a>, and <a class="el" href="structdfa.html#a39a9c7689219c7bc954d8f096cff9454">dfa::TransTable</a>.</p>
 
@@ -139,7 +145,7 @@
   </dd>
 </dl>
 
-<p>References <a class="el" href="regex2dfa_8c.html#a01b2aff7068366c448834355a0de88e5">Allocate()</a>, <a class="el" href="cwb-scan-corpus_8c.html#a3b2ca35e2432cf1326402df1ba775129">C</a>, <a class="el" href="structstate.html#a1621a3668da7c7a47d8187596ea56fb3">state::Class</a>, <a class="el" href="structdfa.html#a81ef1cda7575629802e9007d33185919">dfa::E_State</a>, <a class="el" href="eval_8h.html#a4fc26b79d5e2fea9774fdf3c7b17d1b8">eep</a>, <a class="el" href="structstate.html#a059be79f78c5d38e42123c35e5f8528c">state::Empty</a>, <a class="el" href="eval_8h.html#a2476047b623e315b84e87213173cbd82">Environment</a>, <a class="el" href="regex2dfa_8c.html#aa7c6445759d2f6ed16fb2f0cdfdafe53">ERRORS</a>, <a class="el" href="cqp_8h.html#a306ebd41c0cd1303b1372c6153f0caf8">False</a>, <a class="el" href="structdfa.html#a7e2d4ac1a0a606c961a5e45b2e470865">dfa::Final</a>, <a class="el" href="regex2dfa_8c.html#a1784bd4a21538796cff0bb6e08a17aa9">FormState()</a>, <a class="el" href="regex2dfa_8c.html#a2858154e2009b0e6e616f313177762bc">init()</a>, <a class="el" href="structstate.html#a1f9c3ddf0664d3f51fb1160284a3f10b">state::LHS</a>, <a class="el" href="structdfa.html#a527218880bb5117e62de1e786c263044">dfa::Max_Input</a>, <a class="el" href="structdfa.html#a4e13df223e06eeb511ea4cf8fd211ffb">dfa::Max_States</a>, <a class="el" href="structevalenv.html#ae750cb43d0f9065d9d300131dda6ed1b">evalenv::MaxPatIndex</a>, <a class="el" href="regex2dfa_8c.html#ad99d12efd71ad35dbb1756b0e921b784">MergeStates()</a>, <a class="el" href="structsymbol.html#a5e6182c030324511dd82e9fa1a0ab071">symbol::Name</a>, <a class="el" href="regex2dfa_8c.html#abdcca4fd4a2fb73d22de1e1be17141d8">Parse()</a>, <a class="el" href="structstate.html#ab6ee8ca81cbcb8c08a4b989ec57606c6">state::RHS</a>, <a class="el" href="cqp_8h.html#a73e30a4cafb3e8b359d93c3f5c4bc986">searchstr</a>, <a class="el" href="structstate.html#ad3b72fc789ec054c5b0f0b5233a99504">state::Shifts</a>, <a class="el" href="structstate.html#ac46d2745f2be818340dc70ded3b89277">state::ShList</a>, <a class="el" href="options_8h.html#ace81f0d9c44733f52081f1bc8a6589f8">show_dfa</a>, <a class="el" href="regex2dfa_8c.html#ab260a491c6fc19739138894ab7deff0d">Ss</a>, <a class="el" href="structdfa.html#a39a9c7689219c7bc954d8f096cff9454">dfa::TransTable</a>, <a class="el" href="cqp_8h.html#add3ca9eefe3b5b754426f51d3043e579">True</a>, and <a class="el" href="regex2dfa_8c.html#a426c1001e607d31fe758b9723c8b87a3">WriteStates()</a>.</p>
+<p>References <a class="el" href="cwb-scan-corpus_8c.html#a3b2ca35e2432cf1326402df1ba775129">C</a>, <a class="el" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="structstate.html#a1621a3668da7c7a47d8187596ea56fb3">state::Class</a>, <a class="el" href="structdfa.html#a81ef1cda7575629802e9007d33185919">dfa::E_State</a>, <a class="el" href="eval_8h.html#a4fc26b79d5e2fea9774fdf3c7b17d1b8">eep</a>, <a class="el" href="structstate.html#a059be79f78c5d38e42123c35e5f8528c">state::Empty</a>, <a class="el" href="eval_8h.html#a2476047b623e315b84e87213173cbd82">Environment</a>, <a class="el" href="regex2dfa_8c.html#aa7c6445759d2f6ed16fb2f0cdfdafe53">ERRORS</a>, <a class="el" href="cqp_8h.html#a306ebd41c0cd1303b1372c6153f0caf8">False</a>, <a class="el" href="structdfa.html#a7e2d4ac1a0a606c961a5e45b2e470865">dfa::Final</a>, <a class="el" href="regex2dfa_8c.html#a1784bd4a21538796cff0bb6e08a17aa9">FormState()</a>, <a class="el" href="regex2dfa_8c.html#a2858154e2009b0e6e616f313177762bc">init()</a>, <a class="el" href="structstate.html#a1f9c3ddf0664d3f51fb1160284a3f10b">state::LHS</a>, <a class="el" href="structdfa.html#a527218880bb5117e62de1e786c263044">dfa::Max_Input</a>, <a class="el" href="structdfa.html#a4e13df223e06eeb511ea4cf8fd211ffb">dfa::Max_States</a>, <a class="el" href="structevalenv.html#ae750cb43d0f9065d9d300131dda6ed1b">evalenv::MaxPatIndex</a>, <a class="el" href="regex2dfa_8c.html#ad99d12efd71ad35dbb1756b0e921b784">MergeStates()</a>, <a class="el" href="structsymbol.html#a5e6182c030324511dd82e9fa1a0ab071">symbol::Name</a>, <a class="el" href="regex2dfa_8c.html#abdcca4fd4a2fb73d22de1e1be17141d8">Parse()</a>, <a class="el" href="structstate.html#ab6ee8ca81cbcb8c08a4b989ec57606c6">state::RHS</a>, <a class="el" href="cqp_8h.html#a73e30a4cafb3e8b359d93c3f5c4bc986">searchstr</a>, <a class="el" href="structstate.html#ad3b72fc789ec054c5b0f0b5233a99504">state::Shifts</a>, <a class="el" href="structstate.html#ac46d2745f2be818340dc70ded3b89277">state::ShList</a>, <a class="el" href="options_8h.html#ace81f0d9c44733f52081f1bc8a6589f8">show_dfa</a>, <a class="el" href="regex2dfa_8c.html#ab260a491c6fc19739138894ab7deff0d">Ss</a>, <a class="el" href="structdfa.html#a39a9c7689219c7bc954d8f096cff9454">dfa::TransTable</a>, <a class="el" href="cqp_8h.html#add3ca9eefe3b5b754426f51d3043e579">True</a>, and <a class="el" href="regex2dfa_8c.html#a426c1001e607d31fe758b9723c8b87a3">WriteStates()</a>.</p>
 
 <p>Referenced by <a class="el" href="parse__actions_8h.html#a1fb802bc0071a3b18f2992ea2388211d">do_SearchPattern()</a>.</p>
 
@@ -161,6 +167,8 @@
 </div>
 <div class="memdoc">
 
+<p>Prints the contents of a DFA to stdout. </p>
+
 <p>References <a class="el" href="structdfa.html#a81ef1cda7575629802e9007d33185919">dfa::E_State</a>, <a class="el" href="structdfa.html#a7e2d4ac1a0a606c961a5e45b2e470865">dfa::Final</a>, <a class="el" href="structdfa.html#a527218880bb5117e62de1e786c263044">dfa::Max_Input</a>, <a class="el" href="structdfa.html#a4e13df223e06eeb511ea4cf8fd211ffb">dfa::Max_States</a>, and <a class="el" href="structdfa.html#a39a9c7689219c7bc954d8f096cff9454">dfa::TransTable</a>.</p>
 
 <p>Referenced by <a class="el" href="eval_8h.html#a956720cedd2f011e8f87d8b981901ece">show_environment()</a>.</p>
@@ -168,7 +176,7 @@
 </div>
 </div>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Thu Aug 5 03:44:32 2010 for CWB by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Thu Aug 5 17:10:08 2010 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>

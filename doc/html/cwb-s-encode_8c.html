@@ -86,7 +86,8 @@
 <ul>
 <li>int <a class="el" href="cwb-s-encode_8c.html#ac3e1795766a80ec63b157951b4b9a7d4">debug</a> = 0
 <li>int <a class="el" href="cwb-s-encode_8c.html#a582e2ef9670c974c00e00ad10af0e629">silent</a> = 0
-<dl class="el"><dd class="mdescRight">debug mode on/off  <a href="#a582e2ef9670c974c00e00ad10af0e629"></a><br/></dl><li>int <a class="el" href="cwb-s-encode_8c.html#a9cdf89a4e98f37e877bff8ead279aa1d">set_syntax_strict</a> = 0
+<dl class="el"><dd class="mdescRight">debug mode on/off  <a href="#a582e2ef9670c974c00e00ad10af0e629"></a><br/></dl><li>int <a class="el" href="cwb-s-encode_8c.html#a23a915acdf42841433fd21dbdd48989d">strip_blanks_in_values</a> = 0
+<li>int <a class="el" href="cwb-s-encode_8c.html#a9cdf89a4e98f37e877bff8ead279aa1d">set_syntax_strict</a> = 0
 <dl class="el"><dd class="mdescRight">check that set attributes are always given in the same syntax  <a href="#a9cdf89a4e98f37e877bff8ead279aa1d"></a><br/></dl><li>int <a class="el" href="cwb-s-encode_8c.html#a1d6a5242139200aaa955588acf9a6010">in_memory</a> = 0
 <dl class="el"><dd class="mdescRight">create list of regions in memory (allowing non-linear input), then write to disk  <a href="#a1d6a5242139200aaa955588acf9a6010"></a><br/></dl><li>int <a class="el" href="cwb-s-encode_8c.html#aea6cb9df1a9a5552a38bdd163a15f84e">add_to_existing</a> = 0
 <dl class="el"><dd class="mdescRight">add to existing attribute: implies in_memory; existing regions are automatically inserted at startup  <a href="#aea6cb9df1a9a5552a38bdd163a15f84e"></a><br/></dl><li>FILE * <a class="el" href="cwb-s-encode_8c.html#a6bbbb0963299134a3c610fe69d0f74c9">text_fd</a> = NULL
@@ -366,7 +367,7 @@
 
 <p>Parse options and set global variables. </p>
 
-<p>References <a class="el" href="cwb-s-encode_8c.html#aea6cb9df1a9a5552a38bdd163a15f84e">add_to_existing</a>, <a class="el" href="cl_8h.html#aee476e23a98efac85d9a9288f18fe686">cl_new_corpus()</a>, <a class="el" href="cwb-compress-rdx_8c.html#ac3e1795766a80ec63b157951b4b9a7d4">debug</a>, <a class="el" href="cwb-encode_8c.html#a8eadc6730ef4fbdae87a20414b789faf">directory</a>, <a class="el" href="cwb-s-encode_8c.html#a1d6a5242139200aaa955588acf9a6010">in_memory</a>, <a class="el" href="struct_sencode_range.html#a5ac083a645d964373f022d03df4849c8">SencodeRange::name</a>, <a class="el" href="options_8h.html#ab6be6986e1a07fc76b7a5a77aa7cc43b">registry</a>, <a class="el" href="cwb-s-encode_8c.html#ad5789dce3651c3882e691b8b6e0c2974">sencode_range_declare()</a>, <a class="el" href="cwb-s-encode_8c.html#a66462fc5630af31b0b2e973c5f22bcc6">sencode_usage()</a>, <a class="el" href="cwb-s-encode_8c.html#a94798fdadfbf49a7c658ace669a1d310a4999345dfb96ac99ae28a836305b1bf9">set_any</a>, <a class="el" href="cwb-s-encode_8c.html#a98c765d283883dcb529f6059f3bded4b">set_att</a>, <a class="el" href="cwb-s-encode_8c.html#a9cdf89a4e98f37e877bff8ead279aa1d">set_syntax_strict</a>, <a class="el" href="options_8h.html#a582e2ef9670c974c00e00ad10af0e629">silent</a>, and <a class="el" href="cwb-s-encode_8c.html#a6bbbb0963299134a3c610fe69d0f74c9">text_fd</a>.</p>
+<p>References <a class="el" href="cwb-s-encode_8c.html#aea6cb9df1a9a5552a38bdd163a15f84e">add_to_existing</a>, <a class="el" href="cl_8h.html#aee476e23a98efac85d9a9288f18fe686">cl_new_corpus()</a>, <a class="el" href="cwb-compress-rdx_8c.html#ac3e1795766a80ec63b157951b4b9a7d4">debug</a>, <a class="el" href="cwb-encode_8c.html#a8eadc6730ef4fbdae87a20414b789faf">directory</a>, <a class="el" href="cwb-s-encode_8c.html#a1d6a5242139200aaa955588acf9a6010">in_memory</a>, <a class="el" href="struct_sencode_range.html#a5ac083a645d964373f022d03df4849c8">SencodeRange::name</a>, <a class="el" href="options_8h.html#ab6be6986e1a07fc76b7a5a77aa7cc43b">registry</a>, <a class="el" href="cwb-s-encode_8c.html#ad5789dce3651c3882e691b8b6e0c2974">sencode_range_declare()</a>, <a class="el" href="cwb-s-encode_8c.html#a66462fc5630af31b0b2e973c5f22bcc6">sencode_usage()</a>, <a class="el" href="cwb-s-encode_8c.html#a94798fdadfbf49a7c658ace669a1d310a4999345dfb96ac99ae28a836305b1bf9">set_any</a>, <a class="el" href="cwb-s-encode_8c.html#a98c765d283883dcb529f6059f3bded4b">set_att</a>, <a class="el" href="cwb-s-encode_8c.html#a9cdf89a4e98f37e877bff8ead279aa1d">set_syntax_strict</a>, <a class="el" href="options_8h.html#a582e2ef9670c974c00e00ad10af0e629">silent</a>, <a class="el" href="cwb-s-encode_8c.html#a23a915acdf42841433fd21dbdd48989d">strip_blanks_in_values</a>, and <a class="el" href="cwb-s-encode_8c.html#a6bbbb0963299134a3c610fe69d0f74c9">text_fd</a>.</p>
 
 <p>Referenced by <a class="el" href="cwb-s-encode_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>.</p>
 
@@ -868,6 +869,21 @@
 
 </div>
 </div>
+<a class="anchor" id="a23a915acdf42841433fd21dbdd48989d"></a><!-- doxytag: member="cwb&#45;s&#45;encode.c::strip_blanks_in_values" ref="a23a915acdf42841433fd21dbdd48989d" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="cwb-s-encode_8c.html#a23a915acdf42841433fd21dbdd48989d">strip_blanks_in_values</a> = 0</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Referenced by <a class="el" href="cwb-s-encode_8c.html#af03b28b7de6e87eb57fedd7aae5d8a5b">sencode_parse_options()</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="a40df5e868c98dc5e6e0ed930050c3ce7"></a><!-- doxytag: member="cwb&#45;s&#45;encode.c::StructureList" ref="a40df5e868c98dc5e6e0ed930050c3ce7" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -901,7 +917,7 @@
 </div>
 </div>
 </div>
-<hr class="footer"/><address style="text-align: right;"><small>Generated on Thu Aug 5 03:44:32 2010 for CWB by&nbsp;
+<hr class="footer"/><address style="text-align: right;"><small>Generated on Thu Aug 5 17:10:08 2010 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.3 </small></address>
 </body>
