@@ -16,16 +16,16 @@
 ##  WWW at http://www.gnu.org/copyleft/gpl.html).
 
 ##
-##  PLATFORM CONFIGURATION FILE: Mac OS X (Darwin) on 64-bit Intel Core2 and newer CPUs
+##  PLATFORM CONFIGURATION FILE: Universal build (i386, x86_64) on Mac OS X (Darwin) 10.5+ with optimisation for Intel Core 2 CPUs
 ##
 
 ## Inherits from basic Darwin configuration
 include $(TOP)/config/platform/darwin
 
-## Core 2 optimisations are only available with Xcode 3.1 (using gcc-4.2)
+## Core 2 optimisations are only available with GCC 4.2 from Xcode 3.1 (make sure we use Apple's GCC, not 3rd-party)
 CC = /usr/bin/gcc-4.2
 
-## Optimise for Core2 architecture
+## Universal build for Intel 32-bit & 64-bit CPUs tuned to Intel Core 2 architecture
 CFLAGS = -Wall -O3 -arch x86_64 -arch i386 -march=core2 -mtune=core2
 
 DEPEND_CFLAGS = -Wall -O3

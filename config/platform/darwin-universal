@@ -16,17 +16,17 @@
 ##  WWW at http://www.gnu.org/copyleft/gpl.html).
 
 ##
-##  PLATFORM CONFIGURATION FILE: Universal build (ppc, i386, x06_64) for Mac OS X (Darwin)
+##  PLATFORM CONFIGURATION FILE: Universal build (i386, x06_64) for Mac OS X (Darwin) 10.5+
 ##
 
 ## Inherits from basic Darwin configuration
 include $(TOP)/config/platform/darwin
 
-## Make sure that Apple's gcc is used (not e.g. a fink-installed version)
+## Make sure that Apple's gcc is used (not e.g. a version installed by Fink or MacPorts)
 CC = /usr/bin/gcc
 
-## Good optimisation flags for Intel Core2 architecture haven't been determined yet
-CFLAGS = -Wall -O3 -arch x86_64 -arch i386 -arch ppc
+## Universal build for Intel 32-bit & 64-bit CPUs (standard since for OS X 10.6, which drops PPC support)
+CFLAGS = -Wall -O3 -arch x86_64 -arch i386
 
 DEPEND_CFLAGS = -Wall -O3
 

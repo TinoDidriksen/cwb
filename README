@@ -44,11 +44,11 @@ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
 details.
 
-A copy of the GNU General Public License is provided in the file "COPYING".
+A copy of the GNU General Public License is included in the file "COPYING".
 It is also available via WWW at http://www.gnu.org/copyleft/gpl.html, or you
 can obtain it by writing to the Free Software Foundation, Inc., 51 Franklin
 Street Fifth Floor, Boston, MA 02110-1301 USA.
 
-CQP currently makes use of the CSTR Editline library, Copyright (C) 1992 
-by Simmule Turner and Rich Salz (see "editline/ReadMe.rsalz" for licensing
-information).
+See the file "COPYING" for additional licensing information concerning third-party
+open-source software packages used by the IMS Open Corpus Workbench.
+soft

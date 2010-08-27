@@ -33,13 +33,13 @@
 #         darwin-g5      - with optimization for PowerPC G5 processor
 #         darwin-i386    - configuration for i386-compatible processors
 #         darwin-64      - 64-bit build on Intel Core2 and newer processors
-#         darwin-universal - Universal build for ppc, i386 and x86_64 architecturs
-#         darwin-core2   - optimised build for Core 2 CPU (requires Xcode 3.1 / OS X 10.5)
+#         darwin-universal - universal build for i386 and x86_64 architectures on OS X 10.5+
+#         darwin-core2   - universal build optimised for Core 2 CPU (requires Xcode 3.1 / OS X 10.5+)
 #       solaris       SUN Solaris 8 for SPARC CPU
 #       cygwin        Win32 build using Cygwin emulation layer (experimental)
 #       mingw         Cross-compile for Win32 from a *nix system with MinGW installed (experimental)
 #
-include $(TOP)/config/platform/darwin-universal
+include $(TOP)/config/platform/darwin-core2
 
 #
 # SITE-SPECIFIC CONFIGURATION (installation path and other local settings)
