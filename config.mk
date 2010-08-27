@@ -46,6 +46,7 @@ include $(TOP)/config/platform/darwin-core2
 #
 # Pre-defined site configuration files:
 #       standard        standard configuration (installation in /usr/local tree)
+#         beta-install    ... install into separate tree /usr/local/cwb-<VERSION>
 #       classic         "classic" configuration (CWB v2.2, uses /corpora/c1/registry)
 #       osx-fink        Mac OS X installation in Fink's /sw tree
 #       binary-release  Build binary package for release (static if possible, use with "make release")
@@ -56,7 +57,7 @@ include $(TOP)/config/platform/darwin-core2
 #         windows-release ... for Windows binaries cross-compiled with MinGW; use with "mingw" platform
 #       cygwin          Win32 / Cygwin configuration (experimental)
 #       
-include $(TOP)/config/site/standard
+include $(TOP)/config/site/beta-install
 
 
 #
