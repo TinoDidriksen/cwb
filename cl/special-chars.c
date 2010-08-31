@@ -1597,7 +1597,7 @@ cl_string_qsort_compare(const char *s1,
   }
   else {
     /* utf8 mode */
-    int result = (int)g_utf8_collate((gchar *)s1, (gchar *)s2);
+    int result = (int)g_utf8_collate((gchar *)comp1, (gchar *)comp2);
     /* TODO: for now we are using the collate function from GLib.
      * In practice, this may not be appropriate as it is locale-dependent -
      * so, for example, it may impose case-insensitivity or accent-insensitivity
@@ -1789,7 +1789,7 @@ cl_string_canonical(char *s, CorpusCharset charset, int flags)
       string = (gchar *)s;
 
     /* UTF8 precomposing -- always happens */
-    precomposed = g_utf8_normalize(string, -1, G_NORMALIZE_NFC);
+    /* precomposed = g_utf8_normalize(string, -1, G_NORMALIZE_NFC); */ /* -- duplicate call to g_utf8_normalize() removed */
     if (NULL == (precomposed = g_utf8_normalize(string, -1, G_NORMALIZE_NFC)) ) {
       fprintf(stderr, "CL: major error, invalid UTF8 string passed to cl_string_canonical...\n");
       return;

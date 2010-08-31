@@ -63,7 +63,7 @@
 
 /* ---------------------------------------------------------------------- */
 
-/* configuration variables // command-line switches */
+/* configuration variables & command-line switches */
 int debug = 0;                  /** debug mode on/off */
 int silent = 0;                 /**< avoid messages in -M / -a modes */
 int strip_blanks_in_values = 0; /* Wow, this is unused :o) */

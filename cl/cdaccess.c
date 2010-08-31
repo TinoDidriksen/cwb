@@ -1392,17 +1392,17 @@ cl_regex2id(Attribute *attribute, char *pattern, int flags, int *number_of_match
     int i;
 
     /* compute start offset and length of current lexicon entry from lexidx, if possible)
-     * // no longer necessary because we can't pass len to cl_regex_match
-     * // although 'twould be a good optimisation if possible to avoid calling strlen
-     * // pass in via a global variable cl_regopt_haystack_strlenin?*/
+     *  -- no longer necessary because we can't pass len to cl_regex_match
+     *  -- although 'twould be a good optimisation if possible to avoid calling strlen
+     *  -- pass in via a global variable cl_regopt_haystack_strlenin? */
     off_start = ntohl(lexidx_data[idx]);
     word = lex_data + off_start;
     if (idx < lexsize-1) {
       off_end = ntohl(lexidx_data[idx + 1]) - 1;
-      //len = off_end - off_start;
+      /* len = off_end - off_start; */
     }
     else {
-      //len = strlen(word);
+      /* len = strlen(word); */
     }
 
     if (cl_regex_match(rx, word)) {    /* regex match */
