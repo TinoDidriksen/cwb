@@ -7,7 +7,7 @@ then
   echo "You must install the Xcode suite (available from Apple) in order to compile the CWB from source."
   exit
 fi
-################# !!! TODO - for 3.2.0 and greater, it will also be necessary to check that Glib and PCRE are available.
+################# !!! TODO - for 3.2.0 and greater, it will also be necessary to check that Glib, PCRE and GNU Readline are available.
 
 # run as root! su or sudo.
 
@@ -30,7 +30,6 @@ perl -i~ -pe 'if (/^include \$\(TOP\)\/config\/platform\//) { $_ = "include \$(T
 make clean
 make depend
 make cl
-make editline
 make utils
 make cqp
 

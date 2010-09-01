@@ -21,7 +21,9 @@ Other changes:
    
  - the Corpus Library (CL) has been reorganised to make programming against it easier, and it now contains 
    several more utility functions.
-   
+
+ - command-line editing backported from included Editline library to external GNU Readline (which was originally
+   used by CQP but had to be replaced for licensing reasons before the CWB was made open-source)
 
 
 Version 3.1

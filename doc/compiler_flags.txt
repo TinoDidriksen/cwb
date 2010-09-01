@@ -4,12 +4,10 @@ interactive terminal display (including bold font, underlined text, and
 colours with experimental -C option).
 
 USE_READLINE:
-If defined, CQP uses the included editline library to allow command-line
+If defined, CQP uses the GNU Readline library to allow command-line
 editing and a command history (which can automatically be saved to a 
-disk file in order to be persistent across sessions).  A backport to
-the more widespread GNU Readline library (which had to be abandoned for
-copyright reasons before CQP became open source) is planned and should
-be fairly easy.
+disk file in order to be persistent across sessions).  GNU Readline
+has to be installed before compiling the CWB.
 
 EMULATE_SETENV:
 SUN Solaris 8 doesn't support the setenv() function to manipulate 

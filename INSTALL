@@ -481,5 +481,5 @@ utils/                  source code of command-line utilities
 
 man/                    manpages for CQP and the command-line utilities
 
-editline/               local copy of the CSTR Editline library used by CQP
+editline/               local copy of the CSTR Editline library (no longer used)
 

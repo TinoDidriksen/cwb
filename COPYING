@@ -3,13 +3,10 @@
                   LICENCE AND REDISTRIBUTION INFORMATION
                   ======================================
 
-The Open Corpus Workbench is licensed under the GNU General Public License.
+The IMS Open Corpus Workbench (CWB) is licensed under the GNU General Public
+License, version 2 or newer.
 
-CWB makes use of three libraries: PCRE, GLib, and Editline.
-
-Both binary releases and source code packages of CWB include a complete
-copy of the Editline library. Information on the licensing of this library
-can be found in the file editline/ReadMe.rsalz of the source code package.
+CWB makes use of three libraries: PCRE, GLib, and GNU Readline.
 
 Binary releases of CWB redistribute elements of the PCRE library (due to this 
 library being statically linked into the CWB executables[*]). PCRE is 
@@ -17,13 +14,18 @@ licensed under the BSD Licence, which permits such binary redistribution
 on condition the original copyright notice and the BSD license's conditions
 and disclaimer are included. We include this information in the current file.
 
+Binary releases of CWB redistribute elements of the GNU Readline library (due to
+this library being statically linked into the CWB executables[*]).  GNU Readline
+is licensed under the GNU General Public License, version 3.  You may redistribute
+the CWB under the same license as GNU Readline.
+
 Binary releases of CWB also redistribute elements of the GLib library (due to 
-this library being statically linked into the CWB executables[*]). GLib
-is licensed under the GNU Library General Public Licence (or GNU Lesser 
-General Public Licence as it is now known). As such, CWB binaries qualify both 
-as a "work that uses the Library" and as a "a work containing portions of the 
-Library" (in the terminology of the LGPL. Under the terms of section 6 of the 
-LGPL, such redistribution in linked-in-binary format is permitted as long as 
+this library being statically linked into the CWB executables[*]). GLib is
+licensed under the GNU Library General Public Licence (or GNU Lesser General
+Public Licence as it is now known), version 2 or newer. As such, CWB binaries
+qualify both as a "work that uses the Library" and as a "a work containing portions
+of the Library" (in the terminology of the LGPL. Under the terms of section 6 of
+the LGPL, such redistribution in linked-in-binary format is permitted as long as 
 its use is covered by the license (which it is, since all of CWB is covered 
 by the more-restrictive GPL) and as long as the source code of the library
 is made available. To avoid inflating the size of the CWB download with a 

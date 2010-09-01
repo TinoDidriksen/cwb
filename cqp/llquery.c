@@ -21,7 +21,7 @@
  * This file contains the main function for CQP (interactive loop)
  *
  * In addition, it contains the functions that interactive CQP will need
- * if command-line editing with editline is enabled.
+ * if command-line editing with GNU Readline is enabled.
  */
 
 #include <stdio.h>
@@ -39,17 +39,23 @@
 
 
 #ifdef USE_READLINE
-#include <editline.h>
+#include <readline/readline.h>
+#include <readline/history.h>
 #endif /* USE_READLINE */
 
 
 
 #ifdef USE_READLINE
 
-/* unlike GNU Readline, Editline expects to get the full list of possible completions
-   from the custom completion function; therefore, we need some helper routines which
-   can build NULL-terminated string lists of arbitrary size;
-   all functions & static variables use the namespace prefix cc_... (for custom completion)
+/* The implementation of custom completion was largely dictated by the Editline library used 
+ * as a replacement for GNU Readline:
+ *  "unlike GNU Readline, Editline expects to get the full list of possible completions
+ *   from the custom completion function; therefore, we need some helper routines which
+ *   can build NULL-terminated string lists of arbitrary size; note that the newly allocated
+ *   list is returned to Editline, which should take care of freeing all strings and the list vector;
+ *   all functions & static variables use the namespace prefix cc_... (for 'custom completion')"
+ * We keep this architecture for the backport to GNU Readline, using rl_attempted_completion_function
+ * instead of the more common rl_completion_entry_function / rl_completion_matches() approach.
 */
 char **cc_compl_list = NULL;      /* list of possible completions */
 int cc_compl_list_size = 0;       /* number of completions in list */
@@ -57,13 +63,14 @@ int cc_compl_list_allocated = 0;  /* number of entries allocated for list (incl.
 #define CC_COMPL_LIST_ALLOC_BLOCK 256 /* how many list cells to allocate at a time */
 
 
-/* initialise completion list (size 0) without freeing it (because it will be freed by editline library) */
+/* initialise new completion list (size 0) without freeing previous list (which was deallocated by readline library) */
 void
 cc_compl_list_init(void) {
   cc_compl_list = (char **) cl_malloc(CC_COMPL_LIST_ALLOC_BLOCK * sizeof(char *));
   cc_compl_list_allocated = CC_COMPL_LIST_ALLOC_BLOCK;
-  cc_compl_list_size = 0;
-  cc_compl_list[0] = NULL;
+  cc_compl_list_size = 1;
+  cc_compl_list[0] = NULL; /* dummy entry for longest common prefix (computed by cc_compl_list_sort_uniq()) */
+  cc_compl_list[1] = NULL; /* end-of-list marker */
 }
 
 /* add string (must be alloc'ed by caller) to completion list */
@@ -87,35 +94,62 @@ cc_compl_list_sort(const void *p1, const void *p2) {
   return result;
 }
 
+#define RL_DEBUG 0
+
 /* sort list and remove (& free) duplicates; returns pointer to list */
 char **
 cc_compl_list_sort_uniq(void) {
   int mark, point;
-  if (cc_compl_list_size > 0)
-    qsort(cc_compl_list, cc_compl_list_size, sizeof(char *), cc_compl_list_sort);       /* don't sort NULL at end of list */
-  /* now for the tricky part ... go through list and remove duplicates */
-  mark = 0;
-  point = 1;                    /* always keep first list element */
+  char *lcp, *new_string;
+  
+  if (cc_compl_list_size <= 1) { /* empty list (only containing dummy entry) */
+    /* at least some versions of GNU readline are broken and don't accept an empty list */
+    rl_attempted_completion_over = 1; /* so readline doesn't fall back to filename completion */
+    cl_free(cc_compl_list);
+#if RL_DEBUG
+    printf("\nRETURNING 0 COMPLETIONS.\n");
+#endif
+    return NULL;
+  }
+
+  /* sort list entries, then go through sorted list and remove duplicates, computing LCP on the fly */
+  qsort(cc_compl_list+1, cc_compl_list_size-1, sizeof(char *), cc_compl_list_sort); /* don't sort dummy entry at start of list */
+  cc_compl_list[0] = cl_strdup(cc_compl_list[1]); /* LCP = longest common prefix must be prefix of first possible completion */
+  mark = 1;
+  point = 2;                    /* we always keep the first list element */
   while (point < cc_compl_list_size) {
     if (strcmp(cc_compl_list[mark], cc_compl_list[point]) == 0) {
-      free(cc_compl_list[point]); /* duplicate -> free, don't advance point */
+      free(cc_compl_list[point]);       /* duplicate -> free, don't advance mark */
     }
     else {
-      mark++;                   /* new string -> advance mark & copy there */
+      mark++;                           /* new string -> advance mark & copy there */
       cc_compl_list[mark] = cc_compl_list[point];
+      lcp = cc_compl_list[0];   /* adjust LCP */
+      new_string = cc_compl_list[mark];
+      while (*lcp && *lcp == *new_string) {
+        lcp++; new_string++;
+      }
+      *lcp = '\0'; /* shorten LCP to common prefix with new string */
     }
     point++;
   }
   cc_compl_list_size = mark + 1;
   cc_compl_list[cc_compl_list_size] = NULL;
+#if RL_DEBUG
+  printf("\nRETURNING %d COMPLETIONS:\n", cc_compl_list_size);
+  for (mark=0; cc_compl_list[mark]; mark++) {
+    printf(" - %s\n", cc_compl_list[mark]);
+  }
+#endif
   return cc_compl_list;
 }
 
 /* custom completion function: complete corpus/subcorpus names */
 char **
-cqp_custom_completion(char *line, int start, int end) {
-  char *text;       /* the part of the line editline wants us to complete */
-  int text_len;     /* are the first text_len characters of text[] */
+cqp_custom_completion(const char *text, int start, int end) {
+  /* <line> is the complete input line; <text> to be completed is the substring from <start> to <end> */
+  char *line = rl_line_buffer;  
+  int text_len = end - start; /* length of <text> */
   Variable var;
   CorpusList *cl;
   char *prototype, *prefix;
@@ -124,22 +158,21 @@ cqp_custom_completion(char *line, int start, int end) {
   int mother_len, real_len, prefix_len;
   char *completion;
 
-  text = line + start;
-  text_len = end - start;
-  /* the string that GNU readline would supply to a custom completer ist
-     line[start .. end]; or, equivalently, the first len = end - start characters of text[] */
+#if RL_DEBUG
+  printf("\n>> COMPLETING TEXT '%s'\n", text);
+#endif
 
   /*
    *  (A) file name completion (triggered by '> "', '>> "', and '< "' patterns before start)
    */
 
   /* must check for file name completion first because absolute path would be mistaken for a macro invocation */
-  if ((--start >= 0) && (line[start] == '"')) {
+  if ((--start >= 0) && (line[start] == '"' || line[start == '\''])) {
     while ((--start >= 0) && (line[start] == ' ')) {
       /* nop */
     }
     if ((start >= 0) && ((line[start] == '>') || (line[start] == '<'))) {
-      /* looks like a redirection (more or less ...), so return NULL and let editline handle filename completion */
+      /* looks like a redirection (more or less ...), so return NULL and let readline handle filename completion */
       return NULL;
     }
     /* a string within a "set <option> ..." command may also be a filename */
@@ -158,6 +191,9 @@ cqp_custom_completion(char *line, int start, int end) {
     prefix_len = text_len - 1;
     var = variables_iterator_next();
     while (var != NULL) {
+#if RL_DEBUG
+      printf("Comparing variable $%s with prefix $%s\n", var->my_name, prefix);
+#endif
       if (strncmp(prefix, var->my_name, prefix_len) == 0) { /* found variable matching prefix -> format and add */
         completion = cl_malloc(strlen(var->my_name) + 2);
         sprintf(completion, "$%s", var->my_name);
@@ -313,7 +349,9 @@ readline_main(void)
   char *input = NULL;
 
   /* activate CQP's custom completion function */
-  el_user_completion_function = cqp_custom_completion;
+  rl_attempted_completion_function = cqp_custom_completion;
+  /* configuration: don't break tokens on $, so word lists work correctly (everything else corresponds to readline defaults) */
+  rl_completer_word_break_characters = " \t\n\"\\'`@><=;|&{(";
   /* if CQP history file is specified, read history from file */
   if (cqp_history_file != NULL) {
     /* ignore errors; it's probably just that the history file doesn't exist yet */

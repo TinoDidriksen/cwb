@@ -14,14 +14,13 @@ then
 	exit
 fi
 
-yum install autoconf bison flex gcc pkgconfig glibc glibc-common glibc-devel glibc-headers make ncurses ncurses-lib pcre pcre-devel glib glib-devel
+yum install autoconf bison flex gcc pkgconfig glibc glibc-common glibc-devel glibc-headers make ncurses ncurses-lib pcre pcre-devel glib glib-devel readline readline-devel
 
 ./install-scripts/cwb-config-basic
 
 make clean
 make depend
 make cl
-make editline
 make utils
 make cqp
 

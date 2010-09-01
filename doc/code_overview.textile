@@ -663,9 +663,7 @@ This contains documentation of the CWB code (note: _not_ user documentation for 
 
 h3. editline
 
-This contains a (slightly patched) version of the Editline library, on which CQP is dependent. 
-
-The file editline/README documents why this is included in the CWB source tree.
+This contains a (slightly patched) version of the Editline library, on which earlier versions of CQP were dependent.  Now that CQP has been backported to GNU Readline in CWB 3.2.4+, the directory is no longer needed and will be deleted in a future check-in.
 
 h3. instutils
 

@@ -41,7 +41,6 @@
 #  utils        to compile the utilities only
 #  man          to update the manpages from their .pod sources
 #  doxygen      to update the HTML code documentation (requires doxygen to be installed)
-#  editline     to compile the editline library shipped with the CWB
 #  
 
 TOP = $(shell pwd)
@@ -51,13 +50,13 @@ include $(TOP)/config.mk
 ifdef __MINGW__
 #EXTERNALS = mingw-libgnurx-2.5.1
 else
-EXTERNALS = editline
+EXTERNALS = 
 endif
 SUBDIRS = cl cqp utils man instutils	# subdirectories that have their own makefiles
 SRCDIRS = cl cqp utils CQi	# subdirectories containing C source code
 
 
-.PHONY: clean realclean depend all test install uninstall release editline mingw-libgnurx-2.5.1 cl cqp utils man instutils tags size
+.PHONY: clean realclean depend all test install uninstall release mingw-libgnurx-2.5.1 cl cqp utils man instutils tags size
 
 default:
 	@$(ECHO) "Please type one of the following:"
@@ -69,7 +68,6 @@ default:
 	@$(ECHO) "  make install   install CWB into chosen location"
 	@$(ECHO) "  make release   create binary release in build/ directory"
 	@$(ECHO) ""
-	@$(ECHO) "  make editline  build included editline library for CQP"
 #	@$(ECHO) "  make mingw-libgnurx-2.5.1  "
 #	@$(ECHO) "                 build included mingw-libgnurx-2.5.1 (for Windows)"
 	@$(ECHO) "  make cl        build low-level corpus library (CL)"
@@ -104,17 +102,6 @@ doxygen:
 	-$(RM) -rf doc/html/*
 	doxygen doc/doxygen-config
 	(cd doc && perl textile2html.perl)
-
-editline:
-	@$(ECHO) "--------------------------------- BUILDING EDITLINE LIBRARY"
-ifndef __MINGW__
-	(cd editline && CC="$(CC)" RANLIB="$(RANLIB)" CFLAGS="$(CFLAGS)" ./configure && $(MAKE))
-## -- this is not optimal (CWB flags might break editline build / should use externally installed library instead!
-else
-	@$(ECHO) "Editline cannot currently be built for Windows..."
-#   note that editline/configure cannot run under mingw because it attempts to run some compiled files
-#   which causes configure to hang (because Unix can't run *.exe files)
-endif
 
 #mingw-libgnurx-2.5.1:
 #ifdef __MINGW__
@@ -152,7 +139,6 @@ clean:
 
 realclean:	clean
 	for i in $(SUBDIRS) ; do $(MAKE) -C $$i realclean; done;
-	-$(RM) -rf editline/config.log editline/autom4te.cache editline/config.status editline/Makefile editline/editline_config.h config.mk.bak
 ifdef __MINGW__
 	-$(RM) -rf mingw-libgnurx-2.5.1/config.log mingw-libgnurx-2.5.1/config.status mingw-libgnurx-2.5.1/Makefile
 endif

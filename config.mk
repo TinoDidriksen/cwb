@@ -121,9 +121,9 @@ include $(TOP)/config/site/beta-install
 # they are usually set in the platform configuration file to work around OS deficiencies.
 #
 
-## Readline library for command-line editing (currently, only the included editline library is supported)
-# READLINE_LIBS = -L $(TOP)/editline -leditline
-# READLINE_DEFINES = -I $(TOP)/editline
+## GNU Readline library for command-line editing
+# READLINE_LIBS = -L <path_to_readline_libs> -lreadline -lhistory
+# READLINE_DEFINES = -I <path_to_readline_headers>
 
 ## CWB uses Flex/Bison for parsing registry files and CQP commands
 # YACC = bison -d -t

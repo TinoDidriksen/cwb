@@ -14,14 +14,13 @@ then
 	exit
 fi
 
-apt-get install autoconf bison flex gcc pkg-config libc6-dev libncurses5-dev make libpcre3-dev libglib2.0-0 libglib2.0-dev
+apt-get install autoconf bison flex gcc pkg-config libc6-dev libncurses5-dev make libpcre3-dev libglib2.0-0 libglib2.0-dev libreadline6 libreadline6-dev
 
 ./install-scripts/cwb-config-basic
 
 make clean
 make depend
 make cl
-make editline
 make utils
 make cqp
 

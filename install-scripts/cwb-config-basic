@@ -21,7 +21,7 @@ then
   then
     rep="${rep}darwin-g4" # don't make assumptions about more recent processor or ability to produce Universal binaries
   else
-    rep="${rep}darwin-universal" # build Universal binaries by default (best for linking libcl.a into other programs such as Perl and Python)
+    rep="${rep}darwin-universal" # build Universal binaries (i386 + x86_64) by default (standard on OS X 10.6, Snow Leopard)
   fi
 
 elif [[ "$uname_output" == SunOS* ]]

@@ -23,8 +23,8 @@
 #
 # CWB version
 #
-VERSION = 3.2.b3
-# alpha / beta for the unicode support version, 3.2
+VERSION = 3.2.4
+# alpha / beta for Unicode support: all versions 3.2.x
 
 #
 # Check that required configuration variables are set
@@ -189,8 +189,8 @@ CFLAGS += $(DEBUG_FLAGS) $(SITE_CFLAGS)
 LDFLAGS += $(DEBUG_FLAGS) $(SITE_LDFLAGS)
 
 # termcap/curses/readline DISALLOWED under MinGW, even if set elsewhere
-# (because we don't want to link against a Unix libncurses, and editline
-# won't compile under MinGW.) cmd.exe gives us commandline editing anyway.
+# (because we don't want to link against a Unix libncurses / readline);
+# cmd.exe gives us commandline editing anyway.
 ifdef __MINGW__
 READLINE_LIBS = 
 TERMCAP_LIBS =
@@ -203,7 +203,7 @@ ifdef TERMCAP_LIBS
 CFLAGS += -DUSE_TERMCAP
 endif
 
-# same for readline library support (defaults to included editline)
+# same for GNU Readline library support
 ifdef READLINE_LIBS
 CFLAGS += -DUSE_READLINE
 endif

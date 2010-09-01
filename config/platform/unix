@@ -45,9 +45,9 @@ RANLIB = ranlib
 # B) Optional (recommended) settings
 #
 
-## Support for command-line editing in CQP (using included editline library)
-READLINE_LIBS = -L../editline -leditline
-READLINE_DEFINES = -I../editline
+## Support for command-line editing in CQP (using external GNU Readline library)
+READLINE_LIBS = -lreadline -lhistory
+READLINE_DEFINES = 
 
 ## Support for text highlighting in CQP (ncurses library is widely available)
 TERMCAP_LIBS = -lncurses
