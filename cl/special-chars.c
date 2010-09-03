@@ -1332,23 +1332,28 @@ cl_string_maptable(CorpusCharset charset, int flags)
   end old version */
 }
 
-
+/* invalid control character in ISO8859-* or ASCII (except for TAB) */
+#define INVALID_CTRL(c) (c < 0x20 && c != 0x09)
 
 /**
  * Checks the encoding of a string.
  *
  * This function looks for bad bytes (or byte sequences in the case of UTF8);
- * if any are present, it judges the string invalid.
+ * if any are present, it judges the string invalid.  For ISO8859-* encodings,
+ * the string can optionally be "repaired" in-place by replacing bad bytes with
+ * '?' characters.  If the "repair" is successful, the function returns True.
  *
  * What counts as "bad" is of course relative to the character set that the
- * string is encoded in - so this must be specified.
+ * string is encoded in - so this must be specified.  For ISO8859-* encodings,
+ * bad bytes include all control characters [\x00-\x1f] except for TAB.
  *
  * @param s        Null-terminated string to check.
  * @param charset  CorpusCharset of the string's encoding.
+ * @param repair   if True, replace invalid 8-bit characters by '?'
  * @return         Boolean: true for valid, false for invalid.
  */
 int
-cl_string_validate_encoding(const char *s, CorpusCharset charset)
+cl_string_validate_encoding(char *s, CorpusCharset charset, int repair)
 {
   /* cast as unsigned string to allow hex comparisons,
    * (but pass signed version to Glib for UTF8) */
@@ -1363,8 +1368,12 @@ cl_string_validate_encoding(const char *s, CorpusCharset charset)
      check each character in string, if in illegal zone, return false. */
   case ascii:
     for (; *str ; str++)
-      if ( *str > 0x7f )
-        return 0;
+      if ( *str > 0x7f || INVALID_CTRL(*str) ) {
+        if (repair) 
+          *str = '?';
+        else
+          return 0;
+      }
     break;
 
   /* character sets where anything is OK except 0x80 to 0x9f, like Latin1 */
@@ -1378,66 +1387,103 @@ cl_string_validate_encoding(const char *s, CorpusCharset charset)
   case latin9:
   case cyrillic:
     for (; *str ; str++)
-      if (*str > 0x7f && *str < 0xa0)
-        return 0;
+      if (INVALID_CTRL(*str) || (*str > 0x7f && *str < 0xa0)) {
+        if (repair) 
+          *str = '?';
+        else
+          return 0;
+      }
     break;
 
   /* latin3 has extra non-allowed characters */
   case latin3:
     for (; *str ; str++)
-      if (*str > 0x7f &&
-          ( *str < 0xa0 || *str == 0xa5 || *str == 0xae || *str == 0xbe
-                        || *str == 0xc3 || *str == 0xd0 || *str == 0xe3
-                        || *str == 0xf0
-          )
-        )
-        return 0;
+      if (INVALID_CTRL(*str) 
+          || (*str > 0x7f 
+              && (   *str <  0xa0
+                  || *str == 0xa5
+                  || *str == 0xae
+                  || *str == 0xbe
+                  || *str == 0xc3
+                  || *str == 0xd0
+                  || *str == 0xe3
+                  || *str == 0xf0
+                 )
+             )
+         ) {
+        if (repair) 
+          *str = '?';
+        else
+          return 0;
+      }
     break;
 
   /* so does Greek! */
   case greek:
     for (; *str ; str++)
-      if (*str > 0x7f &&
-          ( *str < 0xa0 || *str == 0xae || *str == 0xd2 || *str == 0xff )
-        )
-        return 0;
+      if (INVALID_CTRL(*str)
+          || (*str > 0x7f 
+              && (   *str <  0xa0 
+                  || *str == 0xae
+                  || *str == 0xd2
+                  || *str == 0xff
+                 )
+             )
+         ) {
+        if (repair) 
+          *str = '?';
+        else
+          return 0;
+      }
     break;
 
   /* hebrew has a few more complexities */
   case hebrew:
     for (; *str ; str++)
-      if (*str > 0x7f &&
-          (   *str <  0xa0
-          ||  *str == 0xa1
-          || (*str >= 0xbf && *str <= 0xde)
-          ||  *str == 0xfb
-          ||  *str == 0xfc
-          ||  *str == 0xff
-          )
-        )
-        return 0;
+      if (INVALID_CTRL(*str)
+          || (*str > 0x7f
+              && (    *str <  0xa0
+                  ||  *str == 0xa1
+                  || (*str >= 0xbf && *str <= 0xde)
+                  ||  *str == 0xfb
+                  ||  *str == 0xfc
+                  ||  *str == 0xff
+                 )
+             )
+         ) {
+        if (repair) 
+          *str = '?';
+        else
+          return 0;
+      }
     break;
 
   /* arabic has great swathes of non-allowed characters */
   /* (this may not be the most efficient set of tests)  */
   case arabic:
     for (; *str ; str++)
-      if (*str >  0x7f &&
-          (   *str <  0xa0
-          ||  *str == 0xa1
-          ||  *str == 0xa2
-          ||  *str == 0xa3
-          || (*str >= 0xa5 && *str <= 0xac)
-          || (*str >= 0xae && *str <= 0xba)
-          ||  *str == 0xbc
-          ||  *str == 0xbd
-          ||  *str == 0xbe
-          ||  *str == 0xc0
-          || (*str >= 0xdb && *str <= 0xf)
-          ||  *str >= 0xf3
-          )
-        )
-        return 0;
+      if (INVALID_CTRL(*str)
+          || (*str >  0x7f
+              && (    *str <  0xa0
+                  ||  *str == 0xa1
+                  ||  *str == 0xa2
+                  ||  *str == 0xa3
+                  || (*str >= 0xa5 && *str <= 0xac)
+                  || (*str >= 0xae && *str <= 0xba)
+                  ||  *str == 0xbc
+                  ||  *str == 0xbd
+                  ||  *str == 0xbe
+                  ||  *str == 0xc0
+                  || (*str >= 0xdb && *str <= 0xf)
+                  ||  *str >= 0xf3
+                 )
+            )
+         ) {
+        if (repair) 
+          *str = '?';
+        else
+          return 0;
+      }
     break;
 
   default: /* unknown_charset, etc. */

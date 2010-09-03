@@ -103,11 +103,11 @@ extern size_t cl_memory_limit;
 #endif
 
 #ifndef __MINGW__
-/* for use with [fs]printf() */
-#define COMMA_SEP_THOUSANDS_CONVSPEC "%'d"
+/* for use with [fs]printf(), all decimal or floating-point conversions */
+#define COMMA_SEP_THOUSANDS_CONVSPEC "'"
 #else
-#define COMMA_SEP_THOUSANDS_CONVSPEC "%d"
-/* this feature only supported on actual POSIX -- not on mingw for osme reason */
+#define COMMA_SEP_THOUSANDS_CONVSPEC ""
+/* this feature only supported on actual POSIX -- not on mingw for some reason */
 #endif
 
 #if (!defined(REGISTRY_ENVVAR))

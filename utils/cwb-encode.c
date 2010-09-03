@@ -92,7 +92,7 @@ char *registry_file = NULL;             /**< if set, auto-generate registry file
 char *directory = NULL;                 /**< corpus data directory (no longer defaults to current directory) */
 char *corpus_character_set = "latin1";  /**< character set label that is inserted into the registry file */
 CorpusCharset encoding_charset;         /**< a charset object to be generated from corpus_character_set */
-
+int clean_strings = 0;                  /**< clean up input strings by replacing invalid bytes with '?' (except for UTF-8 encoding)*/
 
 /* ---------------------------------------------------------------------- */
 
@@ -311,6 +311,7 @@ encode_usage(void)
   fprintf(stderr, "  -b <n>    number of buckets in lexicon hash tables\n");
   fprintf(stderr, "  -c <charset> specify corpus character set (instead of the default latin1)\n");
   fprintf(stderr, "     * valid charsets: ascii ; latin1 to latin9 ; utf8\n");
+  fprintf(stderr, "  -C        clean strings, replacing invalid bytes with '?' (except UTF-8 charset)\n");
   fprintf(stderr, "  -v        verbose mode (show progress messages while encoding)\n");
   fprintf(stderr, "  -q        quiet mode (suppresses most warnings)\n");
   fprintf(stderr, "  -D        debug mode (quiet, sorry, quite the opposite :-)\n");
@@ -1176,7 +1177,7 @@ encode_parse_options(int argc, char **argv)
   cl_string_list dir_files;   /* list of input files found in directory (-F option) */
   int i, l;
 
-  while((c = getopt(argc, argv, "p:P:S:V:0:f:t:F:d:r:C:R:U:Bsb:c:xvqhD")) != EOF)
+  while((c = getopt(argc, argv, "p:P:S:V:0:f:t:F:d:R:U:Bsb:c:CxvqhD")) != EOF)
     switch(c) {
 
       /* -B: strip leading and trailing blanks from tokens and annotations */
@@ -1199,6 +1200,11 @@ encode_parse_options(int argc, char **argv)
       corpus_character_set = cl_charset_name_canonical(optarg);
       if (corpus_character_set == NULL)
         encode_error("Invalid character set specified with the -c flag!");
+      break;
+
+      /* -C: clean up strings (remove invalid bytes) */
+    case 'C':
+      clean_strings++;
       break;
 
       /* -x: translate XML entities and ignore declarations & comments */
@@ -1225,16 +1231,6 @@ encode_parse_options(int argc, char **argv)
         encode_error("Error: data directory '%s' does not exist.\nPlease create this directory first.",
                      directory);
       }
-      break;
-
-      /* -r <dir>: change registry directory (for -C option) */
-    case 'r':
-      encode_error("Sorry, the -r and -C flags haven't been implemented yet.");
-      break;
-
-      /* -C <id>: (re-)encode corpus <id>; must be declared in default registry */
-    case 'C':
-      encode_error("Sorry, the -C flag hasn't been implemented yet.");
       break;
 
       /* -R <rf>: create registry file named <rf> */
@@ -1588,7 +1584,7 @@ encode_get_input_line(char *buffer, int bufsize)
   /* check encoding and standardise Unicode character composition
    * ONLY if we are at the top of the stack of recursive calls */
   if (recursive_call == 0) {
-    if (!cl_string_validate_encoding(buffer, encoding_charset))
+    if (!cl_string_validate_encoding(buffer, encoding_charset, clean_strings))
       encode_error("Encoding error: an invalid byte or byte sequence for charset \"%s\" was encountered.\n",
           corpus_character_set);
     /* calling this function with no flags will normalize to precomposed form;
@@ -1747,7 +1743,7 @@ main(int argc, char **argv)
   /* MAIN LOOP: read one line of input and process it */
   while ( encode_get_input_line(linebuf, MAX_INPUT_LINE_LENGTH) ) {
     if (verbose && (line % 15000 == 0)) {
-      printf(COMMA_SEP_THOUSANDS_CONVSPEC "k tokens processed\r", line >> 10);
+      printf("%" COMMA_SEP_THOUSANDS_CONVSPEC "9dk tokens processed\r", line >> 10);
       fflush(stdout);
     }
 
@@ -1855,7 +1851,7 @@ main(int argc, char **argv)
 
   if (verbose) {
     printf("%50s\r", "");       /* clear progress line */
-    printf("Total size: " COMMA_SEP_THOUSANDS_CONVSPEC " tokens (%.1fM)\n", line, ((float) line) / 1048576);
+    printf("Total size: %" COMMA_SEP_THOUSANDS_CONVSPEC "d tokens (%.1fM)\n", line, ((float) line) / 1048576);
   }
 
   /* close open regions at end of input; then close file handles for s-attributes */

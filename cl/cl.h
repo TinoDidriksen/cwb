@@ -714,8 +714,8 @@ char *cl_charset_name_canonical(char *name_to_check);
 void cl_string_canonical(char *s, CorpusCharset charset, int flags);
 /* modifies string <s> in place; flags are IGNORE_CASE and IGNORE_DIAC */
 
-/* boolean function, returns is string valid? */
-int cl_string_validate_encoding(const char *s, CorpusCharset charset);
+/* boolean function, returns is string valid?; can repair (in-place edit) 8-bit encoding by replacing invalid chars with '?' */
+int cl_string_validate_encoding(char *s, CorpusCharset charset, int repair);
 
 /* various functions related to sorting/grouping... */
 char *cl_string_reverse(const char *s, CorpusCharset charset); /* creates a new string */

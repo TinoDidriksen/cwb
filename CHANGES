@@ -17,7 +17,8 @@ Other changes:
 
  - cwb-encode now validates the encoding of files as it imports them against the corpus character set. Invalid
    bytes or byte sequences lead to an abort. The default character set is Latin1, this can be changed with
-   the -c option.
+   the -c option. For ASCII and ISO8859-* character sets, invalid bytes (such as the [\x80-\x9f] range) can
+   automatically be replaced by '?' characters if the -C option is specified.
    
  - the Corpus Library (CL) has been reorganised to make programming against it easier, and it now contains 
    several more utility functions.

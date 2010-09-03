@@ -416,7 +416,7 @@ prepare_Query()
   }
 
   /* validate character encoding according to that corpus, now we know it's loaded */
-  if (!cl_string_validate_encoding(QueryBuffer, current_corpus->corpus->charset)) {
+  if (!cl_string_validate_encoding(QueryBuffer, current_corpus->corpus->charset, 0)) {
     cqpmessage(Error, "Query includes a character or character sequence that is invalid\n"
         "in the encoding specified for this corpus");
     generate_code = 0;
