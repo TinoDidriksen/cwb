@@ -415,18 +415,18 @@ prepare_Query()
     generate_code = 0;
   }
 
-  /* validate character encoding according to that corpus, now we know it's loaded */
-  if (!cl_string_validate_encoding(QueryBuffer, current_corpus->corpus->charset, 0)) {
-    cqpmessage(Error, "Query includes a character or character sequence that is invalid\n"
-        "in the encoding specified for this corpus");
-    generate_code = 0;
-  }
-
   if (generate_code) {
     
     assert(current_corpus->corpus != NULL);
     assert(searchstr == NULL);
     assert(eep == -1);
+
+    /* validate character encoding according to that corpus, now we know it's loaded */
+    if (!cl_string_validate_encoding(QueryBuffer, current_corpus->corpus->charset, 0)) {
+      cqpmessage(Error, "Query includes a character or character sequence that is invalid\n"
+          "in the encoding specified for this corpus");
+      generate_code = 0;
+    }
 
     if (!next_environment()) {
       cqpmessage(Error, "Can't allocate another evaluation environment");
