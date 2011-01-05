@@ -24,7 +24,7 @@ this library being statically linked into the CWB executables[*]). GLib is
 licensed under the GNU Library General Public Licence (or GNU Lesser General
 Public Licence as it is now known), version 2 or newer. As such, CWB binaries
 qualify both as a "work that uses the Library" and as a "a work containing portions
-of the Library" (in the terminology of the LGPL. Under the terms of section 6 of
+of the Library" in the terminology of the LGPL. Under the terms of section 6 of
 the LGPL, such redistribution in linked-in-binary format is permitted as long as 
 its use is covered by the license (which it is, since all of CWB is covered 
 by the more-restrictive GPL) and as long as the source code of the library
@@ -36,7 +36,8 @@ the GLib source code to any person who has downloaded a binary release of
 CWB. Requests for a copy of the code should be sent to cwb@sslmit.unibo.it,
 an email list monitored by the developers, one of whom will respond as quckly
 as possible. (Although, in nearly all cases, it will be quicker to go to 
-http://www.gtk.org/download.html .)
+http://www.gtk.org/download.html or to get the code of the library via your
+OS's software distribution if possible.)
  
 In the remainder of this file, you will find
 

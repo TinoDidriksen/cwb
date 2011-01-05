@@ -1057,7 +1057,7 @@ unsigned char latin1_nocase_tab[256] = {
 / **
  * Table which translates latin-1 characters
  * with diacritics to their [A-Za-z] "equivalents",
- * including ß->s, þ->t
+ * including s-set->s, thorn->t
  *
  * Use cl_string_maptable to access.
  * @see cl_string_maptable
@@ -1333,7 +1333,8 @@ cl_string_maptable(CorpusCharset charset, int flags)
 }
 
 /* invalid control character in ISO8859-* or ASCII (except for TAB) */
-#define INVALID_CTRL(c) (c < 0x20 && c != 0x09)
+#define INVALID_CTRL(c) (c < 0x20 && c != 0x09 && c != 0x0a && c != 0x0d)
+
 
 /**
  * Checks the encoding of a string.
@@ -2001,6 +2002,7 @@ cl_path_registry_quote(char *path)
 int cl_allow_latex2iso = 0;
 
 
+/* todo remove literal accented characters from code */
 /**
  * Converts ASCII strings with latex-style blackslash escapes
  * for accented characters to ISO-8859-1 (Latin-1).
@@ -2083,17 +2085,17 @@ cl_string_latex2iso(char *str, char *result, int target_len)
       }
       else if (c == '"') {     /* diaresis / umlaut */
         switch ( c = popc(str, src_pos) ) {
-        case 'A': pushc(result, 'Ä', target_pos, target_len); break;
-        case 'E': pushc(result, 'Ë', target_pos, target_len); break;
-        case 'I': pushc(result, 'Ï', target_pos, target_len); break;
-        case 'O': pushc(result, 'Ö', target_pos, target_len); break;
-        case 'U': pushc(result, 'Ü', target_pos, target_len); break;
-        case 'a': pushc(result, 'ä', target_pos, target_len); break;
-        case 'e': pushc(result, 'ë', target_pos, target_len); break;
-        case 'i': pushc(result, 'ï', target_pos, target_len); break;
-        case 'o': pushc(result, 'ö', target_pos, target_len); break;
-        case 'u': pushc(result, 'ü', target_pos, target_len); break;
-        case 's': pushc(result, 'ß', target_pos, target_len); break;
+        case 'A': pushc(result, 'Ã„', target_pos, target_len); break;
+        case 'E': pushc(result, 'Ã‹', target_pos, target_len); break;
+        case 'I': pushc(result, 'Ã', target_pos, target_len); break;
+        case 'O': pushc(result, 'Ã–', target_pos, target_len); break;
+        case 'U': pushc(result, 'Ãœ', target_pos, target_len); break;
+        case 'a': pushc(result, 'Ã¤', target_pos, target_len); break;
+        case 'e': pushc(result, 'Ã«', target_pos, target_len); break;
+        case 'i': pushc(result, 'Ã¯', target_pos, target_len); break;
+        case 'o': pushc(result, 'Ã¶', target_pos, target_len); break;
+        case 'u': pushc(result, 'Ã¼', target_pos, target_len); break;
+        case 's': pushc(result, 'ÃŸ', target_pos, target_len); break;
         default:   /* copy both */
           pushc(result, '"', target_pos, target_len);
           pushc(result, c,   target_pos, target_len);
@@ -2103,16 +2105,16 @@ cl_string_latex2iso(char *str, char *result, int target_len)
       }
       else if (c == '\'') {     /* accent aigu */
         switch ( c = popc(str, src_pos) ) {
-        case 'A': pushc(result, 'Á', target_pos, target_len); break;
-        case 'E': pushc(result, 'É', target_pos, target_len); break;
-        case 'I': pushc(result, 'Í', target_pos, target_len); break;
-        case 'O': pushc(result, 'Ó', target_pos, target_len); break;
-        case 'U': pushc(result, 'Ú', target_pos, target_len); break;
-        case 'a': pushc(result, 'á', target_pos, target_len); break;
-        case 'e': pushc(result, 'é', target_pos, target_len); break;
-        case 'i': pushc(result, 'í', target_pos, target_len); break;
-        case 'o': pushc(result, 'ó', target_pos, target_len); break;
-        case 'u': pushc(result, 'ú', target_pos, target_len); break;
+        case 'A': pushc(result, 'Ã', target_pos, target_len); break;
+        case 'E': pushc(result, 'Ã‰', target_pos, target_len); break;
+        case 'I': pushc(result, 'Ã', target_pos, target_len); break;
+        case 'O': pushc(result, 'Ã“', target_pos, target_len); break;
+        case 'U': pushc(result, 'Ãš', target_pos, target_len); break;
+        case 'a': pushc(result, 'Ã¡', target_pos, target_len); break;
+        case 'e': pushc(result, 'Ã©', target_pos, target_len); break;
+        case 'i': pushc(result, 'Ã­', target_pos, target_len); break;
+        case 'o': pushc(result, 'Ã³', target_pos, target_len); break;
+        case 'u': pushc(result, 'Ãº', target_pos, target_len); break;
         default:   /* copy both */
           pushc(result, '\'', target_pos, target_len);
           pushc(result, c,   target_pos, target_len);
@@ -2122,16 +2124,16 @@ cl_string_latex2iso(char *str, char *result, int target_len)
       }
       else if (c == '`') {      /* accent grave */
         switch ( c = popc(str, src_pos) ) {
-        case 'A': pushc(result, 'À', target_pos, target_len); break;
-        case 'E': pushc(result, 'È', target_pos, target_len); break;
-        case 'I': pushc(result, 'Ì', target_pos, target_len); break;
-        case 'O': pushc(result, 'Ò', target_pos, target_len); break;
-        case 'U': pushc(result, 'Ù', target_pos, target_len); break;
-        case 'a': pushc(result, 'à', target_pos, target_len); break;
-        case 'e': pushc(result, 'è', target_pos, target_len); break;
-        case 'i': pushc(result, 'ì', target_pos, target_len); break;
-        case 'o': pushc(result, 'ò', target_pos, target_len); break;
-        case 'u': pushc(result, 'ù', target_pos, target_len); break;
+        case 'A': pushc(result, 'Ã€', target_pos, target_len); break;
+        case 'E': pushc(result, 'Ãˆ', target_pos, target_len); break;
+        case 'I': pushc(result, 'ÃŒ', target_pos, target_len); break;
+        case 'O': pushc(result, 'Ã’', target_pos, target_len); break;
+        case 'U': pushc(result, 'Ã™', target_pos, target_len); break;
+        case 'a': pushc(result, 'Ã ', target_pos, target_len); break;
+        case 'e': pushc(result, 'Ã¨', target_pos, target_len); break;
+        case 'i': pushc(result, 'Ã¬', target_pos, target_len); break;
+        case 'o': pushc(result, 'Ã²', target_pos, target_len); break;
+        case 'u': pushc(result, 'Ã¹', target_pos, target_len); break;
         default:   /* copy both */
           pushc(result, '`', target_pos, target_len);
           pushc(result, c,   target_pos, target_len);
@@ -2141,16 +2143,16 @@ cl_string_latex2iso(char *str, char *result, int target_len)
       }
       else if (c == '^') {      /* accent circonflex */
         switch ( c = popc(str, src_pos) ) {
-        case 'A': pushc(result, 'Â', target_pos, target_len); break;
-        case 'E': pushc(result, 'Ê', target_pos, target_len); break;
-        case 'I': pushc(result, 'Î', target_pos, target_len); break;
-        case 'O': pushc(result, 'Ô', target_pos, target_len); break;
-        case 'U': pushc(result, 'í', target_pos, target_len); break;
-        case 'a': pushc(result, 'â', target_pos, target_len); break;
-        case 'e': pushc(result, 'ê', target_pos, target_len); break;
-        case 'i': pushc(result, 'î', target_pos, target_len); break;
-        case 'o': pushc(result, 'ô', target_pos, target_len); break;
-        case 'u': pushc(result, 'û', target_pos, target_len); break;
+        case 'A': pushc(result, 'Ã‚', target_pos, target_len); break;
+        case 'E': pushc(result, 'ÃŠ', target_pos, target_len); break;
+        case 'I': pushc(result, 'ÃŽ', target_pos, target_len); break;
+        case 'O': pushc(result, 'Ã”', target_pos, target_len); break;
+        case 'U': pushc(result, 'Ã­', target_pos, target_len); break;
+        case 'a': pushc(result, 'Ã¢', target_pos, target_len); break;
+        case 'e': pushc(result, 'Ãª', target_pos, target_len); break;
+        case 'i': pushc(result, 'Ã®', target_pos, target_len); break;
+        case 'o': pushc(result, 'Ã´', target_pos, target_len); break;
+        case 'u': pushc(result, 'Ã»', target_pos, target_len); break;
         default:   /* copy both */
           pushc(result, '^', target_pos, target_len);
           pushc(result, c,   target_pos, target_len);
@@ -2160,8 +2162,8 @@ cl_string_latex2iso(char *str, char *result, int target_len)
       }
       else if (c == ',') {      /* cedille */
         switch ( c = popc(str, src_pos) ) {
-        case 'C': pushc(result, 'Ç', target_pos, target_len); break;
-        case 'c': pushc(result, 'ç', target_pos, target_len); break;
+        case 'C': pushc(result, 'Ã‡', target_pos, target_len); break;
+        case 'c': pushc(result, 'Ã§', target_pos, target_len); break;
         default:   /* copy both */
           pushc(result, ',', target_pos, target_len);
           pushc(result, c,   target_pos, target_len);
@@ -2171,8 +2173,8 @@ cl_string_latex2iso(char *str, char *result, int target_len)
       }
       else if (c == '~') {
         switch ( c = popc(str, src_pos) ) {
-        case 'n': pushc(result, 'ñ', target_pos, target_len); break;
-        case 'N': pushc(result, 'Ñ', target_pos, target_len); break;
+        case 'n': pushc(result, 'Ã±', target_pos, target_len); break;
+        case 'N': pushc(result, 'Ã‘', target_pos, target_len); break;
         default:   /* copy both */
           pushc(result, '~', target_pos, target_len);
           pushc(result, c,   target_pos, target_len);
@@ -2193,6 +2195,7 @@ endloop:
 
   return result;
 }
+
 
 /**
  * Decode XML entities in a string.
