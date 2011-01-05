@@ -2002,7 +2002,6 @@ cl_path_registry_quote(char *path)
 int cl_allow_latex2iso = 0;
 
 
-/* todo remove literal accented characters from code */
 /**
  * Converts ASCII strings with latex-style blackslash escapes
  * for accented characters to ISO-8859-1 (Latin-1).
@@ -2085,17 +2084,17 @@ cl_string_latex2iso(char *str, char *result, int target_len)
       }
       else if (c == '"') {     /* diaresis / umlaut */
         switch ( c = popc(str, src_pos) ) {
-        case 'A': pushc(result, 'Ä', target_pos, target_len); break;
-        case 'E': pushc(result, 'Ë', target_pos, target_len); break;
-        case 'I': pushc(result, 'Ï', target_pos, target_len); break;
-        case 'O': pushc(result, 'Ö', target_pos, target_len); break;
-        case 'U': pushc(result, 'Ü', target_pos, target_len); break;
-        case 'a': pushc(result, 'ä', target_pos, target_len); break;
-        case 'e': pushc(result, 'ë', target_pos, target_len); break;
-        case 'i': pushc(result, 'ï', target_pos, target_len); break;
-        case 'o': pushc(result, 'ö', target_pos, target_len); break;
-        case 'u': pushc(result, 'ü', target_pos, target_len); break;
-        case 's': pushc(result, 'ß', target_pos, target_len); break;
+        case 'A': pushc(result, 0xC4, target_pos, target_len); break;
+        case 'E': pushc(result, 0xCB, target_pos, target_len); break;
+        case 'I': pushc(result, 0xCF, target_pos, target_len); break;
+        case 'O': pushc(result, 0xD6, target_pos, target_len); break;
+        case 'U': pushc(result, 0xDC, target_pos, target_len); break;
+        case 'a': pushc(result, 0xE4, target_pos, target_len); break;
+        case 'e': pushc(result, 0xEb, target_pos, target_len); break;
+        case 'i': pushc(result, 0xEF, target_pos, target_len); break;
+        case 'o': pushc(result, 0xF6, target_pos, target_len); break;
+        case 'u': pushc(result, 0xFc, target_pos, target_len); break;
+        case 's': pushc(result, 0xDF, target_pos, target_len); break;
         default:   /* copy both */
           pushc(result, '"', target_pos, target_len);
           pushc(result, c,   target_pos, target_len);
@@ -2105,16 +2104,16 @@ cl_string_latex2iso(char *str, char *result, int target_len)
       }
       else if (c == '\'') {     /* accent aigu */
         switch ( c = popc(str, src_pos) ) {
-        case 'A': pushc(result, 'Á', target_pos, target_len); break;
-        case 'E': pushc(result, 'É', target_pos, target_len); break;
-        case 'I': pushc(result, 'Í', target_pos, target_len); break;
-        case 'O': pushc(result, 'Ó', target_pos, target_len); break;
-        case 'U': pushc(result, 'Ú', target_pos, target_len); break;
-        case 'a': pushc(result, 'á', target_pos, target_len); break;
-        case 'e': pushc(result, 'é', target_pos, target_len); break;
-        case 'i': pushc(result, 'í', target_pos, target_len); break;
-        case 'o': pushc(result, 'ó', target_pos, target_len); break;
-        case 'u': pushc(result, 'ú', target_pos, target_len); break;
+        case 'A': pushc(result, 0xC1, target_pos, target_len); break;
+        case 'E': pushc(result, 0xC9, target_pos, target_len); break;
+        case 'I': pushc(result, 0xCD, target_pos, target_len); break;
+        case 'O': pushc(result, 0xD3, target_pos, target_len); break;
+        case 'U': pushc(result, 0xDA, target_pos, target_len); break;
+        case 'a': pushc(result, 0xE1, target_pos, target_len); break;
+        case 'e': pushc(result, 0xE9, target_pos, target_len); break;
+        case 'i': pushc(result, 0xED, target_pos, target_len); break;
+        case 'o': pushc(result, 0xF3, target_pos, target_len); break;
+        case 'u': pushc(result, 0xFA, target_pos, target_len); break;
         default:   /* copy both */
           pushc(result, '\'', target_pos, target_len);
           pushc(result, c,   target_pos, target_len);
@@ -2124,16 +2123,16 @@ cl_string_latex2iso(char *str, char *result, int target_len)
       }
       else if (c == '`') {      /* accent grave */
         switch ( c = popc(str, src_pos) ) {
-        case 'A': pushc(result, 'À', target_pos, target_len); break;
-        case 'E': pushc(result, 'È', target_pos, target_len); break;
-        case 'I': pushc(result, 'Ì', target_pos, target_len); break;
-        case 'O': pushc(result, 'Ò', target_pos, target_len); break;
-        case 'U': pushc(result, 'Ù', target_pos, target_len); break;
-        case 'a': pushc(result, 'à', target_pos, target_len); break;
-        case 'e': pushc(result, 'è', target_pos, target_len); break;
-        case 'i': pushc(result, 'ì', target_pos, target_len); break;
-        case 'o': pushc(result, 'ò', target_pos, target_len); break;
-        case 'u': pushc(result, 'ù', target_pos, target_len); break;
+        case 'A': pushc(result, 0xC0, target_pos, target_len); break;
+        case 'E': pushc(result, 0xC8, target_pos, target_len); break;
+        case 'I': pushc(result, 0xCC, target_pos, target_len); break;
+        case 'O': pushc(result, 0xD2, target_pos, target_len); break;
+        case 'U': pushc(result, 0xD9, target_pos, target_len); break;
+        case 'a': pushc(result, 0xE0, target_pos, target_len); break;
+        case 'e': pushc(result, 0xE8, target_pos, target_len); break;
+        case 'i': pushc(result, 0xEC, target_pos, target_len); break;
+        case 'o': pushc(result, 0xF2, target_pos, target_len); break;
+        case 'u': pushc(result, 0xF9, target_pos, target_len); break;
         default:   /* copy both */
           pushc(result, '`', target_pos, target_len);
           pushc(result, c,   target_pos, target_len);
@@ -2143,16 +2142,16 @@ cl_string_latex2iso(char *str, char *result, int target_len)
       }
       else if (c == '^') {      /* accent circonflex */
         switch ( c = popc(str, src_pos) ) {
-        case 'A': pushc(result, 'Â', target_pos, target_len); break;
-        case 'E': pushc(result, 'Ê', target_pos, target_len); break;
-        case 'I': pushc(result, 'Î', target_pos, target_len); break;
-        case 'O': pushc(result, 'Ô', target_pos, target_len); break;
-        case 'U': pushc(result, 'í', target_pos, target_len); break;
-        case 'a': pushc(result, 'â', target_pos, target_len); break;
-        case 'e': pushc(result, 'ê', target_pos, target_len); break;
-        case 'i': pushc(result, 'î', target_pos, target_len); break;
-        case 'o': pushc(result, 'ô', target_pos, target_len); break;
-        case 'u': pushc(result, 'û', target_pos, target_len); break;
+        case 'A': pushc(result, 0xC2, target_pos, target_len); break;
+        case 'E': pushc(result, 0xCA, target_pos, target_len); break;
+        case 'I': pushc(result, 0xCE, target_pos, target_len); break;
+        case 'O': pushc(result, 0xD4, target_pos, target_len); break;
+        case 'U': pushc(result, 0xDB, target_pos, target_len); break;
+        case 'a': pushc(result, 0xE2, target_pos, target_len); break;
+        case 'e': pushc(result, 0xEA, target_pos, target_len); break;
+        case 'i': pushc(result, 0xEE, target_pos, target_len); break;
+        case 'o': pushc(result, 0xF4, target_pos, target_len); break;
+        case 'u': pushc(result, 0xFB, target_pos, target_len); break;
         default:   /* copy both */
           pushc(result, '^', target_pos, target_len);
           pushc(result, c,   target_pos, target_len);
@@ -2162,8 +2161,8 @@ cl_string_latex2iso(char *str, char *result, int target_len)
       }
       else if (c == ',') {      /* cedille */
         switch ( c = popc(str, src_pos) ) {
-        case 'C': pushc(result, 'Ç', target_pos, target_len); break;
-        case 'c': pushc(result, 'ç', target_pos, target_len); break;
+        case 'C': pushc(result, 0xC7, target_pos, target_len); break;
+        case 'c': pushc(result, 0xE7, target_pos, target_len); break;
         default:   /* copy both */
           pushc(result, ',', target_pos, target_len);
           pushc(result, c,   target_pos, target_len);
@@ -2173,8 +2172,8 @@ cl_string_latex2iso(char *str, char *result, int target_len)
       }
       else if (c == '~') {
         switch ( c = popc(str, src_pos) ) {
-        case 'n': pushc(result, 'ñ', target_pos, target_len); break;
-        case 'N': pushc(result, 'Ñ', target_pos, target_len); break;
+        case 'N': pushc(result, 0xD1, target_pos, target_len); break;
+        case 'n': pushc(result, 0xF1, target_pos, target_len); break;
         default:   /* copy both */
           pushc(result, '~', target_pos, target_len);
           pushc(result, c,   target_pos, target_len);

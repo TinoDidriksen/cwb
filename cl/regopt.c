@@ -123,7 +123,7 @@ cl_new_regex(char *regex, int flags, CorpusCharset charset)
   int error_num, optimised, i, l;
 
   int options_for_pcre = 0;
-  char *errstring_for_pcre = NULL;
+  const char *errstring_for_pcre = NULL;
   int erroffset_for_pcre = 0;
 
   /* allocate temporary strings */
@@ -164,7 +164,7 @@ cl_new_regex(char *regex, int flags, CorpusCharset charset)
     return NULL;
   }
   else if (cl_debug)
-    fprintf(stderr, "CL: Regex compiled successfully using PCRE library\n", errstring_for_pcre);
+    fprintf(stderr, "CL: Regex compiled successfully using PCRE library\n");
 
   /* always use pcre_study because nearly all our regexes are going to be used lots of times;
    * note that according to man pcre, the optimisation methods are different to those used by
@@ -178,7 +178,7 @@ cl_new_regex(char *regex, int flags, CorpusCharset charset)
        the extra info */
   }
   if (cl_debug && rx->extra)
-    fprintf(stderr, "CL: calling pcre_study produced useful information...\n", errstring_for_pcre);
+    fprintf(stderr, "CL: calling pcre_study produced useful information...\n");
 
   /* allocate string buffer for cl_regex_match() function if flags are present */
   if (flags)
@@ -471,7 +471,7 @@ read_matchall(char *mark)
     while (*point != ']' && *point != '\\' && *point != '[' && *point != '\0') { */
     /* [AH: new version] the following characters are "not safe-looking" within a character class in PCRE: */
     while (*point != ']' && *point != '\\' && *point != '[' && *point != '\0'
-            && *point != '-' && point != '^') {
+            && *point != '-' && *point != '^') {
       point++;
     }
     /* if we got to ] without hitting a "messy" character, read the entire character class.

@@ -25,7 +25,7 @@ cp config.mk config.mk.bak
 
 # set appropriate configuration flags in config.mk (Perl is always available on Mac OS X)
 
-perl -i~ -pe 'if (/^include \$\(TOP\)\/config\/platform\//) { $_ = "include \$(TOP)/config/platform/darwin-universal\n" } elsif (/^include \$\(TOP\)\/config\/site\//) { $_ = "include \$(TOP)/config/site/standard\n" }' config.mk
+perl -i~ -pe 'if (/^include \$\(TOP\)\/config\/platform\//) { $_ = "include \$(TOP)/config/platform/darwin-core2\n" } elsif (/^include \$\(TOP\)\/config\/site\//) { $_ = "include \$(TOP)/config/site/standard\n" }' config.mk
 
 make clean
 make depend
