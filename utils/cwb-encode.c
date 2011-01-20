@@ -1591,6 +1591,10 @@ encode_get_input_line(char *buffer, int bufsize)
      * but don't bother with the overhead unless the encoding is UTF8  */
     if (encoding_charset == utf8)
       cl_string_canonical(buffer, utf8, 0);
+    /* finally, get rid of C0 controls iff the user asked us to clean up strings */
+    if (clean_strings)
+      cl_string_zap_controls(buffer, encoding_charset, '?', 0, 0);
+    /* note we DIDN'T zap tab and newline, becuase this string has yet to be column-split */
   }
   return ok;
 }

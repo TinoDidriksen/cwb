@@ -1332,8 +1332,56 @@ cl_string_maptable(CorpusCharset charset, int flags)
   end old version */
 }
 
-/* invalid control character in ISO8859-* or ASCII (except for TAB) */
-#define INVALID_CTRL(c) (c < 0x20 && c != 0x09 && c != 0x0a && c != 0x0d)
+
+/* invalid control character in ISO8859-* or ASCII (except for TAB)
+#define INVALID_CTRL(c) (c < 0x20 && c != 0x09 && c != 0x0a && c != 0x0d) */
+
+/**
+ * Replaces any invalid control characters in a string.
+ *
+ * "Invalid" control characters are any below 0x20.
+ *
+ * The string is modified in situ. A typical "replace" to use would be '?'
+ * to match the action of cl_string_validate_encoding.
+ *
+ * @param s             The string to modify.
+ * @param charset       The character set of the string.
+ * @param replace       The replacement character to use. If this is 0, the
+ *                      character is deleted rather than replaced.
+ * @param zap_tabs      Whether or not tabs should be zapped (boolean).
+ * @param zap_newlines  Whether or not \n and \r should be zapped (boolean).
+ * @return              The number of characters replaced/deleted in the string.
+ */
+int
+cl_string_zap_controls(char *s, CorpusCharset *charset, char replace, int zap_tabs, int zap_newlines)
+{
+  int i;
+  /* number of replacements made */
+  int num = 0;
+  int zappable[0x20] = {1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1};
+
+  /* set flags */
+  zappable[0x09] = (zap_tabs ? 1 : 0);
+  zappable[0x0d] = zappable[0x0a] = (zap_newlines ? 1 : 0);
+  /* all other C0 controls are always zappable */
+
+  /* we don't currently do anything with charset because all CWB character sets are ascii-compatible.
+     But the parameter is retained in case of a theoretical future charset that isn't.  */
+
+  for (; *s ; s++)
+    if (*s < 0x20 && zappable[*s]) {
+      num++;
+      if (replace)
+        *s = replace;
+      else
+        /* it is safe to do a bare down-copy because
+         * the C0s are all single-byte under UTF-8 */
+        for (i = 0 ; *(s+i) = *(s+i+1) ; i++)
+          ;
+    }
+  return num;
+}
+
 
 
 /**
@@ -1345,8 +1393,7 @@ cl_string_maptable(CorpusCharset charset, int flags)
  * '?' characters.  If the "repair" is successful, the function returns True.
  *
  * What counts as "bad" is of course relative to the character set that the
- * string is encoded in - so this must be specified.  For ISO8859-* encodings,
- * bad bytes include all control characters [\x00-\x1f] except for TAB.
+ * string is encoded in - so this must be specified.
  *
  * @param s        Null-terminated string to check.
  * @param charset  CorpusCharset of the string's encoding.
@@ -1366,10 +1413,11 @@ cl_string_validate_encoding(char *s, CorpusCharset charset, int repair)
     return (g_utf8_validate((gchar *)str, -1, NULL) ? 1 : 0);
 
   /* all the others are of the same pattern:
-     check each character in string, if in illegal zone, return false. */
+     check each character in string, if in illegal zone, return false or overwrite with '?'.
+     we short-circuit the tests where possible. */
   case ascii:
     for (; *str ; str++)
-      if ( *str > 0x7f || INVALID_CTRL(*str) ) {
+      if ( *str > 0x7f ) {
         if (repair) 
           *str = '?';
         else
@@ -1388,7 +1436,7 @@ cl_string_validate_encoding(char *s, CorpusCharset charset, int repair)
   case latin9:
   case cyrillic:
     for (; *str ; str++)
-      if (INVALID_CTRL(*str) || (*str > 0x7f && *str < 0xa0)) {
+      if ( (*str > 0x7f && *str < 0xa0)) {
         if (repair) 
           *str = '?';
         else
@@ -1399,8 +1447,7 @@ cl_string_validate_encoding(char *s, CorpusCharset charset, int repair)
   /* latin3 has extra non-allowed characters */
   case latin3:
     for (; *str ; str++)
-      if (INVALID_CTRL(*str) 
-          || (*str > 0x7f 
+      if ( *str > 0x7f
               && (   *str <  0xa0
                   || *str == 0xa5
                   || *str == 0xae
@@ -1410,7 +1457,6 @@ cl_string_validate_encoding(char *s, CorpusCharset charset, int repair)
                   || *str == 0xe3
                   || *str == 0xf0
                  )
-             )
          ) {
         if (repair) 
           *str = '?';
@@ -1422,14 +1468,12 @@ cl_string_validate_encoding(char *s, CorpusCharset charset, int repair)
   /* so does Greek! */
   case greek:
     for (; *str ; str++)
-      if (INVALID_CTRL(*str)
-          || (*str > 0x7f 
+      if ( *str > 0x7f
               && (   *str <  0xa0 
                   || *str == 0xae
                   || *str == 0xd2
                   || *str == 0xff
                  )
-             )
          ) {
         if (repair) 
           *str = '?';
@@ -1441,8 +1485,7 @@ cl_string_validate_encoding(char *s, CorpusCharset charset, int repair)
   /* hebrew has a few more complexities */
   case hebrew:
     for (; *str ; str++)
-      if (INVALID_CTRL(*str)
-          || (*str > 0x7f
+      if (*str > 0x7f
               && (    *str <  0xa0
                   ||  *str == 0xa1
                   || (*str >= 0xbf && *str <= 0xde)
@@ -1450,7 +1493,6 @@ cl_string_validate_encoding(char *s, CorpusCharset charset, int repair)
                   ||  *str == 0xfc
                   ||  *str == 0xff
                  )
-             )
          ) {
         if (repair) 
           *str = '?';
@@ -1463,8 +1505,7 @@ cl_string_validate_encoding(char *s, CorpusCharset charset, int repair)
   /* (this may not be the most efficient set of tests)  */
   case arabic:
     for (; *str ; str++)
-      if (INVALID_CTRL(*str)
-          || (*str >  0x7f
+      if (*str >  0x7f
               && (    *str <  0xa0
                   ||  *str == 0xa1
                   ||  *str == 0xa2
@@ -1478,7 +1519,6 @@ cl_string_validate_encoding(char *s, CorpusCharset charset, int repair)
                   || (*str >= 0xdb && *str <= 0xf)
                   ||  *str >= 0xf3
                  )
-            )
          ) {
         if (repair) 
           *str = '?';
