@@ -1353,7 +1353,7 @@ cl_string_maptable(CorpusCharset charset, int flags)
  * @return              The number of characters replaced/deleted in the string.
  */
 int
-cl_string_zap_controls(char *s, CorpusCharset *charset, char replace, int zap_tabs, int zap_newlines)
+cl_string_zap_controls(char *s, CorpusCharset charset, char replace, int zap_tabs, int zap_newlines)
 {
   int i;
   /* number of replacements made */

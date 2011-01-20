@@ -715,7 +715,7 @@ void cl_string_canonical(char *s, CorpusCharset charset, int flags);
 /* modifies string <s> in place; flags are IGNORE_CASE and IGNORE_DIAC */
 
 /* remove or overwrite C0 control characters in a string (modify input string!) */
-int cl_string_zap_controls(char *s, CorpusCharset *charset, char replace, int zap_tabs, int zap_newlines);
+int cl_string_zap_controls(char *s, CorpusCharset charset, char replace, int zap_tabs, int zap_newlines);
 
 /* boolean function, returns is string valid?; can repair (in-place edit) 8-bit encoding by replacing invalid chars with '?' */
 int cl_string_validate_encoding(char *s, CorpusCharset charset, int repair);
