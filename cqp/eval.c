@@ -2670,8 +2670,7 @@ simulate_dfa(int envidx, int cut, int keep_old_ranges)
 
   if (evalenv->dfa.Final[0] == True) {
     cqpmessage(Error, 
-               "Start state is final state, no evaluation "
-               "(whole corpus is matched)\n");
+               "Query matches empty string, evaluation aborted (otherwise whole corpus would be matched)\n");
 
     set_corpus_matchlists(evalenv->query_corpus, 
                           &matchlist, /* total_matchlist may be uninitialised */
