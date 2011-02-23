@@ -143,7 +143,7 @@ release: libcl.a
 uninstall:
 	@$(ECHO) "ERROR: uninstall operation is currently not supported!"
 #	$(RM) $(LIBINSTDIR)/libcl.a
-#	(cd $(INCINSTDIR); $(RM) cl.h)
+#	(cd $(REALINCINSTDIR); $(RM) cl.h)
 
 depend:
 	-$(RM) depend.mk
