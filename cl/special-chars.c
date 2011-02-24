@@ -2295,3 +2295,37 @@ cl_xml_entity_decode(char *s)
   }
   return s;
 }
+
+
+/**
+ * Replacement for strcpy that won't copy more than MAX_STRING_LENGTH characters.
+ *
+ * This is intended to make it easier to evade buffer overflows. But it doesn't
+ * protect against the opposite danger of losing important data from the end of
+ * a truncated string.
+ *
+ * Note, buffer overflow is still possible if buf is a pointer to the beginning
+ * of a buffer.
+ *
+ * So this function is not a panacea, it's just a bit of a help.
+ *
+ * It's also implemented in a way that is safe for down-strcpying, that is, if
+ * we are erasing a section from the start/middle of the string (cl_strcpy(string,
+ * string+3); for instance). The POSIX standard states that the normal strcpy
+ * has undefined behaviour if the objects overlap. That's not the case here.
+ *
+ * @param buf  A string buffer to copy to.
+ * @param src  The string pointer to copy from.
+ * @return     In classic strcpy-stylie, this function uselessly returns buf.
+ */
+char *
+cl_strcpy(char *buf, const char *src)
+{
+  int i;
+  for (i = 0 ; i < MAX_LINE_LENGTH, (buf[i] = src[i]) != '\0' ; i++)
+    ;
+  /* if we ran out of buffer space, make sure the string is null-terminated */
+  if (i == MAX_LINE_LENGTH)
+    buf[MAX_LINE_LENGTH-1] = '\0';
+  return buf;
+}

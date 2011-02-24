@@ -281,6 +281,9 @@ void cl_set_memory_limit(int megabytes);  /* 0 or less turns limit off */
  *  misc CL utility functions
  */
 
+/* CL-specific version of strcpy. Don't use unless you know what you're doing. */
+char *cl_strcpy(char *buf, const char *src);
+
 int cl_strcmp(char *s1, char *s2);
 
 char *cl_string_latex2iso(char *str, char *result, int target_len);

@@ -70,7 +70,7 @@ else if (arg->type != atyp) { \
 }
 
 /**
- * CL internal string comparison (uses signed char on all platforms)
+ * CL internal string comparison (uses signed char on all platforms).
  */
 int
 cl_strcmp(char *s1, char *s2)

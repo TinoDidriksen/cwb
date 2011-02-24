@@ -535,6 +535,9 @@ range_print_registry_line(Range *rng, FILE *fd, int print_comment)
  * is also returned. So you can ignore the return value or not, as
  * you prefer.
  *
+ * This is the function where the command-line formalism for defining
+ * s-attributes is defined.
+ *
  * @see                   ranges
  *
  * @param name            The string from the user specifying the name of
@@ -572,7 +575,7 @@ range_declare(char *name, char *directory, int store_values, int null_attribute)
   rng = &ranges[range_ptr];     /* fill next entry in ranges[] */
   range_ptr++;                  /* must increment range pointer now, in case we have children */
 
-  strcpy(buf, name);
+  cl_strcpy(buf, name);
   /* check if recursion and/or element attributes are declared */
   if ((rec = strchr(buf, ':')) != NULL) {    /* recursion declaration ":<n>"  */
     *(rec++) = '\0';
@@ -1558,7 +1561,7 @@ encode_get_input_line(char *buffer, int bufsize)
     /* on first line of file, skip UTF8 byte-order-mark if present */
     if (input_line == 0 && encoding_charset == utf8)
       if (buffer[0] == (char)0xEF && buffer[1] == (char)0xBB && buffer[2] == (char)0xBF)
-         strcpy(buffer, (buffer+3));
+         cl_strcpy(buffer, (buffer+3));
 
     if (! ok) {
       /* assume we're at end of file -> close current input file, and try reading from next one */
