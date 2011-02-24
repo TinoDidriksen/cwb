@@ -2322,7 +2322,7 @@ char *
 cl_strcpy(char *buf, const char *src)
 {
   int i;
-  for (i = 0 ; i < MAX_LINE_LENGTH, (buf[i] = src[i]) != '\0' ; i++)
+  for (i = 0 ; i < MAX_LINE_LENGTH && (buf[i] = src[i]) != '\0' ; i++)
     ;
   /* if we ran out of buffer space, make sure the string is null-terminated */
   if (i == MAX_LINE_LENGTH)
