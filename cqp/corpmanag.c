@@ -1127,7 +1127,7 @@ load_corpusnames(enum corpus_type ct)
   struct dirent *ep;
   char          *entry;
 
-  char          dirlist[MAX_LINE_LENGTH];
+  char          dirlist[CL_MAX_LINE_LENGTH];
   char          *dirname;
   CorpusList    *corpus;
 
@@ -1845,7 +1845,7 @@ is_qualified(char *corpusname)
  *
  * This function splits query result name {corpusname} into qualifier (name of mother corpus) and local name;
  * returns pointer to local name part, or NULL if {corpusname} is not syntactically valid;
- * if mother_name is not NULL, it must point to a buffer of suitable length (MAX_LINE_LENGTH is sufficient)
+ * if mother_name is not NULL, it must point to a buffer of suitable length (CL_MAX_LINE_LENGTH is sufficient)
  * where the qualifier will be stored (empty string for unqualified corpus, and return value == {corpusname} in this case)
  */
 char *

@@ -116,6 +116,8 @@ extern size_t cl_memory_limit;
 #endif
 
 /**
+ * DEPRACATED synonym for CL_MAX_LINE_LENGTH.
+ *
  *  this is the length of temporary strings which are allocated with a fixed size ... better make it large
  */
 #define MAX_LINE_LENGTH        4096

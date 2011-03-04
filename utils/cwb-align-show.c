@@ -175,9 +175,9 @@ alignshow_goodbye(int error_level)
   if (af != NULL) {
     if (af_is_pipe) {
       /* skip rest of alignment file to avoid "broken pipe" message */
-      char line[4096];
+      char line[CL_MAX_LINE_LENGTH];
       while (!feof(af))
-        fgets(line, 4096, af);
+        fgets(line, CL_MAX_LINE_LENGTH, af);
       pclose(af);
     }
     else
@@ -211,11 +211,11 @@ end_of_alignment(void)
 void
 skip_next_region(FILE *f)
 {
-  char line[4096];
+  char line[CL_MAX_LINE_LENGTH];
 
   if (feof(f))
     end_of_alignment();
-  fgets(line, 4096, f);
+  fgets(line, CL_MAX_LINE_LENGTH, f);
 }
 
 
@@ -228,7 +228,7 @@ skip_next_region(FILE *f)
 void
 print_next_region(FILE *f)
 {
-  char line[4096];
+  char line[CL_MAX_LINE_LENGTH];
   int f1, l1, f2, l2;
   int quality, args;
   char type[256];
@@ -242,7 +242,7 @@ print_next_region(FILE *f)
   /* get next alignment region */
   if (feof(f))
     end_of_alignment();
-  if (NULL == fgets(line, 4096, f))
+  if (NULL == fgets(line, CL_MAX_LINE_LENGTH, f))
     end_of_alignment();
   if (5 > (args = sscanf(line, "%d %d %d %d %s %d", &f1, &l1, &f2, &l2, type, &quality))) {
     fprintf(stderr, "%s: format error in line\n\t%s", progname, line);
@@ -325,9 +325,9 @@ print_next_region(FILE *f)
 int
 main(int argc, char** argv)
 {
-  int argindex;                  /* index of first argument in argv[] */
-  char line[4096];               /* input buffer for .align file */
-  char cmd[4096];                /* interactive command input */
+  int argindex;                                /* index of first argument in argv[] */
+  char line[CL_MAX_LINE_LENGTH];               /* input buffer for .align file */
+  char cmd[CL_MAX_LINE_LENGTH];                /* interactive command input */
   int l;
 
   progname = argv[0];
@@ -361,7 +361,7 @@ main(int argc, char** argv)
   }
 
   /* read header = first line */
-  fgets(line, 4096, af);
+  fgets(line, CL_MAX_LINE_LENGTH, af);
   if (4 != sscanf(line, "%s %s %s %s", corpus1_name, s1_name, corpus2_name, s2_name)) {
     fprintf(stderr, "%s: %s not in .align format\n", progname, align_name);
     fprintf(stderr, "wrong header: %s", line);
@@ -404,7 +404,7 @@ main(int argc, char** argv)
   while (42) { /* :-) */
     /* command prompt */
     printf(">> "); fflush(stdout);
-    fgets(cmd, 4096, stdin);
+    fgets(cmd, CL_MAX_LINE_LENGTH, stdin);
 
     /* "parse" command, i.e. look at first character */
     switch (cmd[0]) {

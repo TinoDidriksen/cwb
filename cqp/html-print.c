@@ -235,10 +235,10 @@ html_print_field(FieldType field, int at_end)
 char *
 html_convert_string(char *s)
 {
-  static char html_s[MAX_LINE_LENGTH*2];
-  int p;
+  static char html_s[CL_MAX_LINE_LENGTH*2];
+  int p; /* "pointer" into array */
 
-  if (!s || strlen(s) >(MAX_LINE_LENGTH))
+  if (!s || strlen(s) >(CL_MAX_LINE_LENGTH))
     return NULL;
   
   for (p = 0; *s; s++) {

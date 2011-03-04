@@ -165,10 +165,11 @@ main(int argc, char *argv[])
   char *align_name = NULL;              /* name of the .align file */
   FILE *af = NULL;                      /* alignment file handle */
   int af_is_pipe;                       /* need to know whether to call fclose() or pclose() */
-  char alx_name[4096], alg_name[4096];  /* full pathnames of .alx and optional .alg file */
+  char alx_name[CL_MAX_LINE_LENGTH];    /* full pathname of .alx file */
+  char alg_name[CL_MAX_LINE_LENGTH];    /* full pathname of optional .alg file */
   FILE *alx=NULL, *alg=NULL;            /* file handles for .alx and optional .alg file */
 
-  char line[4096];                      /* one line of input from <infile> */
+  char line[CL_MAX_LINE_LENGTH];        /* one line of input from <infile> */
 
   char corpus1_name[1024], corpus2_name[1024], s1_name[1024], s2_name[1024];
   Corpus *corpus1, *corpus2;            /* corpus handles */
@@ -216,7 +217,7 @@ main(int argc, char *argv[])
   }
 
   /* read header = first line */
-  fgets(line, 4096, af);
+  fgets(line, CL_MAX_LINE_LENGTH, af);
   if (4 != sscanf(line, "%s %s %s %s", corpus1_name, s1_name, corpus2_name, s2_name)) {
     fprintf(stderr, "%s: %s not in .align format\n", progname, align_name);
     fprintf(stderr, "wrong header: %s", line);
@@ -324,7 +325,7 @@ main(int argc, char *argv[])
   current1 = current2 = -1;         /* for compatibility mode */
   n_0_1 = n_1_0 = 0;                /* number of 0:1 and 1:0 alignments, which are skipped */
   while (! feof(af)) {
-    if (NULL == fgets(line, 4096, af))
+    if (NULL == fgets(line, CL_MAX_LINE_LENGTH, af))
       break;                        /* end of file (or read error, which we choose to ignore) */
     if (4 != sscanf(line, "%d %d %d %d", &f1, &l1, &f2, &l2)) {
       fprintf(stderr, "%s: input format error: %s", progname, line);

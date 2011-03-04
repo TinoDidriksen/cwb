@@ -1619,9 +1619,9 @@ cl_string_qsort_compare(const char *s1,
 
     /* allocate the static buffers once and for all */
     if (! buffers_allocated) {
-      /* a normalised string cannot possibly be longer than (MAX_LINE_LENGTH * 2) */
-      buffer1 = (char *) cl_malloc(MAX_LINE_LENGTH * 2);
-      buffer2 = (char *) cl_malloc(MAX_LINE_LENGTH * 2);
+      /* a normalised string cannot possibly be longer than (CL_MAX_LINE_LENGTH * 2) */
+      buffer1 = (char *) cl_malloc(CL_MAX_LINE_LENGTH * 2);
+      buffer2 = (char *) cl_malloc(CL_MAX_LINE_LENGTH * 2);
       buffers_allocated = 1;
       /* alternative would be to allocate 2 * strlen(s1 or s2), and reallocate
        * whenever more is needed */
@@ -1638,10 +1638,11 @@ cl_string_qsort_compare(const char *s1,
     }
     if (reverse) {
       char *temp;
+      /* note we cannot use cl_strcpy() because the limit is CL_MAX_LINE_LENGTH * 2 */
       strcpy(buffer1, (temp = cl_string_reverse(buffer1, charset)) );
-      free(temp);
+      cl_free(temp);
       strcpy(buffer2, (temp = cl_string_reverse(buffer2, charset)) );
-      free(temp);
+      cl_free(temp);
     }
     /* in either case, we compare the buffers, not the orig string */
     comp1 = buffer1;
@@ -2322,10 +2323,10 @@ char *
 cl_strcpy(char *buf, const char *src)
 {
   int i;
-  for (i = 0 ; i < MAX_LINE_LENGTH && (buf[i] = src[i]) != '\0' ; i++)
+  for (i = 0 ; i < CL_MAX_LINE_LENGTH && (buf[i] = src[i]) != '\0' ; i++)
     ;
   /* if we ran out of buffer space, make sure the string is null-terminated */
-  if (i == MAX_LINE_LENGTH)
-    buf[MAX_LINE_LENGTH-1] = '\0';
+  if (i == CL_MAX_LINE_LENGTH)
+    buf[CL_MAX_LINE_LENGTH-1] = '\0';
   return buf;
 }

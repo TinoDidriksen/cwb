@@ -478,7 +478,7 @@ sencode_range_declare(char *name, char *directory, int store_values)
 void
 sencode_range_open(void)
 {
-  char buf[MAX_LINE_LENGTH];
+  char buf[CL_MAX_LINE_LENGTH];
 
   sprintf(buf, RNG_RNG, range.dir, range.name);
   if ((range.fd = fopen(buf, "wb")) == NULL) {
@@ -737,7 +737,7 @@ main(int argc, char **argv)
   int input_line;
   int start, end;
   char *annot;
-  char buf[MAX_LINE_LENGTH];
+  char buf[CL_MAX_LINE_LENGTH];
   Attribute *att;
   int V_switch, values, S_annotations_dropped;
   int i, N;
@@ -784,11 +784,11 @@ main(int argc, char **argv)
     printf("[Reading input data]\n");
   input_line = 0;
   S_annotations_dropped = 0;
-  while (fgets(buf, MAX_LINE_LENGTH, text_fd)) {
+  while (fgets(buf, CL_MAX_LINE_LENGTH, text_fd)) {
     input_line++;
 
     /* check for buffer overflow */
-    if (strlen(buf) >= (MAX_LINE_LENGTH - 1)) {
+    if (strlen(buf) >= (CL_MAX_LINE_LENGTH - 1)) {
       fprintf(stderr, "BUFFER OVERFLOW, input line #%d is too long:\n>> %s", input_line, buf);
       exit(1);
     }

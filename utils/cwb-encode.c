@@ -555,7 +555,7 @@ range_print_registry_line(Range *rng, FILE *fd, int print_comment)
 Range *
 range_declare(char *name, char *directory, int store_values, int null_attribute)
 {
-  char buf[MAX_LINE_LENGTH];
+  char buf[CL_MAX_LINE_LENGTH];
   Range *rng;
   char *p, *rec, *ea_start, *ea;
   cl_lexhash_entry entry;
@@ -777,15 +777,15 @@ range_close(Range *rng, int end_pos)
           rng->annot = cl_strdup("");
         /* check annotation length & truncate if necessary */
         l = strlen(rng->annot);
-        if (l >= MAX_LINE_LENGTH) {
+        if (l >= CL_MAX_LINE_LENGTH) {
           if (!silent) {
             fprintf(stderr, "Value of <%s> region exceeds maximum string length (%d > %d chars), truncated (", 
-                    rng->name, l, MAX_LINE_LENGTH-1);
+                    rng->name, l, CL_MAX_LINE_LENGTH-1);
             encode_print_input_lineno();
             fprintf(stderr, ").\n");
           }
-          rng->annot[MAX_LINE_LENGTH-2] = '$'; /* truncation marker, as e.g. in Emacs */
-          rng->annot[MAX_LINE_LENGTH-1] = '\0';
+          rng->annot[CL_MAX_LINE_LENGTH-2] = '$'; /* truncation marker, as e.g. in Emacs */
+          rng->annot[CL_MAX_LINE_LENGTH-1] = '\0';
         }
         /* check if annot is already in hash */
         if ((entry = cl_lexhash_find(rng->lh, rng->annot)) != NULL) {
@@ -1105,9 +1105,9 @@ wattr_find(char *name)
 int 
 wattr_declare(char *name, char *directory, int nr_buckets)
 {
-  char corname[MAX_LINE_LENGTH];
-  char lexname[MAX_LINE_LENGTH];
-  char idxname[MAX_LINE_LENGTH];
+  char corname[CL_MAX_LINE_LENGTH];
+  char lexname[CL_MAX_LINE_LENGTH];
+  char idxname[CL_MAX_LINE_LENGTH];
 
   if (name == NULL)
     name = DEFAULT_ATT_NAME;
@@ -1458,15 +1458,15 @@ encode_add_wattr_line(char *str)
 
     /* check annotation length & truncate if necessary (assumes it's ok to modify token[] destructively) */
     l = strlen(token); /* check annotation length & truncate if necessary */
-    if (l >= MAX_LINE_LENGTH) {
+    if (l >= CL_MAX_LINE_LENGTH) {
       if (!silent) {
         fprintf(stderr, "Value of p-attribute '%s' exceeds maximum string length (%d > %d chars), truncated (", 
-                wattrs[fc].name, l, MAX_LINE_LENGTH-1);
+                wattrs[fc].name, l, CL_MAX_LINE_LENGTH-1);
         encode_print_input_lineno();
         fprintf(stderr, ").\n");
       }
-      token[MAX_LINE_LENGTH-2] = '$'; /* truncation marker, as e.g. in Emacs */
-      token[MAX_LINE_LENGTH-1] = '\0';
+      token[CL_MAX_LINE_LENGTH-2] = '$'; /* truncation marker, as e.g. in Emacs */
+      token[CL_MAX_LINE_LENGTH-1] = '\0';
     }
 
     id = cl_lexhash_id(wattrs[fc].lh, token);
@@ -1519,7 +1519,7 @@ encode_get_input_line(char *buffer, int bufsize)
   int ok, len;
   /* we need to keep track of whether this func has been called recursively ... */
   static unsigned int recursive_call = 0;
-  char command[MAX_LINE_LENGTH];
+  char command[CL_MAX_LINE_LENGTH];
 
 
   if (nr_input_files == 0) {

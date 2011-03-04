@@ -47,7 +47,7 @@ struct _CL_Regex {
   pcre_extra *extra;                 /**< buffer for PCRE's internal optimisation data */
   CorpusCharset charset;             /**< the character set in use for this regex */
   int flags;                         /**< flags for this regex: can be IGNORE_CASE and/or IGNORE_DIAC */
-  char *haystack_buf;                /**< a buffer of size MAX_LINE_LENGTH used for normalisation by cl_regex_match().
+  char *haystack_buf;                /**< a buffer of size CL_MAX_LINE_LENGTH used for normalisation by cl_regex_match().
                                           It will be allocated iff one of the flags %c or %d is set.
                                           Note this buffer is for the string being tested NOT for the regular expression. */
 

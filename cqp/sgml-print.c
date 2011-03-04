@@ -144,10 +144,10 @@ sgml_print_field(FieldType field, int at_end)
 char *
 sgml_convert_string(char *s)
 {
-  static char sgml_s[MAX_LINE_LENGTH*2];
+  static char sgml_s[CL_MAX_LINE_LENGTH*2];
   int p;
 
-  if (!s || strlen(s) >(MAX_LINE_LENGTH))
+  if (!s || strlen(s) >(CL_MAX_LINE_LENGTH))
     return NULL;
   
   for (p = 0; *s; s++) {

@@ -620,7 +620,7 @@ prepare_do_subset(CorpusList *cl, FieldType field)
     progress_bar_message(1, 1, "    preparing");
   }
 
-  /* jetzt können wir endlich loslegen */
+  /* jetzt kï¿½nnen wir endlich loslegen */
   query_corpus = make_temp_corpus(cl, "RHS");
   generate_code = 1;
 }
@@ -675,7 +675,7 @@ do_set_complex_target(CorpusList *cl,
     old_query_corpus = NULL;
   }
   
-  /* aufräumen */
+  /* aufrï¿½umen */
   if (boolt)
     free_booltree(boolt);
 }
@@ -2983,7 +2983,7 @@ do_undump(char *corpname, int extension_fields, int sort_ranges, struct InputRed
 {
   int i, ok, size, match, matchend, target, keyword;
   int max_cpos, mark, abort;                /* for validity checks */
-  char line[MAX_LINE_LENGTH], junk[MAX_LINE_LENGTH], mother[MAX_LINE_LENGTH];
+  char line[CL_MAX_LINE_LENGTH], junk[CL_MAX_LINE_LENGTH], mother[CL_MAX_LINE_LENGTH];
   CorpusList *cl = current_corpus, *new = NULL;
 
   assert(corpname != NULL);
@@ -3031,7 +3031,7 @@ do_undump(char *corpname, int extension_fields, int sort_ranges, struct InputRed
   }
 
   ok = 0; /* read undump table header = number of rows */
-  if (fgets(line, MAX_LINE_LENGTH, rd->stream)) {
+  if (fgets(line, CL_MAX_LINE_LENGTH, rd->stream)) {
     if (1 == sscanf(line, "%d %s", &size, junk)) {
       ok = 1;
     }
@@ -3042,7 +3042,7 @@ do_undump(char *corpname, int extension_fields, int sort_ranges, struct InputRed
       }
       else {
         size = 1; /* first line is already in buffer */
-        while (fgets(line, MAX_LINE_LENGTH, rd->stream))
+        while (fgets(line, CL_MAX_LINE_LENGTH, rd->stream))
           size++; /* dump files should not contain any long lines, so this count is correct */
         /* rewind stream to start of file */
         if (fseek(rd->stream, 0, SEEK_SET) != 0) {
@@ -3075,7 +3075,7 @@ do_undump(char *corpname, int extension_fields, int sort_ranges, struct InputRed
   abort = 0;
   for (i = 0; (i < size) && !abort; i++) {        /* now read one data row at a time from the undump table */
     if (feof(rd->stream)
-        || (!fgets(line, MAX_LINE_LENGTH, rd->stream)) /* parse input line format */
+        || (!fgets(line, CL_MAX_LINE_LENGTH, rd->stream)) /* parse input line format */
         || (sscanf(line, "%d %d %d %d %s", &match, &matchend, &target, &keyword, junk)
             != (2 + extension_fields))
         ) {

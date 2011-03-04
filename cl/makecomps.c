@@ -35,7 +35,7 @@
 #define BUFSIZE 0x10000
 
 /* seems not ever to be used? */
-char errmsg[MAX_LINE_LENGTH];
+char errmsg[CL_MAX_LINE_LENGTH];
 
 
 

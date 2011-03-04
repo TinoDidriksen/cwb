@@ -22,6 +22,7 @@
 
 /* byte order handling taken from Corpus Library */
 #include "../cl/endian.h"
+#include "../cl/cl.h"
 
 /**
  * boolean: is the byte-order little-endian?
@@ -31,7 +32,10 @@
 int little_endian = 0;
 
 
+/*
+ * no longer needed because we #incldue the CL ehader
 #define MAX_LINE_LENGTH 1024
+*/
 
 /**
  * Reads from a stream one integer-representing string per line,
@@ -42,10 +46,10 @@ int little_endian = 0;
 void
 process_fd(FILE *fd)
 {
-  char buf[MAX_LINE_LENGTH];
+  char buf[CL_MAX_LINE_LENGTH];
   int i;
 
-  while(fgets(buf, MAX_LINE_LENGTH, fd)) {
+  while(fgets(buf, CL_MAX_LINE_LENGTH, fd)) {
     i = htonl(atoi(buf));
     if (little_endian) 
       i = cl_bswap32(i);        /* explicit conversion */

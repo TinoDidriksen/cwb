@@ -116,7 +116,7 @@ get_print_attribute_values(ContextDescriptor *cd,
                            PrintDescriptionRecord *pdr)
 {
   if (add_position_number && pdr->CPOSPrintFormat) {
-    static char num[MAX_LINE_LENGTH];  /* another 'Oli': this was num[16], definitely not enough for HTML output */
+    static char num[CL_MAX_LINE_LENGTH];  /* another 'Oli': this was num[16], definitely not enough for HTML output */
     
     sprintf(num, pdr->CPOSPrintFormat, position);
     append(s, num, sp, max_sp);
@@ -283,7 +283,7 @@ get_position_values(ContextDescriptor *cd,
       region = &(s_att_regions[sar_sort_index[i]]);
       if (region->start == position) {
         /* add start tag to s */
-        static char body[MAX_LINE_LENGTH]; /* 'body' of the start tag, may include annotation  */
+        static char body[CL_MAX_LINE_LENGTH]; /* 'body' of the start tag, may include annotation  */
         if (show_tag_attributes && (region->annot != NULL)) {
           sprintf(body, "%s %s", region->name, region->annot);
         }
@@ -614,7 +614,7 @@ compose_kwic_line(Corpus *corpus,
 
         this_token_start = line_p;
         
-        /* wir fügen erstmal ganz normal ein und drehen nachher um */
+        /* wir fï¿½gen erstmal ganz normal ein und drehen nachher um */
 
         if ((word = get_field_separators(start, fields, nr_fields, 0, pdr)))
           append(line, word, &line_p, MAXKWICLINELEN);
@@ -653,7 +653,7 @@ compose_kwic_line(Corpus *corpus,
         enough_context = 1;
     }
 
-    /* auffüllen (padding) mit Blanks, bis linker Kontext erreicht */
+    /* auffï¿½llen (padding) mit Blanks, bis linker Kontext erreicht */
     while (acc_len < cd->left_width) {
       line[line_p++] = ' ';
       acc_len++;
@@ -674,7 +674,7 @@ compose_kwic_line(Corpus *corpus,
     fprintf(stderr, "line aft srev(): >>%s<<\n", line + index);
 #endif
 
-    /* der spannende Teil: wir müssen wg srev() die Liste der
+    /* der spannende Teil: wir mï¿½ssen wg srev() die Liste der
      * returned_positions angleichen... */
 
     if (position_list && (nr_positions > 0)) {
@@ -725,7 +725,7 @@ compose_kwic_line(Corpus *corpus,
                               pdr, 
                               nr_mappings, mappings)) {
 
-        /* Trennzeichen einfügen, falls schon tokens in line drin sind */
+        /* Trennzeichen einfï¿½gen, falls schon tokens in line drin sind */
         if (line_p > 0)
           append(line, pdr->TokenSeparator, &line_p, MAXKWICLINELEN);
 
@@ -812,7 +812,7 @@ compose_kwic_line(Corpus *corpus,
                               pdr, 
                               nr_mappings, mappings)) {
         
-        /* Trennzeichen einfügen, falls schon tokens in line drin sind */
+        /* Trennzeichen einfï¿½gen, falls schon tokens in line drin sind */
         if (line_p > 0)
           append(line, pdr->TokenSeparator, &line_p, MAXKWICLINELEN);
 
@@ -824,7 +824,7 @@ compose_kwic_line(Corpus *corpus,
         
         append(line, pdr->BeforeToken, &line_p, MAXKWICLINELEN);
 
-        /* token an line dranhängen */
+        /* token an line dranhï¿½ngen */
         append(line, token, &line_p, MAXKWICLINELEN);
 
         append(line, pdr->AfterToken, &line_p, MAXKWICLINELEN);
@@ -850,10 +850,10 @@ compose_kwic_line(Corpus *corpus,
 
 
   /* Der linke Kontext ist berechnet. Nun werden die Match-Tokens
-   * eingefügt
+   * eingefï¿½gt
    */
 
-  /* Trennzeichen einfügen, falls schon tokens in line drin sind */
+  /* Trennzeichen einfï¿½gen, falls schon tokens in line drin sind */
   if (line_p > 0)
     append(line, pdr->TokenSeparator, &line_p, MAXKWICLINELEN);
   
@@ -873,7 +873,7 @@ compose_kwic_line(Corpus *corpus,
                             pdr, 
                             nr_mappings, mappings)) {
             
-      /* token an line dranhängen */
+      /* token an line dranhï¿½ngen */
 
       this_token_start = line_p;
 
@@ -896,7 +896,7 @@ compose_kwic_line(Corpus *corpus,
                              returned_positions);
 
       if (start != match_end) {
-        /* Trennzeichen einfügen */
+        /* Trennzeichen einfï¿½gen */
         if (line_p > 0)
           line[line_p++] = separator;
       }
@@ -910,7 +910,7 @@ compose_kwic_line(Corpus *corpus,
 
   *s_me = line_p;
 
-  /* nun muß noch der Rechtskontext hinzugefügt werden */
+  /* nun muï¿½ noch der Rechtskontext hinzugefï¿½gt werden */
 
 
   switch(cd->right_type) {
@@ -974,7 +974,7 @@ compose_kwic_line(Corpus *corpus,
         enough_context = 1;
     }
 
-    /* auffüllen (padding) mit Blanks, bis rechter Kontext erreicht */
+    /* auffï¿½llen (padding) mit Blanks, bis rechter Kontext erreicht */
     while (line_p < cd->right_width)
       line[line_p++] = ' ';
     
@@ -997,7 +997,7 @@ compose_kwic_line(Corpus *corpus,
                               pdr, 
                               nr_mappings, mappings)) {
         
-        /* Trennzeichen einfügen, falls schon tokens in line drin sind */
+        /* Trennzeichen einfï¿½gen, falls schon tokens in line drin sind */
         if (line_p > 0)
           append(line, pdr->TokenSeparator, &line_p, MAXKWICLINELEN);
 
@@ -1090,7 +1090,7 @@ compose_kwic_line(Corpus *corpus,
                               pdr, 
                               nr_mappings, mappings)) {
         
-        /* Trennzeichen einfügen, falls schon tokens in line drin sind */
+        /* Trennzeichen einfï¿½gen, falls schon tokens in line drin sind */
         if (line_p > 0)
           line[line_p++] = separator;
 

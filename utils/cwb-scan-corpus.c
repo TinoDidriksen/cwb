@@ -411,7 +411,7 @@ is_regular(char *s)
 void
 add_key(char *key)
 {
-  char buf[MAX_LINE_LENGTH];    /* stores copy of <key> if we have to mess around with it */
+  char buf[CL_MAX_LINE_LENGTH]; /* stores copy of <key> if we have to mess around with it */
   Attribute *att = NULL;        /* p-attribute object for attribute <att> */
   int offset = 0;               /* offset obtained from [+<n>] part of key specifier */
   char *regex = NULL;           /* <regex> from optional [=/<regex>/[cd]] part */
@@ -826,7 +826,7 @@ main (int argc, char *argv[])
   {
     HashEntry entry;
     FILE *of;
-    char pipe_cmd[MAX_LINE_LENGTH];
+    char pipe_cmd[CL_MAX_LINE_LENGTH];
     int bucket, i, k, l, is_pipe;
     char *str;
 

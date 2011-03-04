@@ -69,9 +69,9 @@ char *grain_buffer[MAX_GRAINS];
 int grain_buffer_grains = 0;
 
 /** A buffer for grain strings. @see local_grain_data */
-char public_grain_data[MAX_LINE_LENGTH];
+char public_grain_data[CL_MAX_LINE_LENGTH];
 /** A buffer for grain strings. @see public_grain_data */
-char local_grain_data[MAX_LINE_LENGTH];
+char local_grain_data[CL_MAX_LINE_LENGTH];
 
 int cl_regopt_analyse(char *regex);
 
@@ -94,7 +94,7 @@ int cl_regopt_successes = 0;
  *
  * This global variable is part of the CL_Regex object's API.
  */
-char cl_regex_error[MAX_LINE_LENGTH];
+char cl_regex_error[CL_MAX_LINE_LENGTH];
 
 /**
  * Create a new CL_regex object (ie a regular expression buffer).
@@ -182,7 +182,7 @@ cl_new_regex(char *regex, int flags, CorpusCharset charset)
 
   /* allocate string buffer for cl_regex_match() function if flags are present */
   if (flags)
-    rx->haystack_buf = (char *) cl_malloc(MAX_LINE_LENGTH); /* this is for the string being matched, not the regex! */
+    rx->haystack_buf = (char *) cl_malloc(CL_MAX_LINE_LENGTH); /* this is for the string being matched, not the regex! */
 
   /* attempt to optimise regular expression */
   optimised = cl_regopt_analyse(preprocessed_regex);
@@ -669,7 +669,7 @@ update_grain_buffer(int front_aligned, int anchored)
 
   N = grain_buffer_grains;
   if (N > 0) {
-    len = MAX_LINE_LENGTH;
+    len = CL_MAX_LINE_LENGTH;
     for (i = 0; i < N; i++) {
       int l = strlen(grain_buffer[i]);
       if (l < len)

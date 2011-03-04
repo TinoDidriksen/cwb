@@ -281,6 +281,18 @@ void cl_set_memory_limit(int megabytes);  /* 0 or less turns limit off */
  *  misc CL utility functions
  */
 
+/**
+ * General string buffer size constant.
+ *
+ * This constant is used to determine the maximum length (in bytes)
+ * of a line in a CWB input file. It therefore follows that no s-attribute
+ * or p-attribute can ever be longer than this. It's also the normal constant
+ * to use for (a) a local or global declaration of a character array (b)
+ * dynamic memory allocation of a string buffer. The associated function
+ * cl_strcpy() will copy this many bytes at most.
+ */
+#define CL_MAX_LINE_LENGTH 4096
+
 /* CL-specific version of strcpy. Don't use unless you know what you're doing. */
 char *cl_strcpy(char *buf, const char *src);
 

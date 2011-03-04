@@ -152,7 +152,7 @@ is_num(char *s) {
 char *
 lisp_string(char *s) {
   int i, t;
-  static char ls[MAX_LINE_LENGTH];
+  static char ls[CL_MAX_LINE_LENGTH];
 
   if (mode == LispMode) {
 
@@ -179,7 +179,7 @@ lisp_string(char *s) {
 char *
 xml_string(char *s) {
   int i, t;
-  static char ls[MAX_LINE_LENGTH];
+  static char ls[CL_MAX_LINE_LENGTH];
 
   if ((mode == XMLMode) || xml_compatible) {
     t = 0;

@@ -657,9 +657,9 @@ compute_code_lengths(Attribute *attr, HCD *hc, char *fname)
     {
       char *path;
 
-      char hcd_path[MAX_LINE_LENGTH];
-      char huf_path[MAX_LINE_LENGTH];
-      char sync_path[MAX_LINE_LENGTH];
+      char hcd_path[CL_MAX_LINE_LENGTH];
+      char huf_path[CL_MAX_LINE_LENGTH];
+      char sync_path[CL_MAX_LINE_LENGTH];
 
       Component *corp;
 
@@ -793,9 +793,9 @@ decode_check_huff(Attribute *attr, char *fname)
   
   unsigned char bit;
 
-  char hcd_path[MAX_LINE_LENGTH];
-  char huf_path[MAX_LINE_LENGTH];
-  char sync_path[MAX_LINE_LENGTH];
+  char hcd_path[CL_MAX_LINE_LENGTH];
+  char huf_path[CL_MAX_LINE_LENGTH];
+  char sync_path[CL_MAX_LINE_LENGTH];
 
   
   printf("VALIDATING %s.%s\n", corpus_id, attr->any.name);
