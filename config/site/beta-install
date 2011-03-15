@@ -22,5 +22,11 @@
 ## Inherits from standard configuration (only difference is registry directory)
 include $(TOP)/config/site/standard
 
-## Beta-testing versions install in separate directory tree (but share global registry)
+## Beta-testing versions install in separate directory tree (but share global registry).
+## 
+## If you want to always install beta versions to the usual location, define 
+## CWB_LIVE_DANGEROUSLY as an environment variable; a should-be-portable command for this is
+## sudo echo "export CWB_LIVE_DANGEROUSLY=1 && ./install-scripts/cwb-install-$YOUR_OS" | sudo bash
+ifndef CWB_LIVE_DANGEROUSLY
 PREFIX=/usr/local/cwb-$(VERSION)
+endif
