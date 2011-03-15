@@ -20,8 +20,9 @@
 ##
 
 ## Directory tree where binaries, libraries, header files and man pages will be installed
-## We can set this in Windows, but we will need to allow an override at install time.
-PREFIX = C:\Program Files\CWB
+## We can use the Windows environment variable, but we will need to allow an override at 
+## install time.
+PREFIX = %ProgramFiles%\CWB
 
 ## Install locations are given to override the default paths, which include /s
 BININSTDIR = $(PREFIX)\bin

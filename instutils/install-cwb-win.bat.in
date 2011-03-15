@@ -13,8 +13,11 @@ REGISTRY=${REGISTRY//\\\\/\\}
 cat <<__END__
 @echo off
 
-rem ## Directory tree where the CWB will be installed (normally C:\Program Files\CWB in Windows)
+rem ## Directory tree where the CWB will be installed (normally %ProgramFiles%\CWB in Windows)
 set PREFIX=${PREFIX}
+
+rem Optionally change PREFIX...
+goto choose_install_dir
 :bf_choose_install_dir
 
 rem ## You can also change individual installation directories ...
@@ -32,11 +35,6 @@ rem # manual pages
 set MANDIR=%PREFIX%\man
 
 rem ############### DO NOT CHANGE ANYTHING BELOW THIS LINE ###############
-
-rem Before we do anything else, we must check that C:\Program Files exists.
-if not exist "C:\Program Files" (
-	goto choose_install_dir
-)
 
 rem We could use xcopy, but INSTALL is used for one file at a time...
 set INSTALL=copy
@@ -103,27 +101,21 @@ goto:eof
 
 
 
-rem This would probably be better as a function, but when the PREFIX is changed,
-rem all directory variables need to be re-initialised.
 :choose_install_dir
 
-echo The directory "C:\Program Files" does not exist, perhaps because you have 
-echo a non-English Windows.
-echo CWB is normally installed in "C:\Program Files\CWB" -- so you need to specify 
-echo a different directory.
+echo By default, CWB will be installed in 
+echo      %PREFIX%
+echo If you want to install it somewhere else, you should cancel this installation,
+echo edit the file install-cwb-win.bat, and change the line "set PREFIX=..."
+echo to contain the installation path of your choice.
 echo.
+echo Do you want to cancel installation?
+echo.
+set choice=
+set /p choice=[Type Y or y then [ENTER] to cancel, anything else to continue]
+if '%choice%'=='Y' goto:eof
+if '%choice%'=='y' goto:eof
 
-:while
-set /p NEWDIR=[Enter your chosen installation directory:]
-rem The double check is in case the directory can't be made, ie typing error!
-if not exist "%NEWDIR%" (
-	mkdir "%NEWDIR%"
-)
-if not exist "%NEWDIR%" (
-	echo That directory can't be created! Please specify a different directory.
-	goto while
-)
-set PREFIX=%NEWDIR%
  
 goto bf_choose_install_dir
 __END__

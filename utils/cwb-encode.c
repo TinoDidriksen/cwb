@@ -71,6 +71,8 @@
 
 /* ---------------------------------------------------------------------- */
 
+/* global variables representing configuration */
+
 char *field_separators = FIELDSEPS;     /**< string containing the characters that can function as field separators */
 char *undef_value = UNDEF_VALUE;        /**< string used as value of P-attributes when a value is missing
                                              ie if a tab-delimited field is empty */
@@ -92,13 +94,17 @@ char *registry_file = NULL;             /**< if set, auto-generate registry file
 char *directory = NULL;                 /**< corpus data directory (no longer defaults to current directory) */
 char *corpus_character_set = "latin1";  /**< character set label that is inserted into the registry file */
 CorpusCharset encoding_charset;         /**< a charset object to be generated from corpus_character_set */
-int clean_strings = 0;                  /**< clean up input strings by replacing invalid bytes with '?' (except for UTF-8 encoding)*/
+int clean_strings = 0;                  /**< clean up input strings by replacing invalid bytes with '?' (except for UTF8 encoding)*/
 
 /* ---------------------------------------------------------------------- */
+
+/* cwb-encode encodes S-attributes adn P-attributes, so there is an object-type and global array representing each. */
 
 /**
  * Range object: represents an S-attribute being encoded, and holds some
  * information about the currently-being-processed instance of that S-attribute.
+ *
+ * TODO should probably be called an SAttr
  */
 typedef struct _Range {
   char *dir;                    /**< directory where this range is stored */
@@ -128,7 +134,7 @@ typedef struct _Range {
   int recursion_level;          /**< keeps track of level of embedding when auto-recursion is activated */
   int element_drop_count;       /**< count how many recursive subelements were dropped because of the max_recursion limit */
   struct _Range **recursion_children;   /**< (usually very short) list of s-attribute 'children' for auto-recursion;
-                                             recursion_children[0] points to self! */
+                                             use as array; recursion_children[0] points to self! */
 
   int is_open;                  /**< boolean: whether there is an open structure at the moment */
   int start_pos;                /**< if this->is_open, remember start position of current range */
@@ -138,13 +144,15 @@ typedef struct _Range {
 
 } Range;
 
-/** An array for keeping track of S-attributes being encoded. */
+/** A global array for keeping track of S-attributes being encoded. */
 Range ranges[MAXRANGES];
 /** @see ranges */
 int range_ptr = 0;
 
 /**
  * WAttr object: represents a P-attribute being encoded.
+ *
+ * TODO should probably be called a PAttr
  */
 typedef struct {
   char *name;
@@ -156,7 +164,7 @@ typedef struct {
   FILE *corpus_fd;              /**< file handle of corpus component */
 } WAttr;
 
-/** An array for keeping track of P-attributes being encoded. */
+/** A global array for keeping track of P-attributes being encoded. */
 WAttr wattrs[MAXRANGES];
 /** @see wattrs */
 int wattr_ptr = 0;

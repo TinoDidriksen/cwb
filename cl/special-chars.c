@@ -1726,7 +1726,7 @@ cl_string_qsort_compare(const char *s1,
  * * first character must be an uppercase or lowercase letter or underscore
  * * second and subsequent characters may also be digits, hyphen or fullstop.
  *
- * TODO: should the CL registry lexer be amended ot reflect these restricitons?
+ * TODO: should the CL registry lexer be amended to reflect these restricitons?
  * (ID there is rather laxer than this)
  *
  * @param s   The string to check.

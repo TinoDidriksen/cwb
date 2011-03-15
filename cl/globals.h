@@ -92,7 +92,7 @@ extern size_t cl_memory_limit;
  * for now let's keep it with other OS-path-control macros */
 #endif
 
-/* this is also Win32 compatibiltiy... extra flag for open() */
+/* this is also Win32 compatibility... extra flag for open() */
 /* so that (x | O_BINARY) always == x under POSIX */
 #ifndef O_BINARY
 # ifdef _O_BINARY
@@ -120,10 +120,12 @@ extern size_t cl_memory_limit;
  *
  *  this is the length of temporary strings which are allocated with a fixed size ... better make it large
  */
-#define MAX_LINE_LENGTH        4096
+#define MAX_LINE_LENGTH        CL_MAX_LINE_LENGTH
 
 /**
  *  this is the length of fixed-size buffers for names and identifiers
+ *
+ *  BUT IT IS NEVER USED.
  */
 #define MAX_IDENTIFIER_LENGTH  1024
 

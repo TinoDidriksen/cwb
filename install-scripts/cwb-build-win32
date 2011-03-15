@@ -15,10 +15,12 @@ rep="include \$(TOP)/config/platform/mingw"
 config_file=${config_file/"$target"/"$rep"}
 
 
-# alter site
+# alter site: coming from EITHER standard OR beta-install
 target="include \$(TOP)/config/site/standard"
 rep="include \$(TOP)/config/site/windows-release"
-
+config_file=${config_file/"$target"/"$rep"}
+target="include \$(TOP)/config/site/beta-install"
+rep="include \$(TOP)/config/site/windows-release"
 config_file=${config_file/"$target"/"$rep"}
 
 
