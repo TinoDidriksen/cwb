@@ -93,7 +93,7 @@ Functions</h2>
 <div class="memdoc">
 
 <p>Analyses a regular expression and tries to find the best set of grains. </p>
-<p>Part of the regex optimiser. For a given regular expression, this function will try to extract a set of grains from regular expression {regex_string}. These grains are then used by the CL regex matcher and <a class="el" href="cdaccess_8c.html#a6eb4641e0a1e14b63f2d5f2f5b6a8cea" title="Gets a list of the ids of those items on a given Attribute that match a particular regular-expression...">cl_regex2id()</a> for faster regular expression search.</p>
+<p>Part of the regex optimiser. For a given regular expression, this function will try to extract a set of grains from regular expression {regex_string}. These grains are then used by the CL regex matcher and <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#a6eb4641e0a1e14b63f2d5f2f5b6a8cea" title="Gets a list of the ids of those items on a given Attribute that match a particular regular-expression...">cl_regex2id()</a> for faster regular expression search.</p>
 <p>If successful, this function returns True and stores the grains in the optiomiser's global variables above (from which they should be copied to a CL_Regex object's corresponding members).</p>
 <p>Usage: optimised = cl_regopt_analyse(regex_string);</p>
 <p>This is a non-exported function.</p>
@@ -129,14 +129,14 @@ Functions</h2>
 
 <p>Internal regopt function: copies optimiser data from internal global variables to the member variables of argument CL_Regex object. </p>
 
-<p>References <a class="el" href="struct___c_l___regex.html#a93e5ad5e0410fdbd7c65a09793a14cb6">_CL_Regex::anchor_end</a>, <a class="el" href="struct___c_l___regex.html#a4e3ccc6f2ec66b18f80763c9101dc2a7">_CL_Regex::anchor_start</a>, <a class="el" href="globals_8c.html#a5c4290325b240eac5fe1542a8743286a">cl_debug</a>, <a class="el" href="regopt_8c.html#aeea8fcadfd245bf518d90e45c825d518">cl_regopt_anchor_end</a>, <a class="el" href="regopt_8c.html#a44d3ff55dc4223346a2c4f9c4f4cd30f">cl_regopt_anchor_start</a>, <a class="el" href="regopt_8c.html#a17c41125f23920984f3734380cab57c4">cl_regopt_grain</a>, <a class="el" href="regopt_8c.html#a65b125ab93c3082f07ff0d7635350079">cl_regopt_grain_len</a>, <a class="el" href="regopt_8c.html#ac4527918221c359efeb1d01fb10a1a93">cl_regopt_grains</a>, <a class="el" href="regopt_8c.html#a200be31d923ac49fe9d9ab5f9963eb77">cl_regopt_jumptable</a>, <a class="el" href="cl_8h.html#a6647d75d1d69c7d25447da514b7e4682">cl_strdup()</a>, <a class="el" href="struct___c_l___regex.html#a343da7a5241d5dd4042b632f9c39006e">_CL_Regex::grain</a>, <a class="el" href="struct___c_l___regex.html#a6f097fa6018c5b24ea16507555185feb">_CL_Regex::grain_len</a>, <a class="el" href="struct___c_l___regex.html#a809c37615b266e2fdd396ac191b9a93c">_CL_Regex::grains</a>, and <a class="el" href="struct___c_l___regex.html#a9da424d392549ca48c495ad456441139">_CL_Regex::jumptable</a>.</p>
+<p>References <a class="el" href="struct___c_l___regex.html#a93e5ad5e0410fdbd7c65a09793a14cb6">_CL_Regex::anchor_end</a>, <a class="el" href="struct___c_l___regex.html#a4e3ccc6f2ec66b18f80763c9101dc2a7">_CL_Regex::anchor_start</a>, <a class="el" href="globals_8c.html#a5c4290325b240eac5fe1542a8743286a">cl_debug</a>, <a class="el" href="regopt_8c.html#aeea8fcadfd245bf518d90e45c825d518">cl_regopt_anchor_end</a>, <a class="el" href="regopt_8c.html#a44d3ff55dc4223346a2c4f9c4f4cd30f">cl_regopt_anchor_start</a>, <a class="el" href="regopt_8c.html#a17c41125f23920984f3734380cab57c4">cl_regopt_grain</a>, <a class="el" href="regopt_8c.html#a65b125ab93c3082f07ff0d7635350079">cl_regopt_grain_len</a>, <a class="el" href="regopt_8c.html#ac4527918221c359efeb1d01fb10a1a93">cl_regopt_grains</a>, <a class="el" href="regopt_8c.html#a200be31d923ac49fe9d9ab5f9963eb77">cl_regopt_jumptable</a>, <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#a6647d75d1d69c7d25447da514b7e4682">cl_strdup()</a>, <a class="el" href="struct___c_l___regex.html#a343da7a5241d5dd4042b632f9c39006e">_CL_Regex::grain</a>, <a class="el" href="struct___c_l___regex.html#a6f097fa6018c5b24ea16507555185feb">_CL_Regex::grain_len</a>, <a class="el" href="struct___c_l___regex.html#a809c37615b266e2fdd396ac191b9a93c">_CL_Regex::grains</a>, and <a class="el" href="struct___c_l___regex.html#a9da424d392549ca48c495ad456441139">_CL_Regex::jumptable</a>.</p>
 
 <p>Referenced by <a class="el" href="regopt_8c.html#a2c4607eb8e094b7699062df8eb744058">cl_new_regex()</a>.</p>
 
 </div>
 </div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Fri Mar 4 2011 14:59:34 for CWB by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Mar 15 2011 20:16:46 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

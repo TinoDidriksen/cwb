@@ -37,7 +37,7 @@
 <h1>globals.h File Reference</h1>  </div>
 </div>
 <div class="contents">
-<code>#include &quot;<a class="el" href="cl_8h.html">cl.h</a>&quot;</code><br/>
+<code>#include &quot;<a class="el" href="cl_2cl_8h.html">cl.h</a>&quot;</code><br/>
 <code>#include &lt;stdlib.h&gt;</code><br/>
 <code>#include &lt;stdio.h&gt;</code><br/>
 <code>#include &lt;string.h&gt;</code><br/>
@@ -57,7 +57,7 @@ Defines</h2>
 <li>#define <a class="el" href="globals_8h.html#a36fa9b2e726512bc17a7a6d3e39002be">O_BINARY</a>&nbsp;&nbsp;&nbsp;0
 <li>#define <a class="el" href="globals_8h.html#a12ff77f5bd07f34900265e6a115046c7">COMMA_SEP_THOUSANDS_CONVSPEC</a>&nbsp;&nbsp;&nbsp;&quot;'&quot;
 <li>#define <a class="el" href="globals_8h.html#a7cb97950b921d5fd5ea7bc1b5f8dafdb">REGISTRY_ENVVAR</a>&nbsp;&nbsp;&nbsp;&quot;CORPUS_REGISTRY&quot;
-<dl class="el"><dd class="mdescRight">The Unix environment variable from which the value of the registry will be taken.  <a href="#a7cb97950b921d5fd5ea7bc1b5f8dafdb"></a><br/></dl><li>#define <a class="el" href="globals_8h.html#af0f2173e3b202ddf5756531b4471dcb2">MAX_LINE_LENGTH</a>&nbsp;&nbsp;&nbsp;4096
+<dl class="el"><dd class="mdescRight">The Unix environment variable from which the value of the registry will be taken.  <a href="#a7cb97950b921d5fd5ea7bc1b5f8dafdb"></a><br/></dl><li>#define <a class="el" href="globals_8h.html#af0f2173e3b202ddf5756531b4471dcb2">MAX_LINE_LENGTH</a>&nbsp;&nbsp;&nbsp;CL_MAX_LINE_LENGTH
 <dl class="el"><dd class="mdescRight">DEPRACATED synonym for CL_MAX_LINE_LENGTH.  <a href="#af0f2173e3b202ddf5756531b4471dcb2"></a><br/></dl><li>#define <a class="el" href="globals_8h.html#a3d5a3c317dcfbb56869875ed4a91ddcc">MAX_IDENTIFIER_LENGTH</a>&nbsp;&nbsp;&nbsp;1024
 <dl class="el"><dd class="mdescRight">this is the length of fixed-size buffers for names and identifiers  <a href="#a3d5a3c317dcfbb56869875ed4a91ddcc"></a><br/></dl><li>#define <a class="el" href="globals_8h.html#ac610b33ec571920dfe1c0f5d93f60516">TODO</a>
 <dl class="el"><dd class="mdescRight">Macro which exits the program when a "to do" point is hit.  <a href="#ac610b33ec571920dfe1c0f5d93f60516"></a><br/></dl></ul>
@@ -111,6 +111,7 @@ Variables</h2>
 <div class="memdoc">
 
 <p>this is the length of fixed-size buffers for names and identifiers </p>
+<p>BUT IT IS NEVER USED. </p>
 
 </div>
 </div>
@@ -119,7 +120,7 @@ Variables</h2>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define MAX_LINE_LENGTH&nbsp;&nbsp;&nbsp;4096</td>
+          <td class="memname">#define MAX_LINE_LENGTH&nbsp;&nbsp;&nbsp;CL_MAX_LINE_LENGTH</td>
         </tr>
       </table>
 </div>
@@ -295,7 +296,7 @@ Variables</h2>
 <p>Controls how many debug messages are printed.</p>
 <p>0 = none (default), 1 = some, 2 = heavy </p>
 
-<p>Referenced by <a class="el" href="lexhash_8c.html#ab0c83bcda2f4b258d99d41dcfef1dd30">cl_lexhash_check_grow()</a>, <a class="el" href="regopt_8c.html#a2c4607eb8e094b7699062df8eb744058">cl_new_regex()</a>, <a class="el" href="cl_8h.html#a6eb4641e0a1e14b63f2d5f2f5b6a8cea">cl_regex2id()</a>, <a class="el" href="regopt_8c.html#a7a9d3816260f385cf56e15839c518cee">cl_regex_match()</a>, <a class="el" href="regopt_8h.html#ab312a681f0a8c861a08f9d26a3f4ab95">cl_regopt_analyse()</a>, <a class="el" href="globals_8c.html#a4159ccd1820e8585dcc97d1f32826db7">cl_set_debug_level()</a>, <a class="el" href="makecomps_8h.html#ab8f0ec6caf733eae459326a9c0483608">creat_rev_corpus()</a>, <a class="el" href="attributes_8h.html#a7cf9d15574a7e905ee4fcd34c8f2f68f">create_component()</a>, <a class="el" href="regopt_8c.html#a1b1785e702fe108639b79a3fbf6ed84f">make_jump_table()</a>, and <a class="el" href="regopt_8h.html#a697918b2f55aa6a0fd29906a934f5836">regopt_data_copy_to_regex_object()</a>.</p>
+<p>Referenced by <a class="el" href="lexhash_8c.html#ab0c83bcda2f4b258d99d41dcfef1dd30">cl_lexhash_check_grow()</a>, <a class="el" href="regopt_8c.html#a2c4607eb8e094b7699062df8eb744058">cl_new_regex()</a>, <a class="el" href="cl_2cl_8h.html#a6eb4641e0a1e14b63f2d5f2f5b6a8cea">cl_regex2id()</a>, <a class="el" href="regopt_8c.html#a7a9d3816260f385cf56e15839c518cee">cl_regex_match()</a>, <a class="el" href="regopt_8h.html#ab312a681f0a8c861a08f9d26a3f4ab95">cl_regopt_analyse()</a>, <a class="el" href="globals_8c.html#a4159ccd1820e8585dcc97d1f32826db7">cl_set_debug_level()</a>, <a class="el" href="makecomps_8h.html#ab8f0ec6caf733eae459326a9c0483608">creat_rev_corpus()</a>, <a class="el" href="attributes_8h.html#a7cf9d15574a7e905ee4fcd34c8f2f68f">create_component()</a>, <a class="el" href="regopt_8c.html#a1b1785e702fe108639b79a3fbf6ed84f">make_jump_table()</a>, and <a class="el" href="regopt_8h.html#a697918b2f55aa6a0fd29906a934f5836">regopt_data_copy_to_regex_object()</a>.</p>
 
 </div>
 </div>
@@ -337,7 +338,7 @@ Variables</h2>
 </div>
 </div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Fri Mar 4 2011 14:59:34 for CWB by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Mar 15 2011 20:16:46 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

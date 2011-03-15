@@ -53,15 +53,15 @@ Functions</h2>
 <ul>
 <li>void <a class="el" href="special-chars_8c.html#afcffa063d633b3ad129a431a46dc0178">maptable_init_identity</a> (unsigned char *maptable)
 <dl class="el"><dd class="mdescRight">Initialise an "identity" mapping table.  <a href="#afcffa063d633b3ad129a431a46dc0178"></a><br/></dl><li>void <a class="el" href="special-chars_8c.html#ad231313a944f572f2f254154b29b218d">maptable_init_both</a> (unsigned char *maptable, const unsigned char *nocasetable, const unsigned char *nodiactable)
-<dl class="el"><dd class="mdescRight">Initialise a "fold both case and diacritics" mapping table.  <a href="#ad231313a944f572f2f254154b29b218d"></a><br/></dl><li>unsigned char * <a class="el" href="special-chars_8c.html#ae86d5e60c27778b82281ac1679409512">cl_string_maptable</a> (<a class="el" href="cl_8h.html#a3502421ae8eac74673133702852dde32">CorpusCharset</a> <a class="el" href="cwb-check-input_8c.html#ab7d33183c58d7df43cc5602b9c842b37">charset</a>, int flags)
-<dl class="el"><dd class="mdescRight">Gets a specified character mapping table for use in regular expressions.  <a href="#ae86d5e60c27778b82281ac1679409512"></a><br/></dl><li>int <a class="el" href="special-chars_8c.html#a958484ea143a2d38c8b835e6ae394169">cl_string_zap_controls</a> (char *s, <a class="el" href="cl_8h.html#a3502421ae8eac74673133702852dde32">CorpusCharset</a> <a class="el" href="cwb-check-input_8c.html#ab7d33183c58d7df43cc5602b9c842b37">charset</a>, char replace, int zap_tabs, int zap_newlines)
-<dl class="el"><dd class="mdescRight">Replaces any invalid control characters in a string.  <a href="#a958484ea143a2d38c8b835e6ae394169"></a><br/></dl><li>int <a class="el" href="special-chars_8c.html#a55b268240e8fe355978e6e6fb36d9aa1">cl_string_validate_encoding</a> (char *s, <a class="el" href="cl_8h.html#a3502421ae8eac74673133702852dde32">CorpusCharset</a> <a class="el" href="cwb-check-input_8c.html#ab7d33183c58d7df43cc5602b9c842b37">charset</a>, int repair)
-<dl class="el"><dd class="mdescRight">Checks the encoding of a string.  <a href="#a55b268240e8fe355978e6e6fb36d9aa1"></a><br/></dl><li>char * <a class="el" href="special-chars_8c.html#ae58fdb28a3fe823081eed10563e3229c">cl_string_reverse</a> (const char *s, <a class="el" href="cl_8h.html#a3502421ae8eac74673133702852dde32">CorpusCharset</a> <a class="el" href="cwb-check-input_8c.html#ab7d33183c58d7df43cc5602b9c842b37">charset</a>)
-<dl class="el"><dd class="mdescRight">Creates a "backwards" version of the specified string.  <a href="#ae58fdb28a3fe823081eed10563e3229c"></a><br/></dl><li>int <a class="el" href="special-chars_8c.html#a7e46e4e07cae0f3d6f7a244b305cc83e">cl_string_qsort_compare</a> (const char *<a class="el" href="cwb-align_8c.html#aac99deaca25373d974a3efbdf554f837">s1</a>, const char *<a class="el" href="cwb-align_8c.html#a8ea4130966a8cc8c30768629f4c42084">s2</a>, <a class="el" href="cl_8h.html#a3502421ae8eac74673133702852dde32">CorpusCharset</a> <a class="el" href="cwb-check-input_8c.html#ab7d33183c58d7df43cc5602b9c842b37">charset</a>, int flags, int <a class="el" href="cwb-align-encode_8c.html#ae6ebe94aa9f2d314eb937d8a3042763f">reverse</a>)
+<dl class="el"><dd class="mdescRight">Initialise a "fold both case and diacritics" mapping table.  <a href="#ad231313a944f572f2f254154b29b218d"></a><br/></dl><li>unsigned char * <a class="el" href="special-chars_8c.html#ae86d5e60c27778b82281ac1679409512">cl_string_maptable</a> (<a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#a3502421ae8eac74673133702852dde32">CorpusCharset</a> <a class="el" href="cwb-check-input_8c.html#ab7d33183c58d7df43cc5602b9c842b37">charset</a>, int flags)
+<dl class="el"><dd class="mdescRight">Gets a specified character mapping table for use in regular expressions.  <a href="#ae86d5e60c27778b82281ac1679409512"></a><br/></dl><li>int <a class="el" href="special-chars_8c.html#a958484ea143a2d38c8b835e6ae394169">cl_string_zap_controls</a> (char *s, <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#a3502421ae8eac74673133702852dde32">CorpusCharset</a> <a class="el" href="cwb-check-input_8c.html#ab7d33183c58d7df43cc5602b9c842b37">charset</a>, char replace, int zap_tabs, int zap_newlines)
+<dl class="el"><dd class="mdescRight">Replaces any invalid control characters in a string.  <a href="#a958484ea143a2d38c8b835e6ae394169"></a><br/></dl><li>int <a class="el" href="special-chars_8c.html#a55b268240e8fe355978e6e6fb36d9aa1">cl_string_validate_encoding</a> (char *s, <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#a3502421ae8eac74673133702852dde32">CorpusCharset</a> <a class="el" href="cwb-check-input_8c.html#ab7d33183c58d7df43cc5602b9c842b37">charset</a>, int repair)
+<dl class="el"><dd class="mdescRight">Checks the encoding of a string.  <a href="#a55b268240e8fe355978e6e6fb36d9aa1"></a><br/></dl><li>char * <a class="el" href="special-chars_8c.html#ae58fdb28a3fe823081eed10563e3229c">cl_string_reverse</a> (const char *s, <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#a3502421ae8eac74673133702852dde32">CorpusCharset</a> <a class="el" href="cwb-check-input_8c.html#ab7d33183c58d7df43cc5602b9c842b37">charset</a>)
+<dl class="el"><dd class="mdescRight">Creates a "backwards" version of the specified string.  <a href="#ae58fdb28a3fe823081eed10563e3229c"></a><br/></dl><li>int <a class="el" href="special-chars_8c.html#a7e46e4e07cae0f3d6f7a244b305cc83e">cl_string_qsort_compare</a> (const char *<a class="el" href="cwb-align_8c.html#aac99deaca25373d974a3efbdf554f837">s1</a>, const char *<a class="el" href="cwb-align_8c.html#a8ea4130966a8cc8c30768629f4c42084">s2</a>, <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#a3502421ae8eac74673133702852dde32">CorpusCharset</a> <a class="el" href="cwb-check-input_8c.html#ab7d33183c58d7df43cc5602b9c842b37">charset</a>, int flags, int <a class="el" href="cwb-align-encode_8c.html#ae6ebe94aa9f2d314eb937d8a3042763f">reverse</a>)
 <dl class="el"><dd class="mdescRight">Compares two strings in a qsort-stylie!  <a href="#a7e46e4e07cae0f3d6f7a244b305cc83e"></a><br/></dl><li>int <a class="el" href="special-chars_8c.html#ab4264f7bac736ccbd6d45cde96ab2599">cl_id_validate</a> (char *s)
 <dl class="el"><dd class="mdescRight">Checks a string to see if it is a valid CWB identifier.  <a href="#ab4264f7bac736ccbd6d45cde96ab2599"></a><br/></dl><li>void <a class="el" href="special-chars_8c.html#a07e27dfd6e9b452c314b687ace4566b5">cl_id_toupper</a> (char *s)
 <dl class="el"><dd class="mdescRight">Converts a lowercase corpus name to an equivalent uppercase form.  <a href="#a07e27dfd6e9b452c314b687ace4566b5"></a><br/></dl><li>void <a class="el" href="special-chars_8c.html#abbca7dd33033692ebc4ee7d98390694c">cl_id_tolower</a> (char *s)
-<dl class="el"><dd class="mdescRight">Converts an uppercase corpus name to an equivalent lowercase form.  <a href="#abbca7dd33033692ebc4ee7d98390694c"></a><br/></dl><li>void <a class="el" href="special-chars_8c.html#a708281d7f482a1999c70df6c353d66e1">cl_string_canonical</a> (char *s, <a class="el" href="cl_8h.html#a3502421ae8eac74673133702852dde32">CorpusCharset</a> <a class="el" href="cwb-check-input_8c.html#ab7d33183c58d7df43cc5602b9c842b37">charset</a>, int flags)
+<dl class="el"><dd class="mdescRight">Converts an uppercase corpus name to an equivalent lowercase form.  <a href="#abbca7dd33033692ebc4ee7d98390694c"></a><br/></dl><li>void <a class="el" href="special-chars_8c.html#a708281d7f482a1999c70df6c353d66e1">cl_string_canonical</a> (char *s, <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#a3502421ae8eac74673133702852dde32">CorpusCharset</a> <a class="el" href="cwb-check-input_8c.html#ab7d33183c58d7df43cc5602b9c842b37">charset</a>, int flags)
 <dl class="el"><dd class="mdescRight">Converts a string to canonical form.  <a href="#a708281d7f482a1999c70df6c353d66e1"></a><br/></dl><li>void <a class="el" href="special-chars_8c.html#a76a88a09e8eed393bae6ef422744dd84">cl_path_adjust_os</a> (char *path)
 <dl class="el"><dd class="mdescRight">Standardises subdirectory-dividers in a string that represents a path, in an OS-sensitive way.  <a href="#a76a88a09e8eed393bae6ef422744dd84"></a><br/></dl><li>void <a class="el" href="special-chars_8c.html#a30fe7bb88b656c3283346265a76a797f">cl_path_adjust_independent</a> (char *path)
 <dl class="el"><dd class="mdescRight">Standardises subdirectory-dividers in a string that represents a path into Unix-like form (ie with forward-slash), regardless of what OS we are in.  <a href="#a30fe7bb88b656c3283346265a76a797f"></a><br/></dl><li>char * <a class="el" href="special-chars_8c.html#a4c23e0ddc6fcab7c4b7048dcb3eb605d">cl_path_registry_quote</a> (char *path)
@@ -225,7 +225,7 @@ Variables</h2>
 <p>Checks a string to see if it is a valid CWB identifier. </p>
 <p>The rules for these are as follows (see also the CQP lexer):</p>
 <p>* all characters must be ASCII, ie less than 0x80; * must be at least 1 character long (of course) * first character must be an uppercase or lowercase letter or underscore * second and subsequent characters may also be digits, hyphen or fullstop.</p>
-<p>TODO: should the CL registry lexer be amended ot reflect these restricitons? (ID there is rather laxer than this)</p>
+<p>TODO: should the CL registry lexer be amended to reflect these restricitons? (ID there is rather laxer than this)</p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>s</em>&nbsp;</td><td>The string to check. </td></tr>
@@ -233,6 +233,8 @@ Variables</h2>
   </dd>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>A boolean. True if the string is a valid ID. Otherwise false. </dd></dl>
+
+<p>References <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>.</p>
 
 <p>Referenced by <a class="el" href="corpus_8c.html#aee476e23a98efac85d9a9288f18fe686">cl_new_corpus()</a>, and <a class="el" href="cwb-encode_8c.html#a5f95d4bd20c852ebbd303e0eb43d7d11">encode_generate_registry_file()</a>.</p>
 
@@ -329,7 +331,7 @@ Variables</h2>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The quotified string (newly allocated). </dd></dl>
 
-<p>References <a class="el" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, and <a class="el" href="cl_8h.html#a6647d75d1d69c7d25447da514b7e4682">cl_strdup()</a>.</p>
+<p>References <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, and <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#a6647d75d1d69c7d25447da514b7e4682">cl_strdup()</a>.</p>
 
 <p>Referenced by <a class="el" href="cwb-encode_8c.html#a5f95d4bd20c852ebbd303e0eb43d7d11">encode_generate_registry_file()</a>.</p>
 
@@ -374,7 +376,7 @@ Variables</h2>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>In classic strcpy-stylie, this function uselessly returns buf. </dd></dl>
 
-<p>References <a class="el" href="cl_8h.html#ad68dfe0ca2fbad5052e8213a06f5b4ba">CL_MAX_LINE_LENGTH</a>.</p>
+<p>References <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#ad68dfe0ca2fbad5052e8213a06f5b4ba">CL_MAX_LINE_LENGTH</a>.</p>
 
 <p>Referenced by <a class="el" href="cwb-encode_8c.html#a4179bb576944f012092322c5f446b0a8">encode_get_input_line()</a>, and <a class="el" href="cwb-encode_8c.html#a4d8ab2954e3fc7fc015616effbaa046d">range_declare()</a>.</p>
 
@@ -393,7 +395,7 @@ Variables</h2>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="cl_8h.html#a3502421ae8eac74673133702852dde32">CorpusCharset</a>&nbsp;</td>
+          <td class="paramtype"><a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#a3502421ae8eac74673133702852dde32">CorpusCharset</a>&nbsp;</td>
           <td class="paramname"> <em>charset</em>, </td>
         </tr>
         <tr>
@@ -424,7 +426,7 @@ Variables</h2>
   </dd>
 </dl>
 
-<p>References <a class="el" href="cl_8h.html#a9e15a3c725711d9effd623b2f3e225be">cl_free</a>, <a class="el" href="special-chars_8c.html#ae86d5e60c27778b82281ac1679409512">cl_string_maptable()</a>, and <a class="el" href="cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa3946b00fe1f38206339d69285cda6b03">utf8</a>.</p>
+<p>References <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#a9e15a3c725711d9effd623b2f3e225be">cl_free</a>, <a class="el" href="special-chars_8c.html#ae86d5e60c27778b82281ac1679409512">cl_string_maptable()</a>, <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>, and <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa3946b00fe1f38206339d69285cda6b03">utf8</a>.</p>
 
 <p>Referenced by <a class="el" href="regopt_8c.html#a2c4607eb8e094b7699062df8eb744058">cl_new_regex()</a>, <a class="el" href="regopt_8c.html#a7a9d3816260f385cf56e15839c518cee">cl_regex_match()</a>, <a class="el" href="special-chars_8c.html#a7e46e4e07cae0f3d6f7a244b305cc83e">cl_string_qsort_compare()</a>, <a class="el" href="cwb-encode_8c.html#a4179bb576944f012092322c5f446b0a8">encode_get_input_line()</a>, <a class="el" href="output_8h.html#ab5e1d7c16acef5e942e242f803a494f9">print_tabulation()</a>, <a class="el" href="ranges_8c.html#a0199b9d38e35100de957e78f0ad63169">SortExternally()</a>, and <a class="el" href="ranges_8h.html#aaf5f006cef0ac7c1fdb5c9d55558c11a">SortSubcorpus()</a>.</p>
 
@@ -482,7 +484,7 @@ Variables</h2>
 <a class="el" href="special-chars_8c.html#a8e3a6183c822cb47f163cc14d114f0d5" title="Converts ASCII strings with latex-style blackslash escapes for accented characters to ISO-8859-1 (Lat...">cl_string_latex2iso</a> </dd></dl>
 </p>
 
-<p>References <a class="el" href="cl_8h.html#ae848442188523a8c628f85e74163a10f">cl_allow_latex2iso</a>, <a class="el" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="cl_8h.html#a6647d75d1d69c7d25447da514b7e4682">cl_strdup()</a>, <a class="el" href="special-chars_8c.html#a79272991264b5559f333f8e72cea47ee">popc</a>, and <a class="el" href="special-chars_8c.html#ae2d18d971808bf2d30394ba43f80be6d">pushc</a>.</p>
+<p>References <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#ae848442188523a8c628f85e74163a10f">cl_allow_latex2iso</a>, <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#a6647d75d1d69c7d25447da514b7e4682">cl_strdup()</a>, <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>, <a class="el" href="special-chars_8c.html#a79272991264b5559f333f8e72cea47ee">popc</a>, and <a class="el" href="special-chars_8c.html#ae2d18d971808bf2d30394ba43f80be6d">pushc</a>.</p>
 
 <p>Referenced by <a class="el" href="regopt_8c.html#a2c4607eb8e094b7699062df8eb744058">cl_new_regex()</a>, <a class="el" href="parse__actions_8h.html#a6cc225469d64fbddecf2d9dce7e0a28d">do_flagged_string()</a>, <a class="el" href="parse__actions_8h.html#ae325887e35ccdc326967fdbf370bbedd">do_SetVariableValue()</a>, and <a class="el" href="parse__actions_8h.html#a4335ddbb14865c031041a194e182ed92">do_XMLTag()</a>.</p>
 
@@ -495,7 +497,7 @@ Variables</h2>
         <tr>
           <td class="memname">unsigned char* cl_string_maptable </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="cl_8h.html#a3502421ae8eac74673133702852dde32">CorpusCharset</a>&nbsp;</td>
+          <td class="paramtype"><a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#a3502421ae8eac74673133702852dde32">CorpusCharset</a>&nbsp;</td>
           <td class="paramname"> <em>charset</em>, </td>
         </tr>
         <tr>
@@ -526,7 +528,7 @@ Variables</h2>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Pointer to the appropriate mapping table. DO NOT FREE this, or modify it, it is a CL-internal data blob. </dd></dl>
 
-<p>References <a class="el" href="special-chars_8c.html#a4ded408d535e140c3ac78fc80ef2cdb9">identity_tab</a>, <a class="el" href="special-chars_8c.html#ab1ee167b08a952fc7127a54cd0e0050d">identity_tab_init</a>, <a class="el" href="special-chars_8c.html#ad231313a944f572f2f254154b29b218d">maptable_init_both()</a>, <a class="el" href="special-chars_8c.html#afcffa063d633b3ad129a431a46dc0178">maptable_init_identity()</a>, <a class="el" href="special-chars_8c.html#a6189e4777f4ffea13a165e8e5a3ac33d">nocase_nodiac_tab</a>, <a class="el" href="special-chars_8c.html#a044e6db3cd5abd279287e08643090e47">nocase_nodiac_tab_init</a>, <a class="el" href="special-chars_8c.html#a2b1f0fe1f4b5806b7192aee9dd7bce3d">nocase_tab</a>, <a class="el" href="special-chars_8c.html#ad849bfade5bfd88a6959b24dec1743ca">nodiac_tab</a>, and <a class="el" href="cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa3946b00fe1f38206339d69285cda6b03">utf8</a>.</p>
+<p>References <a class="el" href="special-chars_8c.html#a4ded408d535e140c3ac78fc80ef2cdb9">identity_tab</a>, <a class="el" href="special-chars_8c.html#ab1ee167b08a952fc7127a54cd0e0050d">identity_tab_init</a>, <a class="el" href="special-chars_8c.html#ad231313a944f572f2f254154b29b218d">maptable_init_both()</a>, <a class="el" href="special-chars_8c.html#afcffa063d633b3ad129a431a46dc0178">maptable_init_identity()</a>, <a class="el" href="special-chars_8c.html#a6189e4777f4ffea13a165e8e5a3ac33d">nocase_nodiac_tab</a>, <a class="el" href="special-chars_8c.html#a044e6db3cd5abd279287e08643090e47">nocase_nodiac_tab_init</a>, <a class="el" href="special-chars_8c.html#a2b1f0fe1f4b5806b7192aee9dd7bce3d">nocase_tab</a>, <a class="el" href="special-chars_8c.html#ad849bfade5bfd88a6959b24dec1743ca">nodiac_tab</a>, and <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa3946b00fe1f38206339d69285cda6b03">utf8</a>.</p>
 
 <p>Referenced by <a class="el" href="special-chars_8c.html#a708281d7f482a1999c70df6c353d66e1">cl_string_canonical()</a>.</p>
 
@@ -551,7 +553,7 @@ Variables</h2>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="cl_8h.html#a3502421ae8eac74673133702852dde32">CorpusCharset</a>&nbsp;</td>
+          <td class="paramtype"><a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#a3502421ae8eac74673133702852dde32">CorpusCharset</a>&nbsp;</td>
           <td class="paramname"> <em>charset</em>, </td>
         </tr>
         <tr>
@@ -593,7 +595,7 @@ Variables</h2>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>0 if the strings are the same. 1 if s1 is greater. -1 if s2 is greater. </dd></dl>
 
-<p>References <a class="el" href="cl_8h.html#a9e15a3c725711d9effd623b2f3e225be">cl_free</a>, <a class="el" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="cl_8h.html#ad68dfe0ca2fbad5052e8213a06f5b4ba">CL_MAX_LINE_LENGTH</a>, <a class="el" href="cl_8h.html#a708281d7f482a1999c70df6c353d66e1">cl_string_canonical()</a>, <a class="el" href="cl_8h.html#ae58fdb28a3fe823081eed10563e3229c">cl_string_reverse()</a>, <a class="el" href="macros_8h.html#a3acffbd305ee72dcd4593c0d8af64a4f">MIN</a>, and <a class="el" href="cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa3946b00fe1f38206339d69285cda6b03">utf8</a>.</p>
+<p>References <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#a9e15a3c725711d9effd623b2f3e225be">cl_free</a>, <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#ad68dfe0ca2fbad5052e8213a06f5b4ba">CL_MAX_LINE_LENGTH</a>, <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#a708281d7f482a1999c70df6c353d66e1">cl_string_canonical()</a>, <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#ae58fdb28a3fe823081eed10563e3229c">cl_string_reverse()</a>, <a class="el" href="macros_8h.html#a3acffbd305ee72dcd4593c0d8af64a4f">MIN</a>, and <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa3946b00fe1f38206339d69285cda6b03">utf8</a>.</p>
 
 <p>Referenced by <a class="el" href="ranges_8c.html#ab219ee0392ac5d55d43c014e9f42e044">i2compare()</a>.</p>
 
@@ -612,7 +614,7 @@ Variables</h2>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="cl_8h.html#a3502421ae8eac74673133702852dde32">CorpusCharset</a>&nbsp;</td>
+          <td class="paramtype"><a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#a3502421ae8eac74673133702852dde32">CorpusCharset</a>&nbsp;</td>
           <td class="paramname"> <em>charset</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -635,7 +637,7 @@ Variables</h2>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Pointer to the new string. </dd></dl>
 
-<p>References <a class="el" href="cl_8h.html#a6647d75d1d69c7d25447da514b7e4682">cl_strdup()</a>, and <a class="el" href="cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa3946b00fe1f38206339d69285cda6b03">utf8</a>.</p>
+<p>References <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#a6647d75d1d69c7d25447da514b7e4682">cl_strdup()</a>, and <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa3946b00fe1f38206339d69285cda6b03">utf8</a>.</p>
 
 <p>Referenced by <a class="el" href="special-chars_8c.html#a7e46e4e07cae0f3d6f7a244b305cc83e">cl_string_qsort_compare()</a>, <a class="el" href="ranges_8c.html#a0199b9d38e35100de957e78f0ad63169">SortExternally()</a>, and <a class="el" href="ranges_8h.html#aaf5f006cef0ac7c1fdb5c9d55558c11a">SortSubcorpus()</a>.</p>
 
@@ -654,7 +656,7 @@ Variables</h2>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="cl_8h.html#a3502421ae8eac74673133702852dde32">CorpusCharset</a>&nbsp;</td>
+          <td class="paramtype"><a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#a3502421ae8eac74673133702852dde32">CorpusCharset</a>&nbsp;</td>
           <td class="paramname"> <em>charset</em>, </td>
         </tr>
         <tr>
@@ -685,7 +687,7 @@ Variables</h2>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Boolean: true for valid, false for invalid. </dd></dl>
 
-<p>References <a class="el" href="cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa98383b9510ede128be820594e072f901">arabic</a>, <a class="el" href="cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa1fc467976b8e2979150a99beb709443e">ascii</a>, <a class="el" href="cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa841e717cfee614d106a0f8899c6ba639">cyrillic</a>, <a class="el" href="cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa1e664ae89ee112a145ec85d1e895ae50">greek</a>, <a class="el" href="cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa285886ef566374280cceb0a4e18561c0">hebrew</a>, <a class="el" href="cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaabb414040abfb032911b6a01ff3917217">latin1</a>, <a class="el" href="cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa724c1992a8e61d82725c22a9da6ddefe">latin2</a>, <a class="el" href="cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaae3652cea785fa2b69d22555ab515f002">latin3</a>, <a class="el" href="cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa07077e48dfd29feb9f45eb2406bca765">latin4</a>, <a class="el" href="cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa234f500c041b73aabc6fbd8eee10ab6d">latin5</a>, <a class="el" href="cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa10478439f5f44a25543bbd052c4200af">latin6</a>, <a class="el" href="cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa0683b667b8aabe54030680aadd3b5ee7">latin7</a>, <a class="el" href="cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaaf2ba2e166095a0cf8a4ccdb6d1937f83">latin8</a>, <a class="el" href="cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa7ecb9db6bf20631b7ce70e796df4a7bf">latin9</a>, and <a class="el" href="cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa3946b00fe1f38206339d69285cda6b03">utf8</a>.</p>
+<p>References <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa98383b9510ede128be820594e072f901">arabic</a>, <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa1fc467976b8e2979150a99beb709443e">ascii</a>, <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa841e717cfee614d106a0f8899c6ba639">cyrillic</a>, <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa1e664ae89ee112a145ec85d1e895ae50">greek</a>, <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa285886ef566374280cceb0a4e18561c0">hebrew</a>, <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaabb414040abfb032911b6a01ff3917217">latin1</a>, <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa724c1992a8e61d82725c22a9da6ddefe">latin2</a>, <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaae3652cea785fa2b69d22555ab515f002">latin3</a>, <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa07077e48dfd29feb9f45eb2406bca765">latin4</a>, <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa234f500c041b73aabc6fbd8eee10ab6d">latin5</a>, <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa10478439f5f44a25543bbd052c4200af">latin6</a>, <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa0683b667b8aabe54030680aadd3b5ee7">latin7</a>, <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaaf2ba2e166095a0cf8a4ccdb6d1937f83">latin8</a>, <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa7ecb9db6bf20631b7ce70e796df4a7bf">latin9</a>, <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>, and <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa3946b00fe1f38206339d69285cda6b03">utf8</a>.</p>
 
 <p>Referenced by <a class="el" href="cwb-encode_8c.html#a4179bb576944f012092322c5f446b0a8">encode_get_input_line()</a>, and <a class="el" href="parse__actions_8h.html#a0cd76ad97a709afa3bd6610768e1d39d">prepare_Query()</a>.</p>
 
@@ -704,7 +706,7 @@ Variables</h2>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="cl_8h.html#a3502421ae8eac74673133702852dde32">CorpusCharset</a>&nbsp;</td>
+          <td class="paramtype"><a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#a3502421ae8eac74673133702852dde32">CorpusCharset</a>&nbsp;</td>
           <td class="paramname"> <em>charset</em>, </td>
         </tr>
         <tr>
@@ -784,6 +786,8 @@ Variables</h2>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The string (rewritten in situ). </dd></dl>
 
+<p>References <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>.</p>
+
 <p>Referenced by <a class="el" href="cwb-encode_8c.html#adc6d582037bec1ccba6ab40a9ddbbf87">encode_add_wattr_line()</a>, and <a class="el" href="cwb-encode_8c.html#a0365f60206bd41cdb976e2e7d9641731">range_open()</a>.</p>
 
 </div>
@@ -862,7 +866,7 @@ Variables</h2>
 <p>Boolean switch enabling/disabling latex-style escapes. </p>
 <p>By default, it is false; if programs wish to allow these escapes they need to offer some means of changing this variable.</p>
 <p>Note that enabling this variable may cause scrambling of the string for LatinX strings where X is not 1; and may cause undefined errors for UTF8 strings. In short, you should only activate it when you are working with a corpus whose charset is Latin1.</p>
-<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="cl_8h.html#a3502421ae8eac74673133702852dde32" title="The CorpusCharset object: an identifier for one of the character sets supported by CWB...">CorpusCharset</a> </dd></dl>
+<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="cl_2cl_8h.html#a3502421ae8eac74673133702852dde32" title="The CorpusCharset object: an identifier for one of the character sets supported by CWB...">CorpusCharset</a> </dd></dl>
 
 <p>Referenced by <a class="el" href="special-chars_8c.html#a8e3a6183c822cb47f163cc14d114f0d5">cl_string_latex2iso()</a>.</p>
 
@@ -949,9 +953,9 @@ Variables</h2>
 
 <p>Array of tables mapping a character (the index) to the equivalent character in lowercase (the value). </p>
 <p>There are as many tables as there are possible values of CorpusCharset. Moreover, tables must always be in the same order as the values of CorpusCharset are declared in.</p>
-<p>This means starting at ascii == 0 and working up through the canonical order that is observable in <a class="el" href="cl_8h.html" title="This file contains the API for the CWB &quot;Corpus Library&quot; (CL).">cl.h</a></p>
+<p>This means starting at ascii == 0 and working up through the canonical order that is observable in cl.h</p>
 <p>Use a CorpusCharset value as the index into this array.</p>
-<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="cl_8h.html#a3502421ae8eac74673133702852dde32" title="The CorpusCharset object: an identifier for one of the character sets supported by CWB...">CorpusCharset</a> </dd></dl>
+<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="cl_2cl_8h.html#a3502421ae8eac74673133702852dde32" title="The CorpusCharset object: an identifier for one of the character sets supported by CWB...">CorpusCharset</a> </dd></dl>
 
 <p>Referenced by <a class="el" href="special-chars_8h.html#ae86d5e60c27778b82281ac1679409512">cl_string_maptable()</a>.</p>
 
@@ -970,16 +974,16 @@ Variables</h2>
 
 <p>Array of tables mapping a character (the index) to the equivalent character without any accents (the value). </p>
 <p>There are as many tables as there are possible values of CorpusCharset. Moreover, tables must always be in the same order as the values of CorpusCharset are declared in.</p>
-<p>This means stareting at ascii == 0 and working up through the canonical order that is observable in <a class="el" href="cl_8h.html" title="This file contains the API for the CWB &quot;Corpus Library&quot; (CL).">cl.h</a></p>
+<p>This means stareting at ascii == 0 and working up through the canonical order that is observable in cl.h</p>
 <p>Use a CorpusCharset value as the index into this array.</p>
-<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="cl_8h.html#a3502421ae8eac74673133702852dde32" title="The CorpusCharset object: an identifier for one of the character sets supported by CWB...">CorpusCharset</a> </dd></dl>
+<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="cl_2cl_8h.html#a3502421ae8eac74673133702852dde32" title="The CorpusCharset object: an identifier for one of the character sets supported by CWB...">CorpusCharset</a> </dd></dl>
 
 <p>Referenced by <a class="el" href="special-chars_8h.html#ae86d5e60c27778b82281ac1679409512">cl_string_maptable()</a>.</p>
 
 </div>
 </div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Fri Mar 4 2011 14:59:34 for CWB by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Mar 15 2011 20:16:46 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>
