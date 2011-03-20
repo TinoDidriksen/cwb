@@ -171,7 +171,7 @@ main(int argc, char *argv[])
 
   char line[CL_MAX_LINE_LENGTH];        /* one line of input from <infile> */
 
-  char corpus1_name[1024], corpus2_name[1024], s1_name[1024], s2_name[1024];
+  char corpus1_name[CL_MAX_FILENAME_LENGTH], corpus2_name[CL_MAX_FILENAME_LENGTH], s1_name[CL_MAX_FILENAME_LENGTH], s2_name[CL_MAX_FILENAME_LENGTH];
   Corpus *corpus1, *corpus2;            /* corpus handles */
   Attribute *w1, *w2;                   /* attribute handles for 'word' attributes; used to determine corpus size */
   int size1, size2;                     /* size of source & target corpus */

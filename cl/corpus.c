@@ -464,9 +464,14 @@ cl_new_corpus(char *registry_dir, char *registry_name)
 }
 
 /**
- * Deletes a Corpus object.
+ * Deletes a Corpus object from memory.
  *
- * @param corpus  The Corpus to delete
+ * A Corpus object keeps track of how many times it has been requested
+ * via cl_new_corpus(). When cl_delete_corpus() is called, the object is only
+ * actually deleted when there is just one outstanding request.
+ * Otherwise, the variable tracking the number of requests is decremented.
+ *
+ * @param corpus  The Corpus to delete.
  * @return        Always 1.
  */
 int
@@ -477,15 +482,16 @@ cl_delete_corpus(Corpus *corpus)
   assert(corpus != NULL);
   assert(corpus->nr_of_loads > 0);
 
-  /* decrement the number of references to corpus */
+  /* decrement the number of references to this corpus */
   corpus->nr_of_loads--;
 
+  /* delete it physically iff nobody wants to have it any more */
   if (corpus->nr_of_loads == 0) {
 
+    /* remove it from the linked list */
     if (corpus == loaded_corpora)
       loaded_corpora = corpus->next;
     else {
-
       prev = loaded_corpora;
 
       while (prev && (prev->next != corpus))
@@ -501,10 +507,9 @@ cl_delete_corpus(Corpus *corpus)
       }
     }
 
-    /* delete it physically iff nobody wants to have it any more */
-
+    /* now, time to actually get rid of it! */
     while (corpus->attributes != NULL)
-      attr_drop_attribute(corpus->attributes);
+      cl_delete_attribute(corpus->attributes);
 
     corpus->attributes = NULL;
     corpus->next = NULL;
@@ -526,10 +531,6 @@ cl_delete_corpus(Corpus *corpus)
 
     if (corpus->hostAccessList)
       FreeIDList(&(corpus->userAccessList));
-
-    corpus->next = NULL;
-
-    corpus->nr_of_loads = 0;
 
     cl_free(corpus);
 

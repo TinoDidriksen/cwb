@@ -135,7 +135,7 @@ describecorpus_show_statistics (Corpus *corpus)
 
   for (a = corpus->attributes; a; a = a->any.next) {
     switch(a->any.type) {
-    case ATT_POS:   
+    case ATT_POS:
       printf("p-ATT %-16s ", a->any.name);
       tokens = cl_max_cpos(a);
       types = cl_max_id(a);
@@ -144,7 +144,7 @@ describecorpus_show_statistics (Corpus *corpus)
       else 
         printf("           NO DATA");
       break;
-    case ATT_STRUC: 
+    case ATT_STRUC:
       printf("s-ATT %-16s ", a->any.name); 
       regions = cl_max_struc(a);
       if (regions >= 0) {
@@ -155,7 +155,7 @@ describecorpus_show_statistics (Corpus *corpus)
       else 
         printf("           NO DATA");
       break;
-    case ATT_ALIGN: 
+    case ATT_ALIGN:
       printf("a-ATT %-16s ", a->any.name); 
       blocks = cl_max_alg(a);
       if (blocks >= 0) {
@@ -242,7 +242,7 @@ main(int argc, char **argv)
   }
 
   for (i = optind; i < argc; i++) {
-    if ((corpus = setup_corpus(registry, argv[i])) == NULL) {
+    if ((corpus = cl_new_corpus(registry, argv[i])) == NULL) {
       fprintf(stderr, "ERROR. Can't access corpus %s !\n", argv[i]);
       exit(1);
     }

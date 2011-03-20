@@ -237,7 +237,7 @@ ComputeGroupExternally(Group *group)
   char temporary_name[TEMP_FILENAME_BUFSIZE];
   FILE *fd;
   FILE *pipe;
-  char sort_call[1024];
+  char sort_call[CL_MAX_LINE_LENGTH];
 
   /* ---------------------------------------------------------------------- */
 

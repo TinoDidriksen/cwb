@@ -773,7 +773,7 @@ main(int argc, char **argv)
 
   int w, cnt, read_pos_frm_stdin;
 
-  char s[1024];
+  char s[CL_MAX_LINE_LENGTH];      /* buffer for strings read from file */
   char *token;
 
   char *input_filename = NULL;
@@ -1040,7 +1040,7 @@ main(int argc, char **argv)
     }
 
     cnt = 0;
-    while (fgets(s, 1024, input_file) != NULL) {
+    while (fgets(s, CL_MAX_LINE_LENGTH, input_file) != NULL) {
 
       token = strtok(s, " \t\n");
 

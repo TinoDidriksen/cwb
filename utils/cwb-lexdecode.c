@@ -97,7 +97,7 @@ do_show(char *attr_name, char *rx, int rx_flags)
   int *idlist = NULL;
   FILE *input_fd;
 
-  char s[1024];
+  char s[CL_MAX_LINE_LENGTH];
 
   Attribute *attr = NULL;
 
@@ -135,7 +135,7 @@ do_show(char *attr_name, char *rx, int rx_flags)
         exit(1);
       }
 
-      while (fgets(s, 1024, input_fd) != NULL) {
+      while (fgets(s, CL_MAX_LINE_LENGTH, input_fd) != NULL) {
 
         len = strlen(s);
         if (len <= 0) {

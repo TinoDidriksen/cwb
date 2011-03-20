@@ -14,6 +14,10 @@
  *  Public License for more details (in the file "COPYING", or available via
  *  WWW at http://www.gnu.org/copyleft/gpl.html).
  */
+/*
+ * Windows/Unicode-compatibility extensions to CWB in this file
+ *  Copyright (C) 2010      by ANR Textométrie, ENS de Lyon
+ */
 
 
 #ifndef __windows_mmap_h
@@ -35,7 +39,7 @@
 #define MAP_PRIVATE	0x02		/* Changes are private.  */
 
 
-typedef char * caddr_t;
+typedef char *caddr_t;
 
 void *mmap(void *start, size_t length, int prot, int flags, int fd, off_t offset);
 int munmap(void *start, size_t length);

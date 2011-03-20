@@ -63,10 +63,10 @@ int cl_errno;
  */
 #define check_arg(arg,atyp,rval) \
 if (arg == NULL) { \
-  cderrno = CDA_ENULLATT; return rval; \
+  cl_errno = CDA_ENULLATT; return rval; \
 } \
 else if (arg->type != atyp) { \
-  cderrno = CDA_EATTTYPE; return rval; \
+  cl_errno = CDA_EATTTYPE; return rval; \
 }
 
 /**
@@ -177,9 +177,9 @@ void
 cl_error(char *message)
 {
   if (message != NULL)
-    fprintf(stderr, "%s: %s\n", cl_error_string(cderrno), message);
+    fprintf(stderr, "%s: %s\n", cl_error_string(cl_errno), message);
   else
-    fprintf(stderr, "%s\n", cl_error_string(cderrno));
+    fprintf(stderr, "%s\n", cl_error_string(cl_errno));
 }
 
 
@@ -246,7 +246,7 @@ cl_str2id(Attribute *attribute, char *id_string)
   char *str2;
 
 
-  check_arg(attribute, ATT_POS, cderrno);
+  check_arg(attribute, ATT_POS, cl_errno);
 
   lexidx = ensure_component(attribute, CompLexiconIdx, 0);
   lexsrt = ensure_component(attribute, CompLexiconSrt, 0);
@@ -310,16 +310,16 @@ cl_id2strlen(Attribute *attribute, int id)
   Component *lexidx;
   char *s;
 
-  check_arg(attribute, ATT_POS, cderrno);
+  check_arg(attribute, ATT_POS, cl_errno);
 
   lexidx = ensure_component(attribute, CompLexiconIdx, 0);
 
   if (lexidx == NULL) {
-    cderrno = CDA_ENODATA;
+    cl_errno = CDA_ENODATA;
     return CDA_ENODATA;
   }
   else if ((id < 0) || (id >= lexidx->size)) {
-    cderrno = CDA_EIDORNG;
+    cl_errno = CDA_EIDORNG;
     return CDA_EIDORNG;
   }
   else {
@@ -329,16 +329,16 @@ cl_id2strlen(Attribute *attribute, int id)
       s = get_string_of_id(attribute, id);
 
       if (s != NULL) {
-        cderrno = CDA_OK;
+        cl_errno = CDA_OK;
         return strlen(s);
       }
-      else if (cderrno != CDA_OK)
-        return cderrno;
+      else if (cl_errno != CDA_OK)
+        return cl_errno;
       else
         return CDA_EOTHER;
     }
     else {
-      cderrno = CDA_OK;
+      cl_errno = CDA_OK;
       return (ntohl(lexidx->data.data[id+1]) -
               ntohl(lexidx->data.data[id])) - 1;
     }
@@ -362,21 +362,21 @@ cl_sort2id(Attribute *attribute, int sort_index_position)
 {
   Component *srtidx;
 
-  check_arg(attribute, ATT_POS, cderrno);
+  check_arg(attribute, ATT_POS, cl_errno);
 
   srtidx = ensure_component(attribute, CompLexiconSrt, 0);
 
   if (srtidx == NULL) {
-    cderrno = CDA_ENODATA;
+    cl_errno = CDA_ENODATA;
     return CDA_ENODATA;
   }
 
   if ((sort_index_position >=0) && (sort_index_position < srtidx->size)) {
-    cderrno = CDA_OK;
+    cl_errno = CDA_OK;
     return ntohl(srtidx->data.data[sort_index_position]);
   }
   else {
-    cderrno = CDA_EIDXORNG;
+    cl_errno = CDA_EIDXORNG;
     return CDA_EIDXORNG;
   }
 
@@ -400,19 +400,19 @@ cl_id2sort(Attribute *attribute, int id)
 {
   Component *srtidx;
 
-  check_arg(attribute, ATT_POS, cderrno);
+  check_arg(attribute, ATT_POS, cl_errno);
 
   srtidx = ensure_component(attribute, CompLexiconSrt, 0);
 
   if (srtidx == NULL) {
-    cderrno = CDA_ENODATA;
+    cl_errno = CDA_ENODATA;
     return CDA_ENODATA;
   }
 
   if ((id >=0) && (id < srtidx->size)) {
-    cderrno = CDA_OK;
+    cl_errno = CDA_OK;
 
-    cderrno = CDA_ENYI;
+    cl_errno = CDA_ENYI;
     return CDA_ENYI;
   }
 
@@ -435,7 +435,7 @@ cl_sequence_compressed(Attribute *attribute)
 {
   ComponentState state;
 
-  check_arg(attribute, ATT_POS, cderrno);
+  check_arg(attribute, ATT_POS, cl_errno);
 
   /* The item sequence is compressed iff all three components
    * (CompHuffSeq, CompHuffCodes, CompHuffSync) are loaded or unloaded
@@ -486,7 +486,7 @@ cl_index_compressed(Attribute *attribute)
 {
   ComponentState state;
 
-  check_arg(attribute, ATT_POS, cderrno);
+  check_arg(attribute, ATT_POS, cl_errno);
 
   /* The inverted file is compressed iff both two components
    * (CompCompRF, CompCompRFX) are loaded or unloaded */
@@ -534,16 +534,16 @@ cl_max_cpos(Attribute *attribute)
 {
   Component *corpus;
 
-  check_arg(attribute, ATT_POS, cderrno);
+  check_arg(attribute, ATT_POS, cl_errno);
 
   if (item_sequence_is_compressed(attribute) == 1) {
 
     ensure_component(attribute, CompHuffCodes, 0);
     if (attribute->pos.hc == NULL) {
-      cderrno = CDA_ENODATA;
+      cl_errno = CDA_ENODATA;
       return CDA_ENODATA;
     }
-    cderrno = CDA_OK;
+    cl_errno = CDA_OK;
 
     return attribute->pos.hc->length;
 
@@ -553,11 +553,11 @@ cl_max_cpos(Attribute *attribute)
     corpus = ensure_component(attribute, CompCorpus, 0);
 
     if (corpus == NULL) {
-      cderrno = CDA_ENODATA;
+      cl_errno = CDA_ENODATA;
       return CDA_ENODATA;
     }
     else {
-      cderrno = CDA_OK;
+      cl_errno = CDA_OK;
       return corpus->size;
     }
   }
@@ -580,16 +580,16 @@ cl_max_id(Attribute *attribute)
 {
   Component *comp;
 
-  check_arg(attribute, ATT_POS, cderrno);
+  check_arg(attribute, ATT_POS, cl_errno);
 
   comp = ensure_component(attribute, CompLexiconIdx, 0);
 
   if (comp == NULL) {
-    cderrno = CDA_ENODATA;
+    cl_errno = CDA_ENODATA;
     return CDA_ENODATA;
   }
   else {
-    cderrno = CDA_OK;
+    cl_errno = CDA_OK;
     return comp->size;
   }
 
@@ -614,20 +614,20 @@ cl_id2freq(Attribute *attribute, int id)
 {
   Component *freqs;
 
-  check_arg(attribute, ATT_POS, cderrno);
+  check_arg(attribute, ATT_POS, cl_errno);
 
   freqs = ensure_component(attribute, CompCorpusFreqs, 0);
 
   if (freqs == NULL) {
-    cderrno = CDA_ENODATA;
+    cl_errno = CDA_ENODATA;
     return CDA_ENODATA;
   }
   else if ((id >= 0) && (id < freqs->size)) {
-    cderrno = CDA_OK;
+    cl_errno = CDA_OK;
     return ntohl(freqs->data.data[id]);
   }
   else {
-    cderrno = CDA_EIDXORNG;
+    cl_errno = CDA_EIDXORNG;
     return CDA_EIDXORNG;
   }
 
@@ -683,21 +683,21 @@ cl_id2cpos_oldstyle(Attribute *attribute, int id, int *freq, int *restrictor_lis
   check_arg(attribute, ATT_POS, NULL);
 
   size  = get_attribute_size(attribute);
-  if ((size <= 0) || (cderrno != CDA_OK)) {
+  if ((size <= 0) || (cl_errno != CDA_OK)) {
     /*       fprintf(stderr, "Cannot determine size of PA %s\n", */
     /*        attribute->any.name); */
       return NULL;
   }
 
   range  = get_id_range(attribute);
-  if ((range <= 0) || (cderrno != CDA_OK)) {
+  if ((range <= 0) || (cl_errno != CDA_OK)) {
     /*       fprintf(stderr, "Cannot determine ID range of PA %s\n", */
     /*        attribute->any.name); */
     return NULL;
   }
 
   if ((id <0) || (id >= range)) {
-    cderrno = CDA_EIDORNG;
+    cl_errno = CDA_EIDORNG;
     /*       fprintf(stderr, "ID %d out of range of PA %s\n", */
     /*        id, attribute->any.name); */
     *freq = 0;
@@ -705,7 +705,7 @@ cl_id2cpos_oldstyle(Attribute *attribute, int id, int *freq, int *restrictor_lis
   }
 
   *freq = get_id_frequency(attribute, id);
-  if ((*freq < 0) || (cderrno != CDA_OK)) {
+  if ((*freq < 0) || (cl_errno != CDA_OK)) {
     /*       fprintf(stderr, "Frequency %d of ID %d illegal (PA %s)\n", */
     /*        *freq, id, attribute->any.name); */
     return NULL;
@@ -728,7 +728,7 @@ cl_id2cpos_oldstyle(Attribute *attribute, int id, int *freq, int *restrictor_lis
     revcidx = ensure_component(attribute, CompCompRFX, 0);
 
     if (revcorp == NULL || revcidx == NULL) {
-      cderrno = CDA_ENODATA;
+      cl_errno = CDA_ENODATA;
       *freq = 0;
       return NULL;
     }
@@ -793,7 +793,7 @@ cl_id2cpos_oldstyle(Attribute *attribute, int id, int *freq, int *restrictor_lis
     revcidx = ensure_component(attribute, CompRevCorpusIdx, 0);
 
     if (revcorp == NULL || revcidx == NULL) {
-      cderrno = CDA_ENODATA;
+      cl_errno = CDA_ENODATA;
       /*        fprintf(stderr, "Cannot load REVCORP or REVCIDX component of %s\n",  */
       /*                attribute->any.name); */
       *freq = 0;
@@ -849,7 +849,7 @@ cl_id2cpos_oldstyle(Attribute *attribute, int id, int *freq, int *restrictor_lis
 
   }
 
-  cderrno = CDA_OK;
+  cl_errno = CDA_OK;
   return buffer;
 
   assert("Not reached" && 0);
@@ -1111,7 +1111,7 @@ cl_cpos2id(Attribute *attribute, int position)
 {
   Component *corpus;
 
-  check_arg(attribute, ATT_POS, cderrno);
+  check_arg(attribute, ATT_POS, cl_errno);
 
   if (item_sequence_is_compressed(attribute) == 1) {
 
@@ -1133,7 +1133,7 @@ cl_cpos2id(Attribute *attribute, int position)
     cis_sync = ensure_component(attribute, CompHuffSync, 0);
 
     if ((cis == NULL) || (cis_map == NULL) || (cis_sync == NULL)) {
-      cderrno = CDA_ENODATA;
+      cl_errno = CDA_ENODATA;
       return CDA_ENODATA;
     }
 
@@ -1177,8 +1177,8 @@ cl_cpos2id(Attribute *attribute, int position)
 
           if (!BSread(&bit, 1, &bs)) {
             fprintf(stderr, "cdaccess:decompressed read: Read error/1\n");
-            cderrno = CDA_ENODATA;
-            return cderrno;
+            cl_errno = CDA_ENODATA;
+            return cl_errno;
           }
 
           v = (bit ? 1 : 0);
@@ -1188,8 +1188,8 @@ cl_cpos2id(Attribute *attribute, int position)
 
             if (!BSread(&bit, 1, &bs)) {
               fprintf(stderr, "cdaccess:decompressed read: Read error/2\n");
-              cderrno = CDA_ENODATA;
-              return cderrno;
+              cl_errno = CDA_ENODATA;
+              return cl_errno;
             }
 
             v <<= 1;
@@ -1214,11 +1214,11 @@ cl_cpos2id(Attribute *attribute, int position)
 
       assert(rest < SYNCHRONIZATION);
 
-      cderrno = CDA_OK;         /* hi 'Oli' ! */
+      cl_errno = CDA_OK;         /* hi 'Oli' ! */
       return attribute->pos.this_block[rest];
     }
     else {
-      cderrno = CDA_EPOSORNG;
+      cl_errno = CDA_EPOSORNG;
       return CDA_EPOSORNG;
     }
   }
@@ -1227,16 +1227,16 @@ cl_cpos2id(Attribute *attribute, int position)
     corpus = ensure_component(attribute, CompCorpus, 0);
 
     if (corpus == NULL) {
-      cderrno = CDA_ENODATA;
+      cl_errno = CDA_ENODATA;
       return CDA_ENODATA;
     }
 
     if ((position >= 0) && (position < corpus->size)) {
-      cderrno = CDA_OK;
+      cl_errno = CDA_OK;
       return ntohl(corpus->data.data[position]);
     }
     else {
-      cderrno = CDA_EPOSORNG;
+      cl_errno = CDA_EPOSORNG;
       return CDA_EPOSORNG;
     }
   }
@@ -1264,7 +1264,7 @@ cl_cpos2str(Attribute *attribute, int position)
   check_arg(attribute, ATT_POS, NULL);
 
   id = get_id_at_position(attribute, position);
-  if ((id < 0) || (cderrno != CDA_OK))
+  if ((id < 0) || (cl_errno != CDA_OK))
     return NULL;
 
   return get_string_of_id(attribute, id);
@@ -1299,11 +1299,11 @@ cl_id2all(Attribute *attribute, int index, int *freq, int *slen)
   check_arg(attribute, ATT_POS, NULL);
 
   *freq = get_id_frequency(attribute, index);
-  if ((*freq < 0) || (cderrno != CDA_OK))
+  if ((*freq < 0) || (cl_errno != CDA_OK))
     return NULL;
 
   *slen = get_id_string_len(attribute, index);
-  if ((*slen < 0) || (cderrno != CDA_OK))
+  if ((*slen < 0) || (cl_errno != CDA_OK))
     return NULL;
   
   return get_string_of_id(attribute, index);
@@ -1473,7 +1473,7 @@ int cl_idlist2freq(Attribute *attribute,
 {
   int k, sum;
 
-  check_arg(attribute, ATT_POS, cderrno);
+  check_arg(attribute, ATT_POS, cl_errno);
 
   sum = 0;
 
@@ -1579,12 +1579,12 @@ cl_idlist2cpos_oldstyle(Attribute *attribute,
   lexidx = ensure_component(attribute, CompLexiconIdx, 0);
 
   if ((lexidx == NULL) || (word_ids == NULL)) {
-    cderrno = CDA_ENODATA;
+    cl_errno = CDA_ENODATA;
     return NULL;
   }
 
   size = cumulative_id_frequency(attribute, word_ids, number_of_words);
-  if ((size < 0) || (cderrno != CDA_OK)) {
+  if ((size < 0) || (cl_errno != CDA_OK)) {
     return NULL;
   }
 
@@ -1599,13 +1599,13 @@ cl_idlist2cpos_oldstyle(Attribute *attribute,
       word_id = word_ids[k];
       
       if ((word_id < 0) || (word_id >= lexidx->size)) {
-        cderrno = CDA_EIDORNG;
+        cl_errno = CDA_EIDORNG;
         free(table);
         return NULL;
       }
 
       start = get_positions(attribute, word_id, &freq, NULL, 0);
-      if ((freq < 0) || (cderrno != CDA_OK)) {
+      if ((freq < 0) || (cl_errno != CDA_OK)) {
         free(table);
         return NULL;
       }
@@ -1624,12 +1624,12 @@ cl_idlist2cpos_oldstyle(Attribute *attribute,
       qsort(table, size, sizeof(int), intcompare);
       
     *size_of_table = size;
-    cderrno = CDA_OK;
+    cl_errno = CDA_OK;
     return table;
   }
   else {
     *size_of_table = 0;
-    cderrno = CDA_OK;
+    cl_errno = CDA_OK;
     return NULL;
   }
   
@@ -1723,7 +1723,7 @@ cl_cpos2struc(Attribute *a, int cpos)
   if (get_num_of_struc(a, cpos, &struc))
     return struc;
   else
-    return cderrno;
+    return cl_errno;
 }
 
 /**
@@ -1758,11 +1758,11 @@ cl_cpos2boundary(Attribute *a, int cpos) {
       flags |= STRUC_RBOUND;
     return flags;
   }
-  else if (cderrno == CDA_ESTRUC) {
+  else if (cl_errno == CDA_ESTRUC) {
     return 0; /* outside region */
   }
   else
-    return cderrno; /* some error occurred */
+    return cl_errno; /* some error occurred */
 }
 
 
@@ -1786,7 +1786,7 @@ cl_max_struc(Attribute *a)
   if (get_nr_of_strucs(a, &nr)) 
     return nr;
   else
-    return cderrno;
+    return cl_errno;
 }
 
 
@@ -1812,7 +1812,7 @@ cl_cpos2struc2cpos(Attribute *attribute,
   
   int *val;
 
-  check_arg(attribute, ATT_STRUC, cderrno);
+  check_arg(attribute, ATT_STRUC, cl_errno);
 
   *struc_start = 0;
   *struc_end = 0;
@@ -1820,7 +1820,7 @@ cl_cpos2struc2cpos(Attribute *attribute,
   struc_data = ensure_component(attribute, CompStrucData, 0);
     
   if (struc_data == NULL) {
-    cderrno = CDA_ENODATA;
+    cl_errno = CDA_ENODATA;
     return 0;
   }
 
@@ -1831,11 +1831,11 @@ cl_cpos2struc2cpos(Attribute *attribute,
   if (val != NULL) {
     *struc_start = ntohl(*val);
     *struc_end   = ntohl(*(val + 1));
-    cderrno = CDA_OK;
+    cl_errno = CDA_OK;
     return 1;
   }
   else {
-    cderrno = CDA_ESTRUC;
+    cl_errno = CDA_ESTRUC;
     return 0;
   }
 
@@ -1866,12 +1866,12 @@ cl_cpos2struc_oldstyle(Attribute *attribute,
   Component *struc_data;
   int *val;
 
-  check_arg(attribute, ATT_STRUC, cderrno);
+  check_arg(attribute, ATT_STRUC, cl_errno);
 
   struc_data = ensure_component(attribute, CompStrucData, 0);
     
   if (struc_data == NULL) {
-    cderrno = CDA_ENODATA;
+    cl_errno = CDA_ENODATA;
     return 0;
   }
   
@@ -1881,11 +1881,11 @@ cl_cpos2struc_oldstyle(Attribute *attribute,
     
   if (val != NULL) {
     *struc_num = (val - struc_data->data.data)/2;
-    cderrno = CDA_OK;
+    cl_errno = CDA_OK;
     return 1;
   }
   else {
-    cderrno = CDA_ESTRUC;
+    cl_errno = CDA_ESTRUC;
     return 0;
   }
 
@@ -1913,23 +1913,23 @@ cl_struc2cpos(Attribute *attribute,
 {
   Component *struc_data;
 
-  check_arg(attribute, ATT_STRUC, cderrno);
+  check_arg(attribute, ATT_STRUC, cl_errno);
 
   struc_data = ensure_component(attribute, CompStrucData, 0);
     
   if (struc_data == NULL) {
-    cderrno = CDA_ENODATA;
+    cl_errno = CDA_ENODATA;
     return 0;
   }
   
   if ((struc_num < 0) || (struc_num >= (struc_data->size / 2))) {
-    cderrno = CDA_EIDXORNG;
+    cl_errno = CDA_EIDXORNG;
     return 0;
   }
   else {
     *struc_start = ntohl(struc_data->data.data[struc_num * 2]);
     *struc_end   = ntohl(struc_data->data.data[(struc_num * 2)+1]);
-    cderrno = CDA_OK;
+    cl_errno = CDA_OK;
     return 1;
   }
 
@@ -1953,17 +1953,17 @@ get_nr_of_strucs(Attribute *attribute, int *nr_strucs)
 {
   Component *struc_data;
 
-  check_arg(attribute, ATT_STRUC, cderrno);
+  check_arg(attribute, ATT_STRUC, cl_errno);
 
   struc_data = ensure_component(attribute, CompStrucData, 0);
 
   if (struc_data == NULL) {
-    cderrno = CDA_ENODATA;
+    cl_errno = CDA_ENODATA;
     return 0;
   }
 
   *nr_strucs = struc_data->size / 2;
-  cderrno = CDA_OK;
+  cl_errno = CDA_OK;
   return 1;
 
   assert("Not reached" && 0);
@@ -1978,7 +1978,7 @@ get_nr_of_strucs(Attribute *attribute, int *nr_strucs)
 int 
 cl_struc_values(Attribute *attribute) {
 
-  check_arg(attribute, ATT_STRUC, cderrno);
+  check_arg(attribute, ATT_STRUC, cl_errno);
 
   if (attribute->struc.has_attribute_values < 0) {
 
@@ -1996,7 +1996,7 @@ cl_struc_values(Attribute *attribute) {
       attribute->struc.has_attribute_values = 0;
   }
 
-  cderrno = CDA_OK;
+  cl_errno = CDA_OK;
   return attribute->struc.has_attribute_values;
 }
 
@@ -2032,7 +2032,7 @@ cl_struc2str(Attribute *attribute, int struc_num)
 {
   check_arg(attribute, ATT_STRUC, NULL);
 
-  if (structure_has_values(attribute) && (cderrno == CDA_OK)) {
+  if (structure_has_values(attribute) && (cl_errno == CDA_OK)) {
 
     /* local structure */
     typedef struct _idx_el { 
@@ -2049,7 +2049,7 @@ cl_struc2str(Attribute *attribute, int struc_num)
     avx = ensure_component(attribute, CompStrucAVX, 0);
 
     if (avs == NULL || avx == NULL) {
-      cderrno = CDA_ENODATA;
+      cl_errno = CDA_ENODATA;
       return 0;
     }
 
@@ -2065,17 +2065,17 @@ cl_struc2str(Attribute *attribute, int struc_num)
       offset = ntohl(idx->offset);
 
       if (offset >= 0 && offset < avs->data.size) {
-        cderrno = CDA_OK;
+        cl_errno = CDA_OK;
         return (char *)(avs->data.data) + offset;
       }
       else {
-        cderrno = CDA_EINTERNAL; /* this is a bad data inconsistency! */
+        cl_errno = CDA_EINTERNAL; /* this is a bad data inconsistency! */
         return NULL;
       }
     }
     else {
       /* we don't allow regions with missing annotations, so this must be an index error */
-      cderrno = CDA_EIDXORNG;
+      cl_errno = CDA_EIDXORNG;
       return NULL;
     }
   }
@@ -2274,7 +2274,7 @@ cl_cpos2alg2cpos_oldstyle(Attribute *attribute, /* accesses alignment attribute 
 
   Component *align_data;
 
-  check_arg(attribute, ATT_ALIGN, cderrno);
+  check_arg(attribute, ATT_ALIGN, cl_errno);
 
   *source_corpus_start = -1;
   *aligned_corpus_start = -1;
@@ -2284,7 +2284,7 @@ cl_cpos2alg2cpos_oldstyle(Attribute *attribute, /* accesses alignment attribute 
   align_data = ensure_component(attribute, CompAlignData, 0);
 
   if (align_data == NULL) {
-    cderrno = CDA_ENODATA;
+    cl_errno = CDA_ENODATA;
     return 0;
   }
   
@@ -2305,11 +2305,11 @@ cl_cpos2alg2cpos_oldstyle(Attribute *attribute, /* accesses alignment attribute 
       *aligned_corpus_end = ntohl(val[3])-1;
     }
       
-    cderrno = CDA_OK;
+    cl_errno = CDA_OK;
     return 1;
   }
   else {
-    cderrno = CDA_EPOSORNG;
+    cl_errno = CDA_EPOSORNG;
     return 0;
   }
 
@@ -2329,7 +2329,7 @@ cl_has_extended_alignment(Attribute *attribute)
 {
   ComponentState xalign;
 
-  check_arg(attribute, ATT_ALIGN, cderrno);
+  check_arg(attribute, ATT_ALIGN, cl_errno);
   xalign = component_state(attribute, CompXAlignData);
   if ((xalign == ComponentLoaded) || (xalign == ComponentUnloaded)) {
     return 1;                   /* XALIGN component exists */
@@ -2357,19 +2357,19 @@ cl_max_alg(Attribute *attribute)
   if (! cl_has_extended_alignment(attribute)) {
     align_data = ensure_component(attribute, CompAlignData, 0);
     if (align_data == NULL) {
-      cderrno = CDA_ENODATA;
-      return cderrno;
+      cl_errno = CDA_ENODATA;
+      return cl_errno;
     }
-    cderrno = CDA_OK;
+    cl_errno = CDA_OK;
     return (align_data->size / 2) - 1; /* last alignment boundary doesn't correspond to region */
   }
   else {
     align_data = ensure_component(attribute, CompXAlignData, 0);
     if (align_data == NULL) {
-      cderrno = CDA_ENODATA;
-      return cderrno;
+      cl_errno = CDA_ENODATA;
+      return cl_errno;
     }
-    cderrno = CDA_OK;
+    cl_errno = CDA_OK;
     return (align_data->size / 4);
   }
 }
@@ -2393,36 +2393,36 @@ cl_cpos2alg(Attribute *attribute, int cpos)
   if (! cl_has_extended_alignment(attribute)) {
     align_data = ensure_component(attribute, CompAlignData, 0);
     if (align_data == NULL) {
-      cderrno = CDA_ENODATA;
-      return cderrno;
+      cl_errno = CDA_ENODATA;
+      return cl_errno;
     }
     alg = get_alignment(align_data->data.data,
                         align_data->size,
                         cpos);
     if (alg >= 0) {
-      cderrno = CDA_OK;
+      cl_errno = CDA_OK;
       return alg;
     }
     else {
-      cderrno = CDA_EPOSORNG; /* old alignment files don't allow gaps -> index error */
-      return cderrno;
+      cl_errno = CDA_EPOSORNG; /* old alignment files don't allow gaps -> index error */
+      return cl_errno;
     }
   }
   else {
     align_data = ensure_component(attribute, CompXAlignData, 0);
     if (align_data == NULL) {
-      cderrno = CDA_ENODATA;
-      return cderrno;
+      cl_errno = CDA_ENODATA;
+      return cl_errno;
     }
     alg = get_extended_alignment(align_data->data.data,
                                  align_data->size,
                                  cpos);
     if (alg >= 0) {
-      cderrno = CDA_OK;
+      cl_errno = CDA_OK;
       return alg;
     }
     else {
-      cderrno = CDA_EALIGN;
+      cl_errno = CDA_EALIGN;
       return alg;               /* not a real error (just an "exception" condition) */
     }
   }
@@ -2463,12 +2463,12 @@ cl_alg2cpos(Attribute *attribute,
   if (! cl_has_extended_alignment(attribute)) {
     align_data = ensure_component(attribute, CompAlignData, 0);
     if (align_data == NULL) {
-      cderrno = CDA_ENODATA;
+      cl_errno = CDA_ENODATA;
       return 0;
     }
     size = (align_data->size / 2) - 1; /* last alignment boundary doesn't correspond to region */
     if ((alg < 0) || (alg >= size)) {
-      cderrno = CDA_EIDXORNG;
+      cl_errno = CDA_EIDXORNG;
       return 0;
     }
     val = align_data->data.data + (alg * 2);
@@ -2476,18 +2476,18 @@ cl_alg2cpos(Attribute *attribute,
     *target_region_start = ntohl(val[1]);
     *source_region_end  = ntohl(val[2]) - 1;
     *target_region_end = ntohl(val[3]) - 1;
-    cderrno = CDA_OK;
+    cl_errno = CDA_OK;
     return 1;
   }
   else  {
     align_data = ensure_component(attribute, CompXAlignData, 0);
     if (align_data == NULL) {
-      cderrno = CDA_ENODATA;
+      cl_errno = CDA_ENODATA;
       return 0;
     }
     size = align_data->size / 4;
     if ((alg < 0) || (alg >= size)) {
-      cderrno = CDA_EIDXORNG;
+      cl_errno = CDA_EIDXORNG;
       return 0;
     }
     val = align_data->data.data + (alg * 4);
@@ -2495,7 +2495,7 @@ cl_alg2cpos(Attribute *attribute,
     *source_region_end    = ntohl(val[1]);
     *target_region_start = ntohl(val[2]);
     *target_region_end   = ntohl(val[3]);
-    cderrno = CDA_OK;
+    cl_errno = CDA_OK;
     return 1;
   }
 }
@@ -2521,7 +2521,7 @@ cl_dynamic_call(Attribute *attribute,
                 DynCallResult *args,
                 int nr_args)
 {
-  char call[2048];
+  char call[CL_MAX_LINE_LENGTH];
   char istr[32];
 
   int i, k, ap, ins;
@@ -2533,7 +2533,7 @@ cl_dynamic_call(Attribute *attribute,
   char c;
 
 
-  check_arg(attribute, ATT_DYN, cderrno);
+  check_arg(attribute, ATT_DYN, cl_errno);
 
   if ((args == NULL) || (nr_args <= 0))
       goto error;
@@ -2692,7 +2692,7 @@ cl_dynamic_call(Attribute *attribute,
       break;
       
     case ATTAT_STRING:          /* copy output */
-      fgets(call, 1024, pipe);
+      fgets(call, CL_MAX_LINE_LENGTH, pipe);
       dcr->value.charres = (char *)cl_strdup(call);
         
       break;
@@ -2712,14 +2712,14 @@ cl_dynamic_call(Attribute *attribute,
     
     pclose(pipe);
     
-    cderrno = CDA_OK;
+    cl_errno = CDA_OK;
     return 1;
   }
   else 
     goto error;
 
  error:
-  cderrno = CDA_EARGS;
+  cl_errno = CDA_EARGS;
   dcr->type = ATTAT_NONE;
   return 0;
 }
@@ -2739,7 +2739,7 @@ cl_dynamic_numargs(Attribute *attribute)
   int nr;
   DynArg *arg;
 
-  check_arg(attribute, ATT_DYN, cderrno);
+  check_arg(attribute, ATT_DYN, cl_errno);
 
   nr = 0;
   for (arg = attribute->dyn.arglist; arg != NULL; arg = arg->next)
@@ -2750,7 +2750,7 @@ cl_dynamic_numargs(Attribute *attribute)
     else
       nr++;
   
-  cderrno = CDA_OK;
+  cl_errno = CDA_OK;
   return nr;
 
   assert("Not reached" && 0);

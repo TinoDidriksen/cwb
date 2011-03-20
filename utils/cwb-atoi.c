@@ -32,11 +32,6 @@
 int little_endian = 0;
 
 
-/*
- * no longer needed because we #incldue the CL ehader
-#define MAX_LINE_LENGTH 1024
-*/
-
 /**
  * Reads from a stream one integer-representing string per line,
  * and writes the corresponding integer to STDOUT.

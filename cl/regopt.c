@@ -14,6 +14,10 @@
  *  Public License for more details (in the file "COPYING", or available via
  *  WWW at http://www.gnu.org/copyleft/gpl.html).
  */
+/*
+ *  Windows/Unicode-compatibility extensions to CWB in this file
+ *  Copyright (C) 2010      by ANR Textométrie, ENS de Lyon
+ */
 
 #include "globals.h"
 #include "regopt.h"

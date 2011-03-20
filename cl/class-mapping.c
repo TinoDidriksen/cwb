@@ -83,7 +83,7 @@ read_mapping(Corpus *corpus,
   FILE *fd;
   Attribute *attr;
   Mapping m = NULL;
-  char s[1024];
+  char s[CL_MAX_LINE_LENGTH];
 
   if (corpus == NULL) {
     *error_string = "corpus argument missing";
@@ -121,7 +121,7 @@ read_mapping(Corpus *corpus,
     drop_mapping(&m);
   }
 
-  while ( m  &&  fgets(s, 1024, fd) != NULL ) {
+  while ( m  &&  fgets(s, CL_MAX_LINE_LENGTH, fd) != NULL ) {
 
     if (s[0] && s[strlen(s)-1] == '\n')
       s[strlen(s)-1] = '\0';

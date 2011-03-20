@@ -139,10 +139,13 @@ CQPOption cqpoptions[] = {
   { NULL, NULL,                   OptString,  NULL,               NULL, 0,  NULL, 0, 0}
 };
 
+/**
+ * The return value is a newly-allocated string.
+ */
 char *
 expand_filename(char *fname)
 {
-  char fn[1024];
+  char fn[CL_MAX_FILENAME_LENGTH];
   char *home;
   int s, t;
 

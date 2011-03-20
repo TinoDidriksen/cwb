@@ -31,11 +31,11 @@
  * Allocates a new object.
  *
  * A macro for memory allocation which implements an object-oriented-style
- * "new" term: it evaluates to a pointer to a newly-laid out memory block
+ * "new" term: it evaluates to a pointer to a newly-laid-out memory block
  * of the size of the specified type.
  *
  * @param T  The data type of the "object" to be created.
- * @return   A pointer to the new "object"
+ * @return   A pointer to the new "object".
  */
 #define new(T) (T *)cl_malloc(sizeof(T))
 /**

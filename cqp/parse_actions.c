@@ -83,7 +83,7 @@ Context expansion;
  *
  * Doesn't seem currently to be in use anywhere.
  */
-char regex_string[1024];
+char regex_string[CL_MAX_LINE_LENGTH];
 /* index into the regex string buffer, storing a current position. @ see regex_string_pos */
 int regex_string_pos;
 int sslen;
@@ -2833,7 +2833,7 @@ expand_dataspace(CorpusList *cl)
 void
 push_regchr(char c)
 {
-  if (regex_string_pos < 1024) {
+  if (regex_string_pos < CL_MAX_LINE_LENGTH) {
     regex_string[regex_string_pos] = c;
     regex_string_pos++;
     regex_string[regex_string_pos] = '\0';

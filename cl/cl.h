@@ -292,6 +292,14 @@ void cl_set_memory_limit(int megabytes);  /* 0 or less turns limit off */
  * cl_strcpy() will copy this many bytes at most.
  */
 #define CL_MAX_LINE_LENGTH 4096
+/**
+ * String buffer size constant (for filenames).
+ *
+ * This constant can be used for declaring character arrays that will
+ * only contain a filename (or path). It is expected that this will
+ * be shorter than CL_MAX_LINE_LENGTH.
+ */
+#define CL_MAX_FILENAME_LENGTH 1024
 
 /* CL-specific version of strcpy. Don't use unless you know what you're doing. */
 char *cl_strcpy(char *buf, const char *src);
@@ -309,7 +317,7 @@ char *cl_xml_entity_decode(char *s); /* removes the four default XML entities fr
  *
  * TODO: Currently, anything in the upper half of the 8-bit range is
  * allowed (in the old Latin1 days this was anything from 0xa0 to
- * 0xff). This will work with anyt non-ascii character set, but
+ * 0xff). This will work with any non-ascii character set, but
  * is almost certainly too lax.
  *
  * @param c  Character to check. (It is expected to be a char,
@@ -411,10 +419,9 @@ typedef union _Attribute Attribute;
 #define ATT_DYN        (1<<6)
 
 /** shorthand for "any / all types of attribute" */
-/* TODO shouldn't ATT_ALL and ATT_REAL have brackets round their expansions?? in case of higher-precedence operator */
-#define ATT_ALL        ATT_POS   | ATT_STRUC | ATT_ALIGN | ATT_DYN
+#define ATT_ALL        ( ATT_POS | ATT_STRUC | ATT_ALIGN | ATT_DYN )
 /** shorthand for "any / all types of attribute except dynamic" */
-#define ATT_REAL       ATT_POS   | ATT_STRUC | ATT_ALIGN
+#define ATT_REAL       ( ATT_POS | ATT_STRUC | ATT_ALIGN )
 
 
 /* there are a huge number of Attribute "methods" accessing different
@@ -423,7 +430,8 @@ typedef union _Attribute Attribute;
 /* attribute access functions: general Attribute methods */
 
 /**
- * Finds an attribute that matches the specified parameters, if one exists.
+ * Finds an attribute that matches the specified parameters, if one exists,
+ * for the given corpus.
  *
  * Note that although this is a cl_new_* function, and it is the canonical way
  * that we get an Attribute to call Attribute-functions on, it doesn't actually
@@ -437,7 +445,7 @@ typedef union _Attribute Attribute;
  * @see                   cl_new_attribute_oldstyle
  *
  * @param corpus          The corpus in which to search for the attribute.
- * @param attribute_name  The name of the attribute (i.e. the handle it has in the registry file)
+ * @param attribute_name  The name of the attribute (i.e. the handle it has in the registry file).
  * @param type            Type of attribute to be searched for.
  *
  * @return                Pointer to Attribute object, or NULL if not found.

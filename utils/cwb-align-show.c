@@ -29,16 +29,16 @@
 /** Name of the program (from the shell) */
 char *progname = "";
 
-char corpus1_name[1024];            /**< name of the source corpus */
-char corpus2_name[1024];            /**< name of the target corpus */
-char s1_name[1024];                 /**< name of the source sentence regions */
-char s2_name[1024];                 /**< name of the target sentence regions */
-char word_name[1024] = "word";      /**< name of the p-attribute used to display tokens (usually word) */
+char corpus1_name[CL_MAX_FILENAME_LENGTH];            /**< name of the source corpus */
+char corpus2_name[CL_MAX_FILENAME_LENGTH];            /**< name of the target corpus */
+char s1_name[CL_MAX_FILENAME_LENGTH];                 /**< name of the source sentence regions */
+char s2_name[CL_MAX_FILENAME_LENGTH];                 /**< name of the target sentence regions */
+char word_name[CL_MAX_FILENAME_LENGTH] = "word";      /**< name of the p-attribute used to display tokens (usually word) */
 Corpus *corpus1;                    /**< corpus handle: source corpus */
 Corpus *corpus2;                    /**< corpus handle: target corpus */
-Attribute *w1;                      /**< {word} attribute (or whatever is selected with -P) attribute handle: source */
+Attribute *w1;                      /**< {word} attribute (or whatever is selected with -P) handle: source */
 Attribute *s1;                      /**< sentence attribute handle: source */
-Attribute *w2;                      /**< {word} attribute (or whatever is selected with -P) attribute handle: target */
+Attribute *w2;                      /**< {word} attribute (or whatever is selected with -P) handle: target */
 Attribute *s2;                      /**< sentence attribute handle: target */
 char *registry_dir = NULL;          /**< registry directory (NULL = use CL default) */
 

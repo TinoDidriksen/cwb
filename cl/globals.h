@@ -103,7 +103,8 @@ extern size_t cl_memory_limit;
 #endif
 
 #ifndef __MINGW__
-/* for use with [fs]printf(), all decimal or floating-point conversions */
+/* for use with [fs]printf(), all decimal or floating-point conversions, as follows:
+ * "%" COMMA_SEP_THOUSANDS_CONVSPEC "d" (or equivalent) */
 #define COMMA_SEP_THOUSANDS_CONVSPEC "'"
 #else
 #define COMMA_SEP_THOUSANDS_CONVSPEC ""
@@ -122,12 +123,12 @@ extern size_t cl_memory_limit;
  */
 #define MAX_LINE_LENGTH        CL_MAX_LINE_LENGTH
 
-/**
+/*
  *  this is the length of fixed-size buffers for names and identifiers
  *
  *  BUT IT IS NEVER USED.
+ *  #define MAX_IDENTIFIER_LENGTH  1024
  */
-#define MAX_IDENTIFIER_LENGTH  1024
 
 /**
  * Macro which exits the program when a "to do" point is hit.

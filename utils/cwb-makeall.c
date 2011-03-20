@@ -66,7 +66,7 @@ component_ok(Attribute *attr, ComponentID cid)
  * @param cid   The component ID of the component to create.
  */
 void
-make_component(Attribute *attr, ComponentID cid)
+makeall_make_component(Attribute *attr, ComponentID cid)
 {
   int state;
 
@@ -180,7 +180,7 @@ validate_revcorp(Attribute *attr)
  *                  the resulting revcorp.
  */
 void
-do_attribute(Attribute *attr, ComponentID cid, int validate)
+makeall_do_attribute(Attribute *attr, ComponentID cid, int validate)
 {
   assert(attr);
 
@@ -221,12 +221,12 @@ do_attribute(Attribute *attr, ComponentID cid, int validate)
     }
     else {
       /* may need to create "alphabetically" sorted lexicon */
-      make_component(attr, CompLexiconSrt);
+      makeall_make_component(attr, CompLexiconSrt);
       printf(" - lexicon      OK\n");
     }
 
     /* create token frequencies if necessary (must be able to do so if they aren't already there) */
-    make_component(attr, CompCorpusFreqs);
+    makeall_make_component(attr, CompCorpusFreqs);
     printf(" - frequencies  OK\n");
 
     /* check if token sequence has been compressed, otherwise create CompCorpus (if necessary) */
@@ -234,7 +234,7 @@ do_attribute(Attribute *attr, ComponentID cid, int validate)
       printf(" - token stream OK (COMPRESSED)\n");
     }
     else {
-      make_component(attr, CompCorpus);
+      makeall_make_component(attr, CompCorpus);
       printf(" - token stream OK\n");
     }
 
@@ -243,9 +243,9 @@ do_attribute(Attribute *attr, ComponentID cid, int validate)
       printf(" - index        OK (COMPRESSED)\n");
     }
     else {
-      make_component(attr, CompRevCorpusIdx);
+      makeall_make_component(attr, CompRevCorpusIdx);
       if (! component_ok(attr, CompRevCorpus)) { /* need this check to avoid validation of existing revcorp  */
-        make_component(attr, CompRevCorpus);
+        makeall_make_component(attr, CompRevCorpus);
         if (validate) {
           /* validate the index, i.e. the REVCORP component we just created */
           if (! validate_revcorp(attr)) {
@@ -261,7 +261,7 @@ do_attribute(Attribute *attr, ComponentID cid, int validate)
     /* create requested component only */
     printf("Processing component %s of ATTRIBUTE %s\n",
            cid_name(cid), attr->any.name);
-    make_component(attr, cid);
+    makeall_make_component(attr, cid);
     if (validate && (cid == CompRevCorpus)) { /* validates even if REVCORP already existed -> useful trick for validating later */
       if (! validate_revcorp(attr)) {
         fprintf(stderr, "ERROR. Validation failed.\n");
@@ -406,7 +406,7 @@ main(int argc, char **argv)
   if (optind < argc) {
     for (i = optind; i < argc; i++) {
       if ((attribute = cl_new_attribute(corpus, argv[i], ATT_POS)) != NULL) {
-        do_attribute(attribute, cid, validate);
+        makeall_do_attribute(attribute, cid, validate);
       }
       else {
         fprintf(stderr, "p-attribute %s.%s not defined. Aborted.\n",
@@ -417,7 +417,7 @@ main(int argc, char **argv)
   }
   else if (attr_name != NULL) {
     if ((attribute = cl_new_attribute(corpus, attr_name, ATT_POS)) != NULL) {
-      do_attribute(attribute, cid, validate);
+      makeall_do_attribute(attribute, cid, validate);
     }
     else {
       fprintf(stderr, "p-attribute %s.%s not defined. Aborted.\n",
@@ -431,7 +431,7 @@ main(int argc, char **argv)
       if (attribute->type == ATT_POS) {
         ComponentID my_cid;
 
-        do_attribute(attribute, cid, validate);
+        makeall_do_attribute(attribute, cid, validate);
         /* now destoy all components; this makes the attribute unusable,
            but it is currently the only way to free allocated and memory-mapped data */
         for (my_cid = CompDirectory; my_cid < CompLast; my_cid++) { /* ordering gleaned from attributes.h */

@@ -50,6 +50,14 @@ Variable *VariableSpace = NULL;
 
 /* ---------------------------------------------------------------------- */
 
+/**
+ * Finds the Variable object of the given name, if it
+ * exists in VariableSpace.
+ *
+ * @param varname  The name of the variable required.
+ * @return         The Variable requested, or NULL if no Variable by that
+ *                 name could be found.
+ */
 Variable
 FindVariable(char *varname)
 {
@@ -136,7 +144,7 @@ VariableSubtractItem(Variable v, char *item)
 
   for (i = 0; i < v->nr_items; i++)
     
-    /* wir löschen _alle_ vorkommen eines items in der Liste! */
+    /* wir lï¿½schen _alle_ vorkommen eines items in der Liste! */
     
     if (!v->items[i].free && 
         v->items[i].sval != NULL &&
@@ -297,9 +305,9 @@ SetVariableValue(char *varName,
     if ((fd = open_file(varValues, "r"))) {
       
       int l;
-      char s[1024];
+      char s[CL_MAX_LINE_LENGTH];
 
-      while (fgets(s, 1024, fd) != NULL) {
+      while (fgets(s, CL_MAX_LINE_LENGTH, fd) != NULL) {
 
         l = strlen(s);
 
@@ -332,25 +340,30 @@ SetVariableValue(char *varName,
 
 
 /* 
- *  variables iterator
+ *  variables iterator: one non-exported integer and two functions.
  */
 int variables_iterator_idx;
 
-/** Resets the variables iterator */
+/**
+ * Resets the variables iterator to the beginning of the global VariableSpace array.
+ */
 void 
-variables_iterator_new(void) {
+variables_iterator_new(void)
+{
   variables_iterator_idx = 0;
 }
 
 /**
- * Gets the next Variable pointer while iterating through the global array.
+ * Gets the next Variable object from the variables iterator.
  *
- * Returns NULL at end of list.
+ * Returns NULL if the iterator has reached the end of the global VariableSpace array.
  *
  * @see VariableSpace
+ * @return             The next Variable object from the iterator.
  */
 Variable 
-variables_iterator_next(void) {
+variables_iterator_next(void)
+{
   if (variables_iterator_idx < nr_variables) {
     return VariableSpace[variables_iterator_idx++];
   }
@@ -481,11 +494,20 @@ GetVariableItems(Variable v,
   }
 }
 
-/** returns list of pointers to variable's strings */
+/**
+ * Returns an array of pointers to a variable's strings.
+ *
+ * Return value is NULL if there were no strings stored in the variable.
+ * The number of strings that were found is inserted into nr_items.
+ *
+ * The array that is returned must be freed by the caller.
+ *
+ * @param v         The Variable whose strings you want.
+ * @param nr_items  The number of strings found will be put here.
+ * @return          Table of pointers to the Variable's strings.
+ */
 char **
-GetVariableStrings(Variable v, 
-                   /* returned: */
-                   int *nr_items)
+GetVariableStrings(Variable v, int *nr_items)
 {
   char **result;
   int i, j, N;
@@ -513,6 +535,6 @@ GetVariableStrings(Variable v,
       }
     }
     
-    return result;                /* must be freed by caller */
+    return result;
   }
 }

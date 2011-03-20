@@ -15,8 +15,13 @@
  *  WWW at http://www.gnu.org/copyleft/gpl.html).
  */
 
-/* maximum length of a line in a macro definition file */
-#define MACRO_FILE_MAX_LINE_LENGTH 1024
+/**
+ * The maximum length of a line in a macro definition file.
+ *
+ * As of 3.2.x, this has been modified to be the same as CL_MAX_LINE_LENGTH
+ * (for sake of simplicity).
+ */
+#define MACRO_FILE_MAX_LINE_LENGTH CL_MAX_LINE_LENGTH
 
 /* read one character from input (called from YY_INPUT() in <parser.l>) */
 int yy_input_char(void);

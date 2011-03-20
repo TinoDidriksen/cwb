@@ -35,11 +35,11 @@ typedef struct _variable_item {
 /**
  * The Variable object.
  *
- * (Plus also VariableBuffer: the former is a pointer to the latter)
+ * (Plus also VariableBuffer: the former is a pointer to the latter.)
  */
 typedef struct _variable_buf {
 
-  int valid;              /**< flag whether I'm valid or not */
+  int valid;              /**< flag: whether I'm valid or not */
   char *my_name;          /**< my name */
 
   char *my_corpus;        /**< name of corpus I'm valid for */

@@ -175,8 +175,8 @@ void
 compress_reversed_index(Attribute *attr, char *output_fn)
 {
   char *s;
-  char data_fname[1024];
-  char index_fname[1024];
+  char data_fname[CL_MAX_FILENAME_LENGTH];
+  char index_fname[CL_MAX_FILENAME_LENGTH];
   
   int nr_elements;
   int element_freq;
@@ -327,8 +327,8 @@ void
 decompress_check_reversed_index(Attribute *attr, char *output_fn)
 {
   char *s;
-  char data_fname[1024];
-  char index_fname[1024];
+  char data_fname[CL_MAX_FILENAME_LENGTH];
+  char index_fname[CL_MAX_FILENAME_LENGTH];
   
   int nr_elements;
   int element_freq;

@@ -255,7 +255,7 @@ argid_name(int i)
  * with its "next" pointer set to NULL.
  *
  * @see            DynArg
- * @param type_id  String specifying the type of argument required, choose from:
+ * @param type_id  String specifying the type of argument required; choose from:
  *                 STRING, POS, INT, VARARG, FLOAT
  * @return         Pointer to the new DynArg object, or NULL in case of an invalid
  *                 type_id.
@@ -307,9 +307,9 @@ makearg(char *type_id)
  * NEVER CALL THIS!! ONLY USED WHILE PARSING A REGISTRY ENTRY!!!!
  *
  * @param corpus          The corpus this attribute belongs to.
- * @param attribute_name  The name of the attribute (i.e. the handle it has in the registry file)
+ * @param attribute_name  The name of the attribute (i.e. the handle it has in the registry file).
  * @param type            Type of attribute to be created.
- * @param data            Used for a call to find_attribute. It is unused there.
+ * @param data            Unused. It can just be NULL.
  */
 Attribute *
 setup_attribute(Corpus *corpus,
@@ -326,7 +326,7 @@ setup_attribute(Corpus *corpus,
 
   attr = NULL;
 
-  if (find_attribute(corpus, attribute_name, type, data) != NULL)
+  if (cl_new_attribute(corpus, attribute_name, type) != NULL)
     fprintf(stderr, "attributes:setup_attribute(): Warning: \n"
             "  Attribute %s of type %s already defined in corpus %s\n",
             attribute_name, aid_name(type), corpus->id);
@@ -386,7 +386,8 @@ setup_attribute(Corpus *corpus,
 
 
 /**
- * Finds an attribute that matches the specified parameters, if one exists.
+ * Finds an attribute that matches the specified parameters, if one exists,
+ * for the given corpus.
  *
  * Note that although this is a cl_new_* function, and it is the canonical way
  * that we get an Attribute to call Attribute-functions on, it doesn't actually
@@ -400,7 +401,7 @@ setup_attribute(Corpus *corpus,
  * @see                   cl_new_attribute
  *
  * @param corpus          The corpus in which to search for the attribute.
- * @param attribute_name  The name of the attribute (i.e. the handle it has in the registry file)
+ * @param attribute_name  The name of the attribute (i.e. the handle it has in the registry file).
  * @param type            Type of attribute to be searched for.
  * @param data            NOT USED.
  *
@@ -432,13 +433,17 @@ cl_new_attribute_oldstyle(Corpus *corpus,
  * Drops an attribute for the given corpus.
  *
  * The attribute to be dropped is specified by its attribute name
- * and its type (i.e. no pointer needed: compare attr_drop_attribute).
+ * and its type (i.e. no pointer needed: compare cl_delete_attribute).
  *
  * After calling this, the corpus does not have the attribute any
  * longer -- it is the same as it was never defined.
  *
  * This is an internal function; the function exposed in the API for
  * this purpose is cl_delete_attribute().
+ *
+ * tODO: this function can probably actually be deleted. It doesn't
+ * todo: seem to be used anywhere, and is much more complex than
+ * todo: cl_delete_attribute
  *
  * @see      cl_delete_attribute
  * @return   Boolean: true for all OK, false for a problem
@@ -461,41 +466,39 @@ drop_attribute(Corpus *corpus,
  * Deletes the specified Attribute object.
  *
  * The function also appropriately amends the Corpus object of which this
- * Attribute is a dependent.
+ * Attribute is a dependent. This means you can call it repreatedly on the first
+ * element of a Corpus's Attribute list (as the linked list is automatically
+ * adjusted).
  *
  * @return   Boolean: true for all OK, false for a problem.
  */
 int
 cl_delete_attribute(Attribute *attribute)
 {
-  Attribute *prev;
+  Attribute *prev = NULL;
   DynArg *arg;
   Corpus *corpus;
   ComponentID cid;
-
 
   if (attribute == NULL)
     return 0;
   else {
 
-    prev = NULL;
     corpus = attribute->any.mother;
     
     assert("NULL corpus in attribute" && (corpus != NULL));
 
+    /* remove attribute from corpus attribute list */
     if (attribute == corpus->attributes)
       corpus->attributes = attribute->any.next;
     else {
-
-      /* remove attribute from corpus attribute list */
-
       for (prev = corpus->attributes; 
            (prev != NULL) && (prev->any.next != attribute);
            prev = prev->any.next)
         ;
       
       if (prev == NULL)
-        fprintf(stderr, "attributes:attr_drop_attribute():\n"
+        fprintf(stderr, "attributes:cl_delete_attribute():\n"
                 "  Warning: Attribute %s not in list of corpus attributes\n",
                 attribute->any.name);
       else {
@@ -538,9 +541,8 @@ cl_delete_attribute(Attribute *attribute)
     attribute->any.mother = NULL;
     attribute->any.type = ATT_NONE;
     attribute->any.next = NULL;
-    /* attribute->any.components = NULL; */
     
-    free(attribute);
+    cl_free(attribute);
     return 1;
   }
   

@@ -43,7 +43,7 @@
 #define SLASH '^'
 
 
-#define subcorpload_debug False
+#define subcorpload_debug 0
 
 /** magic number for {?? subcorpus files} */
 #define SUBCORPMAGIC 36193928
@@ -348,7 +348,7 @@ ensure_corpus_size(CorpusList *cl)
     if (!cl->loaded) {
       /* load subcorpus (the local_dir entry of the corpus structure contains
          the name of the directory where the disk file can be found */
-      char filename[1024];
+      char filename[CL_MAX_FILENAME_LENGTH];
       
       /* re-create subcorpus filename from corpus structure
          (cf. the treatment in load_corpusnames()) */
@@ -1026,7 +1026,7 @@ changecase_string_no_copy(char *str, enum case_mode mode)
 static char *
 get_fulllocalpath(CorpusList *cl, int qualify)
 {
-  char fullname[1024];
+  char fullname[CL_MAX_FILENAME_LENGTH];
   char *upname;
 
   if (qualify) {
@@ -1100,10 +1100,10 @@ int
 check_stamp(char *directory, char *fname)
 {
   FILE *fd;
-  char full_name[1024];
+  char full_name[CL_MAX_FILENAME_LENGTH];
   int magic, ok;
 
-  sprintf(full_name, "%s/%s", directory, fname);
+  sprintf(full_name, "%s" SUBDIR_SEP_STRING "%s", directory, fname);
 
   if (((fd = open_file(full_name, "rb")) == NULL) ||
       (fread(&magic, sizeof(int), 1, fd) == 0) ||
@@ -1191,7 +1191,7 @@ load_corpusnames(enum corpus_type ct)
               /*     if (corpus == NULL) { */
               /* (NB: one data directory constraint is implicit; loading might work, but save_subcorpus() will crash miserably) */
 
-              char mother[1024]; /* Judith vs. Oli, round 231 */
+              char mother[CL_MAX_FILENAME_LENGTH]; /* Judith vs. Oli, round 231 */
               
               /* allocate memory for the new id */
               corpus = NewCL();
@@ -1383,7 +1383,7 @@ attach_subcorpus(CorpusList *cl,
 
     if (advertised_directory && advertised_filename) {
 
-      char sname[1024];
+      char sname[CL_MAX_FILENAME_LENGTH];
       
       strcpy(sname, advertised_directory);
       if (sname[strlen(sname)-1] != '/')
@@ -1572,7 +1572,7 @@ save_subcorpus(CorpusList *cl, char *fname)
   int i, l1, l2, magic;
 
   FILE *fp;
-  char outfn[1024];
+  char outfn[CL_MAX_FILENAME_LENGTH];
 
   if (cl == NULL)
     return False;

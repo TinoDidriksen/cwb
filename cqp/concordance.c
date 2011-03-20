@@ -84,8 +84,20 @@ srev(char *s)
 
 /* ---------------------------------------------------------------------- */
 
-/* inline */
-int
+/**
+ * Appends one string to another whicle keeping track of the overall length.
+ *
+ * @param s       The string to modify.
+ * @param suffix  The string you want to append to s.
+ * @param sp      Index into s indicating the end of its current content.
+ *                For example, if the string contains "blob", sp would be 4.
+ *                sp is modified by this function to point to the end of
+ *                the content after appending has been complete.
+ * @param max_sp  Size of the s array (ie, no character after s[max_sp-1] will
+ *                be written to).
+ * @return        The number of characters copied.
+ */
+/* inline */ int
 append(char *s, char *suffix, int *sp, int max_sp)
 {
   char *k = suffix;
@@ -97,6 +109,7 @@ append(char *s, char *suffix, int *sp, int max_sp)
     for ( ; *k && (*sp < max_sp); k++) {
       s[(*sp)++] = *k;
     }
+
     acc = *sp - acc;
   }
   return acc;
@@ -176,6 +189,7 @@ get_print_attribute_values(ContextDescriptor *cd,
 
 /* ============================== helpers for: get_position_values() */
 /* the following code is borrowed from <utils/decode.c> and ensures that XML tags in the kwic output always nest properly */
+/* TODO avoidduplication of code!! */
 
 #define MAX_S_ATTRS 1024        /* max. number of s-attribute; same as MAX_ATTRS in <utils/decode.c> and MAXRANGES in <utils/encode.c>  */
 typedef struct {                
@@ -216,9 +230,11 @@ sort_s_att_regions(void) {
 }
 
 
-/* ============================== get_position_values(): get values at given corpus position
+/**
+ * Get values at the given corpus position.
+ *
+ * @return  Always 1.
  */
-
 int
 get_position_values(ContextDescriptor *cd,
                     int position,
@@ -417,6 +433,10 @@ remember_this_position(int position,
   }
 }
 
+/**
+ * @return  A pointer to a function-internal static string containing
+ *          the requested string. Do not free it.
+ */
 char *
 get_field_separators(int position, 
                      ConcLineField *fields,
@@ -424,7 +444,7 @@ get_field_separators(int position,
                      int at_end,
                      PrintDescriptionRecord *pdr)
 {
-  static char s[1024];
+  static char s[CL_MAX_LINE_LENGTH];
   int i, spos;
 
   spos = 0;
@@ -435,14 +455,14 @@ get_field_separators(int position,
     if (at_end) {
       for (i = nr_fields; i > 0; i--) {
         if (position == fields[i-1].end_position) {
-          append(s, pdr->printField(fields[i-1].type, at_end), &spos, 1024);
+          append(s, pdr->printField(fields[i-1].type, at_end), &spos, CL_MAX_LINE_LENGTH);
         }
       }
     }
     else {
       for (i = 0; i < nr_fields; i++) {
         if (position == fields[i].start_position) {
-          append(s, pdr->printField(fields[i].type, at_end), &spos, 1024);
+          append(s, pdr->printField(fields[i].type, at_end), &spos, CL_MAX_LINE_LENGTH);
         }
       }
     }

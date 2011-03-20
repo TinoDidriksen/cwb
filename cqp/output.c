@@ -62,7 +62,7 @@ TabulationItem TabulationList = NULL;
 /* stupid Solaris doesn't have setenv() function, so we need to emulate it with putenv() */
 #ifdef EMULATE_SETENV
 
-char emulate_setenv_buffer[MAX_IDENTIFIER_LENGTH]; /* should be big enough for "var=value" string */
+char emulate_setenv_buffer[CL_MAX_LINE_LENGTH]; /* should be big enough for "var=value" string */
 
 int
 setenv(const char *name, const char *value, int overwrite) {
@@ -172,28 +172,28 @@ open_file(char *name, char *mode)
     return NULL;
   else if (name[0] == '~' || (strncasecmp(name, "$home", 5) == 0)) {
 
-    char s[1024];
+    char s[CL_MAX_FILENAME_LENGTH];
     char *home;
-    int i, sp;
+    int i, s_offset;
 
     home = getenv("HOME");
 
     if (!home || home[0] == '\0') 
       return NULL;
 
-    sp = 0;
+    s_offset = 0;
 
-    for (i = 0; sp < 1023 && home[i]; i++)
-      s[sp++] = home[i];
+    for (i = 0; sp < (CL_MAX_FILENAME_LENGTH-1) && home[i]; i++)
+      s[s_offset++] = home[i];
     
     if (name[0] == '~')
       i = 1;
     else
       i = strlen("$home");
 
-    for ( ; sp < 1023 && name[i]; i++)
-      s[sp++] = name[i];
-    s[sp] = '\0';
+    for ( ; sp < (CL_MAX_FILENAME_LENGTH-1) && name[i]; i++)
+      s[s_offset++] = name[i];
+    s[s_offset] = '\0';
     
     return fopen(s, mode);
   }
@@ -643,19 +643,24 @@ cqpmessage(MessageType type, char *format, ...)
   va_end(ap);
 }
 
+/**
+ * Outputs a blob of information on the mother-corpus of the specified cl.
+ */
 void 
 corpus_info(CorpusList *cl)
 {
   FILE *fd;
   FILE *outfd;
-  char buf[1024];
+  char buf[CL_MAX_LINE_LENGTH];
   int i, ok, stream_ok;
   struct Redir rd = { NULL, NULL, NULL, 0, 0 }; /* for paging (with open_stream()) */
 
-  CorpusList * mom = NULL;
+  CorpusList *mom = NULL;
   CorpusProperty p;
 
+  /* first, the case where cl is actually a full corpus */
   if (cl->type == SYSTEM) {
+
     stream_ok = open_stream(&rd, ascii);
     outfd = (stream_ok) ? rd.stream : stdout; /* use pager, or simply print to stdout if it fails */
     /* print size (should be the mother_size entry) */
@@ -689,22 +694,24 @@ corpus_info(CorpusList *cl)
     else {
       ok = 1;
       do {
-        i = fread(&buf[0], sizeof(char), 1024, fd);
+        i = fread(&buf[0], sizeof(char), CL_MAX_LINE_LENGTH, fd);
         if (fwrite(&buf[0], sizeof(char), i, outfd) != i)
           ok = 0;
-      } while (ok && (i == 1024));
+      } while (ok && (i == CL_MAX_LINE_LENGTH));
       fclose(fd);
     }
 
     if (stream_ok) 
       close_stream(&rd);        /* close pipe to pager if we were using it */
   }
+  /* if cl is not actually a full corpus, try to find its mother and call this function on that */
   else if (cl->mother_name == NULL)
     cqpmessage(Warning, 
                "Corrupt corpus information for %s", cl->name);
   else if ((mom = findcorpus(cl->mother_name, SYSTEM, 0)) != NULL) {
     corpus_info(mom);
   }
+  /* if the mother is not loaded, we just have to print an error */
   else {
     cqpmessage(Info,
                "%s is a subcorpus of %s which is not loaded. Try 'info %s' "

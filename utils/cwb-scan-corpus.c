@@ -550,11 +550,11 @@ add_key(char *key)
 int
 get_next_range(int *start, int *end)
 {
-  char buffer[1024];
+  char buffer[CL_MAX_LINE_LENGTH];
 
   *start = *end = -1;                /* these values are returned on error or at end-of-input */
   if (ranges_fh) {
-    if ((fgets(buffer, 1024, ranges_fh) != NULL) &&
+    if ((fgets(buffer, CL_MAX_LINE_LENGTH, ranges_fh) != NULL) &&
         (sscanf(buffer, "%d %d", start, end) == 2))
       return 1;
     else

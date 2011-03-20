@@ -125,6 +125,7 @@ NwriteInts(int *vals, int nr_vals, FILE *fd)
  * the program if the requested number of ints cannot be read.
  *
  * @param vals     Pointer to location to put the resulting array of ints.
+ *                 (This memory must have been allocated by the caller.)
  * @param nr_vals  Number of integers to read.
  * @param fd       File handle to read from
  */

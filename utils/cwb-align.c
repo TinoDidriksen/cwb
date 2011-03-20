@@ -85,13 +85,13 @@ int pre2 = 0;                   /**< number of pre-alignment regions (target cor
 
 /* global options */
 
-char word_name[1024] = "word";  /**< name of the word attribute (default: word) */
-char outfile_name[1024] = "out.align"; /**< name of the output file */
+char word_name[CL_MAX_FILENAME_LENGTH] = "word";  /**< name of the word attribute (default: word) */
+char outfile_name[CL_MAX_FILENAME_LENGTH] = "out.align"; /**< name of the output file */
 
 double split_factor = 1.2;      /**< 2:2 alignment split factor */
 int beam_width = 50;            /**< best path search beam width */
 
-char prealign_name[1024] = "";  /**< pre-alignment given by structural attribute */
+char prealign_name[CL_MAX_FILENAME_LENGTH] = "";  /**< pre-alignment given by structural attribute */
 int prealign_has_values = 0;    /**< boolean: if 1, regions with same ID values are pre-aligned */
 int verbose = 0;                /**< controls printing of some extra progress info */
 

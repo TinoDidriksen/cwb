@@ -220,9 +220,14 @@ creat_freqs(Component *freqs)
 
 
 /**
- * creates reversed corpus
+ * Creates a reversed corpus component.
+ *
+ * This function should only be invoked by the makeall tool (via create_component()),
+ * which must make sure that the lexicon and (possibly) compressed token stream have been
+ * created by now, so CL access to the token stream works.
  *
  * @see create_component
+ * @see makeall_do_attribute
  */
 int
 creat_rev_corpus(Component *revcorp)
@@ -234,22 +239,18 @@ creat_rev_corpus(Component *revcorp)
   int datasize;
   int primus, secundus, lexsize, buf_used;
   int *buffer;
-  size_t bufsize;
-  int **ptab;                        /* pointers into <buffer> */
+  size_t bufsize;                     /* size of buffer (measured in number of 4-byte integers, not bytes!!) */
+  int **ptab;                         /* pointers into <buffer> */
   int *ptr;
 
   FILE *revcorp_fd;
-  Attribute *attr;                /* the attribute we're working on */
-
-  /* this function should only be invoked by the makeall tool (via create_component()),
-     which must make sure that the lexicon and (possibly) compressed token stream have been
-     created by now, so CL access to the token stream works (see do_attribute()<makeall.c>) */
+  Attribute *attr;                    /* the attribute we're working on */
 
   assert(revcorp != NULL);
   assert(revcorp->path != NULL);
   assert(revcorp->data.data == NULL); /* so REVCORP is unloaded */
 
-  attr = revcorp->attribute;        /* need the attribute handle to use CL functions */
+  attr = revcorp->attribute;          /* need the attribute handle to use CL functions */
 
   /* get the frequency table to compute offsets and fill buffer */
   freqs = ensure_component(attr, CompCorpusFreqs, 1);
@@ -268,7 +269,7 @@ creat_rev_corpus(Component *revcorp)
   if (datasize < bufsize) {
     bufsize = datasize;                /* shrink buffer if full size isn't needed */
   }
-  buffer = cl_malloc(4 * bufsize); /* allocate buffer */
+  buffer = cl_malloc(4 * bufsize); /* allocate buffer with 4 bytes per integer */
 
   /* open REVCORP data file for writing */
   if ((revcorp_fd = fopen(revcorp->path, "wb")) == NULL) {

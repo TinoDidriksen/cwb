@@ -1044,7 +1044,7 @@ SortExternally(void)
   char temporary_name[TEMP_FILENAME_BUFSIZE];
   FILE *fd;
   FILE *pipe;
-  char sort_call[1024];
+  char sort_call[CL_MAX_LINE_LENGTH];
 
   if ((fd = open_temporary_file(temporary_name)) != NULL) {
     int line, p1start, p1end, plen, step, token, l;
@@ -1210,7 +1210,7 @@ SortExternally(void)
           srt_cl->sortidx[line] = -1;
         
         line = 0;
-        while (fgets(sort_call, 1024, pipe)) {
+        while (fgets(sort_call, CL_MAX_LINE_LENGTH, pipe)) {
           if (line < srt_cl->size) {
             int num = atoi(sort_call);
             if (num < 0 || num >= srt_cl->size) {
