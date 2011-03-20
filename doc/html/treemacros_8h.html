@@ -83,7 +83,7 @@ Defines</h2>
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="parse__actions_8h.html#af256cabe9207a82432c70423aa8430fc">bool_and()</a>, <a class="el" href="parse__actions_8h.html#a6edc2bd16687f74049cdd88eb274856e">bool_implies()</a>, <a class="el" href="parse__actions_8h.html#a48e060b48df6ce70f84f9c08380533d2">bool_not()</a>, <a class="el" href="parse__actions_8h.html#a5a135df490f400de682bad4f8f618a8a">bool_or()</a>, <a class="el" href="parse__actions_8h.html#a6cc225469d64fbddecf2d9dce7e0a28d">do_flagged_string()</a>, <a class="el" href="parse__actions_8h.html#a53aef5872fed91559eba1f0082c41bf1">do_IDReference()</a>, <a class="el" href="parse__actions_8h.html#ad25148f9894719c8dda9055e13abfa91">do_LabelReference()</a>, <a class="el" href="parse__actions_8h.html#ad67ac0776cdb48adabee296796f0bb4b">do_RelExExpr()</a>, <a class="el" href="parse__actions_8h.html#a2b9ea94991dbd56dc08e70795dfda1b5">do_RelExpr()</a>, <a class="el" href="parse__actions_8h.html#a0765556ed474633536053be134d02d6c">do_StringConstraint()</a>, <a class="el" href="parse__actions_8h.html#ae9d5edc02de4a41101e64dc04f081c15">FunctionCall()</a>, <a class="el" href="parse__actions_8c.html#af171dda31157fe9e0f1a31f8ce2d687f">OptimizeStringConstraint()</a>, <a class="el" href="tree_8h.html#a28175b9d3283db5580269676c3f60b9c">try_optimization()</a>, <a class="el" href="parse__actions_8c.html#acc58abfdc0cb4fe0ab037d276eb993c3">Varref2IDList()</a>, and <a class="el" href="parser_8tab_8c.html#acd8617a8f2ac0de8bc1cc032cf449e19">yyparse()</a>.</p>
+<p>Referenced by <a class="el" href="parse__actions_8h.html#af256cabe9207a82432c70423aa8430fc">bool_and()</a>, <a class="el" href="parse__actions_8h.html#a6edc2bd16687f74049cdd88eb274856e">bool_implies()</a>, <a class="el" href="parse__actions_8h.html#a48e060b48df6ce70f84f9c08380533d2">bool_not()</a>, <a class="el" href="parse__actions_8h.html#a5a135df490f400de682bad4f8f618a8a">bool_or()</a>, <a class="el" href="parse__actions_8h.html#a6cc225469d64fbddecf2d9dce7e0a28d">do_flagged_string()</a>, <a class="el" href="parse__actions_8h.html#a53aef5872fed91559eba1f0082c41bf1">do_IDReference()</a>, <a class="el" href="parse__actions_8h.html#ad25148f9894719c8dda9055e13abfa91">do_LabelReference()</a>, <a class="el" href="parse__actions_8h.html#ad67ac0776cdb48adabee296796f0bb4b">do_RelExExpr()</a>, <a class="el" href="parse__actions_8h.html#a2b9ea94991dbd56dc08e70795dfda1b5">do_RelExpr()</a>, <a class="el" href="parse__actions_8h.html#a0765556ed474633536053be134d02d6c">do_StringConstraint()</a>, <a class="el" href="parse__actions_8h.html#ae9d5edc02de4a41101e64dc04f081c15">FunctionCall()</a>, <a class="el" href="parse__actions_8c.html#af171dda31157fe9e0f1a31f8ce2d687f">OptimizeStringConstraint()</a>, <a class="el" href="tree_8h.html#a28175b9d3283db5580269676c3f60b9c">try_optimization()</a>, and <a class="el" href="parse__actions_8c.html#acc58abfdc0cb4fe0ab037d276eb993c3">Varref2IDList()</a>.</p>
 
 </div>
 </div>
@@ -112,13 +112,11 @@ Defines</h2>
 </div>
 <div class="memdoc">
 <b>Value:</b><div class="fragment"><pre class="fragment"><span class="keywordflow">do</span> {                                                        \
-                        n = (<a class="code" href="unione__tree.html" title="Underlying union for the Evaltree object.">Evaltree</a>)<a class="code" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#a4e4eccd789155123ab533ed0cecbecea" title="safely allocates memory malloc-style.">cl_malloc</a>(<span class="keyword">sizeof</span>(<span class="keyword">union</span> <a class="code" href="unione__tree.html" title="Underlying union for the Evaltree object.">e_tree</a>));            \
+                        n = (<a class="code" href="unione__tree.html" title="Underlying union for the Evaltree object.">Evaltree</a>)<a class="code" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea" title="safely allocates memory malloc-style.">cl_malloc</a>(<span class="keyword">sizeof</span>(<span class="keyword">union</span> <a class="code" href="unione__tree.html" title="Underlying union for the Evaltree object.">e_tree</a>));            \
                         n-&gt;type = leaf;                                           \
                         n-&gt;leaf.patindex = _patindex;                             \
                       } <span class="keywordflow">while</span> (0)
 </pre></div>
-<p>Referenced by <a class="el" href="parser_8tab_8c.html#acd8617a8f2ac0de8bc1cc032cf449e19">yyparse()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="a2bf079b286ad48c9577788d250e22455"></a><!-- doxytag: member="treemacros.h::NEW_EVALNODE" ref="a2bf079b286ad48c9577788d250e22455" args="(n, _relop, _left, _right, _min, _max)" -->
@@ -170,7 +168,7 @@ Defines</h2>
 </div>
 <div class="memdoc">
 <b>Value:</b><div class="fragment"><pre class="fragment"><span class="keywordflow">do</span> {                                                        \
-                        n = (<a class="code" href="unione__tree.html" title="Underlying union for the Evaltree object.">Evaltree</a>)<a class="code" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#a4e4eccd789155123ab533ed0cecbecea" title="safely allocates memory malloc-style.">cl_malloc</a>(<span class="keyword">sizeof</span>(<span class="keyword">union</span> <a class="code" href="unione__tree.html" title="Underlying union for the Evaltree object.">e_tree</a>));            \
+                        n = (<a class="code" href="unione__tree.html" title="Underlying union for the Evaltree object.">Evaltree</a>)<a class="code" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea" title="safely allocates memory malloc-style.">cl_malloc</a>(<span class="keyword">sizeof</span>(<span class="keyword">union</span> <a class="code" href="unione__tree.html" title="Underlying union for the Evaltree object.">e_tree</a>));            \
                         n-&gt;type = node;                                           \
                         n-&gt;node.op_id = _relop;                                   \
                         n-&gt;node.left = _left;                                     \
@@ -179,7 +177,7 @@ Defines</h2>
                         n-&gt;node.max = _max;                                       \
                       } <span class="keywordflow">while</span> (0)
 </pre></div>
-<p>Referenced by <a class="el" href="parse__actions_8h.html#adbafcf108f171ba7195acec8281a6625">reg_disj()</a>, <a class="el" href="parse__actions_8h.html#a9d9122cdf15fb821ab3037131519efa7">reg_seq()</a>, and <a class="el" href="parser_8tab_8c.html#acd8617a8f2ac0de8bc1cc032cf449e19">yyparse()</a>.</p>
+<p>Referenced by <a class="el" href="parse__actions_8h.html#adbafcf108f171ba7195acec8281a6625">reg_disj()</a>, and <a class="el" href="parse__actions_8h.html#a9d9122cdf15fb821ab3037131519efa7">reg_seq()</a>.</p>
 
 </div>
 </div>
@@ -202,7 +200,7 @@ Defines</h2>
 </div>
 </div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Mar 15 2011 20:16:46 for CWB by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Sun Mar 20 2011 20:06:33 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

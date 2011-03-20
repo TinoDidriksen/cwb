@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
-<title>CWB: build/cwb-3.2.5-windows-i586/include/cwb/cqi.h File Reference</title>
+<title>CWB: CQi/cqi.h File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css"/>
 </head>
@@ -25,10 +25,7 @@
   </div>
   <div class="navpath">
     <ul>
-      <li><a class="el" href="dir_ba5ce2e2d8852d86660bc8e773d32da4.html">build</a>      </li>
-      <li><a class="el" href="dir_d8f4f3442bbb59eb88f5f79dda01e05f.html">cwb-3.2.5-windows-i586</a>      </li>
-      <li><a class="el" href="dir_7d697ec6499185c4a0435480d159bff8.html">include</a>      </li>
-      <li><a class="el" href="dir_17277467baac8ff3b08ba837ba143fc5.html">cwb</a>      </li>
+      <li><a class="el" href="dir_ca50dace2d986c2d8fd850c8ac075c34.html">CQi</a>      </li>
     </ul>
   </div>
 </div>
@@ -45,112 +42,112 @@
 <h2><a name="define-members"></a>
 Defines</h2>
 <ul>
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a32b715d980b9f17d725557e710c77714">CQI_PORT</a>&nbsp;&nbsp;&nbsp;4877
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a0207b2ace5b7bbe90ebe2ac657e03a18">CQI_PAD</a>&nbsp;&nbsp;&nbsp;0x00
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#ace5363d610e1f2df41d46272e27974e8">CQI_STATUS</a>&nbsp;&nbsp;&nbsp;0x01
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#acc587d33b88109d6e5151bbd90ab6c7b">CQI_STATUS_OK</a>&nbsp;&nbsp;&nbsp;0x0101
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a431efac318c66757389956c3a65836a3">CQI_STATUS_CONNECT_OK</a>&nbsp;&nbsp;&nbsp;0x0102
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a3783b00dc34e3f5649aa3d58f71ab93e">CQI_STATUS_BYE_OK</a>&nbsp;&nbsp;&nbsp;0x0103
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#aa2288751a238b24cc16ffe761f1787c1">CQI_STATUS_PING_OK</a>&nbsp;&nbsp;&nbsp;0x0104
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a64aefdf633cd284ea75e2bcd1933ddf0">CQI_ERROR</a>&nbsp;&nbsp;&nbsp;0x02
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#aa3957be81059abb64b9146250bee8880">CQI_ERROR_GENERAL_ERROR</a>&nbsp;&nbsp;&nbsp;0x0201
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a6920a650e099080edeccd7a788e953da">CQI_ERROR_CONNECT_REFUSED</a>&nbsp;&nbsp;&nbsp;0x0202
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#af30502946804f95ce644cdb952c95465">CQI_ERROR_USER_ABORT</a>&nbsp;&nbsp;&nbsp;0x0203
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#ae79c5450c4448e6ec48a9f4b35e97028">CQI_ERROR_SYNTAX_ERROR</a>&nbsp;&nbsp;&nbsp;0x0204
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a0a995ccb88766d9cf05b45054692fb17">CQI_DATA</a>&nbsp;&nbsp;&nbsp;0x03
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a35cad37494403313d5a7aad89e4637a2">CQI_DATA_BYTE</a>&nbsp;&nbsp;&nbsp;0x0301
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a82f9e04ca970ccc5adc6e41cd98177de">CQI_DATA_BOOL</a>&nbsp;&nbsp;&nbsp;0x0302
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a03ae964a97fc5bd57d5a6703e40b924c">CQI_DATA_INT</a>&nbsp;&nbsp;&nbsp;0x0303
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a5d0190a91be8d933ec41ccd9e35dab94">CQI_DATA_STRING</a>&nbsp;&nbsp;&nbsp;0x0304
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a73cc703d56c1b0ce3f3ac4913da3ff57">CQI_DATA_BYTE_LIST</a>&nbsp;&nbsp;&nbsp;0x0305
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#ad59a416ec1936a6c1b215b1f73e52532">CQI_DATA_BOOL_LIST</a>&nbsp;&nbsp;&nbsp;0x0306
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a572534bd23e627c40018118312cf7d7f">CQI_DATA_INT_LIST</a>&nbsp;&nbsp;&nbsp;0x0307
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#aa16e9ffa184753255caca51a35e0344a">CQI_DATA_STRING_LIST</a>&nbsp;&nbsp;&nbsp;0x0308
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a89a44c575bce3e3a77a5703750fae00b">CQI_DATA_INT_INT</a>&nbsp;&nbsp;&nbsp;0x0309
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a371939a716e110694a6a67aca62e4513">CQI_DATA_INT_INT_INT_INT</a>&nbsp;&nbsp;&nbsp;0x030A
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a7d7d17471e449c00d3579c2500e43ff3">CQI_DATA_INT_TABLE</a>&nbsp;&nbsp;&nbsp;0x030B
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#acb9052bf96a4d8e6dfca0fd961c7ea06">CQI_CL_ERROR</a>&nbsp;&nbsp;&nbsp;0x04
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a7ec7ee4ef46fe36f7e289c662f1b39db">CQI_CL_ERROR_NO_SUCH_ATTRIBUTE</a>&nbsp;&nbsp;&nbsp;0x0401
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a90900ef2ca280fb2d97d48cd1777b6de">CQI_CL_ERROR_WRONG_ATTRIBUTE_TYPE</a>&nbsp;&nbsp;&nbsp;0x0402
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a8b73c16b0ae0620a3ca1a1db3d0e551f">CQI_CL_ERROR_OUT_OF_RANGE</a>&nbsp;&nbsp;&nbsp;0x0403
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a4f777bb8cb374ebc70aa71e5e95cc799">CQI_CL_ERROR_REGEX</a>&nbsp;&nbsp;&nbsp;0x0404
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#abeda91054b2ddb30a4c4a06b7afc09bd">CQI_CL_ERROR_CORPUS_ACCESS</a>&nbsp;&nbsp;&nbsp;0x0405
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a3057e2b2449f39d525eccbd0af24dbb6">CQI_CL_ERROR_OUT_OF_MEMORY</a>&nbsp;&nbsp;&nbsp;0x0406
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#aefba8284fc2436aae75a090e255cb672">CQI_CL_ERROR_INTERNAL</a>&nbsp;&nbsp;&nbsp;0x0407
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a3af5d07ab60f5044377f6158e86fbc9c">CQI_CQP_ERROR</a>&nbsp;&nbsp;&nbsp;0x05
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#ade245d28e3c9d7614ecc96f10710c01d">CQI_CQP_ERROR_GENERAL</a>&nbsp;&nbsp;&nbsp;0x0501
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#aea3597ac0aa9de3c7c4feb15241a7bb0">CQI_CQP_ERROR_NO_SUCH_CORPUS</a>&nbsp;&nbsp;&nbsp;0x0502
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a8919ef44d927d089c5cc7fd899698977">CQI_CQP_ERROR_INVALID_FIELD</a>&nbsp;&nbsp;&nbsp;0x0503
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#ac2fca300854cff3d7e387b45b8de6f4c">CQI_CQP_ERROR_OUT_OF_RANGE</a>&nbsp;&nbsp;&nbsp;0x0504
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a9ad1704be29cea225e2afe7eb6bb86f4">CQI_CTRL</a>&nbsp;&nbsp;&nbsp;0x11
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a881b7c0c8b025cb8f984be233b460a49">CQI_CTRL_CONNECT</a>&nbsp;&nbsp;&nbsp;0x1101
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a0840a17435732b57c279a1356661d401">CQI_CTRL_BYE</a>&nbsp;&nbsp;&nbsp;0x1102
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a13b1fbc6df8dc25273df00c05e2a9f41">CQI_CTRL_USER_ABORT</a>&nbsp;&nbsp;&nbsp;0x1103
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#ab42a89d115b8a87ea45b24f80b771f18">CQI_CTRL_PING</a>&nbsp;&nbsp;&nbsp;0x1104
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#ad47f19076e37b59145f0a151ee6824df">CQI_CTRL_LAST_GENERAL_ERROR</a>&nbsp;&nbsp;&nbsp;0x1105
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a0acdc9a0ed7d62503c1847c8aaf22c3d">CQI_ASK_FEATURE</a>&nbsp;&nbsp;&nbsp;0x12
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a0dabfef1caf3fb3441222ee0a6797745">CQI_ASK_FEATURE_CQI_1_0</a>&nbsp;&nbsp;&nbsp;0x1201
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a719bb301de931f24bd9b69a137212fb9">CQI_ASK_FEATURE_CL_2_3</a>&nbsp;&nbsp;&nbsp;0x1202
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a1f1678c1fd700663f57b71f6f9e2501f">CQI_ASK_FEATURE_CQP_2_3</a>&nbsp;&nbsp;&nbsp;0x1203
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a23d9b136bcbb711c8bcb1866728e8bc2">CQI_CORPUS</a>&nbsp;&nbsp;&nbsp;0x13
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#ab6b21e69a62581559db15fb23414630b">CQI_CORPUS_LIST_CORPORA</a>&nbsp;&nbsp;&nbsp;0x1301
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#aff475ec0c62d34c1dae5c1416796f3e0">CQI_CORPUS_CHARSET</a>&nbsp;&nbsp;&nbsp;0x1303
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a0aebb9d28d5ded5cce99e3dbb5a86a95">CQI_CORPUS_PROPERTIES</a>&nbsp;&nbsp;&nbsp;0x1304
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#ab80e83586c0300f985d6f6efb6e29a35">CQI_CORPUS_POSITIONAL_ATTRIBUTES</a>&nbsp;&nbsp;&nbsp;0x1305
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a8f765088924222c032c34cee7fa932cc">CQI_CORPUS_STRUCTURAL_ATTRIBUTES</a>&nbsp;&nbsp;&nbsp;0x1306
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#aefa27d97ffba4044576a31d4e886ac63">CQI_CORPUS_STRUCTURAL_ATTRIBUTE_HAS_VALUES</a>&nbsp;&nbsp;&nbsp;0x1307
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a7d36a1e80f7bf7ee0cfc3bab68bb8ba7">CQI_CORPUS_ALIGNMENT_ATTRIBUTES</a>&nbsp;&nbsp;&nbsp;0x1308
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a275f628eabe0adcf7aef12149bd45e29">CQI_CORPUS_FULL_NAME</a>&nbsp;&nbsp;&nbsp;0x1309
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a399cd095d7c8e4935d3681e2add4eab0">CQI_CORPUS_INFO</a>&nbsp;&nbsp;&nbsp;0x130A
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a108e408a54bb1d77f584c63a76c55bbf">CQI_CORPUS_DROP_CORPUS</a>&nbsp;&nbsp;&nbsp;0x130B
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a4d30974bee90d46c0957d356cb7622c0">CQI_CL</a>&nbsp;&nbsp;&nbsp;0x14
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a2105bd7009afcd97d5f4571130a777c0">CQI_CL_ATTRIBUTE_SIZE</a>&nbsp;&nbsp;&nbsp;0x1401
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#ac3945e31564fd19daad8391bbe57ac6c">CQI_CL_LEXICON_SIZE</a>&nbsp;&nbsp;&nbsp;0x1402
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#aeaab228523d8067bd097754b0f491237">CQI_CL_DROP_ATTRIBUTE</a>&nbsp;&nbsp;&nbsp;0x1403
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a3913401edca614706e4acbfdb64f2aae">CQI_CL_STR2ID</a>&nbsp;&nbsp;&nbsp;0x1404
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#ae80545a962e55e046633a8a4b11d1d8c">CQI_CL_ID2STR</a>&nbsp;&nbsp;&nbsp;0x1405
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#ae4ebdd292f6f9ca83bbe326cbb3b3c6a">CQI_CL_ID2FREQ</a>&nbsp;&nbsp;&nbsp;0x1406
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a1fc2575e298e7b4a7b7c71232da0663b">CQI_CL_CPOS2ID</a>&nbsp;&nbsp;&nbsp;0x1407
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a72a546c9997e1f3e2f39f0b4edeecd91">CQI_CL_CPOS2STR</a>&nbsp;&nbsp;&nbsp;0x1408
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#abb6db947f7fe905aa483eb392c1caff2">CQI_CL_CPOS2STRUC</a>&nbsp;&nbsp;&nbsp;0x1409
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a1c5086ec5d2b4591db8af77a521838d3">CQI_CL_CPOS2LBOUND</a>&nbsp;&nbsp;&nbsp;0x1420
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a548a793a323ca9326d3bdbae519625b0">CQI_CL_CPOS2RBOUND</a>&nbsp;&nbsp;&nbsp;0x1421
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#ac0227e942c5861d28ca5207f7f3b6c45">CQI_CL_CPOS2ALG</a>&nbsp;&nbsp;&nbsp;0x140A
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a3bddec3adfef2ac9cbf8eb272a36e6c9">CQI_CL_STRUC2STR</a>&nbsp;&nbsp;&nbsp;0x140B
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a45e09a95843b81bcd5182a8bae4e2cbc">CQI_CL_ID2CPOS</a>&nbsp;&nbsp;&nbsp;0x140C
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a771a31f295b6c56a16c112dfc2f8332e">CQI_CL_IDLIST2CPOS</a>&nbsp;&nbsp;&nbsp;0x140D
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a1e67f6553f15e4f69c86060bddf60718">CQI_CL_REGEX2ID</a>&nbsp;&nbsp;&nbsp;0x140E
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#ad52996e8e36513cb95f69573a4ceed2e">CQI_CL_STRUC2CPOS</a>&nbsp;&nbsp;&nbsp;0x140F
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#ae148d145229507da76e64f26610451fe">CQI_CL_ALG2CPOS</a>&nbsp;&nbsp;&nbsp;0x1410
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a5df17c1e92e9f6012fb199667d47228a">CQI_CQP</a>&nbsp;&nbsp;&nbsp;0x15
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a460ae42f266b47368b16fc100e43a1c8">CQI_CQP_QUERY</a>&nbsp;&nbsp;&nbsp;0x1501
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a04c0261b0a066443fe88e387fc519939">CQI_CQP_LIST_SUBCORPORA</a>&nbsp;&nbsp;&nbsp;0x1502
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#ac6f6f7ef87d7a9276d3bba81ba0d698e">CQI_CQP_SUBCORPUS_SIZE</a>&nbsp;&nbsp;&nbsp;0x1503
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a6b1940f552a2f6fc8f2ca0b54686a5c5">CQI_CQP_SUBCORPUS_HAS_FIELD</a>&nbsp;&nbsp;&nbsp;0x1504
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a544dc547335b56806817358978266397">CQI_CQP_DUMP_SUBCORPUS</a>&nbsp;&nbsp;&nbsp;0x1505
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a925c5e0f7b7710c93249716d1283c785">CQI_CQP_DROP_SUBCORPUS</a>&nbsp;&nbsp;&nbsp;0x1509
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#ac7f69ae563425861c91afa947f7c598a">CQI_CQP_FDIST_1</a>&nbsp;&nbsp;&nbsp;0x1510
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a50edf3e97c354c3eb392b72435cb8527">CQI_CQP_FDIST_2</a>&nbsp;&nbsp;&nbsp;0x1511
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#aba4d366008cfab3e0521419320447461">CQI_CONST_FALSE</a>&nbsp;&nbsp;&nbsp;0x00
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a306795b844fedafee61b596660cd0c56">CQI_CONST_NO</a>&nbsp;&nbsp;&nbsp;0x00
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a9fd4cb90fcffc25feb6f5dd27f6e0b48">CQI_CONST_TRUE</a>&nbsp;&nbsp;&nbsp;0x01
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a1fb71879c48f79d6c8f1605d61711269">CQI_CONST_YES</a>&nbsp;&nbsp;&nbsp;0x01
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#ad0a73a72ef2fc9f4672ae1b95be172ac">CQI_CONST_FIELD_MATCH</a>&nbsp;&nbsp;&nbsp;0x10
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#ab6001fca68190d661d5270bcdd89dd97">CQI_CONST_FIELD_MATCHEND</a>&nbsp;&nbsp;&nbsp;0x11
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#ac51d3664d6dc08f886f82cdb51251586">CQI_CONST_FIELD_TARGET_0</a>&nbsp;&nbsp;&nbsp;0x00
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#ae70f946f0aa614c8087c102a35465996">CQI_CONST_FIELD_TARGET_1</a>&nbsp;&nbsp;&nbsp;0x01
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a0904788e67fe708d3ffa223a621ec2ca">CQI_CONST_FIELD_TARGET_2</a>&nbsp;&nbsp;&nbsp;0x02
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#ade89db8b0f9dc5c122f189b7efd8eaeb">CQI_CONST_FIELD_TARGET_3</a>&nbsp;&nbsp;&nbsp;0x03
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a4e774f3abf1a4e3602e181d0200326f1">CQI_CONST_FIELD_TARGET_4</a>&nbsp;&nbsp;&nbsp;0x04
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a456ec808f588b3230e7aab08c28ca5b5">CQI_CONST_FIELD_TARGET_5</a>&nbsp;&nbsp;&nbsp;0x05
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a87a2718713570280bbcbeb1e4e031164">CQI_CONST_FIELD_TARGET_6</a>&nbsp;&nbsp;&nbsp;0x06
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a86e67930eda8bead0defdd4920307ba2">CQI_CONST_FIELD_TARGET_7</a>&nbsp;&nbsp;&nbsp;0x07
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a2d1da91bbb1c8885dceb8eae62d6e200">CQI_CONST_FIELD_TARGET_8</a>&nbsp;&nbsp;&nbsp;0x08
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a4a6ab13db7d4e6a1282d053d83078177">CQI_CONST_FIELD_TARGET_9</a>&nbsp;&nbsp;&nbsp;0x09
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#ad4ce50b7cd09c734de13dac1d45aa38b">CQI_CONST_FIELD_TARGET</a>&nbsp;&nbsp;&nbsp;0x00
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#ac2cf7b88e66dd6678b6b152a1d0d856e">CQI_CONST_FIELD_KEYWORD</a>&nbsp;&nbsp;&nbsp;0x09
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a8eb8d707c7404e9de183741fe5f93415">CQI_MAJOR_VERSION</a>&nbsp;&nbsp;&nbsp;0x00
-<li>#define <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cqi_8h.html#a703abcc3b574a1fb5d53372538f5bdfa">CQI_MINOR_VERSION</a>&nbsp;&nbsp;&nbsp;0x01
+<li>#define <a class="el" href="cqi_8h.html#a32b715d980b9f17d725557e710c77714">CQI_PORT</a>&nbsp;&nbsp;&nbsp;4877
+<li>#define <a class="el" href="cqi_8h.html#a0207b2ace5b7bbe90ebe2ac657e03a18">CQI_PAD</a>&nbsp;&nbsp;&nbsp;0x00
+<li>#define <a class="el" href="cqi_8h.html#ace5363d610e1f2df41d46272e27974e8">CQI_STATUS</a>&nbsp;&nbsp;&nbsp;0x01
+<li>#define <a class="el" href="cqi_8h.html#acc587d33b88109d6e5151bbd90ab6c7b">CQI_STATUS_OK</a>&nbsp;&nbsp;&nbsp;0x0101
+<li>#define <a class="el" href="cqi_8h.html#a431efac318c66757389956c3a65836a3">CQI_STATUS_CONNECT_OK</a>&nbsp;&nbsp;&nbsp;0x0102
+<li>#define <a class="el" href="cqi_8h.html#a3783b00dc34e3f5649aa3d58f71ab93e">CQI_STATUS_BYE_OK</a>&nbsp;&nbsp;&nbsp;0x0103
+<li>#define <a class="el" href="cqi_8h.html#aa2288751a238b24cc16ffe761f1787c1">CQI_STATUS_PING_OK</a>&nbsp;&nbsp;&nbsp;0x0104
+<li>#define <a class="el" href="cqi_8h.html#a64aefdf633cd284ea75e2bcd1933ddf0">CQI_ERROR</a>&nbsp;&nbsp;&nbsp;0x02
+<li>#define <a class="el" href="cqi_8h.html#aa3957be81059abb64b9146250bee8880">CQI_ERROR_GENERAL_ERROR</a>&nbsp;&nbsp;&nbsp;0x0201
+<li>#define <a class="el" href="cqi_8h.html#a6920a650e099080edeccd7a788e953da">CQI_ERROR_CONNECT_REFUSED</a>&nbsp;&nbsp;&nbsp;0x0202
+<li>#define <a class="el" href="cqi_8h.html#af30502946804f95ce644cdb952c95465">CQI_ERROR_USER_ABORT</a>&nbsp;&nbsp;&nbsp;0x0203
+<li>#define <a class="el" href="cqi_8h.html#ae79c5450c4448e6ec48a9f4b35e97028">CQI_ERROR_SYNTAX_ERROR</a>&nbsp;&nbsp;&nbsp;0x0204
+<li>#define <a class="el" href="cqi_8h.html#a0a995ccb88766d9cf05b45054692fb17">CQI_DATA</a>&nbsp;&nbsp;&nbsp;0x03
+<li>#define <a class="el" href="cqi_8h.html#a35cad37494403313d5a7aad89e4637a2">CQI_DATA_BYTE</a>&nbsp;&nbsp;&nbsp;0x0301
+<li>#define <a class="el" href="cqi_8h.html#a82f9e04ca970ccc5adc6e41cd98177de">CQI_DATA_BOOL</a>&nbsp;&nbsp;&nbsp;0x0302
+<li>#define <a class="el" href="cqi_8h.html#a03ae964a97fc5bd57d5a6703e40b924c">CQI_DATA_INT</a>&nbsp;&nbsp;&nbsp;0x0303
+<li>#define <a class="el" href="cqi_8h.html#a5d0190a91be8d933ec41ccd9e35dab94">CQI_DATA_STRING</a>&nbsp;&nbsp;&nbsp;0x0304
+<li>#define <a class="el" href="cqi_8h.html#a73cc703d56c1b0ce3f3ac4913da3ff57">CQI_DATA_BYTE_LIST</a>&nbsp;&nbsp;&nbsp;0x0305
+<li>#define <a class="el" href="cqi_8h.html#ad59a416ec1936a6c1b215b1f73e52532">CQI_DATA_BOOL_LIST</a>&nbsp;&nbsp;&nbsp;0x0306
+<li>#define <a class="el" href="cqi_8h.html#a572534bd23e627c40018118312cf7d7f">CQI_DATA_INT_LIST</a>&nbsp;&nbsp;&nbsp;0x0307
+<li>#define <a class="el" href="cqi_8h.html#aa16e9ffa184753255caca51a35e0344a">CQI_DATA_STRING_LIST</a>&nbsp;&nbsp;&nbsp;0x0308
+<li>#define <a class="el" href="cqi_8h.html#a89a44c575bce3e3a77a5703750fae00b">CQI_DATA_INT_INT</a>&nbsp;&nbsp;&nbsp;0x0309
+<li>#define <a class="el" href="cqi_8h.html#a371939a716e110694a6a67aca62e4513">CQI_DATA_INT_INT_INT_INT</a>&nbsp;&nbsp;&nbsp;0x030A
+<li>#define <a class="el" href="cqi_8h.html#a7d7d17471e449c00d3579c2500e43ff3">CQI_DATA_INT_TABLE</a>&nbsp;&nbsp;&nbsp;0x030B
+<li>#define <a class="el" href="cqi_8h.html#acb9052bf96a4d8e6dfca0fd961c7ea06">CQI_CL_ERROR</a>&nbsp;&nbsp;&nbsp;0x04
+<li>#define <a class="el" href="cqi_8h.html#a7ec7ee4ef46fe36f7e289c662f1b39db">CQI_CL_ERROR_NO_SUCH_ATTRIBUTE</a>&nbsp;&nbsp;&nbsp;0x0401
+<li>#define <a class="el" href="cqi_8h.html#a90900ef2ca280fb2d97d48cd1777b6de">CQI_CL_ERROR_WRONG_ATTRIBUTE_TYPE</a>&nbsp;&nbsp;&nbsp;0x0402
+<li>#define <a class="el" href="cqi_8h.html#a8b73c16b0ae0620a3ca1a1db3d0e551f">CQI_CL_ERROR_OUT_OF_RANGE</a>&nbsp;&nbsp;&nbsp;0x0403
+<li>#define <a class="el" href="cqi_8h.html#a4f777bb8cb374ebc70aa71e5e95cc799">CQI_CL_ERROR_REGEX</a>&nbsp;&nbsp;&nbsp;0x0404
+<li>#define <a class="el" href="cqi_8h.html#abeda91054b2ddb30a4c4a06b7afc09bd">CQI_CL_ERROR_CORPUS_ACCESS</a>&nbsp;&nbsp;&nbsp;0x0405
+<li>#define <a class="el" href="cqi_8h.html#a3057e2b2449f39d525eccbd0af24dbb6">CQI_CL_ERROR_OUT_OF_MEMORY</a>&nbsp;&nbsp;&nbsp;0x0406
+<li>#define <a class="el" href="cqi_8h.html#aefba8284fc2436aae75a090e255cb672">CQI_CL_ERROR_INTERNAL</a>&nbsp;&nbsp;&nbsp;0x0407
+<li>#define <a class="el" href="cqi_8h.html#a3af5d07ab60f5044377f6158e86fbc9c">CQI_CQP_ERROR</a>&nbsp;&nbsp;&nbsp;0x05
+<li>#define <a class="el" href="cqi_8h.html#ade245d28e3c9d7614ecc96f10710c01d">CQI_CQP_ERROR_GENERAL</a>&nbsp;&nbsp;&nbsp;0x0501
+<li>#define <a class="el" href="cqi_8h.html#aea3597ac0aa9de3c7c4feb15241a7bb0">CQI_CQP_ERROR_NO_SUCH_CORPUS</a>&nbsp;&nbsp;&nbsp;0x0502
+<li>#define <a class="el" href="cqi_8h.html#a8919ef44d927d089c5cc7fd899698977">CQI_CQP_ERROR_INVALID_FIELD</a>&nbsp;&nbsp;&nbsp;0x0503
+<li>#define <a class="el" href="cqi_8h.html#ac2fca300854cff3d7e387b45b8de6f4c">CQI_CQP_ERROR_OUT_OF_RANGE</a>&nbsp;&nbsp;&nbsp;0x0504
+<li>#define <a class="el" href="cqi_8h.html#a9ad1704be29cea225e2afe7eb6bb86f4">CQI_CTRL</a>&nbsp;&nbsp;&nbsp;0x11
+<li>#define <a class="el" href="cqi_8h.html#a881b7c0c8b025cb8f984be233b460a49">CQI_CTRL_CONNECT</a>&nbsp;&nbsp;&nbsp;0x1101
+<li>#define <a class="el" href="cqi_8h.html#a0840a17435732b57c279a1356661d401">CQI_CTRL_BYE</a>&nbsp;&nbsp;&nbsp;0x1102
+<li>#define <a class="el" href="cqi_8h.html#a13b1fbc6df8dc25273df00c05e2a9f41">CQI_CTRL_USER_ABORT</a>&nbsp;&nbsp;&nbsp;0x1103
+<li>#define <a class="el" href="cqi_8h.html#ab42a89d115b8a87ea45b24f80b771f18">CQI_CTRL_PING</a>&nbsp;&nbsp;&nbsp;0x1104
+<li>#define <a class="el" href="cqi_8h.html#ad47f19076e37b59145f0a151ee6824df">CQI_CTRL_LAST_GENERAL_ERROR</a>&nbsp;&nbsp;&nbsp;0x1105
+<li>#define <a class="el" href="cqi_8h.html#a0acdc9a0ed7d62503c1847c8aaf22c3d">CQI_ASK_FEATURE</a>&nbsp;&nbsp;&nbsp;0x12
+<li>#define <a class="el" href="cqi_8h.html#a0dabfef1caf3fb3441222ee0a6797745">CQI_ASK_FEATURE_CQI_1_0</a>&nbsp;&nbsp;&nbsp;0x1201
+<li>#define <a class="el" href="cqi_8h.html#a719bb301de931f24bd9b69a137212fb9">CQI_ASK_FEATURE_CL_2_3</a>&nbsp;&nbsp;&nbsp;0x1202
+<li>#define <a class="el" href="cqi_8h.html#a1f1678c1fd700663f57b71f6f9e2501f">CQI_ASK_FEATURE_CQP_2_3</a>&nbsp;&nbsp;&nbsp;0x1203
+<li>#define <a class="el" href="cqi_8h.html#a23d9b136bcbb711c8bcb1866728e8bc2">CQI_CORPUS</a>&nbsp;&nbsp;&nbsp;0x13
+<li>#define <a class="el" href="cqi_8h.html#ab6b21e69a62581559db15fb23414630b">CQI_CORPUS_LIST_CORPORA</a>&nbsp;&nbsp;&nbsp;0x1301
+<li>#define <a class="el" href="cqi_8h.html#aff475ec0c62d34c1dae5c1416796f3e0">CQI_CORPUS_CHARSET</a>&nbsp;&nbsp;&nbsp;0x1303
+<li>#define <a class="el" href="cqi_8h.html#a0aebb9d28d5ded5cce99e3dbb5a86a95">CQI_CORPUS_PROPERTIES</a>&nbsp;&nbsp;&nbsp;0x1304
+<li>#define <a class="el" href="cqi_8h.html#ab80e83586c0300f985d6f6efb6e29a35">CQI_CORPUS_POSITIONAL_ATTRIBUTES</a>&nbsp;&nbsp;&nbsp;0x1305
+<li>#define <a class="el" href="cqi_8h.html#a8f765088924222c032c34cee7fa932cc">CQI_CORPUS_STRUCTURAL_ATTRIBUTES</a>&nbsp;&nbsp;&nbsp;0x1306
+<li>#define <a class="el" href="cqi_8h.html#aefa27d97ffba4044576a31d4e886ac63">CQI_CORPUS_STRUCTURAL_ATTRIBUTE_HAS_VALUES</a>&nbsp;&nbsp;&nbsp;0x1307
+<li>#define <a class="el" href="cqi_8h.html#a7d36a1e80f7bf7ee0cfc3bab68bb8ba7">CQI_CORPUS_ALIGNMENT_ATTRIBUTES</a>&nbsp;&nbsp;&nbsp;0x1308
+<li>#define <a class="el" href="cqi_8h.html#a275f628eabe0adcf7aef12149bd45e29">CQI_CORPUS_FULL_NAME</a>&nbsp;&nbsp;&nbsp;0x1309
+<li>#define <a class="el" href="cqi_8h.html#a399cd095d7c8e4935d3681e2add4eab0">CQI_CORPUS_INFO</a>&nbsp;&nbsp;&nbsp;0x130A
+<li>#define <a class="el" href="cqi_8h.html#a108e408a54bb1d77f584c63a76c55bbf">CQI_CORPUS_DROP_CORPUS</a>&nbsp;&nbsp;&nbsp;0x130B
+<li>#define <a class="el" href="cqi_8h.html#a4d30974bee90d46c0957d356cb7622c0">CQI_CL</a>&nbsp;&nbsp;&nbsp;0x14
+<li>#define <a class="el" href="cqi_8h.html#a2105bd7009afcd97d5f4571130a777c0">CQI_CL_ATTRIBUTE_SIZE</a>&nbsp;&nbsp;&nbsp;0x1401
+<li>#define <a class="el" href="cqi_8h.html#ac3945e31564fd19daad8391bbe57ac6c">CQI_CL_LEXICON_SIZE</a>&nbsp;&nbsp;&nbsp;0x1402
+<li>#define <a class="el" href="cqi_8h.html#aeaab228523d8067bd097754b0f491237">CQI_CL_DROP_ATTRIBUTE</a>&nbsp;&nbsp;&nbsp;0x1403
+<li>#define <a class="el" href="cqi_8h.html#a3913401edca614706e4acbfdb64f2aae">CQI_CL_STR2ID</a>&nbsp;&nbsp;&nbsp;0x1404
+<li>#define <a class="el" href="cqi_8h.html#ae80545a962e55e046633a8a4b11d1d8c">CQI_CL_ID2STR</a>&nbsp;&nbsp;&nbsp;0x1405
+<li>#define <a class="el" href="cqi_8h.html#ae4ebdd292f6f9ca83bbe326cbb3b3c6a">CQI_CL_ID2FREQ</a>&nbsp;&nbsp;&nbsp;0x1406
+<li>#define <a class="el" href="cqi_8h.html#a1fc2575e298e7b4a7b7c71232da0663b">CQI_CL_CPOS2ID</a>&nbsp;&nbsp;&nbsp;0x1407
+<li>#define <a class="el" href="cqi_8h.html#a72a546c9997e1f3e2f39f0b4edeecd91">CQI_CL_CPOS2STR</a>&nbsp;&nbsp;&nbsp;0x1408
+<li>#define <a class="el" href="cqi_8h.html#abb6db947f7fe905aa483eb392c1caff2">CQI_CL_CPOS2STRUC</a>&nbsp;&nbsp;&nbsp;0x1409
+<li>#define <a class="el" href="cqi_8h.html#a1c5086ec5d2b4591db8af77a521838d3">CQI_CL_CPOS2LBOUND</a>&nbsp;&nbsp;&nbsp;0x1420
+<li>#define <a class="el" href="cqi_8h.html#a548a793a323ca9326d3bdbae519625b0">CQI_CL_CPOS2RBOUND</a>&nbsp;&nbsp;&nbsp;0x1421
+<li>#define <a class="el" href="cqi_8h.html#ac0227e942c5861d28ca5207f7f3b6c45">CQI_CL_CPOS2ALG</a>&nbsp;&nbsp;&nbsp;0x140A
+<li>#define <a class="el" href="cqi_8h.html#a3bddec3adfef2ac9cbf8eb272a36e6c9">CQI_CL_STRUC2STR</a>&nbsp;&nbsp;&nbsp;0x140B
+<li>#define <a class="el" href="cqi_8h.html#a45e09a95843b81bcd5182a8bae4e2cbc">CQI_CL_ID2CPOS</a>&nbsp;&nbsp;&nbsp;0x140C
+<li>#define <a class="el" href="cqi_8h.html#a771a31f295b6c56a16c112dfc2f8332e">CQI_CL_IDLIST2CPOS</a>&nbsp;&nbsp;&nbsp;0x140D
+<li>#define <a class="el" href="cqi_8h.html#a1e67f6553f15e4f69c86060bddf60718">CQI_CL_REGEX2ID</a>&nbsp;&nbsp;&nbsp;0x140E
+<li>#define <a class="el" href="cqi_8h.html#ad52996e8e36513cb95f69573a4ceed2e">CQI_CL_STRUC2CPOS</a>&nbsp;&nbsp;&nbsp;0x140F
+<li>#define <a class="el" href="cqi_8h.html#ae148d145229507da76e64f26610451fe">CQI_CL_ALG2CPOS</a>&nbsp;&nbsp;&nbsp;0x1410
+<li>#define <a class="el" href="cqi_8h.html#a5df17c1e92e9f6012fb199667d47228a">CQI_CQP</a>&nbsp;&nbsp;&nbsp;0x15
+<li>#define <a class="el" href="cqi_8h.html#a460ae42f266b47368b16fc100e43a1c8">CQI_CQP_QUERY</a>&nbsp;&nbsp;&nbsp;0x1501
+<li>#define <a class="el" href="cqi_8h.html#a04c0261b0a066443fe88e387fc519939">CQI_CQP_LIST_SUBCORPORA</a>&nbsp;&nbsp;&nbsp;0x1502
+<li>#define <a class="el" href="cqi_8h.html#ac6f6f7ef87d7a9276d3bba81ba0d698e">CQI_CQP_SUBCORPUS_SIZE</a>&nbsp;&nbsp;&nbsp;0x1503
+<li>#define <a class="el" href="cqi_8h.html#a6b1940f552a2f6fc8f2ca0b54686a5c5">CQI_CQP_SUBCORPUS_HAS_FIELD</a>&nbsp;&nbsp;&nbsp;0x1504
+<li>#define <a class="el" href="cqi_8h.html#a544dc547335b56806817358978266397">CQI_CQP_DUMP_SUBCORPUS</a>&nbsp;&nbsp;&nbsp;0x1505
+<li>#define <a class="el" href="cqi_8h.html#a925c5e0f7b7710c93249716d1283c785">CQI_CQP_DROP_SUBCORPUS</a>&nbsp;&nbsp;&nbsp;0x1509
+<li>#define <a class="el" href="cqi_8h.html#ac7f69ae563425861c91afa947f7c598a">CQI_CQP_FDIST_1</a>&nbsp;&nbsp;&nbsp;0x1510
+<li>#define <a class="el" href="cqi_8h.html#a50edf3e97c354c3eb392b72435cb8527">CQI_CQP_FDIST_2</a>&nbsp;&nbsp;&nbsp;0x1511
+<li>#define <a class="el" href="cqi_8h.html#aba4d366008cfab3e0521419320447461">CQI_CONST_FALSE</a>&nbsp;&nbsp;&nbsp;0x00
+<li>#define <a class="el" href="cqi_8h.html#a306795b844fedafee61b596660cd0c56">CQI_CONST_NO</a>&nbsp;&nbsp;&nbsp;0x00
+<li>#define <a class="el" href="cqi_8h.html#a9fd4cb90fcffc25feb6f5dd27f6e0b48">CQI_CONST_TRUE</a>&nbsp;&nbsp;&nbsp;0x01
+<li>#define <a class="el" href="cqi_8h.html#a1fb71879c48f79d6c8f1605d61711269">CQI_CONST_YES</a>&nbsp;&nbsp;&nbsp;0x01
+<li>#define <a class="el" href="cqi_8h.html#ad0a73a72ef2fc9f4672ae1b95be172ac">CQI_CONST_FIELD_MATCH</a>&nbsp;&nbsp;&nbsp;0x10
+<li>#define <a class="el" href="cqi_8h.html#ab6001fca68190d661d5270bcdd89dd97">CQI_CONST_FIELD_MATCHEND</a>&nbsp;&nbsp;&nbsp;0x11
+<li>#define <a class="el" href="cqi_8h.html#ac51d3664d6dc08f886f82cdb51251586">CQI_CONST_FIELD_TARGET_0</a>&nbsp;&nbsp;&nbsp;0x00
+<li>#define <a class="el" href="cqi_8h.html#ae70f946f0aa614c8087c102a35465996">CQI_CONST_FIELD_TARGET_1</a>&nbsp;&nbsp;&nbsp;0x01
+<li>#define <a class="el" href="cqi_8h.html#a0904788e67fe708d3ffa223a621ec2ca">CQI_CONST_FIELD_TARGET_2</a>&nbsp;&nbsp;&nbsp;0x02
+<li>#define <a class="el" href="cqi_8h.html#ade89db8b0f9dc5c122f189b7efd8eaeb">CQI_CONST_FIELD_TARGET_3</a>&nbsp;&nbsp;&nbsp;0x03
+<li>#define <a class="el" href="cqi_8h.html#a4e774f3abf1a4e3602e181d0200326f1">CQI_CONST_FIELD_TARGET_4</a>&nbsp;&nbsp;&nbsp;0x04
+<li>#define <a class="el" href="cqi_8h.html#a456ec808f588b3230e7aab08c28ca5b5">CQI_CONST_FIELD_TARGET_5</a>&nbsp;&nbsp;&nbsp;0x05
+<li>#define <a class="el" href="cqi_8h.html#a87a2718713570280bbcbeb1e4e031164">CQI_CONST_FIELD_TARGET_6</a>&nbsp;&nbsp;&nbsp;0x06
+<li>#define <a class="el" href="cqi_8h.html#a86e67930eda8bead0defdd4920307ba2">CQI_CONST_FIELD_TARGET_7</a>&nbsp;&nbsp;&nbsp;0x07
+<li>#define <a class="el" href="cqi_8h.html#a2d1da91bbb1c8885dceb8eae62d6e200">CQI_CONST_FIELD_TARGET_8</a>&nbsp;&nbsp;&nbsp;0x08
+<li>#define <a class="el" href="cqi_8h.html#a4a6ab13db7d4e6a1282d053d83078177">CQI_CONST_FIELD_TARGET_9</a>&nbsp;&nbsp;&nbsp;0x09
+<li>#define <a class="el" href="cqi_8h.html#ad4ce50b7cd09c734de13dac1d45aa38b">CQI_CONST_FIELD_TARGET</a>&nbsp;&nbsp;&nbsp;0x00
+<li>#define <a class="el" href="cqi_8h.html#ac2cf7b88e66dd6678b6b152a1d0d856e">CQI_CONST_FIELD_KEYWORD</a>&nbsp;&nbsp;&nbsp;0x09
+<li>#define <a class="el" href="cqi_8h.html#a8eb8d707c7404e9de183741fe5f93415">CQI_MAJOR_VERSION</a>&nbsp;&nbsp;&nbsp;0x00
+<li>#define <a class="el" href="cqi_8h.html#a703abcc3b574a1fb5d53372538f5bdfa">CQI_MINOR_VERSION</a>&nbsp;&nbsp;&nbsp;0x01
 </ul>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <p>This file contains definitions of messages that can be passed via the Corpus Query Interface. </p>
@@ -1692,7 +1689,7 @@ Defines</h2>
 </div>
 </div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Mar 15 2011 20:16:46 for CWB by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Sun Mar 20 2011 20:06:33 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

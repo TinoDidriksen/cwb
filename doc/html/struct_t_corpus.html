@@ -44,7 +44,7 @@ Data Fields</h2>
 <dl class="el"><dd class="mdescRight">a unique ID (i.e., the registry name identifying the corpus to the CWB)  <a href="#aecb3b0d045ada529257a2fbf8f829599"></a><br/></dl><li>char * <a class="el" href="struct_t_corpus.html#a5ac083a645d964373f022d03df4849c8">name</a>
 <dl class="el"><dd class="mdescRight">the full name of the corpus (descriptive, for information only)  <a href="#a5ac083a645d964373f022d03df4849c8"></a><br/></dl><li>char * <a class="el" href="struct_t_corpus.html#a44196e6a5696d10442c29e639437196e">path</a>
 <dl class="el"><dd class="mdescRight">the ``home directory'' of the corpus  <a href="#a44196e6a5696d10442c29e639437196e"></a><br/></dl><li>char * <a class="el" href="struct_t_corpus.html#a9f25be44cbb4c737b8bfc7f94c1ff6d1">info_file</a>
-<dl class="el"><dd class="mdescRight">the path of the info file of the corpus  <a href="#a9f25be44cbb4c737b8bfc7f94c1ff6d1"></a><br/></dl><li><a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#a3502421ae8eac74673133702852dde32">CorpusCharset</a> <a class="el" href="struct_t_corpus.html#ab7d33183c58d7df43cc5602b9c842b37">charset</a>
+<dl class="el"><dd class="mdescRight">the path of the info file of the corpus  <a href="#a9f25be44cbb4c737b8bfc7f94c1ff6d1"></a><br/></dl><li><a class="el" href="cl_8h.html#a3502421ae8eac74673133702852dde32">CorpusCharset</a> <a class="el" href="struct_t_corpus.html#ab7d33183c58d7df43cc5602b9c842b37">charset</a>
 <dl class="el"><dd class="mdescRight">a special corpus property: specifies character set of the encoded text  <a href="#ab7d33183c58d7df43cc5602b9c842b37"></a><br/></dl><li><a class="el" href="struct_t_corpus_property.html">CorpusProperty</a> <a class="el" href="struct_t_corpus.html#a1e19a624b45265cd91082d959f6055d8">properties</a>
 <dl class="el"><dd class="mdescRight">head of a linked list of CorpusProperty object.  <a href="#a1e19a624b45265cd91082d959f6055d8"></a><br/></dl><li>char * <a class="el" href="struct_t_corpus.html#a37e28e0e6cea644b9e65a1b7980d7934">admin</a>
 <dl class="el"><dd class="mdescRight">{doesn't seem to be used?}  <a href="#a37e28e0e6cea644b9e65a1b7980d7934"></a><br/></dl><li><a class="el" href="struct__idbuf.html">IDList</a> <a class="el" href="struct_t_corpus.html#aeca16b764f325a0ace5e7c7865271070">groupAccessList</a>
@@ -72,7 +72,7 @@ Data Fields</h2>
 
 <p>{doesn't seem to be used?} </p>
 
-<p>Referenced by <a class="el" href="corpus_8c.html#afd6ee191959ef253a4b89bff3521a24a">cl_delete_corpus()</a>, and <a class="el" href="cqp_8c.html#a847a2de5c1c28c9d7055a2b89ed7dad7">yyparse()</a>.</p>
+<p>Referenced by <a class="el" href="corpus_8c.html#afd6ee191959ef253a4b89bff3521a24a">cl_delete_corpus()</a>.</p>
 
 </div>
 </div>
@@ -89,7 +89,7 @@ Data Fields</h2>
 
 <p>the list of attributes </p>
 
-<p>Referenced by <a class="el" href="corpus_8c.html#a24e82e807d11c8d5c343a07e08b4fbd3">cl_corpus_list_attributes()</a>, <a class="el" href="cl_2cl_8h.html#ab0ea5b53a104c4bedc4b98c60a9332f9">cl_delete_attribute()</a>, <a class="el" href="corpus_8c.html#afd6ee191959ef253a4b89bff3521a24a">cl_delete_corpus()</a>, <a class="el" href="cl_2cl_8h.html#a8bd22d2e19977d047e8328accb44603d">cl_new_attribute_oldstyle()</a>, <a class="el" href="corpus_8h.html#a5703da86de0749c60df13c9f6bc96c54">describe_corpus()</a>, <a class="el" href="cwb-describe-corpus_8c.html#a7e8fd5e0d125d848233198d5275f18d7">describecorpus_show_attribute_names()</a>, <a class="el" href="cwb-describe-corpus_8c.html#a883ac2a03c2c5a982d37bb2cc0a51a59">describecorpus_show_basic_info()</a>, <a class="el" href="cwb-describe-corpus_8c.html#a9feb4bfd0366c731ebddd2e7014a6f50">describecorpus_show_statistics()</a>, <a class="el" href="attributes_8h.html#a16595df13a7da0bd816636f39176f39b">first_corpus_attribute()</a>, <a class="el" href="cwb-compress-rdx_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>, <a class="el" href="attlist_8h.html#a752e58aef7a88bbfaff58fb5bcc5fea7">RecomputeAL()</a>, <a class="el" href="attributes_8h.html#abd0b504bc29de61da8b487c4b7f0b10d">setup_attribute()</a>, and <a class="el" href="cqp_8c.html#a847a2de5c1c28c9d7055a2b89ed7dad7">yyparse()</a>.</p>
+<p>Referenced by <a class="el" href="corpus_8c.html#a24e82e807d11c8d5c343a07e08b4fbd3">cl_corpus_list_attributes()</a>, <a class="el" href="cl_8h.html#ab0ea5b53a104c4bedc4b98c60a9332f9">cl_delete_attribute()</a>, <a class="el" href="corpus_8c.html#afd6ee191959ef253a4b89bff3521a24a">cl_delete_corpus()</a>, <a class="el" href="cl_8h.html#a8bd22d2e19977d047e8328accb44603d">cl_new_attribute_oldstyle()</a>, <a class="el" href="corpus_8h.html#a5703da86de0749c60df13c9f6bc96c54">describe_corpus()</a>, <a class="el" href="cwb-describe-corpus_8c.html#a7e8fd5e0d125d848233198d5275f18d7">describecorpus_show_attribute_names()</a>, <a class="el" href="cwb-describe-corpus_8c.html#a883ac2a03c2c5a982d37bb2cc0a51a59">describecorpus_show_basic_info()</a>, <a class="el" href="cwb-describe-corpus_8c.html#a9feb4bfd0366c731ebddd2e7014a6f50">describecorpus_show_statistics()</a>, <a class="el" href="attributes_8h.html#a16595df13a7da0bd816636f39176f39b">first_corpus_attribute()</a>, <a class="el" href="cwb-compress-rdx_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>, <a class="el" href="attlist_8h.html#a752e58aef7a88bbfaff58fb5bcc5fea7">RecomputeAL()</a>, and <a class="el" href="attributes_8h.html#abd0b504bc29de61da8b487c4b7f0b10d">setup_attribute()</a>.</p>
 
 </div>
 </div>
@@ -98,7 +98,7 @@ Data Fields</h2>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#a3502421ae8eac74673133702852dde32">CorpusCharset</a> <a class="el" href="struct_t_corpus.html#ab7d33183c58d7df43cc5602b9c842b37">charset</a></td>
+          <td class="memname"><a class="el" href="cl_8h.html#a3502421ae8eac74673133702852dde32">CorpusCharset</a> <a class="el" href="struct_t_corpus.html#ab7d33183c58d7df43cc5602b9c842b37">charset</a></td>
         </tr>
       </table>
 </div>
@@ -106,7 +106,7 @@ Data Fields</h2>
 
 <p>a special corpus property: specifies character set of the encoded text </p>
 
-<p>Referenced by <a class="el" href="corpus_8h.html#a5492efc3742070f65be1b0bcbead995a">add_corpus_property()</a>, <a class="el" href="output_8h.html#a3705e2e9564604bb7378a724691cb97b">catalog_corpus()</a>, <a class="el" href="corpus_8c.html#a3786eda36f00b2645b6b3a9b77410644">cl_corpus_charset()</a>, <a class="el" href="output_8h.html#ac68b1c252026e89999641e0c010a5ad2">corpus_info()</a>, <a class="el" href="parse__actions_8h.html#aa407cf20505f657f679f9b7d233f92c7">do_dump()</a>, <a class="el" href="parse__actions_8h.html#a6cc225469d64fbddecf2d9dce7e0a28d">do_flagged_string()</a>, <a class="el" href="parse__actions_8h.html#a4335ddbb14865c031041a194e182ed92">do_XMLTag()</a>, <a class="el" href="ranges_8c.html#ab219ee0392ac5d55d43c014e9f42e044">i2compare()</a>, <a class="el" href="parse__actions_8h.html#a0cd76ad97a709afa3bd6610768e1d39d">prepare_Query()</a>, <a class="el" href="groups_8h.html#a933562d9aaeb1eda69430555ed28e62b">print_group()</a>, <a class="el" href="output_8h.html#ab5e1d7c16acef5e942e242f803a494f9">print_tabulation()</a>, <a class="el" href="ranges_8c.html#a0199b9d38e35100de957e78f0ad63169">SortExternally()</a>, <a class="el" href="ranges_8h.html#aaf5f006cef0ac7c1fdb5c9d55558c11a">SortSubcorpus()</a>, and <a class="el" href="cqp_8c.html#a847a2de5c1c28c9d7055a2b89ed7dad7">yyparse()</a>.</p>
+<p>Referenced by <a class="el" href="corpus_8h.html#a5492efc3742070f65be1b0bcbead995a">add_corpus_property()</a>, <a class="el" href="output_8h.html#a3705e2e9564604bb7378a724691cb97b">catalog_corpus()</a>, <a class="el" href="corpus_8c.html#a3786eda36f00b2645b6b3a9b77410644">cl_corpus_charset()</a>, <a class="el" href="output_8h.html#ac68b1c252026e89999641e0c010a5ad2">corpus_info()</a>, <a class="el" href="parse__actions_8h.html#aa407cf20505f657f679f9b7d233f92c7">do_dump()</a>, <a class="el" href="parse__actions_8h.html#a6cc225469d64fbddecf2d9dce7e0a28d">do_flagged_string()</a>, <a class="el" href="parse__actions_8h.html#a4335ddbb14865c031041a194e182ed92">do_XMLTag()</a>, <a class="el" href="ranges_8c.html#ab219ee0392ac5d55d43c014e9f42e044">i2compare()</a>, <a class="el" href="parse__actions_8h.html#a0cd76ad97a709afa3bd6610768e1d39d">prepare_Query()</a>, <a class="el" href="groups_8h.html#a933562d9aaeb1eda69430555ed28e62b">print_group()</a>, <a class="el" href="output_8h.html#ab5e1d7c16acef5e942e242f803a494f9">print_tabulation()</a>, <a class="el" href="ranges_8c.html#a0199b9d38e35100de957e78f0ad63169">SortExternally()</a>, and <a class="el" href="ranges_8h.html#aaf5f006cef0ac7c1fdb5c9d55558c11a">SortSubcorpus()</a>.</p>
 
 </div>
 </div>
@@ -123,7 +123,7 @@ Data Fields</h2>
 
 <p>List of groups allowed to access this corpus (can be NULL). </p>
 
-<p>Referenced by <a class="el" href="corpus_8c.html#ae70a858159cb5d38fd3259648b343eb3">check_access_conditions()</a>, <a class="el" href="corpus_8c.html#afd6ee191959ef253a4b89bff3521a24a">cl_delete_corpus()</a>, and <a class="el" href="cqp_8c.html#a847a2de5c1c28c9d7055a2b89ed7dad7">yyparse()</a>.</p>
+<p>Referenced by <a class="el" href="corpus_8c.html#ae70a858159cb5d38fd3259648b343eb3">check_access_conditions()</a>, and <a class="el" href="corpus_8c.html#afd6ee191959ef253a4b89bff3521a24a">cl_delete_corpus()</a>.</p>
 
 </div>
 </div>
@@ -138,7 +138,7 @@ Data Fields</h2>
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="corpus_8c.html#ae70a858159cb5d38fd3259648b343eb3">check_access_conditions()</a>, <a class="el" href="corpus_8c.html#afd6ee191959ef253a4b89bff3521a24a">cl_delete_corpus()</a>, and <a class="el" href="cqp_8c.html#a847a2de5c1c28c9d7055a2b89ed7dad7">yyparse()</a>.</p>
+<p>Referenced by <a class="el" href="corpus_8c.html#ae70a858159cb5d38fd3259648b343eb3">check_access_conditions()</a>, and <a class="el" href="corpus_8c.html#afd6ee191959ef253a4b89bff3521a24a">cl_delete_corpus()</a>.</p>
 
 </div>
 </div>
@@ -155,7 +155,7 @@ Data Fields</h2>
 
 <p>a unique ID (i.e., the registry name identifying the corpus to the CWB) </p>
 
-<p>Referenced by <a class="el" href="corpus_8c.html#ae70a858159cb5d38fd3259648b343eb3">check_access_conditions()</a>, <a class="el" href="corpus_8c.html#afd6ee191959ef253a4b89bff3521a24a">cl_delete_corpus()</a>, <a class="el" href="corpus_8c.html#aee476e23a98efac85d9a9288f18fe686">cl_new_corpus()</a>, <a class="el" href="corpus_8h.html#a5703da86de0749c60df13c9f6bc96c54">describe_corpus()</a>, <a class="el" href="parse__actions_8h.html#afad20fde8138986737853aa2d5c08f4f">do_StructuralContext()</a>, <a class="el" href="attributes_8h.html#abd0b504bc29de61da8b487c4b7f0b10d">setup_attribute()</a>, and <a class="el" href="cqp_8c.html#a847a2de5c1c28c9d7055a2b89ed7dad7">yyparse()</a>.</p>
+<p>Referenced by <a class="el" href="corpus_8c.html#ae70a858159cb5d38fd3259648b343eb3">check_access_conditions()</a>, <a class="el" href="corpus_8c.html#afd6ee191959ef253a4b89bff3521a24a">cl_delete_corpus()</a>, <a class="el" href="corpus_8c.html#aee476e23a98efac85d9a9288f18fe686">cl_new_corpus()</a>, <a class="el" href="corpus_8h.html#a5703da86de0749c60df13c9f6bc96c54">describe_corpus()</a>, <a class="el" href="parse__actions_8h.html#afad20fde8138986737853aa2d5c08f4f">do_StructuralContext()</a>, and <a class="el" href="attributes_8h.html#abd0b504bc29de61da8b487c4b7f0b10d">setup_attribute()</a>.</p>
 
 </div>
 </div>
@@ -172,7 +172,7 @@ Data Fields</h2>
 
 <p>the path of the info file of the corpus </p>
 
-<p>Referenced by <a class="el" href="corpus_8c.html#afd6ee191959ef253a4b89bff3521a24a">cl_delete_corpus()</a>, <a class="el" href="output_8h.html#ac68b1c252026e89999641e0c010a5ad2">corpus_info()</a>, <a class="el" href="corpus_8h.html#a5703da86de0749c60df13c9f6bc96c54">describe_corpus()</a>, <a class="el" href="cwb-describe-corpus_8c.html#a883ac2a03c2c5a982d37bb2cc0a51a59">describecorpus_show_basic_info()</a>, and <a class="el" href="cqp_8c.html#a847a2de5c1c28c9d7055a2b89ed7dad7">yyparse()</a>.</p>
+<p>Referenced by <a class="el" href="corpus_8c.html#afd6ee191959ef253a4b89bff3521a24a">cl_delete_corpus()</a>, <a class="el" href="output_8h.html#ac68b1c252026e89999641e0c010a5ad2">corpus_info()</a>, <a class="el" href="corpus_8h.html#a5703da86de0749c60df13c9f6bc96c54">describe_corpus()</a>, and <a class="el" href="cwb-describe-corpus_8c.html#a883ac2a03c2c5a982d37bb2cc0a51a59">describecorpus_show_basic_info()</a>.</p>
 
 </div>
 </div>
@@ -189,7 +189,7 @@ Data Fields</h2>
 
 <p>the full name of the corpus (descriptive, for information only) </p>
 
-<p>Referenced by <a class="el" href="ascii-print_8h.html#a8123c01d1c35c99c5cbadae6e308c3f1">ascii_print_corpus_header()</a>, <a class="el" href="corpus_8c.html#ae70a858159cb5d38fd3259648b343eb3">check_access_conditions()</a>, <a class="el" href="corpus_8c.html#afd6ee191959ef253a4b89bff3521a24a">cl_delete_corpus()</a>, <a class="el" href="corpus_8h.html#a5703da86de0749c60df13c9f6bc96c54">describe_corpus()</a>, <a class="el" href="cwb-describe-corpus_8c.html#a883ac2a03c2c5a982d37bb2cc0a51a59">describecorpus_show_basic_info()</a>, <a class="el" href="cqpserver_8c.html#afb49ac865f86e4d0d15470be399b28e9">do_cqi_corpus_full_name()</a>, <a class="el" href="html-print_8h.html#a799e515f2c4fb96a0b58a0ba5939dfcf">html_print_corpus_header()</a>, <a class="el" href="latex-print_8h.html#a251ac665d07f564a944fc1a514fb80a3">latex_print_corpus_header()</a>, <a class="el" href="sgml-print_8h.html#ae39f54ccae1c1c5088f5e12ac8b07565">sgml_print_corpus_header()</a>, and <a class="el" href="cqp_8c.html#a847a2de5c1c28c9d7055a2b89ed7dad7">yyparse()</a>.</p>
+<p>Referenced by <a class="el" href="ascii-print_8h.html#a8123c01d1c35c99c5cbadae6e308c3f1">ascii_print_corpus_header()</a>, <a class="el" href="corpus_8c.html#ae70a858159cb5d38fd3259648b343eb3">check_access_conditions()</a>, <a class="el" href="corpus_8c.html#afd6ee191959ef253a4b89bff3521a24a">cl_delete_corpus()</a>, <a class="el" href="corpus_8h.html#a5703da86de0749c60df13c9f6bc96c54">describe_corpus()</a>, <a class="el" href="cwb-describe-corpus_8c.html#a883ac2a03c2c5a982d37bb2cc0a51a59">describecorpus_show_basic_info()</a>, <a class="el" href="cqpserver_8c.html#afb49ac865f86e4d0d15470be399b28e9">do_cqi_corpus_full_name()</a>, <a class="el" href="html-print_8h.html#a799e515f2c4fb96a0b58a0ba5939dfcf">html_print_corpus_header()</a>, <a class="el" href="latex-print_8h.html#a251ac665d07f564a944fc1a514fb80a3">latex_print_corpus_header()</a>, and <a class="el" href="sgml-print_8h.html#ae39f54ccae1c1c5088f5e12ac8b07565">sgml_print_corpus_header()</a>.</p>
 
 </div>
 </div>
@@ -206,7 +206,7 @@ Data Fields</h2>
 
 <p>next entry in a linked-list of loaded corpora </p>
 
-<p>Referenced by <a class="el" href="corpus_8c.html#afd6ee191959ef253a4b89bff3521a24a">cl_delete_corpus()</a>, <a class="el" href="corpus_8c.html#aee476e23a98efac85d9a9288f18fe686">cl_new_corpus()</a>, <a class="el" href="corpus_8h.html#a2e8c6f04bb423451ab68782fdd5da158">find_corpus()</a>, and <a class="el" href="cqp_8c.html#a847a2de5c1c28c9d7055a2b89ed7dad7">yyparse()</a>.</p>
+<p>Referenced by <a class="el" href="corpus_8c.html#afd6ee191959ef253a4b89bff3521a24a">cl_delete_corpus()</a>, <a class="el" href="corpus_8c.html#aee476e23a98efac85d9a9288f18fe686">cl_new_corpus()</a>, and <a class="el" href="corpus_8h.html#a2e8c6f04bb423451ab68782fdd5da158">find_corpus()</a>.</p>
 
 </div>
 </div>
@@ -223,7 +223,7 @@ Data Fields</h2>
 
 <p>the number of setup_corpus ops </p>
 
-<p>Referenced by <a class="el" href="corpus_8c.html#afd6ee191959ef253a4b89bff3521a24a">cl_delete_corpus()</a>, <a class="el" href="corpus_8c.html#aee476e23a98efac85d9a9288f18fe686">cl_new_corpus()</a>, and <a class="el" href="cqp_8c.html#a847a2de5c1c28c9d7055a2b89ed7dad7">yyparse()</a>.</p>
+<p>Referenced by <a class="el" href="corpus_8c.html#afd6ee191959ef253a4b89bff3521a24a">cl_delete_corpus()</a>, and <a class="el" href="corpus_8c.html#aee476e23a98efac85d9a9288f18fe686">cl_new_corpus()</a>.</p>
 
 </div>
 </div>
@@ -240,7 +240,7 @@ Data Fields</h2>
 
 <p>the ``home directory'' of the corpus </p>
 
-<p>Referenced by <a class="el" href="corpus_8c.html#afd6ee191959ef253a4b89bff3521a24a">cl_delete_corpus()</a>, <a class="el" href="corpus_8h.html#a5703da86de0749c60df13c9f6bc96c54">describe_corpus()</a>, <a class="el" href="cwb-describe-corpus_8c.html#a883ac2a03c2c5a982d37bb2cc0a51a59">describecorpus_show_basic_info()</a>, and <a class="el" href="cqp_8c.html#a847a2de5c1c28c9d7055a2b89ed7dad7">yyparse()</a>.</p>
+<p>Referenced by <a class="el" href="corpus_8c.html#afd6ee191959ef253a4b89bff3521a24a">cl_delete_corpus()</a>, <a class="el" href="corpus_8h.html#a5703da86de0749c60df13c9f6bc96c54">describe_corpus()</a>, and <a class="el" href="cwb-describe-corpus_8c.html#a883ac2a03c2c5a982d37bb2cc0a51a59">describecorpus_show_basic_info()</a>.</p>
 
 </div>
 </div>
@@ -257,7 +257,7 @@ Data Fields</h2>
 
 <p>head of a linked list of CorpusProperty object. </p>
 
-<p>Referenced by <a class="el" href="corpus_8h.html#a5492efc3742070f65be1b0bcbead995a">add_corpus_property()</a>, <a class="el" href="corpus_8c.html#ae43900bdcfa4f9f973b210b8750889ad">cl_first_corpus_property()</a>, and <a class="el" href="cqp_8c.html#a847a2de5c1c28c9d7055a2b89ed7dad7">yyparse()</a>.</p>
+<p>Referenced by <a class="el" href="corpus_8h.html#a5492efc3742070f65be1b0bcbead995a">add_corpus_property()</a>, and <a class="el" href="corpus_8c.html#ae43900bdcfa4f9f973b210b8750889ad">cl_first_corpus_property()</a>.</p>
 
 </div>
 </div>
@@ -274,7 +274,7 @@ Data Fields</h2>
 
 <p>Directory where this corpus's registry file is located. </p>
 
-<p>Referenced by <a class="el" href="corpus_8c.html#afd6ee191959ef253a4b89bff3521a24a">cl_delete_corpus()</a>, <a class="el" href="corpus_8c.html#aee476e23a98efac85d9a9288f18fe686">cl_new_corpus()</a>, <a class="el" href="cwb-huffcode_8c.html#a80203248d1441475e98106bf8f8ea6ec">compute_code_lengths()</a>, <a class="el" href="corpus_8h.html#a5703da86de0749c60df13c9f6bc96c54">describe_corpus()</a>, <a class="el" href="cwb-describe-corpus_8c.html#a883ac2a03c2c5a982d37bb2cc0a51a59">describecorpus_show_basic_info()</a>, <a class="el" href="corpus_8h.html#a2e8c6f04bb423451ab68782fdd5da158">find_corpus()</a>, <a class="el" href="corpmanag_8c.html#a6971e7cc89868423f1044529eb3047da">GetSystemCorpus()</a>, <a class="el" href="cwb-makeall_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>, and <a class="el" href="cqp_8c.html#a847a2de5c1c28c9d7055a2b89ed7dad7">yyparse()</a>.</p>
+<p>Referenced by <a class="el" href="corpus_8c.html#afd6ee191959ef253a4b89bff3521a24a">cl_delete_corpus()</a>, <a class="el" href="corpus_8c.html#aee476e23a98efac85d9a9288f18fe686">cl_new_corpus()</a>, <a class="el" href="cwb-huffcode_8c.html#a80203248d1441475e98106bf8f8ea6ec">compute_code_lengths()</a>, <a class="el" href="corpus_8h.html#a5703da86de0749c60df13c9f6bc96c54">describe_corpus()</a>, <a class="el" href="cwb-describe-corpus_8c.html#a883ac2a03c2c5a982d37bb2cc0a51a59">describecorpus_show_basic_info()</a>, <a class="el" href="corpus_8h.html#a2e8c6f04bb423451ab68782fdd5da158">find_corpus()</a>, <a class="el" href="corpmanag_8c.html#a6971e7cc89868423f1044529eb3047da">GetSystemCorpus()</a>, and <a class="el" href="cwb-makeall_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>.</p>
 
 </div>
 </div>
@@ -291,7 +291,7 @@ Data Fields</h2>
 
 <p>the cwb-name of this corpus </p>
 
-<p>Referenced by <a class="el" href="ascii-print_8h.html#a8123c01d1c35c99c5cbadae6e308c3f1">ascii_print_corpus_header()</a>, <a class="el" href="corpus_8c.html#afd6ee191959ef253a4b89bff3521a24a">cl_delete_corpus()</a>, <a class="el" href="corpus_8c.html#aee476e23a98efac85d9a9288f18fe686">cl_new_corpus()</a>, <a class="el" href="cwb-huffcode_8c.html#a80203248d1441475e98106bf8f8ea6ec">compute_code_lengths()</a>, <a class="el" href="print-modes_8h.html#ab5b5d03178d7a663b414ffcb3150528a">ComputePrintStructures()</a>, <a class="el" href="corpus_8h.html#a5703da86de0749c60df13c9f6bc96c54">describe_corpus()</a>, <a class="el" href="cwb-describe-corpus_8c.html#a883ac2a03c2c5a982d37bb2cc0a51a59">describecorpus_show_basic_info()</a>, <a class="el" href="corpus_8h.html#a2e8c6f04bb423451ab68782fdd5da158">find_corpus()</a>, <a class="el" href="html-print_8h.html#a799e515f2c4fb96a0b58a0ba5939dfcf">html_print_corpus_header()</a>, <a class="el" href="latex-print_8h.html#a251ac665d07f564a944fc1a514fb80a3">latex_print_corpus_header()</a>, <a class="el" href="parse__actions_8h.html#a58e2b0f6dcef9f88c8ca38e1b2840246">prepare_AlignmentConstraints()</a>, <a class="el" href="class-mapping_8h.html#a54c2e194b218d440667818b9208cc625">print_mapping()</a>, <a class="el" href="sgml-print_8h.html#ae39f54ccae1c1c5088f5e12ac8b07565">sgml_print_corpus_header()</a>, <a class="el" href="variables_8h.html#ae6e743183feb09fe2d9fc4b95f2fde0d">VerifyVariable()</a>, and <a class="el" href="cqp_8c.html#a847a2de5c1c28c9d7055a2b89ed7dad7">yyparse()</a>.</p>
+<p>Referenced by <a class="el" href="ascii-print_8h.html#a8123c01d1c35c99c5cbadae6e308c3f1">ascii_print_corpus_header()</a>, <a class="el" href="corpus_8c.html#afd6ee191959ef253a4b89bff3521a24a">cl_delete_corpus()</a>, <a class="el" href="corpus_8c.html#aee476e23a98efac85d9a9288f18fe686">cl_new_corpus()</a>, <a class="el" href="cwb-huffcode_8c.html#a80203248d1441475e98106bf8f8ea6ec">compute_code_lengths()</a>, <a class="el" href="print-modes_8h.html#ab5b5d03178d7a663b414ffcb3150528a">ComputePrintStructures()</a>, <a class="el" href="corpus_8h.html#a5703da86de0749c60df13c9f6bc96c54">describe_corpus()</a>, <a class="el" href="cwb-describe-corpus_8c.html#a883ac2a03c2c5a982d37bb2cc0a51a59">describecorpus_show_basic_info()</a>, <a class="el" href="corpus_8h.html#a2e8c6f04bb423451ab68782fdd5da158">find_corpus()</a>, <a class="el" href="html-print_8h.html#a799e515f2c4fb96a0b58a0ba5939dfcf">html_print_corpus_header()</a>, <a class="el" href="latex-print_8h.html#a251ac665d07f564a944fc1a514fb80a3">latex_print_corpus_header()</a>, <a class="el" href="parse__actions_8h.html#a58e2b0f6dcef9f88c8ca38e1b2840246">prepare_AlignmentConstraints()</a>, <a class="el" href="class-mapping_8h.html#a54c2e194b218d440667818b9208cc625">print_mapping()</a>, <a class="el" href="sgml-print_8h.html#ae39f54ccae1c1c5088f5e12ac8b07565">sgml_print_corpus_header()</a>, and <a class="el" href="variables_8h.html#ae6e743183feb09fe2d9fc4b95f2fde0d">VerifyVariable()</a>.</p>
 
 </div>
 </div>
@@ -308,7 +308,7 @@ Data Fields</h2>
 
 <p>List of users allowed to access this corpus (can be NULL). </p>
 
-<p>Referenced by <a class="el" href="corpus_8c.html#ae70a858159cb5d38fd3259648b343eb3">check_access_conditions()</a>, <a class="el" href="corpus_8c.html#afd6ee191959ef253a4b89bff3521a24a">cl_delete_corpus()</a>, and <a class="el" href="cqp_8c.html#a847a2de5c1c28c9d7055a2b89ed7dad7">yyparse()</a>.</p>
+<p>Referenced by <a class="el" href="corpus_8c.html#ae70a858159cb5d38fd3259648b343eb3">check_access_conditions()</a>, and <a class="el" href="corpus_8c.html#afd6ee191959ef253a4b89bff3521a24a">cl_delete_corpus()</a>.</p>
 
 </div>
 </div>
@@ -316,7 +316,7 @@ Data Fields</h2>
 <li>cl/<a class="el" href="corpus_8h.html">corpus.h</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Mar 15 2011 20:16:46 for CWB by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Sun Mar 20 2011 20:06:33 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

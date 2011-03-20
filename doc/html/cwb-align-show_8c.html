@@ -67,17 +67,17 @@ Functions</h2>
 Variables</h2>
 <ul>
 <li>char * <a class="el" href="cwb-align-show_8c.html#ab9e1449fd00c98428516f0b41eddcb10">progname</a> = &quot;&quot;
-<dl class="el"><dd class="mdescRight">Name of the program (from the shell).  <a href="#ab9e1449fd00c98428516f0b41eddcb10"></a><br/></dl><li>char <a class="el" href="cwb-align-show_8c.html#a9aa8fde7b69fa0a8004b2b7ab6c0185c">corpus1_name</a> [1024]
-<dl class="el"><dd class="mdescRight">name of the source corpus  <a href="#a9aa8fde7b69fa0a8004b2b7ab6c0185c"></a><br/></dl><li>char <a class="el" href="cwb-align-show_8c.html#a5bb1f1f8d56854a17cb18018d2235b61">corpus2_name</a> [1024]
-<dl class="el"><dd class="mdescRight">name of the target corpus  <a href="#a5bb1f1f8d56854a17cb18018d2235b61"></a><br/></dl><li>char <a class="el" href="cwb-align-show_8c.html#a48e4d732b51d4d2fd11dd611d316fb36">s1_name</a> [1024]
-<dl class="el"><dd class="mdescRight">name of the source sentence regions  <a href="#a48e4d732b51d4d2fd11dd611d316fb36"></a><br/></dl><li>char <a class="el" href="cwb-align-show_8c.html#ac6f6a9ef37f362014a06c51eb236a1cf">s2_name</a> [1024]
-<dl class="el"><dd class="mdescRight">name of the target sentence regions  <a href="#ac6f6a9ef37f362014a06c51eb236a1cf"></a><br/></dl><li>char <a class="el" href="cwb-align-show_8c.html#ad8e9d64c19879c6038f85aafd76e7ec3">word_name</a> [1024] = &quot;word&quot;
-<dl class="el"><dd class="mdescRight">name of the p-attribute used to display tokens (usually word)  <a href="#ad8e9d64c19879c6038f85aafd76e7ec3"></a><br/></dl><li><a class="el" href="struct_t_corpus.html">Corpus</a> * <a class="el" href="cwb-align-show_8c.html#a03c7f632eb4e838ee774fbb207e98a9b">corpus1</a>
+<dl class="el"><dd class="mdescRight">Name of the program (from the shell).  <a href="#ab9e1449fd00c98428516f0b41eddcb10"></a><br/></dl><li>char <a class="el" href="cwb-align-show_8c.html#a4848fb9510cbdb02375e903ef1fbd272">corpus1_name</a> [CL_MAX_FILENAME_LENGTH]
+<dl class="el"><dd class="mdescRight">name of the source corpus  <a href="#a4848fb9510cbdb02375e903ef1fbd272"></a><br/></dl><li>char <a class="el" href="cwb-align-show_8c.html#a528dbbcc2759bc7d1df1c9ed61c3a05a">corpus2_name</a> [CL_MAX_FILENAME_LENGTH]
+<dl class="el"><dd class="mdescRight">name of the target corpus  <a href="#a528dbbcc2759bc7d1df1c9ed61c3a05a"></a><br/></dl><li>char <a class="el" href="cwb-align-show_8c.html#a6a9e4f7e84e94165e8b2f86b027518e3">s1_name</a> [CL_MAX_FILENAME_LENGTH]
+<dl class="el"><dd class="mdescRight">name of the source sentence regions  <a href="#a6a9e4f7e84e94165e8b2f86b027518e3"></a><br/></dl><li>char <a class="el" href="cwb-align-show_8c.html#affaf19616ee88711b4c4b0cecf6e4107">s2_name</a> [CL_MAX_FILENAME_LENGTH]
+<dl class="el"><dd class="mdescRight">name of the target sentence regions  <a href="#affaf19616ee88711b4c4b0cecf6e4107"></a><br/></dl><li>char <a class="el" href="cwb-align-show_8c.html#a519e69a0cc02c03690588d13998a5b17">word_name</a> [CL_MAX_FILENAME_LENGTH] = &quot;word&quot;
+<dl class="el"><dd class="mdescRight">name of the p-attribute used to display tokens (usually word)  <a href="#a519e69a0cc02c03690588d13998a5b17"></a><br/></dl><li><a class="el" href="struct_t_corpus.html">Corpus</a> * <a class="el" href="cwb-align-show_8c.html#a03c7f632eb4e838ee774fbb207e98a9b">corpus1</a>
 <dl class="el"><dd class="mdescRight">corpus handle: source corpus  <a href="#a03c7f632eb4e838ee774fbb207e98a9b"></a><br/></dl><li><a class="el" href="struct_t_corpus.html">Corpus</a> * <a class="el" href="cwb-align-show_8c.html#a5444b7137cd0accdad7e2acef57f48ea">corpus2</a>
 <dl class="el"><dd class="mdescRight">corpus handle: target corpus  <a href="#a5444b7137cd0accdad7e2acef57f48ea"></a><br/></dl><li><a class="el" href="union___attribute.html">Attribute</a> * <a class="el" href="cwb-align-show_8c.html#ab7f33d201d9141ad7f9fad51b9861fb6">w1</a>
-<dl class="el"><dd class="mdescRight">{word} attribute (or whatever is selected with -P) attribute handle: source  <a href="#ab7f33d201d9141ad7f9fad51b9861fb6"></a><br/></dl><li><a class="el" href="union___attribute.html">Attribute</a> * <a class="el" href="cwb-align-show_8c.html#aac99deaca25373d974a3efbdf554f837">s1</a>
+<dl class="el"><dd class="mdescRight">{word} attribute (or whatever is selected with -P) handle: source  <a href="#ab7f33d201d9141ad7f9fad51b9861fb6"></a><br/></dl><li><a class="el" href="union___attribute.html">Attribute</a> * <a class="el" href="cwb-align-show_8c.html#aac99deaca25373d974a3efbdf554f837">s1</a>
 <dl class="el"><dd class="mdescRight">sentence attribute handle: source  <a href="#aac99deaca25373d974a3efbdf554f837"></a><br/></dl><li><a class="el" href="union___attribute.html">Attribute</a> * <a class="el" href="cwb-align-show_8c.html#ad90d11b6ff8d788b7aa77dd3677b7cd3">w2</a>
-<dl class="el"><dd class="mdescRight">{word} attribute (or whatever is selected with -P) attribute handle: target  <a href="#ad90d11b6ff8d788b7aa77dd3677b7cd3"></a><br/></dl><li><a class="el" href="union___attribute.html">Attribute</a> * <a class="el" href="cwb-align-show_8c.html#a8ea4130966a8cc8c30768629f4c42084">s2</a>
+<dl class="el"><dd class="mdescRight">{word} attribute (or whatever is selected with -P) handle: target  <a href="#ad90d11b6ff8d788b7aa77dd3677b7cd3"></a><br/></dl><li><a class="el" href="union___attribute.html">Attribute</a> * <a class="el" href="cwb-align-show_8c.html#a8ea4130966a8cc8c30768629f4c42084">s2</a>
 <dl class="el"><dd class="mdescRight">sentence attribute handle: target  <a href="#a8ea4130966a8cc8c30768629f4c42084"></a><br/></dl><li>char * <a class="el" href="cwb-align-show_8c.html#a1151e3383439ca5d8096811a09b42823">registry_dir</a> = NULL
 <dl class="el"><dd class="mdescRight">registry directory (NULL = use CL default)  <a href="#a1151e3383439ca5d8096811a09b42823"></a><br/></dl><li>char * <a class="el" href="cwb-align-show_8c.html#a9abe541bb92cf77ca090be06cc99ca38">align_name</a> = &quot;&quot;
 <dl class="el"><dd class="mdescRight">name of the .align file  <a href="#a9abe541bb92cf77ca090be06cc99ca38"></a><br/></dl><li>FILE * <a class="el" href="cwb-align-show_8c.html#aa28eb0de3ac484ac5dbff14b81558557">af</a> = NULL
@@ -167,7 +167,7 @@ Variables</h2>
   </dd>
 </dl>
 
-<p>References <a class="el" href="cwb-align-show_8c.html#aa28eb0de3ac484ac5dbff14b81558557">af</a>, <a class="el" href="cwb-align-show_8c.html#a3f6aaeb59411d3eee2ff040a420a41fd">af_is_pipe</a>, <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#ad68dfe0ca2fbad5052e8213a06f5b4ba">CL_MAX_LINE_LENGTH</a>, <a class="el" href="cwb-encode_8c.html#a41ebd28ef1d7c6ade45642cb6acc1039">line</a>, and <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>.</p>
+<p>References <a class="el" href="cwb-align-show_8c.html#aa28eb0de3ac484ac5dbff14b81558557">af</a>, <a class="el" href="cwb-align-show_8c.html#a3f6aaeb59411d3eee2ff040a420a41fd">af_is_pipe</a>, <a class="el" href="cl_8h.html#ad68dfe0ca2fbad5052e8213a06f5b4ba">CL_MAX_LINE_LENGTH</a>, and <a class="el" href="cwb-encode_8c.html#a41ebd28ef1d7c6ade45642cb6acc1039">line</a>.</p>
 
 <p>Referenced by <a class="el" href="cwb-align-show_8c.html#a78d96bcd853ffe2d2624f5600ee3f1c4">end_of_alignment()</a>, and <a class="el" href="cwb-align-show_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>.</p>
 
@@ -216,7 +216,7 @@ Variables</h2>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The value of optind after parsing, ie the index of the first argument in argv[] </dd></dl>
 
-<p>References <a class="el" href="cwb-align-show_8c.html#a523798f68b16d22aaff52d49df477a56">alignshow_usage()</a>, <a class="el" href="cwb-align-show_8c.html#a3fc02d533c2277463ab650c65bef10e5">COL_SEP</a>, <a class="el" href="cwb-align-show_8c.html#ae87b7290eb5f5fa4acc1daee32eb21a7">COL_WIDTH</a>, <a class="el" href="cwb-align-show_8c.html#a738553d9d3900c194807759631d7a15f">MAX_COL_WIDTH</a>, <a class="el" href="cwb-align-show_8c.html#a3dc90da24492627311f5ddd8957a41d6">MIN_COL_WIDTH</a>, <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>, <a class="el" href="options_8h.html#ab9e1449fd00c98428516f0b41eddcb10">progname</a>, <a class="el" href="cwb-align-encode_8c.html#a1151e3383439ca5d8096811a09b42823">registry_dir</a>, and <a class="el" href="cwb-align-show_8c.html#ad8e9d64c19879c6038f85aafd76e7ec3">word_name</a>.</p>
+<p>References <a class="el" href="cwb-align-show_8c.html#a523798f68b16d22aaff52d49df477a56">alignshow_usage()</a>, <a class="el" href="cwb-align-show_8c.html#a3fc02d533c2277463ab650c65bef10e5">COL_SEP</a>, <a class="el" href="cwb-align-show_8c.html#ae87b7290eb5f5fa4acc1daee32eb21a7">COL_WIDTH</a>, <a class="el" href="cwb-align-show_8c.html#a738553d9d3900c194807759631d7a15f">MAX_COL_WIDTH</a>, <a class="el" href="cwb-align-show_8c.html#a3dc90da24492627311f5ddd8957a41d6">MIN_COL_WIDTH</a>, <a class="el" href="options_8h.html#ab9e1449fd00c98428516f0b41eddcb10">progname</a>, <a class="el" href="cwb-align-encode_8c.html#a1151e3383439ca5d8096811a09b42823">registry_dir</a>, and <a class="el" href="cwb-align-show_8c.html#a519e69a0cc02c03690588d13998a5b17">word_name</a>.</p>
 
 <p>Referenced by <a class="el" href="cwb-align-show_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>.</p>
 
@@ -328,7 +328,7 @@ Variables</h2>
   </dd>
 </dl>
 
-<p>References <a class="el" href="cwb-align-show_8c.html#aa28eb0de3ac484ac5dbff14b81558557">af</a>, <a class="el" href="cwb-align-show_8c.html#a3f6aaeb59411d3eee2ff040a420a41fd">af_is_pipe</a>, <a class="el" href="cwb-align-show_8c.html#a9abe541bb92cf77ca090be06cc99ca38">align_name</a>, <a class="el" href="cwb-align-show_8c.html#ad495abb4e431b3a82b92fac60727d8e4">alignshow_goodbye()</a>, <a class="el" href="cwb-align-show_8c.html#aef1135373314f0032cd6713275eb709d">alignshow_parse_args()</a>, <a class="el" href="cwb-align-show_8c.html#aa0745947ad0c779dd5c4e12826bd0276">alignshow_print_help()</a>, <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#a3b60fdde6a7c8fbc535efaf526dbcb78">ATT_POS</a>, <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#a81874b84793891ea3b8db58061820f1e">ATT_STRUC</a>, <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#a9e15a3c725711d9effd623b2f3e225be">cl_free</a>, <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#ad68dfe0ca2fbad5052e8213a06f5b4ba">CL_MAX_LINE_LENGTH</a>, <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#ae9e879605cdbdafc2a8939ae590b6aa0">cl_new_attribute</a>, <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#aee476e23a98efac85d9a9288f18fe686">cl_new_corpus()</a>, <a class="el" href="cwb-align-show_8c.html#a9aa8fde7b69fa0a8004b2b7ab6c0185c">corpus1_name</a>, <a class="el" href="cwb-align-show_8c.html#a5bb1f1f8d56854a17cb18018d2235b61">corpus2_name</a>, <a class="el" href="cwb-encode_8c.html#a41ebd28ef1d7c6ade45642cb6acc1039">line</a>, <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>, <a class="el" href="cwb-align-show_8c.html#a4b7c39e82ec52fbeb9e2504e35305b84">print_next_region()</a>, <a class="el" href="options_8h.html#ab9e1449fd00c98428516f0b41eddcb10">progname</a>, <a class="el" href="cwb-align-encode_8c.html#a1151e3383439ca5d8096811a09b42823">registry_dir</a>, <a class="el" href="cwb-align-show_8c.html#a48e4d732b51d4d2fd11dd611d316fb36">s1_name</a>, <a class="el" href="cwb-align-show_8c.html#ac6f6a9ef37f362014a06c51eb236a1cf">s2_name</a>, <a class="el" href="cwb-align-show_8c.html#ae21f5ced23779ce9b081f09dd0763397">skip_next_region()</a>, and <a class="el" href="cwb-align-show_8c.html#ad8e9d64c19879c6038f85aafd76e7ec3">word_name</a>.</p>
+<p>References <a class="el" href="cwb-align-show_8c.html#aa28eb0de3ac484ac5dbff14b81558557">af</a>, <a class="el" href="cwb-align-show_8c.html#a3f6aaeb59411d3eee2ff040a420a41fd">af_is_pipe</a>, <a class="el" href="cwb-align-show_8c.html#a9abe541bb92cf77ca090be06cc99ca38">align_name</a>, <a class="el" href="cwb-align-show_8c.html#ad495abb4e431b3a82b92fac60727d8e4">alignshow_goodbye()</a>, <a class="el" href="cwb-align-show_8c.html#aef1135373314f0032cd6713275eb709d">alignshow_parse_args()</a>, <a class="el" href="cwb-align-show_8c.html#aa0745947ad0c779dd5c4e12826bd0276">alignshow_print_help()</a>, <a class="el" href="cl_8h.html#a3b60fdde6a7c8fbc535efaf526dbcb78">ATT_POS</a>, <a class="el" href="cl_8h.html#a81874b84793891ea3b8db58061820f1e">ATT_STRUC</a>, <a class="el" href="cl_8h.html#a9e15a3c725711d9effd623b2f3e225be">cl_free</a>, <a class="el" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="cl_8h.html#ad68dfe0ca2fbad5052e8213a06f5b4ba">CL_MAX_LINE_LENGTH</a>, <a class="el" href="cl_8h.html#ae9e879605cdbdafc2a8939ae590b6aa0">cl_new_attribute</a>, <a class="el" href="cl_8h.html#aee476e23a98efac85d9a9288f18fe686">cl_new_corpus()</a>, <a class="el" href="cwb-align-show_8c.html#a4848fb9510cbdb02375e903ef1fbd272">corpus1_name</a>, <a class="el" href="cwb-align-show_8c.html#a528dbbcc2759bc7d1df1c9ed61c3a05a">corpus2_name</a>, <a class="el" href="cwb-encode_8c.html#a41ebd28ef1d7c6ade45642cb6acc1039">line</a>, <a class="el" href="cwb-align-show_8c.html#a4b7c39e82ec52fbeb9e2504e35305b84">print_next_region()</a>, <a class="el" href="options_8h.html#ab9e1449fd00c98428516f0b41eddcb10">progname</a>, <a class="el" href="cwb-align-encode_8c.html#a1151e3383439ca5d8096811a09b42823">registry_dir</a>, <a class="el" href="cwb-align-show_8c.html#a6a9e4f7e84e94165e8b2f86b027518e3">s1_name</a>, <a class="el" href="cwb-align-show_8c.html#affaf19616ee88711b4c4b0cecf6e4107">s2_name</a>, <a class="el" href="cwb-align-show_8c.html#ae21f5ced23779ce9b081f09dd0763397">skip_next_region()</a>, and <a class="el" href="cwb-align-show_8c.html#a519e69a0cc02c03690588d13998a5b17">word_name</a>.</p>
 
 </div>
 </div>
@@ -356,7 +356,7 @@ Variables</h2>
   </dd>
 </dl>
 
-<p>References <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#ad68dfe0ca2fbad5052e8213a06f5b4ba">CL_MAX_LINE_LENGTH</a>, <a class="el" href="cwb-align-show_8c.html#a3fc02d533c2277463ab650c65bef10e5">COL_SEP</a>, <a class="el" href="cwb-align-show_8c.html#ae87b7290eb5f5fa4acc1daee32eb21a7">COL_WIDTH</a>, <a class="el" href="cwb-align-show_8c.html#a78d96bcd853ffe2d2624f5600ee3f1c4">end_of_alignment()</a>, <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#a1ec6ff1950baaff7cc24d618b85f6d5a">get_string_at_position</a>, <a class="el" href="cwb-encode_8c.html#a41ebd28ef1d7c6ade45642cb6acc1039">line</a>, <a class="el" href="cwb-align-show_8c.html#a738553d9d3900c194807759631d7a15f">MAX_COL_WIDTH</a>, <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>, and <a class="el" href="options_8h.html#ab9e1449fd00c98428516f0b41eddcb10">progname</a>.</p>
+<p>References <a class="el" href="cl_8h.html#ad68dfe0ca2fbad5052e8213a06f5b4ba">CL_MAX_LINE_LENGTH</a>, <a class="el" href="cwb-align-show_8c.html#a3fc02d533c2277463ab650c65bef10e5">COL_SEP</a>, <a class="el" href="cwb-align-show_8c.html#ae87b7290eb5f5fa4acc1daee32eb21a7">COL_WIDTH</a>, <a class="el" href="cwb-align-show_8c.html#a78d96bcd853ffe2d2624f5600ee3f1c4">end_of_alignment()</a>, <a class="el" href="cl_8h.html#a1ec6ff1950baaff7cc24d618b85f6d5a">get_string_at_position</a>, <a class="el" href="cwb-encode_8c.html#a41ebd28ef1d7c6ade45642cb6acc1039">line</a>, <a class="el" href="cwb-align-show_8c.html#a738553d9d3900c194807759631d7a15f">MAX_COL_WIDTH</a>, and <a class="el" href="options_8h.html#ab9e1449fd00c98428516f0b41eddcb10">progname</a>.</p>
 
 <p>Referenced by <a class="el" href="cwb-align-show_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>.</p>
 
@@ -386,7 +386,7 @@ Variables</h2>
   </dd>
 </dl>
 
-<p>References <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#ad68dfe0ca2fbad5052e8213a06f5b4ba">CL_MAX_LINE_LENGTH</a>, <a class="el" href="cwb-align-show_8c.html#a78d96bcd853ffe2d2624f5600ee3f1c4">end_of_alignment()</a>, and <a class="el" href="cwb-encode_8c.html#a41ebd28ef1d7c6ade45642cb6acc1039">line</a>.</p>
+<p>References <a class="el" href="cl_8h.html#ad68dfe0ca2fbad5052e8213a06f5b4ba">CL_MAX_LINE_LENGTH</a>, <a class="el" href="cwb-align-show_8c.html#a78d96bcd853ffe2d2624f5600ee3f1c4">end_of_alignment()</a>, and <a class="el" href="cwb-encode_8c.html#a41ebd28ef1d7c6ade45642cb6acc1039">line</a>.</p>
 
 <p>Referenced by <a class="el" href="cwb-align-show_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>.</p>
 
@@ -495,12 +495,12 @@ Variables</h2>
 
 </div>
 </div>
-<a class="anchor" id="a9aa8fde7b69fa0a8004b2b7ab6c0185c"></a><!-- doxytag: member="cwb&#45;align&#45;show.c::corpus1_name" ref="a9aa8fde7b69fa0a8004b2b7ab6c0185c" args="[1024]" -->
+<a class="anchor" id="a4848fb9510cbdb02375e903ef1fbd272"></a><!-- doxytag: member="cwb&#45;align&#45;show.c::corpus1_name" ref="a4848fb9510cbdb02375e903ef1fbd272" args="[CL_MAX_FILENAME_LENGTH]" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">char <a class="el" href="cwb-align_8c.html#abcc4d69b7b82d1bd0e01c400002d2b64">corpus1_name</a>[1024]</td>
+          <td class="memname">char <a class="el" href="cwb-align_8c.html#abcc4d69b7b82d1bd0e01c400002d2b64">corpus1_name</a>[CL_MAX_FILENAME_LENGTH]</td>
         </tr>
       </table>
 </div>
@@ -529,12 +529,12 @@ Variables</h2>
 
 </div>
 </div>
-<a class="anchor" id="a5bb1f1f8d56854a17cb18018d2235b61"></a><!-- doxytag: member="cwb&#45;align&#45;show.c::corpus2_name" ref="a5bb1f1f8d56854a17cb18018d2235b61" args="[1024]" -->
+<a class="anchor" id="a528dbbcc2759bc7d1df1c9ed61c3a05a"></a><!-- doxytag: member="cwb&#45;align&#45;show.c::corpus2_name" ref="a528dbbcc2759bc7d1df1c9ed61c3a05a" args="[CL_MAX_FILENAME_LENGTH]" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">char <a class="el" href="cwb-align_8c.html#a2a6c532d4e13edf784cef85d094e73b8">corpus2_name</a>[1024]</td>
+          <td class="memname">char <a class="el" href="cwb-align_8c.html#a2a6c532d4e13edf784cef85d094e73b8">corpus2_name</a>[CL_MAX_FILENAME_LENGTH]</td>
         </tr>
       </table>
 </div>
@@ -593,12 +593,12 @@ Variables</h2>
 
 </div>
 </div>
-<a class="anchor" id="a48e4d732b51d4d2fd11dd611d316fb36"></a><!-- doxytag: member="cwb&#45;align&#45;show.c::s1_name" ref="a48e4d732b51d4d2fd11dd611d316fb36" args="[1024]" -->
+<a class="anchor" id="a6a9e4f7e84e94165e8b2f86b027518e3"></a><!-- doxytag: member="cwb&#45;align&#45;show.c::s1_name" ref="a6a9e4f7e84e94165e8b2f86b027518e3" args="[CL_MAX_FILENAME_LENGTH]" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">char <a class="el" href="cwb-align-show_8c.html#a48e4d732b51d4d2fd11dd611d316fb36">s1_name</a>[1024]</td>
+          <td class="memname">char <a class="el" href="cwb-align-show_8c.html#a6a9e4f7e84e94165e8b2f86b027518e3">s1_name</a>[CL_MAX_FILENAME_LENGTH]</td>
         </tr>
       </table>
 </div>
@@ -627,12 +627,12 @@ Variables</h2>
 
 </div>
 </div>
-<a class="anchor" id="ac6f6a9ef37f362014a06c51eb236a1cf"></a><!-- doxytag: member="cwb&#45;align&#45;show.c::s2_name" ref="ac6f6a9ef37f362014a06c51eb236a1cf" args="[1024]" -->
+<a class="anchor" id="affaf19616ee88711b4c4b0cecf6e4107"></a><!-- doxytag: member="cwb&#45;align&#45;show.c::s2_name" ref="affaf19616ee88711b4c4b0cecf6e4107" args="[CL_MAX_FILENAME_LENGTH]" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">char <a class="el" href="cwb-align-show_8c.html#ac6f6a9ef37f362014a06c51eb236a1cf">s2_name</a>[1024]</td>
+          <td class="memname">char <a class="el" href="cwb-align-show_8c.html#affaf19616ee88711b4c4b0cecf6e4107">s2_name</a>[CL_MAX_FILENAME_LENGTH]</td>
         </tr>
       </table>
 </div>
@@ -655,7 +655,7 @@ Variables</h2>
 </div>
 <div class="memdoc">
 
-<p>{word} attribute (or whatever is selected with -P) attribute handle: source </p>
+<p>{word} attribute (or whatever is selected with -P) handle: source </p>
 
 <p>Referenced by <a class="el" href="cwb-align-encode_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
 
@@ -672,18 +672,18 @@ Variables</h2>
 </div>
 <div class="memdoc">
 
-<p>{word} attribute (or whatever is selected with -P) attribute handle: target </p>
+<p>{word} attribute (or whatever is selected with -P) handle: target </p>
 
 <p>Referenced by <a class="el" href="cwb-align-encode_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ad8e9d64c19879c6038f85aafd76e7ec3"></a><!-- doxytag: member="cwb&#45;align&#45;show.c::word_name" ref="ad8e9d64c19879c6038f85aafd76e7ec3" args="[1024]" -->
+<a class="anchor" id="a519e69a0cc02c03690588d13998a5b17"></a><!-- doxytag: member="cwb&#45;align&#45;show.c::word_name" ref="a519e69a0cc02c03690588d13998a5b17" args="[CL_MAX_FILENAME_LENGTH]" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">char <a class="el" href="cwb-align_8c.html#ad8e9d64c19879c6038f85aafd76e7ec3">word_name</a>[1024] = &quot;word&quot;</td>
+          <td class="memname">char <a class="el" href="cwb-align_8c.html#a519e69a0cc02c03690588d13998a5b17">word_name</a>[CL_MAX_FILENAME_LENGTH] = &quot;word&quot;</td>
         </tr>
       </table>
 </div>
@@ -696,7 +696,7 @@ Variables</h2>
 </div>
 </div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Mar 15 2011 20:16:46 for CWB by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Sun Mar 20 2011 20:06:33 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>

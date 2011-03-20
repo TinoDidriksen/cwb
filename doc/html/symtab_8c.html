@@ -84,7 +84,7 @@ Functions</h2>
 <p>Checks whether all used labels are defined (and vice versa). </p>
 <p>[only non-special labels in the user namespace will be checked] </p>
 
-<p>References <a class="el" href="output_8c.html#ac523a4b34d2f925e027d8f433de703c9">cqpmessage()</a>, <a class="el" href="struct__label__entry.html#ac8bf36fe0577cba66bccda3a6f7e80a4">_label_entry::flags</a>, <a class="el" href="symtab_8h.html#a2d56f7ced81c60d6486eb1e9716500f7">LAB_DEFINED</a>, <a class="el" href="symtab_8h.html#a60a89751fe754c94dd58042f02dfc984">LAB_SPECIAL</a>, <a class="el" href="symtab_8h.html#ab2866faf1a8020f22d4d2fb7677459dd">LAB_USED</a>, <a class="el" href="struct__label__entry.html#a5ac083a645d964373f022d03df4849c8">_label_entry::name</a>, <a class="el" href="struct__label__entry.html#a16e4ff82fdfe36114b736247599d8843">_label_entry::next</a>, <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>, <a class="el" href="struct__symbol__table.html#ad60ce16127d1cd3690f7c825c3ac02a2">_symbol_table::user</a>, and <a class="el" href="output_8h.html#a9c2eeea9cd09fb001747ef4cc99399a4a48f2bb70fceb692a2dedd8cea496c44b">Warning</a>.</p>
+<p>References <a class="el" href="output_8c.html#ac523a4b34d2f925e027d8f433de703c9">cqpmessage()</a>, <a class="el" href="struct__label__entry.html#ac8bf36fe0577cba66bccda3a6f7e80a4">_label_entry::flags</a>, <a class="el" href="symtab_8h.html#a2d56f7ced81c60d6486eb1e9716500f7">LAB_DEFINED</a>, <a class="el" href="symtab_8h.html#a60a89751fe754c94dd58042f02dfc984">LAB_SPECIAL</a>, <a class="el" href="symtab_8h.html#ab2866faf1a8020f22d4d2fb7677459dd">LAB_USED</a>, <a class="el" href="struct__label__entry.html#a5ac083a645d964373f022d03df4849c8">_label_entry::name</a>, <a class="el" href="struct__label__entry.html#a16e4ff82fdfe36114b736247599d8843">_label_entry::next</a>, <a class="el" href="struct__symbol__table.html#ad60ce16127d1cd3690f7c825c3ac02a2">_symbol_table::user</a>, and <a class="el" href="output_8h.html#a9c2eeea9cd09fb001747ef4cc99399a4a48f2bb70fceb692a2dedd8cea496c44b">Warning</a>.</p>
 
 <p>Referenced by <a class="el" href="parse__actions_8h.html#a1fb802bc0071a3b18f2992ea2388211d">do_SearchPattern()</a>.</p>
 
@@ -132,7 +132,7 @@ Functions</h2>
 
 <p>delete symbol table (free all entries) </p>
 
-<p>References <a class="el" href="symtab_8c.html#a253b1729b8cea8310482910a7a995941">free_labellist()</a>, <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>, <a class="el" href="struct__symbol__table.html#a5ae84d59f2d58c07e93dd8922feaa3d0">_symbol_table::rdat</a>, and <a class="el" href="struct__symbol__table.html#ad60ce16127d1cd3690f7c825c3ac02a2">_symbol_table::user</a>.</p>
+<p>References <a class="el" href="symtab_8c.html#a253b1729b8cea8310482910a7a995941">free_labellist()</a>, <a class="el" href="struct__symbol__table.html#a5ae84d59f2d58c07e93dd8922feaa3d0">_symbol_table::rdat</a>, and <a class="el" href="struct__symbol__table.html#ad60ce16127d1cd3690f7c825c3ac02a2">_symbol_table::user</a>.</p>
 
 <p>Referenced by <a class="el" href="eval_8h.html#af29e9f19b26beddcdba87657cc915704">free_environment()</a>.</p>
 
@@ -234,7 +234,7 @@ Functions</h2>
 
 <p>Returns label entry, or NULL if undefined (flags are used _only_ to determine namespace). </p>
 
-<p>References <a class="el" href="symtab_8h.html#a6312218a29837109d7bb90732a7a8c9b">LAB_RDAT</a>, <a class="el" href="struct__label__entry.html#a5ac083a645d964373f022d03df4849c8">_label_entry::name</a>, <a class="el" href="struct__label__entry.html#a16e4ff82fdfe36114b736247599d8843">_label_entry::next</a>, <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>, <a class="el" href="struct__symbol__table.html#a5ae84d59f2d58c07e93dd8922feaa3d0">_symbol_table::rdat</a>, and <a class="el" href="struct__symbol__table.html#ad60ce16127d1cd3690f7c825c3ac02a2">_symbol_table::user</a>.</p>
+<p>References <a class="el" href="symtab_8h.html#a6312218a29837109d7bb90732a7a8c9b">LAB_RDAT</a>, <a class="el" href="struct__label__entry.html#a5ac083a645d964373f022d03df4849c8">_label_entry::name</a>, <a class="el" href="struct__label__entry.html#a16e4ff82fdfe36114b736247599d8843">_label_entry::next</a>, <a class="el" href="struct__symbol__table.html#a5ae84d59f2d58c07e93dd8922feaa3d0">_symbol_table::rdat</a>, and <a class="el" href="struct__symbol__table.html#ad60ce16127d1cd3690f7c825c3ac02a2">_symbol_table::user</a>.</p>
 
 <p>Referenced by <a class="el" href="parse__actions_8h.html#a4335ddbb14865c031041a194e182ed92">do_XMLTag()</a>, and <a class="el" href="symtab_8h.html#ac0093e82d521c18e97808dece3977a8e">labellookup()</a>.</p>
 
@@ -297,7 +297,7 @@ Functions</h2>
 
 <p>read references (cpos value in get_reftab is returned for 'this' label (_), set to -1 if n/a) </p>
 
-<p>References <a class="el" href="struct___ref_tab.html#ac103627c1ad15cbec2f22d0abe6d54b6">_RefTab::data</a>, <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>, and <a class="el" href="struct___ref_tab.html#a439227feff9d7f55384e8780cfc2eb82">_RefTab::size</a>.</p>
+<p>References <a class="el" href="struct___ref_tab.html#ac103627c1ad15cbec2f22d0abe6d54b6">_RefTab::data</a>, and <a class="el" href="struct___ref_tab.html#a439227feff9d7f55384e8780cfc2eb82">_RefTab::size</a>.</p>
 
 <p>Referenced by <a class="el" href="eval_8c.html#aaf8dd0672a1325480955ab8397b1928b">eval_constraint()</a>, <a class="el" href="eval_8c.html#a56ebf47da8a1555648176db1b81a4526">get_label_referenced_position()</a>, <a class="el" href="symtab_8h.html#a58fb972b7977dfdbcb513bf607e5bbcd">print_label_values()</a>, and <a class="el" href="eval_8c.html#adb7ad0a24759f5f36340f8b66bb70d79">simulate()</a>.</p>
 
@@ -343,9 +343,9 @@ Functions</h2>
 <p>Look up a label, add flags, and return label entry (NULL if undefined). </p>
 <p>if create is set and label does not exist, it is added to the symbol table </p>
 
-<p>References <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#a6647d75d1d69c7d25447da514b7e4682">cl_strdup()</a>, <a class="el" href="corpmanag_8c.html#a746b800ffb51e8f93719735b06e40a54">field_name_to_type()</a>, <a class="el" href="symtab_8c.html#a5f268916937d60f062425639f44297aa">findlabel()</a>, <a class="el" href="struct__label__entry.html#ac8bf36fe0577cba66bccda3a6f7e80a4">_label_entry::flags</a>, <a class="el" href="struct__label__entry.html#a5ac083a645d964373f022d03df4849c8">_label_entry::name</a>, <a class="el" href="struct__label__entry.html#a16e4ff82fdfe36114b736247599d8843">_label_entry::next</a>, <a class="el" href="struct__symbol__table.html#a720939920b71c9d9f9410359151d8224">_symbol_table::next_index</a>, <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>, <a class="el" href="struct__symbol__table.html#a5ae84d59f2d58c07e93dd8922feaa3d0">_symbol_table::rdat</a>, <a class="el" href="struct__label__entry.html#adb528a1cb1ca190150183394d082590d">_label_entry::ref</a>, and <a class="el" href="struct__symbol__table.html#ad60ce16127d1cd3690f7c825c3ac02a2">_symbol_table::user</a>.</p>
+<p>References <a class="el" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="cl_8h.html#a6647d75d1d69c7d25447da514b7e4682">cl_strdup()</a>, <a class="el" href="corpmanag_8c.html#a746b800ffb51e8f93719735b06e40a54">field_name_to_type()</a>, <a class="el" href="symtab_8c.html#a5f268916937d60f062425639f44297aa">findlabel()</a>, <a class="el" href="struct__label__entry.html#ac8bf36fe0577cba66bccda3a6f7e80a4">_label_entry::flags</a>, <a class="el" href="struct__label__entry.html#a5ac083a645d964373f022d03df4849c8">_label_entry::name</a>, <a class="el" href="struct__label__entry.html#a16e4ff82fdfe36114b736247599d8843">_label_entry::next</a>, <a class="el" href="struct__symbol__table.html#a720939920b71c9d9f9410359151d8224">_symbol_table::next_index</a>, <a class="el" href="struct__symbol__table.html#a5ae84d59f2d58c07e93dd8922feaa3d0">_symbol_table::rdat</a>, <a class="el" href="struct__label__entry.html#adb528a1cb1ca190150183394d082590d">_label_entry::ref</a>, and <a class="el" href="struct__symbol__table.html#ad60ce16127d1cd3690f7c825c3ac02a2">_symbol_table::user</a>.</p>
 
-<p>Referenced by <a class="el" href="parse__actions_8h.html#a53aef5872fed91559eba1f0082c41bf1">do_IDReference()</a>, <a class="el" href="parse__actions_8h.html#ad25148f9894719c8dda9055e13abfa91">do_LabelReference()</a>, <a class="el" href="parse__actions_8h.html#ad4b42dd005a14bd1014115d669f993ac">do_NamedWfPattern()</a>, <a class="el" href="parse__actions_8h.html#a4335ddbb14865c031041a194e182ed92">do_XMLTag()</a>, and <a class="el" href="parser_8tab_8c.html#acd8617a8f2ac0de8bc1cc032cf449e19">yyparse()</a>.</p>
+<p>Referenced by <a class="el" href="parse__actions_8h.html#a53aef5872fed91559eba1f0082c41bf1">do_IDReference()</a>, <a class="el" href="parse__actions_8h.html#ad25148f9894719c8dda9055e13abfa91">do_LabelReference()</a>, <a class="el" href="parse__actions_8h.html#ad4b42dd005a14bd1014115d669f993ac">do_NamedWfPattern()</a>, and <a class="el" href="parse__actions_8h.html#a4335ddbb14865c031041a194e182ed92">do_XMLTag()</a>.</p>
 
 </div>
 </div>
@@ -368,7 +368,7 @@ Functions</h2>
 <p>Create new reference table of required size for the given symbol table. </p>
 <p>NB If further labels are added to st, you must reallocate the reference table to make room for the new reference indices </p>
 
-<p>References <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="struct___ref_tab.html#ac103627c1ad15cbec2f22d0abe6d54b6">_RefTab::data</a>, <a class="el" href="struct__symbol__table.html#a720939920b71c9d9f9410359151d8224">_symbol_table::next_index</a>, and <a class="el" href="struct___ref_tab.html#a439227feff9d7f55384e8780cfc2eb82">_RefTab::size</a>.</p>
+<p>References <a class="el" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="struct___ref_tab.html#ac103627c1ad15cbec2f22d0abe6d54b6">_RefTab::data</a>, <a class="el" href="struct__symbol__table.html#a720939920b71c9d9f9410359151d8224">_symbol_table::next_index</a>, and <a class="el" href="struct___ref_tab.html#a439227feff9d7f55384e8780cfc2eb82">_RefTab::size</a>.</p>
 
 <p>Referenced by <a class="el" href="eval_8c.html#a6b88f677ea68fdf529f6588033930492">check_alignment_constraints()</a>, and <a class="el" href="eval_8c.html#a6d83579b3075256f14a62888a2e4b284">simulate_dfa()</a>.</p>
 
@@ -392,7 +392,7 @@ Functions</h2>
 
 <p>create new symbol table </p>
 
-<p>References <a class="el" href="build_2cwb-3_82_85-windows-i586_2include_2cwb_2cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="struct__symbol__table.html#a720939920b71c9d9f9410359151d8224">_symbol_table::next_index</a>, <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>, <a class="el" href="struct__symbol__table.html#a5ae84d59f2d58c07e93dd8922feaa3d0">_symbol_table::rdat</a>, and <a class="el" href="struct__symbol__table.html#ad60ce16127d1cd3690f7c825c3ac02a2">_symbol_table::user</a>.</p>
+<p>References <a class="el" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="struct__symbol__table.html#a720939920b71c9d9f9410359151d8224">_symbol_table::next_index</a>, <a class="el" href="struct__symbol__table.html#a5ae84d59f2d58c07e93dd8922feaa3d0">_symbol_table::rdat</a>, and <a class="el" href="struct__symbol__table.html#ad60ce16127d1cd3690f7c825c3ac02a2">_symbol_table::user</a>.</p>
 
 <p>Referenced by <a class="el" href="eval_8h.html#aa86d4404d808161292634a1c1e62871d">next_environment()</a>.</p>
 
@@ -439,7 +439,7 @@ Functions</h2>
   </dd>
 </dl>
 
-<p>References <a class="el" href="symtab_8c.html#a626f8764b931a695b6f1b93c029c5026">get_reftab()</a>, <a class="el" href="struct__label__entry.html#a5ac083a645d964373f022d03df4849c8">_label_entry::name</a>, <a class="el" href="struct__label__entry.html#a16e4ff82fdfe36114b736247599d8843">_label_entry::next</a>, <a class="el" href="struct__symbol__table.html#a720939920b71c9d9f9410359151d8224">_symbol_table::next_index</a>, <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>, <a class="el" href="struct__symbol__table.html#a5ae84d59f2d58c07e93dd8922feaa3d0">_symbol_table::rdat</a>, <a class="el" href="struct__label__entry.html#adb528a1cb1ca190150183394d082590d">_label_entry::ref</a>, <a class="el" href="struct___ref_tab.html#a439227feff9d7f55384e8780cfc2eb82">_RefTab::size</a>, and <a class="el" href="struct__symbol__table.html#ad60ce16127d1cd3690f7c825c3ac02a2">_symbol_table::user</a>.</p>
+<p>References <a class="el" href="symtab_8c.html#a626f8764b931a695b6f1b93c029c5026">get_reftab()</a>, <a class="el" href="struct__label__entry.html#a5ac083a645d964373f022d03df4849c8">_label_entry::name</a>, <a class="el" href="struct__label__entry.html#a16e4ff82fdfe36114b736247599d8843">_label_entry::next</a>, <a class="el" href="struct__symbol__table.html#a720939920b71c9d9f9410359151d8224">_symbol_table::next_index</a>, <a class="el" href="struct__symbol__table.html#a5ae84d59f2d58c07e93dd8922feaa3d0">_symbol_table::rdat</a>, <a class="el" href="struct__label__entry.html#adb528a1cb1ca190150183394d082590d">_label_entry::ref</a>, <a class="el" href="struct___ref_tab.html#a439227feff9d7f55384e8780cfc2eb82">_RefTab::size</a>, and <a class="el" href="struct__symbol__table.html#ad60ce16127d1cd3690f7c825c3ac02a2">_symbol_table::user</a>.</p>
 
 <p>Referenced by <a class="el" href="eval_8c.html#adb7ad0a24759f5f36340f8b66bb70d79">simulate()</a>.</p>
 
@@ -463,7 +463,7 @@ Functions</h2>
 
 <p>print symbol table contents (for debugging purposes) </p>
 
-<p>References <a class="el" href="struct__label__entry.html#ac8bf36fe0577cba66bccda3a6f7e80a4">_label_entry::flags</a>, <a class="el" href="struct__label__entry.html#a5ac083a645d964373f022d03df4849c8">_label_entry::name</a>, <a class="el" href="struct__label__entry.html#a16e4ff82fdfe36114b736247599d8843">_label_entry::next</a>, <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>, <a class="el" href="struct__symbol__table.html#a5ae84d59f2d58c07e93dd8922feaa3d0">_symbol_table::rdat</a>, <a class="el" href="struct__label__entry.html#adb528a1cb1ca190150183394d082590d">_label_entry::ref</a>, and <a class="el" href="struct__symbol__table.html#ad60ce16127d1cd3690f7c825c3ac02a2">_symbol_table::user</a>.</p>
+<p>References <a class="el" href="struct__label__entry.html#ac8bf36fe0577cba66bccda3a6f7e80a4">_label_entry::flags</a>, <a class="el" href="struct__label__entry.html#a5ac083a645d964373f022d03df4849c8">_label_entry::name</a>, <a class="el" href="struct__label__entry.html#a16e4ff82fdfe36114b736247599d8843">_label_entry::next</a>, <a class="el" href="struct__symbol__table.html#a5ae84d59f2d58c07e93dd8922feaa3d0">_symbol_table::rdat</a>, <a class="el" href="struct__label__entry.html#adb528a1cb1ca190150183394d082590d">_label_entry::ref</a>, and <a class="el" href="struct__symbol__table.html#ad60ce16127d1cd3690f7c825c3ac02a2">_symbol_table::user</a>.</p>
 
 <p>Referenced by <a class="el" href="eval_8c.html#a6d83579b3075256f14a62888a2e4b284">simulate_dfa()</a>.</p>
 
@@ -526,7 +526,7 @@ Functions</h2>
 
 <p>set references (cpos value in get_reftab is returned for 'this' label (_), set to -1 if n/a) </p>
 
-<p>References <a class="el" href="output_8c.html#ac523a4b34d2f925e027d8f433de703c9">cqpmessage()</a>, <a class="el" href="struct___ref_tab.html#ac103627c1ad15cbec2f22d0abe6d54b6">_RefTab::data</a>, <a class="el" href="output_8h.html#a9c2eeea9cd09fb001747ef4cc99399a4a4dfd42ec49d09d8c6555c218301cc30f">Error</a>, <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>, and <a class="el" href="struct___ref_tab.html#a439227feff9d7f55384e8780cfc2eb82">_RefTab::size</a>.</p>
+<p>References <a class="el" href="output_8c.html#ac523a4b34d2f925e027d8f433de703c9">cqpmessage()</a>, <a class="el" href="struct___ref_tab.html#ac103627c1ad15cbec2f22d0abe6d54b6">_RefTab::data</a>, <a class="el" href="output_8h.html#a9c2eeea9cd09fb001747ef4cc99399a4a4dfd42ec49d09d8c6555c218301cc30f">Error</a>, and <a class="el" href="struct___ref_tab.html#a439227feff9d7f55384e8780cfc2eb82">_RefTab::size</a>.</p>
 
 <p>Referenced by <a class="el" href="eval_8h.html#a1c6b9087d4b9c61e2be81a7a68e174cc">eval_bool()</a>, <a class="el" href="eval_8c.html#aaf8dd0672a1325480955ab8397b1928b">eval_constraint()</a>, <a class="el" href="eval_8c.html#aead01bf924ccdd541a9018bf1d72730e">get_leaf_value()</a>, and <a class="el" href="eval_8c.html#adb7ad0a24759f5f36340f8b66bb70d79">simulate()</a>.</p>
 
@@ -557,7 +557,7 @@ Functions</h2>
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="struct__label__entry.html#ac8bf36fe0577cba66bccda3a6f7e80a4">_label_entry::flags</a>, <a class="el" href="struct__label__entry.html#a16e4ff82fdfe36114b736247599d8843">_label_entry::next</a>, and <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>.</p>
+<p>References <a class="el" href="struct__label__entry.html#ac8bf36fe0577cba66bccda3a6f7e80a4">_label_entry::flags</a>, and <a class="el" href="struct__label__entry.html#a16e4ff82fdfe36114b736247599d8843">_label_entry::next</a>.</p>
 
 <p>Referenced by <a class="el" href="eval_8c.html#adb7ad0a24759f5f36340f8b66bb70d79">simulate()</a>, and <a class="el" href="symtab_8h.html#abc24cdf73c38ef9e57dc0c10550ecbd3">symbol_table_new_iterator()</a>.</p>
 
@@ -588,14 +588,14 @@ Functions</h2>
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="struct__label__entry.html#ac8bf36fe0577cba66bccda3a6f7e80a4">_label_entry::flags</a>, <a class="el" href="lex_8creg_8c.html#a070d2ce7b6bb7e5c05602aa8c308d0c4">NULL</a>, <a class="el" href="struct__symbol__table.html#a5ae84d59f2d58c07e93dd8922feaa3d0">_symbol_table::rdat</a>, <a class="el" href="symtab_8c.html#ac14125b1884227479df64bbbbe18d12b">symbol_table_iterator()</a>, and <a class="el" href="struct__symbol__table.html#ad60ce16127d1cd3690f7c825c3ac02a2">_symbol_table::user</a>.</p>
+<p>References <a class="el" href="struct__label__entry.html#ac8bf36fe0577cba66bccda3a6f7e80a4">_label_entry::flags</a>, <a class="el" href="struct__symbol__table.html#a5ae84d59f2d58c07e93dd8922feaa3d0">_symbol_table::rdat</a>, <a class="el" href="symtab_8c.html#ac14125b1884227479df64bbbbe18d12b">symbol_table_iterator()</a>, and <a class="el" href="struct__symbol__table.html#ad60ce16127d1cd3690f7c825c3ac02a2">_symbol_table::user</a>.</p>
 
 <p>Referenced by <a class="el" href="eval_8c.html#adb7ad0a24759f5f36340f8b66bb70d79">simulate()</a>.</p>
 
 </div>
 </div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Tue Mar 15 2011 20:16:46 for CWB by&nbsp;
+<hr class="footer"/><address class="footer"><small>Generated on Sun Mar 20 2011 20:06:33 for CWB by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.1 </small></address>
 </body>
