@@ -294,7 +294,7 @@ html_print_aligned_line(FILE *stream,
 
   html_puts(stream, attribute_name, SUBST_ALL);
   html_puts(stream, ":</EM></B>&nbsp;&nbsp;", 0);
-  html_puts(stream, line, SUBST_ALL);
+  html_puts(stream, line, SUBST_NONE); /* entities have already been escaped */
 
   if (GlobalPrintOptions.print_tabular) 
     fprintf(stream, "</TR>\n");

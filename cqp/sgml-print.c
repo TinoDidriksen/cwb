@@ -96,6 +96,7 @@ SGMLPrintDescriptionRecord = {
 
 /* ---------------------------------------------------------------------- */
 
+#define SUBST_NONE 0
 #define SUBST_LT   1
 #define SUBST_GT   2
 #define SUBST_AMP  4
@@ -213,7 +214,7 @@ sgml_print_aligned_line(FILE *stream, char *attribute_name, char *line)
   sgml_puts(stream, "<align name=\"", 0);
   sgml_puts(stream, attribute_name, 0);
   sgml_puts(stream, "\">", 0);
-  sgml_puts(stream, line, SUBST_ALL);
+  sgml_puts(stream, line, SUBST_NONE); /* entities have already been escaped */
 
   fputc('\n', stream);
 }

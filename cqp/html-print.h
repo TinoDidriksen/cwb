@@ -25,6 +25,7 @@
 #include "print-modes.h"
 #include "groups.h"
 
+#define SUBST_NONE 0
 #define SUBST_LT   1
 #define SUBST_GT   2
 #define SUBST_AMP  4

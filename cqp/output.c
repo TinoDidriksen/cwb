@@ -183,7 +183,7 @@ open_file(char *name, char *mode)
 
     s_offset = 0;
 
-    for (i = 0; sp < (CL_MAX_FILENAME_LENGTH-1) && home[i]; i++)
+    for (i = 0; s_offset < (CL_MAX_FILENAME_LENGTH-1) && home[i]; i++)
       s[s_offset++] = home[i];
     
     if (name[0] == '~')
@@ -191,7 +191,7 @@ open_file(char *name, char *mode)
     else
       i = strlen("$home");
 
-    for ( ; sp < (CL_MAX_FILENAME_LENGTH-1) && name[i]; i++)
+    for ( ; s_offset < (CL_MAX_FILENAME_LENGTH-1) && name[i]; i++)
       s[s_offset++] = name[i];
     s[s_offset] = '\0';
     
