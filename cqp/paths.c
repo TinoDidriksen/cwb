@@ -20,47 +20,5 @@
 
 #include "paths.h"
 
-/**
- * Tokenises a string into components split by ':'.
- *
- * @param s  The string to tokenise; or, NULL if tokenisation has already been initialised.
- * @return   The next token from the string.
- */
-char *
-get_path_component(char *s)
-{
-  register int c;
-  char *tok;
-  static char *last;
-  
-  if (s == NULL && (s = last) == NULL)
-    return (NULL);
-  
-  do {
-    c = *s++;
-  } while (c == PATH_SEPARATOR);
-  
-  if (c == 0) {           /* no non-delimiter characters */
-    last = NULL;
-    return (NULL);
-  }
-  tok = s - 1;
-  
-  for (;;) {
-    c = *s++;
-
-    if (c == PATH_SEPARATOR || c == '\0') {
-      if (c == 0)
-        s = NULL;
-      else
-        s[-1] = 0;
-      last = s;
-      return (tok);
-    }
-  }
-  /* NOTREACHED */
- 
-  assert(0 && "Not reached");
-  return NULL;
-}
+/* path splitting func moved to cl */
 

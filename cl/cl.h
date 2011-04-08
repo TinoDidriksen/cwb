@@ -334,12 +334,15 @@ char *cl_xml_entity_decode(char *s); /* removes the four default XML entities fr
                                   ( c == '_')                        \
                                  )
 
+/* functions that do things with paths */
 void cl_path_adjust_os(char *path);  /* normalises a path to Windowslike or Unixlike, depending on the build;
                                         string changed in place. */
 void cl_path_adjust_independent(char *path); /* makes a path Unixlike, regardless of the OS; string changed in place. */
 
 char *cl_path_registry_quote(char *path); /* adds registry-format quotes and slashes to a path where necessary;
                                              a newly-allocated string is returned. */
+
+char *cl_path_get_component(char *s); /* tokeniser for string contianing many paths separated by : or ; */
 
 /* validate and manipulate strings that are (sub)corpus identifiers */
 int cl_id_validate(char *s);
@@ -943,6 +946,9 @@ typedef struct _CL_BitVec *CL_BitVec;                 /**< The CL_BitVec object:
 #define structure_has_values(a) cl_struc_values(a)
 #define structure_value(a, struc) cl_struc2str(a, struc)
 #define structure_value_at_position(a, cpos) cl_cpos2struc2str(a, cpos)
+
+/* formerly a CQP function, now in CL */
+#define get_path_component cl_path_get_component
 
 /*
  * Some "old" functions have gone altogether; they are not just depracated, but vanished!

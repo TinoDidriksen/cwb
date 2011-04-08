@@ -18,8 +18,9 @@
 #ifndef _paths_h_
 #define _paths_h_
 
-
+/* moved to CL
 char *get_path_component(char *pathlist);
+*/
 
 
 #endif

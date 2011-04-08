@@ -50,7 +50,7 @@ extern size_t cl_memory_limit;
 #define PATH_SEPARATOR ':'
 /** character used to delimit subdirectories in a path */
 #define SUBDIR_SEPARATOR '/'
-/** same character as a string for compile-time concatenation */
+/** character from SUBDIR_SEPARATOR as a string for compile-time concatenation */
 #define SUBDIR_SEP_STRING "/"
 /** name of directory for temporary files (as string, absolute path) */
 #define TEMPDIR_PATH "/tmp"
