@@ -23,7 +23,7 @@
 #
 # CWB version
 #
-VERSION = 3.2.6
+VERSION = 3.2.7
 # alpha / beta for Unicode support: all versions 3.2.x
 
 #

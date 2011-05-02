@@ -715,7 +715,7 @@ char *cl_corpus_property(Corpus *corpus, char *property);
 typedef enum ECorpusCharset {
   ascii = 0,
 
-  /* planned support for ISO-8859-* charsets; as of v3.2.x, only latin1, ascii and utf8 are supported */
+  /* As of v3.2.7, all charsets listed below are supported. */
 
   /* latin1 = 8859-1, latin2 = 8859-2, latin3 = 8859-3, latin4 = 8859-4, cyrillic = 8859-5,
      arabic = 8859-6, greek = 8859-7, hebrew = 8859-8, latin5 = 8859-9, latin6 = 8859-10,
