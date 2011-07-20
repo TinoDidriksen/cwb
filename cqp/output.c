@@ -819,7 +819,8 @@ pt_validate_anchor(CorpusList *cl, FieldType anchor) {
     break;
   case MatchField:
   case MatchEndField:
-    assert(cl->range && cl->size > 0);
+    /* should always be present */
+    assert(cl->range != NULL);
     break;
   case NoField:
   default:
@@ -864,8 +865,11 @@ print_tabulation(CorpusList *cl, int first, int last, struct Redir *rd)
     else {
       item->attribute_type = ATT_NONE; /* no attribute -> print corpus position */
     }
-    if (! (pt_validate_anchor(cl, item->anchor1) && pt_validate_anchor(cl, item->anchor2)))
-      return 0;
+    if (cl->size > 0) {
+      /* work around bug: anchor validation will fail for empty query result (but then loop below is void anyway) */
+      if (! (pt_validate_anchor(cl, item->anchor1) && pt_validate_anchor(cl, item->anchor2)))
+	return 0;
+    }
     item = item->next;
   }
 
