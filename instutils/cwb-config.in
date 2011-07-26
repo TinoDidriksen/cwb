@@ -53,7 +53,7 @@ case "\$1" in
   --ldflags|-L)
     echo "\$LDFLAGS";;
   --registry|-r)
-    if [ "x\$CORPUS_REGISTRY" == "x" ]
+    if [ "x\$CORPUS_REGISTRY" = "x" ]
       then
       echo "\$REGISTRY"
       else
