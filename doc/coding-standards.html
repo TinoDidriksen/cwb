@@ -2,11 +2,27 @@
 
 <p><span class="caps">NB.</span> There may be numerous exceptions to these rules-of-thumb in the existing <span class="caps">CWB </span>code, since <span class="caps">CWB </span>contains multiple strata of code done by different people in different styles. The aim of these </p>
 
+<ul>
+<li>Note that everything here only applies to the main <span class="caps">CWB </span>package. The <span class="caps">CWB</span>-Perl and <span class="caps">CQP</span>web code bases may (and, in fact, do) follow different conventions.</li>
+</ul>
+
 <h2><span class="caps">ANSI</span></h2>
 
 <ul>
 <li>All C code in <span class="caps">CWB </span>should adhere to <span class="caps">ANSI</span> C standard</li>
 <li>This means, for example, no old-style prototypes (with untyped parameters) should ever be used</li>
+</ul>
+
+<h2>Encoding</h2>
+
+<ul>
+<li>Since <span class="caps">CWB </span>handles many character encodings, the code itself should be character-set-neutral</li>
+<li>Therefore, all code files must be valid 7-bit <span class="caps">ASCII</span><ul>
+<li>Corollary: use neither literal <span class="caps">UTF</span>-8 nor literal Latin-1 characters within code files</li>
+<li>Use numbers or hex escape sequences instead</li>
+</ul>
+</li>
+<li>There may be Latin-1 characters left over in pre-3.0 parts of the code, these will be weeded out and removed over time. </li>
 </ul>
 
 <h2>Brace style</h2>
@@ -30,6 +46,7 @@
 <li>Indent lines within braces 1 level</li>
 <li>As a corollary of this, indent second half of a one-statement <code>if / for / while</code> by 1 level</li>
 <li>Spaces, not tab characters, are used for aligning comments at the <em>end</em> of code lines</li>
+<li>Where possible standardise on spaces rather than tab characters at the start of code lines as well</li>
 </ul>
 
 <h2>Function definitions</h2>
@@ -85,12 +102,17 @@
 <h2>Doxygen Javadoc-style <span class="caps">API </span>comments</h2>
 
 <ul>
-<li><span class="caps">CWB </span>uses the Doxygen system for generating <span class="caps">HTML </span>documentation of the macros, functions, structures and global variables in the C source and header files.<br />
-**See http://www.doxygen.nl</li>
-<li>Only a <em>a subset of</em> the Doxygen comment syntax is used in <span class="caps">CWB</span>:<ul>
+<li><span class="caps">CWB </span>uses the Doxygen system for generating <span class="caps">HTML </span>documentation of the macros, functions, structures and global variables in the C source and header files.<ul>
+<li>See http://www.doxygen.nl</li>
+</ul>
+</li>
+<li>Only <em>a subset of</em> the Doxygen comment syntax is used in <span class="caps">CWB</span>:<ul>
 <li>Use Javadoc-style syntax, <em>not</em> any of the other syntaxes supported by Doxygen</li>
 <li>For each documented item, give a <em>brief description</em> (compulsory) and a <em>detailed description</em> (optional).<ul>
-<li>The brief description is the first sentence of the documenting comment, followed by a blank line</li>
+<li>The brief description is the first sentence of the documenting comment, followed by a blank line<ul>
+<li>The brief description may not contain any sentence-final punctuation, except at its end.</li>
+</ul>
+</li>
 <li>The detailed description follows, across as many lines as necessary</li>
 </ul>
 </li>

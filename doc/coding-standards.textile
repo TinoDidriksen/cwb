@@ -2,10 +2,20 @@ h1. Rules-of-thumb for formatting code in CWB / CQP
 
 NB. There may be numerous exceptions to these rules-of-thumb in the existing CWB code, since CWB contains multiple strata of code done by different people in different styles. The aim of these 
 
+* Note that everything here only applies to the main CWB package. The CWB-Perl and CQPweb code bases may (and, in fact, do) follow different conventions.
+
 h2. ANSI
 
 * All C code in CWB should adhere to ANSI C standard
 * This means, for example, no old-style prototypes (with untyped parameters) should ever be used
+
+h2. Encoding
+
+* Since CWB handles many character encodings, the code itself should be character-set-neutral
+* Therefore, all code files must be valid 7-bit ASCII
+** Corollary: use neither literal UTF-8 nor literal Latin-1 characters within code files
+** Use numbers or hex escape sequences instead
+* There may be Latin-1 characters left over in pre-3.0 parts of the code, these will be weeded out and removed over time. 
 
 h2. Brace style
 
@@ -22,6 +32,7 @@ h2. Indenting
 * Indent lines within braces 1 level
 * As a corollary of this, indent second half of a one-statement @if / for / while@ by 1 level
 * Spaces, not tab characters, are used for aligning comments at the _end_ of code lines
+* Where possible standardise on spaces rather than tab characters at the start of code lines as well
 
 h2. Function definitions
 
@@ -60,11 +71,12 @@ h2. Commenting
 h2. Doxygen Javadoc-style API comments
 
 * CWB uses the Doxygen system for generating HTML documentation of the macros, functions, structures and global variables in the C source and header files.
-**See http://www.doxygen.nl
-* Only a _a subset of_ the Doxygen comment syntax is used in CWB:
+** See http://www.doxygen.nl
+* Only _a subset of_ the Doxygen comment syntax is used in CWB:
 ** Use Javadoc-style syntax, _not_ any of the other syntaxes supported by Doxygen
 ** For each documented item, give a _brief description_ (compulsory) and a _detailed description_ (optional).
 *** The brief description is the first sentence of the documenting comment, followed by a blank line
+**** The brief description may not contain any sentence-final punctuation, except at its end.
 *** The detailed description follows, across as many lines as necessary
 ** For functions, also give &#64;param and &#64;return specifications
 ** Structures and functions are always _preceded_ directly by their documentation.
