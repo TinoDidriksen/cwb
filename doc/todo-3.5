@@ -1,0 +1,53 @@
+Here is the list of things that need to be done to get all components up to v3.5
+
+FOR V 3.0.0
+===========
+
+- Complete corpus encoding tutorial
+- Complete CQP tutorial
+- Complete documentation of CWB-Perl
+
+FOR V 3.5.0
+===========
+
+- Get to Zero Known Bugs in the core (most bugs are in things relating to Win32 compatability and UTF8 support)  
+- Get to Zero Known Bugs in CQPweb
+- Get to Zero Known Bugs in CWB-Perl 
+- Get CWB to compile actually on Windows with MinGW rather than (or as well as) cross-compiling
+- Link Glib & PCRE statically not dynamically on Windows so we don't need to mess with DLLs
+- Update CWB-Perl for changes in the CL API in v3.1 & 3.2 (most notably, Unicode)
+- Work out an install system for the Perl modules on Windows (would be nice to avoid requirement for gcc/gmake if possible;
+  precompiled binary package for Windows installation? Use Strawberry Perl?)
+- Make CQPweb Windows-compatible
+- Write a definitive documentation of the problems with UTF8 characters in Windows and how to get round them 
+- Get cwb-config to work on Windows (maybe by reimplementing it in VB script?)
+- Ferret out any non-checked input in CQP for character set checking.
+- Make fixed-char KWIC output "work", or at least approximate working, with UTF-8, as a stopgap before 3.9/4.0
+
+
+THINGS THAT ARE ON THE LIST, BUT WON'T BE TACKLED TILL 3.9/4.0
+==============================================================
+
+This is just a vague list to record roughly what we intend to be doing down the road.
+
+- Sort out CQP output modes in a principled way (one XML mode, one plaintext mode)
+- Increase the limit on corpus size by an order of magnitude or several.
+- Standardise the object-oriented code (class/method naming rules) in the core
+- Refactor CQP into clearcut modules (to enable easier optimisation / rewriting of sub-units if necessary)
+- Better XML indexing & queries: recursive nesting of elements, start tag attributes
+- Multiple target positions in CQP
+- Query optimisation
+- Advances to the qery language (Different, specialised QLs?)
+- New query features (Google-style IR searches; Queries on dependency parse graphs; Fuzzy search & phrase queries)
+- Advances to CWB-Perl to allow access to the spiffy new features
+- Advances to CQPweb as per its own roadmap todo-list
+
+(NB this is a non-exhaustive list; a much longer roadmap document, with more detail on how some of these things
+are envisaged to work, is being worked on)
+
+
+THINGS FROM THE ABOVE LIST THAT ARE NOW COMPLETE
+================================================
+
+<nothing yet>
+
