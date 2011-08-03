@@ -25,6 +25,12 @@ Reads one integer per line from ASCII file I<file> or from standard input and wr
 =back
 
 
+=head1 SEE ALSO
+
+L<cqp>, L<cqpserver>, L<cwb-align-encode>, L<cwb-align>, L<cwb-align-show>, L<cwb-compress-rdx>, 
+L<cwb-config>, L<cwb-decode-nqrfile>, L<cwb-decode>, L<cwb-describe-corpus>, L<cwb-encode>, L<cwb-huffcode>, 
+L<cwb-itoa>, L<cwb-lexdecode>, L<cwb-makeall>, L<cwb-scan-corpus>, L<cwb-s-decode>, L<cwb-s-encode>.
+
 =head1 COPYRIGHT
 
 =over 4

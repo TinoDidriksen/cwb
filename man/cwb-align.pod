@@ -69,6 +69,12 @@ C<< S<-C:1 -S:50:0.4 -3:3 -4:4> >>.
 B<TODO>
 
 
+=head1 SEE ALSO
+
+L<cqp>, L<cqpserver>, L<cwb-align-encode>, L<cwb-align-show>, L<cwb-atoi>, L<cwb-compress-rdx>, 
+L<cwb-config>, L<cwb-decode-nqrfile>, L<cwb-decode>, L<cwb-describe-corpus>, L<cwb-encode>, L<cwb-huffcode>, 
+L<cwb-itoa>, L<cwb-lexdecode>, L<cwb-makeall>, L<cwb-scan-corpus>, L<cwb-s-decode>, L<cwb-s-encode>.
+
 =head1 COPYRIGHT
 
 =over 4

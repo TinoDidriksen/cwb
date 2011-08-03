@@ -1,6 +1,6 @@
 =head1 NAME
 
-cqp - The corpus query processor of the CWB (interactive version)
+cqp - The CWB Corpus Query Processor (interactive or slaved-process version)
 
 =head1 SYNOPSIS
 
@@ -44,24 +44,25 @@ B<TODO>
        [ VerboseParser, ParserDebug, ParseOnly, SearchDebug, MacroDebug ]
        [ ALL (activate all modes except ParseOnly)                      ]
 
-=over 4
 
-=item B<TODO>
 
-=back
+=head1 SEE ALSO
 
+L<cqpserver>, L<cwb-align-encode>, L<cwb-align>, L<cwb-align-show>, L<cwb-atoi>, L<cwb-compress-rdx>, 
+L<cwb-config>, L<cwb-decode-nqrfile>, L<cwb-decode>, L<cwb-describe-corpus>, L<cwb-encode>, L<cwb-huffcode>, 
+L<cwb-itoa>, L<cwb-lexdecode>, L<cwb-makeall>, L<cwb-scan-corpus>, L<cwb-s-decode>, L<cwb-s-encode>.
 
 =head1 COPYRIGHT
 
 =over 4
 
-=item
+=item 
 B<IMS Open Corpus Workbench (CWB)> L<http://cwb.sourceforge.net/>
 
-=item
+=item 
 Copyright (C) 1993-2006 by IMS, University of Stuttgart
 
-=item
+=item 
 Copyright (C) 2007- by the respective contributers (see file F<AUTHORS>)
 
 =back

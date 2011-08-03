@@ -1,6 +1,6 @@
 =head1 NAME
 
-cqpcl - The corpus query processor of the CWB (command-line version)
+cqpcl - The CWB Corpus Query Processor (B<depracated> commandline-only version)
 
 =head1 SYNOPSIS
 
@@ -11,15 +11,13 @@ B<cqpcl> [-hvmscixS] [-D I<corpus>] [-r I<registry_dir>]
 
 =head1 DESCRIPTION
 
-B<TODO>
-
 B<Use of this command-line version of CQP is deprecated>, due to security issues and problems with shell metacharacters.
-B<It may no longer be included in future releases of the CWB.>  The recommended methods for batch
-processing with CQP are to run it as a slave process in the background (which is facilitated by
-he C<-c> option and interface packages for various programming languages), or to read an automatically
+B<It may be omitted from future releases of the CWB.>  The recommended methods for batch
+processing with CQP are (a) to run B<cqp> as a slave process in the background (which is facilitated by
+the C<-c> option and interface packages for various programming languages), or to read an automatically
 generated CQP script file with the C<-f> option.
 
-=head1 OPTIONS
+=head1 OPTIONS (see also man cqp)
 
     -h           help
     -v           version and copyright information
@@ -46,12 +44,11 @@ generated CQP script file with the C<-f> option.
        [ VerboseParser, ParserDebug, ParseOnly, SearchDebug, MacroDebug ]
        [ ALL (activate all modes except ParseOnly)                      ]
 
-=over 4
+=head1 SEE ALSO
 
-=item B<TODO>
-
-=back
-
+L<cqp>, L<cqpserver>, L<cwb-align-encode>, L<cwb-align>, L<cwb-align-show>, L<cwb-atoi>, L<cwb-compress-rdx>, 
+L<cwb-config>, L<cwb-decode-nqrfile>, L<cwb-decode>, L<cwb-describe-corpus>, L<cwb-encode>, L<cwb-huffcode>, 
+L<cwb-itoa>, L<cwb-lexdecode>, L<cwb-makeall>, L<cwb-scan-corpus>, L<cwb-s-decode>, L<cwb-s-encode>.
 
 =head1 COPYRIGHT
 
