@@ -1997,11 +1997,18 @@ matchfirstpattern(AVS pattern,
 
 
 
+/*
+ * This function's name is totally useless.
+ */
 void
-simulate(Matchlist *matchlist, int *cut,
-         int start_state, int start_offset, /* start_offset is always set to 0; no idea what it was meant for??? */
-         int *state_vector, int *target_vector,
-         RefTab *reftab_vector, RefTab *reftab_target_vector,
+simulate(Matchlist *matchlist,
+         int *cut,
+         int start_state,
+         int start_offset, /* start_offset is always set to 0; no idea what it was meant for??? */
+         int *state_vector,
+         int *target_vector,
+         RefTab *reftab_vector,
+         RefTab *reftab_target_vector,
          int start_transition)
 {
   int i, p, cpos, effective_cpos, rp;
@@ -2066,8 +2073,8 @@ simulate(Matchlist *matchlist, int *cut,
        * find the appropriate range
        * three cases:
        * 1 start point smaller than range beginning
-       *   we should have considered that start point before. so
-       *   we cannot have a match in this case.
+       *   we should have considered that start point before.
+       *   so we cannot have a match in this case.
        *   action: assign -1 to matchlist->start and increment i
        * 2 start point within range (ok)
        *   action: simulate automaton
@@ -2121,8 +2128,7 @@ simulate(Matchlist *matchlist, int *cut,
         boundary = MIN(b1, b2);
 
         if (debug_simulation)
-          fprintf(stderr, "Starting NFA simulation. Max bound is %d\n",
-                  boundary);
+          fprintf(stderr, "Starting NFA simulation. Max bound is %d\n", boundary);
 
         if (boundary == -1) {
           /*
@@ -2490,7 +2496,8 @@ simulate(Matchlist *matchlist, int *cut,
             matchlist->target_positions[i] = -1;
         }
 
-        i++;                        /* move to the next regarded matchlist element */
+        i++;
+        /* move to the next regarded matchlist element */
 
 
       } /* case 2: simulate automaton */
@@ -2506,7 +2513,7 @@ simulate(Matchlist *matchlist, int *cut,
       i++;
     }
 
-  }     /* the big "else" (unless evalenv->query_corpus->size == 0) */
+  }     /* end of the big "else" (unless evalenv->query_corpus->size == 0) */
 }
 
 
@@ -2944,7 +2951,7 @@ cqp_run_tab_query(int implode)
   memset((char *)positions, '\0', nr_columns * sizeof(int));
 
   /* zur Bequemlichkeit, damit wir die Constraints als Array
-   * adressieren können */
+   * adressieren kï¿½nnen */
 
   constraints = (Evaltree *)cl_malloc(nr_columns * sizeof(Evaltree));
   memset((char *)constraints, '\0', nr_columns * sizeof(Evaltree));

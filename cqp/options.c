@@ -49,94 +49,102 @@
  */
 CQPOption cqpoptions[] = {
 
-  /* Abbr  VariableName           Type        Where to store    String- Int- Environ Side-  Option
-   *                                                            Default Def. VarName Effect Type
-   * ---------------------------------------------------------------------------------------------*/
+  /* Abbr  VariableName           Type        Where to store           String-       Int- Environ Side-  Option
+   *                                                                   Default       Def. VarName Effect Flags
+   * ----------------------------------------------------------------------------------------------------------*/
 
-  /* debugging options */
-  { NULL, "VerboseParser",        OptBoolean, &verbose_parser,    NULL, 0,  NULL, 0, 0},
-  { NULL, "ShowSymtab",           OptBoolean, &show_symtab,       NULL, 0,  NULL, 0, 0},
-  { NULL, "ShowGconstraints",     OptBoolean, &show_gconstraints, NULL, 0,  NULL, 0, 0},
-  { NULL, "ShowEvaltree",         OptBoolean, &show_evaltree,     NULL, 0,  NULL, 0, 0},
-  { NULL, "ShowPatlist",          OptBoolean, &show_patlist,      NULL, 0,  NULL, 0, 0},
-  { NULL, "ShowDFA",              OptBoolean, &show_dfa,          NULL, 0,  NULL, 0, 0},
-  { NULL, "ShowCompDFA",          OptBoolean, &show_compdfa,      NULL, 0,  NULL, 0, 0},
-  { NULL, "SymtabDebug",          OptBoolean, &symtab_debug,      NULL, 0,  NULL, 0, 0},
-  { NULL, "ParserDebug",          OptBoolean, &parser_debug,      NULL, 0,  NULL, 0, 0},
-  { NULL, "TreeDebug",            OptBoolean, &tree_debug,        NULL, 0,  NULL, 0, 0},
-  { NULL, "EvalDebug",            OptBoolean, &eval_debug,        NULL, 0,  NULL, 0, 0},
-  { NULL, "InitialMatchlistDebug",OptBoolean, &initial_matchlist_debug, NULL, 0,  NULL, 0, 0},
-  { NULL, "DebugSimulation",      OptBoolean, &debug_simulation,  NULL, 0,  NULL, 0, 0},
-  { NULL, "SearchDebug",          OptBoolean, &search_debug,      NULL, 0,  NULL, 0, 0},
-  { NULL, "ServerLog",            OptBoolean, &server_log,        NULL, 1,  NULL, 0, 0},
-  { NULL, "ServerDebug",          OptBoolean, &server_debug,      NULL, 0,  NULL, 0, 0}, 
-  { NULL, "Snoop",                OptBoolean, &snoop,             NULL, 0,  NULL, 0, 0},
-  { NULL, "ParseOnly",            OptBoolean, &parseonly,         NULL, 0,  NULL, 0, 0},
-  { NULL, "Silent",               OptBoolean, &silent,            NULL, 0,  NULL, 0, 0},
-  { NULL, "ChildProcess",         OptBoolean, &child_process,     NULL, 0,  NULL, 0, 0},
-  { NULL, "MacroDebug",           OptBoolean, &macro_debug,       NULL, 0,  NULL, 0, 0},
-  { NULL, "CLDebug",              OptBoolean, &activate_cl_debug, NULL, 0,  NULL, 4, 0},
+  /* debugging options (anything that controls whether or not a message of some kind is printed) */
+  { NULL, "VerboseParser",        OptBoolean, &verbose_parser,         NULL,         0,   NULL,   0,     0 },
+  { NULL, "ShowSymtab",           OptBoolean, &show_symtab,            NULL,         0,   NULL,   0,     0 },
+  { NULL, "ShowGconstraints",     OptBoolean, &show_gconstraints,      NULL,         0,   NULL,   0,     0 },
+  { NULL, "ShowEvaltree",         OptBoolean, &show_evaltree,          NULL,         0,   NULL,   0,     0 },
+  { NULL, "ShowPatlist",          OptBoolean, &show_patlist,           NULL,         0,   NULL,   0,     0 },
+  { NULL, "ShowDFA",              OptBoolean, &show_dfa,               NULL,         0,   NULL,   0,     0 },
+  { NULL, "ShowCompDFA",          OptBoolean, &show_compdfa,           NULL,         0,   NULL,   0,     0 },
+  { NULL, "SymtabDebug",          OptBoolean, &symtab_debug,           NULL,         0,   NULL,   0,     0 },
+  { NULL, "ParserDebug",          OptBoolean, &parser_debug,           NULL,         0,   NULL,   0,     0 },
+  { NULL, "TreeDebug",            OptBoolean, &tree_debug,             NULL,         0,   NULL,   0,     0 },
+  { NULL, "EvalDebug",            OptBoolean, &eval_debug,             NULL,         0,   NULL,   0,     0 },
+  { NULL, "InitialMatchlistDebug",OptBoolean, &initial_matchlist_debug,NULL,         0,   NULL,   0,     0 },
+  { NULL, "DebugSimulation",      OptBoolean, &debug_simulation,       NULL,         0,   NULL,   0,     0 },
+  { NULL, "SearchDebug",          OptBoolean, &search_debug,           NULL,         0,   NULL,   0,     0 },
+  { NULL, "ServerLog",            OptBoolean, &server_log,             NULL,         1,   NULL,   0,     0 },
+  { NULL, "ServerDebug",          OptBoolean, &server_debug,           NULL,         0,   NULL,   0,     0 },
+  { NULL, "Snoop",                OptBoolean, &snoop,                  NULL,         0,   NULL,   0,     0 },
+  { NULL, "ParseOnly",            OptBoolean, &parseonly,              NULL,         0,   NULL,   0,     0 },
+  { NULL, "Silent",               OptBoolean, &silent,                 NULL,         0,   NULL,   0,     0 },
+  { NULL, "ChildProcess",         OptBoolean, &child_process,          NULL,         0,   NULL,   0,     0 },
+  { NULL, "MacroDebug",           OptBoolean, &macro_debug,            NULL,         0,   NULL,   0,     0 },
+  { NULL, "CLDebug",              OptBoolean, &activate_cl_debug,      NULL,         0,   NULL,   4,     0 },
 
   /* "secret" internal options */
-  { NULL, "PrintNrMatches",       OptInteger, &printNrMatches,    NULL, 0,  NULL, 0, 0}, 
+  { NULL, "PrintNrMatches",       OptInteger, &printNrMatches,         NULL,         0,   NULL,   0,     0 },
 
-  { "eg", "ExternalGroup",        OptBoolean, &UseExternalGrouping, NULL, 0, NULL, 0, 0},
-  { "egc","ExternalGroupCommand", OptString,  &ExternalGroupingCommand, NULL, 0, NULL, 0, 0}, 
-  { "lcv", "LessCharsetVariable", OptString,  &less_charset_variable, "LESSCHARSET", 0, NULL, 0, 0},
+  { "eg", "ExternalGroup",        OptBoolean, &UseExternalGrouping,    NULL,         0,   NULL,   0,     0 },
+  { "egc","ExternalGroupCommand", OptString,  &ExternalGroupingCommand,NULL,         0,   NULL,   0,     0 },
+  { "lcv", "LessCharsetVariable", OptString,  &less_charset_variable,  "LESSCHARSET",0,   NULL,   0,     0 },
 
   /* options set by command-line flags */
-  { NULL, "Readline",             OptBoolean, &use_readline,      NULL, 0,  NULL, 0, 0},
-  { "dc", "DefaultCorpus",        OptString,  &default_corpus,    NULL, 0,  NULL, 0, 0},
-  { "hb", "HardBoundary",         OptInteger, &hard_boundary,     NULL, DEFAULT_HARDBOUNDARY, NULL, 0, 0},
-  { "hc", "HardCut",              OptInteger, &hard_cut,          NULL, 0,  NULL, 0, 0},
-  { "ql", "QueryLock",            OptInteger, &query_lock,        NULL, 0,  NULL, 0, 0},
-  { "m",  "Macros",               OptBoolean, &enable_macros,     NULL, 1,  NULL, 0, 0},
-  { NULL, "UserLevel",            OptInteger, &user_level,        NULL, 0,  NULL, 0, 0}, 
+  { NULL, "Readline",             OptBoolean, &use_readline,           NULL,         0,   NULL,   0,     0 },
+  { "dc", "DefaultCorpus",        OptString,  &default_corpus,         NULL,         0,   NULL,   0,     0 },
+  { "hb", "HardBoundary",         OptInteger, &hard_boundary,          NULL,         DEFAULT_HARDBOUNDARY,
+                                                                                          NULL,   0,     0 },
+  { "hc", "HardCut",              OptInteger, &hard_cut,               NULL,         0,   NULL,   0,     0 },
+  { "ql", "QueryLock",            OptInteger, &query_lock,             NULL,         0,   NULL,   0,     0 },
+  { "m",  "Macros",               OptBoolean, &enable_macros,          NULL,         1,   NULL,   0,     0 },
+  { NULL, "UserLevel",            OptInteger, &user_level,             NULL,         0,   NULL,   0,     0 },
+
+  /* Abbr  VariableName           Type        Where to store           String-       Int- Environ Side-  Option
+   *                                                                   Default       Def. VarName Effect Flags
+   * ----------------------------------------------------------------------------------------------------------*/
 
   /* now called DataDirectory, but we keep the old name (secretly) for compatibility */
-  { "lcd","LocalCorpusDirectory", OptString,  &LOCAL_CORP_PATH,   NULL, 0,  NULL, 2, 0 },
+  { "lcd","LocalCorpusDirectory", OptString,  &LOCAL_CORP_PATH,        NULL,         0,   NULL,   2,     0 },
 
   /* user options */
-  { "r",  "Registry",             OptString,  &registry,          NULL, 0,  REGISTRY_ENVVAR, 1,  OPTION_CQP }, 
-  { "dd", "DataDirectory",        OptString,  &LOCAL_CORP_PATH,   NULL, 0,  DEFAULT_LOCAL_PATH_ENV_VAR, 2,  OPTION_CQP },
-  { "hf", "HistoryFile",          OptString,  &cqp_history_file,  NULL, 0,  NULL, 0, OPTION_CQP },
-  { "wh", "WriteHistory",         OptBoolean, &write_history_file, NULL, 0, NULL, 0, OPTION_CQP },
-  { "ms", "MatchingStrategy",     OptString,  &matching_strategy_name, "standard", 0, NULL, 9, OPTION_CQP },
-  { "sr", "StrictRegions",        OptBoolean, &strict_regions,    NULL, 1,  NULL, 0, OPTION_CQP},
-  { "p",  "Paging",               OptBoolean, &paging,            NULL, 1,  NULL, 0, OPTION_CQP},
+  { "r",  "Registry",             OptString,  &registry,               NULL,         0,   REGISTRY_ENVVAR,
+                                                                                                  1,     OPTION_CQP },
+  { "dd", "DataDirectory",        OptString,  &LOCAL_CORP_PATH,        NULL,         0,   DEFAULT_LOCAL_PATH_ENV_VAR,
+                                                                                                  2,     OPTION_CQP },
+  { "hf", "HistoryFile",          OptString,  &cqp_history_file,       NULL,         0,   NULL,   0,     OPTION_CQP },
+  { "wh", "WriteHistory",         OptBoolean, &write_history_file,     NULL,         0,   NULL,   0,     OPTION_CQP },
+  { "ms", "MatchingStrategy",     OptString,  &matching_strategy_name, "standard",   0,   NULL,   9,     OPTION_CQP },
+  { "sr", "StrictRegions",        OptBoolean, &strict_regions,         NULL,         1,   NULL,   0,     OPTION_CQP},
+  { "p",  "Paging",               OptBoolean, &paging,                 NULL,         1,   NULL,   0,     OPTION_CQP},
 #ifndef __MINGW__
-  { "pg", "Pager",                OptString,  &pager,             "less -FRX -+S", 0,  "CQP_PAGER", 0, OPTION_CQP},
-  { "h",  "Highlighting",         OptBoolean, &highlighting,      NULL, 1,  NULL, 0, OPTION_CQP },
+  { "pg", "Pager",                OptString,  &pager,                  "less -FRX -+S",0, "CQP_PAGER",0, OPTION_CQP},
+  { "h",  "Highlighting",         OptBoolean, &highlighting,           NULL,         1,   NULL,   0,     OPTION_CQP },
 #else
   /* use more as default pager under Windows (because it exists whereas less doesn't :-P ) */
-  { "pg", "Pager",                OptString,  &pager,             "more", 0,  "CQP_PAGER", 0, OPTION_CQP},
+  { "pg", "Pager",                OptString,  &pager,                  "more",       0,   "CQP_PAGER",0, OPTION_CQP},
   /* this implies that the default value for hihglighting must be "off" under Windows */
-  { "h",  "Highlighting",         OptBoolean, &highlighting,      NULL, 0,  NULL, 0, OPTION_CQP },
+  { "h",  "Highlighting",         OptBoolean, &highlighting,           NULL,         0,   NULL,   0,     OPTION_CQP },
   #endif
-  { "col","Colour",               OptBoolean, &use_colour,        NULL, 0,  NULL, 0, OPTION_CQP },
-  { "pb", "ProgressBar",          OptBoolean, &progress_bar,      NULL, 0,  NULL, 0, OPTION_CQP },
-  { "pp", "PrettyPrint",          OptBoolean, &pretty_print,      NULL, 1,  NULL, 0, OPTION_CQP },
-  { "c",  "Context",              OptContext, &CD,                NULL, 0,  NULL, 0, OPTION_CQP },
-  { "lc", "LeftContext",          OptContext, &CD,                NULL, 0,  NULL, 0, OPTION_CQP },
-  { "rc", "RightContext",         OptContext, &CD,                NULL, 0,  NULL, 0, OPTION_CQP },
-  { "ld", "LeftKWICDelim",        OptString,  &left_delimiter,    "<",  0,  NULL, 0, OPTION_CQP },
-  { "rd", "RightKWICDelim",       OptString,  &right_delimiter,   ">",  0,  NULL, 0, OPTION_CQP },
-  { "pm", "PrintMode",            OptString,  &printModeString,   "ascii", 0,  NULL, 6, OPTION_CQP},
-  { "po", "PrintOptions",         OptString,  &printModeOptions,  NULL, 0,  NULL, 8, OPTION_CQP},
-  { "ps", "PrintStructures",      OptString,  &printStructure,    NULL, 0,  NULL, 7, OPTION_CQP},
-  { "sta","ShowTagAttributes",    OptBoolean, &show_tag_attributes, NULL, 1,  NULL, 0, OPTION_CQP},
-  { "st", "ShowTargets",          OptBoolean, &show_targets,      NULL, 0,  NULL, 0, OPTION_CQP},
-  { "as", "AutoShow",             OptBoolean, &autoshow,          NULL, 1,  NULL, 0, OPTION_CQP },
-  { NULL, "Timing",               OptBoolean, &timing,            NULL, 0,  NULL, 0, OPTION_CQP },
-  { "o",  "Optimize",             OptBoolean, &query_optimize,    NULL, 0,  NULL, 3, OPTION_CQP }, 
-  { "es", "ExternalSort",         OptBoolean, &UseExternalSorting,NULL, 0,  NULL, 0, OPTION_CQP },
-  { "esc","ExternalSortCommand",  OptString,  &ExternalSortingCommand, NULL, 0, NULL, 0, OPTION_CQP }, 
-  { "da", "DefaultNonbrackAttr",  OptString,  &def_unbr_attr,     DEFAULT_ATT_NAME, 0, NULL, 0, OPTION_CQP },
-  { "sub","AutoSubquery",         OptBoolean, &subquery,          NULL, 0,  NULL, 0, OPTION_CQP },
-  { NULL, "AutoSave",             OptBoolean, &auto_save,         NULL, 0,  NULL, 0, OPTION_CQP }, 
-  { NULL, "SaveOnExit",           OptBoolean, &save_on_exit,      NULL, 0,  NULL, 0, OPTION_CQP }, 
+  { "col","Colour",               OptBoolean, &use_colour,             NULL,         0,   NULL,   0,     OPTION_CQP },
+  { "pb", "ProgressBar",          OptBoolean, &progress_bar,           NULL,         0,   NULL,   0,     OPTION_CQP },
+  { "pp", "PrettyPrint",          OptBoolean, &pretty_print,           NULL,         1,   NULL,   0,     OPTION_CQP },
+  { "c",  "Context",              OptContext, &CD,                     NULL,         0,   NULL,   0,     OPTION_CQP },
+  { "lc", "LeftContext",          OptContext, &CD,                     NULL,         0,   NULL,   0,     OPTION_CQP },
+  { "rc", "RightContext",         OptContext, &CD,                     NULL,         0,   NULL,   0,     OPTION_CQP },
+  { "ld", "LeftKWICDelim",        OptString,  &left_delimiter,         "<",          0,   NULL,   0,     OPTION_CQP },
+  { "rd", "RightKWICDelim",       OptString,  &right_delimiter,        ">",          0,   NULL,   0,     OPTION_CQP },
+  { "pm", "PrintMode",            OptString,  &printModeString,        "ascii",      0,   NULL,   6,     OPTION_CQP},
+  { "po", "PrintOptions",         OptString,  &printModeOptions,       NULL,         0,   NULL,   8,     OPTION_CQP},
+  { "ps", "PrintStructures",      OptString,  &printStructure,         NULL,         0,   NULL,   7,     OPTION_CQP},
+  { "sta","ShowTagAttributes",    OptBoolean, &show_tag_attributes,    NULL,         1,   NULL,   0,     OPTION_CQP},
+  { "st", "ShowTargets",          OptBoolean, &show_targets,           NULL,         0,   NULL,   0,     OPTION_CQP},
+  { "as", "AutoShow",             OptBoolean, &autoshow,               NULL,         1,   NULL,   0,     OPTION_CQP },
+  { NULL, "Timing",               OptBoolean, &timing,                 NULL,         0,   NULL,   0,     OPTION_CQP },
+  { "o",  "Optimize",             OptBoolean, &query_optimize,         NULL,         0,   NULL,   3,     OPTION_CQP },
+  { "es", "ExternalSort",         OptBoolean, &UseExternalSorting,     NULL,         0,   NULL,   0,     OPTION_CQP },
+  { "esc","ExternalSortCommand",  OptString,  &ExternalSortingCommand, NULL,         0,   NULL,   0,     OPTION_CQP },
+  { "da", "DefaultNonbrackAttr",  OptString,  &def_unbr_attr,          DEFAULT_ATT_NAME,0,NULL,   0,     OPTION_CQP },
+  { "sub","AutoSubquery",         OptBoolean, &subquery,               NULL,         0,   NULL,   0,     OPTION_CQP },
+  { NULL, "AutoSave",             OptBoolean, &auto_save,              NULL,         0,   NULL,   0,     OPTION_CQP },
+  { NULL, "SaveOnExit",           OptBoolean, &save_on_exit,           NULL,         0,   NULL,   0,     OPTION_CQP },
 
-  { NULL, NULL,                   OptString,  NULL,               NULL, 0,  NULL, 0, 0}
+  /* empty option to terminate array */
+  { NULL, NULL,                   OptString,  NULL,                    NULL,         0,   NULL,   0,     0}
 };
 
 /**
@@ -207,7 +215,8 @@ expand_filename(char *fname)
   
 }
 
-void usage(void)
+void
+cqp_usage(void)
 {
   switch (which_app) {
   case cqpserver:
@@ -496,7 +505,7 @@ set_default_option_values(void)
  * s. This should be never called from outside.
  *
  * @see      cqpoptions
- * @param s  Name of the option to find.
+ * @param s  Name of the option to find (or abbreviation); matched case-insensitively.
  * @return   Index of element in cqpoptions corresponding to the name s,
  *           or -1 if no corresponding element was found.
  */
@@ -520,7 +529,9 @@ int find_option(char *s)
 /**
  * Carries out any "side effects" of setting an option.
  *
- * @param opt  The option that has just been set.
+ * @param opt  The option that has just been set (index into the cqpoptions array).
+ *
+ * TODO This use of integer indexes as the pass from parse_options is very messy....
  */
 void
 execute_side_effects(int opt)
@@ -599,7 +610,8 @@ execute_side_effects(int opt)
   }
 }
 
-int validate_string_option_value(int opt, char *value)
+int
+validate_string_option_value(int opt, char *value)
 {
 #ifdef __NEVER__
   switch (opt) {
@@ -658,7 +670,7 @@ int validate_integer_option_value(int opt, int value)
 /**
  * Sets a string-valued option.
  *
- * An error string
+ * An error string (function-internal constant, do NOT free)
  * is returned if the type of the option does not correspond to
  * the function which is called. Upon success, NULL is returned.
  *
@@ -705,9 +717,9 @@ set_string_option_value(char *opt_name, char *value)
 
 
 /**
- * Sets an integer or string-valued option.
+ * Sets an integer-valued option.
  *
- * An error string
+ * An error string (function-internal constant, do NOT free)
  * is returned if the type of the option does not correspond to
  * the function which is called. Upon success, NULL is returned.
  *
@@ -880,7 +892,7 @@ parse_options(int ac, char *av[])
     valid_options = "+1b:d:D:FhI:l:LmM:P:qr:Svx";
     break;
   default:
-    usage();                        /* this will display the 'unknown application' message */
+    cqp_usage();                        /* this will display the 'unknown application' message */
   }
 
   while ((c = getopt(ac, av, valid_options)) != EOF)
@@ -976,7 +988,7 @@ parse_options(int ac, char *av[])
       }
       break;
     case 'h':
-      usage();
+      cqp_usage();
       break;
     case 'v':
       printf("%s\n", licensee);
@@ -1014,9 +1026,12 @@ parse_options(int ac, char *av[])
 
     case 'i':
       silent = rangeoutput = True;
-      verbose_parser = show_symtab = show_gconstraints = 
-        show_evaltree = show_patlist =
-        symtab_debug = parser_debug = eval_debug = search_debug = False;
+      verbose_parser = show_symtab
+        = show_gconstraints = show_evaltree
+        = show_patlist = symtab_debug
+        = parser_debug = eval_debug
+        = search_debug = False;
+      /* cf. options.h; there are more debug vars than this now, should they all be set to false? */
       break;
       
     case 'c':
@@ -1024,6 +1039,7 @@ parse_options(int ac, char *av[])
       paging = highlighting = False;
       autoshow = auto_save = False;
       progress_bar_child_mode(1);
+      /* TODO: would it be useful to set PrettyPrint automatically to "off" in child mode? */
       break;
 
     case 'e':

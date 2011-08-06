@@ -128,6 +128,8 @@ int
 initialize_cqp(int argc, char **argv)
 {
   char *home = NULL;
+  char *homedrive = NULL;
+  char *homepath = NULL;
   char init_file_fullname[256];
 
   /* file handle for initialisation files, if any */
@@ -160,9 +162,23 @@ initialize_cqp(int argc, char **argv)
 
   yydebug = parser_debug;
 
-  /* read initialization file */
+  /* before we start looking for files, let's get the home directory, if we can,
+   * so we don't have to detect it in more than one place. */
+#ifndef __MINGW__
+  home = (char *)getenv("HOME");
+#else
+  /* under Windows it is %HOMEDRIVE%%HOMEPATH% */
+  if ((homepath = (char *)getenv("HOMEPATH")) != NULL && (homedrive = (char *)getenv("HOMEDRIVE")) != NULL )  {
+    home = (char *)cl_malloc(256);
+    sprintf(home, "%s%s", homedrive, homepath);
+  }
+#endif
+  /* note that either way above, home is NULL if the needed env var(s) were not found. */
+
+
+  /* read initialization file if specified via -I, or if we are in interactive mode */
   if (cqp_init_file ||
-      (!child_process && (!batchmode || (batchfd == NULL)) && !(which_app == cqpserver))
+      (!child_process && (!batchmode || batchfd == NULL) && which_app != cqpserver)
       ) {
 
     /*
@@ -179,10 +195,10 @@ initialize_cqp(int argc, char **argv)
 
     init_file_fullname[0] = '\0';
 
-    /* read init file specified with -I , otherwise look for ~/.cqprc */
+    /* read init file specified with -I , otherwise look for $HOME/.cqprc */
     if (cqp_init_file)
       sprintf(init_file_fullname, "%s", cqp_init_file);
-    else if ((home = (char *)getenv("HOME")) != NULL)
+    else if (home)
       sprintf(init_file_fullname, "%s%c%s", home, SUBDIR_SEPARATOR, CQPRC_NAME);
 
     if (init_file_fullname[0] != '\0') {
@@ -220,8 +236,8 @@ initialize_cqp(int argc, char **argv)
     /* read macro init file specified with -M , otherwise look for ~/.cqpmacros */
     if (macro_init_file)
       sprintf(init_file_fullname, "%s", macro_init_file);
-    else if ((home = (char *)getenv("HOME")) != NULL)
-      sprintf(init_file_fullname, "%s/%s", home, CQPMACRORC_NAME);
+    else if (home)
+      sprintf(init_file_fullname, "%s%c%s", home, SUBDIR_SEPARATOR, CQPMACRORC_NAME);
 
     if (init_file_fullname[0] != '\0') {
       if ((cqprc = fopen(init_file_fullname, "r")) != NULL) {

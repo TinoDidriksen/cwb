@@ -21,10 +21,13 @@
 #include "../cl/globals.h"
 #include "concordance.h"
 
+/** Default value for the HardBoundary configuration option. */
 #define DEFAULT_HARDBOUNDARY 100
 
+/** Flag for CQP configuration options: is this public and visible interactively in CQP? */
 #define OPTION_CQP    1                /* public, use in cqp */
 
+/** Default value for the context scope configuration option (counted in characters */
 #define DEFAULT_CONTEXT 25
 
 #define DEFAULT_LOCAL_PATH_ENV_VAR "CQP_LOCAL_CORP_DIR"
@@ -48,19 +51,20 @@ int inhibit_activation;              /**< Boolean: inhibit corpus activations in
 /* debugging options */
 int parseonly;
 int verbose_parser;               /**< if true, absolutely all messages from the parser get printed */
-int show_symtab;
+int show_symtab;                  /**< if true,  */
 int show_gconstraints;
 int show_evaltree;
 int show_patlist;
 int show_dfa;
 int show_compdfa;
-int symtab_debug;
-int parser_debug;
-int tree_debug;
-int eval_debug;
-int search_debug;
+int symtab_debug;                 /**< if this AND debug_simulation are true, print extra messages relating to eval
+                                   *   environment labels when simulating an NFA. */
+int parser_debug;                 /**< if true,  */
+int tree_debug;                   /**< if true, extra messages are embedded when an evaluation tree is pretty-printed */
+int eval_debug;                   /**< if true, assorted debug messages related to query evaluation are printed */
+int search_debug;                 /**< if true, the evaltree of a pattern is pretty-printed before the DFA is created. */
 int initial_matchlist_debug;
-int debug_simulation;
+int debug_simulation;             /**< if true, debug messages are printed when simulating an NFA. @see simulate */
 int activate_cl_debug;
 
 /* CQPserver options */
@@ -125,6 +129,13 @@ char *macro_init_file;            /**< secondary init file for loading macro def
 char *cqp_history_file;           /**< filename where CQP command history will be saved */
 int write_history_file;           /**< Controls whether CQP command history is written to file */
 
+/* options for non-interactive use */
+int batchmode;                    /**< set by -f {file} option (don't read ~/.cqprc, then process input from {file}) */
+int silent;                       /**< Disables some messages & warnings (used rather inconsistently).
+                                   *   NEW: suppresses cqpmessage() unless it is an error */
+char *default_corpus;             /**< corpus specified with -D {corpus} */
+char *query_string;               /**< query specified on command line (-E {string}, cqpcl only) */
+
 /* options which just shouldn't exist */
 int UseExternalSorting;           /**< (option which should not exist) use external sorting algorithm */
 char *ExternalSortingCommand;     /**< (option which should not exist) external sort command to use */
@@ -132,13 +143,6 @@ int UseExternalGrouping;          /**< (option which should not exist) use exter
 char *ExternalGroupingCommand;    /**< (option which should not exist) external group command to use */
 int user_level;                   /**< (option which should not exist) user level: 0 == normal, 1 == advanced, 2 == expert) */
 int rangeoutput;                  /**< (option which should not exist) */
-
-/* options for non-interactive use */
-int batchmode;                    /**< set by -f {file} option (don't read ~/.cqprc, then process input from {file}) */
-int silent;                       /**< Disables some messages & warnings (used rather inconsistently).
-                                   *   NEW: suppresses cqpmessage() unless it is an error */
-char *default_corpus;             /**< corpus specified with -D {corpus} */
-char *query_string;               /**< query specified on command line (-E {string}, cqpcl only) */
 
 
 /**
@@ -177,16 +181,27 @@ typedef enum _opttype {
   OptInteger, OptString, OptBoolean, OptContext
 } OptType;
 
-/** A CQPOption represents a single configuration option for CQP. */
+/**
+ * A CQPOption represents a single configuration option for CQP.
+ *
+ * It does not actually contain the config-option itself; that is held as
+ * a global variable somewhere. Instead, it holds metadata about the
+ * config-option, including a pointer to the actual variable.
+ *
+ * Note it's possible to have wo CQPOption objects referring to the same
+ * actual variable - in this case the two option names in question
+ * would be synonymous.
+ *
+ */
 typedef struct _cqpoption {
-  char    *opt_abbrev;
-  char    *opt_name;
-  OptType  type;
-  void    *address;
-  char    *cdefault;
-  int      idefault;
-  char    *envvar;
-  int      side_effect;
+  char    *opt_abbrev;           /**< Short version of this option's name. */
+  char    *opt_name;             /**< Name of this option as referred to in the interactive control syntax */
+  OptType  type;                 /**< Data type of this configuration option. */
+  void    *address;              /**< Pointer to the actual variable that contains this config option. */
+  char    *cdefault;             /**< Default value fo rthis option (string value) */
+  int      idefault;             /**< Default value fo rthis option (integer value) */
+  char    *envvar;               /**< The environment variable from which CQP will take a value for this option */
+  int      side_effect;          /**< Ref number of the side effect that changing this option has. @see execute_side_effects */
   int      flags;                /* PUBLIC, CQP */
 } CQPOption;
 

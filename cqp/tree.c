@@ -437,12 +437,22 @@ init_booltree(Constrainttree *ctptr)
 }
 
 
-/*
- * pretty printer: traverse boolean evaluation tree and print its contents
- * with appropriate indentation.                                           
+/**
+ * Prints a boolean evaluation tree.
+ *
+ * This function is a pretty-printer for the Constrainttree data type. It
+ * traverses a boolean evaluation tree and prints its contents. An indentation
+ * level must be specified.
+ *
+ * (The indentation is needed because this function calls itself recursively for sub-branches.)
+ *
+ * @param ctptr   Constrainttree to print.
+ * @param indent  Number of indent levels at which to start printing. Each
+ *                indent level is realised as two spaces.
  */ 
 
-void print_booltree(Constrainttree ctptr, int indent)
+void
+print_booltree(Constrainttree ctptr, int indent)
 {
   int i;
   ActualParamList *arg;

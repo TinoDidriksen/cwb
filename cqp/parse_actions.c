@@ -1063,12 +1063,12 @@ do_SearchPattern(Evaltree expr, /* $1 */
         printf("Search String: ``%s''\n", searchstr);
       }
       
-      if (searchstr && (strspn(searchstr, " ") < strlen(searchstr))) { /* i.e. searchstr !~ /^\s*$/ */
+      if (searchstr && (strspn(searchstr, " ") < strlen(searchstr))) { /* i.e. searchstr does not match /^\s*$/ */
         regex2dfa(searchstr, &(CurEnv->dfa));
       }
       else {
-	cqpmessage(Error, "Query is vacuous, not evaluated.");
-	generate_code = 0;
+        cqpmessage(Error, "Query is vacuous, not evaluated.");
+        generate_code = 0;
       }
       cl_free(searchstr);
     }
