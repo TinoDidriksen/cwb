@@ -8,21 +8,29 @@ B<cwb-atoi> [-nl] I<file>
 
 =head1 DESCRIPTION
 
-B<TODO>
-
-Reads one integer per line from ASCII file I<file> or from standard input and writes values to standard output as 32bit integers in network format (the format used by uncompressed CWB binary data files).
+Reads one integer per line from ASCII file I<file> or from standard input, 
+and writes values to standard output as 32bit integers in network format 
+(the format used by uncompressed CWB binary data files).
 
 
 =head1 OPTIONS
 
-Please note that no CWB programs currently support GNU-style C<--long-options>.
-
-  -n  convert to network format [default]
-  -l  convert to little endian format
+Please note that the CWB utilities do not currently support GNU-style C<--long-options>.
 
 =over 4
 
-=item B<TODO>
+=item B<-n>
+
+Convert to network format (big endian, the default).
+
+=item B<-l>
+
+Convert to little endian format.
+
+=item B<-h>
+
+Displays B<cwb-atoi>'s help message, with short information about the usage of the command line options. 
+After the usage message is printed, B<cwb-atoi> will exit.
 
 =back
 
@@ -35,18 +43,11 @@ L<cwb-itoa>, L<cwb-lexdecode>, L<cwb-makeall>, L<cwb-scan-corpus>, L<cwb-s-decod
 
 =head1 COPYRIGHT
 
-=over 4
-
-=item
 B<IMS Open Corpus Workbench (CWB)> L<http://cwb.sourceforge.net/>
 
-=item
 Copyright (C) 1993-2006 by IMS, University of Stuttgart
 
-=item
 Copyright (C) 2007- by the respective contributers (see file F<AUTHORS>)
-
-=back
 
 This program is free software; you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
