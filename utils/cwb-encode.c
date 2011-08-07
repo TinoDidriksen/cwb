@@ -318,7 +318,7 @@ encode_usage(void)
   fprintf(stderr, "  -U <str>  insert <str> for missing columns [default: \"%s\"]\n", undef_value);
   fprintf(stderr, "  -b <n>    number of buckets in lexicon hash tables\n");
   fprintf(stderr, "  -c <charset> specify corpus character set (instead of the default latin1)\n");
-  fprintf(stderr, "     * valid charsets: ascii ; latin1 to latin9 ; utf8\n");
+  fprintf(stderr, "     * valid charsets: ascii ; latin1 to latin9 ; arabic, greek, hebrew ; utf8\n");
   fprintf(stderr, "  -C        clean strings, replacing invalid bytes with '?' (except UTF-8 charset)\n");
   fprintf(stderr, "  -v        verbose mode (show progress messages while encoding)\n");
   fprintf(stderr, "  -q        quiet mode (suppresses most warnings)\n");
@@ -1254,8 +1254,8 @@ encode_parse_options(int argc, char **argv)
         int registry_is_canonical = 1;
         registry_file = optarg;
 
-        /* Check for path ending in slash and for non-lowercase */
-        /* allow EITHER possible value of SUBDIR_SEPARATOR */
+        /* Check for path ending in slash and for non-lowercase in last part of the filename;
+         * allow EITHER possible value of SUBDIR_SEPARATOR */
         size = strlen(registry_file) - 1;
         if ((size < 0) || (registry_file[size] == '/') || (registry_file[size] == '\\'))
           encode_error("Usage error: invalid filename '%s' for registry entry", registry_file);
@@ -1266,7 +1266,7 @@ encode_parse_options(int argc, char **argv)
             registry_is_ok = 0; /* uppercase characters, '.' and '~' are definitely not allowed */
           
           if (!( c == '_' || c == '-' || (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') ))
-            registry_is_canonical = 0; /* new canonical form allows only a-z, 0-9, _, - */
+            registry_is_canonical = 0; /* new canonical form allows only ASCII a-z, 0-9, _, - */
 
           size--;
         }
@@ -1303,7 +1303,7 @@ encode_parse_options(int argc, char **argv)
       for (i = 0; i < l; i++) {
         cl_string_list_append(input_files, cl_string_list_get(dir_files, i));
       }
-      cl_delete_string_list(dir_files); /* allocated strings have been copied to input_files, so don't free() them */
+      cl_delete_string_list(dir_files); /* allocated strings have been moved into input_files, so don't free() them */
       break;
 
       /* -s: skip empty lines */
@@ -1515,7 +1515,8 @@ encode_add_wattr_line(char *str)
  * character set specified for the corpus, then an error
  * will be printed and the program shut down.
  *
- * @param buffer   Where to load the line to.
+ * @param buffer   Where to load the line to. Assumed to be
+ *                 MAX_INPUT_LINE_LENGTH long.
  * @param bufsize  Not currently used, but should be
  *                 MAX_INPUT_LINE_LENGTH in case of future use!
  *
@@ -1622,7 +1623,7 @@ encode_generate_registry_file(char *registry_file)
   FILE *registry_fd;
   char *registry_id;          /* use last part of registry filename (i.e. string following last '/' character) */
   char *corpus_name = NULL;   /* name of the corpus == uppercase version of registry_id */
-  char *info_file = NULL;     /* name of INFO file == <directory>/.info or corpus-info.txt under win */
+  char *info_file = NULL;     /* name of INFO file: <dir>/.info or <dir>/corpus-info.txt under win; see cl/globals.h */
   char *path = NULL;
   int i;
 

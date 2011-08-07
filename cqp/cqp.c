@@ -278,6 +278,11 @@ initialize_cqp(int argc, char **argv)
   }
 #endif
 
+#ifdef __MINGW__
+  /* due to how the home path was calculated, home contains a malloc'ed string */
+  cl_free(home);
+#endif
+
   return 1;
 }
 

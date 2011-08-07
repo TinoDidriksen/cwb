@@ -600,7 +600,7 @@ catalog_corpus(CorpusList *cl,
  * Print a message to output (for instance a debug message).
  *
  * @see           MessageType
- * @param type    Specifies what type of message (messages of some types are not always printed)/
+ * @param type    Specifies what type of message (messages of some types are not always printed)
  * @param format  Format string (and ...) are passed as arguments to vfprintf().
  */
 void 
@@ -610,7 +610,7 @@ cqpmessage(MessageType type, char *format, ...)
 
   va_start(ap, format);
 
-  /* do not print MEssage unless parser is in verbose mode */
+  /* do not print Message unless parser is in verbose mode */
   if ((type != Message) || verbose_parser) {
     
     char *msg;

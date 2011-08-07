@@ -1542,7 +1542,7 @@ interpreter(void)
 
 
 /**
- * Main function for the cqpserver app
+ * Main function for the cqpserver app.
  */
 int
 main(int argc, char *argv[])
@@ -1551,6 +1551,8 @@ main(int argc, char *argv[])
 
   which_app = cqpserver;
 
+  /* TODO: shouldn't these come AFTER initialize_cqp(), as that function may overwrite these values with defaults?
+   * or maybe I've missed some subtlety here....*/
   silent = 1; 
   paging = autoshow = auto_save = 0;
 

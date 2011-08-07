@@ -22,7 +22,7 @@
 
 /* byte order handling taken from Corpus Library */
 #include "../cl/endian.h"
-#include "../cl/cl.h"
+#include "../cl/globals.h"
 
 /**
  * boolean: is the byte-order little-endian?
@@ -48,7 +48,7 @@ process_fd(FILE *fd)
     i = htonl(atoi(buf));
     if (little_endian) 
       i = cl_bswap32(i);        /* explicit conversion */
-    fwrite(&i, 4, 1, stdout);        /* always write 4 bytes ! */
+    fwrite(&i, 4, 1, stdout);   /* always write 4 bytes ! */
   }
 }
 
@@ -82,7 +82,7 @@ main(int argc, char **argv)
         fprintf(stderr, "\n");
         fprintf(stderr, "Usage:  %s [options] [file]\n", argv[0]);
         fprintf(stderr, "Reads one integer per line from ASCII file <file> or from standard input\n");
-        fprintf(stderr, "and writes values to standard output as 32bit integers in network format\n");
+        fprintf(stderr, "and writes values to standard output as 32-bit integers in network format\n");
         fprintf(stderr, "(the format used by CWB binary data files).\n");
         fprintf(stderr, "Options:\n");
         fprintf(stderr, "  -n  convert to network format [default]\n");

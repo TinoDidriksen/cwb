@@ -24,10 +24,10 @@
 /** Default value for the HardBoundary configuration option. */
 #define DEFAULT_HARDBOUNDARY 100
 
-/** Flag for CQP configuration options: is this public and visible interactively in CQP? */
-#define OPTION_CQP    1                /* public, use in cqp */
+/** Flag for CQP configuration options: is this visible interactively in CQP? */
+#define OPTION_CQP    1
 
-/** Default value for the context scope configuration option (counted in characters */
+/** Default value for the context scope configuration option (counted in characters) */
 #define DEFAULT_CONTEXT 25
 
 #define DEFAULT_LOCAL_PATH_ENV_VAR "CQP_LOCAL_CORP_DIR"
@@ -41,36 +41,37 @@ enum _which_app { undef, cqp, cqpcl, cqpserver} which_app;
 
 
 /* the insecure/inhibit_activation/inhibit_interactives options aren't really needed any more;
- * CGI scripts should use the new query lock mode instead
- * [ insecure and inhibit_activation are kept for compatibility; inhibit_interactives has been removed ]
+ * CGI scripts should use the new query lock mode instead.
+ * [ insecure and inhibit_activation are kept for compatibility; inhibit_interactives has been removed. ]
  */
-int insecure;                        /**< Boolean: != 0 means we should not allow pipes etc. (cgi) */
-int inhibit_activation;              /**< Boolean: inhibit corpus activations in parser */
+int insecure;                     /**< Boolean: != 0 means we should not allow pipes etc. (For example, in CGI.) */
+int inhibit_activation;           /**< Boolean: inhibit corpus activations in parser */
 
 
 /* debugging options */
-int parseonly;
-int verbose_parser;               /**< if true, absolutely all messages from the parser get printed */
-int show_symtab;                  /**< if true,  */
-int show_gconstraints;
-int show_evaltree;
-int show_patlist;
-int show_dfa;
-int show_compdfa;
+int parseonly;                    /**< if true, queries are only parsed, not evaluated. */
+int verbose_parser;               /**< if true, absolutely all messages from the parser get printed (inc Message-level). */
+int show_symtab;                  /**< Doesn't seem to be used anywhere; should show_environment use it? if not, remove? TODO  */
+int show_gconstraints;            /**< if true, the tree of global contraints is printed when an EvalEnvironment is displayed */
+int show_evaltree;                /**< if true, the evaluation tree is printed when an EvalEnvironment is displayed */
+int show_patlist;                 /**< if true, the pattern list is printed when an EvalEnvironment is displayed */
+int show_compdfa;                 /**< if true, the complete DFA is printed when an EvalEnvironment is displayed */
+int show_dfa;                     /**< if true, the regex2dfa module will print out the states of the DFA after it is parsed. */
+  /* TODO rename the above variable because it is NOT the same as the other show_* variables. regex2dfa_debug? dfa_debug? */
 int symtab_debug;                 /**< if this AND debug_simulation are true, print extra messages relating to eval
                                    *   environment labels when simulating an NFA. */
-int parser_debug;                 /**< if true,  */
+int parser_debug;                 /**< if true, the parser's internal Bison-generated debug setting is turned on. */
 int tree_debug;                   /**< if true, extra messages are embedded when an evaluation tree is pretty-printed */
 int eval_debug;                   /**< if true, assorted debug messages related to query evaluation are printed */
 int search_debug;                 /**< if true, the evaltree of a pattern is pretty-printed before the DFA is created. */
-int initial_matchlist_debug;
+int initial_matchlist_debug;      /**< if true, debug messages relating to the initial set of candidate matches are printed. */
 int debug_simulation;             /**< if true, debug messages are printed when simulating an NFA. @see simulate */
-int activate_cl_debug;
+int activate_cl_debug;            /**< if true, the CL's debug message setting is set to On. */
 
 /* CQPserver options */
 int server_log;                   /**< cqpserver option: logging */
 int server_debug;                 /**< cqpserver option: debugging output */
-int snoop;                        /**< cqpserver option: monitor CQi network communciation */
+int snoop;                        /**< cqpserver option: monitor CQi network communication */
 int private_server;               /**< cqpserver option: makes CQPserver accept a single connection only */
 int server_port;                  /**< cqpserver option: CQPserver's listening port (if 0, listens on CQI_PORT) */
 int localhost;                    /**< cqpserver option: accept local connections (loopback) only */
@@ -82,7 +83,7 @@ int query_lock_violation;         /**< cqpserver option: set for CQPserver's sak
 
 /* macro options */
 int enable_macros;                /**< enable macros only at user request in case they introduce compatibility problems */
-int macro_debug;                  /**< enable debugging of macros */
+int macro_debug;                  /**< enable debugging of macros (and print macro hash stats on shutdown). */
 
 /* query options */
 int hard_boundary;                /**< Query option: use implicit 'within' clause (unless overridden by explicit spec) */
@@ -132,7 +133,7 @@ int write_history_file;           /**< Controls whether CQP command history is w
 /* options for non-interactive use */
 int batchmode;                    /**< set by -f {file} option (don't read ~/.cqprc, then process input from {file}) */
 int silent;                       /**< Disables some messages & warnings (used rather inconsistently).
-                                   *   NEW: suppresses cqpmessage() unless it is an error */
+                                   *   NEW: suppresses cqpmessage() unless it is an error. */
 char *default_corpus;             /**< corpus specified with -D {corpus} */
 char *query_string;               /**< query specified on command line (-E {string}, cqpcl only) */
 
@@ -202,7 +203,7 @@ typedef struct _cqpoption {
   int      idefault;             /**< Default value fo rthis option (integer value) */
   char    *envvar;               /**< The environment variable from which CQP will take a value for this option */
   int      side_effect;          /**< Ref number of the side effect that changing this option has. @see execute_side_effects */
-  int      flags;                /* PUBLIC, CQP */
+  int      flags;                /**< Flags for this option: can include PUBLIC, CQP */
 } CQPOption;
 
 

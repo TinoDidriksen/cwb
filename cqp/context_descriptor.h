@@ -21,11 +21,16 @@
 
 #include "attlist.h"
 
+/* The following constant define flags for the four different ways of measuring context-width: */
 
+/** Context width measured in characters */
 #define CHAR_CONTEXT -1
+/** Context width measured in tokens */
 #define WORD_CONTEXT -2
+/** Context width measured in terms of an s-attribute */
 #define STRUC_CONTEXT -3
-#define ALIGN_CONTEXT -4	/* allow alignment blocks as context */
+/** Context width measured in terms of an a-attribute - that is, alignment blocks as the unit of context */
+#define ALIGN_CONTEXT -4
 
 /**
  * ContextDescriptor object: a bundle of CQP options
@@ -40,15 +45,15 @@ typedef struct _context_description_block {
 
   /* ==================== left context */
 
-  int left_width;
-  int left_type;
+  int left_width;                    /**< Amount of context to show before the match, in units specified by left_type */
+  int left_type;                     /**< Set to one of the constants: CHAR_CONTEXT, WORD_CONTEXT, STRUC_CONTEXT, ALIGN_CONTEXT */
   char *left_structure_name;
   Attribute *left_structure;
 
   /* ==================== right context */
 
-  int right_width;
-  int right_type;
+  int right_width;                   /**< Amount of context to show after the match, in units specified by right_type */
+  int right_type;                    /**< Set to one of the constants: CHAR_CONTEXT, WORD_CONTEXT, STRUC_CONTEXT, ALIGN_CONTEXT */
   char *right_structure_name;
   Attribute *right_structure;
 

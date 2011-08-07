@@ -23,8 +23,8 @@
 #
 # CWB version
 #
-VERSION = 3.2.7
-# alpha / beta for Unicode support: all versions 3.2.x
+VERSION = 3.4.0
+# 3.4.x = beta versions leading up to new stable 3.5.0
 
 #
 # Check that required configuration variables are set

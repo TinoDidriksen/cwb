@@ -280,10 +280,10 @@ get_matched_corpus_positions(Attribute *attribute,
   matchlist->is_inverted = 0;
 
   if (attribute == NULL)
-    attribute = find_attribute(evalenv->query_corpus->corpus,
-                               DEFAULT_ATT_NAME,
-                               ATT_POS,
-                               NULL);
+    attribute = cl_new_attribute_oldstyle(evalenv->query_corpus->corpus,
+                                          DEFAULT_ATT_NAME,
+                                          ATT_POS,
+                                          NULL);
 
   assert(attribute);
 
@@ -292,25 +292,21 @@ get_matched_corpus_positions(Attribute *attribute,
   
   /* changed .* / .+ optimization to .* only -- so "" will be handled correctly as an attribute value
      (will be standard in CWB 4.0, and may happen now if someone runs encode with -U "") */
+  /* AH notes Aug 2011: the above comment about 4.0 has nothing to do with the TODO-4.0 plan I sketched out! */
   if (STREQ(regstr, ".*")) {
     if (eval_debug) 
       fprintf(stderr, "get_matched_corpus_positions: */+ optimization\n");
     
     matchlist->start = (int *)cl_malloc(sizeof(int) * size);
 
-    /* we here produce a copy of a system corpus. TODO: optimize that
-     * with the "matches_whole_corpus"-flag.
-     */
-
+    /* we here produce a copy of a system corpus. TODO: optimize that with the "matches_whole_corpus"-flag. */
     for (i = 0; i < size; i++)
       matchlist->start[i] = i;
     matchlist->tabsize = size;
     matchlist->matches_whole_corpus = 1;
   }
   else {
-    /* get the word ids of the word forms which are matched by the 
-     * regular expression  'regstr' 
-     */
+    /* get the word ids of the word forms which are matched by the regular expression  'regstr' */
 
     word_ids = cl_regex2id(attribute,
                            regstr,
@@ -353,7 +349,7 @@ get_matched_corpus_positions(Attribute *attribute,
     }
   } /* end case where regstr is not ".*" */
 
-  /* finally, possibly print out a debug message (TODO: shouldn't this use cqpmessage()?)*/
+  /* finally, possibly print out a debug message */
   if (initial_matchlist_debug && 
       (matchlist->start != NULL) &&
       (matchlist->tabsize > 0) && !silent)
@@ -2630,13 +2626,13 @@ check_alignment_constraints(Matchlist *ml)
 }
 
 /* TODO what a very helpful documentation comment the following is.... (AH) */
-/* simulate the dfa */
+/** simulate the dfa */
 void
 simulate_dfa(int envidx, int cut, int keep_old_ranges)
 {
   int p, maxresult, state, i;
   Matchlist matchlist;
-  Matchlist total_matchlist; 
+  Matchlist total_matchlist;
 
   int *state_vector;            /* currently active states are marked with corresponding cpos */
   int *target_vector;           /* target states when simulating transition */
@@ -2653,7 +2649,7 @@ simulate_dfa(int envidx, int cut, int keep_old_ranges)
 
 
   assert(envidx <= eep);        /* envidx == 0, actually ...  check_alignment_constraint EXPLICITLY assumes that everything
-                                   else is an alignment constraint! */
+                                 * else is an alignment constraint! */
   evalenv = &Environment[envidx];
 
   /* Apparently Max_Input is the maximal number of transitions that appears in the 
@@ -2696,7 +2692,6 @@ simulate_dfa(int envidx, int cut, int keep_old_ranges)
     /* allocate the state and reference table vectors here, so that this has
      * not to be done in every simulate iteration
      */
-
     state_vector = (int *)cl_malloc(sizeof(int) * evalenv->dfa.Max_States);
     target_vector = (int *)cl_malloc(sizeof(int) * evalenv->dfa.Max_States);
     reftab_vector = (RefTab *) cl_malloc(sizeof(RefTab) * evalenv->dfa.Max_States);
@@ -2951,7 +2946,7 @@ cqp_run_tab_query(int implode)
   memset((char *)positions, '\0', nr_columns * sizeof(int));
 
   /* zur Bequemlichkeit, damit wir die Constraints als Array
-   * adressieren k�nnen */
+   * adressieren koennen */
 
   constraints = (Evaltree *)cl_malloc(nr_columns * sizeof(Evaltree));
   memset((char *)constraints, '\0', nr_columns * sizeof(Evaltree));
@@ -2977,7 +2972,7 @@ cqp_run_tab_query(int implode)
 
   /* OK. Let's reduce them. */
 
-  /* simple, silly algorighm. Just to test the beast. */
+  /* simple, silly algorithm. Just to test the beast. */
   /* TODO: optimize by using smallest_col */
 
   while (positions[0] < lists[0].tabsize) {
@@ -3028,13 +3023,11 @@ cqp_run_tab_query(int implode)
     }
   }
 
-  /* go throuh all lists and mark positions which are not yet visited */
+  /* go through all lists and mark positions which are not yet visited */
   for (this_col = 0; this_col < nr_columns; this_col++) {
-
     for (i = positions[this_col]; i < lists[this_col].tabsize; i++)
       lists[this_col].start[i] = -1;
     Setop(&(lists[this_col]), Reduce, NULL);
-
   }
 
 
@@ -3375,23 +3368,36 @@ free_environment(int thisenv)
   }
 }
 
+/**
+ * Prints the contents of an EvalEnvironment object to STDOUT.
+ *
+ * Which bits of information are printed depends on which of a group of
+ * debugging-variables are set to true.
+ *
+ * The EvalEnvironment to print is specified as an index into the global
+ * array (Environment).
+ *
+ * @see Environment
+ * @param thisenv  Index into Environment indicating which EvalEnvironment
+ *                 should be displayed.
+ */
 void
 show_environment(int thisenv)
 {
   if ((thisenv < 0) || (thisenv > eep))
-    fprintf(stderr, "Environment %d not used\n",
-            thisenv);
-  else {
-    
+    fprintf(stderr, "Environment %d not used\n", thisenv);
+  else if (show_compdfa || show_evaltree || show_gconstraints || show_patlist) {
+    /* Note, at least one of the above debugging-variables must be true, or there is nothing to print! */
+
     printf("\n ================= ENVIRONMENT #%d ===============\n\n", thisenv);
-    
+
     printf("Has %starget indicator.\n", Environment[thisenv].has_target_indicator ? "" : "no ");
 
     if (show_compdfa) {
       printf("\n==================== DFA:\n\n");
       show_complete_dfa(Environment[thisenv].dfa);
     }
-    
+
     if (show_evaltree) {
       printf("\n==================== Evaluation Tree:\n\n");
       print_evaltree(thisenv, Environment[thisenv].evaltree, 0);
@@ -3401,7 +3407,7 @@ show_environment(int thisenv)
       printf("\n==================== Global Constraints:\n\n");
       print_booltree(Environment[thisenv].gconstraint, 0);
     }
-    
+
     if (show_patlist)
       show_patternlist(thisenv);
 

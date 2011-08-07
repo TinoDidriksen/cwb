@@ -15,15 +15,22 @@
  *  WWW at http://www.gnu.org/copyleft/gpl.html).
  */
 
-/* ****************************************************************** */
-/* regular expression to DFA converter -- originally written by       */
-/*                                        markh@csd4.csd.uwm.edu      */
-/* Derived from the syntax:                                           */
-/* Rule = (ID "=" Ex ",")* Ex.                                        */
-/* Ex = "0" | "1" | ID | "(" Ex ")" | "[" Ex "]" | Ex "+" | Ex "*" |  */
-/*       Ex Ex | Ex "|" Ex.                                           */
-/* with the usual precedence rules.                                   */
-/* ****************************************************************** */
+/**
+ * @file
+ *
+ * Regular expression to DFA converter -- originally written by markh@csd4.csd.uwm.edu
+ *
+ * Derived from the syntax:
+ *
+ * Rule = (ID "=" Ex ",")* Ex.
+ *
+ * Ex = "0" | "1" | ID | "(" Ex ")" | "[" Ex "]" | Ex "+" | Ex "*" | Ex Ex | Ex "|" Ex.                                           *
+ *
+ * with the usual precedence rules.
+ *
+ * (Note, this is the token-sequence regex = not the string-level regex!
+ */
+
 
 #include <stdio.h>
 #include <ctype.h>
@@ -42,11 +49,12 @@
 /**
  * Global variable containing a search string that is to be converted to a DFA.
  * (Needs to be global; functions using the DFA write to it, and then the DFA
- * parser reads from it. Declared as an external global in cqp.h.
+ * parser reads from it. Declared as an external global in cqp.h so other parts
+ * of CQP can access it.)
  */
 char *searchstr;
 
-/* DATA STRUCTURES */
+/* DATA STRUCTURES: internal to the regex2dfa module */
 typedef unsigned char byte;
 
 typedef struct symbol *Symbol;
@@ -125,6 +133,8 @@ char *Action[7] =
 char *LastW;
 
 #define MAX_CHAR 0x4000
+/* TODO do we need a 16Kb string given the limits on string length elsewhere in CWB/CQP ?
+ * If we do, should this name be more transparent? (CH_ARR_MAX better perhaps) */
 static char ChArr[MAX_CHAR];
 char *ChP;
 
@@ -137,7 +147,9 @@ int ERRORS;
 #define MAX_ERRORS 25
 
 #define HASH_MAX 0x200
-Symbol HashTab[HASH_MAX], FirstB, LastB;
+/** Global hash table containing Symbols. */
+Symbol HashTab[HASH_MAX];
+Symbol FirstB, LastB;
 
 /** TODO needs a comment! */
 #define NN 0x200
@@ -196,6 +208,12 @@ GET(void)
   }
 }
 
+/**
+ * Ungets a character from the search string (by decrementing the index into the
+ * search string; the actual string itself isn't modified).
+ *
+ * @param Ch  Ignored.
+ */
 static void
 UNGET(int Ch)
 {
@@ -330,7 +348,7 @@ CopyS(char *S)
   return NewS;
 }
 
-/** create a one-byte hash of the string S */
+/** Creates a one-byte hash of the string S. */
 byte
 Hash(char *S)
 {
@@ -342,6 +360,7 @@ Hash(char *S)
   return H&0xff;
 }
 
+/** Look up the symbol contained in string S in the global hash table. */
 Symbol
 LookUp(char *S)
 {
@@ -966,7 +985,7 @@ MergeStates(void)
     }
 }
 
-/** Write states to stdout. */
+/** Write states to stdout. Private function. */
 void
 WriteStates(void)
 {
@@ -1103,10 +1122,10 @@ init(void)
 }
 
 /**
- * Converts a regular expression to a DFA.
+ * Converts a regular expression to a DFA. Public function.
  *
  * @param rxs         The regular expression.
- * @param automaton   Pointer to the DFA to write to.
+ * @param automaton   Pointer to the DFA object to write to.
  */
 void
 regex2dfa(char *rxs, DFA *automaton)
@@ -1132,7 +1151,7 @@ regex2dfa(char *rxs, DFA *automaton)
   automaton->Max_Input = Environment[eep].MaxPatIndex + 1;
   automaton->E_State = automaton->Max_States;
 
-  if (show_dfa)
+  if (show_dfa) /* TODO: Use a module-internal debug variable (for encapsulation). */
     WriteStates();
 
   /* allocate memory for the transition table and initialize it. */

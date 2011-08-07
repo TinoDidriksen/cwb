@@ -1115,10 +1115,10 @@ print_macro_definition(char *name, int args)
       printf("/%s[", name);
       for (i = 0; i < args; i++) {
         if (macro->argnames[i] != NULL) {
-          printf("·%s·", macro->argnames[i]);
+          printf("ï¿½%sï¿½", macro->argnames[i]);
         }
         else {
-          printf("·%d·", i);
+          printf("ï¿½%dï¿½", i);
         }
         if (i < (args-1)) printf(", ");
       }
@@ -1127,23 +1127,25 @@ print_macro_definition(char *name, int args)
         if (seg->arg >= 0) {
           i = seg->arg;
           if (macro->argnames[i] != NULL) {
-            printf("·%s·", macro->argnames[i]);
+            printf("ï¿½%sï¿½", macro->argnames[i]);
           }
           else {
-            printf("·%d·", i);
+            printf("ï¿½%dï¿½", i);
           }
         }
         else if (seg->string != NULL)
           printf("%s", seg->string);
         else
-          printf("·$$·");
+          printf("ï¿½$$ï¿½");
       }
       printf("\n");
     }
   }
 }
 
-/** print macro hash statistics on stderr */
+/**
+ * Prints macro hash statistics on stderr.
+ */
 void 
 macro_statistics(void)
 {

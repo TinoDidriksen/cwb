@@ -68,6 +68,17 @@ extern size_t cl_memory_limit;
  */
 #define TEMP_FILENAME_BUFSIZE 128
 
+/**
+ * The current version of CWB.
+ *
+ * This VERSION macro should be defined by the CL's build environment.
+ * If it isn't already defined, this definition ensures compilation of the CL,
+ * and any programs that use it, won't fail (e.g. if you're test-compiling
+ * a single file that contains VERSION).
+ */
+#if (!defined(VERSION))
+#define VERSION " x.y.z "
+#endif
 
 /* default registry settings */
 #if (!defined(REGISTRY_DEFAULT_PATH))

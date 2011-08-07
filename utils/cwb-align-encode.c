@@ -43,7 +43,7 @@ void
 alignencode_usage(void)
 {
   fprintf(stderr, "\n");
-  fprintf(stderr, "Usage: %s [options] <alignment file>\n\n", progname);
+  fprintf(stderr, "Usage: %s [options] <alignment_file>\n\n", progname);
   fprintf(stderr, "\n");
   fprintf(stderr, "Adds an alignment attribute to an existing CWB corpus\n");
   fprintf(stderr, "\n");
@@ -67,6 +67,7 @@ alignencode_usage(void)
  * Parses the program's commandline arguments.
  *
  * Usage:
+ *
  * optindex = alignencode_parse_args(argc, argv, required_arguments);
  *
  * @param ac        The program's argc
@@ -171,7 +172,10 @@ main(int argc, char *argv[])
 
   char line[CL_MAX_LINE_LENGTH];        /* one line of input from <infile> */
 
-  char corpus1_name[CL_MAX_FILENAME_LENGTH], corpus2_name[CL_MAX_FILENAME_LENGTH], s1_name[CL_MAX_FILENAME_LENGTH], s2_name[CL_MAX_FILENAME_LENGTH];
+  char corpus1_name[CL_MAX_FILENAME_LENGTH];
+  char corpus2_name[CL_MAX_FILENAME_LENGTH];
+  char s1_name[CL_MAX_FILENAME_LENGTH];
+  char s2_name[CL_MAX_FILENAME_LENGTH];
   Corpus *corpus1, *corpus2;            /* corpus handles */
   Attribute *w1, *w2;                   /* attribute handles for 'word' attributes; used to determine corpus size */
   int size1, size2;                     /* size of source & target corpus */

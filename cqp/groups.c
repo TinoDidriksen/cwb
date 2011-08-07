@@ -465,7 +465,8 @@ Group *compute_grouping(CorpusList *cl,
     return ComputeGroupInternally(group);
 }
 
-void free_group(Group **group)
+void
+free_group(Group **group)
 {
   cl_free((*group)->count_cells);
   (*group)->my_corpus = NULL;

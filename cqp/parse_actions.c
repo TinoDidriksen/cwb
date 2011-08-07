@@ -501,7 +501,7 @@ do_save(CorpusList *cl, struct Redir *r)
   if (cl) {
     if (!LOCAL_CORP_PATH)
       cqpmessage(Warning,
-                 "Can't save subcorpus ``%s'' (env. var. %s isn't set)",
+                 "Can't save subcorpus ``%s'' (env. var. %s isn't set)", /* TODO: isn't this a bit misleading? Would be better to say "you must set DataDirectory".... */
                  cl->name,
                  DEFAULT_LOCAL_PATH_ENV_VAR);
     else {
@@ -2839,25 +2839,26 @@ push_regchr(char c)
     regex_string[regex_string_pos] = '\0';
   }
   else {
-    cqpmessage(Warning,
-             "Regex string overflow");
+    cqpmessage(Warning, "Regex string overflow");
     regex_string[0] = '\0';
   }
 }
 
+/**
+ * Prints out all the existing EvalEnvironments in the global array.
+ *
+ * @see Environment
+ */
 void
 debug_output(void)
 {
-
   int i;
-
-  if (show_compdfa || show_evaltree || show_gconstraints || show_patlist)
-    for (i = 0; i <= eep; i++)
-      show_environment(i);
+  for (i = 0; i <= eep; i++)
+    show_environment(i);
 }
 
 
-/** global variable for timing functions; not exported. @see do_start_timer @see do_timing */
+/** Global variable for timing functions; not exported. @see do_start_timer @see do_timing */
 struct timeval timer_start_time;
 
 /**

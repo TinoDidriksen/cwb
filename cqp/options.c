@@ -115,11 +115,11 @@ CQPOption cqpoptions[] = {
   { "pg", "Pager",                OptString,  &pager,                  "less -FRX -+S",0, "CQP_PAGER",0, OPTION_CQP},
   { "h",  "Highlighting",         OptBoolean, &highlighting,           NULL,         1,   NULL,   0,     OPTION_CQP },
 #else
-  /* use more as default pager under Windows (because it exists whereas less doesn't :-P ) */
+  /* use more as default pager under Windows (because it exists whereas less may not :-P ) */
   { "pg", "Pager",                OptString,  &pager,                  "more",       0,   "CQP_PAGER",0, OPTION_CQP},
-  /* this implies that the default value for hihglighting must be "off" under Windows */
+  /* this implies that the default value for highlighting must be "off" under Windows */
   { "h",  "Highlighting",         OptBoolean, &highlighting,           NULL,         0,   NULL,   0,     OPTION_CQP },
-  #endif
+#endif
   { "col","Colour",               OptBoolean, &use_colour,             NULL,         0,   NULL,   0,     OPTION_CQP },
   { "pb", "ProgressBar",          OptBoolean, &progress_bar,           NULL,         0,   NULL,   0,     OPTION_CQP },
   { "pp", "PrettyPrint",          OptBoolean, &pretty_print,           NULL,         1,   NULL,   0,     OPTION_CQP },
@@ -396,7 +396,11 @@ print_option_value(int opt) {
   }
 }
 
-void print_option_values()
+/**
+ * Prints out the values of all the CQP configuration options.
+ */
+void
+print_option_values()
 {
   int opt;
   int lc_opt = find_option("LeftContext"); /* left and right context are automatically shown together with context option */
@@ -478,11 +482,12 @@ set_default_option_values(void)
 
   CD.print_cpos = 1;
 
-
+  /* TODO: should the following be scrubbed at some point? */
   ExternalSortingCommand = cl_strdup(DEFAULT_EXTERNAL_SORTING_COMMAND);
   ExternalGroupingCommand = cl_strdup(DEFAULT_EXTERNAL_GROUPING_COMMAND);
  
-  private_server = 0;                /* CQPserver options */
+  /* CQPserver options */
+  private_server = 0;
   server_port = 0;
   server_quit = 0;
   localhost = 0;
@@ -661,7 +666,8 @@ validate_string_option_value(int opt, char *value)
   return 1;
 }
 
-int validate_integer_option_value(int opt, int value)
+int
+validate_integer_option_value(int opt, int value)
 {
   return 1;
 }
@@ -750,6 +756,7 @@ set_integer_option_value(char *opt_name, int value)
 }
 
 
+/* TODO following docblock doesn;t actually match the function!!! */
 /* these two set integer or string-valued options. An error string
  * is returned if the type of the option does not correspond to
  * the function which is called. Upon success, NULL is returned.
