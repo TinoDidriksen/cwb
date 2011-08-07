@@ -18,6 +18,8 @@ B<NB:> The recommended front-end for indexing and compression is the B<cwb-make>
 
 =head1 OPTIONS
 
+Please note that no CWB programs currently support GNU-style C<--long-options>.
+
   -P <att>  compress attribute <att> [default: word]
   -A        compress all positional attributes
   -r <dir>  set registry directory

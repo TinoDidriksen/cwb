@@ -13,6 +13,8 @@ B<TODO>
 
 =head1 OPTIONS
 
+Please note that no CWB programs currently support GNU-style C<--long-options>.
+
   -r <reg> use registry directory <reg>
   -n       do not show corpus positions
   -v       do not show annotated values

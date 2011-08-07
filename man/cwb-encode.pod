@@ -24,6 +24,8 @@ B<NB:> If you re-encode an existing corpus, be sure to delete all old data files
 
 =head1 OPTIONS
 
+Please note that no CWB programs currently support GNU-style C<--long-options>.
+
   -f <file> read input from <file> [default: stdin]
   -t <file> [same as -f <file> for backward compatibility]
   -d <dir>  directory for data files created by cwb-encode

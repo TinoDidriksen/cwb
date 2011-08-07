@@ -13,6 +13,8 @@ B<TODO>
 
 =head1 OPTIONS
 
+Please note that no CWB programs currently support GNU-style C<--long-options>.
+
 =over 4
 
 =item B<TODO>

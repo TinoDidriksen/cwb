@@ -18,6 +18,8 @@ Print the lexicon (or part of it) of a positional attribute on standard output, 
 
 =head1 OPTIONS
 
+Please note that no CWB programs currently support GNU-style C<--long-options>.
+
   -P <att>  use p-attribute <att> [default: word]
   -S        only show lexicon and corpus size
   -r <dir>  set registry directory

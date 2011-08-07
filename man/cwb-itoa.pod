@@ -15,6 +15,8 @@ Reads 32-bit integers in network format from CWB binary data file I<file> or fro
 
 =head1 OPTIONS
 
+Please note that no CWB programs currently support GNU-style C<--long-options>.
+
   -n  read integers in network format [default]
   -l  read integers in little endian format
 

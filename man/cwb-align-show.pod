@@ -27,6 +27,8 @@ B<TODO>
 
 =head1 OPTIONS
 
+Please note that no CWB programs currently support GNU-style C<--long-options>.
+
   -P <p-att> display positional attribute <p-att> [word]
   -r <reg>   use registry directory <reg>
   -w <n>     set display column width to <n>   [38]

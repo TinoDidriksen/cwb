@@ -21,6 +21,8 @@ alignment files referencing regions by annotated ID codes.
 
 =head1 OPTIONS
 
+Please note that no CWB programs currently support GNU-style C<--long-options>.
+
   -d <dir> write data file(s) to directory <dir>
   -D       write files to corpus data directory
   -C       compatibility mode (creates .alg file)

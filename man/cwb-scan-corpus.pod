@@ -29,6 +29,8 @@ where I<att> is a positional or structural attribute, I<n> an optional non-negat
 
 =head1 OPTIONS
 
+Please note that no CWB programs currently support GNU-style C<--long-options>.
+
   -r <dir>  use registry directory <dir>
   -b <n>    use <n> hash buckets [default: 1,000,000]
   -o <file> write frequency table to <file> [default: standard output]

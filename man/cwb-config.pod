@@ -14,6 +14,9 @@ B<TODO>
 
 =head1 OPTIONS
 
+Since this utility is implemented as a shell scipt rather than as a binary rpogram,
+it is able to support GNU-style C<--long-options>, unlike the other CWB utilities.
+
   --version, -v    installed CWB version
   --prefix         CWB installation prefix (may have been overridden)
   --bindir         install location of binaries

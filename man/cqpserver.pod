@@ -1,49 +1,106 @@
 =head1 NAME
 
-cqpserver - A network server implementing the CQi interface (based on CQP)
+cqpserver - A network daemon implementing the CQi interface (based on CQP)
 
 =head1 SYNOPSIS
 
 B<cqpserver> [-hvmxS1Lq] [-D I<corpus>] [-r I<registry_dir>]
     [-l I<data_dir>] [-I I<init_file>] [-M I<macro_file>]
-    [-b I<n>] [-d I<mode>] [-P I<port>]
+    [-b I<n>] [-d I<mode>] [-P I<port>] [<user>:<password> ...]
 
 =head1 DESCRIPTION
 
-B<TODO>
+The CQPserver is a network daemon that listens on a specified port for commands 
+that follow the CQi protocol. CQi allows the capabilities of CQP to be controlled
+programmatically by another application, either locally or remotely. 
 
+With a CQPserver running, other programs can make use of CQP as a backend without having to create 
+a slave process controlled via pipes - slave processes being tricky in programming environments such as
+Java.
+
+Although it is controlled completely differently, the basic capabilities of B<cqpserver> are the same
+as those of interactive-mode or slave-mode B<cqp>.
 
 =head1 OPTIONS
 
-    -h           help
-    -v           version and copyright information
-    -r dir       use <dir> as default registry
-    -l dir       store/load subcorpora in <dir>
-    -I file      read <file> as init file
-    -M file      read macro definitions from <file>
-    -m           disable macro expansion
-    -D corpus    set default corpus to <corpus>
-    -b num       set hard boundary for kleene star to <num> tokens
-    -S           SIG_PIPE handler toggle
-    -x           insecure mode (when run SETUID)
-    -1           single client server (exits after 1 connection)
-    -P  port     listen on port #<port> [default=CQI_PORT]
-    -L           accept connections from localhost only (loopback)
-    -q           fork() and quit before accepting connections
-    -d mode      activate/deactivate debug mode, where <mode> is one of: 
-       [ ShowSymtab, ShowPatList, ShowEvaltree, ShowDFA, ShowCompDFA,   ]
-       [ ShowGConstraints, SymtabDebug, TreeDebug, CLDebug,             ]
-       [ EvalDebug, InitialMatchlistDebug, DebugSimulation,             ]
-       [ VerboseParser, ParserDebug, ParseOnly, SearchDebug, MacroDebug ]
-       [ ServerLog [on], ServerDebug, Snoop (log all network traffic)   ]
-       [ ALL (activate all modes except ParseOnly)                      ]
+Please note that CQP does not currently support GNU-style C<--long-options>.
+
+B<cqpserver> takes most of the same options as B<cqp>. However, there are some exceptions.
+
+The following options are available for B<cqp>, but not for B<cqpserver>: 
 
 =over 4
 
-=item B<TODO>
+B<-c>, B<-C>, B<-e>, B<-f>, B<-i>, B<-L>, B<-p>, B<-P>, B<-R>, B<-s>, B<-W>
 
 =back
 
+On the other hand, the following options are particular to B<cqpserver>:
+
+=over 4
+
+=item B<-1>
+
+Starts the CQPserver in private-server mode: the server will accept one single connection from a client,
+and then exit.
+
+=item B<-L>
+
+Makes the CQPserver accept connections from localhost (127.0.0.1) only (i.e. loopback mode). 
+
+Please note that this is I<wholly different> from what B<-L> means as an option to b<cqp>!
+
+=item B<-P> I<port>
+
+Sets #I<port> as the port that the CQP server will listen on. The default port, if this option is not
+specified, is given by the constant CQI_PORT in the code, which is currently defined as port 4877.
+
+Please note that this is I<wholly different> from what B<-P> means as an option to b<cqp>!
+
+=item B<-q>
+
+When this option is set, the initial server process will fork itself and quit before accepting connections.
+That is, the child server will persist in the background listening on its port, while the parent server exits, returning 
+to the shell or program that called it. 
+This makes it easy to start a CQPserver from a script and then carry on without waiting for the server to shut down.
+
+This option has no effect on Windows.
+
+=back
+
+In addition, with B<cqpserver> the following extra debug modes can be activated with the shared B<-d> option: 
+
+=over 4
+
+=item ServerLog
+
+Turns on logging of server messages; log entries are printed to B<cqpserver>'s standard-output.
+
+=item ServerDebug
+
+Turns on debug messages from the CQPserver module. 
+
+=item Snoop 
+
+Turns on monitoring of all CQi network traffic. A log of CQi communication is printed to B<cqpserver>'s standard-error.
+
+=back
+
+
+
+
+=head1 ENVIRONMENT
+
+As with the options, B<cqpserver> recognises the same environment variables as B<cqp>, with the following
+exceptions.
+
+=over 4
+
+CQP_PAGER is read in, but ignored, as B<cqpserver> does not use a pager.
+
+
+
+=back
 
 =head1 SEE ALSO
 
@@ -53,18 +110,11 @@ L<cwb-itoa>, L<cwb-lexdecode>, L<cwb-makeall>, L<cwb-scan-corpus>, L<cwb-s-decod
 
 =head1 COPYRIGHT
 
-=over 4
-
-=item
 B<IMS Open Corpus Workbench (CWB)> L<http://cwb.sourceforge.net/>
 
-=item
 Copyright (C) 1993-2006 by IMS, University of Stuttgart
 
-=item
 Copyright (C) 2007- by the respective contributers (see file F<AUTHORS>)
-
-=back
 
 This program is free software; you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software

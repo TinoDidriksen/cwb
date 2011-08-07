@@ -21,6 +21,8 @@ must exist both in source AND target corpus).
 
 =head1 OPTIONS
 
+Please note that no CWB programs currently support GNU-style C<--long-options>.
+
   -P <p-att> use positional attribute <p-att> for alignment [word]
   -S <s-att> pre-alignment (corresponding regions of the s-attribute are
              pre-aligned; regions must appear in identical order!)

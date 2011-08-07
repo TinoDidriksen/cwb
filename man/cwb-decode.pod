@@ -20,6 +20,8 @@ B<NB:> command-line B<options> (which control the output format, range of corpus
 
 =head1 OPTIONS
 
+Please note that no CWB programs currently support GNU-style C<--long-options>.
+
   -L        Lisp output mode
   -H        concordance line ('horizontal') output mode
   -C        compact output mode (suitable for encode)

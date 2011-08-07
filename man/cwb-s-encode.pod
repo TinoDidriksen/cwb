@@ -17,6 +17,8 @@ B<NB:> It is not necessary to run B<cwb-makeall> after adding or modifying a str
 
 =head1 OPTIONS
 
+Please note that no CWB programs currently support GNU-style C<--long-options>.
+
   -B        strip leading/trailing blanks from annotations
   -d <dir>  directory for output files
   -f <file> read input from <file> [default: stdin]

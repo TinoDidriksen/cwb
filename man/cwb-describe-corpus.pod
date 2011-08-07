@@ -14,6 +14,8 @@ B<TODO>
 
 =head1 OPTIONS
 
+Please note that no CWB programs currently support GNU-style C<--long-options>.
+
   -r <dir>  use registry directory <dir>
   -s        show statistics (attribute & lexicon size)
   -d        show details (about component files)
