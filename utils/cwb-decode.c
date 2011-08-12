@@ -220,14 +220,16 @@ xml_string(char *s) {
     return s;
 }
 
-/* prints XML declaration, using character set specification obtained from <corpus> */
+/** Prints an XML declaration, using character set specification obtained from the global corpus variable. */
 void
 print_xml_declaration(void) {
   CorpusCharset charset = unknown_charset;
-  if (corpus) {
+  if (corpus)
     charset = cl_corpus_charset(corpus);
-  }
 
+  /* latin1 = 8859-1, latin2 = 8859-2, latin3 = 8859-3, latin4 = 8859-4, cyrillic = 8859-5,
+     arabic = 8859-6, greek = 8859-7, hebrew = 8859-8, latin5 = 8859-9, latin6 = 8859-10,
+     latin7 = 8859-13, latin8 = 8859-14, latin9 = 8859-15 */
   printf("<?xml version=\"1.0\" encoding=\"");
   switch (charset) {
   case latin1:
@@ -242,20 +244,32 @@ print_xml_declaration(void) {
   case latin4:
     printf("ISO-8859-4");
     break;
-  case latin5:
+  case cyrillic:
     printf("ISO-8859-5");
     break;
-  case latin6:
+  case arabic:
     printf("ISO-8859-6");
     break;
-  case latin7:
+  case greek:
     printf("ISO-8859-7");
     break;
-  case latin8:
+  case hebrew:
     printf("ISO-8859-8");
     break;
-  case latin9:
+  case latin5:
     printf("ISO-8859-9");
+    break;
+  case latin6:
+    printf("ISO-8859-10");
+    break;
+  case latin7:
+    printf("ISO-8859-13");
+    break;
+  case latin8:
+    printf("ISO-8859-14");
+    break;
+  case latin9:
+    printf("ISO-8859-15");
     break;
   case utf8:
     printf("UTF-8");
