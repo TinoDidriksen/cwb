@@ -287,13 +287,17 @@ makeall_usage(void)
   fprintf(stderr, "  -D        debug mode\n");
   fprintf(stderr, "  -r <dir>  use registry directory <dir>\n");
   fprintf(stderr, "  -c <comp> create component <comp> only\n");
-  fprintf(stderr, "  -P <att>  work on attribute <att> [default: word]\n");
+  fprintf(stderr, "  -P <att>  work on attribute <att> [default: ALL attributes]\n");
   fprintf(stderr, "  -M <size> limit memory usage to approx. <size> MBytes\n");
   fprintf(stderr, "  -V        validate index after creating it\n");
   fprintf(stderr, "Part of the IMS Open Corpus Workbench v" VERSION "\n\n");
   exit(2);
 }
-
+/* TODO  it is a but confusing that there is both a -P option for attributes, AND you can list attributes
+ * after the corpus name. (Or is there a difference between these two ways of specifying attributes? Either
+ * way, it needs to be documented in the usage message, and in the manfile too.
+ * NB the normally parallel huffcode does not have attributes after the corpus!
+ */
 
 
 /* *************** *\
@@ -309,7 +313,7 @@ makeall_usage(void)
 int
 main(int argc, char **argv)
 {
-  char *attr_name;
+  char *attr_name = NULL;
   Attribute *attribute;
 
   char *registry_directory = NULL;
@@ -319,7 +323,7 @@ main(int argc, char **argv)
   extern char *optarg;
   int c;
 
-  int validate;
+  int validate = 0;
 
   char *component = NULL;
 
@@ -329,8 +333,6 @@ main(int argc, char **argv)
   /* ------------------------------------------------- PARSE ARGUMENTS */
 
   progname = argv[0];
-  attr_name = NULL;
-  validate = 0;
 
   /* parse arguments */
   while ((c = getopt(argc, argv, "+r:c:P:hDM:V")) != EOF) {
@@ -338,7 +340,8 @@ main(int argc, char **argv)
 
     /* r: registry directory */
     case 'r':
-      if (registry_directory == NULL) registry_directory = optarg;
+      if (registry_directory == NULL)
+        registry_directory = optarg;
       else {
         fprintf(stderr, "%s: -r option used twice\n", progname);
         exit(2);
@@ -346,11 +349,21 @@ main(int argc, char **argv)
       break;
 
     case 'P':
-      attr_name = optarg;
+      if (attr_name == NULL)
+        attr_name = optarg;
+      else {
+        fprintf(stderr, "%s: -P option used twice\n", progname);
+        exit(2);
+      }
       break;
 
     case 'c':
-      component = optarg;
+      if (component == NULL)
+        component = optarg;
+      else {
+        fprintf(stderr, "%s: -c option used twice\n", progname);
+        exit(2);
+      }
       break;
 
     case 'D':

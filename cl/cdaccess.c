@@ -59,7 +59,8 @@ int cl_errno;
  * (a) arg must not be NULL.
  * (b) arg type has to be the type specified in atyp.
  *
- * If these conditions are not specified, the function returns rval.
+ * If these conditions are not fulfilled, the current function returns rval, and
+ * cl_errno is set.
  */
 #define check_arg(arg,atyp,rval) \
 if (arg == NULL) { \
@@ -1720,7 +1721,7 @@ int
 cl_cpos2struc(Attribute *a, int cpos)
 {
   int struc = -1;
-  if (get_num_of_struc(a, cpos, &struc))
+  if (cl_cpos2struc_oldstyle(a, cpos, &struc))
     return struc;
   else
     return cl_errno;
@@ -1858,9 +1859,7 @@ cl_cpos2struc2cpos(Attribute *attribute,
  * @return           Boolean: true for all OK, false for error.
  */
 int
-cl_cpos2struc_oldstyle(Attribute *attribute,
-                       int position,
-                 int *struc_num)
+cl_cpos2struc_oldstyle(Attribute *attribute, int position, int *struc_num)
 {
 
   Component *struc_data;
@@ -2032,7 +2031,7 @@ cl_struc2str(Attribute *attribute, int struc_num)
 {
   check_arg(attribute, ATT_STRUC, NULL);
 
-  if (structure_has_values(attribute) && (cl_errno == CDA_OK)) {
+  if (cl_struc_values(attribute) && (cl_errno == CDA_OK)) {
 
     /* local structure */
     typedef struct _idx_el { 

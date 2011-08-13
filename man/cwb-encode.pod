@@ -230,15 +230,15 @@ Activates quiet mode; most warning messages will be suppressed.
   
 =item B<-R> I<registry_file>   
 
-Creates a registry entry (in the file <registry_file>. 
+Creates a registry entry (in the file I<registry_file>. 
 
 The registry file is what gives the corpus its "name", that handle or label used to access it throughout CWB.
 
 Corpus names have two format: all-lowercase and ALL-UPPERCASE. The registry filename uses the all-lowercase format,
-whereas most programs (including CQP) use the all-uppercase format
+whereas most programs (including CQP) use the all-uppercase format. 
 This means that the actual filename specified with B<-R> must only contain lowercase Latin letters (digits 0-9, underscore,
 and hyphen are also allowed). Due to character encoding issues, accented letters are not allowed in corpus names
-(or in names of attributes). This does not apply to the path of the directory that contains the registry file.
+(or in names of attributes) - but this does not apply to the path of the directory that contains the registry file.
 
 So, if you specify C<-R /home/CORPORA/very_big_corpus>, then that file will be created, and will contain a
 description of the index data (including where it is stored, what attributes there are, and so on). 
@@ -247,8 +247,7 @@ The corpus name that you use to access the corpus in CQP is then VERY_BIG_CORPUS
 If you do not use this option, you will need to create a registry file yourself before other CWB utilities
 and CQP will be able to access the indexed corpus data. So use of B<-R> is very strongly recommended.
 
-It is usual to put registry files in a special corpus registry directory, in which case you should specify the full
-path of that registry directory for this option. 
+It is usual to put all your registry files in a special corpus registry directory. 
 
 =item B<-s>
 

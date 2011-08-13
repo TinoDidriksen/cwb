@@ -927,7 +927,7 @@ huffcode_usage(char *msg, int error_code)
   fprintf(stderr, "  -r <dir>  set registry directory\n");
   fprintf(stderr, "  -f <file> set output file prefix (creates <file>.huf, ...)\n");
   fprintf(stderr, "  -v        verbose mode (shows protocol) [may be repeated]\n");
-/*   fprintf(stderr, "  -d        debug mode (not implemented)\n"); */
+/*   fprintf(stderr, "  -d        debug mode (not implemented)\n"); *//* TODO -d / -D distinct as in cwb-compress-rdx? */
   fprintf(stderr, "  -T        skip validation pass ('I trust you')\n");
   fprintf(stderr, "  -h        this help page\n\n");
   fprintf(stderr, "Part of the IMS Open Corpus Workbench v" VERSION "\n\n");

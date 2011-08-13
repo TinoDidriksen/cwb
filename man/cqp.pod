@@ -305,7 +305,7 @@ Equivalent to the interactive command C<set Pager I<pager>>.
 
 Specifies that the registry directory should be I<registry_dir> on startup,
 instead of the standard registry. If this option is not specified, then a directory 
-specified by the C<CORPUS_REGISTRY> environment variable will be used; if that is not available, 
+specified by the CORPUS_REGISTRY environment variable will be used; if that is not available, 
 the built-in CWB default will be used.
 
 =item B<-R> I<num>
@@ -378,7 +378,7 @@ C<set DataDirectory -I<dir>>.
 =item B<CORPUS_REGISTRY>
 
 If set, this environment variable specifies the location of the corpus registry directory. This
-registry directory is scanned for available copora when CQP starts up. 
+registry directory is scanned for available corpora when CQP starts up. 
 
 The CORPUS_REGISTRY is overruled by the B<-r> option, if present; if neither of these means
 of specifying the registry is used, then the built-in CWB default registry location will be used.

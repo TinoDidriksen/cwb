@@ -74,18 +74,16 @@ cl_set_optimize(int state) {
 }
 
 /**
- * Sets the memory limit.
+ * Sets the memory limit respected by some CL functions.
  *
- *
- * NOTE name of parameter differs here and in cl.h -- TODO
  * @see cl_memory_limit
  */
 void 
-cl_set_memory_limit(int limit) {
-  if (limit <= 0) {
+cl_set_memory_limit(int megabytes) {
+  if (megabytes <= 0) {
     cl_memory_limit = 0;
   }
   else {
-    cl_memory_limit = limit;
+    cl_memory_limit = megabytes;
   }
 }
