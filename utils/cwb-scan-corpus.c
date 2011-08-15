@@ -378,6 +378,7 @@ is_letter(unsigned char c)
 int
 is_regular(char *s)
 {
+  /* TODO this function is a huge Unicode / 8859-2+ bug */
   char *p = s;
   while (*p) {                          /* each component of the word may be ... */
     if (*p >= '0' && *p <= '9') { /* ... a number */
@@ -409,7 +410,7 @@ is_regular(char *s)
  *             main() from a command-line argument)
  */
 void
-add_key(char *key)
+scancorpus_add_key(char *key)
 {
   char buf[CL_MAX_LINE_LENGTH]; /* stores copy of <key> if we have to mess around with it */
   Attribute *att = NULL;        /* p-attribute object for attribute <att> */
@@ -464,15 +465,11 @@ add_key(char *key)
 
   /* now <buf> points to the attribute name, <regex> is NULL or points to a regular expression,
      the optional <flags> are set up, and <offset> is 0 or set to <n> */
-  att = cl_new_attribute(C, buf, ATT_POS);
-  if (att != NULL) {
+  if ((att = cl_new_attribute(C, buf, ATT_POS)) != NULL)
     is_structural = 0;
-  }
-  else {
-    att = cl_new_attribute(C, buf, ATT_STRUC);
+  else if ((att = cl_new_attribute(C, buf, ATT_STRUC)) != NULL)
     is_structural = 1;
-  }
-  if (att == NULL) {
+  else {
     fprintf(stderr, "Error: can't open attribute %s.%s\n", corpname, buf);
     fprintf(stderr, "      (possibly a syntax error in key '%s')\n", key);
     exit(1);
@@ -586,7 +583,7 @@ get_next_range(int *start, int *end)
 int
 main (int argc, char *argv[])
 {
-  int argind;                      /* index of first (non-option) argument in argv[] */
+  int argind;                      /* will be set to the index of first (non-option) argument in argv[] */
   int Csize = 0;                   /* corpus size (= number of tokens) */
   Attribute *word;                 /* need default p-attribute to compute corpus size */
   int cpos, next_cpos, start_cpos, end_cpos, previous_end;
@@ -618,7 +615,7 @@ main (int argc, char *argv[])
 
   /* remaining arguments are specifiers for keys forming N-tuple */
   while (argind < argc) {
-    add_key(argv[argind]);
+    scancorpus_add_key(argv[argind]);
     argind++;
   }
 
@@ -859,7 +856,7 @@ main (int argc, char *argv[])
     else {
       of = stdout;
       if (! quiet)
-        fprintf(stderr, "Printing frequency table on stdout ... ");
+        fprintf(stderr, "Printing frequency table on stdout ... \n");
     }
     fflush(stderr);
 

@@ -196,7 +196,8 @@ cl_error(char *message)
  *
  * @param attribute  The Attribute to look the item up on
  * @param id         Identifier of an item on this attribute.
- * @return           The string, or NULL if there is an error
+ * @return           The string (pointer to actual data within the
+ *                   attribute, DO NOT FREE!), or NULL if there is an error.
  */
 char *
 cl_id2str(Attribute *attribute, int id)
@@ -352,6 +353,8 @@ cl_id2strlen(Attribute *attribute, int id)
 
 /**
  * Gets the ID code of the item at the specified position in the Attribute's sorted wordlist index.
+ *
+ * That is, given a sort-order position, the actual ID of the corresponding item is generated.
  *
  * @see get_sortidxpos_of_id
  * @param attribute            The (positional) Attribute whose index is to be searched.
@@ -1254,7 +1257,8 @@ cl_cpos2id(Attribute *attribute, int position)
  * @param attribute  The P-attribute to look on.
  * @param position   The corpus position to look at.
  * @return           The string of the item at that position
- *                   on this attribute, OR NULL
+ *                   on this attribute (pointer to actual data within the
+ *                   attribute, DO NOT FREE!), or NULL
  *                   if there is an error.
  */
 char *
@@ -1264,11 +1268,11 @@ cl_cpos2str(Attribute *attribute, int position)
 
   check_arg(attribute, ATT_POS, NULL);
 
-  id = get_id_at_position(attribute, position);
+  id = cl_cpos2id(attribute, position);
   if ((id < 0) || (cl_errno != CDA_OK))
     return NULL;
 
-  return get_string_of_id(attribute, id);
+  return cl_id2str(attribute, id);
 }
 
 

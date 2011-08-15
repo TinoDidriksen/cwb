@@ -78,7 +78,9 @@ Corpus *corpus = NULL;          /**< corpus we're working on; at the moment, thi
 
 enum {
   set_none, set_any, set_regular, set_whitespace
-} set_att = set_none;           /**< set attributes */
+} set_att = set_none;           /**< feature-set attributes: type of. Initial value: not a feature set.
+                                 *   Changes to set_any once we know we are dealing with a feature set.
+                                 *   Changes to set_regular or set_whitespace once we know which format of f.s. it is. */
 
 
 /* ---------------------------------------------------------------------- */
@@ -88,15 +90,15 @@ enum {
  *
  */
 typedef struct {
-  char *dir;                    /**< directory where this range is stored */
-  char *name;                   /**< range name */
+  char *dir;                    /**< directory where this s-attribute is stored */
+  char *name;                   /**< s-attribute name */
 
   int store_values;             /**< flag indicating whether to store values */
 
   int ready;                    /**< flag indicates whether sencode_range_open() has already been called */
   FILE *fd;                     /**< fd of x.rng (bin mode) */
-  FILE *avx;                    /**< the attribute value index (text mode)*/
-  FILE *avs;                    /**< the attribute values (bin mode)*/
+  FILE *avx;                    /**< the attribute value index (bin mode)*/
+  FILE *avs;                    /**< the attribute value strings (text mode) */
 
   int last_cpos;                /**< end of last region (consistency checking) */
   int num;                      /**< the next will be the num-th structure */
@@ -106,9 +108,9 @@ typedef struct {
 /**
  * Global (and only) instance of the cwb-s-encode SencodeRange object.
  *
- * Contains information on the s-attribute (aka "range") being coded.
+ * Contains information on the new s-attribute being coded.
  */
-SencodeRange range;
+SencodeRange new_satt;
 
 /* ---------------------------------------------------------------------- */
 
@@ -118,13 +120,15 @@ char *progname = NULL;
 
 /**
  * The "structure list" data type is used for 'adding' regions (-a).
+ *
+ * SL is a really bad name; should be "RegionList".
+ *
  * In this case, all existing regions are read into an ordered, bidirectional list;
  * new regions are inserted into that list (overlaps are automatically resolved
  * in favour of the 'earlier' region; if start point is identical, the longer
- * region is retained). Only when the entire input has been read, the data
- * will be actually encoded and stored on disk.
+ * region is retained). Only once the entire input has been read is the data
+ * actually encoded and stored on disk.
  */
-
 typedef struct _SL {
   int start;                    /**< start of region */
   int end;                      /**< end of region */
@@ -157,7 +161,7 @@ SL_rewind(void)
 /**
  * Gets a pointer to the next available structure on the global structure list.
  *
- * Returns NULL if we're at the end of the list.
+ * Returns NULL if we're at the end of the list.text
  */
 SL
 SL_next(void)
@@ -211,6 +215,7 @@ SL_insert_after_point(int start, int end, char *annot)
     item->annot = NULL;
   item->prev = NULL;
   item->next = NULL;
+
   /* this function has to handle a number of special cases ... */
   if (SL_Point == NULL) {          /* insert at start of list */
     if (StructureList == NULL) {   /* empty list */
@@ -226,7 +231,7 @@ SL_insert_after_point(int start, int end, char *annot)
     item->prev = SL_Point;
     SL_Point = SL_Point->next = item;
   }
-  else {                            /* insert somewhere inside list */
+  else {                         /* insert somewhere inside list */
     item->next = SL_Point->next; /* links between new item and following item */
     SL_Point->next->prev = item;
     SL_Point->next = item;       /* links between point and new item */
@@ -259,13 +264,15 @@ SL_delete(SL item)
   }
   /* free item object */
   cl_free(item->annot);
-  free(item);
+  cl_free(item);
 }
 
 /**
  * Inserts an item into the global structure list.
  *
- * Combines SL_seek(), SL_insert_at_point() and ambiguity resolution
+ * It adds a new region to the list: its start point, its end point, its annotation.
+ *
+ * Combines SL_seek(), SL_insert_at_point() and ambiguity resolution.
  */
 void
 SL_insert(int start, int end, char *annot)
@@ -277,15 +284,22 @@ SL_insert(int start, int end, char *annot)
     item = SL_insert_after_point(start, end, annot); /* insert item at start of list */
   }
   else if ((point->start <= start) && (start <= point->end)) {
-    if ((point->start < start) || (point->end > end)) { /* overlap: don't insert */
+    /* start is within the previous region stored in point */
+    if ((point->start < start) || (point->end > end)) {
+      /* overlap: don't insert
+       * because either the start points don't match, or the old region is longer */
       return;
     }
-    else {                                              /* overlap: overwrite previous entry */
+    else {
+      /* point->start == start && point->end <= end -->
+       * overlap: overwrite previous entry
+       * because the start points match, and the new region is as long or longer */
       item = SL_insert_after_point(start, end, annot);
       SL_delete(point); /* this re-establishes list ordering */
     }
   }
-  else {                        /* non-overlapping: simply insert new region after point */
+  else {
+    /* non-overlapping: simply insert new region after point */
     item = SL_insert_after_point(start, end, annot);
   }
 
@@ -304,17 +318,20 @@ SL_insert(int start, int end, char *annot)
 
 
 /**
- * Parse an input line into cwb-s-encode.
+ * Parses an input line into cwb-s-encode.
  *
  * Usage:
  *
  * ok = sencode_parse_line(char *line, int *start, int *end, char **annot);
  *
  * Expects standard TAB-separated format; first two fields must be numbers,
- * optional third field is returned in annot
+ * optional third field is returned in annot - if not present, annot is
+ * set to NULL.
  *
- *
- * @param
+ * @param line   The line to be parsed.
+ * @param start  Location for the start cpos.
+ * @param end    Location for the end cos.
+ * @param annot  Location for the annotation string.
  * @return Boolean; true for all OK, false for error.
  */
 int
@@ -382,40 +399,38 @@ sencode_parse_line(char *line, int *start, int *end, char **annot)
 /* ---------------------------------------------------------------------- */
 
 /**
- * Changes annotation string to standard set attribute syntax.
+ * Changes an annotation string to standard set attribute syntax.
  *
- * On first call, checks whether annotations are already given in
- * '|'-delimited form, otherwise it will always split on whitespace;
+ * On first call, the function checks whether annotations are already given in standard
+ * '|'-delimited form; otherwise we assume we are using whitespace to split.
  *
- * the string may be reallocated (i.e. caller must use & free
- * the returned value);
+ * The return string may have been newly allocated
+ * (i.e. caller must use & free the returned value).
  *
- * if there are syntax errors, returns NULL
- *
- * Usage:  * annot = sencode_check_set(char *annot);
+ * If there are syntax errors, returns NULL.
  *
  * @param annot  The annotation string to check.
+ * @return       The standardised string, or NULL if there was an
+ *               error in the call to cl_make_set().
  */
 char *
 sencode_check_set(char *annot)
 {
   char *set;
-  int split;                    /* need to split on whitespace? */
 
   if (set_att == set_none || annot == NULL) {
     return annot;               /* no modification needed */
   }
   else if ((!set_syntax_strict) || set_att == set_any) {
-    if (annot[0] == '|') {
+    /* we work out the set mode on the first item analysed, or on
+     * every item iff we are using non-strict set syntax */
+    if (annot[0] == '|')
       set_att = set_regular;
-    }
-    else {
+    else
       set_att = set_whitespace;
-    }
   }
 
-  split = (set_att == set_whitespace) ? 1 : 0;
-  set = cl_make_set(annot, split);
+  set = cl_make_set(annot, (set_att == set_whitespace));
   cl_free(annot);
   return set;
 }
@@ -455,79 +470,80 @@ sencode_usage(void)
 
 
 /**
- * Initialises the "range" variable for the s-attribute to be encoded,
- * and sets name/directory */
+ * Initialises the "new_satt" variable for the s-attribute to be encoded,
+ * and sets name/directory
+ */
 void
-sencode_range_declare(char *name, char *directory, int store_values)
+sencode_declare_new_satt(char *name, char *directory, int store_values)
 {
-  range.name = cl_strdup(name);
-  range.dir = cl_strdup(directory);
+  new_satt.name = cl_strdup(name);
+  new_satt.dir = cl_strdup(directory);
 
-  range.num = 0;
-  range.offset = 0;
-  range.store_values = store_values;
-  range.last_cpos = -1;
+  new_satt.num = 0;
+  new_satt.offset = 0;
+  new_satt.store_values = store_values;
+  new_satt.last_cpos = -1;
 
-  range.ready = 0;
-  range.fd = NULL;
-  range.avs = NULL;
-  range.avx = NULL;
+  new_satt.ready = 0;
+  new_satt.fd = NULL;
+  new_satt.avs = NULL;
+  new_satt.avx = NULL;
 }
 
 /** Open disk files for the s-attribute being encoded (must have been declared first). */
 void
-sencode_range_open(void)
+sencode_open_files(void)
 {
   char buf[CL_MAX_LINE_LENGTH];
 
-  sprintf(buf, RNG_RNG, range.dir, range.name);
-  if ((range.fd = fopen(buf, "wb")) == NULL) {
+  sprintf(buf, RNG_RNG, new_satt.dir, new_satt.name);
+  if ((new_satt.fd = fopen(buf, "wb")) == NULL) {
     perror(buf);
     exit(1);
   }
 
-  if (range.store_values) {
-    sprintf(buf, RNG_AVS, range.dir, range.name);
-    if ((range.avs = fopen(buf, "w")) == NULL) {
+  if (new_satt.store_values) {
+    sprintf(buf, RNG_AVS, new_satt.dir, new_satt.name);
+    if ((new_satt.avs = fopen(buf, "w")) == NULL) {
       perror(buf);
       exit(1);
     }
 
-    sprintf(buf, RNG_AVX, range.dir, range.name);
-    if ((range.avx = fopen(buf, "wb")) == NULL) {
+    sprintf(buf, RNG_AVX, new_satt.dir, new_satt.name);
+    if ((new_satt.avx = fopen(buf, "wb")) == NULL) {
       perror(buf);
       exit(1);
     }
   }
 
-  range.ready = 1;
+  new_satt.ready = 1;
 }
 
 /** Close the disk files for the s-attribute being encoded. */
 void
-sencode_range_close(void)
+sencode_close_files(void)
 {
-  if (range.ready) {
-    if (EOF == fclose(range.fd)) {
+  if (new_satt.ready) {
+    if (EOF == fclose(new_satt.fd)) {
       perror("Error writing RNG file");
       exit(1);
     }
 
-    if (range.avs) {
-      if (EOF == fclose(range.avs)) {
+    if (new_satt.avs) {
+      if (EOF == fclose(new_satt.avs)) {
         perror("Error writing AVS file");
         exit(1);
       }
     }
 
-    if (range.avx) {
-      if (EOF == fclose(range.avx)) {
+    if (new_satt.avx) {
+      if (EOF == fclose(new_satt.avx)) {
         perror("Error writing AVX file");
         exit(1);
       }
     }
 
-    range.ready = 0;
+    new_satt.ready = 0;
   }
 }
 
@@ -551,8 +567,8 @@ sencode_parse_options(int argc, char **argv)
 
   /* if text_fd is unspecified, stdin will be used */
   text_fd = NULL;
-  /* make sure either -S or -V is used: reset range.name now & check after getopt */
-  range.name = NULL;
+  /* make sure either -S or -V is used: reset new_satt.name now & check after getopt */
+  new_satt.name = NULL;
 
   while((c = getopt(argc, argv, "+qBd:f:msDS:V:r:C:Mah")) != EOF)
     switch(c) {
@@ -622,7 +638,7 @@ sencode_parse_options(int argc, char **argv)
 
       /* S: s-attribute without annotations */
     case 'S':
-      sencode_range_declare(optarg, directory, 0);
+      sencode_declare_new_satt(optarg, directory, 0);
       if (optind < argc) {
         fprintf(stderr, "Error: -S <att> must be last flag on command line.\n\n");
         exit(1);
@@ -631,7 +647,7 @@ sencode_parse_options(int argc, char **argv)
 
       /* V: s-attribute with annotations */
     case 'V':
-      sencode_range_declare(optarg, directory, 1);
+      sencode_declare_new_satt(optarg, directory, 1);
       if (optind < argc) {
         fprintf(stderr, "Error: -V <att> must be last flag on command line.\n\n");
         exit(1);
@@ -648,7 +664,7 @@ sencode_parse_options(int argc, char **argv)
   /* now, check the default and obligatory values */
   if (!text_fd)
     text_fd = stdin;
-  if (range.name == NULL) {
+  if (new_satt.name == NULL) {
     fprintf(stderr, "Error: either -S or -V flag must be specified.\n\n");
     exit(1);
   }
@@ -671,48 +687,49 @@ sencode_parse_options(int argc, char **argv)
 
 /* ======================================== */
 
-cl_lexhash LH = NULL;           /* use lexhash to avoid multiple copies of annotations (-m mode) */
+/** Lexhash used when writing regions, to avoid multiple copies of annotations (-m mode) */
+cl_lexhash LH = NULL;
 
 /**
- * Write data about a region to disk files (as defined in global variable range).
+ * Write data about a region to disk files (as defined in global variable new_satt).
  */
 void
-sencode_range_write(int start, int end, char *annot)
+sencode_write_region(int start, int end, char *annot)
 {
-  if (!range.ready)
-    sencode_range_open();
-  if (range.store_values && (LH == NULL))
+  if (!new_satt.ready)
+    sencode_open_files();
+  if (new_satt.store_values && (LH == NULL))
     LH = cl_new_lexhash(0);
 
   /* write start & end positions of region */
-  NwriteInt(start, range.fd);
-  NwriteInt(end, range.fd);
+  NwriteInt(start, new_satt.fd);
+  NwriteInt(end, new_satt.fd);
 
   /* store annotation for -V attribute */
-  if (range.store_values) {
+  if (new_satt.store_values) {
     int offset, id;
     cl_lexhash_entry entry;
 
     entry = cl_lexhash_find(LH, annot);
     if (entry == NULL) {
-      /* must add string to hash */
+      /* must add string to hash and to avs file */
       entry = cl_lexhash_add(LH, annot);
-      entry->data.integer = range.offset;
-      range.offset += strlen(annot) + 1; /* increment range offset */
-      if (0 > fprintf(range.avs, "%s%c", annot, 0)) {
-        perror("Error writing AVS file");
+      entry->data.integer = new_satt.offset;
+      new_satt.offset += strlen(annot) + 1; /* increment range offset */
+      if (0 > fprintf(new_satt.avs, "%s%c", annot, 0)) {
+        perror("Error writing to AVS file");
         exit(1);
       }
     }
     id = entry->id;
     offset = entry->data.integer;
 
-    NwriteInt(range.num, range.avx);
-    NwriteInt(offset, range.avx);
+    NwriteInt(new_satt.num, new_satt.avx);
+    NwriteInt(offset, new_satt.avx);
   }
 
-  range.num++;   /* increment range number */
-  range.last_cpos = end;
+  new_satt.num++;   /* increment region number */
+  new_satt.last_cpos = end;
 }
 
 
@@ -751,9 +768,9 @@ main(int argc, char **argv)
       fprintf(stderr, "Error: You have to specify source corpus (-C <corpus>) for -a switch.\n");
       exit(1);
     }
-    att = cl_new_attribute(corpus, range.name, ATT_STRUC);
+    att = cl_new_attribute(corpus, new_satt.name, ATT_STRUC);
     if ((att != NULL) && (cl_max_struc(att) > 0)) {
-      V_switch = range.store_values;
+      V_switch = new_satt.store_values;
       values = cl_struc_values(att);
       if (V_switch && (!values)) {
         fprintf(stderr, "Error: Existing regions of -V attribute have no annotations.\n");
@@ -764,7 +781,7 @@ main(int argc, char **argv)
         exit(1);
       }
       if (!silent)
-        printf("[Loading previous <%s> regions]\n", range.name);
+        printf("[Loading previous <%s> regions]\n", new_satt.name);
 
       N = cl_max_struc(att);
       for (i = 0; i < N; i++) {
@@ -775,7 +792,7 @@ main(int argc, char **argv)
     }
     else {
       if (!silent)
-        printf("[No <%s> regions defined (skipped)]\n", range.name);
+        printf("[No <%s> regions defined (skipped)]\n", new_satt.name);
     }
   }
 
@@ -797,17 +814,17 @@ main(int argc, char **argv)
       fprintf(stderr, "FORMAT ERROR on line #%d:\n>> %s", input_line, buf);
       exit(1);
     }
-    if (range.store_values && (annot == NULL)) {
+    if (new_satt.store_values && (annot == NULL)) {
       fprintf(stderr, "MISSING ANNOTATION on line #%d:\n>> %s", input_line, buf);
       exit(1);
     }
-    if ((!range.store_values) && (annot != NULL)) {
+    if ((!new_satt.store_values) && (annot != NULL)) {
       if (! S_annotations_dropped)
         fprintf(stderr, "WARNING: Annotation for -S attribute ignored on line #%d (warning issued only once):\n>> %s", input_line, buf);
       S_annotations_dropped++;
     }
-    if ((start <= range.last_cpos) || (end < start)) {
-      fprintf(stderr, "RANGE INCONSISTENCY on line #%d:\n>> %s(end of previous range was %d)\n", input_line, buf, range.last_cpos);
+    if ((start <= new_satt.last_cpos) || (end < start)) {
+      fprintf(stderr, "RANGE INCONSISTENCY on line #%d:\n>> %s(end of previous region was %d)\n", input_line, buf, new_satt.last_cpos);
       exit(1);
     }
     if (annot != NULL && set_att != set_none) {
@@ -821,23 +838,22 @@ main(int argc, char **argv)
 
     /* debugging output */
     if (debug) {
-      printf("[%d, %d]", start, end);
-      if (annot != NULL) {
-        printf(" <%s>", annot);
-      }
-      printf("\n");
+      fprintf(stderr, "[%d, %d]", start, end);
+      if (annot != NULL)
+        fprintf(stderr, " <%s>", annot);
+      fprintf(stderr, "\n");
     }
 
     /* in -M mode, store this region in memory; otherwise write it to the disk files */
     if (in_memory)
       SL_insert(start, end, annot);
     else
-      sencode_range_write(start, end, annot);
+      sencode_write_region(start, end, annot);
 
     cl_free(annot);
   }
 
-  /* in -M mode, write data to disk now */
+  /* in -M mode, write data to disk now that we have finished looping across input data */
   if (in_memory) {
     SL item;
 
@@ -845,14 +861,14 @@ main(int argc, char **argv)
       printf("[Creating encoded disk file(s)]\n");
     SL_rewind();
     while ((item = SL_next()) != NULL)
-      sencode_range_write(item->start, item->end, item->annot);
+      sencode_write_region(item->start, item->end, item->annot);
   }
 
   /* close files */
-  sencode_range_close();
+  sencode_close_files();
 
   if (S_annotations_dropped > 0)
-    fprintf(stderr, "Warning: %d annotation values dropped for -S attribute '%s'.\n", S_annotations_dropped, range.name);
+    fprintf(stderr, "Warning: %d annotation values dropped for -S attribute '%s'.\n", S_annotations_dropped, new_satt.name);
 
   exit(0);
 }

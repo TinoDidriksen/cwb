@@ -15,6 +15,15 @@
  *  WWW at http://www.gnu.org/copyleft/gpl.html).
  */
 
+/**
+ * @file
+ *
+ * See cqp/corpmanag.c for the file format that this utility decodes.
+ *
+ * Note, some of the code is repeated across CQP's load-file functions
+ * and here. In the long term, we'll aim to remove this duplication.
+ * TODO!
+ */
 
 #include <stdio.h>
 #include <sys/types.h>
@@ -24,11 +33,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-/** magic number of the subcorpus file format */
+/** magic number of the subcorpus file format; defined in the CQP code, corpmanag.c ;
+ * TODO should probably be defined centrally (cl/globals.h?) */
 #define SUBCORPMAGIC 36193928
 
-/** Boolean: controls whether a "registry" header in the subcorpus file gets printed or not */
-int print_header = 1;
 
 /**
  * Gets the size of the file.
@@ -50,7 +58,7 @@ file_length(FILE *fd)
  * Reads a subcorpus file and prints information about it to STDOUT.
  *
  * "Subcorpus file" here means (a) it begins with the subcorpus magic number;
- * (b)then there is a "registry" area terminated by one or more zero bytes;
+ * (b) then there is a "registry" area terminated by one or more zero bytes;
  * (c) then there may be the size of the subcorpus;
  * (d) then there are a whole load of
  * start-end range integer pairs, to the end of the file.
@@ -58,11 +66,13 @@ file_length(FILE *fd)
  * The registry is printed iff print_header. The start-end pairs
  * are printed on tab-delimited lines, one line per pair.
  *
- * @param fd  File pointer.
- * @return    Boolean: true for all OK, false for problem.
+ * @param fd            File pointer.
+ * @param print_header  Boolean: controls whether a "registry" header
+ *                      in the subcorpus file gets printed or not
+ * @return              Boolean: true for all OK, false for problem.
  */
 int
-show_subcorpus_info(FILE *fd)
+nqrfile_print_info(FILE *fd, print_header)
 {
   char        *field;
   char        *p;
@@ -92,7 +102,7 @@ show_subcorpus_info(FILE *fd)
     /* read the subcorpus */
     
     if (len != fread(field, 1, len, fd)) {
-      fprintf(stderr, "Read error while reading corpus data\n");
+      fprintf(stderr, "Read error while reading in data from subcorpus file\n");
       return 0;
     }
     else if (*((int *)field) == SUBCORPMAGIC || *((int *)field) == SUBCORPMAGIC+1) {
@@ -133,11 +143,9 @@ show_subcorpus_info(FILE *fd)
       }
 
       if (print_header) {
-
         printf("REGISTRY %s\n", registry);
         printf("O_NAME   %s\n", o_name);
         printf("SIZE     %d\n", size);
-
       }
 
       range = (struct range_t *) p;
@@ -147,7 +155,7 @@ show_subcorpus_info(FILE *fd)
                range[j].start, range[j].end);
     }
     else {
-      fprintf(stderr, "Magic number incorrect\n");
+      fprintf(stderr, "Error: Magic number incorrect in subcorpus file!\n");
       return 0;
     }
       
@@ -175,18 +183,22 @@ main(int argc, char **argv)
 {
   int i;
   FILE *fd;
+  int header_required = 1;
 
   for (i = 1; i < argc; i++) {
+    /* TODO would be useful to change this to +/-H (in v4.0), so that -h is "available" for
+     * a _usage funciton, if we ever decide we need one.
+     */
     if (strcmp(argv[i], "-h") == 0)
-      print_header = 0;
+      header_required = 0;
     else if (strcmp(argv[i], "+h") == 0)
-      print_header = 1;
+      header_required = 1;
     else {
 
       /* treat arg as sc-name */
 
       if (strcmp(argv[i], "-") == 0) {
-        if (!show_subcorpus_info(stdin))
+        if (!nqrfile_print_info(stdin, header_required))
           exit(1);
       }
       else {
@@ -195,7 +207,7 @@ main(int argc, char **argv)
           exit(1);
         }
         else {
-          if (!show_subcorpus_info(fd))
+          if (!nqrfile_print_info(fd, header_required))
             exit(1);
           fclose(fd);
         }

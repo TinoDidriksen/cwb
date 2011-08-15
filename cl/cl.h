@@ -855,6 +855,7 @@ typedef struct _cl_lexhash_entry {
   /**
    * This entry's data fields.
    * Use as entry->data.integer, entry->data.numeric, ...
+   * TODO --> explanation as to why this is a struct not a union?
    */
   struct _cl_lexhash_entry_data {
     int integer;

@@ -206,6 +206,8 @@ MayHaveComponent(int attr_type, ComponentID cid)
  * @param i  The attribute-type whose name is required.
  *           (Should be one of the values of the constants
  *           defined in cl.h.)
+ * @return   String (pointer to internal constant string,
+ *           do not change or free).
  */
 char *
 aid_name(int i)
@@ -228,6 +230,8 @@ aid_name(int i)
  * @param i  The argument-type whose name is required.
  *           (Should be one of the values of the constants
  *           defined in cl.h.)
+ * @return   String (pointer to internal constant string,
+ *           do not change or free).
  */
 char *
 argid_name(int i)

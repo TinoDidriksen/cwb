@@ -50,18 +50,18 @@ char *input_filename = NULL;
  *                    (use NULL to use a default fallback string)
  */
 void
-print_info(Attribute *attr, int id, char *fallback_s)
+lexdecode_print_item_info(Attribute *attr, int id, char *fallback_s)
 {
-  char *lemma;
+  char *item;
   int freq, slen;
 
   if (id >= 0) {
     if (fallback_s == NULL)
       fallback_s = "(none)";
 
-    lemma = get_id_info(attr, id, &freq, &slen);
-    if (cderrno != CDA_OK) {
-      cdperror("(aborting) get_id_info() failed");
+    item = cl_id2all(attr, id, &freq, &slen);
+    if (cl_errno != CDA_OK) {
+      cl_error("(aborting) get_id_info() failed");
       exit(1);
     }
   }
@@ -69,13 +69,13 @@ print_info(Attribute *attr, int id, char *fallback_s)
     id = -1;
     freq = 0;
     slen = 0;
-    lemma = NULL;
+    item = NULL;
   }
 
   if (print_nr)    printf("%7d\t", id);
   if (print_freqs) printf("%7d\t", freq);
   if (print_len)   printf("%7d\t", slen);
-  printf("%s\n", lemma ? lemma : fallback_s);
+  printf("%s\n", item ? item : fallback_s);
 }
 
 /**
@@ -89,7 +89,7 @@ print_info(Attribute *attr, int id, char *fallback_s)
  * @param rx_flags   IGNORE_CASE; IGNORE_DIAC; both; or neither.
  */
 void
-do_show(char *attr_name, char *rx, int rx_flags)
+lexdecode_show(char *attr_name, char *rx, int rx_flags)
 {
   int i, k, len, size;
   int attr_size;
@@ -108,14 +108,14 @@ do_show(char *attr_name, char *rx, int rx_flags)
   }
 
   attr_size = cl_max_cpos(attr);
-  if (cderrno != CDA_OK) {
-    cdperror("(aborting) cl_max_cpos() failed");
+  if (cl_errno != CDA_OK) {
+    cl_error("(aborting) cl_max_cpos() failed");
     exit(1);
   }
 
   size = cl_max_id(attr);
-  if (cderrno != CDA_OK) {
-    cdperror("(aborting) cl_max_id() failed");
+  if (cl_errno != CDA_OK) {
+    cl_error("(aborting) cl_max_id() failed");
     exit(1);
   }
 
@@ -156,7 +156,7 @@ do_show(char *attr_name, char *rx, int rx_flags)
           if ((i < 0) && (!freq_0_if_unknown))
               fprintf(stderr, "%s Warning: ``%s'' not found in lexicon (ignored)\n", progname, s);
             else
-              print_info(attr, i, (input_are_numbers) ? NULL : s);
+              lexdecode_print_item_info(attr, i, (input_are_numbers) ? NULL : s);
         }
 
       }
@@ -179,9 +179,9 @@ do_show(char *attr_name, char *rx, int rx_flags)
           i = idlist[k];
         }
         else if (sort) {
-          i = get_id_from_sortidx(attr, k);
-          if (cderrno != CDA_OK) {
-            cdperror("(aborting) get_id_from_sortidx() failed");
+          i = cl_sort2id(attr, k);
+          if (cl_errno != CDA_OK) {
+            cl_error("(aborting) cl_sort2id() failed");
             exit(1);
           }
         }
@@ -189,7 +189,7 @@ do_show(char *attr_name, char *rx, int rx_flags)
           i = k;
         }
 
-        print_info(attr, i, NULL);
+        lexdecode_print_item_info(attr, i, NULL);
       }
     }
 
@@ -350,7 +350,7 @@ main(int argc, char **argv) {
       exit(2);
     }
 
-    do_show(attr_name, rx, rx_flags);
+    lexdecode_show(attr_name, rx, rx_flags);
 
     cl_delete_corpus(corpus);
   }

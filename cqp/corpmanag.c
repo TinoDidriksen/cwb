@@ -1435,6 +1435,7 @@ attach_subcorpus(CorpusList *cl,
           cl->abs_fn = fullname;
           fullname = NULL;
           
+          /* advance p to the end of the 1st string (path of mother's registry) */
           while (*p)
             p++;
           /* skip the '\0' character */
@@ -1455,7 +1456,7 @@ attach_subcorpus(CorpusList *cl,
 
             assert(cl->mother_size > 0);
 
-            /* advance p to the end of the 2nd string */
+            /* advance p to the end of the 2nd string (name of mother) */
             while (*p)
               p++;
             /* skip the '\0' character */
