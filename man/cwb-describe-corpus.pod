@@ -78,18 +78,11 @@ L<cwb-itoa>, L<cwb-lexdecode>, L<cwb-makeall>, L<cwb-scan-corpus>, L<cwb-s-decod
 
 =head1 COPYRIGHT
 
-=over 4
-
-=item
 B<IMS Open Corpus Workbench (CWB)> L<http://cwb.sourceforge.net/>
 
-=item
 Copyright (C) 1993-2006 by IMS, University of Stuttgart
 
-=item
 Copyright (C) 2007- by the respective contributers (see file F<AUTHORS>)
-
-=back
 
 This program is free software; you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
@@ -102,4 +95,3 @@ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details
 L<http://www.gnu.org/copyleft/gpl.html>).
 
 =cut
-

@@ -19,7 +19,7 @@ is printed.
 In matchlist mode (C<-p> or C<-f>), (pairs of) corpus positions are read from standard input 
 or a file specified with C<-f>, and the corresponding tokens or ranges are displayed. 
 
-In either case, the output is to standard output; any accompanying error or wanring messages are printed to
+In either case, the output is to standard output; any accompanying error or warning messages are printed to
 standard error. 
 
 The attribute declaration flags C<-P>, C<-S>, C<-V> and C<-A> determine which attributes will be printed; 
@@ -42,7 +42,7 @@ environment variable, or CWB's built-in default registry will be used.
 
 =head1 OPTIONS
 
-Please note that no CWB programs currently support GNU-style C<--long-options>.
+Please note that the CWB utilities do not currently support GNU-style C<--long-options>.
 
 =over 4
 
@@ -106,6 +106,8 @@ Activates XML output mode.
 
 =head1 ATTRIBUTE DECLARATIONS
 
+=over 4
+
 =item B<-P> I<attribute>
 
 Declares that p-attribute I<attribute> should be printed.
@@ -117,7 +119,7 @@ Declares that s-attribute I<attribute> should be printed
 
 =item B<-V> I<attribute>  
 
-In matchlist mode only, declares that the s-attribute annotation for each input range should be printed.
+In matchlist mode only, declares that the s-attribute annotation that surrounds each input range should be printed.
 Note that it does not normally make sense to declare the same s-attribute with both B<-S> and B<-V>.
 
 =item B<-A> I<attribute>
@@ -133,10 +135,8 @@ A-attributes must still be added manually, if required.
 =item B<-c> I<attribute>
 
 Sets a context attribute. In matchlist mode only, each range will be expanded to a full containing I<attribute> region.
-
-=over 4
-
-=item B<TODO>
+In "normal" mode with concordance style output, each individual token will be printed within its full
+containing I<attribute>.
 
 =back
 
@@ -149,23 +149,101 @@ Sets a context attribute. In matchlist mode only, each range will be expanded to
 
 This output mode is used if no other mode is explicitly specified.
 
-Each token is printed on a separate line.
+Each token is printed on a separate line. Corpus position numbers, if activated, are printed
+at the start of the line, followed by a colon. All types of attributes are printed on the
+line, each one separateed by tabs. The form for p-attributes is an
+C<I<attribute>=I<value>> pair. S-attributes and a-attributes are given as 
+C<< I<<attribute>>:I<start>-I<end> >> and C<< I<start1>-I<end1>==>I<attribute>:I<start2>-I<end2> >>
+respectively.
 
-End tags are not printed for s-attributes and a-attributes.
+In matchlist mode, if a context attribute is being used, it is printed as
+a line at the start of each match: this begins with TARGET or INTERVAL,
+followed by (respectively) one or two integers indicating the extent of the
+context being shown.
+
+"Surrounding" s-attribute values in matchlist mode are shown on a single line each,
+in the form C<< <I<attribute> I<value>> >> .
 
 
 =item B<Compact output>
 
 This output format is designed so that it can also serve as input to B<cwb-encode>.
 
+As in standard mode, one token is printed per line. However, only p-attributes are
+shown on token lines. S-attributes and a-attributes are instead shown on separate
+lines, in pseudo-XML-esque form. 
+
+S-attributes are printed in the form C<< <I<attribute> I<annotation>> >> ,
+with simple closing tags.
+A-attributes are given as simple unvalued tags, unless printing of token numbers
+is enabled, in which case the a-attribute tags will contain a pair of numbers
+representing the start and end points of the corresponding region in the aligned corpus.
+These numbers will also appear in the closing tag of the a-attribute. 
+
+In matchlist mode, if a context attribute is being used, it is not actually printed.
+
+In matchlist mdoe, the values of "surrounding" s-attributes are shown in the form
+of a comment - a line formatted as C<# I<attribute>=I<value>> . These comments
+may need to be stripped before the output is sent to B<cwb-encode>.
+
 
 =item B<XML-compatible compact output>
+
+This is the same as compact output, except that:
+
+=over 4
+
+=item *
+
+Strings are printed with certain characters ( C<< " ' < > & >> ) represented by the 
+corresponding XML entities.
+
+=item *
+
+There is an XML declaration at the start of the output.
+
+=item *
+
+The whole output is wrapped in a C<< <corpus> >> element, or a C<< <matchlist> >> element 
+in matchlist mode.
+
+=back
+
+Note that in contrast to XML output, the individual tokens are I<not> represented
+by XML structures, and the tags indicating s-attributes and a-attributes are not different
+from their form in normal compact mode.
 
 
 =item B<Concordance-line ("horizontal") output>
 
+This mode makes B<cwb-decode>'s output resemble the format of a CQP concordance as
+closely as possible. Most types of attribute are shown in a very similar way to 
+how they appear in compact output mode. However, they are adjusted so that many
+tokens can be presented on a single line.
+
+For example, corpus position numbers are shown at the start of each line (where
+requested), rather than repeatedly on the line alongside every token. This matches
+the formatting used by CQP. 
+
+S-attributes and a-attributes are shown in the same pseudo-XML format as in compact mode,
+but on the same line.
+
+It's important to note that in "normal" mode, you will still only see one token per line
+(because only one token at a time is being printed) - although you can use a context
+s-attribute to expand the number of tokens printed on each line, there will still be one line
+per token. It is in matchlist mode that this output format is especially useful.
+
 Tokens are separated by spaces. In matchlist mode, sequences of tokens are separated by newline
-characters. 
+characters. Within each token, p-attributes are delimited by the forward slash. Note
+that forward-slash is not escaped in any way when it occurs as part of one of the 
+p-attributes' values.
+
+In matchlist mode, if a context attribute is used, it is not actually printed.
+
+The values of "surrounding" s-attributes in matchlist mode are shown as
+the same kind of pseudo-XML tag used in standard mode, but this is set off
+from the remainder of the line with a colon, as follows: C<< <I<attribute> I<value>>: >>
+
 
 
 =item B<Lisp output mode>
@@ -173,12 +251,12 @@ characters.
 All data structures are represented as well-formed list objects in B<(>parenthesesB<)>. 
 
 P-attribute values are given in the form C<(I<attribute_name> I<attribute_value>)>. These are, in
-turn, contained in C<(token ...)> structures.
+turn, contained in a single list per token (which will begin with the corpus position number,
+if the B<-n> option has been selected).
 
-In matchlist mode with a cno
-The token (in normal mode) or set of tokens (in matchlist mode) is cotnained in a C<(TARGET ...)> structure.
-
-In matchlist mode, each C<(TARGET ...)> 
+When a context attribute is being used (B<-c>), the set of tokens (in matchlist mode) is then contained in a
+C<(TARGET I<cpos>...)> structure. Additonally, if more than one token is contained within this TARGET,
+the first object within the TARGET list is an C<INTERVAL I<from_cpos> I<to_cpos>)> structure.
 
 In matchlist mode, each sequence of matches begins with a C<CONTEXT I<from_cpos> I<to_cpos>)> structure.
 
@@ -187,17 +265,30 @@ In matchlist mode, each sequence of matches begins with a C<CONTEXT I<from_cpos>
 
 An XML declaration is given at the start of the output.
 
-The whole output is wrapped in a C<<corpus>> tag, or a C<<matchlist>> tag with groups of C<<match>> tags in matchlist mode.
+Strings are printed with certain characters ( C<< " ' < > & >> ) represented by the 
+corresponding XML entities.
 
-Each token is contained in a C<<token>> element.
+The whole output is wrapped in a C<< <corpus> >> element, or a C<< <matchlist> >> element with groups 
+of C<< <match> >> elements in matchlist mode.
 
-Token numbers, where requested, are given as C<cpos> attributes on C<<token>> elements.
+Each token is contained in a C<< <token> >> element. 
+The contents of the p-attributes within each token are given in the form 
+C<< <attr name="...">...</attr> >> .
+
+Token numbers, where requested, are given as C<cpos> attributes on the C<< <token> >> elements. 
+Corpus positions (start and end) will also be shown on elements representing a-attributes and 
+s-attributes if numbers have been requested. 
+
+S-attributes and p-attributes are printed before the token element they are associated with, in the form
+C<< <align type="start" target="..." /> >> and C<< <tag type="start" name="..." /> >> .
+The end points, printed after the token elements they are associated, are the same, except that I<type> is 
+given as I<end>.
 
 In matchlist mode, the values of "surrounding" s-attributes declared with B<-V> 
-are given before the contents of each match, in the form C<<element name="..." value="..."/>> . 
+are given before the contents of each match, in the form C<< <element name="..." value="..."/> >> . 
 
 In matchlist mode, if extended context is requested with the B<-c> declaration, this is shown in the form
-C<<context start="I<cpos>" end="I<cpos>"/>> .
+C<< <context start="I<cpos>" end="I<cpos>"/> >> .
 
 
 =back
@@ -224,18 +315,11 @@ L<cwb-itoa>, L<cwb-lexdecode>, L<cwb-makeall>, L<cwb-scan-corpus>, L<cwb-s-decod
 
 =head1 COPYRIGHT
 
-=over 4
-
-=item
 B<IMS Open Corpus Workbench (CWB)> L<http://cwb.sourceforge.net/>
 
-=item
 Copyright (C) 1993-2006 by IMS, University of Stuttgart
 
-=item
 Copyright (C) 2007- by the respective contributers (see file F<AUTHORS>)
-
-=back
 
 This program is free software; you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software

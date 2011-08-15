@@ -30,7 +30,8 @@ details of the index to be generated, including the location of the data directo
 and location of the resulting index is determined by the configuration of B<cwb-encode>.
 
 The purpose of this manual file is to explain the conventions for calling B<cwb-encode>. It does not attempt
-to explain all the details of the CWB data model or how encoding is accomplished. For details on these other issues, 
+to explain all the details of the CWB data model or how encoding is accomplished. Nor does it discuss how
+B<cwb-encode> can be used to add additional attributes to an already-encoded corpus. For details on these other issues, 
 please refer to the CWB project's I<CWB Encoding Tutorial> document. 
 
 When B<cwb-encode> is invoked, as well as options, the p-attributes and s-attrributes of the corpus must be declared.
@@ -56,7 +57,7 @@ Registry file names are all-lowercase
 and can contain the letters a to z (no accents), the underscore, the hyphen, and the digits 0 to 9. The name
 of the corpus is then the uppercased version of that filename. You can write a registry file yourself, but it
 is strongly recommended to let B<cwb-encode> do it for you using the B<-R> option.
-
+  
 After encoding, you should use B<cwb-makeall> to create the 
 required index files and frequency lists, and then compress them with B<cwb-huffcode> and 
 B<cwb-compress-rdx> (or preferably use the B<cwb-make> program from the CWB/Perl interface).
