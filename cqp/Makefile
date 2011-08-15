@@ -78,7 +78,7 @@ CQI_OBJS = ../CQi/server.o ../CQi/auth.o
 CQP_OBJS = dummy_auth.o
 
 HDRS =  cqp.h options.h symtab.h tree.h eval.h corpmanag.h \
-	regex2dfa.h output.h translate.h \
+	regex2dfa.h output.h \
 	ranges.h builtins.h treemacros.h \
 	groups.h targets.h matchlist.h \
 	concordance.h \
