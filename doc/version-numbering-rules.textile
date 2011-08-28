@@ -17,8 +17,8 @@ h2. Version numbers for the core CWB
 * All version numbers will be of the form x.y.z
 * Major public releases of the core CWB will be 3.0.z, 4.0.z, etc.
 ** In these releases, the z indicates the maintenance/bugfix release version
-* Major releases are allowed to break backwards compatability, both of library APIs and of user interface.
-* There may be intermediate stable public versions, which will not break compatability (or will do so in a trivial way)
+* Major releases are allowed to break backwards compatibility, both of library APIs and of user interface.
+* There may be intermediate stable public versions, which will not break compatibility (or will do so in a trivial way)
 ** These will have the numbers 3.5.z, 4.5.z, etc.
 * Any other minor release number represents an unstable beta.
 ** Users who want to take advantage of the latest improvements are encouraged to use these intermediate releases.
@@ -29,11 +29,11 @@ h2. Version numbers for CWB-Perl and CQPweb
 
 * All version numbers will follow the same general format as the core CWB.
 * All versions of CWB-Perl and CQPweb will have the same major number as the version of the core that they are compatible with.
-** Minor numbers x.0 to x.3 denote compatability with the stable version x.0 of the core
-** Minor numbers x.5 to x.8 denote compatability with the stable version x.0 of the core
-** Minor numbers x.4 or x.9, if used, denote compatabiltiy with the upcoming stable version x.5 or (x+1).0 of the core
+** Minor numbers x.0 to x.3 denote compatibility with the stable version x.0 of the core
+** Minor numbers x.5 to x.8 denote compatibility with the stable version x.5 of the core
+** Minor numbers x.4 or x.9, if used, denote compatibiltiy with the upcoming stable version x.5 or (x+1).0 of the core
 * An increment in the minor number (say, from 3.5 to 3.6) indicates some major change in the user interface
-** Such a change may possibly break backward-compatability in the front end, without changing how compatability with the core works
+** Such a change may possibly break backward-compatibility in the front end, without changing how compatibility with the core works
 * An increment in the maintenance/bugfix number represents a smaller change that does not majorly affect the user interface. 
 
 h2. Additional caveats for CQPweb
