@@ -499,8 +499,7 @@ char *cl_cpos2str(Attribute *attribute, int position);
 
 /* ========== some high-level constructs */
 
-char *cl_id2all(Attribute *attribute,
-                  int index, int *freq, int *slen);
+char *cl_id2all(Attribute *attribute, int index, int *freq, int *slen);
 
 int *cl_regex2id(Attribute *attribute,
                  char *pattern,

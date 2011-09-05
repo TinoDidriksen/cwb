@@ -2006,7 +2006,7 @@ cl_struc_values(Attribute *attribute) {
 
 
 /**
- * A non-exported function used by structure_value
+ * A non-exported function used by cl_struc2str
  */
 int
 s_v_comp(const void *v1, const void *v2)
