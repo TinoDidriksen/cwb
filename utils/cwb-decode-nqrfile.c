@@ -72,7 +72,7 @@ file_length(FILE *fd)
  * @return              Boolean: true for all OK, false for problem.
  */
 int
-nqrfile_print_info(FILE *fd, print_header)
+nqrfile_print_info(FILE *fd, int print_header)
 {
   char        *field;
   char        *p;
