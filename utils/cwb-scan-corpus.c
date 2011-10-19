@@ -51,6 +51,7 @@ struct _Hash {
   int max_offset;           /**< largest offset of all keys (to avoid scanning past end of corpus */
   int is_structural[MAX_N]; /**< list of flags identifying s-attributes (all others are p-attributes) */
   CL_Regex regex[MAX_N];    /**< optional regex constraint (compiled regular expression) */
+  int is_negated[MAX_N];    /**< whether regex constraint is negated (!=) */
 
   /* optional frequency values for corpus rows */
   Attribute *frequency_values;
@@ -101,14 +102,13 @@ scancorpus_usage(void)
   fprintf(stderr, "Usage: %s [options] <corpus> <key1> <key2> ... \n\n", progname);
   fprintf(stderr, "Computes the joint frequency distribution over <key1>, <key2>, ... .\n");
   fprintf(stderr, "Each key specifier takes the form:\n\n");
-  fprintf(stderr, "    [?]<att>[+<n>][=/<regex>/[cd]]\n\n");
+  fprintf(stderr, "    [?]<att>[+<n>][[!]=/<regex>/[cd]]\n\n");
   fprintf(stderr, "where <att> is a positional or structural attribute, <n> an optional\n");
   fprintf(stderr, "non-negative offset (number of tokens to the right), and <regex> an optional\n");
-  fprintf(stderr, "regular expression against which the key is matched (instances where the value\n");
-  fprintf(stderr, "of <att> does not match <regex> are discarded before counting). The regex\n");
-  fprintf(stderr, "may be followed by 'c' (ignore case) and/or 'd' (ignore diacritics).\n");
+  fprintf(stderr, "regular expression that the key must match ('=') or not match ('!='). The\n");
+  fprintf(stderr, "regex may be followed by 'c' (ignore case) and/or 'd' (ignore diacritics).\n");
   fprintf(stderr, "The optional '?' sign marks a \"constraint\" key which will not be included\n");
-  fprintf(stderr, "in the resulting frequency distribution.\n\n");
+  fprintf(stderr, "in the resulting frequency distribution. Up to %d keys may be specified in total.\n\n", MAX_N);
   fprintf(stderr, "The output is a table of the form:\n");
   fprintf(stderr, "  <f>  TAB  <key1-value>  TAB  <key2-value>  TAB  ... \n\n");
   fprintf(stderr, "Options:\n");
@@ -118,7 +118,8 @@ scancorpus_usage(void)
   fprintf(stderr, "            (compressed with gzip if <file> ends in '.gz')\n");
   fprintf(stderr, "  -f <n>    include only items with frequency >= <n> in result table\n");
   fprintf(stderr, "  -F <att>  add up frequency values from p-attribute <att>\n");
-  fprintf(stderr, "  -C        clean up data, i.e. accept only 'regular' words\n");
+  fprintf(stderr, "  -C        clean up data, i.e. accept only \"regular\" words\n");
+  fprintf(stderr, "            (does not apply to constraint keys marked with '?')\n");
   fprintf(stderr, "  -s <n>    start scanning at corpus position <n>\n");
   fprintf(stderr, "  -e <n>    stop scanning at corpus position <n>\n");
   fprintf(stderr, "  -R <file> read list of corpus ranges to scan from <file>\n");
@@ -417,6 +418,7 @@ scancorpus_add_key(char *key)
   int offset = 0;               /* offset obtained from [+<n>] part of key specifier */
   char *regex = NULL;           /* <regex> from optional [=/<regex>/[cd]] part */
   int flags = 0;                /* optional ignore case and/or diacritics flags ([cd]) */
+  int is_negated = 0;           /* regex constraint negated? */
   int is_constraint = 0;        /* just a constraint key? */
   int is_structural = 0;        /* positional or structural attribute? */
   char *p;
@@ -429,8 +431,14 @@ scancorpus_add_key(char *key)
   else
     strcpy(buf, key);
 
-  regex = strchr(buf, '=');        /* check for "=/<regex>/" */
+  regex = strchr(buf, '=');        /* check for "=/<regex>/" or "!=/<regex>/" */
   if (regex != NULL) {
+    if (regex > buf) {
+      if (regex[-1] == '!') {
+        regex[-1] = '\0';
+        is_negated = 1;
+      }
+    }
     *(regex++) = '\0';                /* terminate part of key before regex */
     if (*regex != '/') {
       fprintf(stderr, "Syntax error in regex part of key '%s'.\n", key);
@@ -480,6 +488,7 @@ scancorpus_add_key(char *key)
   if (offset > Hash.max_offset)
     Hash.max_offset = offset;
   Hash.is_constraint[Hash.N] = is_constraint;
+  Hash.is_negated[Hash.N] = is_negated;
 
   if (regex != NULL) {                /* optional regex constraint */
     Hash.regex[Hash.N] = cl_new_regex(regex, flags, cl_corpus_charset(C)); /* compile regular expression */
@@ -735,16 +744,28 @@ main (int argc, char *argv[])
               else
                 bot = mid + 1;
             }
-            if (id != idlist[bot])     /* now id==idlist[bot==top], or id is not in list */
-              accept = 0;
+            if (id == idlist[bot]) {   /* now id==idlist[bot==top], or id is not in list */
+              if (Hash.is_negated[i])  /* a) id found -> reject if constraint is negated */
+                accept = 0;            
+            } 
+            else {
+              if (Hash.is_negated[i]) {/* b) id not found -> reject unless negated, otherwise must check -C flag */
+                if (check_words && !Hash.is_constraint[i]) {
+                   /* id matching negative constraint may not have been found in idlist[] filtered with -C flag,
+                      so we need to check explicitly that the corresponding string is regular in this case */
+                  str = cl_id2str(Hash.att[i], id);
+                  if (!is_regular(str)) accept = 0;
+                }
+              }
+              else accept = 0;
+            }
           }
           else if (size == 0) {        /* empty list: constraint cannot be satisfied */
             accept = 0;
           }
-          else if (check_words) {      /* no regex, but -C option specified: check now whether word is regular
-                                          (otherwise implicit in ID list) */
+          else if (check_words) {      /* no regex, but -C option specified: check now whether word is regular */
             str = cl_id2str(Hash.att[i], id);
-            accept = accept && is_regular(str);
+            if (!is_regular(str)) accept = 0;
           }
         }
         else {                             /* s-attribute -> id = offset of annotation string in lexicon data */
@@ -766,9 +787,15 @@ main (int argc, char *argv[])
                 Hash.virtual_id[i] = -1;
               }
               Hash.constraint_ok[i] = 1;
-              if ((Hash.regex[i] != NULL) && (! cl_regex_match(Hash.regex[i], str)))
-                Hash.constraint_ok[i] = 0;
-              if (check_words && !is_regular(str))
+              if (Hash.regex[i] != NULL) {
+                if (cl_regex_match(Hash.regex[i], str)) {
+                  if (Hash.is_negated[i]) Hash.constraint_ok[i] = 0;  /* negated regex matches -> reject */
+                }
+                else {
+                  if (!Hash.is_negated[i]) Hash.constraint_ok[i] = 0; /* plain regex matches -> reject */
+                }
+              }
+              if (check_words && !Hash.is_constraint[i] && !is_regular(str)) /* -C flag (ignored fo constraint keys) */
                 Hash.constraint_ok[i] = 0;
               /* may jump directly to next region when regex constraint is present (or for ``?head'' constraints) */ 
               if (Hash.regex[i] != NULL || Hash.source_base[i] == NULL) { 
@@ -786,7 +813,7 @@ main (int argc, char *argv[])
           if (effective_cpos >= Hash.start_cpos[i]) { /* when in region, use relevant information in Hash data structure */
             id = Hash.virtual_id[i];
             if (Hash.regex[i] != NULL || check_words) /* apply stored constraint flag if regex or -C is in effect */
-              if (! Hash.constraint_ok[i])
+              if (! Hash.constraint_ok[i])            /* (should always be TRUE otherwise, so the condition may be redundant) */
                 accept = 0;
           }
           else {                        /* outside region, ID is undef (-1) and any regex constraint fails */
