@@ -25,7 +25,7 @@ for that p-attribute: a list of all types, and the number of tokens that occur f
 each. However, if a second key is added - say, C<word+1> for the following token -
 then we get a frequency list of bigrams instead. The frequencies of individual words
 are no longer reported - rather the frequencies of every different combination of
-word occuring in a sequence with one directly after the other.
+words occuring in a sequence with one directly after the other.
 
 Alternatively, a second p-attribute on the same position could be specified:
 C<word pos> . In this case, it is the word-pos combinations which are listed and counted.
@@ -53,17 +53,20 @@ Please note that the CWB utilities do not currently support GNU-style C<--long-o
 
 =item B<-b> I<num>
 
-A hash table, where each hash contains a particular number of buckets, are used in the scanning
-process. This option allows the number of buckets to be set by the user. Users who do not already understand what hash table
-buckets are do not need to understand this option. The default number of buckets is 1,000,000.
+In order to collect frequency counts in the scanning process, a hash table with a particular number of buckets is used.
+Each bucket can hold a single tuple of key values.  If there are more different types (i.e. key value combinations) than buckets,
+they have to be stored in overflow chains, reducing the computational efficiency of the hashing algorithm.
+
+This option allows the number of buckets to be set by the user, in order to improve the speed of the corpus scan for
+frequency counts involving a very large number of types.  Users who are not already familiar with hash tables
+do not need to understand this option.  The default setting of 1,000,000 buckets will be sufficient for most applications.
 
 =item B<-C>        
 
-Enables cleanup of the output data. "Cleanup" means
-that any token values that are not "regular" words will be omitted. A regular word
-consists only of letters, numbers and hyphens and does not end with a hyphen.f
+Enables cleanup of the output data. "Cleanup" means that any token values that are not "regular" words will be omitted.
+A regular word consists only of letters, numbers and hyphens and does not end with a hyphen.
 
-Cleanup does not apply to the values of "constraint" keys.
+Cleanup does not apply to the values of "constraint" keys.  All other keys will be affected, however, as C<-C> is a global option.
 
 =item B<-e> I<end>
 
@@ -80,14 +83,12 @@ will be included in the output table.
 
 =item B<-F> I<attribute>  
 
-Adds up frequency values from p-attribute I<attribute>, so that the values each corpus position
-can be treated as having a higher frequency than the default 1.
+Adds up frequency values from p-attribute I<attribute> instead of considering each instance of a value combination
+found in the corpus as a single occurrence.  The specified p-attribute must contain only strings representing numbers,
+where the number for a given token represents the joint frequency of the corresponding tuple of key values.
 
-The specified p-attribute must contain
-only strings representing numbers, where the number for a given token represents the joint frequency
-of the set of items contained on the other p-attributes for that same token.
-
-B<TODO check the above is correct>
+This option is intended for use with large frequency tables stored as a CWB corpus, e.g. in the BNCweb interface.  Certain
+types of aggregate counts are much faster with this implementation than an indexed MySQL database table.
 
 =item B<-h>
 
@@ -104,8 +105,7 @@ The output file will be compressed using B<gzip> if I<file> ends in C<.gz>.
 
 =item B<-q>
 
-Activates quiet mode - the progress information normally printed to standard error
-is suppressed.
+Activates quiet mode - the progress information normally printed to standard error is suppressed.
 
 =item B<-r> I<registry_dir>
 
@@ -118,7 +118,7 @@ the built-in CWB default will be used.
 
 Specifies that a list of corpus ranges to scan should be read in from from I<file>. I<file>
 can be C<->, in which case ranges will be read from standard input. Ranges are expected to
-be listed one per line, in the form of a start position, followed by a space, followed by
+be listed one per line, in the form of a start position, followed by whitespace, followed by
 an end position.
 
 Note that it does not make sense to combine this option with B<-s> and B<-e>, so if B<-R> is present,
@@ -134,9 +134,13 @@ position in the key specification will be the token at corpus position I<start>.
 
 =head1 KEY SPECIFIERS
 
-Each key specifier takes the form:
+Each key specifier takes the form
 
     [?]<att>[+<n>][=/<regex>/[cd]]
+
+or
+
+    [?]<att>[+<n>][!=/<regex>/[cd]]
 
 where:
 
@@ -166,6 +170,7 @@ position 22, and so on.
 
 I<regex> is an optional regular expression against which the key is matched; 
 instances where the value of I<att> does not match I<regex> are discarded before counting.
+If the C<!=> operator is used, instances will be discarded if I<regex> matches.
 
 Regular expressions use PCRE syntax. If the corpus is encoded in UTF-8, Unicode character
 classes can be used. Like all CWB regular expressions, these are matched against entire
@@ -186,6 +191,11 @@ For example, the required tuple might be C<word word+1>, but if only bigrams
 beginning with a noun are required, C<?pos=/N.*/> could be added to enforce this
 restriction without the POS tags themselves (NP1, NN1, or whatever else)
 becoming part of the tuple.
+
+A "bare" constraint key on an s-attribute (without a regular expression condition)
+restricts the scan to regions of the selected s-attribute, e.g. C<?heading+2> in order to 
+ensure that the token at offset +2 is within a heading.  Bare constraints on p-attributes
+don't make any sense, of course.
 
 =back
 
