@@ -28,7 +28,7 @@
 #include "attlist.h"
 #include "options.h"
 
-#define MAXKWICLINELEN 32768
+#define MAXKWICLINELEN 65535
 
 #define SRESIZE 1024
 
@@ -501,10 +501,10 @@ compose_kwic_line(Corpus *corpus,
   int text_size;
   int start, end, index;
 
-  char line[MAXKWICLINELEN];
+  char line[MAXKWICLINELEN + 1];
   int line_p;
 
-  char token[MAXKWICLINELEN];
+  char token[MAXKWICLINELEN + 1];
   int token_p;
 
   char *word;
@@ -675,8 +675,8 @@ compose_kwic_line(Corpus *corpus,
 
     /* auff�llen (padding) mit Blanks, bis linker Kontext erreicht */
     while (acc_len < cd->left_width) {
-      line[line_p++] = ' ';
-      acc_len++;
+      append(line, " ", &line_p, MAXKWICLINELEN);
+      acc_len++; /* pretend to fill in necessary number of blanks, even if buffer is already full */
     }
 
     /* die bisherige Zeile (Linkskontext des Match-Tokens) umdrehen,
@@ -917,7 +917,7 @@ compose_kwic_line(Corpus *corpus,
 
       if (start != match_end) {
         /* Trennzeichen einf�gen */
-        if (line_p > 0)
+        if (line_p > 0 && line_p < MAXKWICLINELEN)
           line[line_p++] = separator;
       }
     }
@@ -970,7 +970,7 @@ compose_kwic_line(Corpus *corpus,
         append(line, pdr->BeforeToken, &line_p, MAXKWICLINELEN);
 
         token_p = 0;
-        while (token[token_p] && 
+        while (token[token_p] && line_p < MAXKWICLINELEN &&
                acc_len < cd->right_width) {
           line[line_p++] = token[token_p++];
           acc_len++;
@@ -994,9 +994,9 @@ compose_kwic_line(Corpus *corpus,
         enough_context = 1;
     }
 
-    /* auff�llen (padding) mit Blanks, bis rechter Kontext erreicht */
+    /* auffüllen (padding) mit Blanks, bis rechter Kontext erreicht */
     while (line_p < cd->right_width)
-      line[line_p++] = ' ';
+      append(line, " ", &line_p, MAXKWICLINELEN);
     
     break;
     
@@ -1017,7 +1017,7 @@ compose_kwic_line(Corpus *corpus,
                               pdr, 
                               nr_mappings, mappings)) {
         
-        /* Trennzeichen einf�gen, falls schon tokens in line drin sind */
+        /* Trennzeichen einfügen, falls schon tokens in line drin sind */
         if (line_p > 0)
           append(line, pdr->TokenSeparator, &line_p, MAXKWICLINELEN);
 
@@ -1111,7 +1111,7 @@ compose_kwic_line(Corpus *corpus,
                               nr_mappings, mappings)) {
         
         /* Trennzeichen einf�gen, falls schon tokens in line drin sind */
-        if (line_p > 0)
+        if (line_p > 0 && line_p < MAXKWICLINELEN)
           line[line_p++] = separator;
 
         this_token_start = line_p;
