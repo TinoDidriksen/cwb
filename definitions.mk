@@ -23,7 +23,7 @@
 #
 # CWB version
 #
-VERSION = 3.4.1
+VERSION = 3.4.2
 # 3.4.x = beta versions leading up to new stable 3.5.0
 
 #

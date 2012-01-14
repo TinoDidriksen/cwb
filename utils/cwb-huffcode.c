@@ -377,7 +377,10 @@ compute_code_lengths(Attribute *attr, HCD *hc, char *fname)
 
   for (i = 0; i < hc->size; i++) {
     heap[i] = hc->size + i;
-    heap[hc->size+i] = get_id_frequency(attr, i);
+    heap[hc->size+i] = get_id_frequency(attr, i) + 1;
+    /* add-one trick needed to avoid unsupported Huffman codes > 31 bits for very large corpora of ca. 2 billion words:
+       theoretical optimal code length for hapax legomena in such corpora is ca. 31 bits, and the Huffman algorithm 
+       sometimes generates 32-bit codes; with add-one trick, the theoretical optimal code length is always <= 30 bits */    
   }
 
   /* ============================== PROTOCOL ============================== */
