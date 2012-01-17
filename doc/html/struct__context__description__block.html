@@ -52,12 +52,12 @@
 Data Fields</h2>
 <ul>
 <li>int <a class="el" href="struct__context__description__block.html#a1258cbedc6d0d6ada0e462b87610579d">left_width</a>
-<li>int <a class="el" href="struct__context__description__block.html#aa4b8e22e70bf39bf1873cfa4f09ae700">left_type</a>
-<li>char * <a class="el" href="struct__context__description__block.html#afa68487f1225b12a9a0c374608f8964a">left_structure_name</a>
+<dl class="el"><dd class="mdescRight">Amount of context to show before the match, in units specified by left_type.  <a href="#a1258cbedc6d0d6ada0e462b87610579d"></a><br/></dl><li>int <a class="el" href="struct__context__description__block.html#aa4b8e22e70bf39bf1873cfa4f09ae700">left_type</a>
+<dl class="el"><dd class="mdescRight">Set to one of the constants: CHAR_CONTEXT, WORD_CONTEXT, STRUC_CONTEXT, ALIGN_CONTEXT.  <a href="#aa4b8e22e70bf39bf1873cfa4f09ae700"></a><br/></dl><li>char * <a class="el" href="struct__context__description__block.html#afa68487f1225b12a9a0c374608f8964a">left_structure_name</a>
 <li><a class="el" href="union___attribute.html">Attribute</a> * <a class="el" href="struct__context__description__block.html#a53051fa2d939852b0e335f486e401092">left_structure</a>
 <li>int <a class="el" href="struct__context__description__block.html#a3b766ab37127b9dfc9dced549f12d1b6">right_width</a>
-<li>int <a class="el" href="struct__context__description__block.html#a4cd7294feb60136d9bfee4796f67cbd7">right_type</a>
-<li>char * <a class="el" href="struct__context__description__block.html#ac757da07dc3a3d5476d1f9f23dd8dbed">right_structure_name</a>
+<dl class="el"><dd class="mdescRight">Amount of context to show after the match, in units specified by right_type.  <a href="#a3b766ab37127b9dfc9dced549f12d1b6"></a><br/></dl><li>int <a class="el" href="struct__context__description__block.html#a4cd7294feb60136d9bfee4796f67cbd7">right_type</a>
+<dl class="el"><dd class="mdescRight">Set to one of the constants: CHAR_CONTEXT, WORD_CONTEXT, STRUC_CONTEXT, ALIGN_CONTEXT.  <a href="#a4cd7294feb60136d9bfee4796f67cbd7"></a><br/></dl><li>char * <a class="el" href="struct__context__description__block.html#ac757da07dc3a3d5476d1f9f23dd8dbed">right_structure_name</a>
 <li><a class="el" href="union___attribute.html">Attribute</a> * <a class="el" href="struct__context__description__block.html#a260b48760c37fb06742e7e84cb271e7a">right_structure</a>
 <li>int <a class="el" href="struct__context__description__block.html#a008f774a80cbd9538b1e50cdd7bf29b0">print_cpos</a>
 <li><a class="el" href="struct__attlist.html">AttributeList</a> * <a class="el" href="struct__context__description__block.html#ab0c9f5c58479a7132e805c6cb613a606">attributes</a>
@@ -140,6 +140,8 @@ Data Fields</h2>
 </div>
 <div class="memdoc">
 
+<p>Set to one of the constants: CHAR_CONTEXT, WORD_CONTEXT, STRUC_CONTEXT, ALIGN_CONTEXT. </p>
+
 <p>Referenced by <a class="el" href="ascii-print_8h.html#a8123c01d1c35c99c5cbadae6e308c3f1">ascii_print_corpus_header()</a>, <a class="el" href="concordance_8h.html#a56419cf83985974f599ea0fa65f554ce">compose_kwic_line()</a>, <a class="el" href="html-print_8c.html#aa33a61adb8885724ff5ea4fc97e2e4cf">html_print_context()</a>, <a class="el" href="print__align_8c.html#ab4fcc5be1517cf9e24a48ded5622c9be">init_align_module()</a>, <a class="el" href="context__descriptor_8h.html#a796afe5b380afce748f75e3142db17b4">initialize_context_descriptor()</a>, <a class="el" href="latex-print_8c.html#a0777bf57ca0635459d5b806ead570523">latex_print_context()</a>, <a class="el" href="context__descriptor_8h.html#a1c4c7c9975c66a463bfc4c164c83af1f">PrintContextDescriptor()</a>, <a class="el" href="options_8h.html#a93847df2fb331e55cc129cb33e7fd440">set_context_option_value()</a>, <a class="el" href="options_8c.html#aac85b75729b62d91147deb7ea7b878ed">set_default_option_values()</a>, <a class="el" href="sgml-print_8c.html#aa4953a522417fdfe7e77678bbc7aa9ac">sgml_print_context()</a>, and <a class="el" href="context__descriptor_8h.html#a8b7716f1af60350c61f092fbf44578b8">verify_context_descriptor()</a>.</p>
 
 </div>
@@ -154,6 +156,8 @@ Data Fields</h2>
       </table>
 </div>
 <div class="memdoc">
+
+<p>Amount of context to show before the match, in units specified by left_type. </p>
 
 <p>Referenced by <a class="el" href="ascii-print_8h.html#a8123c01d1c35c99c5cbadae6e308c3f1">ascii_print_corpus_header()</a>, <a class="el" href="concordance_8h.html#a56419cf83985974f599ea0fa65f554ce">compose_kwic_line()</a>, <a class="el" href="html-print_8c.html#aa33a61adb8885724ff5ea4fc97e2e4cf">html_print_context()</a>, <a class="el" href="context__descriptor_8h.html#a796afe5b380afce748f75e3142db17b4">initialize_context_descriptor()</a>, <a class="el" href="latex-print_8c.html#a0777bf57ca0635459d5b806ead570523">latex_print_context()</a>, <a class="el" href="options_8c.html#a3b63ff1af997333f51cad78bf921732a">parse_options()</a>, <a class="el" href="context__descriptor_8h.html#a1c4c7c9975c66a463bfc4c164c83af1f">PrintContextDescriptor()</a>, <a class="el" href="options_8h.html#a93847df2fb331e55cc129cb33e7fd440">set_context_option_value()</a>, <a class="el" href="options_8c.html#aac85b75729b62d91147deb7ea7b878ed">set_default_option_values()</a>, <a class="el" href="sgml-print_8c.html#aa4953a522417fdfe7e77678bbc7aa9ac">sgml_print_context()</a>, and <a class="el" href="context__descriptor_8h.html#a8b7716f1af60350c61f092fbf44578b8">verify_context_descriptor()</a>.</p>
 
@@ -230,6 +234,8 @@ Data Fields</h2>
 </div>
 <div class="memdoc">
 
+<p>Set to one of the constants: CHAR_CONTEXT, WORD_CONTEXT, STRUC_CONTEXT, ALIGN_CONTEXT. </p>
+
 <p>Referenced by <a class="el" href="ascii-print_8h.html#a8123c01d1c35c99c5cbadae6e308c3f1">ascii_print_corpus_header()</a>, <a class="el" href="concordance_8h.html#a56419cf83985974f599ea0fa65f554ce">compose_kwic_line()</a>, <a class="el" href="html-print_8c.html#aa33a61adb8885724ff5ea4fc97e2e4cf">html_print_context()</a>, <a class="el" href="print__align_8c.html#ab4fcc5be1517cf9e24a48ded5622c9be">init_align_module()</a>, <a class="el" href="context__descriptor_8h.html#a796afe5b380afce748f75e3142db17b4">initialize_context_descriptor()</a>, <a class="el" href="latex-print_8c.html#a0777bf57ca0635459d5b806ead570523">latex_print_context()</a>, <a class="el" href="context__descriptor_8h.html#a1c4c7c9975c66a463bfc4c164c83af1f">PrintContextDescriptor()</a>, <a class="el" href="options_8h.html#a93847df2fb331e55cc129cb33e7fd440">set_context_option_value()</a>, <a class="el" href="options_8c.html#aac85b75729b62d91147deb7ea7b878ed">set_default_option_values()</a>, <a class="el" href="sgml-print_8c.html#aa4953a522417fdfe7e77678bbc7aa9ac">sgml_print_context()</a>, and <a class="el" href="context__descriptor_8h.html#a8b7716f1af60350c61f092fbf44578b8">verify_context_descriptor()</a>.</p>
 
 </div>
@@ -244,6 +250,8 @@ Data Fields</h2>
       </table>
 </div>
 <div class="memdoc">
+
+<p>Amount of context to show after the match, in units specified by right_type. </p>
 
 <p>Referenced by <a class="el" href="ascii-print_8h.html#a8123c01d1c35c99c5cbadae6e308c3f1">ascii_print_corpus_header()</a>, <a class="el" href="concordance_8h.html#a56419cf83985974f599ea0fa65f554ce">compose_kwic_line()</a>, <a class="el" href="html-print_8c.html#aa33a61adb8885724ff5ea4fc97e2e4cf">html_print_context()</a>, <a class="el" href="context__descriptor_8h.html#a796afe5b380afce748f75e3142db17b4">initialize_context_descriptor()</a>, <a class="el" href="latex-print_8c.html#a0777bf57ca0635459d5b806ead570523">latex_print_context()</a>, <a class="el" href="options_8c.html#a3b63ff1af997333f51cad78bf921732a">parse_options()</a>, <a class="el" href="context__descriptor_8h.html#a1c4c7c9975c66a463bfc4c164c83af1f">PrintContextDescriptor()</a>, <a class="el" href="options_8h.html#a93847df2fb331e55cc129cb33e7fd440">set_context_option_value()</a>, <a class="el" href="options_8c.html#aac85b75729b62d91147deb7ea7b878ed">set_default_option_values()</a>, <a class="el" href="sgml-print_8c.html#aa4953a522417fdfe7e77678bbc7aa9ac">sgml_print_context()</a>, and <a class="el" href="context__descriptor_8h.html#a8b7716f1af60350c61f092fbf44578b8">verify_context_descriptor()</a>.</p>
 
@@ -268,7 +276,7 @@ Data Fields</h2>
 <li>cqp/<a class="el" href="context__descriptor_8h.html">context_descriptor.h</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Sun Jul 31 2011 00:16:43 for CWB by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Jan 17 2012 22:07:40 for CWB by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

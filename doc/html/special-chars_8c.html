@@ -231,7 +231,7 @@ Variables</h2>
 
 <p>Checks a string to see if it is a valid CWB identifier. </p>
 <p>The rules for these are as follows (see also the CQP lexer):</p>
-<p>* all characters must be ASCII, ie less than 0x80; * must be at least 1 character long (of course) * first character must be an uppercase or lowercase letter or underscore * second and subsequent characters may also be digits, hyphen or fullstop.</p>
+<p>* all characters must be ASCII, ie less than 0x80; * must be at least 1 character long (of course) * first character must be an uppercase or lowercase letter or underscore * second and subsequent characters may also be digits, hyphen or fullstop. * mixed case is allowed (just-upper and just-lower is imposed elsewhere, where necessary).</p>
 <p>TODO: should the CL registry lexer be amended to reflect these restricitons? (ID there is rather laxer than this)</p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table class="params">
@@ -294,7 +294,7 @@ Variables</h2>
 <div class="memdoc">
 
 <p>Standardises subdirectory-dividers in a string that represents a path, in an OS-sensitive way. </p>
-<p>If the CL was compiled for Unix, backslash is changed to forwardslash. If the CL was compiled for windows, forwardslash is changed to backslash.</p>
+<p>If the CL was compiled for Unix, backslash is changed to forwardslash. If the CL was compiled for Windows, forwardslash is changed to backslash.</p>
 <p>Note that the path is modified in place.</p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table class="params">
@@ -1012,7 +1012,7 @@ Variables</h2>
 </div>
 </div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Sun Jul 31 2011 00:16:43 for CWB by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Jan 17 2012 22:07:39 for CWB by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

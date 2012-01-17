@@ -57,9 +57,9 @@
 </div><h2><a name="func-members"></a>
 Functions</h2>
 <ul>
-<li>void <a class="el" href="cwb-lexdecode_8c.html#acf9dabb3c45c8b01f22903e4c2526976">print_info</a> (<a class="el" href="union___attribute.html">Attribute</a> *attr, int id, char *fallback_s)
-<dl class="el"><dd class="mdescRight">Prints information about a specified item on a P-attribute.  <a href="#acf9dabb3c45c8b01f22903e4c2526976"></a><br/></dl><li>void <a class="el" href="cwb-lexdecode_8c.html#a21e71f17ac00f605db9328ae3148978c">do_show</a> (char *attr_name, char *rx, int rx_flags)
-<dl class="el"><dd class="mdescRight">Prints out the lexicon of a P-attribute.  <a href="#a21e71f17ac00f605db9328ae3148978c"></a><br/></dl><li>void <a class="el" href="cwb-lexdecode_8c.html#a3e17f6b6f17ece48948aef358a8c981a">lexdecode_usage</a> (void)
+<li>void <a class="el" href="cwb-lexdecode_8c.html#a46464334ce73cc248f12ea744c7b3d28">lexdecode_print_item_info</a> (<a class="el" href="union___attribute.html">Attribute</a> *attr, int id, char *fallback_s)
+<dl class="el"><dd class="mdescRight">Prints information about a specified item on a P-attribute.  <a href="#a46464334ce73cc248f12ea744c7b3d28"></a><br/></dl><li>void <a class="el" href="cwb-lexdecode_8c.html#a4f72835b72ca0a3339538cc4496b6020">lexdecode_show</a> (char *attr_name, char *rx, int rx_flags)
+<dl class="el"><dd class="mdescRight">Prints out the lexicon of a P-attribute.  <a href="#a4f72835b72ca0a3339538cc4496b6020"></a><br/></dl><li>void <a class="el" href="cwb-lexdecode_8c.html#a3e17f6b6f17ece48948aef358a8c981a">lexdecode_usage</a> (void)
 <dl class="el"><dd class="mdescRight">Prints a message describing how to use the program to STDERR and then exits.  <a href="#a3e17f6b6f17ece48948aef358a8c981a"></a><br/></dl><li>int <a class="el" href="cwb-lexdecode_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main</a> (int argc, char **argv)
 <dl class="el"><dd class="mdescRight">Main function for cwb-lexdecode.  <a href="#a3c04138a5bfe5d72780bb7e82a18e627"></a><br/></dl></ul>
 <h2><a name="var-members"></a>
@@ -78,12 +78,59 @@ Variables</h2>
 <li>char * <a class="el" href="cwb-lexdecode_8c.html#a8d01b74eac291eef6efa6f9d9857cd77">input_filename</a> = NULL
 </ul>
 <hr/><h2>Function Documentation</h2>
-<a class="anchor" id="a21e71f17ac00f605db9328ae3148978c"></a><!-- doxytag: member="cwb&#45;lexdecode.c::do_show" ref="a21e71f17ac00f605db9328ae3148978c" args="(char *attr_name, char *rx, int rx_flags)" -->
+<a class="anchor" id="a46464334ce73cc248f12ea744c7b3d28"></a><!-- doxytag: member="cwb&#45;lexdecode.c::lexdecode_print_item_info" ref="a46464334ce73cc248f12ea744c7b3d28" args="(Attribute *attr, int id, char *fallback_s)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void do_show </td>
+          <td class="memname">void lexdecode_print_item_info </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="union___attribute.html">Attribute</a> *&#160;</td>
+          <td class="paramname"><em>attr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>fallback_s</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Prints information about a specified item on a P-attribute. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">attr</td><td>The attribute to search </td></tr>
+    <tr><td class="paramname">id</td><td>The id number of the item (type) in question </td></tr>
+    <tr><td class="paramname">fallback_s</td><td>String to print if the item is not found (use NULL to use a default fallback string) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>References <a class="el" href="cl_8h.html#a1fa2e2ab47bd2c689b68a78bdac22028">CDA_OK</a>, <a class="el" href="cdaccess_8c.html#af97f2ad4a69c7d0105f9cee4a51b29b8">cl_errno</a>, <a class="el" href="cdaccess_8c.html#ac0132825a090837c68bdfc59df00e0b8">cl_error()</a>, <a class="el" href="cdaccess_8c.html#aa143a2d85f95855db2544a31c8a8d571">cl_id2all()</a>, <a class="el" href="cwb-lexdecode_8c.html#ac850b1f526c8892e790857467ad7ae64">print_freqs</a>, <a class="el" href="cwb-lexdecode_8c.html#a5f15b0fef741093d2dd0bf2f7e5a7469">print_len</a>, and <a class="el" href="cwb-lexdecode_8c.html#a0d436040cf97c6cef4e0c5b63b52dddc">print_nr</a>.</p>
+
+<p>Referenced by <a class="el" href="cwb-lexdecode_8c.html#a4f72835b72ca0a3339538cc4496b6020">lexdecode_show()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a4f72835b72ca0a3339538cc4496b6020"></a><!-- doxytag: member="cwb&#45;lexdecode.c::lexdecode_show" ref="a4f72835b72ca0a3339538cc4496b6020" args="(char *attr_name, char *rx, int rx_flags)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void lexdecode_show </td>
           <td>(</td>
           <td class="paramtype">char *&#160;</td>
           <td class="paramname"><em>attr_name</em>, </td>
@@ -120,7 +167,7 @@ Variables</h2>
   </dd>
 </dl>
 
-<p>References <a class="el" href="cl_8h.html#a3b60fdde6a7c8fbc535efaf526dbcb78">ATT_POS</a>, <a class="el" href="cl_8h.html#a1fa2e2ab47bd2c689b68a78bdac22028">CDA_OK</a>, <a class="el" href="cl_8h.html#a8807f044dd47ab4d1f1c3eba26b2646c">cderrno</a>, <a class="el" href="cl_8h.html#a33429ad7ed835fc0490b87153b7acc03">cdperror</a>, <a class="el" href="cdaccess_8c.html#ae9db76b80522e91e2735414a079e952b">cl_max_cpos()</a>, <a class="el" href="cdaccess_8c.html#a80f6431eb356913b2d3b84b9cbfaae37">cl_max_id()</a>, <a class="el" href="cl_8h.html#ad68dfe0ca2fbad5052e8213a06f5b4ba">CL_MAX_LINE_LENGTH</a>, <a class="el" href="cl_8h.html#ae9e879605cdbdafc2a8939ae590b6aa0">cl_new_attribute</a>, <a class="el" href="cdaccess_8c.html#a6eb4641e0a1e14b63f2d5f2f5b6a8cea">cl_regex2id()</a>, <a class="el" href="cdaccess_8c.html#abed40ee846d5375f4f21d7ef2306fcc8">cl_str2id()</a>, <a class="el" href="cwb-compress-rdx_8c.html#a0360462590048e1a217c595d8ec3ad5b">corpus_id</a>, <a class="el" href="cwb-lexdecode_8c.html#a4271d02d7b39132da64775afecb297ba">freq_0_if_unknown</a>, <a class="el" href="cl_8h.html#a0205ed6c5fc3f15a80b1790ad1acba47">get_id_from_sortidx</a>, <a class="el" href="cwb-lexdecode_8c.html#a4ad3b1a3f0f0ee98378ddd28381fba15">input_are_numbers</a>, <a class="el" href="cwb-check-input_8c.html#a15a5d6b696ef70e18d81da62bba55285">input_fd</a>, <a class="el" href="cwb-lexdecode_8c.html#a8d01b74eac291eef6efa6f9d9857cd77">input_filename</a>, <a class="el" href="cwb-lexdecode_8c.html#acf9dabb3c45c8b01f22903e4c2526976">print_info()</a>, <a class="el" href="options_8h.html#ab9e1449fd00c98428516f0b41eddcb10">progname</a>, <a class="el" href="cwb-lexdecode_8c.html#ac36d157c4d0ee0037e8322886d72a701">show_size_only</a>, and <a class="el" href="cwb-lexdecode_8c.html#ae6f74965045002e0bca5d50407561314">sort</a>.</p>
+<p>References <a class="el" href="cl_8h.html#a3b60fdde6a7c8fbc535efaf526dbcb78">ATT_POS</a>, <a class="el" href="cl_8h.html#a1fa2e2ab47bd2c689b68a78bdac22028">CDA_OK</a>, <a class="el" href="cdaccess_8c.html#af97f2ad4a69c7d0105f9cee4a51b29b8">cl_errno</a>, <a class="el" href="cdaccess_8c.html#ac0132825a090837c68bdfc59df00e0b8">cl_error()</a>, <a class="el" href="cdaccess_8c.html#ae9db76b80522e91e2735414a079e952b">cl_max_cpos()</a>, <a class="el" href="cdaccess_8c.html#a80f6431eb356913b2d3b84b9cbfaae37">cl_max_id()</a>, <a class="el" href="cl_8h.html#ad68dfe0ca2fbad5052e8213a06f5b4ba">CL_MAX_LINE_LENGTH</a>, <a class="el" href="cl_8h.html#ae9e879605cdbdafc2a8939ae590b6aa0">cl_new_attribute</a>, <a class="el" href="cdaccess_8c.html#a6eb4641e0a1e14b63f2d5f2f5b6a8cea">cl_regex2id()</a>, <a class="el" href="cdaccess_8c.html#a98b635f088241d2bfd7dcc85de095ccd">cl_sort2id()</a>, <a class="el" href="cdaccess_8c.html#abed40ee846d5375f4f21d7ef2306fcc8">cl_str2id()</a>, <a class="el" href="cwb-compress-rdx_8c.html#a0360462590048e1a217c595d8ec3ad5b">corpus_id</a>, <a class="el" href="cwb-lexdecode_8c.html#a4271d02d7b39132da64775afecb297ba">freq_0_if_unknown</a>, <a class="el" href="cwb-lexdecode_8c.html#a4ad3b1a3f0f0ee98378ddd28381fba15">input_are_numbers</a>, <a class="el" href="cwb-check-input_8c.html#a15a5d6b696ef70e18d81da62bba55285">input_fd</a>, <a class="el" href="cwb-lexdecode_8c.html#a8d01b74eac291eef6efa6f9d9857cd77">input_filename</a>, <a class="el" href="cwb-lexdecode_8c.html#a46464334ce73cc248f12ea744c7b3d28">lexdecode_print_item_info()</a>, <a class="el" href="options_8h.html#ab9e1449fd00c98428516f0b41eddcb10">progname</a>, <a class="el" href="cwb-lexdecode_8c.html#ac36d157c4d0ee0037e8322886d72a701">show_size_only</a>, and <a class="el" href="cwb-lexdecode_8c.html#ae6f74965045002e0bca5d50407561314">sort</a>.</p>
 
 <p>Referenced by <a class="el" href="cwb-lexdecode_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>.</p>
 
@@ -143,7 +190,7 @@ Variables</h2>
 
 <p>Prints a message describing how to use the program to STDERR and then exits. </p>
 
-<p>References <a class="el" href="options_8h.html#ab9e1449fd00c98428516f0b41eddcb10">progname</a>.</p>
+<p>References <a class="el" href="options_8h.html#ab9e1449fd00c98428516f0b41eddcb10">progname</a>, and <a class="el" href="globals_8h.html#a1c6d5de492ac61ad29aec7aa9a436bbf">VERSION</a>.</p>
 
 <p>Referenced by <a class="el" href="cwb-lexdecode_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>.</p>
 
@@ -183,54 +230,7 @@ Variables</h2>
   </dd>
 </dl>
 
-<p>References <a class="el" href="cl_8h.html#a8788fa329cb487fb06fe050207769061">central_corpus_directory</a>, <a class="el" href="cl_8h.html#afd6ee191959ef253a4b89bff3521a24a">cl_delete_corpus()</a>, <a class="el" href="cl_8h.html#aee476e23a98efac85d9a9288f18fe686">cl_new_corpus()</a>, <a class="el" href="cl_8h.html#a35e6406545412a8882e6f50526707047">cl_set_optimize()</a>, <a class="el" href="cwb-compress-rdx_8c.html#a0360462590048e1a217c595d8ec3ad5b">corpus_id</a>, <a class="el" href="attributes_8h.html#a0f022cbfe7890834b65ea9542eb4f50c">DEFAULT_ATT_NAME</a>, <a class="el" href="cwb-lexdecode_8c.html#a21e71f17ac00f605db9328ae3148978c">do_show()</a>, <a class="el" href="cwb-lexdecode_8c.html#a4271d02d7b39132da64775afecb297ba">freq_0_if_unknown</a>, <a class="el" href="cl_8h.html#a1f397c74f7f8ba3952858c70eb19d082">IGNORE_CASE</a>, <a class="el" href="cl_8h.html#a2e9f85ae8ad88191c60cf4269b9ab296">IGNORE_DIAC</a>, <a class="el" href="cwb-lexdecode_8c.html#a4ad3b1a3f0f0ee98378ddd28381fba15">input_are_numbers</a>, <a class="el" href="cwb-lexdecode_8c.html#a8d01b74eac291eef6efa6f9d9857cd77">input_filename</a>, <a class="el" href="cwb-lexdecode_8c.html#a3e17f6b6f17ece48948aef358a8c981a">lexdecode_usage()</a>, <a class="el" href="cwb-lexdecode_8c.html#ac850b1f526c8892e790857467ad7ae64">print_freqs</a>, <a class="el" href="cwb-lexdecode_8c.html#a5f15b0fef741093d2dd0bf2f7e5a7469">print_len</a>, <a class="el" href="cwb-lexdecode_8c.html#a0d436040cf97c6cef4e0c5b63b52dddc">print_nr</a>, <a class="el" href="options_8h.html#ab9e1449fd00c98428516f0b41eddcb10">progname</a>, <a class="el" href="cwb-align_8c.html#a9008cc92c9f9b4e6f09d0886e865c657">registry_directory</a>, <a class="el" href="cwb-lexdecode_8c.html#ac36d157c4d0ee0037e8322886d72a701">show_size_only</a>, and <a class="el" href="cwb-lexdecode_8c.html#ae6f74965045002e0bca5d50407561314">sort</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="acf9dabb3c45c8b01f22903e4c2526976"></a><!-- doxytag: member="cwb&#45;lexdecode.c::print_info" ref="acf9dabb3c45c8b01f22903e4c2526976" args="(Attribute *attr, int id, char *fallback_s)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void print_info </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="union___attribute.html">Attribute</a> *&#160;</td>
-          <td class="paramname"><em>attr</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>id</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">char *&#160;</td>
-          <td class="paramname"><em>fallback_s</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Prints information about a specified item on a P-attribute. </p>
-<dl><dt><b>Parameters:</b></dt><dd>
-  <table class="params">
-    <tr><td class="paramname">attr</td><td>The attribute to search </td></tr>
-    <tr><td class="paramname">id</td><td>The id number of the item (type) in question </td></tr>
-    <tr><td class="paramname">fallback_s</td><td>String to print if the item is not found (use NULL to use a default fallback string) </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p>References <a class="el" href="cl_8h.html#a1fa2e2ab47bd2c689b68a78bdac22028">CDA_OK</a>, <a class="el" href="cl_8h.html#a8807f044dd47ab4d1f1c3eba26b2646c">cderrno</a>, <a class="el" href="cl_8h.html#a33429ad7ed835fc0490b87153b7acc03">cdperror</a>, <a class="el" href="cl_8h.html#ac10f3e2c3f5d2d499eac7b80a62c4e2e">get_id_info</a>, <a class="el" href="cwb-lexdecode_8c.html#ac850b1f526c8892e790857467ad7ae64">print_freqs</a>, <a class="el" href="cwb-lexdecode_8c.html#a5f15b0fef741093d2dd0bf2f7e5a7469">print_len</a>, and <a class="el" href="cwb-lexdecode_8c.html#a0d436040cf97c6cef4e0c5b63b52dddc">print_nr</a>.</p>
-
-<p>Referenced by <a class="el" href="cwb-lexdecode_8c.html#a21e71f17ac00f605db9328ae3148978c">do_show()</a>.</p>
+<p>References <a class="el" href="cl_8h.html#a8788fa329cb487fb06fe050207769061">central_corpus_directory</a>, <a class="el" href="cl_8h.html#afd6ee191959ef253a4b89bff3521a24a">cl_delete_corpus()</a>, <a class="el" href="cl_8h.html#aee476e23a98efac85d9a9288f18fe686">cl_new_corpus()</a>, <a class="el" href="cl_8h.html#a35e6406545412a8882e6f50526707047">cl_set_optimize()</a>, <a class="el" href="cwb-compress-rdx_8c.html#a0360462590048e1a217c595d8ec3ad5b">corpus_id</a>, <a class="el" href="attributes_8h.html#a0f022cbfe7890834b65ea9542eb4f50c">DEFAULT_ATT_NAME</a>, <a class="el" href="cwb-lexdecode_8c.html#a4271d02d7b39132da64775afecb297ba">freq_0_if_unknown</a>, <a class="el" href="cl_8h.html#a1f397c74f7f8ba3952858c70eb19d082">IGNORE_CASE</a>, <a class="el" href="cl_8h.html#a2e9f85ae8ad88191c60cf4269b9ab296">IGNORE_DIAC</a>, <a class="el" href="cwb-lexdecode_8c.html#a4ad3b1a3f0f0ee98378ddd28381fba15">input_are_numbers</a>, <a class="el" href="cwb-lexdecode_8c.html#a8d01b74eac291eef6efa6f9d9857cd77">input_filename</a>, <a class="el" href="cwb-lexdecode_8c.html#a4f72835b72ca0a3339538cc4496b6020">lexdecode_show()</a>, <a class="el" href="cwb-lexdecode_8c.html#a3e17f6b6f17ece48948aef358a8c981a">lexdecode_usage()</a>, <a class="el" href="cwb-lexdecode_8c.html#ac850b1f526c8892e790857467ad7ae64">print_freqs</a>, <a class="el" href="cwb-lexdecode_8c.html#a5f15b0fef741093d2dd0bf2f7e5a7469">print_len</a>, <a class="el" href="cwb-lexdecode_8c.html#a0d436040cf97c6cef4e0c5b63b52dddc">print_nr</a>, <a class="el" href="options_8h.html#ab9e1449fd00c98428516f0b41eddcb10">progname</a>, <a class="el" href="cwb-align_8c.html#a9008cc92c9f9b4e6f09d0886e865c657">registry_directory</a>, <a class="el" href="cwb-lexdecode_8c.html#ac36d157c4d0ee0037e8322886d72a701">show_size_only</a>, and <a class="el" href="cwb-lexdecode_8c.html#ae6f74965045002e0bca5d50407561314">sort</a>.</p>
 
 </div>
 </div>
@@ -274,7 +274,7 @@ Variables</h2>
 
 <p>boolean: print out unknown words with freq 0? </p>
 
-<p>Referenced by <a class="el" href="cwb-lexdecode_8c.html#a21e71f17ac00f605db9328ae3148978c">do_show()</a>, and <a class="el" href="cwb-lexdecode_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-lexdecode_8c.html#a4f72835b72ca0a3339538cc4496b6020">lexdecode_show()</a>, and <a class="el" href="cwb-lexdecode_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>.</p>
 
 </div>
 </div>
@@ -291,7 +291,7 @@ Variables</h2>
 
 <p>boolean: read lexicon IDs from file? </p>
 
-<p>Referenced by <a class="el" href="cwb-lexdecode_8c.html#a21e71f17ac00f605db9328ae3148978c">do_show()</a>, and <a class="el" href="cwb-lexdecode_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-lexdecode_8c.html#a4f72835b72ca0a3339538cc4496b6020">lexdecode_show()</a>, and <a class="el" href="cwb-lexdecode_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>.</p>
 
 </div>
 </div>
@@ -306,7 +306,7 @@ Variables</h2>
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="cwb-lexdecode_8c.html#a21e71f17ac00f605db9328ae3148978c">do_show()</a>, and <a class="el" href="cwb-decode_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-lexdecode_8c.html#a4f72835b72ca0a3339538cc4496b6020">lexdecode_show()</a>, and <a class="el" href="cwb-decode_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>.</p>
 
 </div>
 </div>
@@ -323,7 +323,7 @@ Variables</h2>
 
 <p>boolean: print the frequencies of the words? </p>
 
-<p>Referenced by <a class="el" href="cwb-lexdecode_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>, and <a class="el" href="cwb-lexdecode_8c.html#acf9dabb3c45c8b01f22903e4c2526976">print_info()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-lexdecode_8c.html#a46464334ce73cc248f12ea744c7b3d28">lexdecode_print_item_info()</a>, and <a class="el" href="cwb-lexdecode_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>.</p>
 
 </div>
 </div>
@@ -340,7 +340,7 @@ Variables</h2>
 
 <p>boolean: print the word length s? </p>
 
-<p>Referenced by <a class="el" href="cwb-lexdecode_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>, and <a class="el" href="cwb-lexdecode_8c.html#acf9dabb3c45c8b01f22903e4c2526976">print_info()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-lexdecode_8c.html#a46464334ce73cc248f12ea744c7b3d28">lexdecode_print_item_info()</a>, and <a class="el" href="cwb-lexdecode_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>.</p>
 
 </div>
 </div>
@@ -357,7 +357,7 @@ Variables</h2>
 
 <p>boolean: flag whether we should print line numbers </p>
 
-<p>Referenced by <a class="el" href="cwb-lexdecode_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>, and <a class="el" href="cwb-lexdecode_8c.html#acf9dabb3c45c8b01f22903e4c2526976">print_info()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-lexdecode_8c.html#a46464334ce73cc248f12ea744c7b3d28">lexdecode_print_item_info()</a>, and <a class="el" href="cwb-lexdecode_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>.</p>
 
 </div>
 </div>
@@ -389,7 +389,7 @@ Variables</h2>
 
 <p>boolean: do_show should just print the size of the lexicon and exit? </p>
 
-<p>Referenced by <a class="el" href="cwb-lexdecode_8c.html#a21e71f17ac00f605db9328ae3148978c">do_show()</a>, and <a class="el" href="cwb-lexdecode_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-lexdecode_8c.html#a4f72835b72ca0a3339538cc4496b6020">lexdecode_show()</a>, and <a class="el" href="cwb-lexdecode_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>.</p>
 
 </div>
 </div>
@@ -406,12 +406,12 @@ Variables</h2>
 
 <p>boolean: print the lexicon in a sorted order? </p>
 
-<p>Referenced by <a class="el" href="cwb-lexdecode_8c.html#a21e71f17ac00f605db9328ae3148978c">do_show()</a>, and <a class="el" href="cwb-lexdecode_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-lexdecode_8c.html#a4f72835b72ca0a3339538cc4496b6020">lexdecode_show()</a>, and <a class="el" href="cwb-lexdecode_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>.</p>
 
 </div>
 </div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Sun Jul 31 2011 00:16:43 for CWB by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Jan 17 2012 22:07:39 for CWB by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

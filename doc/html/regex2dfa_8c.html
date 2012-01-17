@@ -52,6 +52,9 @@
 <h1>regex2dfa.c File Reference</h1>  </div>
 </div>
 <div class="contents">
+
+<p>Regular expression to DFA converter -- originally written by <a href="mailto:markh@csd4.csd.uwm.edu">markh@csd4.csd.uwm.edu</a>.  
+<a href="#_details">More...</a></p>
 <div class="textblock"><code>#include &lt;stdio.h&gt;</code><br/>
 <code>#include &lt;ctype.h&gt;</code><br/>
 <code>#include &lt;string.h&gt;</code><br/>
@@ -147,14 +150,14 @@ Functions</h2>
 <ul>
 <li>static int <a class="el" href="regex2dfa_8c.html#abb03850a8ac96371276164681d7f9865">GET</a> (void)
 <dl class="el"><dd class="mdescRight">Gets the next character from the searchstr, and increments its pointer; returns EOF if we are at the end of the string.  <a href="#abb03850a8ac96371276164681d7f9865"></a><br/></dl><li>static void <a class="el" href="regex2dfa_8c.html#a8903a293346bb080e1e8445051d3aa6d">UNGET</a> (int Ch)
-<li>static void <a class="el" href="regex2dfa_8c.html#af1954d75ca1f8a905a989759ab99ef38">REGEX2DFA_ERROR</a> (char *Format,...)
+<dl class="el"><dd class="mdescRight">Ungets a character from the search string (by decrementing the index into the search string; the actual string itself isn't modified).  <a href="#a8903a293346bb080e1e8445051d3aa6d"></a><br/></dl><li>static void <a class="el" href="regex2dfa_8c.html#af1954d75ca1f8a905a989759ab99ef38">REGEX2DFA_ERROR</a> (char *Format,...)
 <dl class="el"><dd class="mdescRight">Prints an error message to stdout, and exits the program if there are now just too many errors.  <a href="#af1954d75ca1f8a905a989759ab99ef38"></a><br/></dl><li><a class="el" href="regex2dfa_8c.html#a85e55e51529e83620c77e05854041f8c">Lexical</a> <a class="el" href="regex2dfa_8c.html#a5241ab804487d705a2d196269abc4fd5">LEX</a> (void)
 <dl class="el"><dd class="mdescRight">Gets the Lexical symbol corresponding to the next non-whitespace character in the searchstr.  <a href="#a5241ab804487d705a2d196269abc4fd5"></a><br/></dl><li>void * <a class="el" href="regex2dfa_8c.html#a01b2aff7068366c448834355a0de88e5">Allocate</a> (unsigned Bytes)
 <dl class="el"><dd class="mdescRight">TODO delete: has been replaced throughout with cl_malloc.  <a href="#a01b2aff7068366c448834355a0de88e5"></a><br/></dl><li>void * <a class="el" href="regex2dfa_8c.html#a59a03c6c0148d8bb164bdae60fc9122a">Reallocate</a> (void *X, unsigned Bytes)
 <dl class="el"><dd class="mdescRight">TODO delete: has been replaced throughout with cl_realloc.  <a href="#a59a03c6c0148d8bb164bdae60fc9122a"></a><br/></dl><li>char * <a class="el" href="regex2dfa_8c.html#a5a606fb88b13eee151e00fcfbbd130af">CopyS</a> (char *S)
 <dl class="el"><dd class="mdescRight">TODO delete: has been replaced throughout with cl_strdup (was only used once anyway)  <a href="#a5a606fb88b13eee151e00fcfbbd130af"></a><br/></dl><li><a class="el" href="regex2dfa_8c.html#a0c8186d9b9b7880309c27230bbb5e69d">byte</a> <a class="el" href="regex2dfa_8c.html#a6bad0ab1a08bc253f829b23abe41cc56">Hash</a> (char *S)
-<dl class="el"><dd class="mdescRight">create a one-byte hash of the string S  <a href="#a6bad0ab1a08bc253f829b23abe41cc56"></a><br/></dl><li><a class="el" href="structsymbol.html">Symbol</a> <a class="el" href="regex2dfa_8c.html#a6ed0508c2a6d62b74d1f15523f531553">LookUp</a> (char *S)
-<li>int <a class="el" href="regex2dfa_8c.html#a8f3fa23ac2d62f853feff77cac02be4d">DUP</a> (int A, int B)
+<dl class="el"><dd class="mdescRight">Creates a one-byte hash of the string S.  <a href="#a6bad0ab1a08bc253f829b23abe41cc56"></a><br/></dl><li><a class="el" href="structsymbol.html">Symbol</a> <a class="el" href="regex2dfa_8c.html#a6ed0508c2a6d62b74d1f15523f531553">LookUp</a> (char *S)
+<dl class="el"><dd class="mdescRight">Look up the symbol contained in string S in the global hash table.  <a href="#a6ed0508c2a6d62b74d1f15523f531553"></a><br/></dl><li>int <a class="el" href="regex2dfa_8c.html#a8f3fa23ac2d62f853feff77cac02be4d">DUP</a> (int A, int B)
 <li>void <a class="el" href="regex2dfa_8c.html#a81d9e475b256d59dec2074d8df383214">Store</a> (<a class="el" href="structsymbol.html">Symbol</a> S, int Q)
 <li>int <a class="el" href="regex2dfa_8c.html#a39875b8f99c45b1cdb767af2b00e7dde">MakeExp</a> (int Q, <a class="el" href="regex2dfa_8c.html#a596bacb68a080d7ff2ec635c3a3ad8f8">ExpTag</a> Tag,...)
 <li>void <a class="el" href="regex2dfa_8c.html#a408542da0dbfe158bea4aa31c401e4ba">PUSH</a> (<a class="el" href="regex2dfa_8c.html#acaf25879c0ef2805e354bdfe64a33f53">StackTag</a> Tag, int Q)
@@ -189,7 +192,7 @@ Variables</h2>
 <li>int <a class="el" href="regex2dfa_8c.html#a209b6053ea2d1b3f488d4014b5c326b2">LINE</a>
 <li>int <a class="el" href="regex2dfa_8c.html#aa7c6445759d2f6ed16fb2f0cdfdafe53">ERRORS</a>
 <dl class="el"><dd class="mdescRight">The number of errors enocuntered while parsing a regex to a DFA.  <a href="#aa7c6445759d2f6ed16fb2f0cdfdafe53"></a><br/></dl><li><a class="el" href="structsymbol.html">Symbol</a> <a class="el" href="regex2dfa_8c.html#ad66860d2f8d4597b4b6d3117b075f7ff">HashTab</a> [HASH_MAX]
-<li><a class="el" href="structsymbol.html">Symbol</a> <a class="el" href="regex2dfa_8c.html#abafff017b5fd5fe80d6afac33c195234">FirstB</a>
+<dl class="el"><dd class="mdescRight">Global hash table containing Symbols.  <a href="#ad66860d2f8d4597b4b6d3117b075f7ff"></a><br/></dl><li><a class="el" href="structsymbol.html">Symbol</a> <a class="el" href="regex2dfa_8c.html#abafff017b5fd5fe80d6afac33c195234">FirstB</a>
 <li><a class="el" href="structsymbol.html">Symbol</a> <a class="el" href="regex2dfa_8c.html#ab1d07433b40d34626ada70b42f169776">LastB</a>
 <li><a class="el" href="structexp.html">Exp</a> <a class="el" href="regex2dfa_8c.html#a96866c07e202d03dde27ebdfb5329fb6">ExpHash</a> [NN]
 <li><a class="el" href="structequation.html">Equation</a> <a class="el" href="regex2dfa_8c.html#aef5ea04992db4aebd7f0f936e2632a5b">EquTab</a> = (<a class="el" href="structequation.html">Equation</a>)NULL
@@ -205,7 +208,14 @@ Variables</h2>
 <li>int <a class="el" href="regex2dfa_8c.html#a899f75f12e36b8faea058bef25053826">EMax</a>
 <li>int <a class="el" href="regex2dfa_8c.html#a78d6c2a3f41a4485d1019c35d0232710">currpos</a>
 <dl class="el"><dd class="mdescRight">Index into searchstr showing the next character that will be read.  <a href="#a78d6c2a3f41a4485d1019c35d0232710"></a><br/></dl></ul>
-<hr/><h2>Define Documentation</h2>
+<hr/><a name="_details"></a><h2>Detailed Description</h2>
+<div class="textblock"><p>Regular expression to DFA converter -- originally written by <a href="mailto:markh@csd4.csd.uwm.edu">markh@csd4.csd.uwm.edu</a>. </p>
+<p>Derived from the syntax:</p>
+<p>Rule = (ID "=" Ex ",")* Ex.</p>
+<p>Ex = "0" | "1" | ID | "(" Ex ")" | "[" Ex "]" | Ex "+" | Ex "*" | Ex Ex | Ex "|" Ex. *</p>
+<p>with the usual precedence rules.</p>
+<p>(Note, this is the token-sequence regex = not the string-level regex! </p>
+</div><hr/><h2>Define Documentation</h2>
 <a class="anchor" id="ab22f4b268a34256962fd2b22bb2314f8"></a><!-- doxytag: member="regex2dfa.c::EQU_EXTEND" ref="ab22f4b268a34256962fd2b22bb2314f8" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -785,7 +795,7 @@ Variables</h2>
 </div>
 <div class="memdoc">
 
-<p>create a one-byte hash of the string S </p>
+<p>Creates a one-byte hash of the string S. </p>
 
 </div>
 </div>
@@ -872,6 +882,8 @@ Variables</h2>
       </table>
 </div>
 <div class="memdoc">
+
+<p>Look up the symbol contained in string S in the global hash table. </p>
 
 <p>References <a class="el" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="cl_8h.html#a6647d75d1d69c7d25447da514b7e4682">cl_strdup()</a>, <a class="el" href="structsymbol.html#afbe49f33f22436054a3e57f77cec849f">symbol::Hash</a>, <a class="el" href="cwb-scan-corpus_8c.html#acd0df70578d8633182bc33a50bdf6f01">Hash</a>, <a class="el" href="structsymbol.html#a5e6182c030324511dd82e9fa1a0ab071">symbol::Name</a>, <a class="el" href="structsymbol.html#a6ce85b65efc27ad606c272e288bbaf92">symbol::Next</a>, and <a class="el" href="structsymbol.html#aed1b76d719aee0b996c6824115e8620c">symbol::Tail</a>.</p>
 
@@ -1090,10 +1102,11 @@ Variables</h2>
 <div class="memdoc">
 
 <p>Converts a regular expression to a DFA. </p>
+<p>Public function.</p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table class="params">
     <tr><td class="paramname">rxs</td><td>The regular expression. </td></tr>
-    <tr><td class="paramname">automaton</td><td>Pointer to the DFA to write to. </td></tr>
+    <tr><td class="paramname">automaton</td><td>Pointer to the DFA object to write to. </td></tr>
   </table>
   </dd>
 </dl>
@@ -1206,6 +1219,14 @@ Variables</h2>
 </div>
 <div class="memdoc">
 
+<p>Ungets a character from the search string (by decrementing the index into the search string; the actual string itself isn't modified). </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">Ch</td><td>Ignored. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p>References <a class="el" href="regex2dfa_8c.html#a78d6c2a3f41a4485d1019c35d0232710">currpos</a>.</p>
 
 <p>Referenced by <a class="el" href="regex2dfa_8c.html#a5241ab804487d705a2d196269abc4fd5">LEX()</a>.</p>
@@ -1228,6 +1249,7 @@ Variables</h2>
 <div class="memdoc">
 
 <p>Write states to stdout. </p>
+<p>Private function. </p>
 
 <p>References <a class="el" href="cwb-scan-corpus_8c.html#a3b2ca35e2432cf1326402df1ba775129">C</a>, <a class="el" href="structstate.html#a1621a3668da7c7a47d8187596ea56fb3">state::Class</a>, <a class="el" href="structstate.html#a059be79f78c5d38e42123c35e5f8528c">state::Empty</a>, <a class="el" href="structstate.html#a1f9c3ddf0664d3f51fb1160284a3f10b">state::LHS</a>, <a class="el" href="structsymbol.html#a5e6182c030324511dd82e9fa1a0ab071">symbol::Name</a>, <a class="el" href="structstate.html#ab6ee8ca81cbcb8c08a4b989ec57606c6">state::RHS</a>, <a class="el" href="structstate.html#ad3b72fc789ec054c5b0f0b5233a99504">state::Shifts</a>, <a class="el" href="structstate.html#ac46d2745f2be818340dc70ded3b89277">state::ShList</a>, <a class="el" href="regex2dfa_8c.html#a3908e43ba725e3968a37260d03a526ae">SP</a>, and <a class="el" href="regex2dfa_8c.html#ab260a491c6fc19739138894ab7deff0d">Ss</a>.</p>
 
@@ -1450,6 +1472,8 @@ Variables</h2>
 </div>
 <div class="memdoc">
 
+<p>Global hash table containing Symbols. </p>
+
 </div>
 </div>
 <a class="anchor" id="a1787a7dd341ab4748860c7cf52aa1173"></a><!-- doxytag: member="regex2dfa.c::IBuf" ref="a1787a7dd341ab4748860c7cf52aa1173" args="" -->
@@ -1550,7 +1574,7 @@ Variables</h2>
 <div class="memdoc">
 
 <p>Global variable containing a search string that is to be converted to a DFA. </p>
-<p>(Needs to be global; functions using the DFA write to it, and then the DFA parser reads from it. Declared as an external global in <a class="el" href="cqp_8h.html">cqp.h</a>. </p>
+<p>(Needs to be global; functions using the DFA write to it, and then the DFA parser reads from it. Declared as an external global in <a class="el" href="cqp_8h.html">cqp.h</a> so other parts of CQP can access it.) </p>
 
 <p>Referenced by <a class="el" href="parse__actions_8h.html#a1fb802bc0071a3b18f2992ea2388211d">do_SearchPattern()</a>, <a class="el" href="parse__actions_8h.html#a2aaabbb6bcc4e5210745065baaaf715c">do_StandardQuery()</a>, <a class="el" href="regex2dfa_8c.html#abb03850a8ac96371276164681d7f9865">GET()</a>, <a class="el" href="parse__actions_8h.html#a8fd8ea0c7037f747274aebbc254e47a2">prepare_input()</a>, <a class="el" href="parse__actions_8h.html#a0cd76ad97a709afa3bd6610768e1d39d">prepare_Query()</a>, and <a class="el" href="regex2dfa_8h.html#a69e30286442eee48a3350d6da9bcd4d8">regex2dfa()</a>.</p>
 
@@ -1660,7 +1684,7 @@ Variables</h2>
 </div>
 </div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Sun Jul 31 2011 00:16:43 for CWB by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Jan 17 2012 22:07:39 for CWB by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

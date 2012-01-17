@@ -54,8 +54,8 @@ Functions</h2>
 <ul>
 <li>void <a class="el" href="globals_8c.html#a4159ccd1820e8585dcc97d1f32826db7">cl_set_debug_level</a> (int level)
 <dl class="el"><dd class="mdescRight">Sets the debug level configuration variable.  <a href="#a4159ccd1820e8585dcc97d1f32826db7"></a><br/></dl><li>void <a class="el" href="globals_8c.html#a35e6406545412a8882e6f50526707047">cl_set_optimize</a> (int <a class="el" href="structstate.html">state</a>)
-<dl class="el"><dd class="mdescRight">Turns optimization on or off.  <a href="#a35e6406545412a8882e6f50526707047"></a><br/></dl><li>void <a class="el" href="globals_8c.html#a3197560aacd773338425252b01c60f3a">cl_set_memory_limit</a> (int limit)
-<dl class="el"><dd class="mdescRight">Sets the memory limit.  <a href="#a3197560aacd773338425252b01c60f3a"></a><br/></dl></ul>
+<dl class="el"><dd class="mdescRight">Turns optimization on or off.  <a href="#a35e6406545412a8882e6f50526707047"></a><br/></dl><li>void <a class="el" href="globals_8c.html#ab8e7dc95440cc7a19ce138b099f82f4f">cl_set_memory_limit</a> (int megabytes)
+<dl class="el"><dd class="mdescRight">Sets the memory limit respected by some CL functions.  <a href="#ab8e7dc95440cc7a19ce138b099f82f4f"></a><br/></dl></ul>
 <h2><a name="var-members"></a>
 Variables</h2>
 <ul>
@@ -88,7 +88,7 @@ Variables</h2>
 
 </div>
 </div>
-<a class="anchor" id="a3197560aacd773338425252b01c60f3a"></a><!-- doxytag: member="globals.c::cl_set_memory_limit" ref="a3197560aacd773338425252b01c60f3a" args="(int limit)" -->
+<a class="anchor" id="ab8e7dc95440cc7a19ce138b099f82f4f"></a><!-- doxytag: member="globals.c::cl_set_memory_limit" ref="ab8e7dc95440cc7a19ce138b099f82f4f" args="(int megabytes)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -96,15 +96,14 @@ Variables</h2>
           <td class="memname">void cl_set_memory_limit </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>limit</em></td><td>)</td>
+          <td class="paramname"><em>megabytes</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
-<p>Sets the memory limit. </p>
-<p>NOTE name of parameter differs here and in <a class="el" href="cl_8h.html" title="This file contains the API for the CWB &quot;Corpus Library&quot; (CL).">cl.h</a> -- TODO </p>
+<p>Sets the memory limit respected by some CL functions. </p>
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="globals_8h.html#a8c066560b8ca7c38e328d918b7dca009" title="global configuration variable: memory limit.">cl_memory_limit</a> </dd></dl>
 
 <p>References <a class="el" href="globals_8c.html#a8c066560b8ca7c38e328d918b7dca009">cl_memory_limit</a>.</p>
@@ -178,7 +177,7 @@ Variables</h2>
 <p>In megabytes; some functions will try to keep to this limit; 0 or less turns the limit off.</p>
 <p>(ensure memory limit &gt; 2GB is correctly converted to byte size or number of ints) </p>
 
-<p>Referenced by <a class="el" href="globals_8c.html#a3197560aacd773338425252b01c60f3a">cl_set_memory_limit()</a>, and <a class="el" href="makecomps_8h.html#ab8f0ec6caf733eae459326a9c0483608">creat_rev_corpus()</a>.</p>
+<p>Referenced by <a class="el" href="globals_8c.html#ab8e7dc95440cc7a19ce138b099f82f4f">cl_set_memory_limit()</a>, and <a class="el" href="makecomps_8h.html#ab8f0ec6caf733eae459326a9c0483608">creat_rev_corpus()</a>.</p>
 
 </div>
 </div>
@@ -201,7 +200,7 @@ Variables</h2>
 </div>
 </div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Sun Jul 31 2011 00:16:43 for CWB by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Jan 17 2012 22:07:39 for CWB by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

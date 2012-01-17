@@ -54,7 +54,7 @@
 <code>#include &lt;string.h&gt;</code><br/>
 <code>#include &lt;unistd.h&gt;</code><br/>
 <code>#include &lt;math.h&gt;</code><br/>
-<code>#include &quot;<a class="el" href="cl_8h.html">../cl/cl.h</a>&quot;</code><br/>
+<code>#include &quot;<a class="el" href="globals_8h.html">../cl/globals.h</a>&quot;</code><br/>
 <code>#include &quot;<a class="el" href="feature__maps_8h.html">feature_maps.h</a>&quot;</code><br/>
 </div><h2><a name="define-members"></a>
 Defines</h2>
@@ -91,8 +91,8 @@ Variables</h2>
 <dl class="el"><dd class="mdescRight">pre-alignment attribute (target)  <a href="#a7f01382fd9c1186b3abb5a52421c8e6a"></a><br/></dl><li>int <a class="el" href="cwb-align_8c.html#af68f0dccfb25d93948b065a91f6b8860">size1</a>
 <dl class="el"><dd class="mdescRight">size of source corpus in sentences  <a href="#af68f0dccfb25d93948b065a91f6b8860"></a><br/></dl><li>int <a class="el" href="cwb-align_8c.html#a5174cedb24f38902087f99eb8a24bd14">size2</a>
 <dl class="el"><dd class="mdescRight">size of target corpus in sentences  <a href="#a5174cedb24f38902087f99eb8a24bd14"></a><br/></dl><li>int <a class="el" href="cwb-align_8c.html#a3ae3e10ca42453882be45010085fd2c7">ws1</a>
-<dl class="el"><dd class="mdescRight">size of source corpus in words (i.e.  <a href="#a3ae3e10ca42453882be45010085fd2c7"></a><br/></dl><li>int <a class="el" href="cwb-align_8c.html#a99fa04c458a387b5dcb6ba6f120242a3">ws2</a>
-<dl class="el"><dd class="mdescRight">size of target corpus in words (i.e.  <a href="#a99fa04c458a387b5dcb6ba6f120242a3"></a><br/></dl><li>int <a class="el" href="cwb-align_8c.html#a95801f45a4e65616a77c9f92a80a13fd">pre1</a> = 0
+<dl class="el"><dd class="mdescRight">size of source corpus in word tokens (i.e.  <a href="#a3ae3e10ca42453882be45010085fd2c7"></a><br/></dl><li>int <a class="el" href="cwb-align_8c.html#a99fa04c458a387b5dcb6ba6f120242a3">ws2</a>
+<dl class="el"><dd class="mdescRight">size of target corpus in word tokens (i.e.  <a href="#a99fa04c458a387b5dcb6ba6f120242a3"></a><br/></dl><li>int <a class="el" href="cwb-align_8c.html#a95801f45a4e65616a77c9f92a80a13fd">pre1</a> = 0
 <dl class="el"><dd class="mdescRight">number of pre-alignment regions (source corpus)  <a href="#a95801f45a4e65616a77c9f92a80a13fd"></a><br/></dl><li>int <a class="el" href="cwb-align_8c.html#a86ede747fb0237f46293e42d1908db50">pre2</a> = 0
 <dl class="el"><dd class="mdescRight">number of pre-alignment regions (target corpus)  <a href="#a86ede747fb0237f46293e42d1908db50"></a><br/></dl><li>char <a class="el" href="cwb-align_8c.html#a519e69a0cc02c03690588d13998a5b17">word_name</a> [CL_MAX_FILENAME_LENGTH] = &quot;word&quot;
 <dl class="el"><dd class="mdescRight">name of the word attribute (default: word)  <a href="#a519e69a0cc02c03690588d13998a5b17"></a><br/></dl><li>char <a class="el" href="cwb-align_8c.html#a398dbfce693e05e8a530ed6c34180c1c">outfile_name</a> [CL_MAX_FILENAME_LENGTH] = &quot;out.align&quot;
@@ -330,7 +330,7 @@ Variables</h2>
 <p>string containing location of the registry directory. </p>
 <p>Prints a message describing how to use the program to STDERR and then exits. </p>
 
-<p>References <a class="el" href="cwb-align_8c.html#a9b0fad173d12ac0805a35dcb8ffdb49d">default_config</a>, <a class="el" href="cwb-align_8c.html#aeec628bc091f9e132870620cdc05c574">DEFAULT_CONFIG_LINES</a>, and <a class="el" href="options_8h.html#ab9e1449fd00c98428516f0b41eddcb10">progname</a>.</p>
+<p>References <a class="el" href="cwb-align_8c.html#a9b0fad173d12ac0805a35dcb8ffdb49d">default_config</a>, <a class="el" href="cwb-align_8c.html#aeec628bc091f9e132870620cdc05c574">DEFAULT_CONFIG_LINES</a>, <a class="el" href="options_8h.html#ab9e1449fd00c98428516f0b41eddcb10">progname</a>, and <a class="el" href="globals_8h.html#a1c6d5de492ac61ad29aec7aa9a436bbf">VERSION</a>.</p>
 
 <p>Referenced by <a class="el" href="cwb-align_8c.html#a17371073c35237e8b8ab22fca70902d1">align_parse_args()</a>.</p>
 
@@ -835,7 +835,7 @@ Variables</h2>
 </div>
 <div class="memdoc">
 
-<p>size of source corpus in words (i.e. </p>
+<p>size of source corpus in word tokens (i.e. </p>
 <p>corpus positions) </p>
 
 <p>Referenced by <a class="el" href="cwb-align_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
@@ -853,7 +853,7 @@ Variables</h2>
 </div>
 <div class="memdoc">
 
-<p>size of target corpus in words (i.e. </p>
+<p>size of target corpus in word tokens (i.e. </p>
 <p>corpus positions) </p>
 
 <p>Referenced by <a class="el" href="cwb-align_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
@@ -861,7 +861,7 @@ Variables</h2>
 </div>
 </div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Sun Jul 31 2011 00:16:43 for CWB by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Jan 17 2012 22:07:39 for CWB by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

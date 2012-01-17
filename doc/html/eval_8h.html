@@ -168,7 +168,7 @@ Functions</h2>
 <li>void <a class="el" href="eval_8h.html#a00fa95009fb1f64cd7c16bfe5841a741">cqp_run_tab_query</a> (int implode)
 <li>int <a class="el" href="eval_8h.html#af29e9f19b26beddcdba87657cc915704">free_environment</a> (int thisenv)
 <dl class="el"><dd class="mdescRight">Frees an evaluation environment.  <a href="#af29e9f19b26beddcdba87657cc915704"></a><br/></dl><li>void <a class="el" href="eval_8h.html#a956720cedd2f011e8f87d8b981901ece">show_environment</a> (int thisenv)
-<li>void <a class="el" href="eval_8h.html#ab6f5e0c69815e8d5369483d26474d31c">free_environments</a> ()
+<dl class="el"><dd class="mdescRight">Prints the contents of an EvalEnvironment object to STDOUT.  <a href="#a956720cedd2f011e8f87d8b981901ece"></a><br/></dl><li>void <a class="el" href="eval_8h.html#ab6f5e0c69815e8d5369483d26474d31c">free_environments</a> ()
 <dl class="el"><dd class="mdescRight">Frees all eval environments in the global array, and sets the eep pointer to -1.  <a href="#ab6f5e0c69815e8d5369483d26474d31c"></a><br/></dl></ul>
 <h2><a name="var-members"></a>
 Variables</h2>
@@ -748,7 +748,7 @@ Variables</h2>
 <p>This function wraps round simulate_dfa (the only other thing it does is enforce the hard_cut limit). </p>
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="options_8h.html#a556de4e8937a0479d5968f565569f6a1" title="Query option: use hard cut value for all queries (cannot be changed)">hard_cut</a> </dd>
 <dd>
-<a class="el" href="eval_8c.html#a6d83579b3075256f14a62888a2e4b284">simulate_dfa</a> </dd></dl>
+<a class="el" href="eval_8c.html#a6d83579b3075256f14a62888a2e4b284" title="simulate the dfa">simulate_dfa</a> </dd></dl>
 
 <p>References <a class="el" href="eval_8h.html#a4fc26b79d5e2fea9774fdf3c7b17d1b8">eep</a>, <a class="el" href="options_8h.html#a556de4e8937a0479d5968f565569f6a1">hard_cut</a>, and <a class="el" href="eval_8c.html#a6d83579b3075256f14a62888a2e4b284">simulate_dfa()</a>.</p>
 
@@ -912,6 +912,17 @@ Variables</h2>
 </div>
 <div class="memdoc">
 
+<p>Prints the contents of an EvalEnvironment object to STDOUT. </p>
+<p>Which bits of information are printed depends on which of a group of debugging-variables are set to true.</p>
+<p>The EvalEnvironment to print is specified as an index into the global array (Environment).</p>
+<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="eval_8h.html#a2476047b623e315b84e87213173cbd82" title="A global array of EvalEnvironment structures.">Environment</a> </dd></dl>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">thisenv</td><td>Index into Environment indicating which EvalEnvironment should be displayed. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 <p>References <a class="el" href="eval_8h.html#a4fc26b79d5e2fea9774fdf3c7b17d1b8">eep</a>, <a class="el" href="eval_8h.html#a2476047b623e315b84e87213173cbd82">Environment</a>, <a class="el" href="tree_8c.html#a7868122fb8cd5d13f7247f31fd19895a">print_booltree()</a>, <a class="el" href="tree_8c.html#a6f91c096820c3d4bb1ac60a5b51a489e">print_evaltree()</a>, <a class="el" href="options_8h.html#a7296d6d33aaec548b3e606a0a10478c7">show_compdfa</a>, <a class="el" href="regex2dfa_8c.html#ab7827b454b4605ccfe01459f50fa04ad">show_complete_dfa()</a>, <a class="el" href="options_8h.html#ac02b913dbbae6cb0f875162a3a52f0df">show_evaltree</a>, <a class="el" href="options_8h.html#a40fc0cb60e87498e26995e20316fdca3">show_gconstraints</a>, <a class="el" href="options_8h.html#ab71847647c10d2bfdc4c536e8f818cd2">show_patlist</a>, and <a class="el" href="tree_8c.html#ae345c7bb29c17dc4da6e705092f6b783">show_patternlist()</a>.</p>
 
 <p>Referenced by <a class="el" href="parse__actions_8h.html#afa4d950c9201e61e43350809acf16069">debug_output()</a>.</p>
@@ -986,7 +997,7 @@ Variables</h2>
 </div>
 </div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Sun Jul 31 2011 00:16:43 for CWB by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Jan 17 2012 22:07:39 for CWB by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

@@ -53,7 +53,7 @@
 <code>#include &lt;stdlib.h&gt;</code><br/>
 <code>#include &lt;string.h&gt;</code><br/>
 <code>#include &lt;unistd.h&gt;</code><br/>
-<code>#include &quot;<a class="el" href="cl_8h.html">../cl/cl.h</a>&quot;</code><br/>
+<code>#include &quot;<a class="el" href="globals_8h.html">../cl/globals.h</a>&quot;</code><br/>
 </div><h2><a name="define-members"></a>
 Defines</h2>
 <ul>
@@ -69,10 +69,10 @@ Functions</h2>
 <dl class="el"><dd class="mdescRight">Lists interactive commands on STDERR.  <a href="#aa0745947ad0c779dd5c4e12826bd0276"></a><br/></dl><li>void <a class="el" href="cwb-align-show_8c.html#a523798f68b16d22aaff52d49df477a56">alignshow_usage</a> (void)
 <dl class="el"><dd class="mdescRight">Prints a message describing how to use the program to STDERR and then exits.  <a href="#a523798f68b16d22aaff52d49df477a56"></a><br/></dl><li>int <a class="el" href="cwb-align-show_8c.html#aef1135373314f0032cd6713275eb709d">alignshow_parse_args</a> (int ac, char *av[], int min_args)
 <dl class="el"><dd class="mdescRight">Parses the program's commandline arguments.  <a href="#aef1135373314f0032cd6713275eb709d"></a><br/></dl><li>void <a class="el" href="cwb-align-show_8c.html#ad495abb4e431b3a82b92fac60727d8e4">alignshow_goodbye</a> (int error_level)
-<dl class="el"><dd class="mdescRight">Closes the alignment file handle (if open) and exits the program.  <a href="#ad495abb4e431b3a82b92fac60727d8e4"></a><br/></dl><li>void <a class="el" href="cwb-align-show_8c.html#a78d96bcd853ffe2d2624f5600ee3f1c4">end_of_alignment</a> (void)
-<dl class="el"><dd class="mdescRight">Exits the program because the end of the .align file has been reached.  <a href="#a78d96bcd853ffe2d2624f5600ee3f1c4"></a><br/></dl><li>void <a class="el" href="cwb-align-show_8c.html#ae21f5ced23779ce9b081f09dd0763397">skip_next_region</a> (FILE *f)
-<dl class="el"><dd class="mdescRight">Reads and discards the next alignment region from an .align file.  <a href="#ae21f5ced23779ce9b081f09dd0763397"></a><br/></dl><li>void <a class="el" href="cwb-align-show_8c.html#a4b7c39e82ec52fbeb9e2504e35305b84">print_next_region</a> (FILE *f)
-<dl class="el"><dd class="mdescRight">Reads the next alignment region from a .align file, and displays it on STDOUT.  <a href="#a4b7c39e82ec52fbeb9e2504e35305b84"></a><br/></dl><li>int <a class="el" href="cwb-align-show_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main</a> (int argc, char **argv)
+<dl class="el"><dd class="mdescRight">Closes the alignment file handle (if open) and exits the program.  <a href="#ad495abb4e431b3a82b92fac60727d8e4"></a><br/></dl><li>void <a class="el" href="cwb-align-show_8c.html#a9c92b0eb9e3eabf8058aff644b5d8e1e">alignshow_end_of_alignment</a> (void)
+<dl class="el"><dd class="mdescRight">Exits the program because the end of the .align file has been reached.  <a href="#a9c92b0eb9e3eabf8058aff644b5d8e1e"></a><br/></dl><li>void <a class="el" href="cwb-align-show_8c.html#a2280c19a5c3779d291fbd46c340332f1">alignshow_skip_next_region</a> (FILE *f)
+<dl class="el"><dd class="mdescRight">Reads and discards the next alignment region from an .align file.  <a href="#a2280c19a5c3779d291fbd46c340332f1"></a><br/></dl><li>void <a class="el" href="cwb-align-show_8c.html#addcdfcc3ee6d0f36b391811bd2822831">alignshow_print_next_region</a> (FILE *f)
+<dl class="el"><dd class="mdescRight">Reads the next alignment region from a .align file, and displays it on STDOUT.  <a href="#addcdfcc3ee6d0f36b391811bd2822831"></a><br/></dl><li>int <a class="el" href="cwb-align-show_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main</a> (int argc, char **argv)
 <dl class="el"><dd class="mdescRight">Main function for cwb-align-show.  <a href="#a3c04138a5bfe5d72780bb7e82a18e627"></a><br/></dl></ul>
 <h2><a name="var-members"></a>
 Variables</h2>
@@ -108,7 +108,7 @@ Variables</h2>
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="cwb-align-show_8c.html#aef1135373314f0032cd6713275eb709d">alignshow_parse_args()</a>, and <a class="el" href="cwb-align-show_8c.html#a4b7c39e82ec52fbeb9e2504e35305b84">print_next_region()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-align-show_8c.html#aef1135373314f0032cd6713275eb709d">alignshow_parse_args()</a>, and <a class="el" href="cwb-align-show_8c.html#addcdfcc3ee6d0f36b391811bd2822831">alignshow_print_next_region()</a>.</p>
 
 </div>
 </div>
@@ -158,6 +158,29 @@ Variables</h2>
 </div>
 </div>
 <hr/><h2>Function Documentation</h2>
+<a class="anchor" id="a9c92b0eb9e3eabf8058aff644b5d8e1e"></a><!-- doxytag: member="cwb&#45;align&#45;show.c::alignshow_end_of_alignment" ref="a9c92b0eb9e3eabf8058aff644b5d8e1e" args="(void)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void alignshow_end_of_alignment </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Exits the program because the end of the .align file has been reached. </p>
+
+<p>References <a class="el" href="cwb-align-show_8c.html#ad495abb4e431b3a82b92fac60727d8e4">alignshow_goodbye()</a>.</p>
+
+<p>Referenced by <a class="el" href="cwb-align-show_8c.html#addcdfcc3ee6d0f36b391811bd2822831">alignshow_print_next_region()</a>, and <a class="el" href="cwb-align-show_8c.html#a2280c19a5c3779d291fbd46c340332f1">alignshow_skip_next_region()</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="ad495abb4e431b3a82b92fac60727d8e4"></a><!-- doxytag: member="cwb&#45;align&#45;show.c::alignshow_goodbye" ref="ad495abb4e431b3a82b92fac60727d8e4" args="(int error_level)" -->
 <div class="memitem">
 <div class="memproto">
@@ -183,7 +206,7 @@ Variables</h2>
 
 <p>References <a class="el" href="cwb-align-show_8c.html#aa28eb0de3ac484ac5dbff14b81558557">af</a>, <a class="el" href="cwb-align-show_8c.html#a3f6aaeb59411d3eee2ff040a420a41fd">af_is_pipe</a>, <a class="el" href="cl_8h.html#ad68dfe0ca2fbad5052e8213a06f5b4ba">CL_MAX_LINE_LENGTH</a>, and <a class="el" href="cwb-encode_8c.html#a41ebd28ef1d7c6ade45642cb6acc1039">line</a>.</p>
 
-<p>Referenced by <a class="el" href="cwb-align-show_8c.html#a78d96bcd853ffe2d2624f5600ee3f1c4">end_of_alignment()</a>, and <a class="el" href="cwb-align-show_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-align-show_8c.html#a9c92b0eb9e3eabf8058aff644b5d8e1e">alignshow_end_of_alignment()</a>, and <a class="el" href="cwb-align-show_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>.</p>
 
 </div>
 </div>
@@ -259,6 +282,64 @@ Variables</h2>
 
 </div>
 </div>
+<a class="anchor" id="addcdfcc3ee6d0f36b391811bd2822831"></a><!-- doxytag: member="cwb&#45;align&#45;show.c::alignshow_print_next_region" ref="addcdfcc3ee6d0f36b391811bd2822831" args="(FILE *f)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void alignshow_print_next_region </td>
+          <td>(</td>
+          <td class="paramtype">FILE *&#160;</td>
+          <td class="paramname"><em>f</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Reads the next alignment region from a .align file, and displays it on STDOUT. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">f</td><td>The file handle to read from. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>References <a class="el" href="cwb-align-show_8c.html#a9c92b0eb9e3eabf8058aff644b5d8e1e">alignshow_end_of_alignment()</a>, <a class="el" href="cl_8h.html#ad68dfe0ca2fbad5052e8213a06f5b4ba">CL_MAX_LINE_LENGTH</a>, <a class="el" href="cwb-align-show_8c.html#a3fc02d533c2277463ab650c65bef10e5">COL_SEP</a>, <a class="el" href="cwb-align-show_8c.html#ae87b7290eb5f5fa4acc1daee32eb21a7">COL_WIDTH</a>, <a class="el" href="cl_8h.html#a1ec6ff1950baaff7cc24d618b85f6d5a">get_string_at_position</a>, <a class="el" href="cwb-encode_8c.html#a41ebd28ef1d7c6ade45642cb6acc1039">line</a>, <a class="el" href="cwb-align-show_8c.html#a738553d9d3900c194807759631d7a15f">MAX_COL_WIDTH</a>, <a class="el" href="options_8h.html#ab9e1449fd00c98428516f0b41eddcb10">progname</a>, and <a class="el" href="eval_8h.html#a93fe6fe1a66a9de33bb160f0c3e18954a09c37d051e7e4b3f3a7e8e75dca15912">word</a>.</p>
+
+<p>Referenced by <a class="el" href="cwb-align-show_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a2280c19a5c3779d291fbd46c340332f1"></a><!-- doxytag: member="cwb&#45;align&#45;show.c::alignshow_skip_next_region" ref="a2280c19a5c3779d291fbd46c340332f1" args="(FILE *f)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void alignshow_skip_next_region </td>
+          <td>(</td>
+          <td class="paramtype">FILE *&#160;</td>
+          <td class="paramname"><em>f</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Reads and discards the next alignment region from an .align file. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">f</td><td>The file handle to read from. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>References <a class="el" href="cwb-align-show_8c.html#a9c92b0eb9e3eabf8058aff644b5d8e1e">alignshow_end_of_alignment()</a>, <a class="el" href="cl_8h.html#ad68dfe0ca2fbad5052e8213a06f5b4ba">CL_MAX_LINE_LENGTH</a>, and <a class="el" href="cwb-encode_8c.html#a41ebd28ef1d7c6ade45642cb6acc1039">line</a>.</p>
+
+<p>Referenced by <a class="el" href="cwb-align-show_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="a523798f68b16d22aaff52d49df477a56"></a><!-- doxytag: member="cwb&#45;align&#45;show.c::alignshow_usage" ref="a523798f68b16d22aaff52d49df477a56" args="(void)" -->
 <div class="memitem">
 <div class="memproto">
@@ -276,32 +357,9 @@ Variables</h2>
 
 <p>Prints a message describing how to use the program to STDERR and then exits. </p>
 
-<p>References <a class="el" href="cwb-align-show_8c.html#aa0745947ad0c779dd5c4e12826bd0276">alignshow_print_help()</a>, <a class="el" href="cwb-align-show_8c.html#a3fc02d533c2277463ab650c65bef10e5">COL_SEP</a>, <a class="el" href="cwb-align-show_8c.html#ae87b7290eb5f5fa4acc1daee32eb21a7">COL_WIDTH</a>, and <a class="el" href="options_8h.html#ab9e1449fd00c98428516f0b41eddcb10">progname</a>.</p>
+<p>References <a class="el" href="cwb-align-show_8c.html#aa0745947ad0c779dd5c4e12826bd0276">alignshow_print_help()</a>, <a class="el" href="cwb-align-show_8c.html#a3fc02d533c2277463ab650c65bef10e5">COL_SEP</a>, <a class="el" href="cwb-align-show_8c.html#ae87b7290eb5f5fa4acc1daee32eb21a7">COL_WIDTH</a>, <a class="el" href="options_8h.html#ab9e1449fd00c98428516f0b41eddcb10">progname</a>, and <a class="el" href="globals_8h.html#a1c6d5de492ac61ad29aec7aa9a436bbf">VERSION</a>.</p>
 
 <p>Referenced by <a class="el" href="cwb-align-show_8c.html#aef1135373314f0032cd6713275eb709d">alignshow_parse_args()</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a78d96bcd853ffe2d2624f5600ee3f1c4"></a><!-- doxytag: member="cwb&#45;align&#45;show.c::end_of_alignment" ref="a78d96bcd853ffe2d2624f5600ee3f1c4" args="(void)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void end_of_alignment </td>
-          <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Exits the program because the end of the .align file has been reached. </p>
-
-<p>References <a class="el" href="cwb-align-show_8c.html#ad495abb4e431b3a82b92fac60727d8e4">alignshow_goodbye()</a>.</p>
-
-<p>Referenced by <a class="el" href="cwb-align-show_8c.html#a4b7c39e82ec52fbeb9e2504e35305b84">print_next_region()</a>, and <a class="el" href="cwb-align-show_8c.html#ae21f5ced23779ce9b081f09dd0763397">skip_next_region()</a>.</p>
 
 </div>
 </div>
@@ -339,65 +397,7 @@ Variables</h2>
   </dd>
 </dl>
 
-<p>References <a class="el" href="cwb-align-show_8c.html#aa28eb0de3ac484ac5dbff14b81558557">af</a>, <a class="el" href="cwb-align-show_8c.html#a3f6aaeb59411d3eee2ff040a420a41fd">af_is_pipe</a>, <a class="el" href="cwb-align-show_8c.html#a9abe541bb92cf77ca090be06cc99ca38">align_name</a>, <a class="el" href="cwb-align-show_8c.html#ad495abb4e431b3a82b92fac60727d8e4">alignshow_goodbye()</a>, <a class="el" href="cwb-align-show_8c.html#aef1135373314f0032cd6713275eb709d">alignshow_parse_args()</a>, <a class="el" href="cwb-align-show_8c.html#aa0745947ad0c779dd5c4e12826bd0276">alignshow_print_help()</a>, <a class="el" href="cl_8h.html#a3b60fdde6a7c8fbc535efaf526dbcb78">ATT_POS</a>, <a class="el" href="cl_8h.html#a81874b84793891ea3b8db58061820f1e">ATT_STRUC</a>, <a class="el" href="cl_8h.html#a9e15a3c725711d9effd623b2f3e225be">cl_free</a>, <a class="el" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="cl_8h.html#ad68dfe0ca2fbad5052e8213a06f5b4ba">CL_MAX_LINE_LENGTH</a>, <a class="el" href="cl_8h.html#ae9e879605cdbdafc2a8939ae590b6aa0">cl_new_attribute</a>, <a class="el" href="cl_8h.html#aee476e23a98efac85d9a9288f18fe686">cl_new_corpus()</a>, <a class="el" href="cwb-align-show_8c.html#a4848fb9510cbdb02375e903ef1fbd272">corpus1_name</a>, <a class="el" href="cwb-align-show_8c.html#a528dbbcc2759bc7d1df1c9ed61c3a05a">corpus2_name</a>, <a class="el" href="cwb-encode_8c.html#a41ebd28ef1d7c6ade45642cb6acc1039">line</a>, <a class="el" href="cwb-align-show_8c.html#a4b7c39e82ec52fbeb9e2504e35305b84">print_next_region()</a>, <a class="el" href="options_8h.html#ab9e1449fd00c98428516f0b41eddcb10">progname</a>, <a class="el" href="cwb-align-encode_8c.html#a1151e3383439ca5d8096811a09b42823">registry_dir</a>, <a class="el" href="cwb-align-show_8c.html#a6a9e4f7e84e94165e8b2f86b027518e3">s1_name</a>, <a class="el" href="cwb-align-show_8c.html#affaf19616ee88711b4c4b0cecf6e4107">s2_name</a>, <a class="el" href="cwb-align-show_8c.html#ae21f5ced23779ce9b081f09dd0763397">skip_next_region()</a>, and <a class="el" href="cwb-align-show_8c.html#a519e69a0cc02c03690588d13998a5b17">word_name</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a4b7c39e82ec52fbeb9e2504e35305b84"></a><!-- doxytag: member="cwb&#45;align&#45;show.c::print_next_region" ref="a4b7c39e82ec52fbeb9e2504e35305b84" args="(FILE *f)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void print_next_region </td>
-          <td>(</td>
-          <td class="paramtype">FILE *&#160;</td>
-          <td class="paramname"><em>f</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Reads the next alignment region from a .align file, and displays it on STDOUT. </p>
-<dl><dt><b>Parameters:</b></dt><dd>
-  <table class="params">
-    <tr><td class="paramname">f</td><td>The file handle to read from. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p>References <a class="el" href="cl_8h.html#ad68dfe0ca2fbad5052e8213a06f5b4ba">CL_MAX_LINE_LENGTH</a>, <a class="el" href="cwb-align-show_8c.html#a3fc02d533c2277463ab650c65bef10e5">COL_SEP</a>, <a class="el" href="cwb-align-show_8c.html#ae87b7290eb5f5fa4acc1daee32eb21a7">COL_WIDTH</a>, <a class="el" href="cwb-align-show_8c.html#a78d96bcd853ffe2d2624f5600ee3f1c4">end_of_alignment()</a>, <a class="el" href="cl_8h.html#a1ec6ff1950baaff7cc24d618b85f6d5a">get_string_at_position</a>, <a class="el" href="cwb-encode_8c.html#a41ebd28ef1d7c6ade45642cb6acc1039">line</a>, <a class="el" href="cwb-align-show_8c.html#a738553d9d3900c194807759631d7a15f">MAX_COL_WIDTH</a>, <a class="el" href="options_8h.html#ab9e1449fd00c98428516f0b41eddcb10">progname</a>, and <a class="el" href="eval_8h.html#a93fe6fe1a66a9de33bb160f0c3e18954a09c37d051e7e4b3f3a7e8e75dca15912">word</a>.</p>
-
-<p>Referenced by <a class="el" href="cwb-align-show_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="ae21f5ced23779ce9b081f09dd0763397"></a><!-- doxytag: member="cwb&#45;align&#45;show.c::skip_next_region" ref="ae21f5ced23779ce9b081f09dd0763397" args="(FILE *f)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void skip_next_region </td>
-          <td>(</td>
-          <td class="paramtype">FILE *&#160;</td>
-          <td class="paramname"><em>f</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Reads and discards the next alignment region from an .align file. </p>
-<dl><dt><b>Parameters:</b></dt><dd>
-  <table class="params">
-    <tr><td class="paramname">f</td><td>The file handle to read from. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p>References <a class="el" href="cl_8h.html#ad68dfe0ca2fbad5052e8213a06f5b4ba">CL_MAX_LINE_LENGTH</a>, <a class="el" href="cwb-align-show_8c.html#a78d96bcd853ffe2d2624f5600ee3f1c4">end_of_alignment()</a>, and <a class="el" href="cwb-encode_8c.html#a41ebd28ef1d7c6ade45642cb6acc1039">line</a>.</p>
-
-<p>Referenced by <a class="el" href="cwb-align-show_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>.</p>
+<p>References <a class="el" href="cwb-align-show_8c.html#aa28eb0de3ac484ac5dbff14b81558557">af</a>, <a class="el" href="cwb-align-show_8c.html#a3f6aaeb59411d3eee2ff040a420a41fd">af_is_pipe</a>, <a class="el" href="cwb-align-show_8c.html#a9abe541bb92cf77ca090be06cc99ca38">align_name</a>, <a class="el" href="cwb-align-show_8c.html#ad495abb4e431b3a82b92fac60727d8e4">alignshow_goodbye()</a>, <a class="el" href="cwb-align-show_8c.html#aef1135373314f0032cd6713275eb709d">alignshow_parse_args()</a>, <a class="el" href="cwb-align-show_8c.html#aa0745947ad0c779dd5c4e12826bd0276">alignshow_print_help()</a>, <a class="el" href="cwb-align-show_8c.html#addcdfcc3ee6d0f36b391811bd2822831">alignshow_print_next_region()</a>, <a class="el" href="cwb-align-show_8c.html#a2280c19a5c3779d291fbd46c340332f1">alignshow_skip_next_region()</a>, <a class="el" href="cl_8h.html#a3b60fdde6a7c8fbc535efaf526dbcb78">ATT_POS</a>, <a class="el" href="cl_8h.html#a81874b84793891ea3b8db58061820f1e">ATT_STRUC</a>, <a class="el" href="cl_8h.html#a9e15a3c725711d9effd623b2f3e225be">cl_free</a>, <a class="el" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="cl_8h.html#ad68dfe0ca2fbad5052e8213a06f5b4ba">CL_MAX_LINE_LENGTH</a>, <a class="el" href="cl_8h.html#ae9e879605cdbdafc2a8939ae590b6aa0">cl_new_attribute</a>, <a class="el" href="cl_8h.html#aee476e23a98efac85d9a9288f18fe686">cl_new_corpus()</a>, <a class="el" href="cwb-align-show_8c.html#a4848fb9510cbdb02375e903ef1fbd272">corpus1_name</a>, <a class="el" href="cwb-align-show_8c.html#a528dbbcc2759bc7d1df1c9ed61c3a05a">corpus2_name</a>, <a class="el" href="cwb-encode_8c.html#a41ebd28ef1d7c6ade45642cb6acc1039">line</a>, <a class="el" href="options_8h.html#ab9e1449fd00c98428516f0b41eddcb10">progname</a>, <a class="el" href="cwb-align-encode_8c.html#a1151e3383439ca5d8096811a09b42823">registry_dir</a>, <a class="el" href="cwb-align-show_8c.html#a6a9e4f7e84e94165e8b2f86b027518e3">s1_name</a>, <a class="el" href="cwb-align-show_8c.html#affaf19616ee88711b4c4b0cecf6e4107">s2_name</a>, and <a class="el" href="cwb-align-show_8c.html#a519e69a0cc02c03690588d13998a5b17">word_name</a>.</p>
 
 </div>
 </div>
@@ -466,7 +466,7 @@ Variables</h2>
 
 <p>column separator (blanks) </p>
 
-<p>Referenced by <a class="el" href="cwb-align-show_8c.html#aef1135373314f0032cd6713275eb709d">alignshow_parse_args()</a>, <a class="el" href="cwb-align-show_8c.html#a523798f68b16d22aaff52d49df477a56">alignshow_usage()</a>, and <a class="el" href="cwb-align-show_8c.html#a4b7c39e82ec52fbeb9e2504e35305b84">print_next_region()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-align-show_8c.html#aef1135373314f0032cd6713275eb709d">alignshow_parse_args()</a>, <a class="el" href="cwb-align-show_8c.html#addcdfcc3ee6d0f36b391811bd2822831">alignshow_print_next_region()</a>, and <a class="el" href="cwb-align-show_8c.html#a523798f68b16d22aaff52d49df477a56">alignshow_usage()</a>.</p>
 
 </div>
 </div>
@@ -483,7 +483,7 @@ Variables</h2>
 
 <p>width of a display column (one column for each language) </p>
 
-<p>Referenced by <a class="el" href="cwb-align-show_8c.html#aef1135373314f0032cd6713275eb709d">alignshow_parse_args()</a>, <a class="el" href="cwb-align-show_8c.html#a523798f68b16d22aaff52d49df477a56">alignshow_usage()</a>, and <a class="el" href="cwb-align-show_8c.html#a4b7c39e82ec52fbeb9e2504e35305b84">print_next_region()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-align-show_8c.html#aef1135373314f0032cd6713275eb709d">alignshow_parse_args()</a>, <a class="el" href="cwb-align-show_8c.html#addcdfcc3ee6d0f36b391811bd2822831">alignshow_print_next_region()</a>, and <a class="el" href="cwb-align-show_8c.html#a523798f68b16d22aaff52d49df477a56">alignshow_usage()</a>.</p>
 
 </div>
 </div>
@@ -705,7 +705,7 @@ Variables</h2>
 </div>
 </div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Sun Jul 31 2011 00:16:43 for CWB by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Jan 17 2012 22:07:39 for CWB by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

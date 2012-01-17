@@ -55,7 +55,8 @@ Data Fields</h2>
 <dl class="el"><dd class="mdescRight">list of optional corpus position offsets  <a href="#a8aa7374967f204dfae0b46fd98e301f9"></a><br/></dl><li>int <a class="el" href="struct___hash.html#a5f13b0907ef9484099415aff30745e95">max_offset</a>
 <dl class="el"><dd class="mdescRight">largest offset of all keys (to avoid scanning past end of corpus  <a href="#a5f13b0907ef9484099415aff30745e95"></a><br/></dl><li>int <a class="el" href="struct___hash.html#a03e51bbe5203568b7daeae718239b4a0">is_structural</a> [MAX_N]
 <dl class="el"><dd class="mdescRight">list of flags identifying s-attributes (all others are p-attributes)  <a href="#a03e51bbe5203568b7daeae718239b4a0"></a><br/></dl><li><a class="el" href="struct___c_l___regex.html">CL_Regex</a> <a class="el" href="struct___hash.html#a4af1ec508bf5099699d7d1e358bbdcf5">regex</a> [MAX_N]
-<dl class="el"><dd class="mdescRight">optional regex constraint (compiled regular expression)  <a href="#a4af1ec508bf5099699d7d1e358bbdcf5"></a><br/></dl><li><a class="el" href="union___attribute.html">Attribute</a> * <a class="el" href="struct___hash.html#a13e90a388ef0d76975e0d30185d4d814">frequency_values</a>
+<dl class="el"><dd class="mdescRight">optional regex constraint (compiled regular expression)  <a href="#a4af1ec508bf5099699d7d1e358bbdcf5"></a><br/></dl><li>int <a class="el" href="struct___hash.html#af89484702523e7578ef7b4af9dbc24e0">is_negated</a> [MAX_N]
+<dl class="el"><dd class="mdescRight">whether regex constraint is negated (!=)  <a href="#af89484702523e7578ef7b4af9dbc24e0"></a><br/></dl><li><a class="el" href="union___attribute.html">Attribute</a> * <a class="el" href="struct___hash.html#a13e90a388ef0d76975e0d30185d4d814">frequency_values</a>
 <li>int * <a class="el" href="struct___hash.html#a9fa36e6039694dfd1382466f42ce66f8">frequency</a>
 <dl class="el"><dd class="mdescRight">pre-computed integer values for the attribute keys  <a href="#a9fa36e6039694dfd1382466f42ce66f8"></a><br/></dl><li>int * <a class="el" href="struct___hash.html#ac91e02d17602c7185935a20fceaf5cf4">id_list</a> [MAX_N]
 <dl class="el"><dd class="mdescRight">optional regex constraint (stored as a list of matching lexicon IDs)  <a href="#ac91e02d17602c7185935a20fceaf5cf4"></a><br/></dl><li>int <a class="el" href="struct___hash.html#a5a99bb985f1fb5f8afa97b73882d5cd1">id_list_size</a> [MAX_N]
@@ -86,7 +87,7 @@ Data Fields</h2>
 
 <p>list of the N attributes corresponding to the keys of the hash </p>
 
-<p>Referenced by <a class="el" href="cwb-scan-corpus_8c.html#afc8b08c47e1422ae98e8bed30103ff1e">add_key()</a>, and <a class="el" href="cwb-scan-corpus_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-scan-corpus_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>, and <a class="el" href="cwb-scan-corpus_8c.html#a8947ac051b910a311d2d1f0ef28272bd">scancorpus_add_key()</a>.</p>
 
 </div>
 </div>
@@ -121,7 +122,7 @@ Data Fields</h2>
 
 <p>whether constraint is satisfied (initialised at start_cpos, reset at end_cpos) </p>
 
-<p>Referenced by <a class="el" href="cwb-scan-corpus_8c.html#afc8b08c47e1422ae98e8bed30103ff1e">add_key()</a>, and <a class="el" href="cwb-scan-corpus_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-scan-corpus_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>, and <a class="el" href="cwb-scan-corpus_8c.html#a8947ac051b910a311d2d1f0ef28272bd">scancorpus_add_key()</a>.</p>
 
 </div>
 </div>
@@ -138,7 +139,7 @@ Data Fields</h2>
 
 <p>number of current or next structure </p>
 
-<p>Referenced by <a class="el" href="cwb-scan-corpus_8c.html#afc8b08c47e1422ae98e8bed30103ff1e">add_key()</a>, and <a class="el" href="cwb-scan-corpus_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-scan-corpus_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>, and <a class="el" href="cwb-scan-corpus_8c.html#a8947ac051b910a311d2d1f0ef28272bd">scancorpus_add_key()</a>.</p>
 
 </div>
 </div>
@@ -155,7 +156,7 @@ Data Fields</h2>
 
 <p>end of this structure (cpos) </p>
 
-<p>Referenced by <a class="el" href="cwb-scan-corpus_8c.html#afc8b08c47e1422ae98e8bed30103ff1e">add_key()</a>, and <a class="el" href="cwb-scan-corpus_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-scan-corpus_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>, and <a class="el" href="cwb-scan-corpus_8c.html#a8947ac051b910a311d2d1f0ef28272bd">scancorpus_add_key()</a>.</p>
 
 </div>
 </div>
@@ -204,7 +205,7 @@ Data Fields</h2>
 
 <p>optional regex constraint (stored as a list of matching lexicon IDs) </p>
 
-<p>Referenced by <a class="el" href="cwb-scan-corpus_8c.html#afc8b08c47e1422ae98e8bed30103ff1e">add_key()</a>, and <a class="el" href="cwb-scan-corpus_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-scan-corpus_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>, and <a class="el" href="cwb-scan-corpus_8c.html#a8947ac051b910a311d2d1f0ef28272bd">scancorpus_add_key()</a>.</p>
 
 </div>
 </div>
@@ -221,7 +222,7 @@ Data Fields</h2>
 
 <p>size of this list </p>
 
-<p>Referenced by <a class="el" href="cwb-scan-corpus_8c.html#afc8b08c47e1422ae98e8bed30103ff1e">add_key()</a>, and <a class="el" href="cwb-scan-corpus_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-scan-corpus_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>, and <a class="el" href="cwb-scan-corpus_8c.html#a8947ac051b910a311d2d1f0ef28272bd">scancorpus_add_key()</a>.</p>
 
 </div>
 </div>
@@ -238,7 +239,24 @@ Data Fields</h2>
 
 <p>list of flags marking constraint keys ("?...") </p>
 
-<p>Referenced by <a class="el" href="cwb-scan-corpus_8c.html#afc8b08c47e1422ae98e8bed30103ff1e">add_key()</a>, and <a class="el" href="cwb-scan-corpus_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-scan-corpus_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>, and <a class="el" href="cwb-scan-corpus_8c.html#a8947ac051b910a311d2d1f0ef28272bd">scancorpus_add_key()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="af89484702523e7578ef7b4af9dbc24e0"></a><!-- doxytag: member="_Hash::is_negated" ref="af89484702523e7578ef7b4af9dbc24e0" args="[MAX_N]" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="struct___hash.html#af89484702523e7578ef7b4af9dbc24e0">is_negated</a>[MAX_N]</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>whether regex constraint is negated (!=) </p>
+
+<p>Referenced by <a class="el" href="cwb-scan-corpus_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>, and <a class="el" href="cwb-scan-corpus_8c.html#a8947ac051b910a311d2d1f0ef28272bd">scancorpus_add_key()</a>.</p>
 
 </div>
 </div>
@@ -255,7 +273,7 @@ Data Fields</h2>
 
 <p>list of flags identifying s-attributes (all others are p-attributes) </p>
 
-<p>Referenced by <a class="el" href="cwb-scan-corpus_8c.html#afc8b08c47e1422ae98e8bed30103ff1e">add_key()</a>, and <a class="el" href="cwb-scan-corpus_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-scan-corpus_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>, and <a class="el" href="cwb-scan-corpus_8c.html#a8947ac051b910a311d2d1f0ef28272bd">scancorpus_add_key()</a>.</p>
 
 </div>
 </div>
@@ -273,7 +291,7 @@ Data Fields</h2>
 <p>number of non-constraint keys, i.e. </p>
 <p>the actual hash table stores K-tuples </p>
 
-<p>Referenced by <a class="el" href="cwb-scan-corpus_8c.html#afc8b08c47e1422ae98e8bed30103ff1e">add_key()</a>, <a class="el" href="cwb-scan-corpus_8c.html#a9e44f8ee16add21125bfc4956588a40f">hash_add()</a>, <a class="el" href="cwb-scan-corpus_8c.html#ac5a4421e429785c0b7a85185612e8ecf">hash_find()</a>, and <a class="el" href="cwb-scan-corpus_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-scan-corpus_8c.html#a9e44f8ee16add21125bfc4956588a40f">hash_add()</a>, <a class="el" href="cwb-scan-corpus_8c.html#ac5a4421e429785c0b7a85185612e8ecf">hash_find()</a>, <a class="el" href="cwb-scan-corpus_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>, and <a class="el" href="cwb-scan-corpus_8c.html#a8947ac051b910a311d2d1f0ef28272bd">scancorpus_add_key()</a>.</p>
 
 </div>
 </div>
@@ -290,7 +308,7 @@ Data Fields</h2>
 
 <p>largest offset of all keys (to avoid scanning past end of corpus </p>
 
-<p>Referenced by <a class="el" href="cwb-scan-corpus_8c.html#afc8b08c47e1422ae98e8bed30103ff1e">add_key()</a>, and <a class="el" href="cwb-scan-corpus_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-scan-corpus_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>, and <a class="el" href="cwb-scan-corpus_8c.html#a8947ac051b910a311d2d1f0ef28272bd">scancorpus_add_key()</a>.</p>
 
 </div>
 </div>
@@ -307,7 +325,7 @@ Data Fields</h2>
 
 <p>number of keys, including constraint-only keys </p>
 
-<p>Referenced by <a class="el" href="cwb-scan-corpus_8c.html#afc8b08c47e1422ae98e8bed30103ff1e">add_key()</a>, and <a class="el" href="cwb-scan-corpus_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-scan-corpus_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>, and <a class="el" href="cwb-scan-corpus_8c.html#a8947ac051b910a311d2d1f0ef28272bd">scancorpus_add_key()</a>.</p>
 
 </div>
 </div>
@@ -324,7 +342,7 @@ Data Fields</h2>
 
 <p>list of optional corpus position offsets </p>
 
-<p>Referenced by <a class="el" href="cwb-scan-corpus_8c.html#afc8b08c47e1422ae98e8bed30103ff1e">add_key()</a>, and <a class="el" href="cwb-scan-corpus_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-scan-corpus_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>, and <a class="el" href="cwb-scan-corpus_8c.html#a8947ac051b910a311d2d1f0ef28272bd">scancorpus_add_key()</a>.</p>
 
 </div>
 </div>
@@ -341,7 +359,7 @@ Data Fields</h2>
 
 <p>optional regex constraint (compiled regular expression) </p>
 
-<p>Referenced by <a class="el" href="cwb-scan-corpus_8c.html#afc8b08c47e1422ae98e8bed30103ff1e">add_key()</a>, and <a class="el" href="cwb-scan-corpus_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-scan-corpus_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>, and <a class="el" href="cwb-scan-corpus_8c.html#a8947ac051b910a311d2d1f0ef28272bd">scancorpus_add_key()</a>.</p>
 
 </div>
 </div>
@@ -358,7 +376,7 @@ Data Fields</h2>
 
 <p>base pointers to compute virtual IDs (= offsets) from annotation strings </p>
 
-<p>Referenced by <a class="el" href="cwb-scan-corpus_8c.html#afc8b08c47e1422ae98e8bed30103ff1e">add_key()</a>, and <a class="el" href="cwb-scan-corpus_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-scan-corpus_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>, and <a class="el" href="cwb-scan-corpus_8c.html#a8947ac051b910a311d2d1f0ef28272bd">scancorpus_add_key()</a>.</p>
 
 </div>
 </div>
@@ -375,7 +393,7 @@ Data Fields</h2>
 
 <p>start of this structure (cpos) </p>
 
-<p>Referenced by <a class="el" href="cwb-scan-corpus_8c.html#afc8b08c47e1422ae98e8bed30103ff1e">add_key()</a>, and <a class="el" href="cwb-scan-corpus_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-scan-corpus_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>, and <a class="el" href="cwb-scan-corpus_8c.html#a8947ac051b910a311d2d1f0ef28272bd">scancorpus_add_key()</a>.</p>
 
 </div>
 </div>
@@ -418,7 +436,7 @@ Data Fields</h2>
 <li>utils/<a class="el" href="cwb-scan-corpus_8c.html">cwb-scan-corpus.c</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Sun Jul 31 2011 00:16:43 for CWB by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Jan 17 2012 22:07:40 for CWB by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

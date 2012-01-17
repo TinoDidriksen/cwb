@@ -63,7 +63,8 @@ Defines</h2>
 <dl class="el"><dd class="mdescRight">character used to delimit subdirectories in a path  <a href="#aa3cbd33788dfd77d29dc892204a609a5"></a><br/></dl><li>#define <a class="el" href="globals_8h.html#a2755fc8c6312749a00ca6a64b79d3c0c">SUBDIR_SEP_STRING</a>&#160;&#160;&#160;&quot;/&quot;
 <dl class="el"><dd class="mdescRight">character from SUBDIR_SEPARATOR as a string for compile-time concatenation  <a href="#a2755fc8c6312749a00ca6a64b79d3c0c"></a><br/></dl><li>#define <a class="el" href="globals_8h.html#a49b0f5b674c01903678ddc980caf93fa">TEMPDIR_PATH</a>&#160;&#160;&#160;&quot;/tmp&quot;
 <dl class="el"><dd class="mdescRight">name of directory for temporary files (as string, absolute path)  <a href="#a49b0f5b674c01903678ddc980caf93fa"></a><br/></dl><li>#define <a class="el" href="globals_8h.html#a4ab6f745e550d4d87a22024b6a8e0897">TEMP_FILENAME_BUFSIZE</a>&#160;&#160;&#160;128
-<dl class="el"><dd class="mdescRight">size in bytes of string buffers capable of holding absolute paths of temporary filenames; needs to be big enough for TEMPDIR_PATH plus the result of a call to tempnam() plus the length of a process ID, at least.  <a href="#a4ab6f745e550d4d87a22024b6a8e0897"></a><br/></dl><li>#define <a class="el" href="globals_8h.html#ac392b52df688734d343a5acc32fb6b87">REGISTRY_DEFAULT_PATH</a>&#160;&#160;&#160;&quot;/corpora/c1/<a class="el" href="options_8h.html#ab6be6986e1a07fc76b7a5a77aa7cc43b">registry</a>&quot;
+<dl class="el"><dd class="mdescRight">size in bytes of string buffers capable of holding absolute paths of temporary filenames; needs to be big enough for TEMPDIR_PATH plus the result of a call to tempnam() plus the length of a process ID, at least.  <a href="#a4ab6f745e550d4d87a22024b6a8e0897"></a><br/></dl><li>#define <a class="el" href="globals_8h.html#a1c6d5de492ac61ad29aec7aa9a436bbf">VERSION</a>&#160;&#160;&#160;&quot; x.y.z &quot;
+<dl class="el"><dd class="mdescRight">The current version of CWB.  <a href="#a1c6d5de492ac61ad29aec7aa9a436bbf"></a><br/></dl><li>#define <a class="el" href="globals_8h.html#ac392b52df688734d343a5acc32fb6b87">REGISTRY_DEFAULT_PATH</a>&#160;&#160;&#160;&quot;/corpora/c1/<a class="el" href="options_8h.html#ab6be6986e1a07fc76b7a5a77aa7cc43b">registry</a>&quot;
 <dl class="el"><dd class="mdescRight">The default path assumed for the location of the corpus registry.  <a href="#ac392b52df688734d343a5acc32fb6b87"></a><br/></dl><li>#define <a class="el" href="globals_8h.html#ac161cbe6c7c8f3022334e88e851a019b">INFOFILE_DEFAULT_NAME</a>&#160;&#160;&#160;&quot;.info&quot;
 <li>#define <a class="el" href="globals_8h.html#a36fa9b2e726512bc17a7a6d3e39002be">O_BINARY</a>&#160;&#160;&#160;0
 <li>#define <a class="el" href="globals_8h.html#a12ff77f5bd07f34900265e6a115046c7">COMMA_SEP_THOUSANDS_CONVSPEC</a>&#160;&#160;&#160;&quot;'&quot;
@@ -280,6 +281,24 @@ Variables</h2>
 
 </div>
 </div>
+<a class="anchor" id="a1c6d5de492ac61ad29aec7aa9a436bbf"></a><!-- doxytag: member="globals.h::VERSION" ref="a1c6d5de492ac61ad29aec7aa9a436bbf" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define VERSION&#160;&#160;&#160;&quot; x.y.z &quot;</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>The current version of CWB. </p>
+<p>This VERSION macro should be defined by the CL's build environment. If it isn't already defined, this definition ensures compilation of the CL, and any programs that use it, won't fail (e.g. if you're test-compiling a single file that contains VERSION). </p>
+
+<p>Referenced by <a class="el" href="cwb-align_8c.html#ae1e0d84cd7430ed154bfacc29bdbb1be">align_usage()</a>, <a class="el" href="cwb-align-encode_8c.html#a5aa5525746af1ecd8470f538b642d3d1">alignencode_usage()</a>, <a class="el" href="cwb-align-show_8c.html#a523798f68b16d22aaff52d49df477a56">alignshow_usage()</a>, <a class="el" href="cwb-compress-rdx_8c.html#a48c580680a1c3e3bebdcb1af8426496d">compressrdx_usage()</a>, <a class="el" href="cqpserver_8c.html#a0e22b8470b77242a0ce1e1b3c86689be">cqiserver_welcome()</a>, <a class="el" href="cwb-decode_8c.html#af5f2bf327a0159297c449e347860adbe">decode_usage()</a>, <a class="el" href="cwb-describe-corpus_8c.html#af6030de411ccb672b3c31e9020db724d">describecorpus_usage()</a>, <a class="el" href="cwb-encode_8c.html#ab4563ab00458b1d151447d7f3e52b785">encode_usage()</a>, <a class="el" href="cwb-huffcode_8c.html#aad76daf11045beaf13d02a94ed139c90">huffcode_usage()</a>, <a class="el" href="cwb-lexdecode_8c.html#a3e17f6b6f17ece48948aef358a8c981a">lexdecode_usage()</a>, <a class="el" href="llquery_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>, <a class="el" href="cwb-makeall_8c.html#a1adaf2f54307eac8ae4722646b994a0b">makeall_usage()</a>, <a class="el" href="options_8c.html#a3b63ff1af997333f51cad78bf921732a">parse_options()</a>, <a class="el" href="cwb-scan-corpus_8c.html#a72430d2277a4b79020097a4f3eb0d153">scancorpus_usage()</a>, <a class="el" href="cwb-s-decode_8c.html#aa44d9d428a2436a99171f75726060f7d">sdecode_usage()</a>, and <a class="el" href="cwb-s-encode_8c.html#a66462fc5630af31b0b2e973c5f22bcc6">sencode_usage()</a>.</p>
+
+</div>
+</div>
 <hr/><h2>Variable Documentation</h2>
 <a class="anchor" id="a5c4290325b240eac5fe1542a8743286a"></a><!-- doxytag: member="globals.h::cl_debug" ref="a5c4290325b240eac5fe1542a8743286a" args="" -->
 <div class="memitem">
@@ -315,7 +334,7 @@ Variables</h2>
 <p>In megabytes; some functions will try to keep to this limit; 0 or less turns the limit off.</p>
 <p>(ensure memory limit &gt; 2GB is correctly converted to byte size or number of ints) </p>
 
-<p>Referenced by <a class="el" href="globals_8c.html#a3197560aacd773338425252b01c60f3a">cl_set_memory_limit()</a>, and <a class="el" href="makecomps_8h.html#ab8f0ec6caf733eae459326a9c0483608">creat_rev_corpus()</a>.</p>
+<p>Referenced by <a class="el" href="globals_8c.html#ab8e7dc95440cc7a19ce138b099f82f4f">cl_set_memory_limit()</a>, and <a class="el" href="makecomps_8h.html#ab8f0ec6caf733eae459326a9c0483608">creat_rev_corpus()</a>.</p>
 
 </div>
 </div>
@@ -338,7 +357,7 @@ Variables</h2>
 </div>
 </div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Sun Jul 31 2011 00:16:43 for CWB by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Jan 17 2012 22:07:39 for CWB by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

@@ -50,13 +50,13 @@
 Data Fields</h2>
 <ul>
 <li>char * <a class="el" href="struct_sencode_range.html#a73da71b9c136e698a3ccaa1366e455a8">dir</a>
-<dl class="el"><dd class="mdescRight">directory where this range is stored  <a href="#a73da71b9c136e698a3ccaa1366e455a8"></a><br/></dl><li>char * <a class="el" href="struct_sencode_range.html#a5ac083a645d964373f022d03df4849c8">name</a>
-<dl class="el"><dd class="mdescRight">range name  <a href="#a5ac083a645d964373f022d03df4849c8"></a><br/></dl><li>int <a class="el" href="struct_sencode_range.html#a840e275845c4374a4384021cb20a3eb4">store_values</a>
+<dl class="el"><dd class="mdescRight">directory where this s-attribute is stored  <a href="#a73da71b9c136e698a3ccaa1366e455a8"></a><br/></dl><li>char * <a class="el" href="struct_sencode_range.html#a5ac083a645d964373f022d03df4849c8">name</a>
+<dl class="el"><dd class="mdescRight">s-attribute name  <a href="#a5ac083a645d964373f022d03df4849c8"></a><br/></dl><li>int <a class="el" href="struct_sencode_range.html#a840e275845c4374a4384021cb20a3eb4">store_values</a>
 <dl class="el"><dd class="mdescRight">flag indicating whether to store values  <a href="#a840e275845c4374a4384021cb20a3eb4"></a><br/></dl><li>int <a class="el" href="struct_sencode_range.html#a4adb4fb035eed17910c98225be64ec83">ready</a>
-<dl class="el"><dd class="mdescRight">flag indicates whether <a class="el" href="cwb-s-encode_8c.html#ad4838f681b1b048d97644ab42a2e0e64" title="Open disk files for the s-attribute being encoded (must have been declared first).">sencode_range_open()</a> has already been called  <a href="#a4adb4fb035eed17910c98225be64ec83"></a><br/></dl><li>FILE * <a class="el" href="struct_sencode_range.html#a600b792d6d2ff2e71096dfa60d97a3b0">fd</a>
+<dl class="el"><dd class="mdescRight">flag indicates whether sencode_range_open() has already been called  <a href="#a4adb4fb035eed17910c98225be64ec83"></a><br/></dl><li>FILE * <a class="el" href="struct_sencode_range.html#a600b792d6d2ff2e71096dfa60d97a3b0">fd</a>
 <dl class="el"><dd class="mdescRight">fd of x.rng (bin mode)  <a href="#a600b792d6d2ff2e71096dfa60d97a3b0"></a><br/></dl><li>FILE * <a class="el" href="struct_sencode_range.html#a67794439930965560937a2118457f964">avx</a>
-<dl class="el"><dd class="mdescRight">the attribute value index (text mode)  <a href="#a67794439930965560937a2118457f964"></a><br/></dl><li>FILE * <a class="el" href="struct_sencode_range.html#a00ab813696887d5d4d44ed94b8656b22">avs</a>
-<dl class="el"><dd class="mdescRight">the attribute values (bin mode)  <a href="#a00ab813696887d5d4d44ed94b8656b22"></a><br/></dl><li>int <a class="el" href="struct_sencode_range.html#af763c756953f5d71796b837caa7f94c3">last_cpos</a>
+<dl class="el"><dd class="mdescRight">the attribute value index (bin mode)  <a href="#a67794439930965560937a2118457f964"></a><br/></dl><li>FILE * <a class="el" href="struct_sencode_range.html#a00ab813696887d5d4d44ed94b8656b22">avs</a>
+<dl class="el"><dd class="mdescRight">the attribute value strings (text mode)  <a href="#a00ab813696887d5d4d44ed94b8656b22"></a><br/></dl><li>int <a class="el" href="struct_sencode_range.html#af763c756953f5d71796b837caa7f94c3">last_cpos</a>
 <dl class="el"><dd class="mdescRight">end of last region (consistency checking)  <a href="#af763c756953f5d71796b837caa7f94c3"></a><br/></dl><li>int <a class="el" href="struct_sencode_range.html#a86cf672daa4e0ad11ad10efc894d19c8">num</a>
 <dl class="el"><dd class="mdescRight">the next will be the num-th structure  <a href="#a86cf672daa4e0ad11ad10efc894d19c8"></a><br/></dl><li>int <a class="el" href="struct_sencode_range.html#aed7ea92f45bd273dde380a45ddced592">offset</a>
 <dl class="el"><dd class="mdescRight">string offset for next string  <a href="#aed7ea92f45bd273dde380a45ddced592"></a><br/></dl></ul>
@@ -74,9 +74,9 @@ Data Fields</h2>
 </div>
 <div class="memdoc">
 
-<p>the attribute values (bin mode) </p>
+<p>the attribute value strings (text mode) </p>
 
-<p>Referenced by <a class="el" href="cwb-s-encode_8c.html#ab30a0cfd27bbb5277439b85ead3d1cd3">sencode_range_close()</a>, <a class="el" href="cwb-s-encode_8c.html#ad5789dce3651c3882e691b8b6e0c2974">sencode_range_declare()</a>, <a class="el" href="cwb-s-encode_8c.html#ad4838f681b1b048d97644ab42a2e0e64">sencode_range_open()</a>, and <a class="el" href="cwb-s-encode_8c.html#a15f05f9f123ec1887f780026acf2f45e">sencode_range_write()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-s-encode_8c.html#ab366a68d28133bc00857295a480c4043">sencode_close_files()</a>, <a class="el" href="cwb-s-encode_8c.html#afc69b400cbf699fdedc0fadcc7cc9434">sencode_declare_new_satt()</a>, <a class="el" href="cwb-s-encode_8c.html#a39a59a21c5377261d6b2263416a4bf79">sencode_open_files()</a>, and <a class="el" href="cwb-s-encode_8c.html#aff0f32dc4c2723af6ad1905fd06a37d7">sencode_write_region()</a>.</p>
 
 </div>
 </div>
@@ -91,9 +91,9 @@ Data Fields</h2>
 </div>
 <div class="memdoc">
 
-<p>the attribute value index (text mode) </p>
+<p>the attribute value index (bin mode) </p>
 
-<p>Referenced by <a class="el" href="cwb-s-encode_8c.html#ab30a0cfd27bbb5277439b85ead3d1cd3">sencode_range_close()</a>, <a class="el" href="cwb-s-encode_8c.html#ad5789dce3651c3882e691b8b6e0c2974">sencode_range_declare()</a>, <a class="el" href="cwb-s-encode_8c.html#ad4838f681b1b048d97644ab42a2e0e64">sencode_range_open()</a>, and <a class="el" href="cwb-s-encode_8c.html#a15f05f9f123ec1887f780026acf2f45e">sencode_range_write()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-s-encode_8c.html#ab366a68d28133bc00857295a480c4043">sencode_close_files()</a>, <a class="el" href="cwb-s-encode_8c.html#afc69b400cbf699fdedc0fadcc7cc9434">sencode_declare_new_satt()</a>, <a class="el" href="cwb-s-encode_8c.html#a39a59a21c5377261d6b2263416a4bf79">sencode_open_files()</a>, and <a class="el" href="cwb-s-encode_8c.html#aff0f32dc4c2723af6ad1905fd06a37d7">sencode_write_region()</a>.</p>
 
 </div>
 </div>
@@ -108,9 +108,9 @@ Data Fields</h2>
 </div>
 <div class="memdoc">
 
-<p>directory where this range is stored </p>
+<p>directory where this s-attribute is stored </p>
 
-<p>Referenced by <a class="el" href="cwb-s-encode_8c.html#ad5789dce3651c3882e691b8b6e0c2974">sencode_range_declare()</a>, and <a class="el" href="cwb-s-encode_8c.html#ad4838f681b1b048d97644ab42a2e0e64">sencode_range_open()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-s-encode_8c.html#afc69b400cbf699fdedc0fadcc7cc9434">sencode_declare_new_satt()</a>, and <a class="el" href="cwb-s-encode_8c.html#a39a59a21c5377261d6b2263416a4bf79">sencode_open_files()</a>.</p>
 
 </div>
 </div>
@@ -127,7 +127,7 @@ Data Fields</h2>
 
 <p>fd of x.rng (bin mode) </p>
 
-<p>Referenced by <a class="el" href="cwb-s-encode_8c.html#ab30a0cfd27bbb5277439b85ead3d1cd3">sencode_range_close()</a>, <a class="el" href="cwb-s-encode_8c.html#ad5789dce3651c3882e691b8b6e0c2974">sencode_range_declare()</a>, <a class="el" href="cwb-s-encode_8c.html#ad4838f681b1b048d97644ab42a2e0e64">sencode_range_open()</a>, and <a class="el" href="cwb-s-encode_8c.html#a15f05f9f123ec1887f780026acf2f45e">sencode_range_write()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-s-encode_8c.html#ab366a68d28133bc00857295a480c4043">sencode_close_files()</a>, <a class="el" href="cwb-s-encode_8c.html#afc69b400cbf699fdedc0fadcc7cc9434">sencode_declare_new_satt()</a>, <a class="el" href="cwb-s-encode_8c.html#a39a59a21c5377261d6b2263416a4bf79">sencode_open_files()</a>, and <a class="el" href="cwb-s-encode_8c.html#aff0f32dc4c2723af6ad1905fd06a37d7">sencode_write_region()</a>.</p>
 
 </div>
 </div>
@@ -144,7 +144,7 @@ Data Fields</h2>
 
 <p>end of last region (consistency checking) </p>
 
-<p>Referenced by <a class="el" href="cwb-s-encode_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>, <a class="el" href="cwb-s-encode_8c.html#ad5789dce3651c3882e691b8b6e0c2974">sencode_range_declare()</a>, and <a class="el" href="cwb-s-encode_8c.html#a15f05f9f123ec1887f780026acf2f45e">sencode_range_write()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-s-encode_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>, <a class="el" href="cwb-s-encode_8c.html#afc69b400cbf699fdedc0fadcc7cc9434">sencode_declare_new_satt()</a>, and <a class="el" href="cwb-s-encode_8c.html#aff0f32dc4c2723af6ad1905fd06a37d7">sencode_write_region()</a>.</p>
 
 </div>
 </div>
@@ -159,9 +159,9 @@ Data Fields</h2>
 </div>
 <div class="memdoc">
 
-<p>range name </p>
+<p>s-attribute name </p>
 
-<p>Referenced by <a class="el" href="cwb-s-encode_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>, <a class="el" href="cwb-s-encode_8c.html#af03b28b7de6e87eb57fedd7aae5d8a5b">sencode_parse_options()</a>, <a class="el" href="cwb-s-encode_8c.html#ad5789dce3651c3882e691b8b6e0c2974">sencode_range_declare()</a>, and <a class="el" href="cwb-s-encode_8c.html#ad4838f681b1b048d97644ab42a2e0e64">sencode_range_open()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-s-encode_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>, <a class="el" href="cwb-s-encode_8c.html#afc69b400cbf699fdedc0fadcc7cc9434">sencode_declare_new_satt()</a>, <a class="el" href="cwb-s-encode_8c.html#a39a59a21c5377261d6b2263416a4bf79">sencode_open_files()</a>, and <a class="el" href="cwb-s-encode_8c.html#af03b28b7de6e87eb57fedd7aae5d8a5b">sencode_parse_options()</a>.</p>
 
 </div>
 </div>
@@ -178,7 +178,7 @@ Data Fields</h2>
 
 <p>the next will be the num-th structure </p>
 
-<p>Referenced by <a class="el" href="cwb-s-encode_8c.html#ad5789dce3651c3882e691b8b6e0c2974">sencode_range_declare()</a>, and <a class="el" href="cwb-s-encode_8c.html#a15f05f9f123ec1887f780026acf2f45e">sencode_range_write()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-s-encode_8c.html#afc69b400cbf699fdedc0fadcc7cc9434">sencode_declare_new_satt()</a>, and <a class="el" href="cwb-s-encode_8c.html#aff0f32dc4c2723af6ad1905fd06a37d7">sencode_write_region()</a>.</p>
 
 </div>
 </div>
@@ -195,7 +195,7 @@ Data Fields</h2>
 
 <p>string offset for next string </p>
 
-<p>Referenced by <a class="el" href="cwb-s-encode_8c.html#ad5789dce3651c3882e691b8b6e0c2974">sencode_range_declare()</a>, and <a class="el" href="cwb-s-encode_8c.html#a15f05f9f123ec1887f780026acf2f45e">sencode_range_write()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-s-encode_8c.html#afc69b400cbf699fdedc0fadcc7cc9434">sencode_declare_new_satt()</a>, and <a class="el" href="cwb-s-encode_8c.html#aff0f32dc4c2723af6ad1905fd06a37d7">sencode_write_region()</a>.</p>
 
 </div>
 </div>
@@ -210,9 +210,9 @@ Data Fields</h2>
 </div>
 <div class="memdoc">
 
-<p>flag indicates whether <a class="el" href="cwb-s-encode_8c.html#ad4838f681b1b048d97644ab42a2e0e64" title="Open disk files for the s-attribute being encoded (must have been declared first).">sencode_range_open()</a> has already been called </p>
+<p>flag indicates whether sencode_range_open() has already been called </p>
 
-<p>Referenced by <a class="el" href="cwb-s-encode_8c.html#ab30a0cfd27bbb5277439b85ead3d1cd3">sencode_range_close()</a>, <a class="el" href="cwb-s-encode_8c.html#ad5789dce3651c3882e691b8b6e0c2974">sencode_range_declare()</a>, <a class="el" href="cwb-s-encode_8c.html#ad4838f681b1b048d97644ab42a2e0e64">sencode_range_open()</a>, and <a class="el" href="cwb-s-encode_8c.html#a15f05f9f123ec1887f780026acf2f45e">sencode_range_write()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-s-encode_8c.html#ab366a68d28133bc00857295a480c4043">sencode_close_files()</a>, <a class="el" href="cwb-s-encode_8c.html#afc69b400cbf699fdedc0fadcc7cc9434">sencode_declare_new_satt()</a>, <a class="el" href="cwb-s-encode_8c.html#a39a59a21c5377261d6b2263416a4bf79">sencode_open_files()</a>, and <a class="el" href="cwb-s-encode_8c.html#aff0f32dc4c2723af6ad1905fd06a37d7">sencode_write_region()</a>.</p>
 
 </div>
 </div>
@@ -229,7 +229,7 @@ Data Fields</h2>
 
 <p>flag indicating whether to store values </p>
 
-<p>Referenced by <a class="el" href="cwb-s-encode_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>, <a class="el" href="cwb-s-encode_8c.html#ad5789dce3651c3882e691b8b6e0c2974">sencode_range_declare()</a>, <a class="el" href="cwb-s-encode_8c.html#ad4838f681b1b048d97644ab42a2e0e64">sencode_range_open()</a>, and <a class="el" href="cwb-s-encode_8c.html#a15f05f9f123ec1887f780026acf2f45e">sencode_range_write()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-s-encode_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>, <a class="el" href="cwb-s-encode_8c.html#afc69b400cbf699fdedc0fadcc7cc9434">sencode_declare_new_satt()</a>, <a class="el" href="cwb-s-encode_8c.html#a39a59a21c5377261d6b2263416a4bf79">sencode_open_files()</a>, and <a class="el" href="cwb-s-encode_8c.html#aff0f32dc4c2723af6ad1905fd06a37d7">sencode_write_region()</a>.</p>
 
 </div>
 </div>
@@ -237,7 +237,7 @@ Data Fields</h2>
 <li>utils/<a class="el" href="cwb-s-encode_8c.html">cwb-s-encode.c</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Sun Jul 31 2011 00:16:43 for CWB by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Jan 17 2012 22:07:40 for CWB by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

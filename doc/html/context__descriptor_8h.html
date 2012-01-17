@@ -60,10 +60,10 @@ Data Structures</h2>
 Defines</h2>
 <ul>
 <li>#define <a class="el" href="context__descriptor_8h.html#aa562c496c56c89dfc47743527cdea011">CHAR_CONTEXT</a>&#160;&#160;&#160;-1
-<li>#define <a class="el" href="context__descriptor_8h.html#ac460eee1177dee4721b4132d9aef7619">WORD_CONTEXT</a>&#160;&#160;&#160;-2
-<li>#define <a class="el" href="context__descriptor_8h.html#a54e96417e089a7f57307f2d906b6dd72">STRUC_CONTEXT</a>&#160;&#160;&#160;-3
-<li>#define <a class="el" href="context__descriptor_8h.html#a9ec602b091ff5e82d41f6af9bf0766a1">ALIGN_CONTEXT</a>&#160;&#160;&#160;-4
-</ul>
+<dl class="el"><dd class="mdescRight">Context width measured in characters.  <a href="#aa562c496c56c89dfc47743527cdea011"></a><br/></dl><li>#define <a class="el" href="context__descriptor_8h.html#ac460eee1177dee4721b4132d9aef7619">WORD_CONTEXT</a>&#160;&#160;&#160;-2
+<dl class="el"><dd class="mdescRight">Context width measured in tokens.  <a href="#ac460eee1177dee4721b4132d9aef7619"></a><br/></dl><li>#define <a class="el" href="context__descriptor_8h.html#a54e96417e089a7f57307f2d906b6dd72">STRUC_CONTEXT</a>&#160;&#160;&#160;-3
+<dl class="el"><dd class="mdescRight">Context width measured in terms of an s-attribute.  <a href="#a54e96417e089a7f57307f2d906b6dd72"></a><br/></dl><li>#define <a class="el" href="context__descriptor_8h.html#a9ec602b091ff5e82d41f6af9bf0766a1">ALIGN_CONTEXT</a>&#160;&#160;&#160;-4
+<dl class="el"><dd class="mdescRight">Context width measured in terms of an a-attribute - that is, alignment blocks as the unit of context.  <a href="#a9ec602b091ff5e82d41f6af9bf0766a1"></a><br/></dl></ul>
 <h2><a name="typedef-members"></a>
 Typedefs</h2>
 <ul>
@@ -92,6 +92,8 @@ Functions</h2>
 </div>
 <div class="memdoc">
 
+<p>Context width measured in terms of an a-attribute - that is, alignment blocks as the unit of context. </p>
+
 <p>Referenced by <a class="el" href="concordance_8h.html#a56419cf83985974f599ea0fa65f554ce">compose_kwic_line()</a>, <a class="el" href="options_8h.html#a88074ed42b7b3f0e4854f823d1520d9d">print_option_value()</a>, <a class="el" href="context__descriptor_8h.html#a1c4c7c9975c66a463bfc4c164c83af1f">PrintContextDescriptor()</a>, and <a class="el" href="context__descriptor_8h.html#a8b7716f1af60350c61f092fbf44578b8">verify_context_descriptor()</a>.</p>
 
 </div>
@@ -106,6 +108,8 @@ Functions</h2>
       </table>
 </div>
 <div class="memdoc">
+
+<p>Context width measured in characters. </p>
 
 <p>Referenced by <a class="el" href="ascii-print_8h.html#a8123c01d1c35c99c5cbadae6e308c3f1">ascii_print_corpus_header()</a>, <a class="el" href="concordance_8h.html#a56419cf83985974f599ea0fa65f554ce">compose_kwic_line()</a>, <a class="el" href="html-print_8c.html#aa33a61adb8885724ff5ea4fc97e2e4cf">html_print_context()</a>, <a class="el" href="context__descriptor_8h.html#a796afe5b380afce748f75e3142db17b4">initialize_context_descriptor()</a>, <a class="el" href="latex-print_8c.html#a0777bf57ca0635459d5b806ead570523">latex_print_context()</a>, <a class="el" href="options_8h.html#a88074ed42b7b3f0e4854f823d1520d9d">print_option_value()</a>, <a class="el" href="context__descriptor_8h.html#a1c4c7c9975c66a463bfc4c164c83af1f">PrintContextDescriptor()</a>, <a class="el" href="options_8h.html#a93847df2fb331e55cc129cb33e7fd440">set_context_option_value()</a>, <a class="el" href="options_8c.html#aac85b75729b62d91147deb7ea7b878ed">set_default_option_values()</a>, and <a class="el" href="sgml-print_8c.html#aa4953a522417fdfe7e77678bbc7aa9ac">sgml_print_context()</a>.</p>
 
@@ -122,6 +126,8 @@ Functions</h2>
 </div>
 <div class="memdoc">
 
+<p>Context width measured in terms of an s-attribute. </p>
+
 <p>Referenced by <a class="el" href="concordance_8h.html#a56419cf83985974f599ea0fa65f554ce">compose_kwic_line()</a>, <a class="el" href="html-print_8c.html#aa33a61adb8885724ff5ea4fc97e2e4cf">html_print_context()</a>, <a class="el" href="latex-print_8c.html#a0777bf57ca0635459d5b806ead570523">latex_print_context()</a>, <a class="el" href="options_8h.html#a88074ed42b7b3f0e4854f823d1520d9d">print_option_value()</a>, <a class="el" href="context__descriptor_8h.html#a1c4c7c9975c66a463bfc4c164c83af1f">PrintContextDescriptor()</a>, <a class="el" href="options_8h.html#a93847df2fb331e55cc129cb33e7fd440">set_context_option_value()</a>, <a class="el" href="sgml-print_8c.html#aa4953a522417fdfe7e77678bbc7aa9ac">sgml_print_context()</a>, and <a class="el" href="context__descriptor_8h.html#a8b7716f1af60350c61f092fbf44578b8">verify_context_descriptor()</a>.</p>
 
 </div>
@@ -136,6 +142,8 @@ Functions</h2>
       </table>
 </div>
 <div class="memdoc">
+
+<p>Context width measured in tokens. </p>
 
 <p>Referenced by <a class="el" href="ascii-print_8h.html#a8123c01d1c35c99c5cbadae6e308c3f1">ascii_print_corpus_header()</a>, <a class="el" href="concordance_8h.html#a56419cf83985974f599ea0fa65f554ce">compose_kwic_line()</a>, <a class="el" href="html-print_8c.html#aa33a61adb8885724ff5ea4fc97e2e4cf">html_print_context()</a>, <a class="el" href="print__align_8c.html#ab4fcc5be1517cf9e24a48ded5622c9be">init_align_module()</a>, <a class="el" href="latex-print_8c.html#a0777bf57ca0635459d5b806ead570523">latex_print_context()</a>, <a class="el" href="options_8h.html#a88074ed42b7b3f0e4854f823d1520d9d">print_option_value()</a>, <a class="el" href="context__descriptor_8h.html#a1c4c7c9975c66a463bfc4c164c83af1f">PrintContextDescriptor()</a>, <a class="el" href="options_8h.html#a93847df2fb331e55cc129cb33e7fd440">set_context_option_value()</a>, and <a class="el" href="sgml-print_8c.html#aa4953a522417fdfe7e77678bbc7aa9ac">sgml_print_context()</a>.</p>
 
@@ -308,7 +316,7 @@ Functions</h2>
 </div>
 </div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Sun Jul 31 2011 00:16:43 for CWB by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Jan 17 2012 22:07:39 for CWB by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

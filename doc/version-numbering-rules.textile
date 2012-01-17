@@ -4,7 +4,7 @@ h1. How to assign version numbers in CWB, CWB-Perl, and CQPweb
 h2. Plan for versions: the road ahead
 
 * Version numbering has hitherto been a bit haphazard
-* CWB > v3.0 basically represents work done at IMS Stuttgart
+* CWB < v3.0 basically represents work done at IMS Stuttgart
 ** (plus some betas for subsequent work)
 * CWB-Perl version numbering basically indicates what version of the core CWB it is intended to be compatible with
 * CQPweb originally had entirely separate version numbering (with only major and minor distinguished) 

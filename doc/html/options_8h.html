@@ -63,9 +63,9 @@ Data Structures</h2>
 Defines</h2>
 <ul>
 <li>#define <a class="el" href="options_8h.html#a46d1f3fcda067ddb52bc39acb77acf87">DEFAULT_HARDBOUNDARY</a>&#160;&#160;&#160;100
-<li>#define <a class="el" href="options_8h.html#a89c86c30a192879dfdf99caf60dc1da3">OPTION_CQP</a>&#160;&#160;&#160;1
-<li>#define <a class="el" href="options_8h.html#a65482022daa21b4f2424677e9f3c2f65">DEFAULT_CONTEXT</a>&#160;&#160;&#160;25
-<li>#define <a class="el" href="options_8h.html#a8052a333aa3e0802af5d4997030af2d4">DEFAULT_LOCAL_PATH_ENV_VAR</a>&#160;&#160;&#160;&quot;CQP_LOCAL_CORP_DIR&quot;
+<dl class="el"><dd class="mdescRight">Default value for the HardBoundary configuration option.  <a href="#a46d1f3fcda067ddb52bc39acb77acf87"></a><br/></dl><li>#define <a class="el" href="options_8h.html#a89c86c30a192879dfdf99caf60dc1da3">OPTION_CQP</a>&#160;&#160;&#160;1
+<dl class="el"><dd class="mdescRight">Flag for CQP configuration options: is this visible interactively in CQP?  <a href="#a89c86c30a192879dfdf99caf60dc1da3"></a><br/></dl><li>#define <a class="el" href="options_8h.html#a65482022daa21b4f2424677e9f3c2f65">DEFAULT_CONTEXT</a>&#160;&#160;&#160;25
+<dl class="el"><dd class="mdescRight">Default value for the context scope configuration option (counted in characters)  <a href="#a65482022daa21b4f2424677e9f3c2f65"></a><br/></dl><li>#define <a class="el" href="options_8h.html#a8052a333aa3e0802af5d4997030af2d4">DEFAULT_LOCAL_PATH_ENV_VAR</a>&#160;&#160;&#160;&quot;CQP_LOCAL_CORP_DIR&quot;
 <li>#define <a class="el" href="options_8h.html#a2668eb8d8f708bda2989ab3c3dc8beb6">CQP_FALLBACK_PAGER</a>&#160;&#160;&#160;&quot;more&quot;
 </ul>
 <h2><a name="typedef-members"></a>
@@ -101,9 +101,9 @@ Functions</h2>
 <li>int <a class="el" href="options_8h.html#a03133312221962d93a03d7d6336cdfae">find_option</a> (char *s)
 <dl class="el"><dd class="mdescRight">Finds the index of an option.  <a href="#a03133312221962d93a03d7d6336cdfae"></a><br/></dl><li>char * <a class="el" href="options_8h.html#a8e5868d8c94884b1eacb0d564eaf1a4f">set_string_option_value</a> (char *opt_name, char *value)
 <dl class="el"><dd class="mdescRight">Sets a string-valued option.  <a href="#a8e5868d8c94884b1eacb0d564eaf1a4f"></a><br/></dl><li>char * <a class="el" href="options_8h.html#a144a662a50c3893220a9e51455f34991">set_integer_option_value</a> (char *opt_name, int value)
-<dl class="el"><dd class="mdescRight">Sets an integer or string-valued option.  <a href="#a144a662a50c3893220a9e51455f34991"></a><br/></dl><li>char * <a class="el" href="options_8h.html#a93847df2fb331e55cc129cb33e7fd440">set_context_option_value</a> (char *opt_name, char *sval, int ival)
+<dl class="el"><dd class="mdescRight">Sets an integer-valued option.  <a href="#a144a662a50c3893220a9e51455f34991"></a><br/></dl><li>char * <a class="el" href="options_8h.html#a93847df2fb331e55cc129cb33e7fd440">set_context_option_value</a> (char *opt_name, char *sval, int ival)
 <li>void <a class="el" href="options_8h.html#a123e16dfa386e0969d7822aba5d943d4">print_option_values</a> ()
-<li>void <a class="el" href="options_8h.html#a88074ed42b7b3f0e4854f823d1520d9d">print_option_value</a> (int opt)
+<dl class="el"><dd class="mdescRight">Prints out the values of all the CQP configuration options.  <a href="#a123e16dfa386e0969d7822aba5d943d4"></a><br/></dl><li>void <a class="el" href="options_8h.html#a88074ed42b7b3f0e4854f823d1520d9d">print_option_value</a> (int opt)
 <li>void <a class="el" href="options_8h.html#a0318e97f40679e849d9259e5edb4dfce">parse_options</a> (int argc, char **argv)
 </ul>
 <h2><a name="var-members"></a>
@@ -113,25 +113,25 @@ Variables</h2>
 <li>int <a class="el" href="options_8h.html#adac0b1666b7493b207b3702be8ab961d">insecure</a>
 <dl class="el"><dd class="mdescRight">Boolean: != 0 means we should not allow pipes etc.  <a href="#adac0b1666b7493b207b3702be8ab961d"></a><br/></dl><li>int <a class="el" href="options_8h.html#a1043d7f037cfe96705988c27567220bf">inhibit_activation</a>
 <dl class="el"><dd class="mdescRight">Boolean: inhibit corpus activations in parser.  <a href="#a1043d7f037cfe96705988c27567220bf"></a><br/></dl><li>int <a class="el" href="options_8h.html#abfe244bfad9b0ed54c002d07fd76c383">parseonly</a>
-<li>int <a class="el" href="options_8h.html#ab5b74ed35a1a6e3a4b16fb6f67202e00">verbose_parser</a>
-<dl class="el"><dd class="mdescRight">if true, absolutely all messages from the parser get printed  <a href="#ab5b74ed35a1a6e3a4b16fb6f67202e00"></a><br/></dl><li>int <a class="el" href="options_8h.html#adb2ebc675497cd8b05938a23afaecb3a">show_symtab</a>
-<li>int <a class="el" href="options_8h.html#a40fc0cb60e87498e26995e20316fdca3">show_gconstraints</a>
-<li>int <a class="el" href="options_8h.html#ac02b913dbbae6cb0f875162a3a52f0df">show_evaltree</a>
-<li>int <a class="el" href="options_8h.html#ab71847647c10d2bfdc4c536e8f818cd2">show_patlist</a>
-<li>int <a class="el" href="options_8h.html#ace81f0d9c44733f52081f1bc8a6589f8">show_dfa</a>
-<li>int <a class="el" href="options_8h.html#a7296d6d33aaec548b3e606a0a10478c7">show_compdfa</a>
-<li>int <a class="el" href="options_8h.html#abdc7f9660ae705be873570f69e54b068">symtab_debug</a>
-<li>int <a class="el" href="options_8h.html#a20ba618f37578ad21378433550516222">parser_debug</a>
-<li>int <a class="el" href="options_8h.html#ae8157fadb3625be724efab90b8d36787">tree_debug</a>
-<li>int <a class="el" href="options_8h.html#a9ac01cc7bf03ab469bd26000f633e2cc">eval_debug</a>
-<li>int <a class="el" href="options_8h.html#a82c78a72ef0baf71e897a6329fa41f0f">search_debug</a>
-<li>int <a class="el" href="options_8h.html#a387bcd1013f4d3fde73e92ebd311278a">initial_matchlist_debug</a>
-<li>int <a class="el" href="options_8h.html#a999f1080ec827b7f176a95d6f2539eb8">debug_simulation</a>
-<li>int <a class="el" href="options_8h.html#aa8b54242edda5862018bc23959b0c05a">activate_cl_debug</a>
-<li>int <a class="el" href="options_8h.html#afcb567e6d475e9f8afee3cb5ef9d8538">server_log</a>
-<dl class="el"><dd class="mdescRight">cqpserver option: logging  <a href="#afcb567e6d475e9f8afee3cb5ef9d8538"></a><br/></dl><li>int <a class="el" href="options_8h.html#a30ed1d5e5cd4b60ec73a38312f8c9941">server_debug</a>
-<dl class="el"><dd class="mdescRight">cqpserver option: debugging output  <a href="#a30ed1d5e5cd4b60ec73a38312f8c9941"></a><br/></dl><li>int <a class="el" href="options_8h.html#a5165a807d9a46b3aed8aa60e9e81c6a8">snoop</a>
-<dl class="el"><dd class="mdescRight">cqpserver option: monitor CQi network communciation  <a href="#a5165a807d9a46b3aed8aa60e9e81c6a8"></a><br/></dl><li>int <a class="el" href="options_8h.html#a57937e62353d2f14318c3e2311a0b4a6">private_server</a>
+<dl class="el"><dd class="mdescRight">if true, queries are only parsed, not evaluated.  <a href="#abfe244bfad9b0ed54c002d07fd76c383"></a><br/></dl><li>int <a class="el" href="options_8h.html#ab5b74ed35a1a6e3a4b16fb6f67202e00">verbose_parser</a>
+<dl class="el"><dd class="mdescRight">if true, absolutely all messages from the parser get printed (inc Message-level).  <a href="#ab5b74ed35a1a6e3a4b16fb6f67202e00"></a><br/></dl><li>int <a class="el" href="options_8h.html#adb2ebc675497cd8b05938a23afaecb3a">show_symtab</a>
+<dl class="el"><dd class="mdescRight">Doesn't seem to be used anywhere; should show_environment use it? if not, remove? TODO.  <a href="#adb2ebc675497cd8b05938a23afaecb3a"></a><br/></dl><li>int <a class="el" href="options_8h.html#a40fc0cb60e87498e26995e20316fdca3">show_gconstraints</a>
+<dl class="el"><dd class="mdescRight">if true, the tree of global contraints is printed when an EvalEnvironment is displayed  <a href="#a40fc0cb60e87498e26995e20316fdca3"></a><br/></dl><li>int <a class="el" href="options_8h.html#ac02b913dbbae6cb0f875162a3a52f0df">show_evaltree</a>
+<dl class="el"><dd class="mdescRight">if true, the evaluation tree is printed when an EvalEnvironment is displayed  <a href="#ac02b913dbbae6cb0f875162a3a52f0df"></a><br/></dl><li>int <a class="el" href="options_8h.html#ab71847647c10d2bfdc4c536e8f818cd2">show_patlist</a>
+<dl class="el"><dd class="mdescRight">if true, the pattern list is printed when an EvalEnvironment is displayed  <a href="#ab71847647c10d2bfdc4c536e8f818cd2"></a><br/></dl><li>int <a class="el" href="options_8h.html#a7296d6d33aaec548b3e606a0a10478c7">show_compdfa</a>
+<dl class="el"><dd class="mdescRight">if true, the complete DFA is printed when an EvalEnvironment is displayed  <a href="#a7296d6d33aaec548b3e606a0a10478c7"></a><br/></dl><li>int <a class="el" href="options_8h.html#ace81f0d9c44733f52081f1bc8a6589f8">show_dfa</a>
+<dl class="el"><dd class="mdescRight">if true, the regex2dfa module will print out the states of the DFA after it is parsed.  <a href="#ace81f0d9c44733f52081f1bc8a6589f8"></a><br/></dl><li>int <a class="el" href="options_8h.html#abdc7f9660ae705be873570f69e54b068">symtab_debug</a>
+<dl class="el"><dd class="mdescRight">if this AND debug_simulation are true, print extra messages relating to eval environment labels when simulating an NFA.  <a href="#abdc7f9660ae705be873570f69e54b068"></a><br/></dl><li>int <a class="el" href="options_8h.html#a20ba618f37578ad21378433550516222">parser_debug</a>
+<dl class="el"><dd class="mdescRight">if true, the parser's internal Bison-generated debug setting is turned on.  <a href="#a20ba618f37578ad21378433550516222"></a><br/></dl><li>int <a class="el" href="options_8h.html#ae8157fadb3625be724efab90b8d36787">tree_debug</a>
+<dl class="el"><dd class="mdescRight">if true, extra messages are embedded when an evaluation tree is pretty-printed  <a href="#ae8157fadb3625be724efab90b8d36787"></a><br/></dl><li>int <a class="el" href="options_8h.html#a9ac01cc7bf03ab469bd26000f633e2cc">eval_debug</a>
+<dl class="el"><dd class="mdescRight">if true, assorted debug messages related to query evaluation are printed  <a href="#a9ac01cc7bf03ab469bd26000f633e2cc"></a><br/></dl><li>int <a class="el" href="options_8h.html#a82c78a72ef0baf71e897a6329fa41f0f">search_debug</a>
+<dl class="el"><dd class="mdescRight">if true, the evaltree of a pattern is pretty-printed before the DFA is created.  <a href="#a82c78a72ef0baf71e897a6329fa41f0f"></a><br/></dl><li>int <a class="el" href="options_8h.html#a387bcd1013f4d3fde73e92ebd311278a">initial_matchlist_debug</a>
+<dl class="el"><dd class="mdescRight">if true, debug messages relating to the initial set of candidate matches are printed.  <a href="#a387bcd1013f4d3fde73e92ebd311278a"></a><br/></dl><li>int <a class="el" href="options_8h.html#a999f1080ec827b7f176a95d6f2539eb8">debug_simulation</a>
+<dl class="el"><dd class="mdescRight">if true, debug messages are printed when simulating an NFA.  <a href="#a999f1080ec827b7f176a95d6f2539eb8"></a><br/></dl><li>int <a class="el" href="options_8h.html#aa8b54242edda5862018bc23959b0c05a">activate_cl_debug</a>
+<dl class="el"><dd class="mdescRight">if true, the CL's debug message setting is set to On.  <a href="#aa8b54242edda5862018bc23959b0c05a"></a><br/></dl><li>int <a class="el" href="options_8h.html#afcb567e6d475e9f8afee3cb5ef9d8538">server_log</a>
+<dl class="el"><dd class="mdescRight">cqpserver option: logging (print log messages to standard output)  <a href="#afcb567e6d475e9f8afee3cb5ef9d8538"></a><br/></dl><li>int <a class="el" href="options_8h.html#a30ed1d5e5cd4b60ec73a38312f8c9941">server_debug</a>
+<dl class="el"><dd class="mdescRight">cqpserver option: debugging output (print debug messages to standard error)  <a href="#a30ed1d5e5cd4b60ec73a38312f8c9941"></a><br/></dl><li>int <a class="el" href="options_8h.html#a5165a807d9a46b3aed8aa60e9e81c6a8">snoop</a>
+<dl class="el"><dd class="mdescRight">cqpserver option: monitor CQi network communication  <a href="#a5165a807d9a46b3aed8aa60e9e81c6a8"></a><br/></dl><li>int <a class="el" href="options_8h.html#a57937e62353d2f14318c3e2311a0b4a6">private_server</a>
 <dl class="el"><dd class="mdescRight">cqpserver option: makes CQPserver accept a single connection only  <a href="#a57937e62353d2f14318c3e2311a0b4a6"></a><br/></dl><li>int <a class="el" href="options_8h.html#af204d2d7af5cc273a2b38359c4c09c99">server_port</a>
 <dl class="el"><dd class="mdescRight">cqpserver option: CQPserver's listening port (if 0, listens on CQI_PORT)  <a href="#af204d2d7af5cc273a2b38359c4c09c99"></a><br/></dl><li>int <a class="el" href="options_8h.html#a644551fe8fa35fb428baa6d0ce9d08d0">localhost</a>
 <dl class="el"><dd class="mdescRight">cqpserver option: accept local connections (loopback) only  <a href="#a644551fe8fa35fb428baa6d0ce9d08d0"></a><br/></dl><li>int <a class="el" href="options_8h.html#a80998dce9ef06f1b7af632725d3d0c65">server_quit</a>
@@ -139,7 +139,7 @@ Variables</h2>
 <dl class="el"><dd class="mdescRight">cqpserver option: safe mode for network/HTTP servers (allow query execution only)  <a href="#a16b45448f7ae6a9627dfa1fb73075b15"></a><br/></dl><li>int <a class="el" href="options_8h.html#a4e2f329ef9327552138f73a77978317d">query_lock_violation</a>
 <dl class="el"><dd class="mdescRight">cqpserver option: set for CQPserver's sake to detect attempted query lock violation  <a href="#a4e2f329ef9327552138f73a77978317d"></a><br/></dl><li>int <a class="el" href="options_8h.html#abb9f00607f69c02d395e8219f8f08b8c">enable_macros</a>
 <dl class="el"><dd class="mdescRight">enable macros only at user request in case they introduce compatibility problems  <a href="#abb9f00607f69c02d395e8219f8f08b8c"></a><br/></dl><li>int <a class="el" href="options_8h.html#ab6b7da74334ef7947beb950a49bd49f5">macro_debug</a>
-<dl class="el"><dd class="mdescRight">enable debugging of macros  <a href="#ab6b7da74334ef7947beb950a49bd49f5"></a><br/></dl><li>int <a class="el" href="options_8h.html#a25cb4192d2e2ba7b93bf4c78d7a4ebb3">hard_boundary</a>
+<dl class="el"><dd class="mdescRight">enable debugging of macros (and print macro hash stats on shutdown).  <a href="#ab6b7da74334ef7947beb950a49bd49f5"></a><br/></dl><li>int <a class="el" href="options_8h.html#a25cb4192d2e2ba7b93bf4c78d7a4ebb3">hard_boundary</a>
 <dl class="el"><dd class="mdescRight">Query option: use implicit 'within' clause (unless overridden by explicit spec)  <a href="#a25cb4192d2e2ba7b93bf4c78d7a4ebb3"></a><br/></dl><li>int <a class="el" href="options_8h.html#a556de4e8937a0479d5968f565569f6a1">hard_cut</a>
 <dl class="el"><dd class="mdescRight">Query option: use hard cut value for all queries (cannot be changed)  <a href="#a556de4e8937a0479d5968f565569f6a1"></a><br/></dl><li>int <a class="el" href="options_8h.html#ade549700c678ec5260f85d2ab5a6d8ae">subquery</a>
 <dl class="el"><dd class="mdescRight">Query option: use auto-subquery mode.  <a href="#ade549700c678ec5260f85d2ab5a6d8ae"></a><br/></dl><li>char * <a class="el" href="options_8h.html#a8322f90b5bcfc6579948d77e2219f56f">def_unbr_attr</a>
@@ -174,17 +174,17 @@ Variables</h2>
 <dl class="el"><dd class="mdescRight">changed from 'init_file' because of clash with a # define in {term.h}  <a href="#a1a9190a61c97e5e0a98f958f04a5fdd2"></a><br/></dl><li>char * <a class="el" href="options_8h.html#a3601d5ee126fa2e974a45288b7041bbd">macro_init_file</a>
 <dl class="el"><dd class="mdescRight">secondary init file for loading macro definitions (not read if macros are disabled)  <a href="#a3601d5ee126fa2e974a45288b7041bbd"></a><br/></dl><li>char * <a class="el" href="options_8h.html#a12c2c66a93c271e107bb44f8b449b7fe">cqp_history_file</a>
 <dl class="el"><dd class="mdescRight">filename where CQP command history will be saved  <a href="#a12c2c66a93c271e107bb44f8b449b7fe"></a><br/></dl><li>int <a class="el" href="options_8h.html#ac6e855a8973a6f82ba35f4ee2927091e">write_history_file</a>
-<dl class="el"><dd class="mdescRight">Controls whether CQP command history is written to file.  <a href="#ac6e855a8973a6f82ba35f4ee2927091e"></a><br/></dl><li>int <a class="el" href="options_8h.html#a0610218ccaf8cab9eec75d3b47231f81">UseExternalSorting</a>
+<dl class="el"><dd class="mdescRight">Controls whether CQP command history is written to file.  <a href="#ac6e855a8973a6f82ba35f4ee2927091e"></a><br/></dl><li>int <a class="el" href="options_8h.html#a05c758689b70c64711a1789bff29f60c">batchmode</a>
+<dl class="el"><dd class="mdescRight">set by -f {file} option (don't read ~/.cqprc, then process input from {file})  <a href="#a05c758689b70c64711a1789bff29f60c"></a><br/></dl><li>int <a class="el" href="options_8h.html#a582e2ef9670c974c00e00ad10af0e629">silent</a>
+<dl class="el"><dd class="mdescRight">Disables some messages &amp; warnings (used rather inconsistently).  <a href="#a582e2ef9670c974c00e00ad10af0e629"></a><br/></dl><li>char * <a class="el" href="options_8h.html#af76965244a07bfe630d001af323482b4">default_corpus</a>
+<dl class="el"><dd class="mdescRight">corpus specified with -D {corpus}  <a href="#af76965244a07bfe630d001af323482b4"></a><br/></dl><li>char * <a class="el" href="options_8h.html#a8e29d18e032619898b478b4b4b6ddd8f">query_string</a>
+<dl class="el"><dd class="mdescRight">query specified on command line (-E {string}, cqpcl only)  <a href="#a8e29d18e032619898b478b4b4b6ddd8f"></a><br/></dl><li>int <a class="el" href="options_8h.html#a0610218ccaf8cab9eec75d3b47231f81">UseExternalSorting</a>
 <dl class="el"><dd class="mdescRight">(option which should not exist) use external sorting algorithm  <a href="#a0610218ccaf8cab9eec75d3b47231f81"></a><br/></dl><li>char * <a class="el" href="options_8h.html#a2c330e464324d0f0be94ede0635d81f5">ExternalSortingCommand</a>
 <dl class="el"><dd class="mdescRight">(option which should not exist) external sort command to use  <a href="#a2c330e464324d0f0be94ede0635d81f5"></a><br/></dl><li>int <a class="el" href="options_8h.html#a1ec0a296d4f5566ed9d3ad299c19e05c">UseExternalGrouping</a>
 <dl class="el"><dd class="mdescRight">(option which should not exist) use external grouping algorithm  <a href="#a1ec0a296d4f5566ed9d3ad299c19e05c"></a><br/></dl><li>char * <a class="el" href="options_8h.html#abc357b124948acbbd96fa3b9586d8770">ExternalGroupingCommand</a>
 <dl class="el"><dd class="mdescRight">(option which should not exist) external group command to use  <a href="#abc357b124948acbbd96fa3b9586d8770"></a><br/></dl><li>int <a class="el" href="options_8h.html#aab9e332c1bce81280f568ba84aa55026">user_level</a>
 <dl class="el"><dd class="mdescRight">(option which should not exist) user level: 0 == normal, 1 == advanced, 2 == expert)  <a href="#aab9e332c1bce81280f568ba84aa55026"></a><br/></dl><li>int <a class="el" href="options_8h.html#afc602b27bdada8a16b5f34ede504cbd2">rangeoutput</a>
-<dl class="el"><dd class="mdescRight">(option which should not exist)  <a href="#afc602b27bdada8a16b5f34ede504cbd2"></a><br/></dl><li>int <a class="el" href="options_8h.html#a05c758689b70c64711a1789bff29f60c">batchmode</a>
-<dl class="el"><dd class="mdescRight">set by -f {file} option (don't read ~/.cqprc, then process input from {file})  <a href="#a05c758689b70c64711a1789bff29f60c"></a><br/></dl><li>int <a class="el" href="options_8h.html#a582e2ef9670c974c00e00ad10af0e629">silent</a>
-<dl class="el"><dd class="mdescRight">Disables some messages &amp; warnings (used rather inconsistently).  <a href="#a582e2ef9670c974c00e00ad10af0e629"></a><br/></dl><li>char * <a class="el" href="options_8h.html#af76965244a07bfe630d001af323482b4">default_corpus</a>
-<dl class="el"><dd class="mdescRight">corpus specified with -D {corpus}  <a href="#af76965244a07bfe630d001af323482b4"></a><br/></dl><li>char * <a class="el" href="options_8h.html#a8e29d18e032619898b478b4b4b6ddd8f">query_string</a>
-<dl class="el"><dd class="mdescRight">query specified on command line (-E {string}, cqpcl only)  <a href="#a8e29d18e032619898b478b4b4b6ddd8f"></a><br/></dl><li>int <a class="el" href="options_8h.html#a589e4b294834e4afa88f3b5f78e3ff56">child_process</a>
+<dl class="el"><dd class="mdescRight">(option which should not exist)  <a href="#afc602b27bdada8a16b5f34ede504cbd2"></a><br/></dl><li>int <a class="el" href="options_8h.html#a589e4b294834e4afa88f3b5f78e3ff56">child_process</a>
 <dl class="el"><dd class="mdescRight">Child process mode (used by Perl interface (CQP.pm) and by CQPweb (cqp.inc.php))</p>
 <ul>
 <li>don't automatically read in user's .cqprc and .cqpmacros</li>
@@ -227,6 +227,8 @@ Variables</h2>
 </div>
 <div class="memdoc">
 
+<p>Default value for the context scope configuration option (counted in characters) </p>
+
 <p>Referenced by <a class="el" href="options_8c.html#aac85b75729b62d91147deb7ea7b878ed">set_default_option_values()</a>.</p>
 
 </div>
@@ -241,6 +243,8 @@ Variables</h2>
       </table>
 </div>
 <div class="memdoc">
+
+<p>Default value for the HardBoundary configuration option. </p>
 
 </div>
 </div>
@@ -270,6 +274,8 @@ Variables</h2>
 </div>
 <div class="memdoc">
 
+<p>Flag for CQP configuration options: is this visible interactively in CQP? </p>
+
 <p>Referenced by <a class="el" href="options_8h.html#a123e16dfa386e0969d7822aba5d943d4">print_option_values()</a>.</p>
 
 </div>
@@ -287,6 +293,8 @@ Variables</h2>
 <div class="memdoc">
 
 <p>A CQPOption represents a single configuration option for CQP. </p>
+<p>It does not actually contain the config-option itself; that is held as a global variable somewhere. Instead, it holds metadata about the config-option, including a pointer to the actual variable.</p>
+<p>Note it's possible to have wo CQPOption objects referring to the same actual variable - in this case the two option names in question would be synonymous. </p>
 
 </div>
 </div>
@@ -406,7 +414,7 @@ Variables</h2>
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="options_8h.html#a85ecc6f44a2ec4211ece52bc5afe0303" title="Global array of options for CQP.">cqpoptions</a> </dd></dl>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table class="params">
-    <tr><td class="paramname">s</td><td>Name of the option to find. </td></tr>
+    <tr><td class="paramname">s</td><td>Name of the option to find (or abbreviation); matched case-insensitively. </td></tr>
   </table>
   </dd>
 </dl>
@@ -480,6 +488,8 @@ Variables</h2>
 </div>
 <div class="memdoc">
 
+<p>Prints out the values of all the CQP configuration options. </p>
+
 <p>References <a class="el" href="options_8c.html#a03133312221962d93a03d7d6336cdfae">find_option()</a>, <a class="el" href="struct__cqpoption.html#ad370f616d731d0e001b8a66f1294fba8">_cqpoption::opt_name</a>, <a class="el" href="options_8h.html#a89c86c30a192879dfdf99caf60dc1da3">OPTION_CQP</a>, <a class="el" href="options_8c.html#a88074ed42b7b3f0e4854f823d1520d9d">print_option_value()</a>, <a class="el" href="options_8h.html#a582e2ef9670c974c00e00ad10af0e629">silent</a>, and <a class="el" href="options_8h.html#aab9e332c1bce81280f568ba84aa55026">user_level</a>.</p>
 
 </div>
@@ -546,8 +556,8 @@ Variables</h2>
 </div>
 <div class="memdoc">
 
-<p>Sets an integer or string-valued option. </p>
-<p>An error string is returned if the type of the option does not correspond to the function which is called. Upon success, NULL is returned.</p>
+<p>Sets an integer-valued option. </p>
+<p>An error string (function-internal constant, do NOT free) is returned if the type of the option does not correspond to the function which is called. Upon success, NULL is returned.</p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table class="params">
     <tr><td class="paramname">opt_name</td><td>The name of the option to set. </td></tr>
@@ -589,7 +599,7 @@ Variables</h2>
 <div class="memdoc">
 
 <p>Sets a string-valued option. </p>
-<p>An error string is returned if the type of the option does not correspond to the function which is called. Upon success, NULL is returned.</p>
+<p>An error string (function-internal constant, do NOT free) is returned if the type of the option does not correspond to the function which is called. Upon success, NULL is returned.</p>
 <p>set_string_option_value does NOT strdup the value!</p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table class="params">
@@ -617,6 +627,8 @@ Variables</h2>
       </table>
 </div>
 <div class="memdoc">
+
+<p>if true, the CL's debug message setting is set to On. </p>
 
 <p>Referenced by <a class="el" href="options_8c.html#ac25b2835b607daf6f05f6f87df840e40">execute_side_effects()</a>, <a class="el" href="options_8c.html#a3b63ff1af997333f51cad78bf921732a">parse_options()</a>, and <a class="el" href="options_8c.html#aac85b75729b62d91147deb7ea7b878ed">set_default_option_values()</a>.</p>
 
@@ -791,6 +803,9 @@ Variables</h2>
 </div>
 <div class="memdoc">
 
+<p>if true, debug messages are printed when simulating an NFA. </p>
+<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="eval_8c.html#adb7ad0a24759f5f36340f8b66bb70d79">simulate</a> </dd></dl>
+
 <p>Referenced by <a class="el" href="options_8c.html#a3b63ff1af997333f51cad78bf921732a">parse_options()</a>, and <a class="el" href="eval_8c.html#adb7ad0a24759f5f36340f8b66bb70d79">simulate()</a>.</p>
 
 </div>
@@ -856,6 +871,8 @@ Variables</h2>
       </table>
 </div>
 <div class="memdoc">
+
+<p>if true, assorted debug messages related to query evaluation are printed </p>
 
 <p>Referenced by <a class="el" href="eval_8c.html#aadbbf692b029374646a9baf9b53e2a90">calculate_initial_matchlist_1()</a>, <a class="el" href="eval_8h.html#a1c6b9087d4b9c61e2be81a7a68e174cc">eval_bool()</a>, <a class="el" href="eval_8c.html#a56ebf47da8a1555648176db1b81a4526">get_label_referenced_position()</a>, <a class="el" href="eval_8c.html#aead01bf924ccdd541a9018bf1d72730e">get_leaf_value()</a>, <a class="el" href="eval_8c.html#a31c86ea932365a90b02b4af7462f4196">get_matched_corpus_positions()</a>, and <a class="el" href="options_8c.html#a3b63ff1af997333f51cad78bf921732a">parse_options()</a>.</p>
 
@@ -989,6 +1006,8 @@ Variables</h2>
 </div>
 <div class="memdoc">
 
+<p>if true, debug messages relating to the initial set of candidate matches are printed. </p>
+
 <p>Referenced by <a class="el" href="eval_8c.html#a8b5cec215ec2857925194e627ead0184">get_corpus_positions()</a>, <a class="el" href="eval_8c.html#a31c86ea932365a90b02b4af7462f4196">get_matched_corpus_positions()</a>, <a class="el" href="options_8c.html#a3b63ff1af997333f51cad78bf921732a">parse_options()</a>, and <a class="el" href="eval_8c.html#a6d83579b3075256f14a62888a2e4b284">simulate_dfa()</a>.</p>
 
 </div>
@@ -1005,7 +1024,7 @@ Variables</h2>
 <div class="memdoc">
 
 <p>Boolean: != 0 means we should not allow pipes etc. </p>
-<p>(cgi) </p>
+<p>(For example, in CGI.) </p>
 
 <p>Referenced by <a class="el" href="groups_8h.html#a1e8f0dbf75269530b413a3aff966d326">compute_grouping()</a>, <a class="el" href="output_8h.html#a14e320f7e110fa3f4c81f78a09d41335">open_input_stream()</a>, <a class="el" href="output_8h.html#a8daf0f4a91a7fb631d27c19b8f75353b">open_stream()</a>, <a class="el" href="options_8c.html#a3b63ff1af997333f51cad78bf921732a">parse_options()</a>, and <a class="el" href="ranges_8h.html#aaf5f006cef0ac7c1fdb5c9d55558c11a">SortSubcorpus()</a>.</p>
 
@@ -1105,7 +1124,7 @@ Variables</h2>
 </div>
 <div class="memdoc">
 
-<p>enable debugging of macros </p>
+<p>enable debugging of macros (and print macro hash stats on shutdown). </p>
 
 <p>Referenced by <a class="el" href="macro_8h.html#aa343c98285f1a32ef30f8da7cd1ce4a8">expand_macro()</a>, <a class="el" href="llquery_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>, <a class="el" href="options_8c.html#a3b63ff1af997333f51cad78bf921732a">parse_options()</a>, and <a class="el" href="macro_8h.html#a01ff9eb9b38042da7ebaffa9f379a6d2">yy_input_char()</a>.</p>
 
@@ -1205,6 +1224,8 @@ Variables</h2>
 </div>
 <div class="memdoc">
 
+<p>if true, queries are only parsed, not evaluated. </p>
+
 <p>Referenced by <a class="el" href="parse__actions_8h.html#ad54cd36f0dadd371fa6a84e03a4c989c">do_MUQuery()</a>, <a class="el" href="parse__actions_8h.html#a2aaabbb6bcc4e5210745065baaaf715c">do_StandardQuery()</a>, and <a class="el" href="parse__actions_8h.html#aaeff68a9cd1b640ec8e075f3ac53f003">do_TABQuery()</a>.</p>
 
 </div>
@@ -1219,6 +1240,8 @@ Variables</h2>
       </table>
 </div>
 <div class="memdoc">
+
+<p>if true, the parser's internal Bison-generated debug setting is turned on. </p>
 
 <p>Referenced by <a class="el" href="cqp_8h.html#a313990999a7a7c5275682411e9b58c89">initialize_cqp()</a>, and <a class="el" href="options_8c.html#a3b63ff1af997333f51cad78bf921732a">parse_options()</a>.</p>
 
@@ -1337,7 +1360,7 @@ Variables</h2>
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="cwb-align_8c.html#a17371073c35237e8b8ab22fca70902d1">align_parse_args()</a>, <a class="el" href="cwb-align_8c.html#ae1e0d84cd7430ed154bfacc29bdbb1be">align_usage()</a>, <a class="el" href="cwb-align-encode_8c.html#ae16c4d7f8cd95c2aa0a2765e5256a010">alignencode_parse_args()</a>, <a class="el" href="cwb-align-encode_8c.html#a5aa5525746af1ecd8470f538b642d3d1">alignencode_usage()</a>, <a class="el" href="cwb-align-show_8c.html#aef1135373314f0032cd6713275eb709d">alignshow_parse_args()</a>, <a class="el" href="cwb-align-show_8c.html#aa0745947ad0c779dd5c4e12826bd0276">alignshow_print_help()</a>, <a class="el" href="cwb-align-show_8c.html#a523798f68b16d22aaff52d49df477a56">alignshow_usage()</a>, <a class="el" href="cwb-compress-rdx_8c.html#a48c580680a1c3e3bebdcb1af8426496d">compressrdx_usage()</a>, <a class="el" href="cwb-check-input_8c.html#a21977d52fb361d62e5fce123d7596f97">cwbci_usage()</a>, <a class="el" href="cwb-decode_8c.html#af5f2bf327a0159297c449e347860adbe">decode_usage()</a>, <a class="el" href="cwb-describe-corpus_8c.html#af6030de411ccb672b3c31e9020db724d">describecorpus_usage()</a>, <a class="el" href="cwb-lexdecode_8c.html#a21e71f17ac00f605db9328ae3148978c">do_show()</a>, <a class="el" href="cwb-encode_8c.html#aa0f8374cf6b11c64c60b4fe305815334">encode_parse_options()</a>, <a class="el" href="cwb-encode_8c.html#ab4563ab00458b1d151447d7f3e52b785">encode_usage()</a>, <a class="el" href="cwb-huffcode_8c.html#aad76daf11045beaf13d02a94ed139c90">huffcode_usage()</a>, <a class="el" href="cwb-lexdecode_8c.html#a3e17f6b6f17ece48948aef358a8c981a">lexdecode_usage()</a>, <a class="el" href="cwb-align-encode_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>, <a class="el" href="cwb-makeall_8c.html#a1adaf2f54307eac8ae4722646b994a0b">makeall_usage()</a>, <a class="el" href="options_8c.html#a3b63ff1af997333f51cad78bf921732a">parse_options()</a>, <a class="el" href="cwb-align-show_8c.html#a4b7c39e82ec52fbeb9e2504e35305b84">print_next_region()</a>, <a class="el" href="cwb-scan-corpus_8c.html#a72430d2277a4b79020097a4f3eb0d153">scancorpus_usage()</a>, <a class="el" href="cwb-s-decode_8c.html#aa44d9d428a2436a99171f75726060f7d">sdecode_usage()</a>, <a class="el" href="cwb-s-encode_8c.html#a66462fc5630af31b0b2e973c5f22bcc6">sencode_usage()</a>, and <a class="el" href="options_8c.html#ae8605e2b78cd4a81b6c6b5c30cb7366a">usage()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-align_8c.html#a17371073c35237e8b8ab22fca70902d1">align_parse_args()</a>, <a class="el" href="cwb-align_8c.html#ae1e0d84cd7430ed154bfacc29bdbb1be">align_usage()</a>, <a class="el" href="cwb-align-encode_8c.html#ae16c4d7f8cd95c2aa0a2765e5256a010">alignencode_parse_args()</a>, <a class="el" href="cwb-align-encode_8c.html#a5aa5525746af1ecd8470f538b642d3d1">alignencode_usage()</a>, <a class="el" href="cwb-align-show_8c.html#aef1135373314f0032cd6713275eb709d">alignshow_parse_args()</a>, <a class="el" href="cwb-align-show_8c.html#aa0745947ad0c779dd5c4e12826bd0276">alignshow_print_help()</a>, <a class="el" href="cwb-align-show_8c.html#addcdfcc3ee6d0f36b391811bd2822831">alignshow_print_next_region()</a>, <a class="el" href="cwb-align-show_8c.html#a523798f68b16d22aaff52d49df477a56">alignshow_usage()</a>, <a class="el" href="cwb-compress-rdx_8c.html#a48c580680a1c3e3bebdcb1af8426496d">compressrdx_usage()</a>, <a class="el" href="options_8c.html#a093f7fee1357e619b7c8fc96e80661d3">cqp_usage()</a>, <a class="el" href="cwb-check-input_8c.html#a21977d52fb361d62e5fce123d7596f97">cwbci_usage()</a>, <a class="el" href="cwb-decode_8c.html#af5f2bf327a0159297c449e347860adbe">decode_usage()</a>, <a class="el" href="cwb-describe-corpus_8c.html#af6030de411ccb672b3c31e9020db724d">describecorpus_usage()</a>, <a class="el" href="cwb-encode_8c.html#aa0f8374cf6b11c64c60b4fe305815334">encode_parse_options()</a>, <a class="el" href="cwb-encode_8c.html#ab4563ab00458b1d151447d7f3e52b785">encode_usage()</a>, <a class="el" href="cwb-huffcode_8c.html#aad76daf11045beaf13d02a94ed139c90">huffcode_usage()</a>, <a class="el" href="cwb-lexdecode_8c.html#a4f72835b72ca0a3339538cc4496b6020">lexdecode_show()</a>, <a class="el" href="cwb-lexdecode_8c.html#a3e17f6b6f17ece48948aef358a8c981a">lexdecode_usage()</a>, <a class="el" href="cwb-align-encode_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>, <a class="el" href="cwb-makeall_8c.html#a1adaf2f54307eac8ae4722646b994a0b">makeall_usage()</a>, <a class="el" href="options_8c.html#a3b63ff1af997333f51cad78bf921732a">parse_options()</a>, <a class="el" href="cwb-s-decode_8c.html#aa44d9d428a2436a99171f75726060f7d">sdecode_usage()</a>, and <a class="el" href="cwb-s-encode_8c.html#a66462fc5630af31b0b2e973c5f22bcc6">sencode_usage()</a>.</p>
 
 </div>
 </div>
@@ -1454,7 +1477,7 @@ Variables</h2>
 
 <p>registry directory </p>
 
-<p>Referenced by <a class="el" href="corpmanag_8c.html#aa57f32e05db80db43f0f9e8b97bcf08d">load_corpusnames()</a>, <a class="el" href="cwb-describe-corpus_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>, <a class="el" href="options_8c.html#a3b63ff1af997333f51cad78bf921732a">parse_options()</a>, <a class="el" href="print__align_8h.html#a788d17c5137b4ed29a1cbef60a2e657e">printAlignedStrings()</a>, <a class="el" href="cwb-s-encode_8c.html#af03b28b7de6e87eb57fedd7aae5d8a5b">sencode_parse_options()</a>, and <a class="el" href="cwb-decode-nqrfile_8c.html#af701eb9e70d033003bf4915fbddecbd0">show_subcorpus_info()</a>.</p>
+<p>Referenced by <a class="el" href="corpmanag_8c.html#aa57f32e05db80db43f0f9e8b97bcf08d">load_corpusnames()</a>, <a class="el" href="cwb-describe-corpus_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>, <a class="el" href="cwb-decode-nqrfile_8c.html#a0ae0e3bf05524de6e1a4be2d4cbc8000">nqrfile_print_info()</a>, <a class="el" href="options_8c.html#a3b63ff1af997333f51cad78bf921732a">parse_options()</a>, <a class="el" href="print__align_8h.html#a788d17c5137b4ed29a1cbef60a2e657e">printAlignedStrings()</a>, and <a class="el" href="cwb-s-encode_8c.html#af03b28b7de6e87eb57fedd7aae5d8a5b">sencode_parse_options()</a>.</p>
 
 </div>
 </div>
@@ -1503,6 +1526,8 @@ Variables</h2>
 </div>
 <div class="memdoc">
 
+<p>if true, the evaltree of a pattern is pretty-printed before the DFA is created. </p>
+
 <p>Referenced by <a class="el" href="parse__actions_8h.html#a1fb802bc0071a3b18f2992ea2388211d">do_SearchPattern()</a>, and <a class="el" href="options_8c.html#a3b63ff1af997333f51cad78bf921732a">parse_options()</a>.</p>
 
 </div>
@@ -1518,7 +1543,7 @@ Variables</h2>
 </div>
 <div class="memdoc">
 
-<p>cqpserver option: debugging output </p>
+<p>cqpserver option: debugging output (print debug messages to standard error) </p>
 
 <p>Referenced by <a class="el" href="server_8h.html#a69c3de98def430f21382ee9de60a2f0b">accept_connection()</a>, <a class="el" href="server_8h.html#a6739804115846e33f9ff7c753bec1abb">cqi_activate_corpus()</a>, <a class="el" href="server_8h.html#a4ed474bdc682e0da18871d421eb691be">cqi_lookup_attribute()</a>, <a class="el" href="server_8h.html#a5c0f252fe0cf499f21cf94f860e3b1aa">cqi_read_command()</a>, <a class="el" href="cqpserver_8c.html#ad570d7f947ad120a8a453ecf527b2890">do_cqi_cl_alg2cpos()</a>, <a class="el" href="cqpserver_8c.html#ae6ea3a03a9f3aa7895f43e027b51aadf">do_cqi_cl_attribute_size()</a>, <a class="el" href="cqpserver_8c.html#a53a85e081d0019ef7992a6ba846cc233">do_cqi_cl_cpos2alg()</a>, <a class="el" href="cqpserver_8c.html#a42af46ccabad07757fffa4c6299d1da1">do_cqi_cl_cpos2id()</a>, <a class="el" href="cqpserver_8c.html#a74018eff16bcc1150a0e2a9049267fc9">do_cqi_cl_cpos2lbound()</a>, <a class="el" href="cqpserver_8c.html#ad1fb89937d6bf55cfc02c9b1e9241e7d">do_cqi_cl_cpos2rbound()</a>, <a class="el" href="cqpserver_8c.html#a8f080cc531e3a99f413b025dc35418f0">do_cqi_cl_cpos2str()</a>, <a class="el" href="cqpserver_8c.html#ad05f841b3c525a4c76ca9b4b88e29424">do_cqi_cl_cpos2struc()</a>, <a class="el" href="cqpserver_8c.html#a7f2bda5c5a8d207fd74fe021bedec8da">do_cqi_cl_drop_attribute()</a>, <a class="el" href="cqpserver_8c.html#a0c10effde536613f692df587e4bd9f8f">do_cqi_cl_id2cpos()</a>, <a class="el" href="cqpserver_8c.html#aaa8658fea0834dc99cc5b3c82369e222">do_cqi_cl_id2freq()</a>, <a class="el" href="cqpserver_8c.html#a141a080b31071a71805e4acebb4d9f85">do_cqi_cl_id2str()</a>, <a class="el" href="cqpserver_8c.html#a3ce9613def160d766879ca7116d8a656">do_cqi_cl_idlist2cpos()</a>, <a class="el" href="cqpserver_8c.html#a36a7106d1ef4f819843d79635b4a7aa6">do_cqi_cl_lexicon_size()</a>, <a class="el" href="cqpserver_8c.html#a85ad05f24457be0cc6d5fa24d42d7689">do_cqi_cl_regex2id()</a>, <a class="el" href="cqpserver_8c.html#aace636f52e3e45d492f317db35b8035d">do_cqi_cl_str2id()</a>, <a class="el" href="cqpserver_8c.html#a8d5cf9e9b5a5f282015ac184867a73e3">do_cqi_cl_struc2cpos()</a>, <a class="el" href="cqpserver_8c.html#a4829621c85303be9da6c286c6b318020">do_cqi_cl_struc2str()</a>, <a class="el" href="cqpserver_8c.html#a10e179d58abfa38f8edbae43b5d478fb">do_cqi_corpus_attributes()</a>, <a class="el" href="cqpserver_8c.html#ab60d8c751aff697880accfaf128dbe99">do_cqi_corpus_charset()</a>, <a class="el" href="cqpserver_8c.html#afb49ac865f86e4d0d15470be399b28e9">do_cqi_corpus_full_name()</a>, <a class="el" href="cqpserver_8c.html#a4f6612358d3fc58ac44175f7c3d58b27">do_cqi_corpus_list_corpora()</a>, <a class="el" href="cqpserver_8c.html#af98390443fc209a903d32529b50bb313">do_cqi_corpus_properties()</a>, <a class="el" href="cqpserver_8c.html#a9afea233c86be72ff7b8930e00aab56c">do_cqi_corpus_structural_attribute_has_values()</a>, <a class="el" href="cqpserver_8c.html#a6912e5826b0c2389d696760d1aecc59c">do_cqi_cqp_drop_subcorpus()</a>, <a class="el" href="cqpserver_8c.html#acc9be65d4ae72f0ae16790fee4e1bf70">do_cqi_cqp_dump_subcorpus()</a>, <a class="el" href="cqpserver_8c.html#af303ab31916ff1180ad1e0670575cad1">do_cqi_cqp_fdist_1()</a>, <a class="el" href="cqpserver_8c.html#acdd876f27d34fce653173394e0dde952">do_cqi_cqp_fdist_2()</a>, <a class="el" href="cqpserver_8c.html#a43f247f2e2873651f479445383f2414d">do_cqi_cqp_list_subcorpora()</a>, <a class="el" href="cqpserver_8c.html#a0c7327cf2c044dc71462eb0d8e70e57a">do_cqi_cqp_query()</a>, <a class="el" href="cqpserver_8c.html#a2ede5fb1fed10ecd0b8666e715328830">do_cqi_cqp_subcorpus_has_field()</a>, <a class="el" href="cqpserver_8c.html#af7bcd890dba03bd33aa7fabaebf8fd33">do_cqi_cqp_subcorpus_size()</a>, <a class="el" href="cqpserver_8c.html#a08a98a5503e4f3e1a5a19222d425275a">interpreter()</a>, <a class="el" href="options_8c.html#a3b63ff1af997333f51cad78bf921732a">parse_options()</a>, and <a class="el" href="cqpserver_8c.html#a143133e4b241fce2d89d02743fa1ee77">send_cl_error()</a>.</p>
 
@@ -1535,7 +1560,7 @@ Variables</h2>
 </div>
 <div class="memdoc">
 
-<p>cqpserver option: logging </p>
+<p>cqpserver option: logging (print log messages to standard output) </p>
 
 <p>Referenced by <a class="el" href="server_8h.html#a69c3de98def430f21382ee9de60a2f0b">accept_connection()</a>, <a class="el" href="cqpserver_8c.html#a0c7327cf2c044dc71462eb0d8e70e57a">do_cqi_cqp_query()</a>, <a class="el" href="cqpserver_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>, and <a class="el" href="options_8c.html#a3b63ff1af997333f51cad78bf921732a">parse_options()</a>.</p>
 
@@ -1586,7 +1611,9 @@ Variables</h2>
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="parse__actions_8h.html#afa4d950c9201e61e43350809acf16069">debug_output()</a>, <a class="el" href="options_8c.html#a3b63ff1af997333f51cad78bf921732a">parse_options()</a>, and <a class="el" href="eval_8h.html#a956720cedd2f011e8f87d8b981901ece">show_environment()</a>.</p>
+<p>if true, the complete DFA is printed when an EvalEnvironment is displayed </p>
+
+<p>Referenced by <a class="el" href="options_8c.html#a3b63ff1af997333f51cad78bf921732a">parse_options()</a>, and <a class="el" href="eval_8h.html#a956720cedd2f011e8f87d8b981901ece">show_environment()</a>.</p>
 
 </div>
 </div>
@@ -1600,6 +1627,8 @@ Variables</h2>
       </table>
 </div>
 <div class="memdoc">
+
+<p>if true, the regex2dfa module will print out the states of the DFA after it is parsed. </p>
 
 <p>Referenced by <a class="el" href="options_8c.html#a3b63ff1af997333f51cad78bf921732a">parse_options()</a>, and <a class="el" href="regex2dfa_8h.html#a69e30286442eee48a3350d6da9bcd4d8">regex2dfa()</a>.</p>
 
@@ -1616,7 +1645,9 @@ Variables</h2>
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="parse__actions_8h.html#afa4d950c9201e61e43350809acf16069">debug_output()</a>, <a class="el" href="options_8c.html#a3b63ff1af997333f51cad78bf921732a">parse_options()</a>, and <a class="el" href="eval_8h.html#a956720cedd2f011e8f87d8b981901ece">show_environment()</a>.</p>
+<p>if true, the evaluation tree is printed when an EvalEnvironment is displayed </p>
+
+<p>Referenced by <a class="el" href="options_8c.html#a3b63ff1af997333f51cad78bf921732a">parse_options()</a>, and <a class="el" href="eval_8h.html#a956720cedd2f011e8f87d8b981901ece">show_environment()</a>.</p>
 
 </div>
 </div>
@@ -1631,7 +1662,9 @@ Variables</h2>
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="parse__actions_8h.html#afa4d950c9201e61e43350809acf16069">debug_output()</a>, <a class="el" href="options_8c.html#a3b63ff1af997333f51cad78bf921732a">parse_options()</a>, and <a class="el" href="eval_8h.html#a956720cedd2f011e8f87d8b981901ece">show_environment()</a>.</p>
+<p>if true, the tree of global contraints is printed when an EvalEnvironment is displayed </p>
+
+<p>Referenced by <a class="el" href="options_8c.html#a3b63ff1af997333f51cad78bf921732a">parse_options()</a>, and <a class="el" href="eval_8h.html#a956720cedd2f011e8f87d8b981901ece">show_environment()</a>.</p>
 
 </div>
 </div>
@@ -1646,7 +1679,9 @@ Variables</h2>
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="parse__actions_8h.html#afa4d950c9201e61e43350809acf16069">debug_output()</a>, <a class="el" href="options_8c.html#a3b63ff1af997333f51cad78bf921732a">parse_options()</a>, and <a class="el" href="eval_8h.html#a956720cedd2f011e8f87d8b981901ece">show_environment()</a>.</p>
+<p>if true, the pattern list is printed when an EvalEnvironment is displayed </p>
+
+<p>Referenced by <a class="el" href="options_8c.html#a3b63ff1af997333f51cad78bf921732a">parse_options()</a>, and <a class="el" href="eval_8h.html#a956720cedd2f011e8f87d8b981901ece">show_environment()</a>.</p>
 
 </div>
 </div>
@@ -1660,6 +1695,8 @@ Variables</h2>
       </table>
 </div>
 <div class="memdoc">
+
+<p>Doesn't seem to be used anywhere; should show_environment use it? if not, remove? TODO. </p>
 
 <p>Referenced by <a class="el" href="options_8c.html#a3b63ff1af997333f51cad78bf921732a">parse_options()</a>.</p>
 
@@ -1711,7 +1748,7 @@ Variables</h2>
 <div class="memdoc">
 
 <p>Disables some messages &amp; warnings (used rather inconsistently). </p>
-<p>NEW: suppresses <a class="el" href="output_8c.html#ac523a4b34d2f925e027d8f433de703c9" title="Print a message to output (for instance a debug message).">cqpmessage()</a> unless it is an error </p>
+<p>NEW: suppresses <a class="el" href="output_8c.html#ac523a4b34d2f925e027d8f433de703c9" title="Print a message to output (for instance a debug message).">cqpmessage()</a> unless it is an error. </p>
 
 <p>Referenced by <a class="el" href="parse__actions_8h.html#a654e3871f21cd25d69bcdad009b89609">addHistoryLine()</a>, <a class="el" href="parse__actions_8h.html#a8da739ee55e71755361e95e2480aa088">after_CorpusCommand()</a>, <a class="el" href="cqp_8h.html#a7c30de93f06347a9bc939e324afd1472">cqp_parse_file()</a>, <a class="el" href="output_8h.html#ac523a4b34d2f925e027d8f433de703c9">cqpmessage()</a>, <a class="el" href="cwb-check-input_8c.html#a8bc1180195e9821ecbeb25553f61e8c0">cwbci_parse_options()</a>, <a class="el" href="macro_8h.html#ab59abd6d37fac294aedb96f14fc21f82">define_macro()</a>, <a class="el" href="cwb-encode_8c.html#adc6d582037bec1ccba6ab40a9ddbbf87">encode_add_wattr_line()</a>, <a class="el" href="cwb-encode_8c.html#aa0f8374cf6b11c64c60b4fe305815334">encode_parse_options()</a>, <a class="el" href="eval_8c.html#a8b5cec215ec2857925194e627ead0184">get_corpus_positions()</a>, <a class="el" href="eval_8c.html#a31c86ea932365a90b02b4af7462f4196">get_matched_corpus_positions()</a>, <a class="el" href="corpmanag_8c.html#aa57f32e05db80db43f0f9e8b97bcf08d">load_corpusnames()</a>, <a class="el" href="cqpserver_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>, <a class="el" href="eval_8c.html#abcf01813cbf1161269761c3d6a2dc239">matchfirstpattern()</a>, <a class="el" href="options_8c.html#a3b63ff1af997333f51cad78bf921732a">parse_options()</a>, <a class="el" href="print-modes_8h.html#a4a6decd7223fdfc21cd66ae4000934e9">ParsePrintOptions()</a>, <a class="el" href="options_8h.html#a123e16dfa386e0969d7822aba5d943d4">print_option_values()</a>, <a class="el" href="cwb-encode_8c.html#a7b5a2adf15771a1d43017518ed35a52d">range_close()</a>, <a class="el" href="cwb-encode_8c.html#a0365f60206bd41cdb976e2e7d9641731">range_open()</a>, and <a class="el" href="cwb-s-encode_8c.html#af03b28b7de6e87eb57fedd7aae5d8a5b">sencode_parse_options()</a>.</p>
 
@@ -1728,7 +1765,7 @@ Variables</h2>
 </div>
 <div class="memdoc">
 
-<p>cqpserver option: monitor CQi network communciation </p>
+<p>cqpserver option: monitor CQi network communication </p>
 
 <p>Referenced by <a class="el" href="server_8h.html#a53bd13a4620a8deae3df12b56eabe5e7">cqi_flush()</a>, <a class="el" href="server_8h.html#a783919f365481b24e1f40b9e06aec67f">cqi_read_bool_list()</a>, <a class="el" href="server_8h.html#a2b6b8e991234c8d906fbd7fc10616d9b">cqi_read_byte_list()</a>, <a class="el" href="server_8h.html#a0ae5480bbf68a49f43ca1374c3ddcf44">cqi_read_int()</a>, <a class="el" href="server_8h.html#a41ab4d995d9f204f6745b251cb2a3ddb">cqi_read_int_list()</a>, <a class="el" href="server_8h.html#ab6c0ae8fbfe08d8d16ec4cc330dcda17">cqi_read_string()</a>, <a class="el" href="server_8h.html#acce7ea1fecd59f2fe212f39c08752f06">cqi_read_string_list()</a>, <a class="el" href="server_8h.html#a7e804fdf77d7c4c03d59ab116f7ca398">cqi_read_word()</a>, <a class="el" href="server_8h.html#a9d33dbbdf7ef52c52a3449d3e672c9bb">cqi_recv_byte()</a>, <a class="el" href="server_8h.html#a8490a255335cc1573ab4ad5ab79311ba">cqi_recv_bytes()</a>, <a class="el" href="server_8h.html#ade01249dc3364a15e736fec357d49873">cqi_send_byte()</a>, <a class="el" href="server_8h.html#a031dd74ea850a6e6fdce1fb38fd5bb25">cqi_send_int()</a>, <a class="el" href="server_8h.html#a171a4f951909cb838b9a47bf9fc95ce7">cqi_send_string()</a>, <a class="el" href="server_8h.html#aa94c1d511a980a4bdc3d64e6e52518db">cqi_send_word()</a>, and <a class="el" href="options_8c.html#a3b63ff1af997333f51cad78bf921732a">parse_options()</a>.</p>
 
@@ -1780,6 +1817,8 @@ Variables</h2>
 </div>
 <div class="memdoc">
 
+<p>if this AND debug_simulation are true, print extra messages relating to eval environment labels when simulating an NFA. </p>
+
 <p>Referenced by <a class="el" href="options_8c.html#a3b63ff1af997333f51cad78bf921732a">parse_options()</a>, and <a class="el" href="eval_8c.html#adb7ad0a24759f5f36340f8b66bb70d79">simulate()</a>.</p>
 
 </div>
@@ -1828,6 +1867,8 @@ Variables</h2>
       </table>
 </div>
 <div class="memdoc">
+
+<p>if true, extra messages are embedded when an evaluation tree is pretty-printed </p>
 
 <p>Referenced by <a class="el" href="tree_8h.html#a1d06971a1727bddf03c6274c57989c75">print_booltree()</a>.</p>
 
@@ -1929,7 +1970,7 @@ Variables</h2>
 </div>
 <div class="memdoc">
 
-<p>if true, absolutely all messages from the parser get printed </p>
+<p>if true, absolutely all messages from the parser get printed (inc Message-level). </p>
 
 <p>Referenced by <a class="el" href="output_8h.html#ac523a4b34d2f925e027d8f433de703c9">cqpmessage()</a>, and <a class="el" href="options_8c.html#a3b63ff1af997333f51cad78bf921732a">parse_options()</a>.</p>
 
@@ -1946,7 +1987,7 @@ Variables</h2>
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="eval_8c.html#a6b88f677ea68fdf529f6588033930492">check_alignment_constraints()</a>, <a class="el" href="groups_8c.html#af2a9b2c57eae7adc352b65db3e9d5443">ComputeGroupInternally()</a>, <a class="el" href="cqp_8h.html#aec03e7fa64e8cbd8372b7a586057fc0b">cqp_parse_string()</a>, <a class="el" href="targets_8h.html#ad74275fdc8c9a0aba0b5df529254c7c6">evaluate_subset()</a>, <a class="el" href="targets_8h.html#a8b35d277644a38526a9dd897fe1866f0">evaluate_target()</a>, <a class="el" href="cqp_8h.html#a313990999a7a7c5275682411e9b58c89">initialize_cqp()</a>, <a class="el" href="cqpserver_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>, <a class="el" href="options_8c.html#a3b63ff1af997333f51cad78bf921732a">parse_options()</a>, <a class="el" href="eval_8c.html#a6d83579b3075256f14a62888a2e4b284">simulate_dfa()</a>, <a class="el" href="ranges_8h.html#aaf5f006cef0ac7c1fdb5c9d55558c11a">SortSubcorpus()</a>, <a class="el" href="ranges_8h.html#a816771441eaa5f9006f4187f9d0b99b4">SortSubcorpusRandomize()</a>, and <a class="el" href="options_8c.html#ae8605e2b78cd4a81b6c6b5c30cb7366a">usage()</a>.</p>
+<p>Referenced by <a class="el" href="eval_8c.html#a6b88f677ea68fdf529f6588033930492">check_alignment_constraints()</a>, <a class="el" href="groups_8c.html#af2a9b2c57eae7adc352b65db3e9d5443">ComputeGroupInternally()</a>, <a class="el" href="cqp_8h.html#aec03e7fa64e8cbd8372b7a586057fc0b">cqp_parse_string()</a>, <a class="el" href="options_8c.html#a093f7fee1357e619b7c8fc96e80661d3">cqp_usage()</a>, <a class="el" href="targets_8h.html#ad74275fdc8c9a0aba0b5df529254c7c6">evaluate_subset()</a>, <a class="el" href="targets_8h.html#a8b35d277644a38526a9dd897fe1866f0">evaluate_target()</a>, <a class="el" href="cqp_8h.html#a313990999a7a7c5275682411e9b58c89">initialize_cqp()</a>, <a class="el" href="cqpserver_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>, <a class="el" href="options_8c.html#a3b63ff1af997333f51cad78bf921732a">parse_options()</a>, <a class="el" href="eval_8c.html#a6d83579b3075256f14a62888a2e4b284">simulate_dfa()</a>, <a class="el" href="ranges_8h.html#aaf5f006cef0ac7c1fdb5c9d55558c11a">SortSubcorpus()</a>, and <a class="el" href="ranges_8h.html#a816771441eaa5f9006f4187f9d0b99b4">SortSubcorpusRandomize()</a>.</p>
 
 </div>
 </div>
@@ -1968,7 +2009,7 @@ Variables</h2>
 </div>
 </div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Sun Jul 31 2011 00:16:43 for CWB by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Jan 17 2012 22:07:39 for CWB by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

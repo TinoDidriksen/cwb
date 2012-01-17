@@ -57,7 +57,8 @@ Data Fields</h2>
 </ul>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>The "structure list" data type is used for 'adding' regions (-a). </p>
-<p>In this case, all existing regions are read into an ordered, bidirectional list; new regions are inserted into that list (overlaps are automatically resolved in favour of the 'earlier' region; if start point is identical, the longer region is retained). Only when the entire input has been read, the data will be actually encoded and stored on disk. </p>
+<p>SL is a really bad name; should be "RegionList".</p>
+<p>In this case, all existing regions are read into an ordered, bidirectional list; new regions are inserted into that list (overlaps are automatically resolved in favour of the 'earlier' region; if start point is identical, the longer region is retained). Only once the entire input has been read is the data actually encoded and stored on disk. </p>
 </div><hr/><h2>Field Documentation</h2>
 <a class="anchor" id="a3b3be9087a468fe688fe72b348317b70"></a><!-- doxytag: member="_SL::annot" ref="a3b3be9087a468fe688fe72b348317b70" args="" -->
 <div class="memitem">
@@ -89,7 +90,7 @@ Data Fields</h2>
 
 <p>end of region </p>
 
-<p>Referenced by <a class="el" href="cwb-s-encode_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>, <a class="el" href="cwb-s-encode_8c.html#a15f05f9f123ec1887f780026acf2f45e">sencode_range_write()</a>, <a class="el" href="cwb-s-encode_8c.html#ac45ab6169870998a619acf738ee9e29e">SL_insert()</a>, <a class="el" href="cwb-s-encode_8c.html#aaa1fe19da0a3acca96e84533fd318722">SL_insert_after_point()</a>, and <a class="el" href="cwb-s-encode_8c.html#a8ee1353a177c2d08bdf5b41b13010d5f">SL_seek()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-s-encode_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>, <a class="el" href="cwb-s-encode_8c.html#aff0f32dc4c2723af6ad1905fd06a37d7">sencode_write_region()</a>, <a class="el" href="cwb-s-encode_8c.html#ac45ab6169870998a619acf738ee9e29e">SL_insert()</a>, <a class="el" href="cwb-s-encode_8c.html#aaa1fe19da0a3acca96e84533fd318722">SL_insert_after_point()</a>, and <a class="el" href="cwb-s-encode_8c.html#a8ee1353a177c2d08bdf5b41b13010d5f">SL_seek()</a>.</p>
 
 </div>
 </div>
@@ -144,7 +145,7 @@ Data Fields</h2>
 <li>utils/<a class="el" href="cwb-s-encode_8c.html">cwb-s-encode.c</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Sun Jul 31 2011 00:16:43 for CWB by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Jan 17 2012 22:07:40 for CWB by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

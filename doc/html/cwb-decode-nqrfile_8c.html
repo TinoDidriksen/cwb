@@ -43,12 +43,14 @@
 <div class="header">
   <div class="summary">
 <a href="#define-members">Defines</a> &#124;
-<a href="#func-members">Functions</a> &#124;
-<a href="#var-members">Variables</a>  </div>
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <h1>cwb-decode-nqrfile.c File Reference</h1>  </div>
 </div>
 <div class="contents">
+
+<p>See <a class="el" href="corpmanag_8c.html">cqp/corpmanag.c</a> for the file format that this utility decodes.  
+<a href="#_details">More...</a></p>
 <div class="textblock"><code>#include &lt;stdio.h&gt;</code><br/>
 <code>#include &lt;sys/types.h&gt;</code><br/>
 <code>#include &lt;sys/stat.h&gt;</code><br/>
@@ -60,20 +62,18 @@
 Defines</h2>
 <ul>
 <li>#define <a class="el" href="cwb-decode-nqrfile_8c.html#adb5b0211f3c2e4ce554a48f9874135f4">SUBCORPMAGIC</a>&#160;&#160;&#160;36193928
-<dl class="el"><dd class="mdescRight">magic number of the subcorpus file format  <a href="#adb5b0211f3c2e4ce554a48f9874135f4"></a><br/></dl></ul>
+<dl class="el"><dd class="mdescRight">magic number of the subcorpus file format; defined in the CQP code, <a class="el" href="corpmanag_8c.html">corpmanag.c</a> ; TODO should probably be defined centrally (<a class="el" href="globals_8h.html">cl/globals.h</a>?)  <a href="#adb5b0211f3c2e4ce554a48f9874135f4"></a><br/></dl></ul>
 <h2><a name="func-members"></a>
 Functions</h2>
 <ul>
 <li>int <a class="el" href="cwb-decode-nqrfile_8c.html#a068bd27cf55a3720a248da29c87df910">file_length</a> (FILE *fd)
-<dl class="el"><dd class="mdescRight">Gets the size of the file.  <a href="#a068bd27cf55a3720a248da29c87df910"></a><br/></dl><li>int <a class="el" href="cwb-decode-nqrfile_8c.html#af701eb9e70d033003bf4915fbddecbd0">show_subcorpus_info</a> (FILE *fd)
-<dl class="el"><dd class="mdescRight">Reads a subcorpus file and prints information about it to STDOUT.  <a href="#af701eb9e70d033003bf4915fbddecbd0"></a><br/></dl><li>int <a class="el" href="cwb-decode-nqrfile_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main</a> (int argc, char **argv)
+<dl class="el"><dd class="mdescRight">Gets the size of the file.  <a href="#a068bd27cf55a3720a248da29c87df910"></a><br/></dl><li>int <a class="el" href="cwb-decode-nqrfile_8c.html#a0ae0e3bf05524de6e1a4be2d4cbc8000">nqrfile_print_info</a> (FILE *fd, int print_header)
+<dl class="el"><dd class="mdescRight">Reads a subcorpus file and prints information about it to STDOUT.  <a href="#a0ae0e3bf05524de6e1a4be2d4cbc8000"></a><br/></dl><li>int <a class="el" href="cwb-decode-nqrfile_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main</a> (int argc, char **argv)
 <dl class="el"><dd class="mdescRight">Main function for cwb-decode-nqrfile.  <a href="#a3c04138a5bfe5d72780bb7e82a18e627"></a><br/></dl></ul>
-<h2><a name="var-members"></a>
-Variables</h2>
-<ul>
-<li>int <a class="el" href="cwb-decode-nqrfile_8c.html#a6f20c5c045e074397c81d0ecd8ae0670">print_header</a> = 1
-<dl class="el"><dd class="mdescRight">Boolean: controls whether a "registry" header in the subcorpus file gets printed or not.  <a href="#a6f20c5c045e074397c81d0ecd8ae0670"></a><br/></dl></ul>
-<hr/><h2>Define Documentation</h2>
+<hr/><a name="_details"></a><h2>Detailed Description</h2>
+<div class="textblock"><p>See <a class="el" href="corpmanag_8c.html">cqp/corpmanag.c</a> for the file format that this utility decodes. </p>
+<p>Note, some of the code is repeated across CQP's load-file functions and here. In the long term, we'll aim to remove this duplication. TODO! </p>
+</div><hr/><h2>Define Documentation</h2>
 <a class="anchor" id="adb5b0211f3c2e4ce554a48f9874135f4"></a><!-- doxytag: member="cwb&#45;decode&#45;nqrfile.c::SUBCORPMAGIC" ref="adb5b0211f3c2e4ce554a48f9874135f4" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -85,9 +85,9 @@ Variables</h2>
 </div>
 <div class="memdoc">
 
-<p>magic number of the subcorpus file format </p>
+<p>magic number of the subcorpus file format; defined in the CQP code, <a class="el" href="corpmanag_8c.html">corpmanag.c</a> ; TODO should probably be defined centrally (<a class="el" href="globals_8h.html">cl/globals.h</a>?) </p>
 
-<p>Referenced by <a class="el" href="cwb-decode-nqrfile_8c.html#af701eb9e70d033003bf4915fbddecbd0">show_subcorpus_info()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-decode-nqrfile_8c.html#a0ae0e3bf05524de6e1a4be2d4cbc8000">nqrfile_print_info()</a>.</p>
 
 </div>
 </div>
@@ -152,62 +152,55 @@ Variables</h2>
   </dd>
 </dl>
 
-<p>References <a class="el" href="cwb-decode-nqrfile_8c.html#a6f20c5c045e074397c81d0ecd8ae0670">print_header</a>, and <a class="el" href="cwb-decode-nqrfile_8c.html#af701eb9e70d033003bf4915fbddecbd0">show_subcorpus_info()</a>.</p>
+<p>References <a class="el" href="cwb-decode-nqrfile_8c.html#a0ae0e3bf05524de6e1a4be2d4cbc8000">nqrfile_print_info()</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="af701eb9e70d033003bf4915fbddecbd0"></a><!-- doxytag: member="cwb&#45;decode&#45;nqrfile.c::show_subcorpus_info" ref="af701eb9e70d033003bf4915fbddecbd0" args="(FILE *fd)" -->
+<a class="anchor" id="a0ae0e3bf05524de6e1a4be2d4cbc8000"></a><!-- doxytag: member="cwb&#45;decode&#45;nqrfile.c::nqrfile_print_info" ref="a0ae0e3bf05524de6e1a4be2d4cbc8000" args="(FILE *fd, int print_header)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int show_subcorpus_info </td>
+          <td class="memname">int nqrfile_print_info </td>
           <td>(</td>
           <td class="paramtype">FILE *&#160;</td>
-          <td class="paramname"><em>fd</em></td><td>)</td>
+          <td class="paramname"><em>fd</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>print_header</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
 <p>Reads a subcorpus file and prints information about it to STDOUT. </p>
-<p>"Subcorpus file" here means (a) it begins with the subcorpus magic number; (b)then there is a "registry" area terminated by one or more zero bytes; (c) then there may be the size of the subcorpus; (d) then there are a whole load of start-end range integer pairs, to the end of the file.</p>
+<p>"Subcorpus file" here means (a) it begins with the subcorpus magic number; (b) then there is a "registry" area terminated by one or more zero bytes; (c) then there may be the size of the subcorpus; (d) then there are a whole load of start-end range integer pairs, to the end of the file.</p>
 <p>The registry is printed iff print_header. The start-end pairs are printed on tab-delimited lines, one line per pair.</p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table class="params">
     <tr><td class="paramname">fd</td><td>File pointer. </td></tr>
+    <tr><td class="paramname">print_header</td><td>Boolean: controls whether a "registry" header in the subcorpus file gets printed or not </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Boolean: true for all OK, false for problem. </dd></dl>
 
-<p>References <a class="el" href="fileutils_8c.html#a2c12da91ca3bc84c8fe066451b33d098">file_length()</a>, <a class="el" href="cwb-decode-nqrfile_8c.html#a6f20c5c045e074397c81d0ecd8ae0670">print_header</a>, <a class="el" href="cwb-s-encode_8c.html#a7b8ff59e2c15b8bc49beb48c989fc84a">range</a>, <a class="el" href="options_8h.html#ab6be6986e1a07fc76b7a5a77aa7cc43b">registry</a>, and <a class="el" href="cwb-decode-nqrfile_8c.html#adb5b0211f3c2e4ce554a48f9874135f4">SUBCORPMAGIC</a>.</p>
+<p>References <a class="el" href="fileutils_8c.html#a2c12da91ca3bc84c8fe066451b33d098">file_length()</a>, <a class="el" href="options_8h.html#ab6be6986e1a07fc76b7a5a77aa7cc43b">registry</a>, and <a class="el" href="cwb-decode-nqrfile_8c.html#adb5b0211f3c2e4ce554a48f9874135f4">SUBCORPMAGIC</a>.</p>
 
 <p>Referenced by <a class="el" href="cwb-decode-nqrfile_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>.</p>
 
 </div>
 </div>
-<hr/><h2>Variable Documentation</h2>
-<a class="anchor" id="a6f20c5c045e074397c81d0ecd8ae0670"></a><!-- doxytag: member="cwb&#45;decode&#45;nqrfile.c::print_header" ref="a6f20c5c045e074397c81d0ecd8ae0670" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int <a class="el" href="cwb-decode-nqrfile_8c.html#a6f20c5c045e074397c81d0ecd8ae0670">print_header</a> = 1</td>
-        </tr>
-      </table>
 </div>
-<div class="memdoc">
-
-<p>Boolean: controls whether a "registry" header in the subcorpus file gets printed or not. </p>
-
-<p>Referenced by <a class="el" href="cwb-decode-nqrfile_8c.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a>, and <a class="el" href="cwb-decode-nqrfile_8c.html#af701eb9e70d033003bf4915fbddecbd0">show_subcorpus_info()</a>.</p>
-
-</div>
-</div>
-</div>
-<hr class="footer"/><address class="footer"><small>Generated on Sun Jul 31 2011 00:16:43 for CWB by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Jan 17 2012 22:07:39 for CWB by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

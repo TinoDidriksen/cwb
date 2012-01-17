@@ -91,7 +91,7 @@ Functions</h2>
 <li>void <a class="el" href="parse__actions_8h.html#abef33e4cd74e2930879529d33e18ede2">do_sleep</a> (int duration)
 <dl class="el"><dd class="mdescRight">Puts the program to sleep.  <a href="#abef33e4cd74e2930879529d33e18ede2"></a><br/></dl><li>void <a class="el" href="parse__actions_8h.html#a2363fefd627b915196f40595618e521b">do_exec</a> (char *fname)
 <dl class="el"><dd class="mdescRight">Execute the commands contained within a specified text file.  <a href="#a2363fefd627b915196f40595618e521b"></a><br/></dl><li>void <a class="el" href="parse__actions_8h.html#a4496bd424ac57e01410f15563f12fe13">do_delete_lines_num</a> (<a class="el" href="structcl.html">CorpusList</a> *<a class="el" href="structcl.html">cl</a>, int start, int end)
-<li>void <a class="el" href="parse__actions_8h.html#ac4a1a3059f49c902206ded175e91c2d8">do_delete_lines</a> (<a class="el" href="structcl.html">CorpusList</a> *<a class="el" href="structcl.html">cl</a>, <a class="el" href="corpmanag_8h.html#af1a7d1a8ccee70c4d8bc6c5302a0df0f">FieldType</a> f, int <a class="el" href="cwb-decode_8c.html#a1ea5d0cb93f22f7d0fdf804bd68c3326">mode</a>)
+<li>void <a class="el" href="parse__actions_8h.html#ac4a1a3059f49c902206ded175e91c2d8">do_delete_lines</a> (<a class="el" href="structcl.html">CorpusList</a> *<a class="el" href="structcl.html">cl</a>, <a class="el" href="corpmanag_8h.html#af1a7d1a8ccee70c4d8bc6c5302a0df0f">FieldType</a> f, int <a class="el" href="cwb-decode_8c.html#a0e683ae66015f10f972d6938197dbc5e">mode</a>)
 <li>void <a class="el" href="parse__actions_8h.html#a2d2735c622403fc1509ad9273e2cf368">do_reduce</a> (<a class="el" href="structcl.html">CorpusList</a> *<a class="el" href="structcl.html">cl</a>, int number, int percent)
 <li>void <a class="el" href="parse__actions_8h.html#a2950b6dfe2bd054bb91ff309ac16e9f5">do_cut</a> (<a class="el" href="structcl.html">CorpusList</a> *<a class="el" href="structcl.html">cl</a>, int first, int <a class="el" href="cwb-decode_8c.html#a72e27dee31b1c4c6a504fbed29542d97">last</a>)
 <li>void <a class="el" href="parse__actions_8h.html#aa251d021165ac10e14d62484b1b290ee">do_info</a> (<a class="el" href="structcl.html">CorpusList</a> *<a class="el" href="structcl.html">cl</a>)
@@ -139,7 +139,7 @@ Functions</h2>
 <dl class="el"><dd class="mdescRight">Add a character (in the sense of a byte) to the regex_string buffer.  <a href="#ae1629d9cbfb89decbd61ec953c88c3fa"></a><br/></dl><li>void <a class="el" href="parse__actions_8h.html#a8fd8ea0c7037f747274aebbc254e47a2">prepare_input</a> (void)
 <dl class="el"><dd class="mdescRight">Get ready to parse a command.  <a href="#a8fd8ea0c7037f747274aebbc254e47a2"></a><br/></dl><li>void <a class="el" href="parse__actions_8h.html#a332a182ad6240cb7c95c4cc8d8096a7d">expand_dataspace</a> (<a class="el" href="structcl.html">CorpusList</a> *ds)
 <dl class="el"><dd class="mdescRight">Expand the dataspace of a subcorpus.  <a href="#a332a182ad6240cb7c95c4cc8d8096a7d"></a><br/></dl><li>void <a class="el" href="parse__actions_8h.html#afa4d950c9201e61e43350809acf16069">debug_output</a> (void)
-<li>void <a class="el" href="parse__actions_8h.html#ae18e2e1023535a490e7a3483a6f2630f">do_start_timer</a> (void)
+<dl class="el"><dd class="mdescRight">Prints out all the existing EvalEnvironments in the global array.  <a href="#afa4d950c9201e61e43350809acf16069"></a><br/></dl><li>void <a class="el" href="parse__actions_8h.html#ae18e2e1023535a490e7a3483a6f2630f">do_start_timer</a> (void)
 <dl class="el"><dd class="mdescRight">Starts the timer running.  <a href="#ae18e2e1023535a490e7a3483a6f2630f"></a><br/></dl><li>void <a class="el" href="parse__actions_8h.html#a06c98c00bf6b4a96dbb6f20573a0c823">do_timing</a> (char *msg)
 <dl class="el"><dd class="mdescRight">Shows the period since the timer started running.  <a href="#a06c98c00bf6b4a96dbb6f20573a0c823"></a><br/></dl><li>void <a class="el" href="parse__actions_8h.html#ab66066aec7d7ed3395b865054960b1f3">do_size</a> (<a class="el" href="structcl.html">CorpusList</a> *<a class="el" href="structcl.html">cl</a>, <a class="el" href="corpmanag_8h.html#af1a7d1a8ccee70c4d8bc6c5302a0df0f">FieldType</a> field)
 <li>void <a class="el" href="parse__actions_8h.html#aa407cf20505f657f679f9b7d233f92c7">do_dump</a> (<a class="el" href="structcl.html">CorpusList</a> *<a class="el" href="structcl.html">cl</a>, int first, int <a class="el" href="cwb-decode_8c.html#a72e27dee31b1c4c6a504fbed29542d97">last</a>, struct <a class="el" href="struct_redir.html">Redir</a> *rd)
@@ -511,7 +511,10 @@ Variables</h2>
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="eval_8h.html#a4fc26b79d5e2fea9774fdf3c7b17d1b8">eep</a>, <a class="el" href="options_8h.html#a7296d6d33aaec548b3e606a0a10478c7">show_compdfa</a>, <a class="el" href="eval_8c.html#a956720cedd2f011e8f87d8b981901ece">show_environment()</a>, <a class="el" href="options_8h.html#ac02b913dbbae6cb0f875162a3a52f0df">show_evaltree</a>, <a class="el" href="options_8h.html#a40fc0cb60e87498e26995e20316fdca3">show_gconstraints</a>, and <a class="el" href="options_8h.html#ab71847647c10d2bfdc4c536e8f818cd2">show_patlist</a>.</p>
+<p>Prints out all the existing EvalEnvironments in the global array. </p>
+<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="eval_8h.html#a2476047b623e315b84e87213173cbd82" title="A global array of EvalEnvironment structures.">Environment</a> </dd></dl>
+
+<p>References <a class="el" href="eval_8h.html#a4fc26b79d5e2fea9774fdf3c7b17d1b8">eep</a>, and <a class="el" href="eval_8c.html#a956720cedd2f011e8f87d8b981901ece">show_environment()</a>.</p>
 
 </div>
 </div>
@@ -2477,7 +2480,7 @@ Variables</h2>
 <p>Supports parser rule: line -&gt; command</p>
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="cqp_8h.html#adfbde17c16a76552596e50bd3c371382" title="buffer for queries">QueryBuffer</a> </dd>
 <dd>
-<a class="el" href="cqp_8h.html#ac0d42ac5f8866bd18648afcc372e650c" title="pointer into this buffer, for appending">QueryBufferP</a> </dd></dl>
+<a class="el" href="cqp_8h.html#ac0d42ac5f8866bd18648afcc372e650c" title="index into this buffer, for appending">QueryBufferP</a> </dd></dl>
 
 <p>References <a class="el" href="cqp_8c.html#adfbde17c16a76552596e50bd3c371382">QueryBuffer</a>, <a class="el" href="cqp_8c.html#a54d95727d347da93ae0866f293f729c4">QueryBufferOverflow</a>, and <a class="el" href="cqp_8c.html#ac0d42ac5f8866bd18648afcc372e650c">QueryBufferP</a>.</p>
 
@@ -2690,7 +2693,7 @@ Variables</h2>
 </div>
 </div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Sun Jul 31 2011 00:16:43 for CWB by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Jan 17 2012 22:07:39 for CWB by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

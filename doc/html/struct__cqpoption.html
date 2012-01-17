@@ -52,17 +52,19 @@
 Data Fields</h2>
 <ul>
 <li>char * <a class="el" href="struct__cqpoption.html#ac2bcb379c9612b1e0a522c485889fc06">opt_abbrev</a>
-<li>char * <a class="el" href="struct__cqpoption.html#ad370f616d731d0e001b8a66f1294fba8">opt_name</a>
-<li><a class="el" href="options_8h.html#adee67dd49353d5e1eef081932e41d42f">OptType</a> <a class="el" href="struct__cqpoption.html#a2978761803939b591e774cb736a965e3">type</a>
-<li>void * <a class="el" href="struct__cqpoption.html#ab96816d317aa5196e2ef198d9a8d621b">address</a>
-<li>char * <a class="el" href="struct__cqpoption.html#a2b6d19ba057486d886684a1889e1e991">cdefault</a>
-<li>int <a class="el" href="struct__cqpoption.html#a9a7e42c1fc3a349daf73808264ce6b54">idefault</a>
-<li>char * <a class="el" href="struct__cqpoption.html#aa3fa4308f19ee1983cb36599b8e2af02">envvar</a>
-<li>int <a class="el" href="struct__cqpoption.html#a9154afb2bf62abf7e59554f2e21f1514">side_effect</a>
-<li>int <a class="el" href="struct__cqpoption.html#ac8bf36fe0577cba66bccda3a6f7e80a4">flags</a>
-</ul>
+<dl class="el"><dd class="mdescRight">Short version of this option's name.  <a href="#ac2bcb379c9612b1e0a522c485889fc06"></a><br/></dl><li>char * <a class="el" href="struct__cqpoption.html#ad370f616d731d0e001b8a66f1294fba8">opt_name</a>
+<dl class="el"><dd class="mdescRight">Name of this option as referred to in the interactive control syntax.  <a href="#ad370f616d731d0e001b8a66f1294fba8"></a><br/></dl><li><a class="el" href="options_8h.html#adee67dd49353d5e1eef081932e41d42f">OptType</a> <a class="el" href="struct__cqpoption.html#a2978761803939b591e774cb736a965e3">type</a>
+<dl class="el"><dd class="mdescRight">Data type of this configuration option.  <a href="#a2978761803939b591e774cb736a965e3"></a><br/></dl><li>void * <a class="el" href="struct__cqpoption.html#ab96816d317aa5196e2ef198d9a8d621b">address</a>
+<dl class="el"><dd class="mdescRight">Pointer to the actual variable that contains this config option.  <a href="#ab96816d317aa5196e2ef198d9a8d621b"></a><br/></dl><li>char * <a class="el" href="struct__cqpoption.html#a2b6d19ba057486d886684a1889e1e991">cdefault</a>
+<dl class="el"><dd class="mdescRight">Default value fo rthis option (string value)  <a href="#a2b6d19ba057486d886684a1889e1e991"></a><br/></dl><li>int <a class="el" href="struct__cqpoption.html#a9a7e42c1fc3a349daf73808264ce6b54">idefault</a>
+<dl class="el"><dd class="mdescRight">Default value fo rthis option (integer value)  <a href="#a9a7e42c1fc3a349daf73808264ce6b54"></a><br/></dl><li>char * <a class="el" href="struct__cqpoption.html#aa3fa4308f19ee1983cb36599b8e2af02">envvar</a>
+<dl class="el"><dd class="mdescRight">The environment variable from which CQP will take a value for this option.  <a href="#aa3fa4308f19ee1983cb36599b8e2af02"></a><br/></dl><li>int <a class="el" href="struct__cqpoption.html#a9154afb2bf62abf7e59554f2e21f1514">side_effect</a>
+<dl class="el"><dd class="mdescRight">Ref number of the side effect that changing this option has.  <a href="#a9154afb2bf62abf7e59554f2e21f1514"></a><br/></dl><li>int <a class="el" href="struct__cqpoption.html#ac8bf36fe0577cba66bccda3a6f7e80a4">flags</a>
+<dl class="el"><dd class="mdescRight">Flags for this option: can include PUBLIC, CQP.  <a href="#ac8bf36fe0577cba66bccda3a6f7e80a4"></a><br/></dl></ul>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>A CQPOption represents a single configuration option for CQP. </p>
+<p>It does not actually contain the config-option itself; that is held as a global variable somewhere. Instead, it holds metadata about the config-option, including a pointer to the actual variable.</p>
+<p>Note it's possible to have wo CQPOption objects referring to the same actual variable - in this case the two option names in question would be synonymous. </p>
 </div><hr/><h2>Field Documentation</h2>
 <a class="anchor" id="ab96816d317aa5196e2ef198d9a8d621b"></a><!-- doxytag: member="_cqpoption::address" ref="ab96816d317aa5196e2ef198d9a8d621b" args="" -->
 <div class="memitem">
@@ -74,6 +76,8 @@ Data Fields</h2>
       </table>
 </div>
 <div class="memdoc">
+
+<p>Pointer to the actual variable that contains this config option. </p>
 
 </div>
 </div>
@@ -88,6 +92,8 @@ Data Fields</h2>
 </div>
 <div class="memdoc">
 
+<p>Default value fo rthis option (string value) </p>
+
 </div>
 </div>
 <a class="anchor" id="aa3fa4308f19ee1983cb36599b8e2af02"></a><!-- doxytag: member="_cqpoption::envvar" ref="aa3fa4308f19ee1983cb36599b8e2af02" args="" -->
@@ -100,6 +106,8 @@ Data Fields</h2>
       </table>
 </div>
 <div class="memdoc">
+
+<p>The environment variable from which CQP will take a value for this option. </p>
 
 </div>
 </div>
@@ -114,6 +122,8 @@ Data Fields</h2>
 </div>
 <div class="memdoc">
 
+<p>Flags for this option: can include PUBLIC, CQP. </p>
+
 </div>
 </div>
 <a class="anchor" id="a9a7e42c1fc3a349daf73808264ce6b54"></a><!-- doxytag: member="_cqpoption::idefault" ref="a9a7e42c1fc3a349daf73808264ce6b54" args="" -->
@@ -126,6 +136,8 @@ Data Fields</h2>
       </table>
 </div>
 <div class="memdoc">
+
+<p>Default value fo rthis option (integer value) </p>
 
 <p>Referenced by <a class="el" href="options_8c.html#a3b63ff1af997333f51cad78bf921732a">parse_options()</a>, and <a class="el" href="options_8c.html#aac85b75729b62d91147deb7ea7b878ed">set_default_option_values()</a>.</p>
 
@@ -142,6 +154,8 @@ Data Fields</h2>
 </div>
 <div class="memdoc">
 
+<p>Short version of this option's name. </p>
+
 </div>
 </div>
 <a class="anchor" id="ad370f616d731d0e001b8a66f1294fba8"></a><!-- doxytag: member="_cqpoption::opt_name" ref="ad370f616d731d0e001b8a66f1294fba8" args="" -->
@@ -154,6 +168,8 @@ Data Fields</h2>
       </table>
 </div>
 <div class="memdoc">
+
+<p>Name of this option as referred to in the interactive control syntax. </p>
 
 <p>Referenced by <a class="el" href="options_8h.html#a03133312221962d93a03d7d6336cdfae">find_option()</a>, <a class="el" href="options_8h.html#a123e16dfa386e0969d7822aba5d943d4">print_option_values()</a>, and <a class="el" href="options_8c.html#aac85b75729b62d91147deb7ea7b878ed">set_default_option_values()</a>.</p>
 
@@ -170,6 +186,9 @@ Data Fields</h2>
 </div>
 <div class="memdoc">
 
+<p>Ref number of the side effect that changing this option has. </p>
+<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="options_8c.html#ac25b2835b607daf6f05f6f87df840e40" title="Carries out any &quot;side effects&quot; of setting an option.">execute_side_effects</a> </dd></dl>
+
 </div>
 </div>
 <a class="anchor" id="a2978761803939b591e774cb736a965e3"></a><!-- doxytag: member="_cqpoption::type" ref="a2978761803939b591e774cb736a965e3" args="" -->
@@ -183,13 +202,15 @@ Data Fields</h2>
 </div>
 <div class="memdoc">
 
+<p>Data type of this configuration option. </p>
+
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li>cqp/<a class="el" href="options_8h.html">options.h</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Sun Jul 31 2011 00:16:43 for CWB by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Jan 17 2012 22:07:40 for CWB by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

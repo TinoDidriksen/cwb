@@ -43,15 +43,21 @@
 <h1>SAttRegion Struct Reference</h1>  </div>
 </div>
 <div class="contents">
-<!-- doxytag: class="SAttRegion" --><h2><a name="pub-attribs"></a>
+<!-- doxytag: class="SAttRegion" -->
+<p>Represents a single s-attribuite region and its annotation.  
+<a href="#_details">More...</a></p>
+<h2><a name="pub-attribs"></a>
 Data Fields</h2>
 <ul>
 <li>char * <a class="el" href="struct_s_att_region.html#ad547fb8186b526cb1b588daad4334fbe">name</a>
 <dl class="el"><dd class="mdescRight">name of the s-attribute  <a href="#ad547fb8186b526cb1b588daad4334fbe"></a><br/></dl><li>int <a class="el" href="struct_s_att_region.html#a37722a150250e2a5a98e5e0d11e53449">start</a>
 <li>int <a class="el" href="struct_s_att_region.html#abce9f5dc9c83f2639b72024fdee5d388">end</a>
 <li>char * <a class="el" href="struct_s_att_region.html#af00339ab2b93314bfe3875960b78db02">annot</a>
-<dl class="el"><dd class="mdescRight">NULL if there is no annotation.  <a href="#af00339ab2b93314bfe3875960b78db02"></a><br/></dl></ul>
-<hr/><h2>Field Documentation</h2>
+<dl class="el"><dd class="mdescRight">NULL if there is no annotation; otherwise the content of the annotation.  <a href="#af00339ab2b93314bfe3875960b78db02"></a><br/></dl></ul>
+<hr/><a name="_details"></a><h2>Detailed Description</h2>
+<div class="textblock"><p>Represents a single s-attribuite region and its annotation. </p>
+<p>Before a token is printed, all regions of s-attributes from print_list[] which contain that token are copied to s_att_regions[], bubble-sorted (to enforce proper nesting while retaining the specified order as far as possible), and printed from s_att_regions[] . </p>
+</div><hr/><h2>Field Documentation</h2>
 <a class="anchor" id="af00339ab2b93314bfe3875960b78db02"></a><!-- doxytag: member="SAttRegion::annot" ref="af00339ab2b93314bfe3875960b78db02" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -63,9 +69,9 @@ Data Fields</h2>
 </div>
 <div class="memdoc">
 
-<p>NULL if there is no annotation. </p>
+<p>NULL if there is no annotation; otherwise the content of the annotation. </p>
 
-<p>Referenced by <a class="el" href="concordance_8h.html#a4155e7ddef475f76f6d066ff49afb011">get_position_values()</a>, and <a class="el" href="cwb-decode_8c.html#ae319baa29bcce4fc1184bda24e29f12f">show_position_values()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-decode_8c.html#ae0e7b3f6362d7aef790b708edb83e2ea">decode_print_token_sequence()</a>, and <a class="el" href="concordance_8h.html#a4155e7ddef475f76f6d066ff49afb011">get_position_values()</a>.</p>
 
 </div>
 </div>
@@ -80,7 +86,7 @@ Data Fields</h2>
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="concordance_8h.html#a4155e7ddef475f76f6d066ff49afb011">get_position_values()</a>, <a class="el" href="cwb-decode_8c.html#ae319baa29bcce4fc1184bda24e29f12f">show_position_values()</a>, and <a class="el" href="concordance_8c.html#a208ca1c02f1d4343a36e6606c17fbaee">sort_s_att_regions()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-decode_8c.html#ae0e7b3f6362d7aef790b708edb83e2ea">decode_print_token_sequence()</a>, <a class="el" href="cwb-decode_8c.html#a5eb2b4a7c6a4d481171d2823b5d1a399">decode_sort_s_att_regions()</a>, <a class="el" href="concordance_8h.html#a4155e7ddef475f76f6d066ff49afb011">get_position_values()</a>, and <a class="el" href="concordance_8c.html#a208ca1c02f1d4343a36e6606c17fbaee">sort_s_att_regions()</a>.</p>
 
 </div>
 </div>
@@ -97,7 +103,7 @@ Data Fields</h2>
 
 <p>name of the s-attribute </p>
 
-<p>Referenced by <a class="el" href="concordance_8h.html#a4155e7ddef475f76f6d066ff49afb011">get_position_values()</a>, and <a class="el" href="cwb-decode_8c.html#ae319baa29bcce4fc1184bda24e29f12f">show_position_values()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-decode_8c.html#ae0e7b3f6362d7aef790b708edb83e2ea">decode_print_token_sequence()</a>, and <a class="el" href="concordance_8h.html#a4155e7ddef475f76f6d066ff49afb011">get_position_values()</a>.</p>
 
 </div>
 </div>
@@ -112,7 +118,7 @@ Data Fields</h2>
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="concordance_8h.html#a4155e7ddef475f76f6d066ff49afb011">get_position_values()</a>, <a class="el" href="cwb-decode_8c.html#ae319baa29bcce4fc1184bda24e29f12f">show_position_values()</a>, and <a class="el" href="concordance_8c.html#a208ca1c02f1d4343a36e6606c17fbaee">sort_s_att_regions()</a>.</p>
+<p>Referenced by <a class="el" href="cwb-decode_8c.html#ae0e7b3f6362d7aef790b708edb83e2ea">decode_print_token_sequence()</a>, <a class="el" href="cwb-decode_8c.html#a5eb2b4a7c6a4d481171d2823b5d1a399">decode_sort_s_att_regions()</a>, <a class="el" href="concordance_8h.html#a4155e7ddef475f76f6d066ff49afb011">get_position_values()</a>, and <a class="el" href="concordance_8c.html#a208ca1c02f1d4343a36e6606c17fbaee">sort_s_att_regions()</a>.</p>
 
 </div>
 </div>
@@ -121,7 +127,7 @@ Data Fields</h2>
 <li>utils/<a class="el" href="cwb-decode_8c.html">cwb-decode.c</a></li>
 </ul>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Sun Jul 31 2011 00:16:43 for CWB by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Jan 17 2012 22:07:40 for CWB by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

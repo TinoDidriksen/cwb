@@ -160,8 +160,7 @@ Variables</h2>
 
 <p>Create a new CL_regex object (ie a regular expression buffer). </p>
 <p>The regular expression is preprocessed according to the flags, and anchored to the start and end of the string. (That is, ^ is added to the start, $ to the end.)</p>
-<p>Then the resulting regex is compiled (using POSIX compilation) and optimised.</p>
-<p>Currently, the charset parameter only distinguishes between UTF8 and "other" (Ascii or LatinX), as does PCRE.</p>
+<p>Then the resulting regex is compiled (using PCRE) and optimised.</p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table class="params">
     <tr><td class="paramname">regex</td><td>String containing the regular expression </td></tr>
@@ -174,7 +173,7 @@ Variables</h2>
 
 <p>References <a class="el" href="cl_8h.html#af731838e4fa831743c660972c8499a14">CDA_EBADREGEX</a>, <a class="el" href="cl_8h.html#a1fa2e2ab47bd2c689b68a78bdac22028">CDA_OK</a>, <a class="el" href="cwb-check-input_8c.html#ab7d33183c58d7df43cc5602b9c842b37">charset</a>, <a class="el" href="struct___c_l___regex.html#ab7d33183c58d7df43cc5602b9c842b37">_CL_Regex::charset</a>, <a class="el" href="globals_8c.html#a5c4290325b240eac5fe1542a8743286a">cl_debug</a>, <a class="el" href="cdaccess_8c.html#af97f2ad4a69c7d0105f9cee4a51b29b8">cl_errno</a>, <a class="el" href="cl_8h.html#a9e15a3c725711d9effd623b2f3e225be">cl_free</a>, <a class="el" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="cl_8h.html#ad68dfe0ca2fbad5052e8213a06f5b4ba">CL_MAX_LINE_LENGTH</a>, <a class="el" href="cl_8h.html#aff1d819a01c0ea804f724a85e14dc29e">cl_regex_error</a>, <a class="el" href="regopt_8c.html#ab312a681f0a8c861a08f9d26a3f4ab95">cl_regopt_analyse()</a>, <a class="el" href="cl_8h.html#a708281d7f482a1999c70df6c353d66e1">cl_string_canonical()</a>, <a class="el" href="cl_8h.html#a8e3a6183c822cb47f163cc14d114f0d5">cl_string_latex2iso()</a>, <a class="el" href="struct___c_l___regex.html#a0a0140b9b50c4e2d2d935f0211bcae5e">_CL_Regex::extra</a>, <a class="el" href="struct___c_l___regex.html#ac8bf36fe0577cba66bccda3a6f7e80a4">_CL_Regex::flags</a>, <a class="el" href="struct___c_l___regex.html#a809c37615b266e2fdd396ac191b9a93c">_CL_Regex::grains</a>, <a class="el" href="struct___c_l___regex.html#a6e12607ff9600c7fbf261725f217ec10">_CL_Regex::haystack_buf</a>, <a class="el" href="cl_8h.html#a1f397c74f7f8ba3952858c70eb19d082">IGNORE_CASE</a>, <a class="el" href="cl_8h.html#a2e9f85ae8ad88191c60cf4269b9ab296">IGNORE_DIAC</a>, <a class="el" href="struct___c_l___regex.html#a133399bb3ea4f4e15df4fc72188db775">_CL_Regex::needle</a>, <a class="el" href="regopt_8c.html#a697918b2f55aa6a0fd29906a934f5836">regopt_data_copy_to_regex_object()</a>, and <a class="el" href="cl_8h.html#aa018eeb7e5a4bb1586a3f4337011daeaa3946b00fe1f38206339d69285cda6b03">utf8</a>.</p>
 
-<p>Referenced by <a class="el" href="cwb-scan-corpus_8c.html#afc8b08c47e1422ae98e8bed30103ff1e">add_key()</a>, <a class="el" href="cl_8h.html#a6eb4641e0a1e14b63f2d5f2f5b6a8cea">cl_regex2id()</a>, <a class="el" href="parse__actions_8h.html#a6cc225469d64fbddecf2d9dce7e0a28d">do_flagged_string()</a>, and <a class="el" href="parse__actions_8h.html#a4335ddbb14865c031041a194e182ed92">do_XMLTag()</a>.</p>
+<p>Referenced by <a class="el" href="cl_8h.html#a6eb4641e0a1e14b63f2d5f2f5b6a8cea">cl_regex2id()</a>, <a class="el" href="parse__actions_8h.html#a6cc225469d64fbddecf2d9dce7e0a28d">do_flagged_string()</a>, <a class="el" href="parse__actions_8h.html#a4335ddbb14865c031041a194e182ed92">do_XMLTag()</a>, <a class="el" href="cwb-scan-corpus_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>, and <a class="el" href="cwb-scan-corpus_8c.html#a8947ac051b910a311d2d1f0ef28272bd">scancorpus_add_key()</a>.</p>
 
 </div>
 </div>
@@ -216,7 +215,7 @@ Variables</h2>
 
 <p>References <a class="el" href="struct___c_l___regex.html#a93e5ad5e0410fdbd7c65a09793a14cb6">_CL_Regex::anchor_end</a>, <a class="el" href="struct___c_l___regex.html#a4e3ccc6f2ec66b18f80763c9101dc2a7">_CL_Regex::anchor_start</a>, <a class="el" href="struct___c_l___regex.html#ab7d33183c58d7df43cc5602b9c842b37">_CL_Regex::charset</a>, <a class="el" href="globals_8c.html#a5c4290325b240eac5fe1542a8743286a">cl_debug</a>, <a class="el" href="regopt_8c.html#a2a1fce7eeb5bcc7601316ca301810a90">cl_regopt_successes</a>, <a class="el" href="cl_8h.html#a708281d7f482a1999c70df6c353d66e1">cl_string_canonical()</a>, <a class="el" href="struct___c_l___regex.html#a0a0140b9b50c4e2d2d935f0211bcae5e">_CL_Regex::extra</a>, <a class="el" href="struct___c_l___regex.html#ac8bf36fe0577cba66bccda3a6f7e80a4">_CL_Regex::flags</a>, <a class="el" href="struct___c_l___regex.html#a343da7a5241d5dd4042b632f9c39006e">_CL_Regex::grain</a>, <a class="el" href="struct___c_l___regex.html#a6f097fa6018c5b24ea16507555185feb">_CL_Regex::grain_len</a>, <a class="el" href="struct___c_l___regex.html#a809c37615b266e2fdd396ac191b9a93c">_CL_Regex::grains</a>, <a class="el" href="struct___c_l___regex.html#a6e12607ff9600c7fbf261725f217ec10">_CL_Regex::haystack_buf</a>, <a class="el" href="struct___c_l___regex.html#a9da424d392549ca48c495ad456441139">_CL_Regex::jumptable</a>, and <a class="el" href="struct___c_l___regex.html#a133399bb3ea4f4e15df4fc72188db775">_CL_Regex::needle</a>.</p>
 
-<p>Referenced by <a class="el" href="cl_8h.html#a6eb4641e0a1e14b63f2d5f2f5b6a8cea">cl_regex2id()</a>, <a class="el" href="eval_8h.html#a1c6b9087d4b9c61e2be81a7a68e174cc">eval_bool()</a>, <a class="el" href="eval_8c.html#aaf8dd0672a1325480955ab8397b1928b">eval_constraint()</a>, <a class="el" href="cwb-scan-corpus_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>, and <a class="el" href="eval_8c.html#abcf01813cbf1161269761c3d6a2dc239">matchfirstpattern()</a>.</p>
+<p>Referenced by <a class="el" href="cl_8h.html#a6eb4641e0a1e14b63f2d5f2f5b6a8cea">cl_regex2id()</a>, <a class="el" href="eval_8h.html#a1c6b9087d4b9c61e2be81a7a68e174cc">eval_bool()</a>, <a class="el" href="eval_8c.html#aaf8dd0672a1325480955ab8397b1928b">eval_constraint()</a>, <a class="el" href="cwb-scan-corpus_8c.html#ad40d04a47016bc8bc1aa8cbd182cdd69">is_regular()</a>, <a class="el" href="cwb-scan-corpus_8c.html#a0ddf1224851353fc92bfbff6f499fa97">main()</a>, and <a class="el" href="eval_8c.html#abcf01813cbf1161269761c3d6a2dc239">matchfirstpattern()</a>.</p>
 
 </div>
 </div>
@@ -847,7 +846,7 @@ Variables</h2>
 </div>
 </div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Sun Jul 31 2011 00:16:43 for CWB by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Jan 17 2012 22:07:39 for CWB by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>

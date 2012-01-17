@@ -164,7 +164,7 @@ Variables</h2>
 <li>char <a class="el" href="server_8c.html#a80130d5b13f35135c2015ad633c0351e">cqi_id_lc</a> [] = &quot;abcdefghijklmnopqrstuvwxyz_-0123456789&quot;
 <li>char <a class="el" href="server_8c.html#a4c3dade2a2047a672e399c5d5c05fe68">cqi_id_all</a> [] = &quot;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_-0123456789&quot;
 <li><a class="el" href="structatt__hashtable.html">AttHashTable</a> <a class="el" href="server_8c.html#a0cd713576f00ada0cfd03f169465ece9">AttHash</a> = NULL
-<dl class="el"><dd class="mdescRight">The global attribute hash.  <a href="#a0cd713576f00ada0cfd03f169465ece9"></a><br/></dl></ul>
+<dl class="el"><dd class="mdescRight">The CQi server's global attribute hash.  <a href="#a0cd713576f00ada0cfd03f169465ece9"></a><br/></dl></ul>
 <hr/><h2>Define Documentation</h2>
 <a class="anchor" id="a716958bc71d0ec9216a06ed079d0dce1"></a><!-- doxytag: member="server.c::ATTHASHSIZE" ref="a716958bc71d0ec9216a06ed079d0dce1" args="" -->
 <div class="memitem">
@@ -1392,7 +1392,7 @@ Variables</h2>
 
 <p>References <a class="el" href="server_8c.html#ade01249dc3364a15e736fec357d49873">cqi_send_byte()</a>, and <a class="el" href="options_8h.html#a5165a807d9a46b3aed8aa60e9e81c6a8">snoop</a>.</p>
 
-<p>Referenced by <a class="el" href="server_8h.html#a0cca3684da351a7a4102f8fbf192ed49">cqi_data_int()</a>, <a class="el" href="server_8h.html#a22bb271f1c6be47b1ac94d1a55aa877f">cqi_data_int_int()</a>, <a class="el" href="server_8h.html#a5e47a5ad1c3169139c32c24112eb0339">cqi_data_int_int_int_int()</a>, <a class="el" href="server_8h.html#afdcb33c71ae159637911b67ed6320de0">cqi_send_byte_list()</a>, <a class="el" href="server_8h.html#af0242ed79c683dec4630a9542d510479">cqi_send_int_list()</a>, <a class="el" href="cqpserver_8c.html#ac3bd4303469d27fe3310b0519c2da549">cqi_send_minus_one_list()</a>, <a class="el" href="server_8h.html#a26b5189b0c7545209a9af86cc53639ea">cqi_send_string_list()</a>, <a class="el" href="cqpserver_8c.html#a53a85e081d0019ef7992a6ba846cc233">do_cqi_cl_cpos2alg()</a>, <a class="el" href="cqpserver_8c.html#a42af46ccabad07757fffa4c6299d1da1">do_cqi_cl_cpos2id()</a>, <a class="el" href="cqpserver_8c.html#a74018eff16bcc1150a0e2a9049267fc9">do_cqi_cl_cpos2lbound()</a>, <a class="el" href="cqpserver_8c.html#ad1fb89937d6bf55cfc02c9b1e9241e7d">do_cqi_cl_cpos2rbound()</a>, <a class="el" href="cqpserver_8c.html#a8f080cc531e3a99f413b025dc35418f0">do_cqi_cl_cpos2str()</a>, <a class="el" href="cqpserver_8c.html#ad05f841b3c525a4c76ca9b4b88e29424">do_cqi_cl_cpos2struc()</a>, <a class="el" href="cqpserver_8c.html#aaa8658fea0834dc99cc5b3c82369e222">do_cqi_cl_id2freq()</a>, <a class="el" href="cqpserver_8c.html#a141a080b31071a71805e4acebb4d9f85">do_cqi_cl_id2str()</a>, <a class="el" href="cqpserver_8c.html#aace636f52e3e45d492f317db35b8035d">do_cqi_cl_str2id()</a>, <a class="el" href="cqpserver_8c.html#a4829621c85303be9da6c286c6b318020">do_cqi_cl_struc2str()</a>, <a class="el" href="cqpserver_8c.html#a4f6612358d3fc58ac44175f7c3d58b27">do_cqi_corpus_list_corpora()</a>, <a class="el" href="cqpserver_8c.html#acc9be65d4ae72f0ae16790fee4e1bf70">do_cqi_cqp_dump_subcorpus()</a>, <a class="el" href="cqpserver_8c.html#af303ab31916ff1180ad1e0670575cad1">do_cqi_cqp_fdist_1()</a>, <a class="el" href="cqpserver_8c.html#acdd876f27d34fce653173394e0dde952">do_cqi_cqp_fdist_2()</a>, <a class="el" href="cqpserver_8c.html#a43f247f2e2873651f479445383f2414d">do_cqi_cqp_list_subcorpora()</a>, and <a class="el" href="cqpserver_8c.html#a5f20901a699479daba10f077bba6572a">send_cqi_corpus_attributes()</a>.</p>
+<p>Referenced by <a class="el" href="server_8h.html#a0cca3684da351a7a4102f8fbf192ed49">cqi_data_int()</a>, <a class="el" href="server_8h.html#a22bb271f1c6be47b1ac94d1a55aa877f">cqi_data_int_int()</a>, <a class="el" href="server_8h.html#a5e47a5ad1c3169139c32c24112eb0339">cqi_data_int_int_int_int()</a>, <a class="el" href="server_8h.html#afdcb33c71ae159637911b67ed6320de0">cqi_send_byte_list()</a>, <a class="el" href="server_8h.html#af0242ed79c683dec4630a9542d510479">cqi_send_int_list()</a>, <a class="el" href="server_8h.html#a26b5189b0c7545209a9af86cc53639ea">cqi_send_string_list()</a>, <a class="el" href="cqpserver_8c.html#a53a85e081d0019ef7992a6ba846cc233">do_cqi_cl_cpos2alg()</a>, <a class="el" href="cqpserver_8c.html#a42af46ccabad07757fffa4c6299d1da1">do_cqi_cl_cpos2id()</a>, <a class="el" href="cqpserver_8c.html#a74018eff16bcc1150a0e2a9049267fc9">do_cqi_cl_cpos2lbound()</a>, <a class="el" href="cqpserver_8c.html#ad1fb89937d6bf55cfc02c9b1e9241e7d">do_cqi_cl_cpos2rbound()</a>, <a class="el" href="cqpserver_8c.html#a8f080cc531e3a99f413b025dc35418f0">do_cqi_cl_cpos2str()</a>, <a class="el" href="cqpserver_8c.html#ad05f841b3c525a4c76ca9b4b88e29424">do_cqi_cl_cpos2struc()</a>, <a class="el" href="cqpserver_8c.html#aaa8658fea0834dc99cc5b3c82369e222">do_cqi_cl_id2freq()</a>, <a class="el" href="cqpserver_8c.html#a141a080b31071a71805e4acebb4d9f85">do_cqi_cl_id2str()</a>, <a class="el" href="cqpserver_8c.html#aace636f52e3e45d492f317db35b8035d">do_cqi_cl_str2id()</a>, <a class="el" href="cqpserver_8c.html#a4829621c85303be9da6c286c6b318020">do_cqi_cl_struc2str()</a>, <a class="el" href="cqpserver_8c.html#a4f6612358d3fc58ac44175f7c3d58b27">do_cqi_corpus_list_corpora()</a>, <a class="el" href="cqpserver_8c.html#acc9be65d4ae72f0ae16790fee4e1bf70">do_cqi_cqp_dump_subcorpus()</a>, <a class="el" href="cqpserver_8c.html#af303ab31916ff1180ad1e0670575cad1">do_cqi_cqp_fdist_1()</a>, <a class="el" href="cqpserver_8c.html#acdd876f27d34fce653173394e0dde952">do_cqi_cqp_fdist_2()</a>, <a class="el" href="cqpserver_8c.html#a43f247f2e2873651f479445383f2414d">do_cqi_cqp_list_subcorpora()</a>, <a class="el" href="cqpserver_8c.html#ae950b6ad5fb3a2f6ac6e6d9a12bac071">do_cqi_send_minus_one_list()</a>, and <a class="el" href="cqpserver_8c.html#a5f20901a699479daba10f077bba6572a">send_cqi_corpus_attributes()</a>.</p>
 
 </div>
 </div>
@@ -1547,7 +1547,7 @@ Variables</h2>
 
 <p>Frees the global AttHash object and the space that it points to. </p>
 <p>TODO better name: att_hash_free </p>
-<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="server_8c.html#a0cd713576f00ada0cfd03f169465ece9" title="The global attribute hash.">AttHash</a> </dd></dl>
+<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="server_8c.html#a0cd713576f00ada0cfd03f169465ece9" title="The CQi server&#39;s global attribute hash.">AttHash</a> </dd></dl>
 
 <p>References <a class="el" href="structatt__hashtable.html#a3f7a831f66b8703540b0436add889201">att_hashtable::space</a>.</p>
 
@@ -1570,7 +1570,7 @@ Variables</h2>
 
 <p>This function has to be called once to initialise the global attribute hash. </p>
 <p>TODO better name: att_hash_make </p>
-<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="server_8c.html#a0cd713576f00ada0cfd03f169465ece9" title="The global attribute hash.">AttHash</a> </dd></dl>
+<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="server_8c.html#a0cd713576f00ada0cfd03f169465ece9" title="The CQi server&#39;s global attribute hash.">AttHash</a> </dd></dl>
 
 <p>References <a class="el" href="server_8c.html#a3e18e5ab1201e205ce88c473a2f4bf99">bytes</a>, <a class="el" href="cl_8h.html#a4e4eccd789155123ab533ed0cecbecea">cl_malloc()</a>, <a class="el" href="structatt__hashtable.html#a45a5b7c00a796a23f01673cef1dbe0a9">att_hashtable::code</a>, <a class="el" href="lexhash_8c.html#a6bb4d75c3e8354cff3efd98002335877">find_prime()</a>, <a class="el" href="structatt__hashtable.html#a439227feff9d7f55384e8780cfc2eb82">att_hashtable::size</a>, and <a class="el" href="structatt__hashtable.html#a3f7a831f66b8703540b0436add889201">att_hashtable::space</a>.</p>
 
@@ -1695,7 +1695,7 @@ Variables</h2>
 </div>
 <div class="memdoc">
 
-<p>The global attribute hash. </p>
+<p>The CQi server's global attribute hash. </p>
 
 </div>
 </div>
@@ -1924,7 +1924,7 @@ Variables</h2>
 </div>
 </div>
 </div>
-<hr class="footer"/><address class="footer"><small>Generated on Sun Jul 31 2011 00:16:43 for CWB by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Tue Jan 17 2012 22:07:39 for CWB by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.3 </small></address>
 </body>
