@@ -20,12 +20,6 @@
 #include "globals.h"
 
 /* include external regular expression library */
-#ifndef __MINGW__
-/* #include <regex.h> */
-#else
-/* #include "../mingw-libgnurx-2.5.1/regex.h" */
-#endif
-
 #include <pcre.h>
 
 /**

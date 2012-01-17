@@ -220,7 +220,7 @@ lexdecode_usage(void)
   fprintf(stderr, "  -c        [with -p <rx>] ignore case\n");
   fprintf(stderr, "  -d        [with -p <rx>] ignore diacritics\n");
   fprintf(stderr, "  -F <file> lookup strings read from <file> ('-' for stdin)\n");
-  fprintf(stderr, "  -0        [with -F <file>] show non-existing strings with freq. 0\n");
+  fprintf(stderr, "  -0        [with -F <file>] show non-existing strings with frequency 0\n");
   fprintf(stderr, "  -N        [with -F <file>] read lexicon IDs from <file>\n");
   fprintf(stderr, "  -h        this help page\n\n");
   fprintf(stderr, "Part of the IMS Open Corpus Workbench v" VERSION "\n\n");

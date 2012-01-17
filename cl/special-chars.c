@@ -1812,6 +1812,8 @@ cl_string_qsort_compare(const char *s1,
  * * must be at least 1 character long (of course)
  * * first character must be an uppercase or lowercase letter or underscore
  * * second and subsequent characters may also be digits, hyphen or fullstop.
+ * * mixed case is allowed (just-upper and just-lower is imposed elsewhere,
+ *   where necessary).
  *
  * TODO: should the CL registry lexer be amended to reflect these restricitons?
  * (ID there is rather laxer than this)
@@ -1836,10 +1838,10 @@ cl_id_validate(char *s)
   while (*(++s))
     if ( ! (
            (*s >= 'a' && *s <= 'z')
-        || (*s >= 'a' && *s <= 'z')
-        || *s == '_'
-        || *s == '.'
-        || *s == '-'
+        || (*s >= 'A' && *s <= 'Z')
+        ||  *s == '_'
+        ||  *s == '.'
+        ||  *s == '-'
         || (*s >= '0' && *s <= '9')
         ) )
       return 0;
@@ -2010,7 +2012,7 @@ cl_string_canonical(char *s, CorpusCharset charset, int flags)
  * OS-sensitive way.
  *
  * If the CL was compiled for Unix, backslash is changed to forwardslash.
- * If the CL was compiled for windows, forwardslash is changed to backslash.
+ * If the CL was compiled for Windows, forwardslash is changed to backslash.
  *
  * Note that the path is modified in place.
  *

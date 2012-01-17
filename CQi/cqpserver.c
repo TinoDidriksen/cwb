@@ -32,11 +32,14 @@
 #include "../cqp/groups.h"
 
 
-char *user = "", *passwd = "";
+/** String containing the username sent by the currently-connect CQi client */
+char *user = "";
+/** String containing the password sent by the currently-connect CQi client */
+char *passwd = "";
 
 
 /**
- *  Prints the CQi server welcome & copyright message
+ *  Prints the CQi server welcome and copyright message.
  */
 void 
 cqiserver_welcome(void)
@@ -53,22 +56,41 @@ cqiserver_welcome(void)
  *
  */
 
+/**
+ * Shuts down the server with an "unknown CQi command" error condition.
+ *
+ * @param cmd  The integer representing the unknown command received from the client.
+ */
 void 
-unknown_command_error(int cmd)
+cqiserver_unknown_command_error(int cmd)
 {
   fprintf(stderr, "CQPserver: unknown CQi command 0x%04X.\n", cmd);
   exit(1);
 }
 
+/**
+ * Shuts down the server with an "CQi command not allowed here" error condition.
+ *
+ * @param cmd  The integer representing the wrong command received from the client.
+ */
 void 
-wrong_command_error(int cmd)
+cqiserver_wrong_command_error(int cmd)
 {
   fprintf(stderr, "CQPserver: command 0x%04X not allowed in this context.\n", cmd);
   exit(1);
 }
 
+/**
+ * Shuts down the server with an "internal error" condition.
+ *
+ * Both parameters will be printed as part of the shutdown error message.
+ *
+ * @param function  String: should be name of the calling function, that is,
+ *                  the point where the error was raised.
+ * @param reason    String containing any other explanatory details about the error.
+ */
 void
-internal_error(char *function, char *reason)
+cqiserver_internal_error(char *function, char *reason)
 {
   fprintf(stderr, "CQPserver: internal error in %s()\n", function);
   fprintf(stderr, "CQPserver: ''%s''\n", reason);
@@ -82,13 +104,26 @@ internal_error(char *function, char *reason)
  *
  */
 
-/* send CQI_CL_ERROR_* according to the CL cderrno variable */
+/**
+ * Sends the current CL error value to the client.
+ *
+ * This function takes the current contents of of the CL library's global
+ * cl_errno error value and sends it to the client.
+ *
+ * It takes the CL error consant and translates it into the corresponding
+ * CQI_CL_ERROR_* constant.
+ *
+ * NB: This function shuts down the server with an error condition if cl_errno
+ * does not actually contain an error condition.
+ *
+ * @see cl_errno
+ */
 void
 send_cl_error(void)
 {
   int cmd;
   
-  switch (cderrno) {
+  switch (cl_errno) {
   case CDA_EATTTYPE:
     cmd = CQI_CL_ERROR_WRONG_ATTRIBUTE_TYPE;
     break;
@@ -921,9 +956,15 @@ do_cqi_cqp_list_subcorpora(void)
   free(corpus);
 }
 
-/* CQP queries must be terminated with a single semicolon; */
-/* multiple semicolons will produce an error to occur -- so we */
-/* have to check and add a semicolon if necessary. */
+/**
+ * Tests whether or nto the final non-blank character in a string is a semicolon.
+ *
+ * CQP queries must be terminated with a single semicolon;
+ * multiple semicolons will produce an error to occur -- so we
+ * have to check and add a semicolon if necessary.
+ *
+ * @return  Boolean: true iff the final non-blank character is a semicolon.
+ */
 int
 query_has_semicolon(char *query)
 {
@@ -933,7 +974,8 @@ query_has_semicolon(char *query)
     return 0;
   p = query + strlen(query); 
   while (--p > query)           /* stop at first non-blank char or at first string character */
-    if (!(*p == ' ' || *p == '\t')) break;
+    if (!(*p == ' ' || *p == '\t'))
+      break;
   return (*p == ';') ? 1 : 0;
 }
 
@@ -1014,7 +1056,13 @@ do_cqi_cqp_subcorpus_size(void)
   free(subcorpus);
 }
 
-/* used for debugging output & to check valid fields in subroutines below */
+/**
+ * Returns string representations of CQI_CONST_FIELD_ values.
+ *
+ * Utility function, used for debugging output & to check valid fields in subroutines below.
+ *
+ * TODO as a utiltiy, shouldn't this be in the cqi library (server.c?)
+ */
 char *
 cqi_field_name(cqi_byte field) {
   switch (field) {
@@ -1078,7 +1126,7 @@ do_cqi_cqp_subcorpus_has_field(void)
         cqi_data_bool(CQI_CONST_YES);
       break;
     default:
-      internal_error("do_cqi_cqp_subcorpus_has_field", "Can't identify requested field.");
+      cqiserver_internal_error("do_cqi_cqp_subcorpus_has_field", "Can't identify requested field.");
     }
     cqi_flush();
   }
@@ -1086,9 +1134,20 @@ do_cqi_cqp_subcorpus_has_field(void)
   free(subcorpus);
 }
 
-/* CQI_CQP_DUMP_SUBCORPUS returns list of (-1) values if requested field is not set */
+/**
+ * Sends n instances of integer -1 to the client.
+ *
+ * Utility function for do_cqi_cqp_dump_subcorpus().
+ *
+ * This is the error condition of the CQI_CQP_DUMP_SUBCORPUS command:
+ * it returns a list of (-1) values if requested field is not set.
+ *
+ * It is assumed that the length of the lsit has already been sent.
+ *
+ * @param n  Length of list to send.
+ */
 void
-cqi_send_minus_one_list(int n)
+do_cqi_send_minus_one_list(int n)
 {
   while (n--) 
     cqi_send_int(-1);
@@ -1140,20 +1199,20 @@ do_cqi_cqp_dump_subcorpus(void)
         break;
       case CQI_CONST_FIELD_TARGET:
         if (cl->targets == NULL) 
-          cqi_send_minus_one_list(size);
+          do_cqi_send_minus_one_list(size);
         else 
           for (i=first; i<=last; i++)
             cqi_send_int(cl->targets[i]);
         break;
       case CQI_CONST_FIELD_KEYWORD:
         if (cl->keywords == NULL) 
-          cqi_send_minus_one_list(size);
+          do_cqi_send_minus_one_list(size);
         else 
           for (i=first; i<=last; i++)
             cqi_send_int(cl->keywords[i]);
         break;
       default:
-        internal_error("do_cqi_cqp_dump_subcorpus", "No handler for requested field.");
+        cqiserver_internal_error("do_cqi_cqp_dump_subcorpus", "No handler for requested field.");
       }
       cqi_flush();
   }
@@ -1332,12 +1391,15 @@ do_cqi_cqp_fdist_2(void)
 }
 
 
-/*
+/**
  *
- *  The command interpreter loop (returns on exit)
+ *  The CQP server's command interpreter loop.
+ *
+ *  The loops starts running when this function is called, and when the
+ *  exit command is reveived (CQI_CTRL_BYE)
+ *  (returns on exit)
  *
  */
-
 void 
 interpreter(void)
 {
@@ -1354,7 +1416,7 @@ interpreter(void)
     case CQI_CTRL:
       switch (cmd) {
       case CQI_CTRL_CONNECT:
-        wrong_command_error(cmd);
+        cqiserver_wrong_command_error(cmd);
       case CQI_CTRL_BYE:
         if (server_debug) 
           fprintf(stderr, "CQi: CQI_CTRL_BYE()\n");
@@ -1375,7 +1437,7 @@ interpreter(void)
         cqi_data_string(cqi_error_string);
         break;
       default:
-        unknown_command_error(cmd);
+        cqiserver_unknown_command_error(cmd);
       }
       break;
       
@@ -1432,7 +1494,7 @@ interpreter(void)
         do_cqi_corpus_full_name();
         break;
       default:
-        unknown_command_error(cmd);
+        cqiserver_unknown_command_error(cmd);
       }
       break;
       
@@ -1494,7 +1556,7 @@ interpreter(void)
         do_cqi_cl_alg2cpos();
         break;
       default:
-        unknown_command_error(cmd);
+        cqiserver_unknown_command_error(cmd);
       }
       break;
 
@@ -1526,12 +1588,12 @@ interpreter(void)
         do_cqi_cqp_fdist_2();
         break;
       default:
-        unknown_command_error(cmd);
+        cqiserver_unknown_command_error(cmd);
       }
       break;
       
     default:
-      unknown_command_error(cmd);
+      cqiserver_unknown_command_error(cmd);
 
     } /* end outer switch */
     
@@ -1557,7 +1619,7 @@ main(int argc, char *argv[])
   paging = autoshow = auto_save = 0;
 
   if (!initialize_cqp(argc, argv)) {
-    fprintf(stderr, "ERROR Couldn't initialise CQP engine.\n");
+    fprintf(stderr, "CQPserver: ERROR Couldn't initialise CQP engine.\n");
     exit(1);
   }
   cqiserver_welcome();
@@ -1568,10 +1630,10 @@ main(int argc, char *argv[])
 
   if (0 < accept_connection(server_port)) {
     if (server_log)
-      printf("Connected. Waiting for CONNECT request.\n");
+      printf("CQPserver: Connected. Waiting for CONNECT request.\n");
   }
   else {
-    fprintf(stderr, "ERROR Connection failed.\n");
+    fprintf(stderr, "CQPserver: ERROR Connection failed.\n");
     exit(1);
   }
 
@@ -1579,17 +1641,17 @@ main(int argc, char *argv[])
   cmd = cqi_read_command();
   if (cmd != CQI_CTRL_CONNECT) {
     if (server_log)
-      printf("Connection refused.\n");
-    wrong_command_error(cmd);
+      printf("CQPserver: Connection refused.\n");
+    cqiserver_wrong_command_error(cmd);
   }
   user = cqi_read_string();
   passwd = cqi_read_string();
   if (server_log)
-    printf("CONNECT  user = '%s'  passwd = '%s'  pid = %d\n", user, passwd, (int)getpid());
+    printf("CQPserver: CONNECT  user = '%s'  passwd = '%s'  pid = %d\n", user, passwd, (int)getpid());
 
   /* check password here (always required !!) */
   if (!authenticate_user(user, passwd)) {
-    printf("Wrong username or password. Connection refused.\n");
+    printf("CQPserver: Wrong username or password. Connection refused.\n"); /* TODO shouldn't this be to stderr as it is not conditional on server_log? */
     cqi_command(CQI_ERROR_CONNECT_REFUSED);
   }
   else {
@@ -1612,11 +1674,11 @@ main(int argc, char *argv[])
     interpreter();
 
     if (server_log)
-      printf("User '%s' has logged off from the CQPserver.\n", user);
+      printf("CQPserver: User '%s' has logged off.\n", user);
   }
 
   /* connection terminated; clean up and exit */
-  printf("Exit. (pid = %d)\n", (int)getpid());
+  printf("CQPserver: Exit. (pid = %d)\n", (int)getpid());
 
   return 0;
 }

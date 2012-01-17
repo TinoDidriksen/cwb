@@ -21,7 +21,7 @@
 #include <string.h>
 #include <unistd.h>		/* for POSIX getopt() */
 
-#include "../cl/cl.h"
+#include "../cl/globals.h"
 
 
 /* global variables */
@@ -48,8 +48,8 @@ int af_is_pipe;                     /**< need to know whether to call fclose() o
 
 #define MIN_COL_WIDTH 20
 #define MAX_COL_WIDTH 256
-int COL_WIDTH = 38;                /**< width of a display column (one column for each language) */
-int COL_SEP = 2;                   /**< column separator (blanks) */
+int COL_WIDTH = 38;                 /**< width of a display column (one column for each language) */
+int COL_SEP = 2;                    /**< column separator (blanks) */
 #define WIDE_COL_WIDTH 55
 #define WIDE_COL_SEP   6
 
@@ -79,7 +79,7 @@ alignshow_usage(void)
   fprintf(stderr, "  -r <reg>   use registry directory <reg>\n");
   fprintf(stderr, "  -w <n>     set display column width to <n>   [%d]\n", COL_WIDTH);
   fprintf(stderr, "  -s <n>     set column separator width to <n> [%d]\n", COL_SEP);
-  fprintf(stderr, "  -W         display width settings for wide xterm window\n");
+  fprintf(stderr, "  -W         use alternative default width settings for wide terminal\n");
   fprintf(stderr, "  -h         this help page\n\n");
   fprintf(stderr, "Displays alignment results in terminal. Aligned regions are\n");
   fprintf(stderr, "displayed side-by-side, one region at a time. The following\n");
@@ -195,7 +195,7 @@ alignshow_goodbye(int error_level)
  * Exits the program because the end of the .align file has been reached.
  */
 void
-end_of_alignment(void)
+alignshow_end_of_alignment(void)
 {
   printf("=========================== END OF ALIGNMENT FILE ============================\n");
   alignshow_goodbye(0);
@@ -209,12 +209,12 @@ end_of_alignment(void)
  * @param f  The file handle to read from.
  */
 void
-skip_next_region(FILE *f)
+alignshow_skip_next_region(FILE *f)
 {
   char line[CL_MAX_LINE_LENGTH];
 
   if (feof(f))
-    end_of_alignment();
+    alignshow_end_of_alignment();
   fgets(line, CL_MAX_LINE_LENGTH, f);
 }
 
@@ -226,7 +226,7 @@ skip_next_region(FILE *f)
  * @param f  The file handle to read from.
  */
 void
-print_next_region(FILE *f)
+alignshow_print_next_region(FILE *f)
 {
   char line[CL_MAX_LINE_LENGTH];
   int f1, l1, f2, l2;
@@ -241,9 +241,9 @@ print_next_region(FILE *f)
 
   /* get next alignment region */
   if (feof(f))
-    end_of_alignment();
+    alignshow_end_of_alignment();
   if (NULL == fgets(line, CL_MAX_LINE_LENGTH, f))
-    end_of_alignment();
+    alignshow_end_of_alignment();
   if (5 > (args = sscanf(line, "%d %d %d %d %s %d", &f1, &l1, &f2, &l2, type, &quality))) {
     fprintf(stderr, "%s: format error in line\n\t%s", progname, line);
     fprintf(stderr, "*** IGNORED ***\n");
@@ -409,7 +409,7 @@ main(int argc, char** argv)
     /* "parse" command, i.e. look at first character */
     switch (cmd[0]) {
     case '\n':
-      print_next_region(af);
+      alignshow_print_next_region(af);
       break;
     case 'p':
       {
@@ -417,7 +417,7 @@ main(int argc, char** argv)
         if (1 != sscanf(cmd+1, "%d", &n))
           n = 1;
         while ((n--) > 0) {
-          print_next_region(af);
+          alignshow_print_next_region(af);
           if (n > 0) printf("\n");
         }
         break;
@@ -427,8 +427,9 @@ main(int argc, char** argv)
         int n;
         if (1 != sscanf(cmd+1, "%d", &n))
           n = 1;
-        while ((n--) > 0) skip_next_region(af);
-        print_next_region(af);
+        while ((n--) > 0)
+          alignshow_skip_next_region(af);
+        alignshow_print_next_region(af);
         break;
       }
     case 'h':
@@ -444,6 +445,7 @@ main(int argc, char** argv)
 
   /* that's it (we shouldn't reach this point) */
   alignshow_goodbye(0);
+  return 0;
 }
 
 

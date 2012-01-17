@@ -54,8 +54,8 @@ extern size_t cl_memory_limit;
 #define SUBDIR_SEP_STRING "/"
 /** name of directory for temporary files (as string, absolute path) */
 #define TEMPDIR_PATH "/tmp"
-    /* Windows */
 #else
+    /* Windows */
 #define PATH_SEPARATOR ';'
 #define SUBDIR_SEPARATOR '\\'
 #define SUBDIR_SEP_STRING "\\"
@@ -123,7 +123,7 @@ extern size_t cl_memory_limit;
 #endif
 
 #if (!defined(REGISTRY_ENVVAR))
-/** The Unix environment variable from which the value of the registry will be taken. */
+/** The environment variable from which the value of the registry will be taken. */
 #define REGISTRY_ENVVAR        "CORPUS_REGISTRY"
 #endif
 
@@ -145,7 +145,7 @@ extern size_t cl_memory_limit;
  * Macro which exits the program when a "to do" point is hit.
  */
 #define TODO {(void)fprintf(stderr,"TODO point reached: file \"%s\", line %d\n", \
-			    __FILE__, \
+			    __FILE__,  \
 			    __LINE__); \
 			    exit(1);}
 

@@ -17,6 +17,7 @@
 
 
 #include "../cl/globals.h"
+#include "../cl/corpus.h"
 #include "../cl/cl.h"
 
 /** use 1 million buckets by default */
@@ -80,6 +81,7 @@ Corpus *C;                   /**< corpus we're working on */
 char *reg_dir = NULL;        /**< registry directory (NULL -> use default) */
 char *corpname = NULL;       /**< corpus name (command-line) */
 int check_words = 0;         /**< if set, accept only 'regular' words in frequency counts */
+CL_Regex regular_rx = NULL;  /**< regex object for use when check_words is true. @see is_regular */
 char *progname = NULL;       /**< name of this program (from shell command) */
 char *output_file = NULL;    /**< output file name (-o option) */
 int frequency_threshold = 0; /**< frequency threshold for result table (-f option) */
@@ -99,7 +101,7 @@ void
 scancorpus_usage(void)
 {
   fprintf(stderr, "\n");
-  fprintf(stderr, "Usage: %s [options] <corpus> <key1> <key2> ... \n\n", progname);
+  fprintf(stderr, "Usage: cwb-scan-corpus [options] <corpus> <key1> <key2> ... \n\n");
   fprintf(stderr, "Computes the joint frequency distribution over <key1>, <key2>, ... .\n");
   fprintf(stderr, "Each key specifier takes the form:\n\n");
   fprintf(stderr, "    [?]<att>[+<n>][[!]=/<regex>/[cd]]\n\n");
@@ -114,7 +116,8 @@ scancorpus_usage(void)
   fprintf(stderr, "Options:\n");
   fprintf(stderr, "  -r <dir>  use registry directory <dir>\n");
   fprintf(stderr, "  -b <n>    use <n> hash buckets [default: 1,000,000]\n");
-  fprintf(stderr, "  -o <file> write frequency table to <file> [default"": standard output]\n"); /* 'default:' confuses Emacs C-mode */
+  fprintf(stderr, "  -o <file> write frequency table to <file> [default"": standard output]\n");
+                                                            /* 'default:' confuses Emacs C-mode */
   fprintf(stderr, "            (compressed with gzip if <file> ends in '.gz')\n");
   fprintf(stderr, "  -f <n>    include only items with frequency >= <n> in result table\n");
   fprintf(stderr, "  -F <att>  add up frequency values from p-attribute <att>\n");
@@ -335,7 +338,11 @@ hash_add(int *tuple, int f)
 }
 
 /**
- * Checks whether a character is a letter.
+ * Checks whether a character is a letter in Latin-1.
+ *
+ * This function is no longer used, it is not multi-charset-safe.
+ *
+ * Can probably be scrubbed later.
  *
  * @param c The character to check.
  * @return  Boolean.
@@ -356,9 +363,6 @@ is_letter(unsigned char c)
  * function argument an "unsigned char" now, which should fix the problem. -- SE 18/08/09
  * (NB: there's still a harmless warning that "comparison is always true" for "c <= 0xFF")
  */
-/*
- * TODO This may or may not presents a challenge for UTF-8 depending on how the function is used.
- */
 }
 
 
@@ -371,15 +375,15 @@ is_letter(unsigned char c)
  * "Regularity" is used as a filter on the corpus iff the -C option
  * is specified.
  *
- * Character encoding: Latin-1.
- *
  * @param s  String containing the token to check.
  * @return   True if the token is regular, otherwise false.
  */
 int
 is_regular(char *s)
 {
-  /* TODO this function is a huge Unicode / 8859-2+ bug */
+  return cl_regex_match(regular_rx, s);
+
+#if 0  /* the old version of this function. */
   char *p = s;
   while (*p) {                          /* each component of the word may be ... */
     if (*p >= '0' && *p <= '9') { /* ... a number */
@@ -400,6 +404,7 @@ is_regular(char *s)
   }
   /* when we get here, the word was either empty or ended in a '-' => not regular */
   return 0;
+#endif
 }
 
 
@@ -620,6 +625,28 @@ main (int argc, char *argv[])
   if (C == NULL) {
     fprintf(stderr, "Error: can't find corpus %s (in registry %s)\n", corpname, (reg_dir) ? reg_dir : cl_standard_registry());
     exit(1);
+  }
+
+  /* now we know the corpus (and its character set) we can initialise the global regular expression object, if needed */
+  if (check_words) {
+    int rx_flags;
+    char *cleanup_rx_string;
+
+    if (C->charset == utf8) {
+      /* utf8: don't fold diacritics, but use Unicode character properties */
+      rx_flags = 0;
+      cleanup_rx_string = "[\\pL\\pN\\pM-]*[\\pL\\pN\\pM]";
+    }
+    else {
+      /* iso-8859: we use IGNORE_DIAC so that all strings will be folded,
+       * and a regex based on just ASCII will then always work regardless of charset */
+      rx_flags = IGNORE_DIAC;
+      cleanup_rx_string = "[\\w\\d-]*[\\w\\d]";
+    }
+    if (NULL == (regular_rx = cl_new_regex(cleanup_rx_string, rx_flags, C->charset)) ) {
+      fprintf(stderr, "Error: can't initialise regex system\n");
+      exit(1);
+    }
   }
 
   /* remaining arguments are specifiers for keys forming N-tuple */
@@ -925,6 +952,9 @@ main (int argc, char *argv[])
     if (! quiet)
       fprintf(stderr, "ok.\n");
   } /* endblock print hash contents to stdout */
+
+  /* final act of cleanup */
+  cl_delete_regex(regular_rx);
 
   exit(0);                        /* that was easy, wasn't it? */
 }

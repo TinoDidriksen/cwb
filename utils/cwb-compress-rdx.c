@@ -219,13 +219,13 @@ compress_reversed_index(Attribute *attr, char *output_fn)
 
   nr_elements = cl_max_id(attr);
   if ((nr_elements <= 0) || (cl_errno != CDA_OK)) {
-    cdperror("(aborting) cl_max_id() failed");
+    cl_error("(aborting) cl_max_id() failed");
     compressrdx_cleanup(1);
   }
 
   corpus_size = cl_max_cpos(attr);
   if ((corpus_size <= 0) || (cl_errno != CDA_OK)) {
-    cdperror("(aborting) cl_max_cpos() failed");
+    cl_error("(aborting) cl_max_cpos() failed");
     compressrdx_cleanup(1);
   }
 
@@ -265,7 +265,7 @@ compress_reversed_index(Attribute *attr, char *output_fn)
       compressrdx_cleanup(1);
     }
 
-    PStream = OpenPositionStream(attr, i);
+    PStream = cl_new_stream(attr, i);
     if ((PStream == NULL) || (cl_errno != CDA_OK)) {
       cl_error("(aborting) index read error");
       compressrdx_cleanup(1);
@@ -282,7 +282,7 @@ compress_reversed_index(Attribute *attr, char *output_fn)
     
     last_pos = 0;
     for (k = 0; k < element_freq; k++) {
-      if (1 != ReadPositionStream(PStream, &new_pos, 1)) {
+      if (1 != cl_read_stream(PStream, &new_pos, 1)) {
         cl_error("(aborting) index read error\n");
         compressrdx_cleanup(1);
       }
@@ -482,9 +482,10 @@ compressrdx_usage(char *msg, int error_code)
  * @param error_code  Value to be returned by the program when it exits.
  */
 void
-compressrdx_cleanup(int error_code) {
+compressrdx_cleanup(int error_code)
+{
   if (corpus)
-    drop_corpus(corpus);
+    cl_delete_corpus(corpus);
 
   if (debug_output != stderr)
     fclose(debug_output);
@@ -505,7 +506,8 @@ compressrdx_cleanup(int error_code) {
  * @param argv   Command-line arguments.
  */
 int
-main(int argc, char **argv) {
+main(int argc, char **argv)
+{
   char *registry_directory = NULL;
   char *attr_name = DEFAULT_ATT_NAME;
   Attribute *attr;
@@ -581,7 +583,6 @@ main(int argc, char **argv) {
       compressrdx_usage("illegal option.", 2);
       break;
     }
-
   }
 
   if (debug_fn)  {
@@ -609,8 +610,7 @@ main(int argc, char **argv) {
   if ((corpus = cl_new_corpus(registry_directory, corpus_id)) == NULL) {
     fprintf(stderr, "Corpus %s not found in registry %s . Aborted.\n", 
             corpus_id,
-            (registry_directory ? registry_directory
-             : central_corpus_directory()));
+            (registry_directory ? registry_directory : cl_standard_registry()));
     compressrdx_cleanup(1);
   }
 
@@ -623,9 +623,8 @@ main(int argc, char **argv) {
       }
   }
   else {
-    if ((attr = find_attribute(corpus, attr_name, ATT_POS, NULL)) == NULL) {
-      fprintf(stderr, "Attribute %s.%s doesn't exist. Aborted.\n", 
-              corpus_id, attr_name);
+    if ((attr = cl_new_attribute_oldstyle(corpus, attr_name, ATT_POS, NULL)) == NULL) {
+      fprintf(stderr, "Attribute %s.%s doesn't exist. Aborted.\n", corpus_id, attr_name);
       compressrdx_cleanup(1);
     }
     compress_reversed_index(attr, output_fn);

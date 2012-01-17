@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Important note: this script includes the ${//} operator. You need bash, ksh or zsh to run it, not other variants of sh.
+
 config_file=$(cat config.mk)
 target="include \$(TOP)/config/platform/darwin-core2"
 rep="include \$(TOP)/config/platform/"

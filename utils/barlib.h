@@ -48,19 +48,10 @@ typedef struct _BARdesc {
   int data_size;                       /**< used by BAR_reinit() to know if it needs to reallocate memory */
 } *BARdesc;
 
-/* create N,M-BAR with beam width W
-   BAR = BAR_new(N,M,W);
-   */
 BARdesc BAR_new(int N, int M, int W);
 
-/* change size of BAR (erases contents of BAR)
-   BAR_reinit(BAR, N, M, W);
-   */
 void BAR_reinit(BARdesc BAR, int N, int M, int W);
 
-/* destroy BAR 
-   BAR_delete(BAR);
-   */
 void BAR_delete(BARdesc BAR);
 
 /* A(x,y) = i

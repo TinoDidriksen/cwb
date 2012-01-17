@@ -1059,7 +1059,9 @@ check_subcorpus_name(char *name) {
 /* To avoid messing with function arguments when splitting specifiers,
    I need the following strdupto() function, which creates a duplicate
    of <str> just as if there were a \0 at <end> */
-char *strdupto(char *str, char *end) {
+char *
+strdupto(char *str, char *end)
+{
   int len = end - str;
   char *ret, *p;
 
@@ -1137,14 +1139,14 @@ combine_subcorpus_spec(char *corpus, char *subcorpus) {
 
 /** The AttBucket object is a holder for an attribute and its key string. */
 typedef struct att_bucket {
-  char *string; /* the key */
+  char *string;                 /**< the key for this attribute bucket. */
   Attribute *attribute;
-  int type;                     /* ATT_NONE, ATT_POS, ATT_STRUC, ... */
+  int type;                     /**< type of the attribute in this bucket: ATT_NONE, ATT_POS, ATT_STRUC, ... */
 } AttBucket;
 
 /** Underlying structure for the AttHashTable object.  @see AttHashTable */
 struct att_hashtable {
-  AttBucket *space;
+  AttBucket *space;             /**< the actual array of attribute buckets. */
   int    code;
   int    size;
 };
@@ -1152,7 +1154,7 @@ struct att_hashtable {
 /** An AttHashTable object contains space for a hash table of attribute-pointers. */
 typedef struct att_hashtable *AttHashTable;
 
-/** The global attribute hash */
+/** The CQi server's global attribute hash */
 AttHashTable AttHash = NULL;
 
 /**

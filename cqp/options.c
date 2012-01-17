@@ -31,6 +31,7 @@
 #include "../cl/attributes.h"
 #include "../cl/macros.h"
 
+/* these boolean constants SHOULD NOT be used. Present only to make sure old code doesn't break. */
 #ifndef True
 #define True 1
 #endif
@@ -215,6 +216,10 @@ expand_filename(char *fname)
   
 }
 
+/**
+ * Prints the usage message for the different CQP applications
+ * to standard error and then shuts down the program with exit status 1.
+ */
 void
 cqp_usage(void)
 {
@@ -865,7 +870,7 @@ parse_options(int ac, char *av[])
   insecure = 0;
 
   progname = av[0];
-  licensee = 
+  licensee =
     "\n"
     "The IMS Open Corpus Workbench (CWB)\n"
     "\n"
@@ -899,7 +904,8 @@ parse_options(int ac, char *av[])
     valid_options = "+1b:d:D:FhI:l:LmM:P:qr:Svx";
     break;
   default:
-    cqp_usage();                        /* this will display the 'unknown application' message */
+    cqp_usage();
+    /* this will display the 'unknown application' message */
   }
 
   while ((c = getopt(ac, av, valid_options)) != EOF)

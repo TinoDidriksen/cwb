@@ -50,7 +50,7 @@ extern void yyrestart(FILE *input_file);
 
 /** Array of file handles. Allows nested execution of "included" text files full of commands. */
 FILE *cqp_files[MAXCQPFILES];
-/** index-pointer into cqp_files. @see cqp_files */
+/** index into cqp_files. @see cqp_files */
 int cqp_file_p;
 
 /**
@@ -65,7 +65,7 @@ int reading_cqprc = 0;
 /* ======================================== Query Buffer Interface */
 
 char QueryBuffer[QUERY_BUFFER_SIZE];        /**< buffer for queries */
-int QueryBufferP = 0;                       /**< pointer into this buffer, for appending */
+int QueryBufferP = 0;                       /**< index into this buffer, for appending */
 int QueryBufferOverflow = 0;                /**< flag which signals buffer overflows */
 
 

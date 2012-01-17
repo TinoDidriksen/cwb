@@ -267,39 +267,45 @@ encode_usage(void)
   fprintf(stderr, "\n");
   fprintf(stderr, "Usage:  %s -f <file> [options] -d <dir> [attribute declarations]\n", progname);
   fprintf(stderr, "        ... | %s [options] -d <dir> [attribute declarations]\n\n", progname);
-  fprintf(stderr, "Reads verticalised text from stdin (or an input file with -f option) and converts it\n");
-  fprintf(stderr, "to the CWB binary format. Each TAB-separated column is encoded as a separate\n");
-  fprintf(stderr, "p-attribute. The first p-attribute is named \"word\" (unless changed with -p),\n");
-  fprintf(stderr, "additional columns must be declared with -P flags. S-attributes can be\n");
+  fprintf(stderr, "Reads verticalised text from stdin (or an input file with -f option) and \n");
+  fprintf(stderr, "converts it to the CWB binary format. Each TAB-separated column is encoded as a\n");
+  fprintf(stderr, "separate p-attribute. The first p-attribute is named \"word\" (unless changed\n");
+  fprintf(stderr, "with -p), additional columns must be declared with -P flags. S-attributes can be\n");
   fprintf(stderr, "declared with -S (without annotations) or -V (with annotations) flags. In\n");
   fprintf(stderr, "the input data, they must appear as opening and closing XML tags on separate\n");
   fprintf(stderr, "lines. For each encoded attribute, one or more data files are created in the\n");
   fprintf(stderr, "current directory (or any directory specified with -d). After encoding, use\n");
-  fprintf(stderr, "cwb-makeall to create the required index files and frequency lists, then compress\n");
-  fprintf(stderr, "them with cwb-huffcode and cwb-compress-rdx (or preferably use the cwb-make\n");
-  fprintf(stderr, "program from the CWB/Perl interface).\n\n");
+  fprintf(stderr, "cwb-makeall to create the required index files and frequency lists, then\n");
+  fprintf(stderr, "compress them with cwb-huffcode and cwb-compress-rdx (or preferably use the\n");
+  fprintf(stderr, "cwb-make program from the CWB/Perl interface).\n\n");
   fprintf(stderr, "NB: If you re-encode an existing corpus, be sure to delete all old data files,\n");
-  fprintf(stderr, "in particular the index and any compressed data files, before running cwb-encode!\n");
+  fprintf(stderr, "in particular the index and any compressed data files, before running\n");
+  fprintf(stderr, "cwb-encode!\n");
   fprintf(stderr, "\n");
   fprintf(stderr, "Attribute declarations:\n");
   fprintf(stderr, "  -p <att>  change name of default p-attribute from \"word\" to <att>\n");
   fprintf(stderr, "  -p -      no default p-attribute (all must be declared with -P)\n");
   fprintf(stderr, "  -P <att>  declare additional p-attribute <att>\n");
-  fprintf(stderr, "     * append / to mark as feature set => values will be validated and normalised\n");
+  fprintf(stderr, "     * append / to mark as feature set => values will be validated and\n");
+  fprintf(stderr, "       normalised\n");
   fprintf(stderr, "  -S <att>  declare s-attribute <att> without annotations\n");
   fprintf(stderr, "  -V <att>  declare s-attribute <att> with annotations\n");
-  fprintf(stderr, "     * append :<n> for automatic renaming of nested regions, :0 to drop nested regions\n");
-  fprintf(stderr, "       (highly recommended, otherwise every start tag will begin a new flat region)\n");
-  fprintf(stderr, "     * attribute-value pairs in XML start tags can be auto-split into separate s-attributes;\n");
-  fprintf(stderr, "       the relevant attribute names are appended with + signs (e.g., -S s:0+id+len stores\n");
-  fprintf(stderr, "       XML tags like <s id=\"abc\" len=42> in attributes s, s_id and s_len)\n");
-  fprintf(stderr, "     * use -V to store original attribute-value pairs as single string in addition to\n");
-  fprintf(stderr, "       auto-splitting into individual s-attributes (e.g. -V s:0+id+len)\n");
-  fprintf(stderr, "     * annotations and values of XML tag attributes can be feature sets; append / to relevant\n");
-  fprintf(stderr, "       attribute name for format validation and normalisation (e.g. -S np:2+agr/+head)\n");
+  fprintf(stderr, "     * append :<n> for automatic renaming of nested regions, :0 to drop nested\n");
+  fprintf(stderr, "       regions (highly recommended, otherwise every start tag will begin a new\n");
+  fprintf(stderr, "       flat region)\n");
+  fprintf(stderr, "     * attribute-value pairs in XML start tags can be auto-split into separate\n");
+  fprintf(stderr, "       s-attributes; the relevant attribute names are appended with + signs\n");
+  fprintf(stderr, "       (e.g., -S s:0+id+len stores XML tags like <s id=\"abc\" len=42> in\n");
+  fprintf(stderr, "       attributes s, s_id and s_len)\n");
+  fprintf(stderr, "     * use -V to store original attribute-value pairs as single string in\n");
+  fprintf(stderr, "       addition to auto-splitting into individual s-attributes (e.g. \n");
+  fprintf(stderr, "       -V s:0+id+len)\n");
+  fprintf(stderr, "     * annotations and values of XML tag attributes can be feature sets; append\n");
+  fprintf(stderr, "       / to relevant attribute name for format validation and normalisation\n");
+  fprintf(stderr, "       (e.g. -S np:2+agr/+head)\n");
   fprintf(stderr, "  -0 <att>  declare null s-attribute <att> (discards tags)\n\n");
   fprintf(stderr, "Options:\n");
-  fprintf(stderr, "  -d <dir>  directory for data files created by %s\n", progname);
+  fprintf(stderr, "  -d <dir>  directory for data files created by cwb-encode\n");
   fprintf(stderr, "     * this option always has to be specified (use -d . for current directory)\n");
   fprintf(stderr, "  -f <file> read input from <file> [default is stdin; -f may be used repeatedly]\n");
   fprintf(stderr, "     * gzipped files named *.gz will be decompressed automatically\n");
@@ -309,6 +315,7 @@ encode_usage(void)
   fprintf(stderr, "     * files will be added to the corpus in alphabetical order (ASCII)\n");
   fprintf(stderr, "     * it is not possible to scan subdirectories recursively\n");
 /* uncomment the following lines when (if...) the -C and -r flags are implemented */
+/* a different character for the "C" option would be needed as we are now using it for "clean" */
 /*    fprintf(stderr, "  -C <id>   (re-)encode corpus <id> (using data path from registry)\n"); */
 /*    fprintf(stderr, "  -r <dir>  set registry directory (for -C flag)\n"); */
   fprintf(stderr, "  -R <rf>   create registry entry (named <rf>) listing all encoded attributes\n");
@@ -319,7 +326,7 @@ encode_usage(void)
   fprintf(stderr, "  -b <n>    number of buckets in lexicon hash tables\n");
   fprintf(stderr, "  -c <charset> specify corpus character set (instead of the default latin1)\n");
   fprintf(stderr, "     * valid charsets: ascii ; latin1 to latin9 ; arabic, greek, hebrew ; utf8\n");
-  fprintf(stderr, "  -C        clean strings, replacing invalid bytes with '?' (except UTF-8 charset)\n");
+  fprintf(stderr, "  -C        clean strings, replacing invalid bytes with '?' (not in UTF-8 mode)\n");
   fprintf(stderr, "  -v        verbose mode (show progress messages while encoding)\n");
   fprintf(stderr, "  -q        quiet mode (suppresses most warnings)\n");
   fprintf(stderr, "  -D        debug mode (quiet, sorry, quite the opposite :-)\n");
@@ -335,12 +342,10 @@ encode_usage(void)
 void
 encode_print_input_lineno(void)
 {
-  if ((nr_input_files > 0) && (current_input_file_name != NULL)) {
+  if (nr_input_files > 0 && current_input_file_name != NULL)
     fprintf(stderr, "file %s, line #%d", current_input_file_name, input_line);
-  }
-  else {
+  else
     fprintf(stderr, "input line #%d", input_line);
-  }  
 }
 
 /**
@@ -353,7 +358,8 @@ encode_print_input_lineno(void)
  * @param ...     Additional arguments, printf-style.
  */
 void
-encode_error(char *format, ...) {
+encode_error(char *format, ...)
+{
   va_list ap;
   va_start(ap, format);
 
@@ -1598,7 +1604,7 @@ encode_get_input_line(char *buffer, int bufsize)
   if (recursive_call == 0) {
     if (!cl_string_validate_encoding(buffer, encoding_charset, clean_strings))
       encode_error("Encoding error: an invalid byte or byte sequence for charset \"%s\" was encountered.\n",
-          corpus_character_set);
+                   corpus_character_set);
     /* calling this function with no flags will normalize to precomposed form;
      * but don't bother with the overhead unless the encoding is UTF8  */
     if (encoding_charset == utf8)

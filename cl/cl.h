@@ -140,7 +140,7 @@
  *
  */
 
-/* Error Codes. Note that "CDA" stands for "corpus data access". */
+/* Error Codes. Note that "CDA" stands for "CL data access". */
 #define CDA_OK           0        /**< Error code: everything is fine; actual error values are all less than 0 */
 #define CDA_ENULLATT    -1        /**< Error code: NULL passed as attribute argument */
 #define CDA_EATTTYPE    -2        /**< Error code: function was called on illegal attribute */
@@ -802,7 +802,7 @@ typedef struct _CL_Regex *CL_Regex;
 #define IGNORE_REGEX 4
 
 /* ... and the regex API ... */
-CL_Regex cl_new_regex(char *regex, int flags, CorpusCharset charset /*ignored before v3.2*/);
+CL_Regex cl_new_regex(char *regex, int flags, CorpusCharset charset);
 int cl_regex_optimised(CL_Regex rx); /* 0 = not optimised; otherwise, value indicates level of optimisation */
 int cl_regex_match(CL_Regex rx, char *str); /* automatically uses normalisation flags from constructor;
                                                returns True when regex matches */

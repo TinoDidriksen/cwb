@@ -107,11 +107,8 @@ char cl_regex_error[CL_MAX_LINE_LENGTH];
  * anchored to the start and end of the string. (That is, ^ is added to
  * the start, $ to the end.)
  *
- * Then the resulting regex is compiled (using POSIX compilation) and
+ * Then the resulting regex is compiled (using PCRE) and
  * optimised.
- *
- * Currently, the charset parameter only distinguishes between UTF8 and "other"
- * (Ascii or LatinX), as does PCRE.
  *
  * @param regex    String containing the regular expression
  * @param flags    IGNORE_CASE, or IGNORE_DIAC, or both, or 0.

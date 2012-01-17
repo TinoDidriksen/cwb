@@ -22,7 +22,7 @@
 #include <unistd.h>
 #include <math.h>
 
-#include "../cl/cl.h"
+#include "../cl/globals.h"
 
 #include "feature_maps.h"
 
@@ -77,15 +77,15 @@ Attribute *prealign1 = NULL;    /**< pre-alignment attribute (source) if given *
 Attribute *prealign2 = NULL;    /**< pre-alignment attribute (target) */
 int size1;                      /**< size of source corpus in sentences */
 int size2;                      /**< size of target corpus in sentences */
-int ws1;                        /**< size of source corpus in words (i.e. corpus positions) */
-int ws2;                        /**< size of target corpus in words (i.e. corpus positions) */
+int ws1;                        /**< size of source corpus in word tokens (i.e. corpus positions) */
+int ws2;                        /**< size of target corpus in word tokens (i.e. corpus positions) */
 int pre1 = 0;                   /**< number of pre-alignment regions (source corpus) */
 int pre2 = 0;                   /**< number of pre-alignment regions (target corpus) */
 
 
 /* global options */
 
-char word_name[CL_MAX_FILENAME_LENGTH] = "word";  /**< name of the word attribute (default: word) */
+char word_name[CL_MAX_FILENAME_LENGTH] = "word";         /**< name of the word attribute (default: word) */
 char outfile_name[CL_MAX_FILENAME_LENGTH] = "out.align"; /**< name of the output file */
 
 double split_factor = 1.2;      /**< 2:2 alignment split factor */

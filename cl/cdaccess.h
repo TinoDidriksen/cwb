@@ -18,12 +18,6 @@
 #ifndef _cdaccess_h_
 #define _cdaccess_h_
 
-/*
- * comment out includes to see if it breaks anything, prior to removing...
-#include "globals.h"
-#include "attributes.h"
-*/
-
 /* error codes now in <cl.h> */
 
 /* typedef struct _DCR DynCallResult; now in <cl.h> */

@@ -69,8 +69,8 @@ int debug_simulation;             /**< if true, debug messages are printed when 
 int activate_cl_debug;            /**< if true, the CL's debug message setting is set to On. */
 
 /* CQPserver options */
-int server_log;                   /**< cqpserver option: logging */
-int server_debug;                 /**< cqpserver option: debugging output */
+int server_log;                   /**< cqpserver option: logging (print log messages to standard output) */
+int server_debug;                 /**< cqpserver option: debugging output (print debug messages to standard error) */
 int snoop;                        /**< cqpserver option: monitor CQi network communication */
 int private_server;               /**< cqpserver option: makes CQPserver accept a single connection only */
 int server_port;                  /**< cqpserver option: CQPserver's listening port (if 0, listens on CQI_PORT) */
