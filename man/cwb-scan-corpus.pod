@@ -64,7 +64,8 @@ do not need to understand this option.  The default setting of 1,000,000 buckets
 =item B<-C>        
 
 Enables cleanup of the output data. "Cleanup" means that any token values that are not "regular" words will be omitted.
-A regular word consists only of letters, numbers and hyphens and does not end with a hyphen.
+A regular word consists only of one or more hyphen-connected components, each of which is made up of either all  
+letters or all digits, and does not start or end with a hyphen.
 
 Cleanup does not apply to the values of "constraint" keys.  All other keys will be affected, however, as C<-C> is a global option.
 

@@ -5,6 +5,7 @@ Other changes:
 
  - cwb-scan-corpus now accepts negated regular expression constraints (e.g. 'lemma+0!=/anti.*/c').
    The -C option is consistently ignored for constraint keys ('?...'), and documented to be.
+   It is also now compatible with multiple ISO-8859 character sets and with UTF-8.
 
 Bug fixes:
 
@@ -18,10 +19,11 @@ Bug fixes:
   Even though the actual Huffman codes are now different, the index file format is not affected and should be
   fully compatible between older and newer CWB versions.
 
+
 Version 3.2
 -----------
 
-Version 3.2 of CWB (currently in beta) adds Unicode support (utf8). It also breaks backwards compatability in one,
+Version 3.2 of CWB adds Unicode support (utf8). It also breaks backwards compatability in one,
 possibly important way: all "identifiers" (names of corpora, attributes, subcorpora etc.) must use ASCII characters
 only - no Latin1 accented letters, for instance. This is necessary to avoid potential conflicts between Latin1 and
 UTF8 encodings in filenames and directory paths. Any corpora you have from earlier versions which use accented 
@@ -49,7 +51,7 @@ Other changes:
 Version 3.1
 -----------
 
-Version 3.1 of CWB (currently in beta) will run on Windows (currently, by cross-compilation on Linux using MinGW).
+Version 3.1 of CWB runs on Windows (currently, by cross-compilation on Linux using MinGW).
 This was accomplished by incorporating back into the main code base changes made to a branch of CWB by Serge 
 Heiden and colleagues on the Textometrie project. There are no other new features.
 

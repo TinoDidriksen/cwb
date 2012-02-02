@@ -19,6 +19,7 @@
 #include "../cl/globals.h"
 #include "../cl/corpus.h"
 #include "../cl/cl.h"
+#include "../cl/special-chars.h"
 
 /** use 1 million buckets by default */
 #define DEFAULT_BUCKETS 1000000
@@ -81,7 +82,7 @@ Corpus *C;                   /**< corpus we're working on */
 char *reg_dir = NULL;        /**< registry directory (NULL -> use default) */
 char *corpname = NULL;       /**< corpus name (command-line) */
 int check_words = 0;         /**< if set, accept only 'regular' words in frequency counts */
-CL_Regex regular_rx = NULL;  /**< regex object for use when check_words is true. @see is_regular */
+CL_Regex regular_rx = NULL;  /**< regex object for use when check_words is true. @see scancorpus_word_is_regular */
 char *progname = NULL;       /**< name of this program (from shell command) */
 char *output_file = NULL;    /**< output file name (-o option) */
 int frequency_threshold = 0; /**< frequency threshold for result table (-f option) */
@@ -337,40 +338,14 @@ hash_add(int *tuple, int f)
   }
 }
 
-/**
- * Checks whether a character is a letter in Latin-1.
- *
- * This function is no longer used, it is not multi-charset-safe.
- *
- * Can probably be scrubbed later.
- *
- * @param c The character to check.
- * @return  Boolean.
- */
-int
-is_letter(unsigned char c)
-{
-  return
-    ( (c >= 'A' && c <= 'Z') ||
-      (c >= 'a' && c <= 'z') ||
-      (c >= 0xC0 && c <= 0xFF ));
-/*      (c >= '\xfffd' && c <= '\xfffd') );
- * this line became corrupt when imported into the SVN due to non-ASCII characters (see above)
- * I replaced it with the hex values for capital-a-grave to little-y-diaresis,
- * having looked them up in earlier version of the code... -- AH 1/7/09
- * Which means that the condition could never be satisfied on a platform where char is signed
- * (because the non-ASCII characters have negative codes in this case); I've explicitly made the
- * function argument an "unsigned char" now, which should fix the problem. -- SE 18/08/09
- * (NB: there's still a harmless warning that "comparison is always true" for "c <= 0xFF")
- */
-}
+
 
 
 /**
  * Check regularity of a token.
  *
  * A token is "regular" if it contains only letters, numbers and dashes
- * (with no dash at the end).
+ * (with no dash at the start or end).
  *
  * "Regularity" is used as a filter on the corpus iff the -C option
  * is specified.
@@ -379,9 +354,45 @@ is_letter(unsigned char c)
  * @return   True if the token is regular, otherwise false.
  */
 int
-is_regular(char *s)
+scancorpus_word_is_regular(char *s)
 {
-  return cl_regex_match(regular_rx, s);
+  /* bad pointer or empty string or first char is hyphen? not regular */
+  if (s == NULL || *s == '\0' || *s == '-')
+    return 0;
+
+  /* otherwise, different approach of utf8 versus iso8859 */
+  if (C->charset == utf8)
+    return cl_regex_match(regular_rx, s);
+  else {
+    char *p = s;
+    while (*p) {
+      /* each component of the string may be... */
+      /* a sequence of digits: if so scroll through */
+      if (*p >= '0' && *p <= '9')
+        while (*p >= '0' && *p <= '9')
+          p++;
+      /* or a sequence fo letters: if so scroll through */
+      else if (cl_iso_char_is_alphanumeric(*p, C->charset))
+        while (cl_iso_char_is_alphanumeric(*p, C->charset))
+          p++;
+      /* otherwise this isn't the start of a valid component */
+      else
+        return 0;
+      /* we are at the end of a component: if it is also the end of
+       * the string this is regular; otherwise there must be a hyphen,
+       * followed by another component */
+      if (*p == '\0')
+        return 1;
+      if (*p++ != '-')
+        return 0;
+      /* else: there IS a hyphen, so we need to loop again */
+    }
+    /* we are at the end of the string: was the last character a hyphen? */
+    if (*(p-1) == '-')
+      return 0;
+  }
+  /* when we get here, the word ended in a '-' => not regular */
+  return 0;
 
 #if 0  /* the old version of this function. */
   char *p = s;
@@ -508,7 +519,7 @@ scancorpus_add_key(char *key)
       if (check_words && !is_constraint) { /* reduce ID list to regular words with -C option (but not for constraint keys) */
         point = mark = 0;
         while (point < list_size) {
-          if (is_regular(cl_id2str(att, Hash.id_list[Hash.N][point])))
+          if (scancorpus_word_is_regular(cl_id2str(att, Hash.id_list[Hash.N][point])))
             Hash.id_list[Hash.N][mark++] = Hash.id_list[Hash.N][point];
           point++;
         }
@@ -634,19 +645,12 @@ main (int argc, char *argv[])
 
     if (C->charset == utf8) {
       /* utf8: don't fold diacritics, but use Unicode character properties */
-      rx_flags = 0;
-      cleanup_rx_string = "[\\pL\\pN\\pM-]*[\\pL\\pN\\pM]";
+      if (NULL == (regular_rx = cl_new_regex("([\\pL\\pM]+|\\pN+)(-([\\pL\\pM]+|\\pN+))*", 0, C->charset)) ) {
+        fprintf(stderr, "Error: can't initialise regex\n");
+        exit(1);
+      }
     }
-    else {
-      /* iso-8859: we use IGNORE_DIAC so that all strings will be folded,
-       * and a regex based on just ASCII will then always work regardless of charset */
-      rx_flags = IGNORE_DIAC;
-      cleanup_rx_string = "[\\w\\d-]*[\\w\\d]";
-    }
-    if (NULL == (regular_rx = cl_new_regex(cleanup_rx_string, rx_flags, C->charset)) ) {
-      fprintf(stderr, "Error: can't initialise regex system\n");
-      exit(1);
-    }
+    /* other character sets don't use regex engine: see scancorpus_word_is_regular */
   }
 
   /* remaining arguments are specifiers for keys forming N-tuple */
@@ -781,7 +785,7 @@ main (int argc, char *argv[])
                    /* id matching negative constraint may not have been found in idlist[] filtered with -C flag,
                       so we need to check explicitly that the corresponding string is regular in this case */
                   str = cl_id2str(Hash.att[i], id);
-                  if (!is_regular(str)) accept = 0;
+                  if (!scancorpus_word_is_regular(str)) accept = 0;
                 }
               }
               else accept = 0;
@@ -792,7 +796,7 @@ main (int argc, char *argv[])
           }
           else if (check_words) {      /* no regex, but -C option specified: check now whether word is regular */
             str = cl_id2str(Hash.att[i], id);
-            if (!is_regular(str)) accept = 0;
+            if (!scancorpus_word_is_regular(str)) accept = 0;
           }
         }
         else {                             /* s-attribute -> id = offset of annotation string in lexicon data */
@@ -822,7 +826,7 @@ main (int argc, char *argv[])
                   if (!Hash.is_negated[i]) Hash.constraint_ok[i] = 0; /* plain regex matches -> reject */
                 }
               }
-              if (check_words && !Hash.is_constraint[i] && !is_regular(str)) /* -C flag (ignored fo constraint keys) */
+              if (check_words && !Hash.is_constraint[i] && !scancorpus_word_is_regular(str))   /* -C flag (ignored for constraint keys) */
                 Hash.constraint_ok[i] = 0;
               /* may jump directly to next region when regex constraint is present (or for ``?head'' constraints) */ 
               if (Hash.regex[i] != NULL || Hash.source_base[i] == NULL) { 

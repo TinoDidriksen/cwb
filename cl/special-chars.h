@@ -25,4 +25,6 @@
 
 unsigned char *cl_string_maptable(CorpusCharset charset, int flags);
 
+int cl_iso_char_is_alphanumeric(unsigned char c, CorpusCharset charset);
+
 #endif
