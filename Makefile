@@ -26,15 +26,16 @@
 #  
 #  The following make targets are available:
 #
-#  all		compile the Corpus Library, CQP, command-line utilities and man pages
-#  install	install CL, CQP, utilities and man pages
-# [uninstall	uninstall everything from specified locations] -- currently not available
-#  clean	clean up in all subdirectories 
-#  realclean	also delete automatically generated parsers, dependencies, etc.
+#  all          compile the Corpus Library, CQP, command-line utilities and man pages
+#  install      install CL, CQP, utilities and man pages
+# [uninstall    uninstall everything from specified locations] -- currently not available
+#  release      create a release file (binaries and documentation)
+#  clean        clean up in all subdirectories 
+#  realclean    also delete automatically generated parsers, dependencies, etc.
 #
-#  size		check size of sourcecode (in lines)
-#  depend	update dependencies (only necessary after major changes)
-#  tags		create an emacs ETAGS file
+#  size         check size of sourcecode (in lines)
+#  depend       update dependencies (only necessary after major changes)
+#  tags         create an emacs ETAGS file
 #
 #  cl           to compile the Corpus Library only
 #  cqp          to compile CQP only
