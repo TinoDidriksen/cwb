@@ -45,6 +45,13 @@ Properties > Advanced > Environment Variables > under "System Variables",
 highlight "Path" and press Edit > add the "binary" directory at the end
 of the path, after a semicolon > press OK > OK > OK).
 
+POTENTIAL ISSUE: Sometimes two of the CWB utility program (cwb-atoi and
+cwb-itoa) are flagged up as viruses or trojans by antivirus software.
+If you downlaoded CWB from a legitimate source (basically, Sourceforege)
+this is extremely unlikely to be the case. As far as we can tell the issue
+is that tiny programs like these two (about 24kb each) are deemed inherently 
+suspicious by some naive antivirus scanners. But they aren't viruses, honest!
+
 
 
 	(2) UNIX, etc, INSTALLATION
