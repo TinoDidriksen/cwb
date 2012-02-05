@@ -61,8 +61,18 @@ void add_to_string(char **s, int *spos, int *ssize, char *suffix)
   ((*s)[*spos]) = '\0';
 }
 
-/* ============================== srev(): reverse string, destructively */
-
+/**
+ * Reverses the argument string (destructively, that is, in situ).
+ *
+ * Cf. the non-standard (microsoft) function strrev.
+ *
+ * This does not respect UTF-8, so anything reversed *must* be re-reversed
+ * before output or there will be invalid byte sequences.
+ *
+ * @param s  The string to modify.
+ * @return   A pointer to the modified string (same memory area as
+ *           the argument string).
+ */
 char *
 srev(char *s)
 {
@@ -85,7 +95,7 @@ srev(char *s)
 /* ---------------------------------------------------------------------- */
 
 /**
- * Appends one string to another whicle keeping track of the overall length.
+ * Appends one string to another while keeping track of the overall length.
  *
  * @param s       The string to modify.
  * @param suffix  The string you want to append to s.
@@ -405,7 +415,8 @@ get_position_values(ContextDescriptor *cd,
   s[*sp] = '\0';
 
 #if 0
-  fprintf(stderr, "get_position_values() at pos %d: ``%s''\n", 
+  fprintf(stderr,
+          "get_position_values() at pos %d: ``%s''\n",
           position, s);
 #endif
 
@@ -434,7 +445,7 @@ remember_this_position(int position,
 }
 
 /**
- * @return  A pointer to a function-internal static string containing
+ * @return  A pointer to a function-internal static string buffer containing
  *          the requested string. Do not free it.
  */
 char *
@@ -478,9 +489,23 @@ get_field_separators(int position,
     return NULL;
 }
 
+/**
+ * Builds a string for a concordance output line.
+ *
+ * 'position_list' is a list of (corpus) positions. The string
+ * start and beginning positions for these corpus positions
+ * are written into returned_positions, which must be exactly
+ * two times as large as the position list. The number of
+ * positions must be in nr_positions.
+ *
+ * @param match_start  A corpus position
+ * @param match_end    A corpus position
+ * @return             String containing the output line.
+ */
 char *
 compose_kwic_line(Corpus *corpus,
-                  int match_start, int match_end,
+                  int match_start,
+                  int match_end,
                   ContextDescriptor *cd,
                   int *length,
                   int *s_mb,
@@ -634,7 +659,7 @@ compose_kwic_line(Corpus *corpus,
 
         this_token_start = line_p;
         
-        /* wir f�gen erstmal ganz normal ein und drehen nachher um */
+        /* wir fügen erstmal ganz normal ein und drehen nachher um */
 
         if ((word = get_field_separators(start, fields, nr_fields, 0, pdr)))
           append(line, word, &line_p, MAXKWICLINELEN);
@@ -694,7 +719,7 @@ compose_kwic_line(Corpus *corpus,
     fprintf(stderr, "line aft srev(): >>%s<<\n", line + index);
 #endif
 
-    /* der spannende Teil: wir m�ssen wg srev() die Liste der
+    /* der spannende Teil: wir müssen wg srev() die Liste der
      * returned_positions angleichen... */
 
     if (position_list && (nr_positions > 0)) {
@@ -745,7 +770,7 @@ compose_kwic_line(Corpus *corpus,
                               pdr, 
                               nr_mappings, mappings)) {
 
-        /* Trennzeichen einf�gen, falls schon tokens in line drin sind */
+        /* Trennzeichen einfügen, falls schon tokens in line drin sind */
         if (line_p > 0)
           append(line, pdr->TokenSeparator, &line_p, MAXKWICLINELEN);
 
@@ -832,7 +857,7 @@ compose_kwic_line(Corpus *corpus,
                               pdr, 
                               nr_mappings, mappings)) {
         
-        /* Trennzeichen einf�gen, falls schon tokens in line drin sind */
+        /* Trennzeichen einfügen, falls schon tokens in line drin sind */
         if (line_p > 0)
           append(line, pdr->TokenSeparator, &line_p, MAXKWICLINELEN);
 
@@ -870,10 +895,10 @@ compose_kwic_line(Corpus *corpus,
 
 
   /* Der linke Kontext ist berechnet. Nun werden die Match-Tokens
-   * eingef�gt
+   * eingefügt
    */
 
-  /* Trennzeichen einf�gen, falls schon tokens in line drin sind */
+  /* Trennzeichen einfügen, falls schon tokens in line drin sind */
   if (line_p > 0)
     append(line, pdr->TokenSeparator, &line_p, MAXKWICLINELEN);
   
@@ -930,7 +955,7 @@ compose_kwic_line(Corpus *corpus,
 
   *s_me = line_p;
 
-  /* nun mu� noch der Rechtskontext hinzugef�gt werden */
+  /* nun muss noch der Rechtskontext hinzugefügt werden */
 
 
   switch(cd->right_type) {
@@ -1110,7 +1135,7 @@ compose_kwic_line(Corpus *corpus,
                               pdr, 
                               nr_mappings, mappings)) {
         
-        /* Trennzeichen einf�gen, falls schon tokens in line drin sind */
+        /* Trennzeichen einfügen, falls schon tokens in line drin sind */
         if (line_p > 0 && line_p < MAXKWICLINELEN)
           line[line_p++] = separator;
 
@@ -1146,6 +1171,24 @@ compose_kwic_line(Corpus *corpus,
 
   /* so, das war's ... :-) */
 
+  if (corpus->charset == utf8) {
+    /* charset check: if the corpus is UTF8, and we filled the whole buffer,
+     * we need to make sure that we didn't chop a multi-byte character in
+     * half at the end.
+     */
+    if (line_p == (MAXKWICLINELEN-1))
+      while ( ! cl_string_validate_encoding(line, utf8, 0) )
+        line[--line_p] = '\0';
+    /* the trick above works because all component strings are from a
+     * known-good-utf8 source; ergo, if validation fails,
+     * it can only be because of bad bytes at the end, which we can
+     * lop off byte-by-byte till validation passes. (Alternative approach:
+     * call g_utf8_validate() directly, since this would give us a position
+     * for the first invalid byte ... but for the moment, let's not
+     * call GLib directly outside the CL if we can avoid it.)
+     */
+  }
+
   *length = line_p;
 
   /* TODO: returned_positions richtig setzen */
@@ -1154,6 +1197,7 @@ compose_kwic_line(Corpus *corpus,
 }
 
 
+/* TODO: is this function called anywhere? */
 ConcordanceLine 
 MakeConcordanceLine(Corpus *corpus,
                     Attribute *attribute,

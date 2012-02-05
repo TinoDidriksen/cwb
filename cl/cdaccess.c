@@ -41,7 +41,7 @@
 /**
  * Error number for CL: is set after access to any of various corpus-data-access functions.
  */
-int cl_errno;
+int cl_errno = CDA_OK;
 
 
 
