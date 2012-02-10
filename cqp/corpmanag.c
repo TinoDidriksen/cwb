@@ -37,7 +37,6 @@
 #include "options.h"
 #include "output.h"
 #include "ranges.h"
-/*#include "paths.h"*/
 
 #define COLON ':'
 #define SLASH '^'

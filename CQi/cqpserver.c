@@ -1680,6 +1680,7 @@ main(int argc, char *argv[])
   /* connection terminated; clean up and exit */
   printf("CQPserver: Exit. (pid = %d)\n", (int)getpid());
 
+  /* TODO should we check cqp_error_status as in the main cqp app? */
   return 0;
 }
 

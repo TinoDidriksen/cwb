@@ -437,7 +437,7 @@ main(int argc, char *argv[])
     exit(1);
   }
 
-  /* Test ANSII colours (if CQP was invoked with -C switch) */
+  /* Test ANSI colours (if CQP was invoked with -C switch) */
   if (use_colour) {
 #ifndef __MINGW__
     char *blue = get_colour_escape('b', 1);
@@ -503,7 +503,7 @@ main(int argc, char *argv[])
   if (macro_debug)
     macro_statistics();
 
-  return 0;
+  return (cqp_error_status == 0 ? 0 : 1);
 }
 
 

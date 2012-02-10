@@ -30,7 +30,6 @@
 
 /** DEPRACATED means of storing a Boolean value  */
 typedef int Boolean;
-/* an even more depracated version: typedef enum bool { False, True } Boolean; */
 
 /** DEPRACATED macros for Boolean true and false */
 #define True 1
@@ -55,6 +54,8 @@ typedef enum _cyctype {
 CYCtype LastExpression;
 
 extern int reading_cqprc;
+
+extern int cqp_error_status;
 
 /* ======================================== Query Buffer Interface */
 
