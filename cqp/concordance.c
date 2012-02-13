@@ -972,8 +972,8 @@ compose_kwic_line(Corpus *corpus,
 
       token_p = 0;
 
-      if (acc_len >= cd->right_width)
-        enough_context++;
+      if (acc_len >= cd->right_width || line_p >= MAXKWICLINELEN)
+        enough_context++; /* stop if the requested number of characters have been generated or if the buffer is full */
       else if (get_position_values(cd, 
                                    start, 
                                    token, &token_p, 
@@ -1019,9 +1019,12 @@ compose_kwic_line(Corpus *corpus,
         enough_context = 1;
     }
 
-    /* auffüllen (padding) mit Blanks, bis rechter Kontext erreicht */
+    /* THIS IS NONSENSE -- deactivated by SE, 13.02.2012 */
+#if 0
+    /* pad right context with blanks, so we always have exactly <n> characters of context */
     while (line_p < cd->right_width)
       append(line, " ", &line_p, MAXKWICLINELEN);
+#endif
     
     break;
     
