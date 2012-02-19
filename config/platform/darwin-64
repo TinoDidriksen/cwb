@@ -16,7 +16,8 @@
 ##  WWW at http://www.gnu.org/copyleft/gpl.html).
 
 ##
-##  PLATFORM CONFIGURATION FILE: Mac OS X (Darwin) on 64-bit Intel Core2 and newer CPUs
+##  PLATFORM CONFIGURATION FILE: Mac OS X 10.6 (Snow Leopard) and 10.7 (Lion) on 64-bit Intel Core2 and newer CPUs
+##                               for main 64-bit architecture only, with external libraries provided by HomeBrew package manager
 ##
 
 ## Inherits from basic Darwin configuration
@@ -25,10 +26,15 @@ include $(TOP)/config/platform/darwin
 ## Make sure that Apple's gcc is used (not e.g. a fink-installed version)
 CC = /usr/bin/gcc
 
-## Good optimisation flags for Intel Core2 architecture haven't been determined yet
-CFLAGS = -Wall -O3 -arch x86_64 -arch i386
+## Only build default 64-bit architecture (since homebrew's universal glib build is broken for latest glib 2.30.2)
+CFLAGS = -Wall -O3 -arch x86_64 -march=core2 -mtune=core2
 
 DEPEND_CFLAGS = -Wall -O3
 
+## OS X Lion comes with editline library, which supplies readline + history functionality
+READLINE_LIBS = -lreadline
+
 ## CPU architecture and operating system used to name binary releases
 RELEASE_ARCH = x86_64
+RELEASE_OS = osx-10.6
+

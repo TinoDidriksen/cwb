@@ -29,17 +29,15 @@
 #         linux-64       - configuration for 64-bit CPUs
 #         linux-opteron  - with optimimzation for AMD Opteron processor
 #       darwin        Mac OS X / Darwin [use one of the CPU-specific entries below]
-#         darwin-g4      - with optimization for PowerPC G4 processor
-#         darwin-g5      - with optimization for PowerPC G5 processor
-#         darwin-i386    - configuration for i386-compatible processors
-#         darwin-64      - 64-bit build on Intel Core2 and newer processors
-#         darwin-universal - universal build for i386 and x86_64 architectures on OS X 10.5+
-#         darwin-core2   - universal build optimised for Core 2 CPU (requires Xcode 3.1 / OS X 10.5+)
+#         darwin-universal  - recommended universal build on Mac OS X 10.6 (Snow Leopard) and 10.7 (Lion), using HomeBrew package manager to install external libraries
+#         darwin-64         - recommended 64-bit build (main architecture on Snow Leopard and Lion), using HomeBrew package manager
+#         darwin-port-core2 - universal build optimised for Core 2 CPU (requires Xcode 3.1 / OS X 10.5+), using MacPorts to provide external libraries
+#         darwin-port-universal - universal build for i386 and x86_64 architectures on OS X 10.5+, using MacPorts
 #       solaris       SUN Solaris 8 for SPARC CPU
 #       cygwin        Win32 build using Cygwin emulation layer (experimental)
 #       mingw         Cross-compile for Win32 from a *nix system with MinGW installed (experimental)
 #
-include $(TOP)/config/platform/darwin-core2
+include $(TOP)/config/platform/darwin-universal
 
 #
 # SITE-SPECIFIC CONFIGURATION (installation path and other local settings)
