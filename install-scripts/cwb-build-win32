@@ -9,7 +9,7 @@ config_file=$(cat config.mk)
 
 
 # alter platform
-target="include \$(TOP)/config/platform/darwin-core2"
+target="include \$(TOP)/config/platform/darwin-universal"
 rep="include \$(TOP)/config/platform/mingw"
 
 config_file=${config_file/"$target"/"$rep"}

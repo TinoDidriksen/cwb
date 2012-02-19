@@ -3,7 +3,7 @@
 # Important note: this script includes the ${//} operator. You need bash, ksh or zsh to run it, not other variants of sh.
 
 config_file=$(cat config.mk)
-target="include \$(TOP)/config/platform/darwin-core2"
+target="include \$(TOP)/config/platform/darwin-universal"
 rep="include \$(TOP)/config/platform/"
 
 uname_output=$(uname -a)
@@ -21,9 +21,16 @@ elif [[ "$uname_output" == Darwin* ]]
 then
   if [[ "$uname_output" == *ppc ]]
   then
-    rep="${rep}darwin-g4" # don't make assumptions about more recent processor or ability to produce Universal binaries
+    echo "*** Mac OS X is no longer supported on PowerPC processors ***"
+    exit
   else
-    rep="${rep}darwin-core2" # build core2-optimised binaries (i386 + x86_64) by default; darwin-universal also available
+    # build core2-optimised universal binaries (i386 + x86_64) by default on recent Mac OS X
+    if [[ -f /opt/local/lib/libglib-2.0.dylib || -f /opt/local/lib/libglib-2.0.a ]]
+    then
+      rep="${rep}darwin-port-universal" # GLib seems to be provided by MacPorts
+    else
+      rep="${rep}darwin-universal" # assume that GLib is provided by HomeBrew or has been compiled by user
+    fi
   fi
 
 elif [[ "$uname_output" == SunOS* ]]

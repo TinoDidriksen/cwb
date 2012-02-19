@@ -7,10 +7,53 @@ then
   echo "You must install the Xcode suite (available from Apple) in order to compile the CWB from source."
   exit
 fi
-################# !!! TODO - for 3.2.0 and greater, it will also be necessary to check that Glib, PCRE and GNU Readline are available.
+
+if [[ -f /opt/local/lib/libglib-2.0.dylib || -f /opt/local/lib/libglib-2.0.a || (-x /opt/local/bin/port && !(-f /usr/local/lib/libglib-2.0.dylib || -f /usr/local/lib/libglib-2.0.a)) ]]
+then
+  echo "External libraries seem to be provided by MacPorts (/opt/local)"
+  if [[ !(-f /opt/local/lib/libglib-2.0.dylib || -f /opt/local/lib/libglib-2.0.a) ]]
+  then
+    echo " *** cannot find external GLib2 library (libglib-2.0)"
+    echo "Please install Glib2 with 'port install glib2 +universal', then re-run this script."
+    exit
+  fi
+  if [[ !(-f /opt/local/lib/libpcre.dylib || -f /opt/local/lib/libpcre.a) ]]
+  then
+    echo " *** cannot find external PCRE library (libpcre)"
+    echo "Please install PCRE with 'port install pcre +universal', then re-run this script."
+    exit
+  fi
+  if [[ !((-f /opt/local/lib/libreadline.dylib || -f /opt/local/lib/libreadline.a) && (-f /opt/local/lib/libhistory.dylib || -f /opt/local/lib/libhistory.a)) ]]
+  then
+    echo " *** cannot find external GNU Readline library (libreadline + libhistory)"
+    echo "Please install GNU Readline with 'port install readline +universal', then re-run this script."
+    exit
+  fi
+  PLATFORM=darwin-port-core2
+else
+  echo "External libraries seem to be provided by HomeBrew or installed manually (/usr/local)"
+  if [[ !(-f /usr/local/lib/libglib-2.0.dylib || -f /usr/local/lib/libglib-2.0.a) ]]
+  then
+    echo " *** cannot find external GLib2 library (libglib-2.0)"
+    echo "Please install Glib2 with 'brew install glib2 --universal', then re-run this script."
+    exit
+  fi
+  if [[ !(-f /usr/local/lib/libpcre.dylib || -f /usr/local/lib/libpcre.a) ]]
+  then
+    echo " *** cannot find external PCRE library (libpcre)"
+    echo "Please install PCRE with 'brew install pcre --universal', then re-run this script."
+    exit
+  fi
+  if [[ (-f /opt/local/lib/libreadline.dylib || -f /opt/local/lib/libreadline.a) ]]
+  then
+    echo " *** external GNU Readline library from MacPorts is incompatible with HomeBrew based CWB build"
+    echo "Please uninstall GNU Readline with 'port uninstall readline', then re-run this script."
+    exit
+  fi
+  PLATFORM=darwin-core2
+fi
 
 # run as root! su or sudo.
-
 who=$(whoami)
 
 if [[ "$who" != root ]]
@@ -25,7 +68,7 @@ cp config.mk config.mk.bak
 
 # set appropriate configuration flags in config.mk (Perl is always available on Mac OS X)
 
-perl -i~ -pe 'if (/^include \$\(TOP\)\/config\/platform\//) { $_ = "include \$(TOP)/config/platform/darwin-core2\n" } elsif (/^include \$\(TOP\)\/config\/site\//) { $_ = "include \$(TOP)/config/site/standard\n" }' config.mk
+perl -i~ -pe 'if (/^include \$\(TOP\)\/config\/platform\//) { $_ = "include \$(TOP)/config/platform/'"$PLATFORM"'\n" } elsif (/^include \$\(TOP\)\/config\/site\//) { $_ = "include \$(TOP)/config/site/standard\n" }' config.mk
 
 make clean
 make depend

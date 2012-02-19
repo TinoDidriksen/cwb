@@ -116,6 +116,19 @@ scripts do for you:
  
 After running these scripts, you are ready to start using CWB.
 
+For recent Mac OS X releases, a semi-automatic install script is provided,
+which requires either the HomeBrew or the MacPorts package manager to be
+available. Use the package manager to install the prerequisite external 
+libraries, then run
+
+         sudo ./install-scripts/cwb-install-mac-osx
+
+This script will check whether all prerequisites are satisfied and prompt
+you to install missing libraries; then it will compile and install CWB.
+
+However, it is recommended to follow the step-by-step instructions in
+section "INSTALLATION GUIDE FOR MAC OS X" for a trouble-free install process.
+
 If you are on another common system (e.g. SunOS, Cygwin) for which there
 isn't yet an auto-install script, you can still take a shortcut by using the 
 autoconfigure script:
@@ -205,14 +218,14 @@ Otherwise, the build process will automatically select the generic Linux
 configuration for standard i386-compatible processors.
 
 
-	INSTALLATION GUIDE FOR MAC OS X
+        INSTALLATION GUIDE FOR MAC OS X
 
 On recent versions of Mac OS X (10.6 "Snow Leopard" and 10.7 "Lion"), it is quite
 easy to compile and install CWB release 3.4 and above.
 
  - Lion:         install XCode from the Mac App store (XCode 4.2.1 or newer)
    Snow Leopard: install XCode from https://developer.apple.com/xcode/ (XCode 3.2.6 or newer)
-   		 [you will need a free Apple developer account to download XCode]
+                 [you will need a free Apple developer account to download XCode]
 
  - install HomeBrew package manager from http://mxcl.github.com/homebrew/
 
@@ -221,17 +234,19 @@ system, as they might conflict with the build process described here.  Now insta
 the prerequisite external libraries with the following shell commands:
 
         brew -v install pkg-config
-	brew -v install glib --universal
-	brew -v install pcre --universal
+        brew -v install glib --universal
+        brew -v install pcre --universal
 
 Now edit the file "config.mk", setting the platform entry to
 
-    	include $(TOP)/config/platform/darwin-universal
+        include $(TOP)/config/platform/darwin-universal
 
 and the site configuration as desired.  Then enter the shell commands
 
-	make all
-	make install
+        make clean
+        make depend
+        make all
+        make install
 
 as shown in the section "QUICK INSTALLATION" above.
 
@@ -245,7 +260,7 @@ two possible ways of dealing with this problem:
 
 2) Downgrade glib to the previous version 2.28.8 by entering the shell command
 
-   	(cd /usr/local; git checkout 4b4760a /usr/local/Library/Formula/glib.rb)
+    (cd /usr/local; git checkout 4b4760a /usr/local/Library/Formula/glib.rb)
 
    before installing glib with "brew". See "brew versions glib" for other available
    versions and how to activate them.
