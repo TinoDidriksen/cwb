@@ -130,7 +130,7 @@ cl_new_regex(char *regex, int flags, CorpusCharset charset)
   /* allocate temporary strings */
   l = strlen(regex);
   preprocessed_regex = (char *) cl_malloc(l + 1);
-  anchored_regex = (char *) cl_malloc(l + 5);
+  anchored_regex = (char *) cl_malloc(l + 7);
 
   /* allocate and initialise CL_Regex object */
   rx = (CL_Regex) cl_malloc(sizeof(struct _CL_Regex));
@@ -144,7 +144,7 @@ cl_new_regex(char *regex, int flags, CorpusCharset charset)
   cl_string_canonical(preprocessed_regex, charset, rx->flags);
 
   /* add start and end anchors to improve performance of regex matcher for expressions such as ".*ung" */
-  sprintf(anchored_regex, "^(%s)$", preprocessed_regex);
+  sprintf(anchored_regex, "^(?:%s)$", preprocessed_regex);
 
   /* compile regular expression with PCRE library function */
   if (charset == utf8) {
