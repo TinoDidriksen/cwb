@@ -284,7 +284,7 @@ cl_regex_match(CL_Regex rx, char *str)
     /* if the regex is not optimised, always behave as if a grain was matched */
     grain_match = 1;
 
-  /* if there was a grain-match, we call pcre_exec, which might match or might notfind a match in the end;
+  /* if there was a grain-match, we call pcre_exec, which might match or might not find a match in the end;
    * but if there wasn't a grain-match, we know that pcre won't match; so we don't bother calling it. */
 
   if (!grain_match) { /* enabled since version 2.2.b94 (14 Feb 2006) -- before: && cl_optimize */
@@ -359,11 +359,11 @@ cl_delete_regex(CL_Regex rx)
  * Is the given character a 'safe' character which will only match itself in a regex?
  *
  * What counts as safe: A to Z, a to z, 0 to 9, minus, quote marks, percent,
- * ampersand, slashes, excl mark, colon, semi colon, character, underscore,
- * any value over 0x7f.
+ * ampersand, slash, excl mark, colon, semi colon, character, underscore,
+ * any value over 0x7f (ISO 8859 extension or UTF-8 non-ASCII character).
  *
  * What counts as not safe therefore includes: brackets, braces, square brackets;
- * questionmark, plus, and star; circumflex and dollar sign; dot; hash; etc.
+ * questionmark, plus, and star; circumflex and dollar sign; dot; hash; backslash, etc.
  *
  * (But, in UTF8, Unicode PUNC area equivalents of these characters will be safe.)
  *
@@ -374,8 +374,8 @@ int
 is_safe_char(unsigned char c)
 {
   /* c <= 255 produces 'comparison is always true' compiler warning */
-  /* note: this function is UTF8-safe because values above 0x7f are
-   * always allowed */
+  /* note: this function is UTF8-safe because byte values above 0x7f 
+   * (forming UTF-8 multi-byte sequences) are always allowed */
   if(
       (c >= 'A' && c <= 'Z') ||
       (c >= 'a' && c <= 'z') ||
@@ -395,53 +395,26 @@ is_safe_char(unsigned char c)
 }
 
 /**
- * Reads in a grain from a regex - part of the CL Regex Optimiser.
+ * Is the given character an ASCII alphanumeric?
  *
- * A grain is a string of safe symbols not followed by ?, *, or {..}.
- * This function finds the longest grain it can starting at the point
- * in the regex indicated by mark; backslash-escaped characters are
- * allowed but the backslashes must be stripped by the caller.
+ * ASCII alphanumeric characters comprise A-Z, a-z and 0-9; they are the only 
+ * characters that form special escape sequences in PCRE regular expressions.
  *
- * @param mark  Pointer to location in the regex string from
- *              which to read.
- * @return      Pointer to the first character after the grain
- *              it has read in (or the original "mark" pointer
- *              if no grain is found).
+ * @param c  The character (cast to unsigned for the comparison.
+ * @return   True if ASCII alphanumeric; false otherwise.
  */
-char *
-read_grain(char *mark)
-{
-  char *point = mark;
-  int last_char_escaped = 0, glen;
-
-  glen = 0; /* effective length of grain */
-  while ( is_safe_char(*point) || (*point == '\\' && point[1]) ) {
-    if (*point == '\\') {
-      /* skip backslash and escaped character
-       * (but not at end of string; backslash at
-       * end of string really is backslash). */
-      point++;
-      last_char_escaped = 1;
-    }
-    else {
-      last_char_escaped = 0;
-    }
-    point++;
-    glen++;
+int
+is_ascii_alnum(unsigned char c) {
+  if ((c >= 'A' && c <= 'Z') ||
+      (c >= 'a' && c <= 'z') ||
+      (c >= '0' && c <= '9')) {
+    return 1;
   }
-  if (point > mark) {        /* if followed by ?, *, or {..}, shrink grain by one char */
-    if (*point == '?' || *point == '*' || *point == '{') {
-      point--;
-      glen--;
-      if (last_char_escaped) /* if last character was escaped, make sure to remove the backslash as well */
-        point--;
-    }
+  else {
+    return 0;
   }
-  if (glen >= 2)
-    return point;
-  else
-    return mark;
 }
+
 
 /**
  * Reads in a matchall (dot wildcard) or safe character -
@@ -470,9 +443,13 @@ read_matchall(char *mark)
        we won't skip it or any other special characters with possibly messy results;
        we just accept | as a special optimisation for the matches and contains operators in CQP
     while (*point != ']' && *point != '\\' && *point != '[' && *point != '\0') { */
-    /* [AH: new version] the following characters are "not safe-looking" within a character class in PCRE: */
+    /* [AH: new version] the following characters are "not safe-looking" within a character class in PCRE: 
     while (*point != ']' && *point != '\\' && *point != '[' && *point != '\0'
-            && *point != '-' && *point != '^') {
+            && *point != '-' && *point != '^') { */
+    /* [SE: reverted] to original version: range '-' and negation '^' are unproblematic since we treat
+       any character class as a matchall; we could even accept named sets such as [:alnum:], but this 
+       would make the analyzer much more complicated */
+    while (*point != ']' && *point != '\\' && *point != '[' && *point != '\0') {
       point++;
     }
     /* if we got to ] without hitting a "messy" character, read the entire character class.
@@ -482,11 +459,21 @@ read_matchall(char *mark)
   else if (is_safe_char(*mark)) {
     return mark + 1;
   }
-  else if (*mark == '\\') {      /* outside a character class, \ always escapes to literal meaning */
-    /* TODO: problem, in PCRE a \ can escape not just the following letter, but a sequence after it;
-     * will this break the grain-finder? (Overgenerating grains merely results in extra calls to the
-     * regex engine, lowering the effect of the optimsiation, but not giving false matches)*/
-    return mark + 2;
+  else if (*mark == '\\') {
+    /* \ escapes punctuation etc. to literal, but forms escape sequence with alphanumeric characters */
+    char *point = mark + 1;
+    if (is_ascii_alnum(*point)) {
+      char c = *point;
+      if (c == 'w' || c == 'W' || c == 'd' || c == 'D' || c == 's' || c == 'S') {
+        return point + 1; /* accept simple escape sequences \w, \W, \d, \D, \s, \S as wildcards */
+      }
+      else {
+        return mark; /* other escape sequences are considered unsafe (but might want to add \p{xxx}) */
+      }
+    }
+    else {
+      return point + 1; /* \ not followed by alphanumeric character -> should be safe */
+    }
   }
   else {
     return mark;
@@ -513,14 +500,22 @@ read_kleene(char *mark)
 {
   char *point = mark;
   if (*point == '?' || *point == '*' || *point == '+') {
-    return point + 1;
+    point++;
+    if (*point == '?' || *point == '+')
+      point++; /* lazy or possessive quantifier */
+    return point;
   }
   else if (*point == '{') {
     point++;
     while ((*point >= '0' && *point <= '9') || (*point == ',')) {
       point++;
     }
-    return (*point == '}') ? point + 1 : mark;
+    if (*point != '}')
+      return mark;
+    point++;
+    if (*point == '?' || *point == '+')
+      point++; /* lazy or possessive quantifier */
+    return point;
   }
   else {
     return mark;
@@ -555,6 +550,54 @@ read_wildcard(char *mark)
 }
 
 /**
+ * Reads in a grain from a regex - part of the CL Regex Optimiser.
+ *
+ * A grain is a string of safe symbols not followed by ?, *, or {..}.
+ * This function finds the longest grain it can starting at the point
+ * in the regex indicated by mark; backslash-escaped characters are
+ * allowed but the backslashes must be stripped by the caller.
+ *
+ * @param mark  Pointer to location in the regex string from
+ *              which to read.
+ * @return      Pointer to the first character after the grain
+ *              it has read in (or the original "mark" pointer
+ *              if no grain is found).
+ */
+char *
+read_grain(char *mark)
+{
+  char *point = mark;
+  int last_char_escaped = 0, glen;
+
+  glen = 0; /* effective length of grain */
+  while ( is_safe_char(*point) || (*point == '\\' && !is_ascii_alnum(point[1])) ) {
+    if (*point == '\\' && point[1]) {
+      /* skip backslash and escaped character (but not at end of string, where backslash is literal;
+       * the skipped character must not be alphanumeric, otherwise it might form an escape sequence */
+      point++;
+      last_char_escaped = 1;
+    }
+    else {
+      last_char_escaped = 0;
+    }
+    point++;
+    glen++;
+  }
+  if (point > mark) {        /* if followed by a quantifier, shrink grain by one char */
+    if (read_kleene(point) > point) {
+      point--; /* could be improved to accept grain for non-optional quantifier (+, {1,}, etc) */
+      glen--;
+      if (last_char_escaped) /* if last character was escaped, make sure to remove the backslash as well */
+        point--;
+    }
+  }
+  if (glen >= 2)
+    return point;
+  else
+    return mark;
+}
+
+/**
  * Finds grains in a disjunction group - part of the CL Regex Optimiser.
  *
  * This function find grains in disjunction group within a regular expression;
@@ -584,12 +627,21 @@ read_disjunction(char *mark, int *align_start, int *align_end)
   char *point, *p2, *q, *buf;
   int grain, failed;
 
+  
   if (*mark == '(') {
     point = mark + 1;
     buf = local_grain_data;
     grain_buffer_grains = 0;
     grain = 0;
     failed = 0;
+
+    if (*point == '?') {
+      point++;  /* don't accept special (?...) groups, except for simple non-capturing (?:...) */
+      if (*point == ':')
+        point++;
+      else
+        return mark; /* failed to parse disjunction */
+    }
 
     /* if we can extend the disjunction parser to allow parentheses around the initial segment of 
        an alternative, then regexen created by the matches operator will also be optimised! */
@@ -677,7 +729,7 @@ update_grain_buffer(int front_aligned, int anchored)
         len = l;
     }
     if (len >= 2) { /* minimum grain length is 2 */
-      /* we make a heuristics decision whether the new set of grains is better than the current one;
+      /* we make a heuristic decision whether the new set of grains is better than the current one;
          based on grain length and the number of grains */
       if (    (len >  (cl_regopt_grain_len + 1))
           || ((len == (cl_regopt_grain_len + 1)) && (N <= (3 * cl_regopt_grains) ))

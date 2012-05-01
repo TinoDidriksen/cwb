@@ -19,6 +19,8 @@ Bug fixes:
   Even though the actual Huffman codes are now different, the index file format is not affected and should be
   fully compatible between older and newer CWB versions.
 
+- [2012-05-01] Updated regexp optimiser to work correctly with the extended set of wildcards, escape sequences,
+  and special groups in PCRE regular expressions. CURRENTLY IN TESTING PHASE.
 
 Version 3.2
 -----------
