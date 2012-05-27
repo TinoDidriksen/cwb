@@ -958,7 +958,8 @@ main (int argc, char *argv[])
   } /* endblock print hash contents to stdout */
 
   /* final act of cleanup */
-  cl_delete_regex(regular_rx);
+  if (regular_rx)
+    cl_delete_regex(regular_rx);
 
   exit(0);                        /* that was easy, wasn't it? */
 }

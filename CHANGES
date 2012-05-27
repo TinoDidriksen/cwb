@@ -9,18 +9,23 @@ Other changes:
 
 Bug fixes:
 
-- [2011-11-03: v3.4.1] CQP no longer crashes with a segmentation fault when trying to display very long kwic lines
-  with "cat" (bug #1549254); instead, lines are silently truncated. The standard buffer size has also been increased
-  to 64k bytes, which is sufficient to display the longest BNC sentences in BNCweb (with many attributes shown).
+ - [2011-11-03: v3.4.1] CQP no longer crashes with a segmentation fault when trying to display very long kwic lines
+   with "cat" (bug #1549254); instead, lines are silently truncated. The standard buffer size has also been increased
+   to 64k bytes, which is sufficient to display the longest BNC sentences in BNCweb (with many attributes shown).
 
-- [2012-01-14: v3.4.2] Huffmann compression now works even for very large corpora of around 2 billion words
-  (bug #2929062). The Huffmann algorithm in cwb-huffcode has been modified to ensure no code words with more
-  than 31 bits are generated (which would occasionally happen for hapax legomena in a 2 billion word corpus).
-  Even though the actual Huffman codes are now different, the index file format is not affected and should be
-  fully compatible between older and newer CWB versions.
+ - [2012-01-14: v3.4.2] Huffmann compression now works even for very large corpora of around 2 billion words
+   (bug #2929062). The Huffmann algorithm in cwb-huffcode has been modified to ensure no code words with more
+   than 31 bits are generated (which would occasionally happen for hapax legomena in a 2 billion word corpus).
+   Even though the actual Huffman codes are now different, the index file format is not affected and should be
+   fully compatible between older and newer CWB versions.
 
-- [2012-05-01] Updated regexp optimiser to work correctly with the extended set of wildcards, escape sequences,
-  and special groups in PCRE regular expressions. CURRENTLY IN TESTING PHASE.
+ - [2012-02-02: v3.4.3] Made cwb-scan-corpus "regular words" mode fully UTF-8 compatible.
+
+ - [2012-05-01] Updated regexp optimiser to work correctly with the extended set of wildcards, escape sequences,
+   and special groups in PCRE regular expressions. CURRENTLY IN TESTING PHASE.
+
+ - [2012-05-20: v3.4.4] Fixed bug causing segmentation fault in cwb-scan-corpus.
+
 
 Version 3.2
 -----------

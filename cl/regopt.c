@@ -339,6 +339,10 @@ cl_delete_regex(CL_Regex rx)
    */
   int i;
 
+  /* sanity check for NULL pointer */
+  if (!rx)
+    return;
+
   if (rx->needle)
     pcre_free(rx->needle);         /* free PCRE regex buffer */
   if (rx->extra)
