@@ -17,6 +17,7 @@
 
 #include <stdio.h>
 
+#include "../cl/cl.h"
 #include "../cl/corpus.h"
 #include "../cl/attributes.h"
 #include "../cl/cdaccess.h"
@@ -35,12 +36,26 @@
 #include "sgml-print.h"
 #include "latex-print.h"
 
+/**
+ * Flag for whether the "print_align" module has been initialised yet or not.
+ */
 static int module_init = 0;
 
+/**
+ * Global context descriptor used solely for the
+ * printing of corresponding strings from an
+ * aligned corpus.
+ */
 static ContextDescriptor AlignedCorpusCD;
 
-/* ---------------------------------------------------------------------- */
 
+
+/**
+ * Initialises the alignment-printing module by setting up the
+ * static global ContextDescriptor (internal to print_align module).
+ *
+ * @see AlignedCorpusCD
+ */
 void
 init_align_module()
 {
@@ -54,18 +69,33 @@ init_align_module()
   }
 }
 
-/* ---------------------------------------------------------------------- */
 
 
-/* THIS SHOULD REALLY BE REWRITTTEN SO THAT THE ALIGNED CORPUS, ITS ATTRIBUTES, AND
-   THE (ALIGNED) CD ARE ONLY INITIALISED ONCE (FOR EACH CAT COMMAND) */
+
+/* TODO
+ * THIS SHOULD REALLY BE REWRITTTEN SO THAT THE ALIGNED CORPUS, ITS ATTRIBUTES, AND
+ * THE (ALIGNED) CD ARE ONLY INITIALISED ONCE (FOR EACH CAT COMMAND)
+ */
+/**
+ * For a given query result, prints the corresponding section of the
+ * aligned corpus (if any).
+ *
+ * This function is the business-end of the "print_align" module.
+ * @param sourceCorpus  The corpus the query was run on.
+ * @param cd            ContextDescriptor containing data on how the concordance is to be printed.
+ * @param begin_target  Starting cpos of the result being printed.
+ * @param end_target    Ending cpos of the result being printed.
+ * @param highlighting  Boolean: Iff true, highlighting will be used
+ *                      (applies only in ASCII print mode; see "ascii_print_aligned_line").
+ * @param stream        Output destination stream (will be printed to).
+ */
 void
 printAlignedStrings(Corpus *sourceCorpus, 
-		    ContextDescriptor *cd,
-		    int begin_target, 
-		    int end_target,
-		    int highlighting, /* highlight corpus tags of aligned lines? (ASCII mode only) */
-		    FILE *stream)
+                    ContextDescriptor *cd,
+                    int begin_target,
+                    int end_target,
+                    int highlighting,
+                    FILE *stream)
 {
   AttributeInfo *ai, *Sai, *Tai;
   Attribute *alat;
@@ -83,129 +113,131 @@ printAlignedStrings(Corpus *sourceCorpus,
 
     if (ai->status) {
 
-      /* right_width und left_width setzen */
-      if (((alat = find_attribute(sourceCorpus, 
-				  ai->name, 
-				  ATT_ALIGN, NULL)) != NULL) &&
-	  (/* if it isn't already there, load it (setup_corpus() will just increment the refcount, if the corpus is already loaded) */
-	   ((alignedCorpus = setup_corpus(registry,
-					  ai->name)) != NULL))) {
-	
-	int alg1, alg2, alg_start, alg_end;
-	char *s = NULL;
-	
-	alg1 = cl_cpos2alg(alat, begin_target);
-	alg2 = cl_cpos2alg(alat, end_target);
+      /* get the corpus positions for the aligned  */
+      if ((alat = find_attribute(sourceCorpus, ai->name, ATT_ALIGN, NULL)) != NULL
+          &&
+          /* if it isn't already there, load it (cl_new_corpus() will just increment the refcount, if the corpus is already loaded) */
+          (alignedCorpus = cl_new_corpus(registry, ai->name)) != NULL
+          ) {
 
-	if ((alg1 < 0) ||
-	    (alg2 < 0) ||
-	    !cl_alg2cpos(alat, alg1, &dummy, &dummy, &alg_start, &dummy) ||
-	    !cl_alg2cpos(alat, alg2, &dummy, &dummy, &dummy, &alg_end) ||
-	    (alg_end < alg_start)
-	    ) {
-	  s = cl_strdup("(no alignment found)");	    /* s != NULL signifies error or no alignment found */
-	}
-	
-	/* For some obscure reason, the AlignedCorpusCD sometimes gets corrupted
-	   from outside; so we re-initialize for every aligned corpus we print. */
-	initialize_context_descriptor(&AlignedCorpusCD);
-	update_context_descriptor(alignedCorpus, &AlignedCorpusCD);
-	
-	/* How about this: Try to show the same attributes in this corpus 
-	   as in the aligned corpus */
-	if (cd->attributes) {
-	  for (Sai = cd->attributes->list; Sai && Sai->name; Sai = Sai->next) {
-	    if ((Tai = FindInAL(AlignedCorpusCD.attributes, Sai->name)))
-	      Tai->status = Sai->status;
-	  }
-	} /* positional attributes */
-	if (cd->strucAttributes) {
-	  for (Sai = cd->strucAttributes->list; Sai && Sai->name; Sai = Sai->next) {
-	    if ((Tai = FindInAL(AlignedCorpusCD.strucAttributes, Sai->name)))
-	      Tai->status = Sai->status;
-	  }
-	} /* structural attributes */
-	/* printing structural attribute values in the aligned regions doesn't
-	     seem to make a lot of sense, so we stick with the first two options */
+        int alg1, alg2, alg_start, alg_end;
+        char *s = NULL;
 
-	switch (GlobalPrintMode) {
-	case PrintASCII:
-	case PrintUNKNOWN:
-	  if (s == NULL) 
-	    s = compose_kwic_line(alignedCorpus, 
-				  alg_start, alg_end, 
-				  &AlignedCorpusCD, 
-				  &dummy,
-				  &dummy, &dummy,
-				  NULL, NULL, 
-				  NULL, 0, NULL, 
-				  NULL, 0,
-				  ConcLineHorizontal,
-				  &ASCIIPrintDescriptionRecord,
-				  0, NULL);
-	  ascii_print_aligned_line(stream, highlighting, ai->name, s ? s : "(null)");
-	  break;
-	    
-	case PrintSGML:
-	  if (s == NULL)
-	    s = compose_kwic_line(alignedCorpus, 
-				  alg_start, alg_end, 
-				  &AlignedCorpusCD, 
-				  &dummy,
-				  &dummy, &dummy,
-				  NULL, NULL, 
-				  NULL, 0, NULL, 
-				  NULL, 0,
-				  ConcLineHorizontal,
-				  &SGMLPrintDescriptionRecord,
-				  0, NULL);
-	  sgml_print_aligned_line(stream, ai->name, s ? s : "(null)");
-	  break;
-	    
-	case PrintHTML:
-	  if (s == NULL)
-	    s = compose_kwic_line(alignedCorpus, 
-				  alg_start, alg_end, 
-				  &AlignedCorpusCD, 
-				  &dummy,
-				  &dummy, &dummy,
-				  NULL, NULL, 
-				  NULL, 0, NULL, 
-				  NULL, 0,
-				  ConcLineHorizontal,
-				  &HTMLPrintDescriptionRecord,
-				  0, NULL);
-	  html_print_aligned_line(stream, ai->name, s ? s : "(null)");
-	  break;
-	    
-	case PrintLATEX:
-	  if (s == NULL)
-	    s = compose_kwic_line(alignedCorpus, 
-				  alg_start, alg_end, 
-				  &AlignedCorpusCD, 
-				  &dummy,
-				  &dummy, &dummy,
-				  NULL, NULL, 
-				  NULL, 0, NULL, 
-				  NULL, 0,
-				  ConcLineHorizontal,
-				  &LaTeXPrintDescriptionRecord,
-				  0, NULL);
-	  latex_print_aligned_line(stream, ai->name, s ? s : "(null)");
-	  break;
-	    
-	case PrintBINARY:
-	  /* don't display anything */
-	  break;
-	    
-	default:
-	  assert(0 && "Unknown print mode");
-	  break;
-	}
-	free(s);
-	/* don't drop the corpus even if we're the only one using it;
-	   this may waste some memory, but otherwise we'd keep loading
-	   and unloading the thing */
+        alg1 = cl_cpos2alg(alat, begin_target);
+        alg2 = cl_cpos2alg(alat, end_target);
+
+        if (alg1 < 0 ||
+            alg2 < 0 ||
+            !cl_alg2cpos(alat, alg1, &dummy, &dummy, &alg_start, &dummy) ||
+            !cl_alg2cpos(alat, alg2, &dummy, &dummy, &dummy, &alg_end)  ||
+            alg_end < alg_start
+            ) {
+          s = cl_strdup("(no alignment found)");
+          /* so after here, s != NULL signifies error or no alignment found;
+           * this is checked before attempting to build alignment strings below. */
+        }
+
+        /* For some obscure reason, the AlignedCorpusCD sometimes gets corrupted
+         * from outside; so we re-initialize for every aligned corpus we print. */
+        initialize_context_descriptor(&AlignedCorpusCD);
+        update_context_descriptor(alignedCorpus, &AlignedCorpusCD);
+
+        /* How about this: Try to show the same attributes in this corpus
+           as in the aligned corpus */
+        if (cd->attributes) {
+          for (Sai = cd->attributes->list; Sai && Sai->name; Sai = Sai->next) {
+            if ((Tai = FindInAL(AlignedCorpusCD.attributes, Sai->name)))
+              Tai->status = Sai->status;
+          }
+        } /* positional attributes */
+        if (cd->strucAttributes) {
+          for (Sai = cd->strucAttributes->list; Sai && Sai->name; Sai = Sai->next) {
+            if ((Tai = FindInAL(AlignedCorpusCD.strucAttributes, Sai->name)))
+              Tai->status = Sai->status;
+          }
+        } /* structural attributes */
+        /* printing structural attribute values in the aligned regions doesn't
+         * seem to make a lot of sense, so we stick with the first two options */
+
+        switch (GlobalPrintMode) {
+        case PrintASCII:
+        case PrintUNKNOWN:
+          if (s == NULL)
+            s = compose_kwic_line(alignedCorpus,
+                                  alg_start, alg_end,
+                                  &AlignedCorpusCD,
+                                  &dummy,
+                                  &dummy, &dummy,
+                                  NULL, NULL,
+                                  NULL, 0, NULL,
+                                  NULL, 0,
+                                  ConcLineHorizontal,
+                                  &ASCIIPrintDescriptionRecord,
+                                  0, NULL);
+          ascii_print_aligned_line(stream, highlighting, ai->name, s ? s : "(null)");
+          break;
+
+        case PrintSGML:
+          if (s == NULL)
+            s = compose_kwic_line(alignedCorpus,
+                                  alg_start, alg_end,
+                                  &AlignedCorpusCD,
+                                  &dummy,
+                                  &dummy, &dummy,
+                                  NULL, NULL,
+                                  NULL, 0, NULL,
+                                  NULL, 0,
+                                  ConcLineHorizontal,
+                                  &SGMLPrintDescriptionRecord,
+                                  0, NULL);
+          sgml_print_aligned_line(stream, ai->name, s ? s : "(null)");
+          break;
+
+        case PrintHTML:
+          if (s == NULL)
+            s = compose_kwic_line(alignedCorpus,
+                                  alg_start, alg_end,
+                                  &AlignedCorpusCD,
+                                  &dummy,
+                                  &dummy, &dummy,
+                                  NULL, NULL,
+                                  NULL, 0, NULL,
+                                  NULL, 0,
+                                  ConcLineHorizontal,
+                                  &HTMLPrintDescriptionRecord,
+                                  0, NULL);
+          html_print_aligned_line(stream, ai->name, s ? s : "(null)");
+          break;
+
+        case PrintLATEX:
+          if (s == NULL)
+            s = compose_kwic_line(alignedCorpus,
+                                  alg_start, alg_end,
+                                  &AlignedCorpusCD,
+                                  &dummy,
+                                  &dummy, &dummy,
+                                  NULL, NULL,
+                                  NULL, 0, NULL,
+                                  NULL, 0,
+                                  ConcLineHorizontal,
+                                  &LaTeXPrintDescriptionRecord,
+                                  0, NULL);
+          latex_print_aligned_line(stream, ai->name, s ? s : "(null)");
+          break;
+
+        case PrintBINARY:
+          /* don't display anything */
+          break;
+
+        default:
+          assert(0 && "Unknown print mode");
+          break;
+        }
+        cl_free(s);
+
+        /* don't drop the aligned corpus even if we're the only one using it;
+         * this may waste some memory, but otherwise we'd keep loading
+         * and unloading the thing */
       }
     }
   }

@@ -289,7 +289,8 @@ cqp_usage(void)
 
 
 void 
-print_option_value(int opt) {
+print_option_value(int opt)
+{
   int show_lc_rc = 0;                /* "set context;" should also display left and right context settings */
 
   if (cqpoptions[opt].opt_abbrev != NULL)

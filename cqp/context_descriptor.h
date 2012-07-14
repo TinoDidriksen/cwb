@@ -35,42 +35,39 @@
 /**
  * ContextDescriptor object: a bundle of CQP options
  * describing how a list of corpus positions is to be
- * displayed: with left context, with right context,
- * with what attributes, etc.
+ * displayed in a concordance: with left context,
+ * with right context, with what attributes, etc.
  *
  * It is passed around between different print functions
  * so that they know what to do!
  */
 typedef struct _context_description_block {
 
-  /* ==================== left context */
+  /* ==================== left context scope description variables */
 
   int left_width;                    /**< Amount of context to show before the match, in units specified by left_type */
-  int left_type;                     /**< Set to one of the constants: CHAR_CONTEXT, WORD_CONTEXT, STRUC_CONTEXT, ALIGN_CONTEXT */
+  int left_type;                     /**< Unit in which context is measured;
+                                          Set to one of the constants: CHAR_CONTEXT, WORD_CONTEXT, STRUC_CONTEXT, ALIGN_CONTEXT */
   char *left_structure_name;
   Attribute *left_structure;
 
-  /* ==================== right context */
+  /* ==================== right context scope description variables */
 
   int right_width;                   /**< Amount of context to show after the match, in units specified by right_type */
-  int right_type;                    /**< Set to one of the constants: CHAR_CONTEXT, WORD_CONTEXT, STRUC_CONTEXT, ALIGN_CONTEXT */
+  int right_type;                    /**< Unit in which context is measured;
+                                          Set to one of the constants: CHAR_CONTEXT, WORD_CONTEXT, STRUC_CONTEXT, ALIGN_CONTEXT */
   char *right_structure_name;
   Attribute *right_structure;
 
-  /* ==================== flag whether to print corpus position */
+  /** Boolean flag: if true, print corpus position numbers */
   int print_cpos;
 
-  /* ==================== positional attributes to print */
-  AttributeList *attributes;
+  /* ==================== lists of attributes of different types to print */
 
-  /* ==================== structural attributes to print */
-  AttributeList *strucAttributes;
-
-  /* ==================== structure tag (values) to print */
-  AttributeList *printStructureTags;
-
-  /* ==================== aligned lines to print */
-  AttributeList *alignedCorpora;
+  AttributeList *attributes;         /**< positional attributes to print */
+  AttributeList *strucAttributes;    /**< structural attributes to print */
+  AttributeList *printStructureTags; /**< structure tag (values) to print */
+  AttributeList *alignedCorpora;     /**< aligned lines to print */
 
 } ContextDescriptor;
 
@@ -85,9 +82,7 @@ int initialize_context_descriptor(ContextDescriptor *cd);
 
 int update_context_descriptor(Corpus *corpus, ContextDescriptor *cd);
 
-ContextDescriptor *NewContextDescriptor();
-
-void FreeContextDescriptor(ContextDescriptor **cdp);
+ContextDescriptor *NewContextDescriptor(void);
 
 void PrintContextDescriptor(ContextDescriptor *cdp);
 

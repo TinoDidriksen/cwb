@@ -165,7 +165,7 @@ int child_process;
 
 /* some global variables */
 
-/** The global context descriptor. */
+/** The global context descriptor. TODO: Is this the only place a hard-allocated, rather than malloc'd, CD is used?*/
 ContextDescriptor CD;
 
 int handle_sigpipe;

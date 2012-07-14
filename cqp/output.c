@@ -234,18 +234,18 @@ open_pager(char *cmd, CorpusCharset charset)
     tested_pager = cl_strdup(cmd);
   }
 
-  /* if (less_charset_variable != "" and charset != ascii) set environment variable accordingly */
-  if (*less_charset_variable && charset != ascii) {
+  /* if (less_charset_variable != "" ) set environment variable accordingly */
+  if (*less_charset_variable) {
     char *new_value;
 
     switch (charset){
+    case ascii:   /* fallthru is intentional: ASCII is a subset of valid UTF-8 */
     case utf8:    new_value = "utf-8";    break;
 
-    /* TODO: insert other ISO charsets here. The strings needed for the environment val ARE NOT
-     * the same as those used internally by CWB to represent different charsets.
+    /* "less" does not distinguish between the different ISO-8859 character sets,
+     * so if not using UTF-8, always use ISO-8859
      */
-
-    default:      new_value = "iso8859";  break; /* default non-ascii setting is ISO-8859 */
+    default:      new_value = "iso8859";  break;
     }
 
     char *current_value = getenv(less_charset_variable);

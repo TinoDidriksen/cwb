@@ -111,8 +111,7 @@ initialize_cl(CorpusList *cl, int free_name)
   cl->corpus = NULL;
   cl->size = 0;
 
-  if (cl->cd) 
-    FreeContextDescriptor(&(cl->cd));
+  cl_free(cl->cd);
 
   cl_free(cl->sortidx);
 

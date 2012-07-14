@@ -24,10 +24,10 @@
 
 void
 printAlignedStrings(Corpus *sourceCorpus, 
-		    ContextDescriptor *cd,
-		    int begin_target, 
-		    int end_target,
-		    int highlighting,
-		    FILE *stream);
+                    ContextDescriptor *cd,
+                    int begin_target,
+                    int end_target,
+                    int highlighting,
+                    FILE *stream);
 
 #endif

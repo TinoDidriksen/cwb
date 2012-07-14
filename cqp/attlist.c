@@ -356,9 +356,11 @@ AttributeInfo *FindInAL(AttributeList *list, char *name)
 
 
 /**
- * Goes through an AttributeList, deletes entries for attributes that don't exist, and adds entries for those that do.
+ * Goes through an AttributeList, deletes entries for attributes
+ * that don't exist, and adds entries for those that do.
  *
- * Note that all AttributeInfo entries are linked to the actual Attribute objects by this function.
+ * Note that all AttributeInfo entries are linked to the actual
+ * Attribute objects by this function.
  *
  * @param list         The AttributeList to recompute.
  * @param corpus       The corpus in which these attributes are found.
