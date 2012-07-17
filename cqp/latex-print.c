@@ -37,6 +37,8 @@
 
 #include <sys/types.h>
 #include <sys/time.h>
+#include <time.h>
+
 #ifndef __MINGW__
 #include <pwd.h>
 #endif
@@ -267,15 +269,16 @@ void latex_print_context(ContextDescriptor *cd, FILE *stream)
   fputs("\\\\\n", stream);
 }
 
-void latex_print_corpus_header(CorpusList *cl, 
-                               FILE *stream)
+void
+latex_print_corpus_header(CorpusList *cl,
+                          FILE *stream)
 {
   time_t now;
 #ifndef __MINGW__
   struct passwd *pwd = NULL;
 #endif
 
-  (void) time(&now);
+  time(&now);
   /*   pwd = getpwuid(geteuid()); */
   /* disabled because of incompatibilities between different Linux versions */
 

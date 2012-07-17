@@ -184,7 +184,7 @@ in_CorpusCommand(char *id, CorpusList *cl)
     return NULL;
   }
   else {
-    (void) duplicate_corpus(cl, id, True);
+    duplicate_corpus(cl, id, True);
     
     last_cyc = Assignment;
     return current_corpus;
@@ -219,8 +219,7 @@ after_CorpusCommand(CorpusList *cl)
       else if (!silent)
         printf("%d matches.%s\n",
                cl->size,
-               (cl->size > 0 ? " Use 'cat' to show."
-                : ""));
+               (cl->size > 0 ? " Use 'cat' to show." : ""));
     }
     query_corpus = NULL;
     
@@ -260,7 +259,8 @@ after_CorpusCommand(CorpusList *cl)
 
 /**
  * This function is called after an UnnamedCorpusCommand rule is parsed.
- * Seems to be a tidying=upfunction.
+ *
+ * Seems to be a tidying-up function.
  *
  * @param cl  The result of the corpus-yielding command (first component of this syntax rule).
  * @return    Modified valuse of cl. May be NULL.

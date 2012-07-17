@@ -39,6 +39,8 @@
 
 #include <sys/types.h>
 #include <sys/time.h>
+#include <time.h>
+
 #ifndef __MINGW__
 #include <pwd.h>
 #endif
@@ -260,7 +262,8 @@ void sgml_print_context(ContextDescriptor *cd, FILE *stream)
 
 }
 
-void sgml_print_corpus_header(CorpusList *cl, FILE *stream)
+void
+sgml_print_corpus_header(CorpusList *cl, FILE *stream)
 {
   time_t now;
 
@@ -268,7 +271,8 @@ void sgml_print_corpus_header(CorpusList *cl, FILE *stream)
   struct passwd *pwd = NULL;
 #endif
 
-  (void) time(&now);
+  time(&now);
+
   /*   pwd = getpwuid(geteuid()); */
   /* disabled because of incompatibilities between different Linux versions */
 
@@ -284,12 +288,12 @@ void sgml_print_corpus_header(CorpusList *cl, FILE *stream)
           (pwd ? pwd->pw_name : "unknown"),
           (pwd ? pwd->pw_gecos  : "unknown"),
 #else
-          "<unknown>",
-          "<unknown>",
+          "unknown",
+          "unknown",
 #endif
           ctime(&now),
-          (cl->corpus && cl->corpus->registry_name ? cl->corpus->registry_name : "unknown"),
-          (cl->corpus && cl->corpus->name ? cl->corpus->name : "unknown"),
+          ( (cl->corpus && cl->corpus->registry_name) ? cl->corpus->registry_name : "unknown"),
+          ( (cl->corpus && cl->corpus->name) ? cl->corpus->name : "unknown"),
           cl->size,
           cl->mother_name, cl->name);
   
@@ -298,11 +302,12 @@ void sgml_print_corpus_header(CorpusList *cl, FILE *stream)
   fputs("</concordanceInfo>\n", stream);
 }
 
-void sgml_print_output(CorpusList *cl, 
-                       FILE *stream,
-                       int interactive,
-                       ContextDescriptor *cd,
-                       int first, int last)
+void
+sgml_print_output(CorpusList *cl,
+                  FILE *stream,
+                  int interactive,
+                  ContextDescriptor *cd,
+                  int first, int last)
 {
   int line, real_line;
   ConcLineField clf[NoField];   /* NoField is largest field code (not used by us) */

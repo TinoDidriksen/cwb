@@ -1534,7 +1534,7 @@ static int intcompare(const void *i, const void *j)
  * positions, and secondarily by b. restrictor_list_size is the number of
  * integers in this list, NOT THE NUMBER OF PAIRS.
  * WARNING: CURRENTLY UNIMPLEMENTED
- * {NB -- this descrtiption of restrictor_list_size DOESN'T MATCH
+ * {NB -- this description of restrictor_list_size DOESN'T MATCH
  * the one for get_positions(), which this function calls...
  *
  * REMEMBER: this monster returns a list of corpus indices, not a list
@@ -1581,7 +1581,7 @@ cl_idlist2cpos_oldstyle(Attribute *attribute,
     return NULL;
   }
 
-  size = cumulative_id_frequency(attribute, word_ids, number_of_words);
+  size = cl_idlist2freq(attribute, word_ids, number_of_words);
   if ((size < 0) || (cl_errno != CDA_OK)) {
     return NULL;
   }
@@ -1781,7 +1781,7 @@ int
 cl_max_struc(Attribute *a)
 {
   int nr = -1;
-  if (get_nr_of_strucs(a, &nr)) 
+  if (cl_max_struc_oldstyle(a, &nr))
     return nr;
   else
     return cl_errno;
@@ -1945,7 +1945,7 @@ cl_struc2cpos(Attribute *attribute,
  * @return             boolean: true for all OK, false for problem.
  */
 int
-get_nr_of_strucs(Attribute *attribute, int *nr_strucs)
+cl_max_struc_oldstyle(Attribute *attribute, int *nr_strucs)
 {
   Component *struc_data;
 
@@ -2098,7 +2098,7 @@ structure_value_at_position(Attribute *struc, int position)
       (!get_num_of_struc(struc, position, &snum)))
     return NULL;
   else 
-    return structure_value(struc, snum);
+    return cl_struc2str(struc, snum);
 }
 
 
@@ -2149,7 +2149,7 @@ get_alignment(int *data, int size, int position)   /* ALIGN component */
   while (low <= high) {
     nr++;
     if (nr > 100000) {
-      fprintf(stderr, "Binary search in get_alignment_item failed\n");
+      fprintf(stderr, "Binary search in get_alignment failed\n");
       return -1;
     }
 
@@ -2527,7 +2527,6 @@ cl_dynamic_call(Attribute *attribute,
   int argnum, val;
   DynArg *p;
   char c;
-
 
   check_arg(attribute, ATT_DYN, cl_errno);
 

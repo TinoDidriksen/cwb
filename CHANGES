@@ -26,6 +26,7 @@ Bug fixes:
 
  - [2012-05-20: v3.4.4] Fixed bug causing segmentation fault in cwb-scan-corpus.
 
+ - [2012-07-17: v3.4.5] Fixed bug causing segmentation fault in CQP when cat output with header is requested.
 
 Version 3.2
 -----------

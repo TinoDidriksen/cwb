@@ -493,7 +493,20 @@ print_output(CorpusList *cl,
   }
 }
 
-/** prints matches #first..#last; use (0,-1) for entire corpus  */
+/**
+ * Prints a corpus, typically (some of) the matches of a query.
+ *
+ * (Not sure why it's called "catalog"; is this a pun on the cat keyword? -- AH 2012-07-17)
+ *
+ * The query is represented by a subcorpus (cl); only results
+ * #first..#last; will be printed; use (0,-1) for entire corpus.
+ *
+ * @param cl     The corpus/subcorpus/query to output.
+ * @param rd     Block of output redirection info; if NULL, default settings will be used.
+ * @param first  Offset of first match to print.
+ * @param last   Offset of last match to print.
+ * @param mode   Print mode to use.
+ */
 void 
 catalog_corpus(CorpusList *cl,
                struct Redir *rd,
@@ -543,7 +556,7 @@ catalog_corpus(CorpusList *cl,
 
     printHeader = GlobalPrintOptions.print_header;
 
-    /* fraglich... */
+    /* questionable... */
     if (GlobalPrintMode == PrintHTML)
       printHeader = True;
 
@@ -567,11 +580,11 @@ catalog_corpus(CorpusList *cl,
        if (printHeader || (mode == PrintASCII && !(rd->stream == stdout || rd->is_paging))); 
     */
 
-    /* header is printed _only_ when explicitly requested now
-     * (previous behaviour was to print header automatically when saving results to a file;
+    /* header is printed _only_ when explicitly requested now (or, when in HTML mode; see above);
+     * previous behaviour was to print header automatically when saving results to a file;
      * this makes sense when such files are created to document the results of a corpus search,
      * but nowadays they are mostly used for automatic post-processing (e.g. in a Web interface),
-     * where the header is just a nuisance that has to be stripped)
+     * where the header is just a nuisance that has to be stripped.
      */
     if (printHeader) {
       /* print something like a header */
@@ -583,7 +596,7 @@ catalog_corpus(CorpusList *cl,
     print_output(cl, rd->stream, 
                  isatty(fileno(rd->stream)) || rd->is_paging, 
                  &CD, first, last, mode);
-    
+
 #ifndef __MINGW__
     if (rd->is_paging && handle_sigpipe) {
       if (signal(SIGPIPE, SIG_IGN) == SIG_ERR)

@@ -145,17 +145,19 @@ printAlignedStrings(Corpus *sourceCorpus,
         /* How about this: Try to show the same attributes in this corpus
            as in the aligned corpus */
         if (cd->attributes) {
+          /* positional attributes */
           for (Sai = cd->attributes->list; Sai && Sai->name; Sai = Sai->next) {
             if ((Tai = FindInAL(AlignedCorpusCD.attributes, Sai->name)))
               Tai->status = Sai->status;
           }
-        } /* positional attributes */
+        }
         if (cd->strucAttributes) {
+          /* structural attributes */
           for (Sai = cd->strucAttributes->list; Sai && Sai->name; Sai = Sai->next) {
             if ((Tai = FindInAL(AlignedCorpusCD.strucAttributes, Sai->name)))
               Tai->status = Sai->status;
           }
-        } /* structural attributes */
+        }
         /* printing structural attribute values in the aligned regions doesn't
          * seem to make a lot of sense, so we stick with the first two options */
 

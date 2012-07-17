@@ -595,7 +595,7 @@ int cl_cpos2alg2cpos_oldstyle(Attribute *attribute,
  *  The DynCallResult object (needed to allocate space for dynamic function arguments)
  */
 typedef struct _DCR {
-  int type;              /**< Type of DynCallResult, indicated by one of the  ATTAT_x macro constants*/
+  int type;              /**< Type of DynCallResult, indicated by one of the ATTAT_x macro constants*/
   union {
     int intres;
     char *charres;

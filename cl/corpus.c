@@ -543,6 +543,8 @@ cl_delete_corpus(Corpus *corpus)
 
 /**
  * Prints a description of the corpus to STDOUT.
+ *
+ * TODO might be nice to have this function offer an option of XML-style output.
  */
 void
 describe_corpus(Corpus *corpus)
@@ -677,7 +679,7 @@ cl_first_corpus_property(Corpus *corpus)
  * (The corpus properties iterator / property datatype is public.)
  *
  * @param prop      The current property.
- * @return          The next property on the list.
+ * @return          The next property on the list, or NULL if there isn't one.
  *
  */
 CorpusProperty
