@@ -41,6 +41,10 @@
  */
 static int module_init = 0;
 
+
+
+
+
 /**
  * Global context descriptor used solely for the
  * printing of corresponding strings from an
@@ -111,6 +115,7 @@ printAlignedStrings(Corpus *sourceCorpus,
 
   for (ai = cd->alignedCorpora->list; ai && ai->name; ai = ai->next) {
 
+    /* TODO add a comment here explaining why we check ai->status */
     if (ai->status) {
 
       /* get the corpus positions for the aligned  */
@@ -122,6 +127,15 @@ printAlignedStrings(Corpus *sourceCorpus,
 
         int alg1, alg2, alg_start, alg_end;
         char *s = NULL;
+        int sanitise_aligned_data = 0; /* bool: if true, allow only ascii chars in aligned output */
+
+        /* Do we need to recode contents of the aligned corpus? */
+        {
+          /* the "comparison" charset is never ascii, this is to make sure that utf8/ascii corpora are interchangeable both ways */
+          CorpusCharset compare = (sourceCorpus->charset == ascii ? utf8 : sourceCorpus->charset);
+          if (alignedCorpus->charset != ascii && alignedCorpus->charset != compare)
+            sanitise_aligned_data = 1;
+        }
 
         alg1 = cl_cpos2alg(alat, begin_target);
         alg2 = cl_cpos2alg(alat, end_target);
@@ -176,11 +190,13 @@ printAlignedStrings(Corpus *sourceCorpus,
                                   ConcLineHorizontal,
                                   &ASCIIPrintDescriptionRecord,
                                   0, NULL);
+            if (sanitise_aligned_data)
+              cl_string_validate_encoding(s, ascii, 1);
           ascii_print_aligned_line(stream, highlighting, ai->name, s ? s : "(null)");
           break;
 
         case PrintSGML:
-          if (s == NULL)
+          if (s == NULL) {
             s = compose_kwic_line(alignedCorpus,
                                   alg_start, alg_end,
                                   &AlignedCorpusCD,
@@ -192,11 +208,14 @@ printAlignedStrings(Corpus *sourceCorpus,
                                   ConcLineHorizontal,
                                   &SGMLPrintDescriptionRecord,
                                   0, NULL);
+            if (s && sanitise_aligned_data)
+              cl_string_validate_encoding(s, ascii, 1);
+          }
           sgml_print_aligned_line(stream, ai->name, s ? s : "(null)");
           break;
 
         case PrintHTML:
-          if (s == NULL)
+          if (s == NULL) {
             s = compose_kwic_line(alignedCorpus,
                                   alg_start, alg_end,
                                   &AlignedCorpusCD,
@@ -208,11 +227,14 @@ printAlignedStrings(Corpus *sourceCorpus,
                                   ConcLineHorizontal,
                                   &HTMLPrintDescriptionRecord,
                                   0, NULL);
+            if (s && sanitise_aligned_data)
+              cl_string_validate_encoding(s, ascii, 1);
+          }
           html_print_aligned_line(stream, ai->name, s ? s : "(null)");
           break;
 
         case PrintLATEX:
-          if (s == NULL)
+          if (s == NULL) {
             s = compose_kwic_line(alignedCorpus,
                                   alg_start, alg_end,
                                   &AlignedCorpusCD,
@@ -224,6 +246,9 @@ printAlignedStrings(Corpus *sourceCorpus,
                                   ConcLineHorizontal,
                                   &LaTeXPrintDescriptionRecord,
                                   0, NULL);
+            if (s && sanitise_aligned_data)
+              cl_string_validate_encoding(s, ascii, 1);
+          }
           latex_print_aligned_line(stream, ai->name, s ? s : "(null)");
           break;
 
