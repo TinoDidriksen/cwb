@@ -132,6 +132,7 @@ printAlignedStrings(Corpus *sourceCorpus,
         /* Do we need to recode contents of the aligned corpus? */
         {
           /* the "comparison" charset is never ascii, this is to make sure that utf8/ascii corpora are interchangeable both ways */
+          /* -- NB: if output is via a pager, LESSCHARSET will be set to UTF8 if the source corpus is ascii; vide cqp/output.c */
           CorpusCharset compare = (sourceCorpus->charset == ascii ? utf8 : sourceCorpus->charset);
           if (alignedCorpus->charset != ascii && alignedCorpus->charset != compare)
             sanitise_aligned_data = 1;

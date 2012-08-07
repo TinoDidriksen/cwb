@@ -35,14 +35,26 @@
  *******************************************************************
  * FLAGS controlling how ensure_component() behaves.
  *******************************************************************
+ */
 
- * if ENSURE_COMPONENT_EXITS is defined, ensure_component will exit
+/* TODO: these should be either (a) dynamic - set at runtime or (b) bound to a setting in config.mk or definitions.mk
+ * changing these settings should not require hacking the source! */
+
+/**
+ * if CL_ENSURE_COMPONENT_EXITS is defined, ensure_component will exit
  * when the component can't be created or loaded.
- *
+ */
+#if 0
+#define CL_ENSURE_COMPONENT_EXITS
+#endif
 
- * if ALLOW_COMPONENT_CREATION is defined, components may be created
+/**
+ * if CL_ENSURE_COMPONENT_ALLOW_CREATION is defined, components may be created
  * on the fly by ensure_component.
  */
+#if 0
+#define CL_ENSURE_COMPONENT_ALLOW_CREATION
+#endif
 
 /**
  * if KEEP_SILENT is defined, ensure_component won't complain about
@@ -50,7 +62,7 @@
  *
  * @see ensure_component
  */
-#define KEEP_SILENT
+#define CL_ENSURE_COMPONENT_KEEP_SILENT
 
 
 
@@ -62,12 +74,12 @@
  * @see Component_Field_Specs
  */
 typedef struct component_field_spec {
-  ComponentID id;        /**< the ID code used as the index for this component in an Attribute's component array.
-                              This specifies what kind of blob of info this component this is. */
+  ComponentID id;        /**< the specifier for what kind of blob of info this component is; also used
+                              as the index for this component in its Attribute's component array. */
   char *name;            /**< String used as the label for this component  (abbreviation of the
                               relevant label used in the ComponentID enumeration). */
-  int using_atts;        /**< The attributes that use this component */
-  char *default_path;    /**< default location of the file corresponding to this component */
+  int using_atts;        /**< The attribute type of the Attributes that use this component */
+  char *default_path;    /**< The default location of the file corresponding to this component */
 } component_field_spec;
 
 /**
@@ -108,7 +120,7 @@ static struct component_field_spec Component_Field_Specs[] =
 
 
 /* ---------------------------------------------------------------------- */
-
+/*TODO needed here? move to header file? */
 ComponentState comp_component_state(Component *component);
 
 /* ---------------------------------------------------------------------- */
@@ -324,8 +336,8 @@ setup_attribute(Corpus *corpus,
   Attribute *attr;
   Attribute *prev;
 
-  /* count of attributes that the corpus possesses already, including the default */
-  /* used to calculate this attribute's attr_number value. */
+  /* count of attributes that the corpus possesses already, including the default
+   * used to calculate this attribute's attr_number value. */
   int a_num;
 
   attr = NULL;
@@ -1056,9 +1068,9 @@ create_component(Attribute *attribute, ComponentID cid)
  * this function (e.g. if failure to ensure causes the program
  * to abort).
  *
- * @see KEEP_SILENT
- * @see ENSURE_COMPONENT_EXITS
- * @see ALLOW_COMPONENT_CREATION
+ * @see CL_ENSURE_COMPONENT_KEEP_SILENT
+ * @see CL_ENSURE_COMPONENT_EXITS
+ * @see CL_ENSURE_COMPONENT_ALLOW_CREATION
  *
  * @param attribute     The Attribute object to work with.
  * @param cid           The identifier of the Component to "ensure".
@@ -1080,7 +1092,7 @@ ensure_component(Attribute *attribute, ComponentID cid, int try_creation)
     /*  component is undeclared */
     fprintf(stderr, "attributes:ensure_component(): Warning:\n"
             "  Undeclared component: %s\n", cid_name(cid));
-#ifdef ENSURE_COMPONENT_EXITS    
+#ifdef CL_ENSURE_COMPONENT_EXITS
     exit(1);
 #endif
     return NULL;
@@ -1095,12 +1107,12 @@ ensure_component(Attribute *attribute, ComponentID cid, int try_creation)
     case ComponentUnloaded:
       (void) load_component(attribute, cid); /* try to load the component */
       if (comp_component_state(comp) != ComponentLoaded) {
-#ifndef KEEP_SILENT
+#ifndef CL_ENSURE_COMPONENT_KEEP_SILENT
         fprintf(stderr, "attributes:ensure_component(): Warning:\n"
                 "  Can't load %s component of %s\n", 
                 cid_name(cid), attribute->any.name);
 #endif
-#ifdef ENSURE_COMPONENT_EXITS    
+#ifdef CL_ENSURE_COMPONENT_EXITS
         exit(1);
 #endif
         return NULL;
@@ -1111,16 +1123,16 @@ ensure_component(Attribute *attribute, ComponentID cid, int try_creation)
 
       if (try_creation != 0) {
 
-#ifdef ALLOW_COMPONENT_CREATION
+#ifdef CL_ENSURE_COMPONENT_ALLOW_CREATION
 
         (void) create_component(attribute, cid);
         if (comp_component_state(comp) != ComponentLoaded) {
-#ifndef KEEP_SILENT
+#ifndef CL_ENSURE_COMPONENT_KEEP_SILENT
           fprintf(stderr, "attributes:ensure_component(): Warning:\n"
                   "  Can't load or create %s component of %s\n", 
                   cid_name(cid), attribute->any.name);
 #endif
-#ifdef ENSURE_COMPONENT_EXITS
+#ifdef CL_ENSURE_COMPONENT_EXITS
           exit(1);
 #endif
           return NULL;
@@ -1129,7 +1141,7 @@ ensure_component(Attribute *attribute, ComponentID cid, int try_creation)
         fprintf(stderr, "Sorry, but this program is not set up to allow the\n"
                 "creation of corpus components. Please refer to the manuals\n"
                 "or use the ''makeall'' tool.\n");
-#ifdef ENSURE_COMPONENT_EXITS    
+#ifdef CL_ENSURE_COMPONENT_EXITS
         exit(1);
 #endif
         return NULL;
@@ -1137,12 +1149,12 @@ ensure_component(Attribute *attribute, ComponentID cid, int try_creation)
 
       }
       else {
-#ifndef KEEP_SILENT
+#ifndef CL_ENSURE_COMPONENT_KEEP_SILENT
         fprintf(stderr, "attributes:ensure_component(): Warning:\n"
                 "  I'm not allowed to create %s component of %s\n", 
                   cid_name(cid), attribute->any.name);
 #endif
-#ifdef ENSURE_COMPONENT_EXITS    
+#ifdef CL_ENSURE_COMPONENT_EXITS
         exit(1);
 #endif
         return NULL;
@@ -1153,7 +1165,7 @@ ensure_component(Attribute *attribute, ComponentID cid, int try_creation)
       fprintf(stderr, "attributes:ensure_component(): Warning:\n"
               "  Can't ensure undefined/illegal %s component of %s\n", 
               cid_name(cid), attribute->any.name);
-#ifdef ENSURE_COMPONENT_EXITS    
+#ifdef CL_ENSURE_COMPONENT_EXITS
       exit(1);
 #endif
       break;
@@ -1162,7 +1174,7 @@ ensure_component(Attribute *attribute, ComponentID cid, int try_creation)
       fprintf(stderr, "attributes:ensure_component(): Warning:\n"
               "  Illegal state of  %s component of %s\n", 
               cid_name(cid), attribute->any.name);
-#ifdef ENSURE_COMPONENT_EXITS    
+#ifdef CL_ENSURE_COMPONENT_EXITS
       exit(1);
 #endif
       break;
