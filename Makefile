@@ -80,7 +80,15 @@ default:
 	@$(ECHO) "  make tags      generate symbol index for GNU Emacs"
 	@$(ECHO) "  make size      check total size of CWB source code"   
 
-all:  $(EXTERNALS) $(SUBDIRS)
+all:  $(EXTERNALS)
+	@$(ECHO) "--------------------------------- BUILDING CORPUS LIBRARY (CL)"
+	$(MAKE) -C cl
+	@$(ECHO) "--------------------------------- BUILDING CQP"
+	$(MAKE) -C cqp
+	@$(ECHO) "--------------------------------- BUILDING COMMAND-LINE UTILITIES"
+	$(MAKE) -C utils
+	@$(ECHO) "--------------------------------- BUILDING MANPAGES"
+	$(MAKE) -C man
 
 cl:
 	@$(ECHO) "--------------------------------- BUILDING CORPUS LIBRARY (CL)"
