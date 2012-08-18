@@ -47,9 +47,9 @@
 TOP = $(shell pwd)
 include $(TOP)/config.mk
 
-# targets for external libraries
+# targets for external libraries; currently not used (Glib and PCRE assumed to be on the system already)
 ifdef __MINGW__
-#EXTERNALS = mingw-libgnurx-2.5.1
+#EXTERNALS = 
 else
 EXTERNALS = 
 endif
@@ -69,8 +69,6 @@ default:
 	@$(ECHO) "  make install   install CWB into chosen location"
 	@$(ECHO) "  make release   create binary release in build/ directory"
 	@$(ECHO) ""
-#	@$(ECHO) "  make mingw-libgnurx-2.5.1  "
-#	@$(ECHO) "                 build included mingw-libgnurx-2.5.1 (for Windows)"
 	@$(ECHO) "  make cl        build low-level corpus library (CL)"
 	@$(ECHO) "  make cqp       build CQP query processor"
 	@$(ECHO) "  make utils     build command-line utilities"
@@ -111,14 +109,6 @@ doxygen:
 	-$(RM) -rf doc/html/*
 	doxygen doc/doxygen-config
 	(cd doc && perl textile2html.perl)
-
-#mingw-libgnurx-2.5.1:
-#ifdef __MINGW__
-#	@$(ECHO) "--------------------------------- BUILDING MINGW-LIBGNURX LIBRARY"
-#	(cd mingw-libgnurx-2.5.1 && ./configure CC="$(CC)" && $(MAKE))
-#else
-#	@$(ECHO) "Error: mingw-libgnurx-2.5.1 can only be built when targeting a Windows environment."
-#endif
 
 instutils:
 	@$(ECHO) "--------------------------------- CONFIGURING INSTUTILS"
