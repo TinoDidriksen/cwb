@@ -24,7 +24,7 @@
 /** Defines the default number of buckets in a lexhash. */
 #define DEFAULT_NR_OF_BUCKETS 250000
 
-/** The update interval for hash performance estimation. */
+/** The update interval for hash performance estimation (number of lookups between performance checks). */
 #define PERFORMANCE_COUNT 1000
 
 /** The default value for the performance limit (avg no of comparisons) before the hash is expanded. */
@@ -49,7 +49,7 @@ is_prime(int n) {
 /** Returns smallest prime >= n */
 int 
 find_prime(int n) {
-  for( ; n > 0 ; n++)           /* will exit on int overflow */
+  for( ; n > 0 ; n++)           /* loop will break on signed int overflow */
     if (is_prime(n)) 
       return n;
   return 0;
@@ -61,7 +61,7 @@ hash_string(char *string) {
   unsigned char *s = (unsigned char *)string;
   unsigned int result = 0;
   for( ; *s; s++)
-    result = (result * 33 ) ^ (result >> 27) ^ *s;
+    result = (result * 33) ^ (result >> 27) ^ *s;
   return result;
 }
 
@@ -91,13 +91,13 @@ typedef void (*cl_lexhash_cleanup_func)(cl_lexhash_entry);
  */
 struct _cl_lexhash {
   cl_lexhash_entry *table;      /**< table of buckets; each "bucket" is a pointer to the list of entries that make up that bucket */
-  unsigned int buckets;         /**< number of buckets in the list */
+  unsigned int buckets;         /**< number of buckets in the hash table */
   int next_id;                  /**< ID that will be assigned to next new entry */
   int entries;                  /**< current number of entries in this hash */
   cl_lexhash_cleanup_func cleanup_func; /**< callback function used when deleting entries (see cl.h) */
-  int performance_counter;      /**< a variable used for estimating hash performance (avg no of comparisons) */
-  int comparisons;              /**< a variable used for estimating hash performance (avg no of comparisons) */
-  double last_performance;      /**< a variable used for estimating hash performance (avg no of comparisons) */
+  int performance_counter;      /**< variable used for estimating hash performance (avg no of comparisons): interval for checking performance */
+  int comparisons;              /**< variable used for estimating hash performance (avg no of comparisons): n string comparisons since last performance check */
+  double last_performance;      /**< variable used for estimating hash performance (avg no of comparisons): stores calculated performance stat */
   int auto_grow;                /**< boolean: whether to expand this hash automatically; true by default */
 };
 
@@ -109,8 +109,8 @@ struct _cl_lexhash {
 /**
  * Creates a new cl_lexhash object.
  *
- * @param buckets    The number of buckets in the newly-created cl_lexhash; set to 0 to use the
- *                   default number of buckets.
+ * @param buckets    The number of buckets in the newly-created cl_lexhash;
+ *                   set to 0 to use the default number of buckets.
  * @return           The new cl_lexhash.
  */
 cl_lexhash 
@@ -118,7 +118,8 @@ cl_new_lexhash(int buckets)
 {
   cl_lexhash hash;
   
-  if (buckets <= 0) buckets = DEFAULT_NR_OF_BUCKETS;
+  if (buckets <= 0)
+    buckets = DEFAULT_NR_OF_BUCKETS;
   hash = (cl_lexhash) cl_malloc(sizeof(struct _cl_lexhash));
   hash->buckets = find_prime(buckets);
   hash->table = cl_calloc(hash->buckets, sizeof(cl_lexhash_entry));
@@ -318,7 +319,7 @@ cl_lexhash_check_grow(cl_lexhash hash)
  * @param hash        The hash to search.
  * @param token       The key-string to look for.
  * @param ret_offset  This integer address will be filled with the token's
- *                    hashtable offset.
+ *                    hashtable offset (can be NULL, in which case, ignored).
  * @return            The entry that is found (or NULL if the string is not
  *                    in the hash).
  */
@@ -329,6 +330,7 @@ cl_lexhash_find_i(cl_lexhash hash, char *token, unsigned int *ret_offset)
   cl_lexhash_entry entry;
 
   assert((hash != NULL && hash->table != NULL && hash->buckets > 0) && "cl_lexhash object was not properly initialised");
+
   /* get the offset of the bucket to look in by computing the hash of the string */
   offset = hash_string(token) % hash->buckets;
   if (ret_offset != NULL)
@@ -354,6 +356,9 @@ cl_lexhash_find_i(cl_lexhash hash, char *token, unsigned int *ret_offset)
 /**
  * Finds the entry corresponding to a particular string within a cl_lexhash.
  *
+ * This function is basically a wrapper around the internal function cl_lexhash_find_i.
+ *
+ * @see               cl_lexhash_find_i
  * @param hash        The hash to search.
  * @param token       The key-string to look for.
  * @return            The entry that is found (or NULL if the string is not
@@ -390,13 +395,13 @@ cl_lexhash_add(cl_lexhash hash, char *token)
                                    by the call to cl_lexhash_find_i                                     */
   
   entry = cl_lexhash_find_i(hash, token, &offset);
+
   if (entry != NULL) {
     /* token already in hash -> increment frequency count */
     entry->freq++;
-    return entry;
   }
   else {
-    /* add new entry for this token */
+    /* token not in hash -> add new entry for this token */
     entry = (cl_lexhash_entry) cl_malloc(sizeof(struct _cl_lexhash_entry));
     entry->key = cl_strdup(token);
     entry->freq = 1;
@@ -405,19 +410,22 @@ cl_lexhash_add(cl_lexhash hash, char *token)
     entry->data.numeric = 0.0;
     entry->data.pointer = NULL;
     entry->next = NULL;
-    insert_point = hash->table[offset]; /* insert entry into its bucket in the hash table */
+
+    /* insert entry into its bucket in the hash table */
+    insert_point = hash->table[offset];
     if (insert_point == NULL) {
       hash->table[offset] = entry;      /* only entry in this bucket so far */
     }
-    else { /* always insert as last entry in its bucket (because of Zipf's Law:
-              frequent lexemes tend to occur early in the corpus and should be first in their buckets for faster access) */
+    else {
+      /* always insert a new entry as the last entry in its bucket (because of Zipf's Law:
+       * frequent lexemes tend to occur early in the corpus and should be first in their buckets for faster access) */
       while (insert_point->next != NULL)
         insert_point = insert_point->next;
       insert_point->next = entry;
     }
     hash->entries++;
-    return entry;
   }
+  return entry;
 }
 
 /* returns ID of <token>, -1 if not in hash */
@@ -450,7 +458,7 @@ cl_lexhash_id(cl_lexhash hash, char *token)
  *
  * @param hash   The hash to look in.
  * @param token  The string to look for.
- * @return       The frrequency of that string, or 0
+ * @return       The frequency of that string, or 0
  *               if the string is not in the hash
  *               (whgich is, of course, actually its frequency).
  */
@@ -463,7 +471,7 @@ cl_lexhash_freq(cl_lexhash hash, char *token)
   return (entry != NULL) ? entry->freq : 0;
 } 
 
-/* deletes <token> from hash & returns its frequency */
+
 /**
  * Deletes a string from a hash.
  *
@@ -473,7 +481,7 @@ cl_lexhash_freq(cl_lexhash hash, char *token)
  *
  * @param hash   The hash to alter.
  * @param token  The string to remove.
- * @return       The frequency of the deleted entry.
+ * @return       The frequency of the deleted entry (0 if the string was not found in the hash).
  */
 int 
 cl_lexhash_del(cl_lexhash hash, char *token)
@@ -508,7 +516,7 @@ cl_lexhash_del(cl_lexhash hash, char *token)
  * Gets the number of different strings stored in a lexhash.
  *
  * This returns the total number of entries in all the
- * bucket linked-lists in the whole hashtable.
+ * buckets in the whole hashtable.
  *
  * @param hash  The hash to size up.
  */

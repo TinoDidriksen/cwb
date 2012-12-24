@@ -848,7 +848,7 @@ typedef struct _cl_lexhash *cl_lexhash;
  * Unlike most underlying structures, this is public in the CL API.
  */
 typedef struct _cl_lexhash_entry {
-  char *key;                        /**< hash key == token */
+  char *key;                        /**< hash key == form of tokens */
   unsigned int freq;                /**< frequency of this type */
   int id;                           /**< the id code of this type */
   /**

@@ -44,7 +44,7 @@ typedef struct _hash_entry {
 
 
 /**
- * A specialised hash for computing frequency distributions over tuples of lexicon IDs
+ * A specialised hashtable for computing frequency distributions over tuples of lexicon IDs.
  */
 struct _Hash {
   int N;                    /**< number of keys, including constraint-only keys */
@@ -307,7 +307,7 @@ hash_find(int *tuple, int *R_index)
   return entry;
 }
 
-/* insert N-tuple into hash (if it's already in there, just increment its count) */
+
 /**
  * Inserts an N-tuple into the global hash.
  *
