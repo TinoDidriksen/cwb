@@ -4,8 +4,8 @@ cwb-encode - The CWB corpus encoding utility
 
 =head1 SYNOPSIS
 
-B<cwb-encode> [-xsBvqDh] [-d I<data_directory>] [-R I<registry_file>] [-U I<string>] [-b I<num>] 
-    -f I<input_file> [...] -F I<input_directory> [...] [-p -|-p <attribute>] 
+B<cwb-encode> [-xsBCvqDh] [-d I<data_directory>] [-R I<registry_file>] [-U I<string>] [-b I<num>] 
+    [-c I<charset>] -f I<input_file> [...] -F I<input_directory> [...] [-p -|-p <attribute>] 
     (-P I<attribute>|-S I<attribute_spec>|-V I<attribute_spec>|-0 I<attribute>)*
 
 ... | B<cwb-encode> S<[I<options>] [I<declarations>]>
