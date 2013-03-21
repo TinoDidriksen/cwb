@@ -4,7 +4,7 @@ cwb-lexdecode - Access lexicon of token-level annotations in a CWB corpus
 
 =head1 SYNOPSIS
 
-B<cwb-lexdecode> [-fnlsh] [-r I<registry_dir>] [-P I<attribute>]
+B<cwb-lexdecode> [-fnlbsh] [-r I<registry_dir>] [-P I<attribute>]
     [-p I<regexp> [-cd]] [-F I<file> [-0N]]  I<corpus>
 
 B<cwb-lexdecode> [-r I<registry_dir>] [-P I<attribute>] -S I<corpus>
@@ -51,6 +51,13 @@ mode (reading strings, not integers), specification of an item that is not found
 in an error message to standard error and nothing to standard output. But if B<-0>
 is set, it will instead result in a zero-frequency item being printed to standard
 output.
+
+=item B<-b>
+
+Turns off the use of extra "blanks" (spaces) to pad numeric columns to a fixed width.
+By default, the frequency (B<-f>), string-length (B<-l>) and lexicon ID number (B<-n>)
+columns are printed with extra spaces used as necessary to fill up a minimum width
+of seven characters; this option inhibits this behaviour.
 
 =item B<-c>
 

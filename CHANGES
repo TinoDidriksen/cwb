@@ -6,6 +6,8 @@ Other changes:
  - cwb-scan-corpus now accepts negated regular expression constraints (e.g. 'lemma+0!=/anti.*/c').
    The -C option is consistently ignored for constraint keys ('?...'), and documented to be.
    It is also now compatible with multiple ISO-8859 character sets and with UTF-8.
+ - cwb-lexdecode now has a "no-blanks" option (-b) to turn off the padding of numeric columns with
+   spaces to the minimum width of seven.
 
 Bug fixes:
 

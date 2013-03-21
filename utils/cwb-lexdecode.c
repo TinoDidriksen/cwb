@@ -30,6 +30,7 @@ char *progname;
 int print_nr = 0;           /**< boolean: flag whether we should print line numbers */
 int print_freqs = 0;        /**< boolean: print the frequencies of the words? */
 int print_len = 0;          /**< boolean: print the word length s? */
+int dont_pad_cols = 0;      /**< boolean: omit padding spaces on numeric columns? */
 int sort = 0;               /**< boolean: print the lexicon in a sorted order? */
 int input_are_numbers = 0;  /**< boolean: read lexicon IDs from file? */
 int show_size_only = 0;     /**< boolean: do_show should just print the size of the lexicon and exit? */
@@ -52,6 +53,7 @@ char *input_filename = NULL;
 void
 lexdecode_print_item_info(Attribute *attr, int id, char *fallback_s)
 {
+  char *format;
   char *item;
   int freq, slen;
 
@@ -72,9 +74,10 @@ lexdecode_print_item_info(Attribute *attr, int id, char *fallback_s)
     item = NULL;
   }
 
-  if (print_nr)    printf("%7d\t", id);
-  if (print_freqs) printf("%7d\t", freq);
-  if (print_len)   printf("%7d\t", slen);
+  format = (dont_pad_cols ? "%d\t" : "%7d\t" );
+  if (print_nr)    printf(format, id);
+  if (print_freqs) printf(format, freq);
+  if (print_len)   printf(format, slen);
   printf("%s\n", item ? item : fallback_s);
 }
 
@@ -215,6 +218,7 @@ lexdecode_usage(void)
   fprintf(stderr, "  -f        show frequency (number of occurrences)\n");
   fprintf(stderr, "  -n        show internal lexicon ID\n");
   fprintf(stderr, "  -l        show length of annotation string\n");
+  fprintf(stderr, "  -b        do not pad columns with space characters\n");
   fprintf(stderr, "  -s        print in (lexically) sorted order\n");
   fprintf(stderr, "  -p <rx>   show lexicon entries matching regexp <rx> only\n");
   fprintf(stderr, "  -c        [with -p <rx>] ignore case\n");
@@ -288,6 +292,10 @@ main(int argc, char **argv) {
 
     case 'l':                        /* l: print word length */
       print_len++;
+      break;
+
+    case 'b':                        /* b: omit space passing on numberic columns */
+      dont_pad_cols++;
       break;
 
     case 's':                        /* s: print sorted */
