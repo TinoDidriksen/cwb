@@ -26,8 +26,8 @@
 
 /** Level of progress-info (inc compression protocol) message output: 0 = none. */
 int do_protocol = 0;
-/** File handle for this program's progress-info output: always stdout */
-FILE *protocol; /* " = stdout;" init moved to main() for Gnuwin32 compatibility */
+/** File handle for this program's progress-info output: note, it is always stdout */
+FILE *protocol; /* For Gnuwin32 compatibility, this must be initialised in main(), not here. */
 
 /* ---------------------------------------------------------------------- */
 
@@ -94,7 +94,7 @@ bprintf(unsigned int i, int width, FILE *stream)
 
 
 /**
- * Dumps the specified heap of memory to the program output stream.
+ * Dumps the specified heap of memory to the program's STDOUT.
  *
  * @see protocol
  * @param heap       Location of the heap to dump.
@@ -124,7 +124,7 @@ dump_heap(int *heap, int heap_size, int node, int indent)
 }
 
 /**
- * Prints a description of the specified heap of memory to the program output stream.
+ * Prints a description of the specified heap of memory to the program's STDOUT.
  *
  * @see protocol
  * @param heap       Location of the heap to print.
@@ -144,7 +144,7 @@ print_heap(int *heap, int heap_size, char *title)
   
   dump_heap(heap, heap_size, 1, 0);
 
-  fprintf(protocol, "");
+  fprintf(protocol, "\x0c");
 }
 
 
@@ -571,7 +571,6 @@ compute_code_lengths(Attribute *attr, HCD *hc, char *fname)
 
     fprintf(stderr, "Problem: No output generated -- no items?\n");
     nr_codes = 0;
-
   }
   else {
 
@@ -698,8 +697,7 @@ compute_code_lengths(Attribute *attr, HCD *hc, char *fname)
 
       printf("- writing code descriptor block to %s\n",  hcd_path);
       if (!WriteHCD(hcd_path, hc)) {
-        fprintf(stderr, "ERROR: writing %s failed. Aborted.\n",
-                hcd_path);
+        fprintf(stderr, "ERROR: writing %s failed. Aborted.\n", hcd_path);
         exit(1);
       }
 
@@ -936,7 +934,7 @@ huffcode_usage(char *msg, int error_code)
   fprintf(stderr, "Part of the IMS Open Corpus Workbench v" VERSION "\n\n");
 
   if (corpus)
-    drop_corpus(corpus);
+    cl_delete_corpus(corpus);
 
   exit(error_code);
 }
