@@ -328,7 +328,7 @@ creat_rev_corpus(Component *revcorp)
 
     /* check pointers (i.e. observed frequencies vs. data from FREQS component) */
     ptr = buffer;
-    for (id = primus + 1; id < secundus; id++) {
+    for (id = primus + 1; id <= secundus; id++) {
       ptr += cl_id2freq(attr, id);
       if (ptr != ptab[id]) {
         fprintf(stderr, "Pointer inconsistency for id=%d. Aborting.\n", id);

@@ -1115,10 +1115,10 @@ print_macro_definition(char *name, int args)
       printf("/%s[", name);
       for (i = 0; i < args; i++) {
         if (macro->argnames[i] != NULL) {
-          printf("�%s�", macro->argnames[i]);
+          printf("<%s>", macro->argnames[i]);
         }
         else {
-          printf("�%d�", i);
+          printf("<%d>", i);
         }
         if (i < (args-1)) printf(", ");
       }
@@ -1127,16 +1127,16 @@ print_macro_definition(char *name, int args)
         if (seg->arg >= 0) {
           i = seg->arg;
           if (macro->argnames[i] != NULL) {
-            printf("�%s�", macro->argnames[i]);
+            printf("<%s>", macro->argnames[i]);
           }
           else {
-            printf("�%d�", i);
+            printf("<%d>", i);
           }
         }
         else if (seg->string != NULL)
           printf("%s", seg->string);
         else
-          printf("�$$�");
+          printf("<$$>");
       }
       printf("\n");
     }
