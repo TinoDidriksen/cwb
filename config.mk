@@ -44,7 +44,7 @@ include $(TOP)/config/platform/darwin-universal
 #
 # Pre-defined site configuration files:
 #       standard        standard configuration (installation in /usr/local tree)
-#         beta-install    ... install into separate tree /usr/local/cwb-<VERSION>
+#         beta-install    ... install into separate tree /usr/local/cwb-<VERSION> (unless CWB_LIVE_DANGEROUSLY is set)
 #       classic         "classic" configuration (CWB v2.2, uses /corpora/c1/registry)
 #       osx-fink        Mac OS X installation in Fink's /sw tree
 #       binary-release  Build binary package for release (static if possible, use with "make release")
