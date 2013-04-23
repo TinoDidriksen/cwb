@@ -114,9 +114,9 @@ int write_file_from_blob(char *filename,
 
 /* ==================================================== LOW LEVEL FUNCTIONS */
 
-caddr_t mmapfile(char *filename, size_t *len_ptr, char *mode);
+void *mmapfile(char *filename, size_t *len_ptr, char *mode);
 
-caddr_t mallocfile(char *filename, size_t *len_ptr, char *mode);
+void *mallocfile(char *filename, size_t *len_ptr, char *mode);
 
 /* a new-style API for MemBlobs */
 /* NB argument orders for the read/write functions are wrong... */

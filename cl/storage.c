@@ -48,14 +48,16 @@
 
 #define MMAP_EMPTY_LEN 8    /* can't mmap() 0 bytes, so mmap() MMAP_EMPTY_LEN bytes beyond end-of-file for empty files */
 
-/* extern int munmap(); */
 
 /* ============================================================ */
 
 /**
- * Writes an integer to file, converting to network byte order.
+ * Writes a 32-bit integer to file, converting to network byte order.
  *
- * Other than the byte order conversion, this is the same as
+ * Other than the byte order conversion, amd the fact that it exits
+ * the program upon error (so the user of this function can assume
+ * success), this is the same as
+ *
  * fwrite(&val, sizeof(int), 1, fd) .
  *
  * @param val  The integer to write.
@@ -73,7 +75,7 @@ NwriteInt(int val, FILE *fd)
 }
 
 /**
- * Reads an integer from file, converting from network byte order.
+ * Reads a 32-bit integer from file, converting from network byte order.
  *
  * This function does all the error checking for you, and will abort
  * the program if the int cannot be read.
@@ -94,7 +96,7 @@ NreadInt(int *val, FILE *fd)
 
 
 /**
- * Writes an array of integers to file, converting to network byte order.
+ * Writes an array of 32-bit integers to file, converting to network byte order.
  *
  * Other than the byte order conversion, this is the same as
  * fwrite(vals, sizeof(int), nr_vals, fd) .
@@ -119,7 +121,7 @@ NwriteInts(int *vals, int nr_vals, FILE *fd)
 }
 
 /**
- * Reads an array of integers from file, converting from network byte order.
+ * Reads an array of 32-bit integers from file, converting from network byte order.
  *
  * This function does all the error checking for you, and will abort
  * the program if the requested number of ints cannot be read.
@@ -241,17 +243,17 @@ mfree(MemBlob *blob)
       break;
     case MMAPPED:
       map_len = (blob->size > 0) ? blob->size : MMAP_EMPTY_LEN;
-      if (munmap((caddr_t)blob->data, map_len) < 0)
+      if (munmap((void *)blob->data, map_len) < 0)
         perror("storage:munmap()");
       break;
     case MALLOCED:
       free((void *)blob->data);
       break;
     case PAGED:
-      assert("Paged memory not yet implemented" && 0);
+      assert("CL: Paged memory not yet implemented" && 0);
       break;
     default:
-      assert("Illegal memory storage class in storage:mfree()" && 0);
+      assert("CL: Illegal memory storage class in storage:mfree()" && 0);
       break;
     }
     if (blob->fname != NULL)
@@ -282,13 +284,13 @@ mfree(MemBlob *blob)
  * @return          The contents of file in filename as a pointer to a
  *                  memory area.
  */
-caddr_t 
+void *
 mmapfile(char *filename, size_t *len_ptr, char *mode)
 {
   struct stat stat_buf;
   int fd;
   int binflag = 0; /* set to O_BINARY if we want to use the binary flag with open() */
-  caddr_t space;
+  void *space;
   size_t map_len; /* should probably be off_t (for file sizes) rather than size_t (for size of objects), according to SUS */
 
   /* allow for: r+b, w+b, rb+, wb+ */
@@ -350,7 +352,7 @@ mmapfile(char *filename, size_t *len_ptr, char *mode)
 #if defined(__svr4__)
   if (space == MAP_FAILED) {
 #else
-  if (space == (caddr_t)-1) {        /* do we need this fallback ? */
+  if (space == (void *)-1) {        /* do we need this fallback ? */
 #endif
     fprintf(stderr, "mmapfile()<storage.c>: Can't mmap() file %s ...\n"
             "\tYou have probably run out of memory / address space!\n"
@@ -372,13 +374,13 @@ mmapfile(char *filename, size_t *len_ptr, char *mode)
  *
  * @see mmapfile
  */
-caddr_t
+void *
 mallocfile(char *filename, size_t *len_ptr, char *mode)
 {
   struct stat stat_buf;
   int fd;
   int binflag = 0; /* set to O_BINARY if we want to use the binary flag with open() */
-  caddr_t space;
+  void *space;
 
   /* allow for: r+b, w+b, rb+, wb+, rb, wb */
   binflag = (mode[1] == 'b' || (mode[1] == '+' && mode[2] == 'b') ) ? O_BINARY : 0;
@@ -401,7 +403,7 @@ mallocfile(char *filename, size_t *len_ptr, char *mode)
     else {
       *len_ptr = stat_buf.st_size;
 
-      space = (caddr_t)cl_malloc(*len_ptr);
+      space = (void *)cl_malloc(*len_ptr);
       
       if (read(fd, space, *len_ptr) != *len_ptr) {
         fprintf(stderr, "storage:mallocfile():\n  couldn't read file contents -- ");
@@ -425,7 +427,7 @@ mallocfile(char *filename, size_t *len_ptr, char *mode)
       perror(NULL);
     }
     else {
-      space = (caddr_t)cl_malloc(*len_ptr);
+      space = cl_malloc(*len_ptr);
       
       if (write(fd, space, *len_ptr) != *len_ptr) {
         fprintf(stderr, "storage:mallocfile():\n  couldn't write file -- ");

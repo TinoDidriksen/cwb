@@ -20,7 +20,6 @@
 
 #include "globals.h"
 
-#include "storage.h"                      /* gets sys/types.h for caddr_t */
 
 
 

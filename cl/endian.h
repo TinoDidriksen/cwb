@@ -26,11 +26,18 @@
 #ifndef _ENDIAN_H_
 #define _ENDIAN_H_
 
-
-/* The CWB uses _network_ byte order for 32-bit integers stored in its platform-independent disk files.
-   Conversion to and from native byte order is handled by the BSD functions/macros htonl() and ntohl(),
-   which must be available in the system library.
-*/
+/**
+ * @file
+ *
+ * globals.h checks whether endianness is well-defined.
+ *
+ * The CWB uses _network_ byte order (i.e. Most Significant Byte First)
+ * for 32-bit integers stored in its platform-independent disk files.
+ *
+ * Conversion to and from processor-native byte order is handled by the
+ * BSD functions/macros htonl() and ntohl(), which must be available in
+ * the system library.
+ */
 
 /*
  * Macros for network/internal number representation conversion.
