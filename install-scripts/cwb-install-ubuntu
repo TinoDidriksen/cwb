@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Note : this script will probably work on Debian too.
+# Note : this script works on Debian too.
 
 # run as root! su or sudo.
 

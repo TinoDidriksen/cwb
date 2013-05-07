@@ -1,6 +1,6 @@
 =head1 NAME
 
-cwb-align-show - Browse alignment files created by cwb-align
+cwb-align-show - browse alignment files created by cwb-align
 
 =head1 SYNOPSIS
 
@@ -9,40 +9,97 @@ B<cwb-align-show> [-Wh] [-w I<n>] [-s I<n>] [-r I<registry_dir>]
 
 =head1 DESCRIPTION
 
-B<TODO>
+B<cwb-align-show> is an interactive program for reviewing the output of B<cwb-align>.
 
-Display alignment results in terminal. Aligned regions are displayed side-by-side, one region at a time. The following interactive commands are available:
+B<cwb-align> produces an alignment file, that is, a file containing pairs of regions
+judged to be equivalents across the two aligned corpora. B<cwb-align-show> allows the actual
+content of these pairs of regions to be reviewed in a side-by-side format.
 
+The program is invoked by specifying the alignment file to be displayed. Compressed alignment files
+can be reviewed; any file whose name ends in C<.gz> will be automatically decompressed.
 
-=head1 INTERACTIVE COMMANDS
+One region from the alignment file is shown at a time, with the region from the first corpus in the left-hand
+column, and region from the second corpus in the right-hand column. Interactive commands (see below) are
+used to move forwards through the file in steps of one or more regions. 
 
-  RET    show next aligned region
-  p <n>  print next <n> regions
-  s <n>  skip next <n> regions
-  h      this list (help)
-  q, x   exit cwb-align-show
-
-B<TODO>
-
+B<cwb-align-show> will look for the two aligned corpora in the registry directory, as usual. If a registry
+location is not specified with the B<-r> option, then either a directory specified by the CORPUS_REGISTRY
+environment variable, or CWB's built-in default registry will be used.
 
 =head1 OPTIONS
 
 Please note that no CWB programs currently support GNU-style C<--long-options>.
 
-  -P <p-att> display positional attribute <p-att> [word]
-  -r <reg>   use registry directory <reg>
-  -w <n>     set display column width to <n>   [38]
-  -s <n>     set column separator width to <n> [2]
-  -W         display width settings for wide xterm window
-  -h         this help page
-
 =over 4
 
-=item B<TODO>
+=item B<-h>
+
+Displays B<cwb-align-show>'s help message, with short information about the usage of the command line options.  
+This usage message will be also shown if B<cwb-align-show> is called with invalid options.
+After the usage message is printed, B<cwb-align-show> will exit.
+
+=item B<-P> I<attribute>
+
+Specifies which positional attribute in the corpus should be displayed. 
+By default, the C<word> attribute is shown. 
+
+=item B<-r> I<registry_dir>
+
+Specifies that the registry files for the two aligned corpora are located in I<registry_dir>,
+instead of the standard registry. If this option is not specified, then a directory 
+specified by the CORPUS_REGISTRY environment variable will be used; if that is not available, 
+the built-in CWB default will be used.
+
+=item B<-s> I<n>
+
+Sets the width of the separator between the two columns in B<cwb-align-show>'s display to I<n> characters.
+The default width of the column separator is 2.
+
+=item B<-w> I<n>
+
+Sets the width of the two columns in B<cwb-align-show>'s display to I<n> characters.
+The default width of each column is 38.
+
+=item B<-W>
+
+With the default values for the widths of the columns and column separator (see above), 
+B<cwb-align-show>'s display will fit within an 80-character space (i.e. it will
+fit in a traditional small terminal). Specifying the B<-W> option sets alternative defaults 
+that expand the display, up to 116 characters; you should not use this option unless your 
+terminal is big enough for such lines!
+
+Note that -W is equivalent to C<-w 55 -s 6>.
 
 =back
 
 
+=head1 INTERACTIVE COMMANDS
+
+Once in interactive mode, the following commands are available for browsing the alignment file.
+
+=over 4
+
+=item B<RETURN key>
+
+Shows the next aligned region.
+
+=item B<p> I<n>  
+
+Prints the next I<n> aligned regions.
+
+=item B<s> I<n>
+
+Skips past the next I<n> regions (and prints the first region after the regions skipped).
+
+=item B<h>
+
+Shows the online help (an abbreviated version of this list of commands).
+
+=item B<q> or B<x>   
+
+Exits the program.
+
+=back
 
 =head1 SEE ALSO
 

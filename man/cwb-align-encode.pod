@@ -1,6 +1,6 @@
 =head1 NAME
 
-cwb-align-encode - Add alignment attribute to existing CWB corpus
+cwb-align-encode - Add an alignment attribute to an existing CWB corpus
 
 =head1 SYNOPSIS
 

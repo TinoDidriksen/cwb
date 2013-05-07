@@ -50,8 +50,8 @@ int af_is_pipe;                     /**< need to know whether to call fclose() o
 #define MAX_COL_WIDTH 256
 int COL_WIDTH = 38;                 /**< width of a display column (one column for each language) */
 int COL_SEP = 2;                    /**< column separator (blanks) */
-#define WIDE_COL_WIDTH 55
-#define WIDE_COL_SEP   6
+#define WIDE_COL_WIDTH 55           /**< wider column width available on request (-W option) */
+#define WIDE_COL_SEP   6            /**< column separator to accompany the wider columns */
 
 
 /**
@@ -265,7 +265,7 @@ alignshow_print_next_region(FILE *f)
     /* fill left column */
     w = 0; col[0] = 0;
     while (i1 <= l1) {
-      word = get_string_at_position(w1, i1);
+      word = cl_cpos2str(w1, i1);
       n = strlen(word);
       if (n > COL_WIDTH) {
         /* token doesn't fit in line */
@@ -281,21 +281,25 @@ alignshow_print_next_region(FILE *f)
       }
     }
     printf("%s", col);                /* print left column and fill */
-    while ((w++) < COL_WIDTH) printf(" ");
+    while ((w++) < COL_WIDTH)
+      printf(" ");
 
-    for (n = COL_SEP; n > 0; n--) printf(" "); /* column separator */
+    /* print column separator */
+    for (n = COL_SEP; n > 0; n--)
+      printf(" ");
 
     /* fill right column */
     w = 0; col[0] = 0;
     while (i2 <= l2) {
-      word = get_string_at_position(w2, i2);
+      word = cl_cpos2str(w2, i2);
       n = strlen(word);
       if (n > COL_WIDTH) {
         /* token doesn't fit in line */
         word = "<OVERSIZE TOKEN>";
         n = strlen(word);
       }
-      if ((w + n) > COL_WIDTH) break; /* column full */
+      if ((w + n) > COL_WIDTH)
+        break; /* column full */
       sprintf(col + w, "%s", word); w += n;
       i2++;                           /* next token */
       if (w < COL_WIDTH) {
@@ -303,7 +307,7 @@ alignshow_print_next_region(FILE *f)
         w++;
       }
     }
-    printf("%s", col);                /* print left column (no need to fill) */
+    printf("%s", col);                /* print right column (no need to fill) */
 
     printf("\n");
   }
@@ -437,8 +441,10 @@ main(int argc, char** argv)
       break;
     case 'q': case 'x':
       alignshow_goodbye(0);
+      break;
     default:
       fprintf(stderr, "UNKNOWN COMMAND. Type 'h' for list of commands.\n");
+      break;
     }
 
   }
