@@ -37,20 +37,31 @@ typedef struct feature_maps_t {
   int n_features;               /**< number of allocated features */
   int **w2f1;                   /**< feature map 1 */
   int **w2f2;                   /**< feature map 2 */
-  int *fweight;                 /**< feature weights */
+  int *fweight;                 /**< array of feature weights */
 
-  vstack_t *vstack;
+  vstack_t *vstack;             /**< a stack (implemented as linked list) of integer vectors,
+                                     each containing <n_features> integers. */
 
 } feature_maps_t;
 
-typedef feature_maps_t *FMS;    /**< FMS : feature map handle */
+/**
+ * The FMS object: contains memory space for a feature map between two attributes,
+ * used in aligning corpora.
+ *
+ * The "feature map" is a very large and complex data structure of all the different features
+ * we can look at, together with weights.
+ *
+ * Basically, it is a "compiled" version of the features defined by the cwb-align configuration
+ * flags *AS APPLIED TO THIS SPECIFIC CORPUS - a massive list of "things to look for"
+ * when comparing any two potentially-corresponding regions from a source/target corpus pair.
+ */
+typedef feature_maps_t *FMS;
 
 
-FMS
-create_feature_maps(char **config, int config_lines,                
-                    Attribute *w_attr1, Attribute *w_attr2,
-                    Attribute *s_attr1, Attribute *s_attr2
-                    );
+FMS create_feature_maps(char **config, int config_lines,
+                        Attribute *w_attr1, Attribute *w_attr2,
+                        Attribute *s_attr1, Attribute *s_attr2
+                        );
 
 
 int *get_fvector(FMS fms);
@@ -61,27 +72,23 @@ void check_fvectors(FMS fms);
 
 
 
-int
-feature_match(FMS fms, 
-              int f1, int l1, int f2, int l2);
+int feature_match(FMS fms, int f1, int l1, int f2, int l2);
 
 
-void
-show_features(FMS fms, int which, char *word);
+void show_features(FMS fms, int which, char *word);
 
 
 
-void
-best_path(FMS fms,
-          int f1, int l1,
-          int f2, int l2,
-          int beam_width,       /* beam search */
-          int verbose,          /* echo progress info on stdout ? */
-          /* output */
-          int *steps,
-          int **out1,
-          int **out2,
-          int **out_quality);
+void best_path(FMS fms,
+               int f1, int l1,
+               int f2, int l2,
+               int beam_width,       /* beam search */
+               int verbose,          /* echo progress info on stdout ? */
+               /* output */
+               int *steps,
+               int **out1,
+               int **out2,
+               int **out_quality);
 
 
 

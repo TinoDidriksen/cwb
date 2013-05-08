@@ -72,7 +72,7 @@ struct TCorpus {
 
   IDList groupAccessList;          /**< List of groups allowed to access this corpus (can be NULL) */
   IDList userAccessList;           /**< List of users allowed to access this corpus (can be NULL) */
-  IDList hostAccessList;
+  IDList hostAccessList;           /**< List of host machines allowed to access this corpus (can be NULL) */
   
   char *registry_dir;              /**< Directory where this corpus's registry file is located */
   char *registry_name;             /**< the cwb-name of this corpus */

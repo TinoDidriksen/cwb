@@ -12,34 +12,78 @@ B<cwb-align> [-vh] [-r I<registry_dir>] [-s I<x>] [-w I<n>]
 
 =head1 DESCRIPTION
 
-B<TODO>
+B<TODO> GEnerally what prog does and how it does it.
+
+B<cwb-align> is called as follows: first the command line options, if any, are specified;
+then the three compulsory arguments (I<source_corpus>, I<target_corpus>, I<grid_attribute>) are given; 
+finally, configuration flags are added after the arguments
 
 I<source_corpus> is the name of the source corpus, I<target_corpus> the name of the target corpus, 
-and I<grid_attribute> the s-attribute used as alignment grid (an attribute of this name 
-must exist both in source AND target corpus).
+and I<grid_attribute> the s-attribute used as the alignment grid. It is important to note that
+the s-attribute specified for use as the grid attribute must exist, and must have the same name, 
+in both the source AND target corpora).
+
+The possible options and configuration flag are specified in the following two sections.
+
+B<cwb-align-show> will look for the two aligned corpora in the registry directory, as usual. If a registry
+location is not specified with the B<-r> option, then either a directory specified by the CORPUS_REGISTRY
+environment variable, or CWB's built-in default registry will be used.
+
 
 
 =head1 OPTIONS
 
 Please note that no CWB programs currently support GNU-style C<--long-options>.
 
-  -P <p-att> use positional attribute <p-att> for alignment [word]
-  -S <s-att> pre-alignment (corresponding regions of the s-attribute are
-             pre-aligned; regions must appear in identical order!)
+  -S <s-att> 
   -V <s-att> pre-alignment with ID matching (identical annotation strings)
-  -o <file>  write alignment output to file <file>      [out.align]
-  -s <x>     set 2:2 alignment split factor to <x>      [1.2]
-  -w <n>     use best path search beam of width <n>     [50]
-  -r <reg>   use registry directory <reg>
-  -v         verbose
-  -h         this help page
+
+  -s <x>     
 
 =over 4
 
-=item B<TODO>
+=item B<-h>
+
+Displays B<cwb-align>'s help message, with short information about the usage of the command line options.  
+This usage message will be also shown if B<cwb-align> is called with invalid options.
+After the usage message is printed, B<cwb-align-show> will exit.
+
+=item B<-o> I<filename>
+
+Specifies the filename to which the program's output should be written. If this option is not used,
+then the default destination file C<out.align> is used. 
+
+=item B<-P> I<attribute>
+
+Specified the p-attribute whose content should be analysed to establish the alignment. 
+By default, the C<word> attribute is analysed.
+
+=item B<-r> I<registry_dir>
+
+Specifies that the registry files for the two aligned corpora are located in I<registry_dir>,
+instead of the standard registry. If this option is not specified, then a directory 
+specified by the CORPUS_REGISTRY environment variable will be used; if that is not available, 
+the built-in CWB default will be used.
+
+=item B<-s> I<x>
+
+set 2:2 alignment split factor to <x>      [1.2]
+
+=item B<-S> I<attribute>
+
+pre-alignment (corresponding regions of the s-attribute are pre-aligned; regions must appear in identical order!)
+
+Please note that only one of B<-S> and B<-V> may be specfied (since it makes no sense for there to be 
+I<both> types of pre-alignment). 
+
+=item B<-v>
+
+Activates verbose mode. In this mode, progress information is printed on standard output in the course
+of the calculation of the alignment.
+
+TODO
 
 =back
-
 
 =head1 CONFIGURATION FLAGS
 

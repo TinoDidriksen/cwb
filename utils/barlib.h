@@ -21,7 +21,7 @@
  * The BARdesc object: a BAR (Beamed Array) descriptor.
  *
  * The Beamed Array Library implements storage for the kind of sparse matrix required
- * by beam search methods in dynamic programming. A Beamed Array is a N,M-matrix
+ * by beam search methods in dynamic programming. A Beamed Array is a N-by-M matrix
  *
  *      A(x,y) ;  x = 0 ... N-1, y = 0 ... M-1
  *
@@ -32,11 +32,11 @@
  * contains a single contiguous block of at most W (potentially) nonzero elements. The
  * position of this block on a given diagonal is determined by the first write access to
  * that diagonal. It is assumed that the first element written is the leftmost one, i.e.
- * setting A(x,y)=1 will define the block on d_(x+y) to be
+ * setting A(x,y) = 1 will define the block on d_(x+y) to be
  *
  *      {(x,y), (x+1,y-1), ... , (x+W-1, y+W-1)}
  *
- *
+ * Well done if you understand that......
  */
 typedef struct _BARdesc {
   unsigned int x_size, y_size, d_size; /**< matrix dimensions: N, M, N+M */
@@ -54,27 +54,7 @@ void BAR_reinit(BARdesc BAR, int N, int M, int W);
 
 void BAR_delete(BARdesc BAR);
 
-/* A(x,y) = i
-   BAR_write(BAR, x, y, i);
-   
-   BAR ... BAR descriptor
-   x,y ... matrix coordinates
-   i   ... value
-
-   sets A(x,y) = i; 
-   if (x,y) is outside matrix or beam range, the function call is ignored;
-   if d_(x+y) hasn't been accessed before, the block_start_x value is set to x;
-   */
 void BAR_write(BARdesc BAR, int x, int y, int i);
 
-/* i = A(x,y)
-   i = BAR_read(BAR, x, y);
-
-   BAR ... BAR descriptor
-   x,y ... matrix coordinates
-
-   returns value of A(x,y);
-   if (x,y) is outside matrix or beam range, returns 0;
-   */
 int BAR_read(BARdesc BAR, int x, int y);
 

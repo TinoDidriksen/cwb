@@ -23,6 +23,7 @@
 #include <math.h>
 
 #include "../cl/globals.h"
+#include "../cl/attributes.h"
 
 #include "feature_maps.h"
 
@@ -85,8 +86,8 @@ int pre2 = 0;                   /**< number of pre-alignment regions (target cor
 
 /* global options */
 
-char word_name[CL_MAX_FILENAME_LENGTH] = "word";         /**< name of the word attribute (default: word) */
-char outfile_name[CL_MAX_FILENAME_LENGTH] = "out.align"; /**< name of the output file */
+char word_name[CL_MAX_FILENAME_LENGTH] = DEFAULT_ATT_NAME;  /**< name of the word attribute (default: word) */
+char outfile_name[CL_MAX_FILENAME_LENGTH] = "out.align";    /**< name of the output file */
 
 double split_factor = 1.2;      /**< 2:2 alignment split factor */
 int beam_width = 50;            /**< best path search beam width */
@@ -290,18 +291,20 @@ align_print_line(FILE *fd, int f1, int l1, int f2, int l2, int quality)
  * (in .align format).
  *
  * Usage:
- * steps = align_do_alignment(FMS, f1, l1, f2, l2, outfile);
+ *
+ * steps += align_do_alignment(FMS, f1, l1, f2, l2, outfile);
  *
  * @param fms      The feature map to use in best_path alignment.
- * @param if1      First cpos in source corpus.
- * @param il1      Last cpos in source corpus.
- * @param if2      First cpos in target corpus.
- * @param il2      Last cpos in target corpus.
+ * @param if1      Number of s-attribute instance that is the start point (first) in source corpus.
+ * @param il1      Number of s-attribute instance that is the end point (last) in source corpus.
+ * @param if2      Number of s-attribute instance that is the start point (first) in target corpus.
+ * @param il2      Number of s-attribute instance that is the start point (last) in target corpus.
  * @param outfile  File handle to print the alignment lines to.
+ * @return         The number of alignment steps created (= number of lines written to outfile).
  */
 int
 align_do_alignment(FMS fms, int if1, int il1, int if2, int il2, FILE *outfile) {
-  int steps, *out1, *out2, *quality;    /* return values of best_path() */
+  int steps, *out1, *out2, *quality;    /* out-arguments for best_path() */
   int f1 = 0, l1 = 0, f2 = 0, l2 = 0;
   int q1 = 0, q2 = 0;
   int i, steps_created;
