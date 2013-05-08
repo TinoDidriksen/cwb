@@ -81,7 +81,8 @@ int silent = 0;                         /**< hide messages */
 int verbose = 0;                        /**< show progress (this is _not_ the opposite of silent!) */
 int xml_aware = 0;                      /**< substitute XML entities in p-attributes & ignore <? and <! lines */
 int skip_empty_lines = 0;               /**< skip empty lines when encoding? */
-int line = 0;                           /**< corpus position currently being encoded (ie cpos of _next_ token) */
+unsigned line = 0;                      /**< corpus position currently being encoded (ie cpos of _next_ token) */
+/* unsigned so it doesn't wrap after first 2^31 tokens and we can abort encoding when corpus size is exceeded */
 int strip_blanks = 0;                   /**< strip leading and trailing blanks from input and token annotations */
 cl_string_list input_files = NULL;      /**< list of input file (-f option(s)) */
 int nr_input_files = 0;                 /**< number of input files (length of list after option processing) */
@@ -89,7 +90,7 @@ int current_input_file = 0;             /**< index of input file currently being
 char *current_input_file_name = NULL;   /**< filename of current input file, for error messages */
 FILE *input_fd = NULL;                  /**< file handle for current input file (or pipe) (text mode!) */
 int input_file_is_pipe = 0;             /**< so we can properly close input_fd using either fclose() or pclose() */
-int input_line = 0;                     /**< input line number (reset for each new file) for error messages */
+unsigned long input_line = 0;           /**< input line number (reset for each new file) for error messages */
 char *registry_file = NULL;             /**< if set, auto-generate registry file named {registry_file}, listing declared attributes */
 char *directory = NULL;                 /**< corpus data directory (no longer defaults to current directory) */
 char *corpus_character_set = "latin1";  /**< character set label that is inserted into the registry file */
@@ -343,9 +344,9 @@ void
 encode_print_input_lineno(void)
 {
   if (nr_input_files > 0 && current_input_file_name != NULL)
-    fprintf(stderr, "file %s, line #%d", current_input_file_name, input_line);
+    fprintf(stderr, "file %s, line #%ld", current_input_file_name, input_line);
   else
-    fprintf(stderr, "input line #%d", input_line);
+    fprintf(stderr, "input line #%ld", input_line);
 }
 
 /**
@@ -1867,6 +1868,11 @@ main(int argc, char **argv)
       if (!handled) {
         encode_add_wattr_line(buf);
         line++;                 /* line is now the corpus position of the next token that will be encoded */
+        if (line >= 1UL << 31) {
+          fprintf(stderr, "Maximal corpus size has been exceeded.\n");
+          fprintf(stderr, "WARNING: input truncated to the first %ld tokens.\n", 1UL << 31);
+          break;
+        }
       }
     } /* endif (this is a line that should be encoded) */
   } /* endwhile (main loop for each line) */

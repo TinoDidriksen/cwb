@@ -321,14 +321,14 @@ char *cl_xml_entity_decode(char *s); /* removes the four default XML entities fr
  * is almost certainly too lax.
  *
  * @param c  Character to check. (It is expected to be a char,
- *           so is typecase to unsigned char for comparison with
+ *           so is typecast to unsigned char for comparison with
  *           upper-128 hex values.)
  */
 #define cl_xml_is_name_char(c)  ( ( c >= 'A'  && c <= 'Z')  ||       \
                                   ( c >= 'a'  && c <= 'z')  ||       \
                                   ( c >= '0'  && c <= '9')  ||       \
                                   (    (unsigned char) c >= 0x80     \
-                                    && (unsigned char) c <= 0xff     \
+                                  /* && (unsigned char) c <= 0xff */ \
                                   ) ||                               \
                                   ( c == '-') ||                     \
                                   ( c == '_')                        \
