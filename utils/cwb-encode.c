@@ -1868,9 +1868,10 @@ main(int argc, char **argv)
       if (!handled) {
         encode_add_wattr_line(buf);
         line++;                 /* line is now the corpus position of the next token that will be encoded */
-        if (line >= 1UL << 31) {
+        if (line >= 0x7FFFFFFF) {
+          /* largest admissible corpus size should be 2^31 - 1 tokens, with maximal cpos = 2^31 - 2 */
           fprintf(stderr, "Maximal corpus size has been exceeded.\n");
-          fprintf(stderr, "WARNING: input truncated to the first %ld tokens.\n", 1UL << 31);
+          fprintf(stderr, "WARNING: input truncated to the first %ld tokens.\n", 0x7FFFFFFF);
           break;
         }
       }
