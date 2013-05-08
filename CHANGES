@@ -29,6 +29,10 @@ Bug fixes:
  - [2012-05-20: v3.4.4] Fixed bug causing segmentation fault in cwb-scan-corpus.
 
  - [2012-07-17: v3.4.5] Fixed bug causing segmentation fault in CQP when cat output with header is requested.
+ 
+ - [2013-05-08: v3.4.7] Fixed problems with command-line completion on Mac OS X (bugs #8 and #55); #8 was a 
+   buffer overflow for long lists of completion candidates; #55 is fixed by auto-detecting a genuine GNU Readline
+   library installed by the user in /usr/local or with a package manager such as HomeBrew
 
 Version 3.2
 -----------

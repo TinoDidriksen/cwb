@@ -27,5 +27,10 @@ include $(TOP)/config/platform/unix
 INSTALL = install
 INSTFLAGS_FILE = -p
 
+## try to auto-detect GNU readline (or fall back on system-provided Editline)
+READLINE_DEFINES := $(shell '$(TOP)/instutils/find_readline.perl' --cflags)
+READLINE_LIBS := $(shell '$(TOP)/instutils/find_readline.perl' --ldflags)
+
 ## CPU architecture and operating system used to name binary releases
-RELEASE_OS = osx-10.5
+RELEASE_OS = osx-10.6
+

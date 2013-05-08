@@ -23,7 +23,7 @@
 #
 # CWB version
 #
-VERSION = 3.4.6
+VERSION = 3.4.7
 # 3.4.x = beta versions leading up to new stable 3.5.0
 
 #
@@ -256,8 +256,8 @@ LDFLAGS_LIBS = -lpcre `pkg-config --libs glib-2.0`
 endif 
 
 # complete sets of compiler and linker flags (allows easy specification of specific build rules)
-CFLAGS_ALL = $(CFLAGS) $(INTERNAL_DEFINES) $(READLINE_DEFINES) $(TERMCAP_DEFINES) $(GLIB_DEFINES)
-DEPEND_CFLAGS_ALL = $(DEPEND_CLAGS) $(INTERNAL_DEFINES) $(READLINE_DEFINES) $(TERMCAP_DEFINES)
+CFLAGS_ALL = $(CFLAGS) $(INTERNAL_DEFINES) $(GLIB_DEFINES) $(READLINE_DEFINES) $(TERMCAP_DEFINES)
+DEPEND_CFLAGS_ALL = $(DEPEND_CLAGS) $(INTERNAL_DEFINES)
 LDFLAGS_ALL = $(LDFLAGS) $(LDFLAGS_LIBS)
 
 # readline and termcap libraries are only needed for building CQP

@@ -31,10 +31,7 @@ CFLAGS = -Wall -O3 -arch x86_64 -arch i386 -march=core2 -mtune=core2
 
 DEPEND_CFLAGS = -Wall -O3
 
-## OS X Lion comes with editline library, which supplies readline + history functionality
-READLINE_LIBS = -lreadline
-
 ## CPU architecture and operating system used to name binary releases
 RELEASE_ARCH = universal
-RELEASE_OS = osx-10.6
+RELEASE_OS = osx-10.7
 

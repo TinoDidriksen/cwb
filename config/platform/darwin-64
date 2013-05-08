@@ -26,15 +26,12 @@ include $(TOP)/config/platform/darwin
 ## Make sure that Apple's gcc is used (not e.g. a fink-installed version)
 CC = /usr/bin/gcc
 
-## Only build default 64-bit architecture (since homebrew's universal glib build is broken for latest glib 2.30.2)
-CFLAGS = -Wall -O3 -arch x86_64 -march=core2 -mtune=core2
+## Only build default 64-bit architecture, optimised for this system
+CFLAGS = -Wall -O3 -arch x86_64 -march=native -mtune=native
 
 DEPEND_CFLAGS = -Wall -O3
 
-## OS X Lion comes with editline library, which supplies readline + history functionality
-READLINE_LIBS = -lreadline
-
 ## CPU architecture and operating system used to name binary releases
 RELEASE_ARCH = x86_64
-RELEASE_OS = osx-10.6
+RELEASE_OS = osx-10.7
 

@@ -128,7 +128,7 @@ include $(TOP)/config/site/beta-install
 # LEX = flex -8
 
 ## GNU-compatible install program (defaults to included shell script)
-# INSTALL = $(TOP)/install.sh
+# INSTALL = $(TOP)/instutils/install.sh
 
 ## Sometimes, extra install flags are needed for files or directories (e.g. preserve modification time on OS X)
 # INSTFLAGS_FILE = ???

@@ -39,6 +39,7 @@ and ask your question there.
 
         RECOMMENDED SOFTWARE (not essential)
 
+ - the GNU Readline library for command-line editing (strongly recommended)
  - GNU install or a compatible program
  - Perl with pod2man script for rebuilding manual pages
  - GNU less pager for interactive display of query results in CQP
@@ -220,28 +221,39 @@ configuration for standard i386-compatible processors.
 
         INSTALLATION GUIDE FOR MAC OS X
 
-On recent versions of Mac OS X (10.6 "Snow Leopard" and 10.7 "Lion"), it is quite
-easy to compile and install CWB release 3.4 and above.
+On recent versions of Mac OS X (10.6 "Snow Leopard", 10.7 "Lion", 10.8 "Mountain Lion"),
+it is quite easy to compile and install CWB.
 
- - Lion:         install XCode from the Mac App store (XCode 4.2.1 or newer)
-   Snow Leopard: install XCode from https://developer.apple.com/xcode/ (XCode 3.2.6 or newer)
-                 [you will need a free Apple developer account to download XCode]
+ - install XCode and the Command Line Tools
+
+   Lion / Mountain Lion:
+     - install XCode from the Mac App store (XCode 4.2.1 or newer)
+     - for recent versions, you then need to run XCode and install Command Line Tools
+       (Downloads | Components in the Preferences dialog)
+
+   Snow Leopard:
+      - obtain a free Apple developer account
+      - install XCode from https://developer.apple.com/xcode/ (XCode 3.2.6 or newer)
 
  - install HomeBrew package manager from http://mxcl.github.com/homebrew/
 
 Make sure that no other package managers (Fink, MacPorts) are installed on your
 system, as they might conflict with the build process described here.  Now install
-the prerequisite external libraries with the following shell commands:
+the required external libraries with the following shell commands:
 
         brew -v install pkg-config
         brew -v install glib --universal
         brew -v install pcre --universal
+        brew -v install readline
 
 Now edit the file "config.mk", setting the platform entry to
 
         include $(TOP)/config/platform/darwin-universal
 
-and the site configuration as desired.  Then enter the shell commands
+and the site configuration as desired.  Alternatively, select "darwin-64" to compile
+a 64-bit-only version tuned to your computer's hardware.
+
+Then enter the shell commands
 
         make clean
         make depend
@@ -250,20 +262,13 @@ and the site configuration as desired.  Then enter the shell commands
 
 as shown in the section "QUICK INSTALLATION" above.
 
-NB: The universal build of glib 2.30.2 seems to be broken at least on OS X 10.7 (Lion)
-with XCode 4.2.1; the same problem might apply to other software versions. There are 
-two possible ways of dealing with this problem:
+Note that the Mac OS X configuration auto-detects GNU Readline that has been
+installed manually or with a package manager such as HomeBrew or MacPorts.  It
+will fall back to the system-provided Editline library only if not version of
+GNU Readline can be found.  In order to check which library CQP will use for
+command-line editing, type
 
-1) Omit the flag "--universal" when installing glib and change the platform configuration
-   setting from "darwin-universal" to "darwin-64". This will compile the CWB only for the
-   64-bit architecture (x86_64), which is the default on Snow Leopard and Lion.
-
-2) Downgrade glib to the previous version 2.28.8 by entering the shell command
-
-    (cd /usr/local; git checkout 4b4760a /usr/local/Library/Formula/glib.rb)
-
-   before installing glib with "brew". See "brew versions glib" for other available
-   versions and how to activate them.
+        instutils/find_readline.perl --check
 
 
         BUILDING WINDOWS BINARIES
