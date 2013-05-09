@@ -567,6 +567,15 @@ cl_delete_attribute(Attribute *attribute)
   return 1;
 }
 
+/**
+ * Accessor function to get the mother corpus of the attribute.
+ */
+Corpus *
+cl_attribute_mother_corpus(Attribute *attribute)
+{
+  return attribute->any.mother;
+}
+
 /* ---------------------------------------------------------------------- */
 
 

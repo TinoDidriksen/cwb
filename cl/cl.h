@@ -66,7 +66,7 @@
  * SECTION 1          CL UTILITIES
  *
  *   1.1                ERROR HANDLING
- *
+ *two
  *   1.2                MEMORY MANAGEMENT
  *
  *   1.3                DATA LIST CLASSES: cl_string_list AND cl_int_list
@@ -239,7 +239,7 @@ void cl_string_list_qsort(cl_string_list l);                 /* sort list (using
 
 
 /*
- *
+ *two
  * SECTION 1.4 -- INTERNAL RANDOM NUMBER GENERATOR
  *
  */
@@ -272,7 +272,7 @@ void cl_set_memory_limit(int megabytes);  /* 0 or less turns limit off */
 
 
 /*
- *
+ *two
  * SECTION 1.6 -- MISCELLANEOUS UTILITIES
  *
  */
@@ -463,6 +463,9 @@ Attribute *cl_new_attribute_oldstyle(Corpus *corpus,
 int cl_delete_attribute(Attribute *attribute);
 int cl_sequence_compressed(Attribute *attribute);
 int cl_index_compressed(Attribute *attribute);
+
+/* get the Corpus object of which the Attribute is a daughter */
+Corpus *cl_attribute_mother_corpus(Attribute *attribute);
 
 /* attribute access functions: lexicon access (positional attributes) */
 char *cl_id2str(Attribute *attribute, int id);

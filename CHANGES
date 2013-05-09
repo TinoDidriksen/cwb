@@ -8,6 +8,7 @@ Other changes:
    It is also now compatible with multiple ISO-8859 character sets and with UTF-8.
  - cwb-lexdecode now has a "no-blanks" option (-b) to turn off the padding of numeric columns with
    spaces to the minimum width of seven.
+ - cwb-align is now safe for use with UTF-8 corpora.
 
 Bug fixes:
 

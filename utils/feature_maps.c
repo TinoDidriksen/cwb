@@ -30,13 +30,16 @@
 /** the top of the range of char_map's outputs @see char_map */
 int char_map_range = 0;
 /**
- * A character map for Latin-1.
+ * A character map for measuring character n-gram similarity.
  *
- * IMPORTANT TODO : this map, and anything that uses it, is a source of UTF8 incompatibiltiy.
+ * For the contents of this array post-initialisation, see the algorithm in the
+ * initialisation function. Basically, when all is said and done, all possible bytes
+ * map to a number that represents position in the (unaccented, caseless) Latin alphabet, where
+ * where (a|A) => 2, and (any punctuation or non-letter) => 1.
  *
- * Once initialised, this map's output = the offset from 0x3f of the input character,
- * plus lowercase is mapped onto the outputs for the uppercase and accented is mapped
- * onto the outputs for unaccented.
+ * This includes, incidentally, UTF-8 component bytes in the upper half of the 8 bit space.
+ * So all such component bytes count as "just punctuation" in the character n-gram
+ * comparisons.
  */
 unsigned char char_map[256];
 
@@ -46,39 +49,43 @@ init_char_map()
 {
   int i;
   unsigned char *map = char_map;
-  unsigned char 
+/* OLD charmap for Latin-1 accent mapping. Now ignored.
+  unsigned char
     map_from[]="��������������������������������������������������������������",
     map_to[]  ="AAAAAAACEEEEIIIIDNOOOOOOUUUUYFSAAAAAAACEEEEIIIIDNOOOOOOUUUUYFY",
     *f = map_from,
-    *t = map_to;
+    *t = map_to;       */
 
   /* the outputs of the map are initialised to 0 */
-  for(i=0;i<256;i++)
+  for(i = 0; i < 256; i++)
     map[i] = 0;
 
-  /* assign output for accented characters in the map from the two strings above */
+  /* assign output for accented characters in the map from the two strings above
   while(*f) {
     map[*f++] = *t++;
   }
+  NO - don't do this, because instead, de-accenting will be dealt with using the CL string functions
+  after the strings to be mapped have been retrieved from the lexicon.
+  */
 
-  /* capital letters map to themselves */
-  for(i='A';i<='Z';i++)
-    map[i]=i;
-  /* lowercase letters map to the corresponding uppercase */
-  for(i='a';i<='z';i++)
-    map[i] = i-'a'+'A';
+  /* lowercase letters map to themselves */
+  for(i = 'a'; i <= 'z'; i++)
+    map[i] = i;
+  /* uppercase letters map to the corresponding lowercase */
+  for(i = 'A'; i <= 'Z'; i++)
+    map[i] = i + 0x20;
   
-  for(i=1;i<256;i++) {
-    /* anything which HAS been assigned an output has (0x41-2) subtracted from it, i.e. 63.
-     * so the map output now = the offset from 0x3f */
+  for(i = 1; i < 256; i++) {
+    /* anything which HAS been assigned an output has (0x61-2) subtracted from it, i.e. 63.
+     * so the map output now = the alphabet offset where 'a' = 2 (in ascii terms, an offset from 0x3f) */
     if(map[i]>0)
-      map[i] -= 'A' - 2;
-    /* anything which HASN'T got an output yet gets 1, which is the same as '@' would get, by the way */
+      map[i] -= 0x5f;
+    /* anything which HASN'T got an output yet gets 1, i.e. all non-letters */
     else
       map[i] = 1;
     
-    /* increase char_map_range form its start value of zero to the highest possible value.  Note this is
-     * deterministic. */
+    /* increase char_map_range from its start value of zero to the highest possible value.
+     * Note this is deterministic. */
     if(map[i] >= char_map_range) {
       char_map_range = map[i]+1;
     }
@@ -155,6 +162,10 @@ create_feature_maps(char **config,
   int i;
   int nw1;  /* number of types on the word-attribute of the source corpus */
   int nw2;  /* number of types on the word-attribute of the target corpus */
+
+  /* one last variable: we need to know the character set of the two corpora for assorted purposes */
+  CorpusCharset charset;
+  charset = cl_corpus_charset(cl_attribute_mother_corpus(w_attr1));
 
   /* first, create the FMS object. */
   r = (FMS) malloc(sizeof(feature_maps_t));
@@ -294,7 +305,6 @@ create_feature_maps(char **config,
             word1[CL_MAX_LINE_LENGTH],
             word2[CL_MAX_LINE_LENGTH];
           FILE *wordlist;
-          CorpusCharset charset = w_attr1->any.mother->charset;
           int nw;      /* number of words scanned from an input line */
           int nl = 0;  /* counter for the number of lines in the wordlist file we have gone through */
           int i1,i2;   /* lexicon ids in source and target corpora */
@@ -318,7 +328,7 @@ create_feature_maps(char **config,
               /* on first line of file, skip UTF8 byte-order-mark if present */
               if (nl == 0 && charset == utf8 && strlen(word1) > 3)
                 if (word1[0] == (char)0xEF && word1[1] == (char)0xBB && word1[2] == (char)0xBF)
-                   cl_strcpy(word1, (word1+3));
+                   cl_strcpy(word1, (word1 + 3));
               nl++;
               /* check that both word 1 and word 2 are valid for the encoding of the corpora */
               if (! (cl_string_validate_encoding(word1, charset, 0)
@@ -486,7 +496,8 @@ create_feature_maps(char **config,
 
             /* for each word in the SOURCE lexicon, acquire the possible n-gram features */
             for(i = 0; i < nw1; i++) {
-              s = (unsigned char *) cl_id2str(w_attr1,i);
+              s = (unsigned char *) cl_strdup(cl_id2str(w_attr1, i));
+              cl_string_canonical( (char *)s, charset, IGNORE_CASE | IGNORE_DIAC);
               ng = 0;
               l = 0;
               while (*s) {
@@ -498,12 +509,15 @@ create_feature_maps(char **config,
                 if (l >= n)
                   *(--r->w2f1[i]) = current_feature + ng;
               }
+              cl_free(s);
             }
 
             /* same again for words in the TARGET lexicon */
             for(i = 0; i < nw2; i++) {
-              s = (unsigned char *) cl_id2str(w_attr2,i);
-              ng = 0; l = 0;
+              s = (unsigned char *) cl_strdup(cl_id2str(w_attr2, i));
+              cl_string_canonical( (char *)s, charset, IGNORE_CASE | IGNORE_DIAC);
+              ng = 0;
+              l = 0;
               while (*s) {
                 /* read and process 1 character */
                 ng = ( (ng * char_map_range) + char_map[*s]) % f;
@@ -513,6 +527,7 @@ create_feature_maps(char **config,
                 if (l >= n)
                   *(--r->w2f2[i]) = current_feature + ng;
               }
+              cl_free(s);
             }
             
             current_feature += f;
@@ -535,9 +550,10 @@ create_feature_maps(char **config,
           else {
             printf("PASS 2: Processing word list %s\n", filename);
             while((nw = fscanf(wordlist, "%s %s", word1, word2))>0) {
+              /* skip utf-8 prefix if present */
               if (nl == 0 && charset == utf8 && strlen(word1) > 3)
                 if (word1[0] == (char)0xEF && word1[1] == (char)0xBB && word1[2] == (char)0xBF)
-                   cl_strcpy(word1, (word1+3));
+                   cl_strcpy(word1, (word1 + 3));
               nl++;
               if (nw !=2 ) {
                 /* skip */

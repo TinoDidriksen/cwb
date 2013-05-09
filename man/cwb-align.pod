@@ -281,7 +281,7 @@ The first line is a header line, which contains the following four elements, sep
 =back
 
 Following the header, each individual line represents
-a single pair of aligned regions (sometimes called an I<alignment bead>) in the corpus.
+a single pair of aligned regions in the corpus.
 This is specified by six fields of information,
 separated by tabs. The six fields are as follows:
 
