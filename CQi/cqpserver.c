@@ -1622,6 +1622,26 @@ main(int argc, char *argv[])
     fprintf(stderr, "CQPserver: ERROR Couldn't initialise CQP engine.\n");
     exit(1);
   }
+  while (optind < argc) {
+    /* remaining command-line arguments are <user>:<password> specifications */
+    char *sep = strchr(argv[optind], ':');
+    if (sep != NULL) {
+      if (sep == argv[optind]) {
+        fprintf(stderr, "CQPserver: Invalid account specification '%s' (username must not be empty)\n", argv[optind]);
+        exit(1);
+      }
+      else {
+        *sep = '\0';
+        add_user_to_list(argv[optind], sep + 1);
+      }
+    }
+    else {
+      fprintf(stderr, "CQPserver: Invalid account specification '%s' (password missing)\n", argv[optind]);
+      exit(1);
+    }
+    optind++;
+  }
+  
   cqiserver_welcome();
 
   if (localhost) {

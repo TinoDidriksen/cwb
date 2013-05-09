@@ -21,6 +21,40 @@ Java.
 Although it is controlled completely differently, the basic capabilities of B<cqpserver> are the same
 as those of interactive-mode or slave-mode B<cqp>.
 
+=head1 ACCESS CONTROL
+
+In order to allow B<cqpserver> to accept connections from CQi clients, user accounts with appropriate
+access permissions have to be declared, and valid remote hosts have to identified by IP address.
+
+This is usually accomplished with the following CQP commands in the init file:
+
+=over 4
+
+=item B<user> I<username> "I<password>";
+
+=item B<user> I<username> "I<password>" (I<CORPUS1> I<CORPUS2> ...);
+
+Create user account with login I<username> and password I<password> (a quoted string).  User names must
+be valid CWB identifiers.
+
+The first version of the command gives the user access to all installed corpora.  The second version
+restricts access to the specified list of corpora.
+
+=item B<host> 141.58.127.100;
+
+=item B<host> 141.58.127.*;
+
+=item B<host> *;
+
+Grant access to a specified remote host (numeric IPv4 address), an entire subnet, or all remote hosts.
+
+=back
+
+Alternatively, user accounts (without access restrictions) can be passed as command-line
+arguments in the form I<username>:I<password>.  Remote hosts cannot be enabled from the
+command line, but local connections can be allowed with the option C<-L>.
+
+
 =head1 OPTIONS
 
 Please note that CQP does not currently support GNU-style C<--long-options>.
