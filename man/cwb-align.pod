@@ -264,7 +264,9 @@ weight 3; (4) shared four-letter sequences, with weight 4.
 
 =head1 OUTPUT FORMAT
 
-B<cwb-align>'s output file uses CWB's C<.align> file format. C<.align> files are formatted as follows.
+B<cwb-align>'s output file uses CWB's C<.align> file format. C<.align> files are ASCII text files (although
+they may contain characters from another encoding if the corpus IDs include non-ASCII characters), 
+formatted as follows.
 
 The first line is a header line, which contains the following four elements, separated by tabs:
 

@@ -434,7 +434,7 @@ cl_new_attribute_oldstyle(Corpus *corpus,
   attr = NULL;
 
   if (corpus == NULL)
-    fprintf(stderr, "attributes:find_attribute(): called with NULL corpus\n");
+    fprintf(stderr, "attributes:cl_new_attribute_oldstyle(): called with NULL corpus\n");
   else {
     
     for (attr = corpus->attributes; attr != NULL; attr = attr->any.next)

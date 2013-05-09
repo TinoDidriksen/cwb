@@ -53,6 +53,7 @@ alignencode_usage(void)
   fprintf(stderr, "  -C       compatibility mode (creates .alg file)\n");
   /*   fprintf(stderr, "  -R       reverse alignment (target -> source)\n"); */
   /* -R option disabled ... need to re-order alignment file for reverse alignment */
+  /*TODO -R is not actually disabled in code. Has it been re-enabled, or does it need ot be disabled? */
   fprintf(stderr, "  -r <reg> use registry directory <reg>\n");
   fprintf(stderr, "  -v       verbose mode\n");
   fprintf(stderr, "  -h       this help page\n\n");
@@ -285,7 +286,8 @@ main(int argc, char *argv[])
       fprintf(stderr, "%s: can't determine pathname for .alx file (internal error)\n", progname);
       exit(1);
     }
-    strcpy(alx_name, comp_pathname); /* need to strcpy because component_full_name() returns pointer to internal buffer */
+    strcpy(alx_name, comp_pathname);
+    /* need to strcpy because component_full_name() returns pointer to internal buffer */
     if (compatibility) {
       comp_pathname = component_full_name(alignment, CompAlignData, NULL);
       if (comp_pathname == NULL) {
