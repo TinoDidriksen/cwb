@@ -88,7 +88,7 @@ char *cregin_name = "";
 /**
  * Buffer for an error message. {Used in registry parser???}
  */
-char errmsg[MAX_LINE_LENGTH];
+char errmsg[CL_MAX_LINE_LENGTH];
 
 
 
@@ -193,7 +193,7 @@ find_corpus(char *registry_dir, char *registry_name)
 FILE *
 find_corpus_registry(char *registry_dir, char *registry_name, char **real_registry_dir)
 {
-  char full_name[MAX_LINE_LENGTH];
+  char full_name[CL_MAX_LINE_LENGTH];
 
   int re_p, ins_p, p, start_of_entry, end_of_entry;
 

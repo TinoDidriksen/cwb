@@ -735,8 +735,8 @@ component_full_name(Attribute *attribute, ComponentID cid, char *path)
   component_field_spec *compspec;
   Component *component;
   
-  static char buf[MAX_LINE_LENGTH];
-  char rname[MAX_LINE_LENGTH];
+  static char buf[CL_MAX_LINE_LENGTH];
+  char rname[CL_MAX_LINE_LENGTH];
   char *reference;
   char c;
 

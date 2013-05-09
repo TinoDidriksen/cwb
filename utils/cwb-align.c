@@ -491,7 +491,7 @@ main(int argc, char *argv[]) {
   if ((l > 3) && (strncasecmp(outfile_name + l - 3, ".gz", 3) == 0)) {
     char *pipe_cmd = (char *) cl_malloc(l+8);
     sprintf(pipe_cmd, "gzip > %s", outfile_name); /* write .gz file through gzip pipe */
-    of = popen(pipe_cmd, "w"); /* TODO) allow for possibiltiy of wb on Win32 */
+    of = popen(pipe_cmd, "w");
     if (of == NULL) {
       perror(pipe_cmd);
       fprintf(stderr, "%s: can't write compressed file %s\n", progname, outfile_name);
@@ -501,7 +501,7 @@ main(int argc, char *argv[]) {
     cl_free(pipe_cmd);
   }
   else {
-    of = fopen(outfile_name, "w"); /* TODO wb -- see above */
+    of = fopen(outfile_name, "w");
     if (of == NULL) {
       perror(outfile_name);
       fprintf(stderr, "%s: can't write file %s\n", progname, outfile_name);

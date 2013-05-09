@@ -143,8 +143,7 @@ create_feature_maps(char **config,
 
   int config_pointer;
 
-  /* TODO constant buffer sizes! */
-  char *b, command[200], dummy[200];
+  char *b, command[CL_MAX_LINE_LENGTH], dummy[CL_MAX_LINE_LENGTH];
 
   int current_feature;
   int weight;                         /* holds the weight assigned to the feature(s) we're working on */
@@ -291,13 +290,13 @@ create_feature_maps(char **config,
         }
         /* -W: the word-translation-equivalence type of feature */
         case 'W': {
-          /* TODO numeric constants (also found elsewhere in the file.....) */
-          char filename[200],
-            word1[200],
-            word2[200];
+          char filename[CL_MAX_LINE_LENGTH],
+            word1[CL_MAX_LINE_LENGTH],
+            word2[CL_MAX_LINE_LENGTH];
           FILE *wordlist;
-          int nw;      /* number of words scanned from an input file */
-          int nl = 0;  /* counter for the numebr of lines in the wordlist file we have gone through */
+          CorpusCharset charset = w_attr1->any.mother->charset;
+          int nw;      /* number of words scanned from an input line */
+          int nl = 0;  /* counter for the number of lines in the wordlist file we have gone through */
           int i1,i2;   /* lexicon ids in source and target corpora */
           int n_matched = 0;  /* counter for n of lines in input file that can be used as a feature. */
 
@@ -316,9 +315,19 @@ create_feature_maps(char **config,
             printf("FEATURE: word list %s, weight=%d ... ", filename, weight);
             fflush(stdout);
             while((nw = fscanf(wordlist,"%s %s",word1,word2))>0) {
+              /* on first line of file, skip UTF8 byte-order-mark if present */
+              if (nl == 0 && charset == utf8 && strlen(word1) > 3)
+                if (word1[0] == (char)0xEF && word1[1] == (char)0xBB && word1[2] == (char)0xBF)
+                   cl_strcpy(word1, (word1+3));
               nl++;
-              /*TODO check that both word 1 and word 2 are valid for the ecnoding of the corproa */
-              if (nw!=2)
+              /* check that both word 1 and word 2 are valid for the encoding of the corpora */
+              if (! (cl_string_validate_encoding(word1, charset, 0)
+                  && cl_string_validate_encoding(word2, charset, 0)) ) {
+                fprintf(stderr, "ERROR: character encoding error in the word-list input file with the input word list.\n");
+                fprintf(stderr, "       (The error occurs on line %d.)\n", nl);
+                exit(1);
+              }
+              if (nw != 2)
                 fprintf(stderr,"WARNING: Line %d in word list '%s' contains %d words, ignored.\n",nl,filename,nw);
               else {
                 /* if word1 and word2 both occur in their respective corpora, this is a feature. */
@@ -512,10 +521,9 @@ create_feature_maps(char **config,
         }
         /* -W: the word-translation-equivalence type of feature */
         case 'W': {
-          /* TODO numeric literals here seems a bit dodgy */
-          char filename[200],
-            word1[200],
-            word2[200];
+          char filename[CL_MAX_LINE_LENGTH],
+            word1[CL_MAX_LINE_LENGTH],
+            word2[CL_MAX_LINE_LENGTH];
           FILE *wordlist;
           int nw, nl = 0, i1 ,i2;
 
@@ -526,12 +534,17 @@ create_feature_maps(char **config,
             exit(-1);
           else {
             printf("PASS 2: Processing word list %s\n", filename);
-            while((nw=fscanf(wordlist, "%s %s", word1, word2))>0) {
+            while((nw = fscanf(wordlist, "%s %s", word1, word2))>0) {
+              if (nl == 0 && charset == utf8 && strlen(word1) > 3)
+                if (word1[0] == (char)0xEF && word1[1] == (char)0xBB && word1[2] == (char)0xBF)
+                   cl_strcpy(word1, (word1+3));
               nl++;
-              if (nw!=2) { /* skip */ }
+              if (nw !=2 ) {
+                /* skip */
+              }
               else {
-                if((i1=cl_str2id(w_attr1,word1))>=0
-                   && (i2=cl_str2id(w_attr2,word2)) >=0) {
+                if((i1 = cl_str2id(w_attr1,word1))>=0
+                   && (i2 = cl_str2id(w_attr2,word2)) >=0) {
                   *(--r->w2f1[i1])=*(--r->w2f2[i2])=current_feature; 
                   r->fweight[current_feature]=weight;
                   current_feature++;
