@@ -16,7 +16,9 @@ B<cwb-align> is a simple program for aligning units in parallel corpora. That is
 corpora in two different languages, where one (the I<target corpus>) is a translation of the other (the 
 I<source corpus>), and where each corpus contains an s-attribute that divides the corpus up into fairly
 short units (for example, sentences), then B<cwb-align> will work out a "best guess" as to which units
-in the source corpus correspond to which units in the target corpus.
+in the source corpus correspond to which units in the target corpus. B<cwb-align> is also capable
+of exploiting I<pre-alignment>, that is, working only within the bounds of known-equivalent
+regions of the corpus as defined by some other s-attribute.
 
 B<cwb-align> is I<not> intended to represent the state-of-the-art in alignment software; rather it is
 intended to provide a basic, fallback option for users of parallel corpora who do not have access to more
@@ -29,13 +31,13 @@ from the two corpora. This similarity score can be based on a number of differen
 
 =over 4
 
-=item The length of each corpus segment, measured in characters.
+=item * The length of each corpus segment, measured in characters.
 
-=item The presence of shared words across the two corpora (ignoring case and accents).
+=item * The presence of shared words across the two corpora (ignoring case and accents).
 
-=item The presence of shared letter sequences (for spotting I<similar but not identical> words).
+=item * The presence of shared letter sequences (for spotting I<similar but not identical> words).
 
-=item The presense of words specified as translation equivalents 
+=item * The presense of words specified as translation equivalents 
 (a file containing the list of word-pairs must be provided by the user) 
 
 =back
@@ -52,8 +54,8 @@ I<source_corpus> is the name of the source corpus, I<target_corpus> is the name 
 and I<grid_attribute> is the s-attribute used as the alignment grid (typically, an s-attribute that
 represents sentences). It is important to note that
 the s-attribute specified for use as the grid attribute must exist, and must have the same name, 
-in both the source AND target corpora). If, for instance, sentences are represented as <s> in one corpus
-but as <sent> in the other, then they cannot be aligned by this program.
+in both the source AND target corpora). If, for instance, sentences are represented as C<<s>> in one corpus
+but as C<<sent>> in the other, then they cannot be aligned by this program.
 
 The possible options and configuration flags are specified in the following two sections of this manual.
 
@@ -73,7 +75,7 @@ Please note that no CWB programs currently support GNU-style C<--long-options>.
 
 Displays B<cwb-align>'s help message, with short information about the usage of the command line options.  
 This usage message will be also shown if B<cwb-align> is called with invalid options.
-After the usage message is printed, B<cwb-align-show> will exit.
+After the usage message is printed, B<cwb-align> will exit.
 
 =item B<-o> I<filename>
 
@@ -84,7 +86,7 @@ If the filename given ends in C<.gz>, the output will be automatically compresse
 
 =item B<-P> I<attribute>
 
-Specified the p-attribute whose content should be analysed to establish the alignment
+Specifies the p-attribute whose content should be analysed to establish the alignment
 (using the criteria of shared words, shared letter sequencies, and so on). 
 By default, the C<word> attribute is analysed.
 
@@ -102,37 +104,54 @@ Sets the 2:2 split alignment factor to I<x>.
 This factor determines the treatment of detected alignments between 
 a group of two sentences (or other segments) in the source corpus and a group of two sentences in the target 
 corpus, that is 2:2 alignments. When a 2:2 alignment is found, it is always possible that it really consists of
-two 1:1 alignments (first sentence in source = first sentence in target, second sentence in source = second 
-sentence in target). B<cwb-align> will only output the 2:2 alignment if the quality score for the 2:2 
-alignment exceeds the I<combined> quality scoress of the two separate 1:1 by at least this factor. Otherwise,
-it will instead output the two 1:1 alignments.
+two 1:1 alignments (first sentence in source => first sentence in target, second sentence in source => second 
+sentence in target). B<cwb-align> will only output a 2:2 alignment if the quality score for the 2:2 
+alignment exceeds the I<combined> quality scores of the two separate 1:1 by at least this factor. 
+Otherwise, B<cwb-align> will instead output the two 1:1 alignments.
     
 The default split alignment factor is 1.2, i.e. the 2:2 alignment will be accepted if its score
 is at least 1.2 times greater than the combined scores of the two 1:1 alignments within it. 
 
 If you find that the program consistently outputs 2:2 alignments when it should be outputting 1:1 alignemnts, 
-you should experiment with increasing this factor; if the progrma does not output 2:2 alignments when it
-ought to, then you shouold experiment with decreasing this factor.
-
+you should experiment with increasing this factor; if the program does not output 2:2 alignments when it
+ought to, then you should experiment with decreasing this factor.
 
 =item B<-S> I<attribute>
 
-pre-alignment (corresponding regions of the s-attribute are pre-aligned; regions must appear in identical order!)
+"Pre-alignment" means that some correspondences are already known - an example use case would be
+where both corpora are made up of a sequence of I<texts> where there is a one-to-one correspondence
+between texts, but the correspondence between sentence I<within> each text remain to be determined 
+by B<cwb-align>.
+
+This option specifies that such a pre-aligned s-attribute is available and should be used. Note
+that a pre-aligned s-attribute must have the same name (ID label) in both corpora, just like
+the "grid" s-attribute.
+
+When B<-S> is used, it is assumed that the pre-aligned S-attribute has an equal number of instances
+in the source and target corpora, and that instance I<x> in the source corresponds to instance I<x> 
+in the target. That is, the links between the pairs of regions are determined solely by their appearance
+in identical order in the source and target corpora.
 
 Please note that only one of B<-S> and B<-V> may be specfied (since it makes no sense for there to be 
-I<both> types of pre-alignment). 
+I<both> types of pre-alignment). If both are specified, or one is specfied multiple times, all but
+the last specification will be ignored. 
 
 =item B<-v>
 
-Activates verbose mode. In this mode, progress information is printed on standard output in the course
+Activates verbose mode. In this mode, additional progress information is printed on standard output in the course
 of the calculation of the alignment.
 
 =item B<-V> I<attribute>
 
-pre-alignment with ID matching (identical annotation strings)
+See discussion of B<-S> above for general comments on pre-alignment. 
 
-Please note that only one of B<-S> and B<-V> may be specfied (since it makes no sense for there to be 
-I<both> types of pre-alignment). 
+The B<-V> option is used if an
+s-attribute exists that pre-aligns the corpora, just like B<-S>. The difference is that whereas with B<-S> 
+the pre-aligned regions in the two corpora are linked by virtue of appearing in the same order in both corpora, 
+with B<-V> the pre-aligned regions are linked by having identical annotation strings. In this case, it is not
+necessary for matching regions to occur in the same order in source and target corpora.
+
+Naturally B<-V> can only be used if the pre-alignment s-attribute is one that has annotations. 
 
 =back
 
@@ -146,7 +165,7 @@ be used - see below).
 There are four basic kinds of features: the size of the alignment regions, shared words, shared within-word
 letter sequences, and the presence of corresponding words from a translation-equivalents list. 
 
-The configuration flags I<also> specify how much weight should be placed on the corresponding set of features:
+The configuration flags I<also> specify how much weight should be placed on the corresponding sets of features:
 every flag is followed by a colon and then an integer indicating the weight factor; the higher this is, the
 more effect that set of features has on the final similarity measurement, relative to the other features.
 Typically, you would want to put more weight on shared words or shared translation-equivalents than
@@ -158,12 +177,12 @@ The full specification of the possible configuration flags is as follows:
 
 =over 4
 
-=item B<-C:<I<weight>>>
+=item B<-C:<I<weightE<gt>>>
 
 Specifies that the lengths of the two possibly-equivalent regions (in characters) should be used as a feature
 for the similarity measurement, with the specified weight.
 
-=item B<-S:<I<weight>>:<I<threshold>>>
+=item B<-S:<I<weightE<gt>>:<I<thresholdE<gt>>>
 
 Specifies that the appearance of the same words in the two possibly-equivalent regions should be used as
 features for the similarity measurement, with the specified weight. You would normally want to include
@@ -189,7 +208,7 @@ Note that all comparisons for this same-word type of feature are (a) case-sensit
 That is, the word-forms must be absolutely identical. Case- and diacrictic-insensitive matching is done by the
 letter-sequence feature type (see below). 
 
-=item B<-1:<I<weight>>>
+=item B<-1:<I<weightE<gt>>>
 
 Specifies that the appearance of shared one-letter sequences within words in the two possibly-equivalent regions
 should be used as features for the similarity measurement, with the specified weight.
@@ -209,25 +228,25 @@ Only the letters C<A> to C<Z> are counted for the comparison; numbers, punctuati
 ignored. This means that the letter-sequence features are of no use at all, and should nto be used,
 if either or both of the corpora is in a language that does not use the Latin alphabet.
 
-=item B<-2:<I<weight>>>
+=item B<-2:<I<weightE<gt>>>
 
 Specifies that the appearance of shared two-letter sequences within words in the two possibly-equivalent regions
 should be used as features for the similarity measurement, with the specified weight. 
 (For general comments about letter sequences, see C<-1> above.)
 
-=item B<-3:<I<weight>>>
+=item B<-3:<I<weightE<gt>>>
 
 Specifies that the appearance of shared three-letter sequences within words in the two possibly-equivalent regions
 should be used as features for the similarity measurement, with the specified weight. 
 (For general comments about letter sequences, see C<-1> above.)
 
-=item B<-4:<I<weight>>>
+=item B<-4:<I<weightE<gt>>>
 
 Specifies that the appearance of shared four-letter sequences within words in the two possibly-equivalent regions
 should be used as features for the similarity measurement, with the specified weight. 
 (For general comments about letter sequences, see C<-1> above.)
 
-=item B<-W:<I<weight>>:<I<filename>>>
+=item B<-W:<I<weightE<gt>>:<I<filenameE<gt>>>
 
 Specifies that the appearance of defined translation-equivalent words in the two possibly-equivalent regions 
 should be used as features for the similarity measurement, with the specified weight.
@@ -235,21 +254,13 @@ should be used as features for the similarity measurement, with the specified we
 The file containing the translation equivalents must use the same character encoding as the two corpora;
 character encoding errors will result in B<cwb-align> aborting.
 
-  -W:<w>:<f> list of translation equivalents (read from file <f>)
-             [format: <source word> SPC <target word>]
-
-
 =back
 
 The default configuration (if no flags are specified) is C<< S<-C:1 -S:50:0.4 -3:3 -4:4> >>.
 
-This means that, by default, the following tyopes of feature are used: (1) length of sentence, with weight 1;
+This means that, by default, the following sets of feature are used: (1) length of sentence, with weight 1;
 (2) presence of shared words, with weight 50 and threshold 0.4; (3) shared three-letter sequences, with
 weight 3; (4) shared four-letter sequences, with weight 4.
-
-=for comment The above appears as: 
-"-C:1 -S:50:0.4 -3:3 -4:4"
-in the rendered file.
 
 =head1 OUTPUT FORMAT
 
@@ -259,13 +270,13 @@ The first line is a header line, which contains the following four elements, sep
 
 =over 4
 
-=item The ID of the source corpus
+=item * The ID of the source corpus
 
-=item The ID of the aligned s-attribute (the I<grid attribute> - see above)
+=item * The ID of the aligned s-attribute (the I<grid attribute> - see above)
 
-=item The ID of the target corpus
+=item * The ID of the target corpus
 
-=item The ID of the aligned s-attribute (repeated)
+=item * The ID of the aligned s-attribute (repeated)
 
 =back
 
@@ -274,12 +285,21 @@ a single pair of aligned regions (sometimes called an I<alignment bead>) in the 
 This is specified by six fields of information,
 separated by tabs. The six fields are as follows:
 
-=item The I<beginning> of the range in the source corpus (expressed as a cpos, i.e. a token number)
-=item The I<end> of the range in the source corpus (expressed as a cpos)
-=item The I<beginning> of the range in the target corpus (expressed as a cpos)
-=item The I<end> of the range in the target corpus (expressed as a cpos)
-=item The I<type> of alignment: 1:1, 2:1, 1:2 or 2:2
-=item The I<quality> of the alignment: a score calculated by the alignment engine
+=over 4
+
+=item * The I<beginning> of the range in the source corpus (expressed as a cpos, i.e. a token number)
+
+=item * The I<end> of the range in the source corpus (expressed as a cpos)
+
+=item * The I<beginning> of the range in the target corpus (expressed as a cpos)
+
+=item * The I<end> of the range in the target corpus (expressed as a cpos)
+
+=item * The I<type> of alignment: 1:1, 2:1, 1:2 or 2:2
+
+=item * The I<quality> of the alignment: a score calculated by the alignment engine
+
+=back
 
 For example,
   

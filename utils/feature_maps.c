@@ -331,8 +331,8 @@ create_feature_maps(char **config,
                 fprintf(stderr,"WARNING: Line %d in word list '%s' contains %d words, ignored.\n",nl,filename,nw);
               else {
                 /* if word1 and word2 both occur in their respective corpora, this is a feature. */
-                if((i1=cl_str2id(w_attr1,word1))>=0
-                   && (i2=cl_str2id(w_attr2,word2)) >=0) {
+                if(   (i1 = cl_str2id(w_attr1, word1)) >= 0
+                   && (i2 = cl_str2id(w_attr2, word2)) >= 0 ) {
                   fcount1[i1]++;
                   fcount2[i2]++;
                   n_matched++;

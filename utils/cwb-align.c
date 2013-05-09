@@ -428,31 +428,25 @@ main(int argc, char *argv[]) {
   }
   size2 = cl_max_struc(s2);
   if (size2 <= 0) {
-    fprintf(stderr, "%s: data access error (%s.%s)\n",
-            progname, corpus2_name, s_name);
+    fprintf(stderr, "%s: data access error (%s.%s)\n", progname, corpus2_name, s_name);
     exit(1);
   }
-  printf("OPENING %s [%d tokens, %d <%s> regions]\n",
-         corpus1_name, ws1, size1, s_name);
-  printf("OPENING %s [%d tokens, %d <%s> regions]\n",
-         corpus2_name, ws2, size2, s_name);
+  printf("OPENING %s [%d tokens, %d <%s> regions]\n", corpus1_name, ws1, size1, s_name);
+  printf("OPENING %s [%d tokens, %d <%s> regions]\n", corpus2_name, ws2, size2, s_name);
 
   /* open pre-alignment attributes if requested */
   if (*prealign_name != '\0') {
     if (!(prealign1 = cl_new_attribute(corpus1, prealign_name, ATT_STRUC))) {
-      fprintf(stderr, "%s: can't open s-attribute %s.%s\n",
-              progname, corpus1_name, prealign_name);
+      fprintf(stderr, "%s: can't open s-attribute %s.%s\n", progname, corpus1_name, prealign_name);
       exit(1);
     }
     if (!(prealign2 = cl_new_attribute(corpus2, prealign_name, ATT_STRUC))) {
-      fprintf(stderr, "%s: can't open s-attribute %s.%s\n",
-              progname, corpus2_name, prealign_name);
+      fprintf(stderr, "%s: can't open s-attribute %s.%s\n", progname, corpus2_name, prealign_name);
       exit(1);
     }
     pre1 = cl_max_struc(prealign1);
     if (pre1 <= 0) {
-      fprintf(stderr, "%s: data access error (%s.%s)\n",
-              progname, corpus1_name, prealign_name);
+      fprintf(stderr, "%s: data access error (%s.%s)\n", progname, corpus1_name, prealign_name);
       exit(1);
     }
     pre2 = cl_max_struc(prealign2);
@@ -466,7 +460,7 @@ main(int argc, char *argv[]) {
     if (prealign_has_values) {
       /* -V: check if pre-alignment attributes really have annotations */
       if (! (cl_struc_values(prealign1) && cl_struc_values(prealign2))) {
-        fprintf(stderr, "%s: -V option requires s-attribute with annotations!\n",
+        fprintf(stderr, "%s: -V option requires an s-attribute with annotations!\n",
                 progname);
         exit(1);
       }
@@ -489,7 +483,7 @@ main(int argc, char *argv[]) {
   of_is_pipe = 0;
   l = strlen(outfile_name);
   if ((l > 3) && (strncasecmp(outfile_name + l - 3, ".gz", 3) == 0)) {
-    char *pipe_cmd = (char *) cl_malloc(l+8);
+    char *pipe_cmd = (char *) cl_malloc(l + 8);
     sprintf(pipe_cmd, "gzip > %s", outfile_name); /* write .gz file through gzip pipe */
     of = popen(pipe_cmd, "w");
     if (of == NULL) {
@@ -514,12 +508,15 @@ main(int argc, char *argv[]) {
 
   /* DO THE ALIGNMENT */
   if (prealign1 == NULL) {
+
     /* neither -S nor -V used: just do a global alignment */
     printf("Running global alignment, please be patient ...\n");
     steps = align_do_alignment(fms, 0, size1 - 1, 0, size2 - 1, of);
+
   } /* end of global alignment */
 
   else if (!prealign_has_values) {
+
     /* -S switch: use pre-aligned regions in given order */
     int i = 0;
     int start, end, start1, end1, start2, end2;
@@ -560,14 +557,16 @@ main(int argc, char *argv[]) {
              prealign_name, i, f1, l1, f2, l2);
       steps += align_do_alignment(fms, f1, l1, f2, l2, of);
     }
+
   } /* end of -S type alignment */
 
   else {
+
     /* -V switch: this is the tricky bit -- need to find matching annotation strings */
     cl_lexhash lh = cl_new_lexhash(2 * pre2); /* use lexhash to identify target regions; make number of buckets large enough for fast access */
     cl_lexhash_entry entry;
     int start, end;
-    int f1, l1, f2, l2;
+    int f1, l1, f2, l2;   /* holders for cpos values */
     char *value;
     int i;
 
@@ -586,8 +585,7 @@ main(int argc, char *argv[]) {
       entry = cl_lexhash_find(lh, value);
       if (entry == NULL) {
         /* no match found */
-        printf("[Skipping source region <%s %s>]\n",
-               prealign_name, value);
+        printf("[Skipping source region <%s %s>]\n", prealign_name, value);
       }
       else {
         int j = entry->data.integer;    /* number of target region */
@@ -612,7 +610,9 @@ main(int argc, char *argv[]) {
     }
 
     cl_delete_lexhash(lh);
+
   } /* end of -V type alignment */
+
   printf("Alignment complete. [created %d alignment regions]\n", steps);
 
 
