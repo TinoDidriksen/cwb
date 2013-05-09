@@ -317,6 +317,7 @@ create_feature_maps(char **config,
             fflush(stdout);
             while((nw = fscanf(wordlist,"%s %s",word1,word2))>0) {
               nl++;
+              /*TODO check that both word 1 and word 2 are valid for the ecnoding of the corproa */
               if (nw!=2)
                 fprintf(stderr,"WARNING: Line %d in word list '%s' contains %d words, ignored.\n",nl,filename,nw);
               else {
@@ -336,7 +337,7 @@ create_feature_maps(char **config,
           break;
         }
         /* -C: the character count type of feature.
-         * This feture exists for EVERY word type. */
+         * This feature exists for EVERY word type. */
         case 'C': 
           if(sscanf(config[config_pointer],"%2s:%d %s",command,&weight,dummy)!=2) {
             fprintf(stderr, "ERROR: wrong # of args: %s\n",config[config_pointer]);
@@ -435,10 +436,10 @@ create_feature_maps(char **config,
              * BUT this time, IF the criterion is met, we don't just count it, we assign
              * the "current_feature" number to the value pointed to in the word-to-feature maps.*/
             for(i1=0; i1<nw1;i1++) {
-              f1=cl_id2freq(w_attr1,i1);
-              i2=cl_str2id(w_attr2, cl_id2str(w_attr1, i1));
-              if(i2>=0){
-                f2=cl_id2freq(w_attr2,i2);
+              f1 = cl_id2freq(w_attr1,i1);
+              i2 = cl_str2id(w_attr2, cl_id2str(w_attr1, i1));
+              if(i2 >= 0){
+                f2 = cl_id2freq(w_attr2,i2);
                 if(f1/(0.0+f1+f2)>=threshold && f2/(0.0+f1+f2)>=threshold){
                   *(--r->w2f1[i1]) = *(--r->w2f2[i2]) = current_feature;
                   r->fweight[current_feature] = weight;
@@ -631,8 +632,8 @@ feature_match(FMS fms,
 
   int *fcount;
   int match, j, i, id, *f;
-  int cc1=0, cc2=0;             /* character count */
-  int from, to;                 /* sentence boundaries */
+  int cc1 = 0, cc2 = 0;         /* character count */
+  int from, to;                 /* sentence boundaries (as cpos) */
   
  
   /* get a feature vector from the vstack */
@@ -652,12 +653,12 @@ feature_match(FMS fms,
     }
   }
 
-  match=0;                      /* sum up similarity measure */
+  match = 0;                      /* sum up similarity measure */
 
   for (j = f2; j <= l2; j++) {  /* compare to features in target region */
     if (cl_struc2cpos(fms->s2, j, &from, &to)) {
       for(i=from; i<= to; i++) {        /* process sentence */
-        id=cl_cpos2id(fms->att2, i);
+        id = cl_cpos2id(fms->att2, i);
         if (id >= 0) {
           f = fms->w2f2[id];
           cc2 += *(f++);                /* character count */
@@ -682,7 +683,7 @@ feature_match(FMS fms,
   
   for (j = f1; j <= l1; j++) {  
     if (cl_struc2cpos(fms->s1, j, &from, &to))
-      for(i=from; i<= to; i++) {
+      for(i = from; i <= to; i++) {
         id = cl_cpos2id(fms->att1,i);
         if (id >= 0) {
           for(f = fms->w2f1[id]+1; f < fms->w2f1[id+1]; f++)

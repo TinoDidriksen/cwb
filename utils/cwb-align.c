@@ -254,10 +254,10 @@ align_parse_args(int ac, char *av[], int min_args)
  * align_print_line(fd, f1, l1, f2, l2, quality);
  *
  * @param fd       File handle to print to.
- * @param f1       First cpos in source corpus.
- * @param l1       Last cpos in source corpus.
- * @param f2       First cpos in target corpus.
- * @param l2       Last cpos in target corpus.
+ * @param f1       First s-attribute instance in source corpus.
+ * @param l1       Last s-attribute instance in source corpus.
+ * @param f2       First s-attribute instance in target corpus.
+ * @param l2       Last s-attribute instance in target corpus.
  * @param quality  Quality of the alignment.
  *
  */
@@ -379,6 +379,13 @@ main(int argc, char *argv[]) {
     fprintf(stderr, "%s: can't open corpus %s\n", progname, corpus2_name);
     exit(1);
   }
+  /* check that the two corpora have the same character encoding */
+  if (corpus1.charset != corpus2.charset) {
+    fprintf(stderr, "%s: can't align %s and %s as they do not share the same character encoding.\n",
+            progname, corpus1_name, corpus2_name);
+    exit(1);
+  }
+
   if (!(word1 = cl_new_attribute(corpus1, word_name, ATT_POS))) {
     fprintf(stderr, "%s: can't open p-attribute %s.%s\n",
             progname, corpus1_name, word_name);
@@ -484,7 +491,7 @@ main(int argc, char *argv[]) {
   if ((l > 3) && (strncasecmp(outfile_name + l - 3, ".gz", 3) == 0)) {
     char *pipe_cmd = (char *) cl_malloc(l+8);
     sprintf(pipe_cmd, "gzip > %s", outfile_name); /* write .gz file through gzip pipe */
-    of = popen(pipe_cmd, "w");
+    of = popen(pipe_cmd, "w"); /* TODO) allow for possibiltiy of wb on Win32 */
     if (of == NULL) {
       perror(pipe_cmd);
       fprintf(stderr, "%s: can't write compressed file %s\n", progname, outfile_name);
@@ -494,7 +501,7 @@ main(int argc, char *argv[]) {
     cl_free(pipe_cmd);
   }
   else {
-    of = fopen(outfile_name, "w");
+    of = fopen(outfile_name, "w"); /* TODO wb -- see above */
     if (of == NULL) {
       perror(outfile_name);
       fprintf(stderr, "%s: can't write file %s\n", progname, outfile_name);
