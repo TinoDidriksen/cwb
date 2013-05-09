@@ -380,7 +380,7 @@ main(int argc, char *argv[]) {
     exit(1);
   }
   /* check that the two corpora have the same character encoding */
-  if (corpus1.charset != corpus2.charset) {
+  if (corpus1->charset != corpus2->charset) {
     fprintf(stderr, "%s: can't align %s and %s as they do not share the same character encoding.\n",
             progname, corpus1_name, corpus2_name);
     exit(1);

@@ -143,7 +143,7 @@ initialize_cqp(int argc, char **argv)
   char *home = NULL;
   char *homedrive = NULL;
   char *homepath = NULL;
-  char init_file_fullname[256];
+  char init_file_fullname[CL_MAX_FILENAME_LENGTH];
 
   /* file handle for initialisation files, if any */
   FILE *cqprc;

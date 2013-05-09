@@ -103,8 +103,12 @@ xidletter       [a-zA-Z0-9_\-\.]
 var             \${letter}{xletter}*
 /* old identifiers:
 id              {letter}{xletter}*(:{xletter}+)?(^{xletter}+)?
-*/
 id              {idletter}{xidletter}*(:{xidletter}+)?(^{xidletter}+)?
+*/
+/* ID (corpus name, attribute name, macro name, etc.) */
+id              {idletter}{xidletter}*
+/* specifier for named query result, with mother name and/or implicit expansion */
+nqrid           {idletter}{xidletter}*:{idletter}{xidletter}*(^{xidletter}+)?|{idletter}{xidletter}*^{xidletter}+
 flags           %[a-z]+
 
 /* -- no idea why accents should be matched explicitly here, so just remove the rule */
@@ -272,6 +276,10 @@ RE\(                    { return(RE_PAREN); }  /* for [lemma = RE($var)] */
                         }
 @:                      { /* allowing @: targets makes distinction between labels & target in macros unnecessary */
                           return('@');
+                        }
+{nqrid}                 { 
+                          yylval.strval = cl_strdup(yytext);
+                          return(NQRID);
                         }
 {id}                    { 
                           yylval.strval = cl_strdup(yytext);

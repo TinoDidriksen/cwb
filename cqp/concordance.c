@@ -294,7 +294,7 @@ get_position_values(ContextDescriptor *cd,
 
   if (add_position_number && orientation == ConcLineHorizontal) {
 
-    char num[16];
+    char num[CL_MAX_LINE_LENGTH];
 
     sprintf(num, pdr->CPOSPrintFormat, position);
     append(s, num, sp, max_sp);
@@ -329,7 +329,7 @@ get_position_values(ContextDescriptor *cd,
   }
 
   if (add_position_number && orientation == ConcLineVertical) {
-    char num[16];
+    char num[CL_MAX_LINE_LENGTH];
     
     sprintf(num, pdr->CPOSPrintFormat, position);
     append(s, num, sp, max_sp);

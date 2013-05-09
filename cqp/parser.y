@@ -189,7 +189,7 @@ synchronize(void)
   TabulationItem     tabulation_item;
 }
 
-%token <strval> ID QID LABEL STRING FLAG TAGSTART TAGEND VARIABLE IPAddress IPSubnet
+%token <strval> ID QID NQRID LABEL STRING FLAG TAGSTART TAGEND VARIABLE IPAddress IPSubnet
 %token <ival> INTEGER
 %token <fval> DOUBLEFLOAT
 %token <field> FIELD FIELDLABEL ANCHORTAG ANCHORENDTAG
@@ -305,7 +305,7 @@ synchronize(void)
 %type <boolt> GlobalConstraint ExtConstraint LookaheadConstraint BoolExpr
 %type <boolt> RelExpr RelLHS RelRHS FunctionCall
 %type <boolo> RelOp
-%type <strval> LabelReference OptRefId
+%type <strval> LabelReference OptRefId ID_OR_NQRID
 %type <context> Description MeetContext OptDistance
 %type <direction> OptDirection
 %type <redir> OptionalRedir Redir
@@ -1229,7 +1229,7 @@ OptionalCID:    CID                     { $$ = $1; }
                 ;
 
 
-CID:            ID                      { CorpusList *cl;
+CID:            ID_OR_NQRID             { CorpusList *cl;
 
                                           cqpmessage(Message, "CID: %s", $1);
 
@@ -1247,6 +1247,10 @@ CID:            ID                      { CorpusList *cl;
                                           else
                                             $$ = cl;
                                         }
+                ;
+
+ID_OR_NQRID:    NQRID                   { $$ = $1; }
+              | ID                      { $$ = $1; }
                 ;
 
 BoolExpr:     BoolExpr IMPLIES BoolExpr { $$ = bool_implies($1, $3); }

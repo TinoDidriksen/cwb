@@ -178,7 +178,7 @@ expand_filename(char *fname)
       /*  reference to the name of another component. */
 
       int rpos;
-      char rname[128];
+      char rname[CL_MAX_LINE_LENGTH];
       char *reference;
 
       s++;                        /* skip the $ */
