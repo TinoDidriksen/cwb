@@ -208,8 +208,8 @@ ifdef READLINE_LIBS
 CFLAGS += -DUSE_READLINE
 endif
 
-# we always add Glib header file info to CFLAGS...
-CFLAGS += `pkg-config --cflags glib-2.0`
+# Glib header file info (added to CFLAGS_ALL below)
+GLIB_DEFINES = `pkg-config --cflags glib-2.0`
 
 # define macro variables for some global settings
 INTERNAL_DEFINES = -DREGISTRY_DEFAULT_PATH=\""$(DEFAULT_REGISTRY)"\" -DCOMPILE_DATE=\"$(COMPILE_DATE)\" -DVERSION=\"$(VERSION)\"

@@ -639,7 +639,7 @@ compose_kwic_line(Corpus *corpus,
 
       token_p = 0;
       
-      if (acc_len >= cd->left_width) {
+      if (acc_len >= cd->left_width || line_p >= MAXKWICLINELEN) {
         enough_context++;
       }
       else if (get_position_values(cd, 
@@ -698,7 +698,7 @@ compose_kwic_line(Corpus *corpus,
         enough_context = 1;
     }
 
-    /* auff�llen (padding) mit Blanks, bis linker Kontext erreicht */
+    /* auffüllen (padding) mit Blanks, bis linker Kontext erreicht */
     while (acc_len < cd->left_width) {
       append(line, " ", &line_p, MAXKWICLINELEN);
       acc_len++; /* pretend to fill in necessary number of blanks, even if buffer is already full */
