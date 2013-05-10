@@ -66,7 +66,7 @@
  * SECTION 1          CL UTILITIES
  *
  *   1.1                ERROR HANDLING
- *two
+ *
  *   1.2                MEMORY MANAGEMENT
  *
  *   1.3                DATA LIST CLASSES: cl_string_list AND cl_int_list
@@ -75,7 +75,9 @@
  *
  *   1.5                SETTING CL CONFIG VARIABLES
  *
- *   1.6                MISCELLANEOUS UTILITIES
+ *   1.6                CONSTANTS
+ *
+ *   1.7                MISCELLANEOUS UTILITIES
  *
  * SECTION 2          THE CORE CL LIBRARY (DATA ACCESS)
  *
@@ -239,7 +241,7 @@ void cl_string_list_qsort(cl_string_list l);                 /* sort list (using
 
 
 /*
- *two
+ *
  * SECTION 1.4 -- INTERNAL RANDOM NUMBER GENERATOR
  *
  */
@@ -272,14 +274,25 @@ void cl_set_memory_limit(int megabytes);  /* 0 or less turns limit off */
 
 
 /*
- *two
- * SECTION 1.6 -- MISCELLANEOUS UTILITIES
+ *
+ * SECTION 1.6 -- CONSTANTS
  *
  */
 
 /*
- *  misc CL utility functions
+ *  various constants describing size limits in CWB
  */
+
+/**
+ * Maximum size of a CWB corpus.
+ *
+ * This is the upper limit on the size of a CWB corpus on 64-bit platforms;
+ * for 32-bit versions of CWB, much tighter limits apply.
+ * cwb-encode will abort once this limit has been reaching, discarding any
+ * further input data. The precise value of the limit is 2^32 - 1 tokens,
+ * i.e. hex 0x7FFFFFFF and decimal 2147483647.
+ */
+#define CL_MAX_CORPUS_SIZE 2147483647
 
 /**
  * General string buffer size constant.
@@ -292,6 +305,7 @@ void cl_set_memory_limit(int megabytes);  /* 0 or less turns limit off */
  * cl_strcpy() will copy this many bytes at most.
  */
 #define CL_MAX_LINE_LENGTH 4096
+
 /**
  * String buffer size constant (for filenames).
  *
@@ -300,6 +314,19 @@ void cl_set_memory_limit(int megabytes);  /* 0 or less turns limit off */
  * be shorter than CL_MAX_LINE_LENGTH.
  */
 #define CL_MAX_FILENAME_LENGTH 1024
+
+
+
+
+/*
+ *
+ * SECTION 1.7 -- MISCELLANEOUS UTILITIES
+ *
+ */
+
+/*
+ *  misc CL utility functions
+ */
 
 /* CL-specific version of strcpy. Don't use unless you know what you're doing. */
 char *cl_strcpy(char *buf, const char *src);

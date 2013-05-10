@@ -9,6 +9,8 @@ Other changes:
  - cwb-lexdecode now has a "no-blanks" option (-b) to turn off the padding of numeric columns with
    spaces to the minimum width of seven.
  - cwb-align is now safe for use with UTF-8 corpora.
+ - there is now a precise limit on the size of a CWB corpus: CL_MAX_CORPUS_SIZE = 2^32 - 1 tokens;
+   cwb-encode will discard additional input data with a warning once the limit has been reached
 
 Bug fixes:
 

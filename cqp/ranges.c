@@ -282,7 +282,8 @@ calculate_ranges(CorpusList *cl, int cpos, Context spc, int *left, int *right)
     assert(corpsize > 0);
     
     *left  = MAX(0, cpos - d); 
-    *right = MIN(corpsize - 1, cpos + d);
+    d = MIN(d, (corpsize - 1) - cpos); /* avoid 32-bit wrap-around for very very large corpora (close to CL_MAX_CORPUS_SIZE) */
+    *right = cpos + d;
     break;
     
   case structure:
