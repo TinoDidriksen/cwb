@@ -514,7 +514,7 @@ create_feature_maps(char **config,
 
             /* same again for words in the TARGET lexicon */
             for(i = 0; i < nw2; i++) {
-              s_orig s = (unsigned char *) cl_strdup(cl_id2str(w_attr2, i));
+              s_orig = s = (unsigned char *) cl_strdup(cl_id2str(w_attr2, i));
               cl_string_canonical( (char *)s, charset, IGNORE_CASE | IGNORE_DIAC);
               ng = 0;
               l = 0;
