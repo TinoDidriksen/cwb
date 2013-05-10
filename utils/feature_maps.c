@@ -273,25 +273,34 @@ create_feature_maps(char **config,
             exit(1);
           }
           else {
-            int i,f,l; /* temp storage for lexicon index, word lenght,
+            int i,f,l; /* temp storage for lexicon index, n of possible features, && word length */
+            char *s;
 
             printf("FEATURE: %d-grams, weight=%d ... ", n, weight);
             fflush(stdout);
 
             /* for each entry in source-corpus lexicon, add to the number of features IFF
-             * tht lexicon entry is longer than 4 characters */
-            for(i=0; i<nw1; i++) {
-              l = cl_id2strlen(w_attr1, i);
+             * that lexicon entry is longer than 4 characters */
+            for(i = 0; i < nw1; i++) {
+              /* l = cl_id2strlen(w_attr1, i); */
+              s = (unsigned char *) cl_strdup(cl_id2str(w_attr1, i));
+              cl_string_canonical( (char *)s, charset, IGNORE_CASE | IGNORE_DIAC);
+              l = strlen(s);
+              cl_free(s);
               fcount1[i] += (l >= n) ? l - n + 1 : 0;
             }
             /* same for target corpus */
-            for(i=0; i<nw2; i++) {
-              l = cl_id2strlen(w_attr2, i);
+            for(i = 0; i < nw2; i++) {
+              /* l = cl_id2strlen(w_attr2, i); */
+              s = (unsigned char *) cl_strdup(cl_id2str(w_attr2, i));
+              cl_string_canonical( (char *)s, charset, IGNORE_CASE | IGNORE_DIAC);
+              l = strlen(s);
+              cl_free(s);
               fcount2[i] += (l >= n) ? l - n + 1 : 0;
             }
             /* set f to number of possible features (= number of possible characters to the power of n) */
-            f=1;
-            for(i=0 ; i<n; i++)
+            f = 1;
+            for(i = 0 ; i < n; i++)
               f *= char_map_range;
             /* anmd add that to our total number of features! */
             r->n_features += f;
