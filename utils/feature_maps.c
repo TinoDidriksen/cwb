@@ -482,7 +482,7 @@ create_feature_maps(char **config,
             ;
           else {
             int i, f, ng, l;
-            unsigned char *s;
+            unsigned char *s, *s_orig;
 
             printf("PASS 2: Processing %d-grams.\n",n);
 
@@ -496,7 +496,7 @@ create_feature_maps(char **config,
 
             /* for each word in the SOURCE lexicon, acquire the possible n-gram features */
             for(i = 0; i < nw1; i++) {
-              s = (unsigned char *) cl_strdup(cl_id2str(w_attr1, i));
+              s_orig = s = (unsigned char *) cl_strdup(cl_id2str(w_attr1, i));
               cl_string_canonical( (char *)s, charset, IGNORE_CASE | IGNORE_DIAC);
               ng = 0;
               l = 0;
@@ -509,12 +509,12 @@ create_feature_maps(char **config,
                 if (l >= n)
                   *(--r->w2f1[i]) = current_feature + ng;
               }
-              cl_free(s);
+              cl_free(s_orig);
             }
 
             /* same again for words in the TARGET lexicon */
             for(i = 0; i < nw2; i++) {
-              s = (unsigned char *) cl_strdup(cl_id2str(w_attr2, i));
+              s_orig s = (unsigned char *) cl_strdup(cl_id2str(w_attr2, i));
               cl_string_canonical( (char *)s, charset, IGNORE_CASE | IGNORE_DIAC);
               ng = 0;
               l = 0;
@@ -527,7 +527,7 @@ create_feature_maps(char **config,
                 if (l >= n)
                   *(--r->w2f2[i]) = current_feature + ng;
               }
-              cl_free(s);
+              cl_free(s_orig);
             }
             
             current_feature += f;
