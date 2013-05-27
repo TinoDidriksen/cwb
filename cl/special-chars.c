@@ -1747,6 +1747,7 @@ cl_string_maptable(CorpusCharset charset, int flags)
 int
 cl_string_zap_controls(char *s, CorpusCharset charset, char replace, int zap_tabs, int zap_newlines)
 {
+  unsigned char *str = s;
   int i;
   /* number of replacements made */
   int num = 0;
@@ -1760,15 +1761,15 @@ cl_string_zap_controls(char *s, CorpusCharset charset, char replace, int zap_tab
   /* we don't currently do anything with charset because all CWB character sets are ascii-compatible.
      But the parameter is retained in case of a theoretical future charset that isn't.  */
 
-  for (; *s ; s++)
-    if (*s < 0x20 && zappable[*s]) {
+  for (; *str ; str++)
+    if (*str < 0x20 && zappable[*str]) {
       num++;
       if (replace)
-        *s = replace;
+        *str = replace;
       else
         /* it is safe to do a bare down-copy because
          * the C0s are all single-byte under UTF-8 */
-        for (i = 0 ; *(s+i) = *(s+i+1) ; i++)
+        for (i = 0 ; *(str+i) = *(str+i+1) ; i++)
           ;
     }
   return num;
