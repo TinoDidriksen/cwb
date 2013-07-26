@@ -713,7 +713,7 @@ corpus_info(CorpusList *cl)
       } while (ok && (i == CL_MAX_LINE_LENGTH));
       /* makes sure that .info file always ends in a newline,
        * thus ensuring that output from the "info;" command always does too.*/
-      if (buf[strlen(buf)] != '\n')
+      if (buf[strlen(buf)-1] != '\n')
         fprintf(outfd, "\n");
       fclose(fd);
     }
