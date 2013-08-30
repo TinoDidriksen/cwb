@@ -61,8 +61,8 @@
 
 /* implicit knowledge about CL component files naming conventions */
 #define STRUC_RNG  "%s" SUBDIR_SEP_STRING "%s.rng"            /**< CL naming convention for S-attribute RNG files */
-#define STRUC_AVX  "%s" SUBDIR_SEP_STRING "%s.avx"            /**< CL naming convention for S-attribute AVX files */
-#define STRUC_AVS  "%s" SUBDIR_SEP_STRING "%s.avs"            /**< CL naming convention for S-attribute AVS files */
+#define STRUC_AVX  "%s" SUBDIR_SEP_STRING "%s.avx"            /**< CL naming convention for S-attribute AVX (attribute-value index) files */
+#define STRUC_AVS  "%s" SUBDIR_SEP_STRING "%s.avs"            /**< CL naming convention for S-attribute AVS (attribute values) files */
 #define POS_CORPUS "%s" SUBDIR_SEP_STRING "%s.corpus"         /**< CL naming convention for P-attribute Corpus files */
 #define POS_LEX    "%s" SUBDIR_SEP_STRING "%s.lexicon"        /**< CL naming convention for P-attribute Lexicon files */
 #define POS_LEXIDX "%s" SUBDIR_SEP_STRING "%s.lexicon.idx"    /**< CL naming convention for P-attribute Lexicon-index files */
@@ -99,7 +99,7 @@ int clean_strings = 0;                  /**< clean up input strings by replacing
 
 /* ---------------------------------------------------------------------- */
 
-/* cwb-encode encodes S-attributes adn P-attributes, so there is an object-type and global array representing each. */
+/* cwb-encode encodes S-attributes and P-attributes, so there is an object-type and global array representing each. */
 
 /**
  * Range object: represents an S-attribute being encoded, and holds some
@@ -205,17 +205,17 @@ encode_strtok(register char *s, register const char *delim)
   
 
   if (s == NULL && (s = last) == NULL)
-    return (NULL);
+    return NULL;
   
   c = *s++;
 
   if (c == 0) {         /* no non-delimiter characters */
     last = NULL;
-    return (NULL);
+    return NULL;
   }
   tok = s - 1;
   
-  for (;;) {
+  while (1) {
     spanp = (char *)delim;
     do {
       if ((sc = *spanp++) == c) {
@@ -230,6 +230,7 @@ encode_strtok(register char *s, register const char *delim)
     c = *s++;
   }
   /* NOTREACHED */
+  return NULL;
 }
 
 
@@ -252,7 +253,7 @@ encode_print_time(FILE *stream, char *msg)
 {
   time_t now;
 
-  (void) time(&now);
+  time(&now);
 
   fprintf(stream, "%s: %s\n", msg, ctime(&now));
 }
@@ -1127,6 +1128,7 @@ wattr_declare(char *name, char *directory, int nr_buckets)
   if (name == NULL)
     name = DEFAULT_ATT_NAME;
 
+  /* TODO why is this a parameter rather than a global ... ? */
   if (directory == NULL)
     encode_error("Error: you must specify a directory for CWB data files with the -d option");
 
@@ -1167,6 +1169,31 @@ wattr_declare(char *name, char *directory, int nr_buckets)
   return 1;
 }
 
+/**
+ * Closes all three file handles for each of the wattr objects
+ * in cwb-encode's global array.
+ */
+void
+wattr_close_all(void)
+{
+  int i;
+
+  for (i = 0; i < wattr_ptr; i++) {
+
+    if (EOF == fclose(wattrs[i].lex_fd)) {
+      perror("fclose() failed");
+      encode_error("Error writing .lexicon file for %s attribute", wattrs[i].name);
+    }
+    if (EOF == fclose(wattrs[i].lexidx_fd)) {
+      perror("fclose() failed");
+      encode_error("Error writing .lexicon.idx file for %s attribute", wattrs[i].name);
+    }
+    if (EOF == fclose(wattrs[i].corpus_fd)) {
+      perror("fclose() failed");
+      encode_error("Error writing .corpus file for %s attribute", wattrs[i].name);
+    }
+  }
+}
 
 
 
@@ -1436,6 +1463,7 @@ encode_add_wattr_line(char *str)
   for (field = encode_strtok(str, field_separators), fc = 0;
        fc < wattr_ptr; 
        field = encode_strtok(NULL, field_separators), fc++) {
+    /* LOOP across each column in the line... */
     
     if ((field != NULL) && strip_blanks) { /* need to strip both leading & trailing blanks from field values */
       int len = strlen(field);
@@ -1472,7 +1500,7 @@ encode_add_wattr_line(char *str)
     }
 
     /* check annotation length & truncate if necessary (assumes it's ok to modify token[] destructively) */
-    l = strlen(token); /* check annotation length & truncate if necessary */
+    l = strlen(token);
     if (l >= CL_MAX_LINE_LENGTH) {
       if (!silent) {
         fprintf(stderr, "Value of p-attribute '%s' exceeds maximum string length (%d > %d chars), truncated (", 
@@ -1950,22 +1978,7 @@ main(int argc, char **argv)
   } /* endfor: closing each open region and s-attribute filehandle for each Range */
 
   /* close file handles for positional attributes */
-  for (i = 0; i < wattr_ptr; i++) {
-
-    if (EOF == fclose(wattrs[i].lex_fd)) {
-      perror("fclose() failed");
-      encode_error("Error writing .lexicon file for %s attribute", wattrs[i].name);
-    }
-    if (EOF == fclose(wattrs[i].lexidx_fd)) {
-      perror("fclose() failed");
-      encode_error("Error writing .lexicon.idx file for %s attribute", wattrs[i].name);
-    }
-    if (EOF == fclose(wattrs[i].corpus_fd)) {
-      perror("fclose() failed");
-      encode_error("Error writing .corpus file for %s attribute", wattrs[i].name);
-    }
-
-  }
+  wattr_close_all();
 
   /* if registry_file != NULL, write appropriate registry entry to file named <registry_file> */
   if (registry_file != NULL) {
@@ -1977,3 +1990,4 @@ main(int argc, char **argv)
 
   exit(0);
 }
+
