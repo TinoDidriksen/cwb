@@ -32,7 +32,7 @@ include $(TOP)/config.mk
 #  size         <dummy target>
 
 MANS = 	cqp.man cqpcl.man cqpserver.man \
-	cwb-align.man cwb-align-show.man cwb-align-encode.man \
+	cwb-align.man cwb-align-show.man cwb-align-encode.man cwb-align-decode.man \
 	cwb-atoi.man cwb-itoa.man \
 	cwb-config.man \
 	cwb-encode.man cwb-decode.man cwb-lexdecode.man cwb-decode-nqrfile.man \

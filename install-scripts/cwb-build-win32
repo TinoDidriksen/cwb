@@ -9,18 +9,18 @@ config_file=$(cat config.mk)
 
 
 # alter platform
-target="include \$(TOP)/config/platform/darwin-universal"
-rep="include \$(TOP)/config/platform/mingw"
+target="PLATFORM=darwin-universal"
+rep="PLATFORM=mingw"
 
 config_file=${config_file/"$target"/"$rep"}
 
 
 # alter site: coming from EITHER standard OR beta-install
-target="include \$(TOP)/config/site/standard"
-rep="include \$(TOP)/config/site/windows-release"
+target="SITE=standard"
+rep="SITE=windows-release"
 config_file=${config_file/"$target"/"$rep"}
-target="include \$(TOP)/config/site/beta-install"
-rep="include \$(TOP)/config/site/windows-release"
+target="SITE=beta-install"
+rep="SITE=windows-release"
 config_file=${config_file/"$target"/"$rep"}
 
 

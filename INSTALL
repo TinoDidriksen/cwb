@@ -57,6 +57,11 @@ for your system (available options are documented in "config.mk").  You
 can also override individual settings manually there.  If you cannot find an
 appropriate configuration, see WRITING YOUR OWN CONFIGURATION FILES below.
 
+Alternatively, platform and site settings can be overriden by adding
+appropriate flags "PLATFORM=### SITE=###" to the end of each of the
+make commands below.  This approach is particularly recommended if you
+are working from a SVN sandbox.
+
 Now, to compile the Corpus Library, CQP, CQPcl, CQPserver, and the
 command-line utilities, type
 

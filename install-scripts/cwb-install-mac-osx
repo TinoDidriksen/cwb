@@ -72,19 +72,14 @@ then
   exit
 fi
 
-cp config.mk config.mk.bak
+CONFIG_FLAGS="PLATFORM=$PLATFORM"
 
-# set appropriate configuration flags in config.mk (Perl is always available on Mac OS X)
+make clean $CONFIG_FLAGS \
+&& make depend $CONFIG_FLAGS \
+&& make cl $CONFIG_FLAGS \
+&& make utils $CONFIG_FLAGS \
+&& make cqp $CONFIG_FLAGS \
+&& make install $CONFIG_FLAGS \
+&& make realclean $CONFIG_FLAGS
 
-perl -i~ -pe 'if (/^include \$\(TOP\)\/config\/platform\//) { $_ = "include \$(TOP)/config/platform/'"$PLATFORM"'\n" } elsif (/^include \$\(TOP\)\/config\/site\//) { $_ = "include \$(TOP)/config/site/standard\n" }' config.mk
 
-make clean \
-&& make depend \
-&& make cl \
-&& make utils \
-&& make cqp \
-&& make install
-
-# restore original state of config file (so subversion doesn't get confused if this is a checked-out version)
-rm config.mk
-mv config.mk.bak config.mk

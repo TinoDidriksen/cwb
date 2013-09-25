@@ -50,7 +50,7 @@ SRCS =  cwb-atoi.c cwb-itoa.c \
 	cwb-describe-corpus.c cwb-decode-nqrfile.c \
 	cwb-scan-corpus.c \
 	barlib.c feature_maps.c \
-	cwb-align.c cwb-align-show.c cwb-align-encode.c \
+	cwb-align.c cwb-align-show.c cwb-align-encode.c cwb-align-decode.c \
 #	cwb-check-input.c
 
 HDRS = barlib.h feature_maps.h
@@ -71,6 +71,7 @@ HDRS = barlib.h feature_maps.h
 #       cwb-align           EasyAlign sentence aligner (operates on CWB-encoded corpora)
 #       cwb-align-show      simple terminal-based viewer for EasyAlign alignment files (.align)
 #       cwb-align-encode    encode .align file into CWB format (.alx, and .alg for backward compatibility)
+#	cwb-align-decode    decode alignment attribute from binary representation into .align format
 #       cwb-check-input     program for checking wellformedness of vertical files
 
 PROGRAMS = cwb-atoi$(EXEC_SUFFIX) cwb-itoa$(EXEC_SUFFIX) \
@@ -80,7 +81,7 @@ PROGRAMS = cwb-atoi$(EXEC_SUFFIX) cwb-itoa$(EXEC_SUFFIX) \
 	cwb-s-encode$(EXEC_SUFFIX) cwb-s-decode$(EXEC_SUFFIX) \
 	cwb-describe-corpus$(EXEC_SUFFIX) cwb-decode-nqrfile$(EXEC_SUFFIX) \
 	cwb-scan-corpus$(EXEC_SUFFIX) \
-	cwb-align$(EXEC_SUFFIX) cwb-align-show$(EXEC_SUFFIX) cwb-align-encode$(EXEC_SUFFIX) \
+	cwb-align$(EXEC_SUFFIX) cwb-align-show$(EXEC_SUFFIX) cwb-align-encode$(EXEC_SUFFIX) cwb-align-decode$(EXEC_SUFFIX) \
 #	cwb-check-input$(EXEC_SUFFIX)
 
 ## ----------------------------------------------------------------------

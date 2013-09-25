@@ -27,7 +27,7 @@ If your parallel corpus is not already aligned, you can use the B<cwb-align> pro
 perform the alignment and generate the C<.align> file.  
 
 Alternatively, if your parallel corpus is already aligned, you can use the B<cwb-align-import>
-utility from the CWB/Perl interface. This utiltiy imports external
+utility from the Perl/CWB package. This utiltiy imports external
 alignment files which reference regions on s-attributes by annotated ID codes (cf. C<man cwb-align-import>);
 it also automatically encodes the imported data into an a-attribute, so that if you use B<cwb-align-import>,
 you do not need to also use B<cwb-align-encode>.
@@ -142,9 +142,8 @@ which should be available alongside this page.
 
 =head1 SEE ALSO
 
-L<cqp>, L<cqpserver>, L<cwb-align>, L<cwb-align-show>, L<cwb-atoi>, L<cwb-compress-rdx>, 
-L<cwb-config>, L<cwb-decode-nqrfile>, L<cwb-decode>, L<cwb-describe-corpus>, L<cwb-encode>, L<cwb-huffcode>, 
-L<cwb-itoa>, L<cwb-lexdecode>, L<cwb-makeall>, L<cwb-scan-corpus>, L<cwb-s-decode>, L<cwb-s-encode>.
+L<cqp>, L<cqpserver>, L<cwb-align>, L<cwb-align-show>, L<cwb-align-decode>, L<cwb-describe-corpus>, 
+L<cwb-s-decode>, L<cwb-lexdecode>, L<cwb-align-decode>, L<cwb-scan-corpus>.
 
 =head1 COPYRIGHT
 

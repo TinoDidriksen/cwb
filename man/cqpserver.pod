@@ -138,7 +138,7 @@ CQP_PAGER is read in, but ignored, as B<cqpserver> does not use a pager.
 
 =head1 SEE ALSO
 
-L<cqp>, L<cwb-align-encode>, L<cwb-align>, L<cwb-align-show>, L<cwb-atoi>, L<cwb-compress-rdx>, 
+L<cqp>, L<cqpcl>, L<cwb-align>, L<cwb-align-show>, L<cwb-align-encode>, L<cwb-align-decode>, L<cwb-atoi>, L<cwb-compress-rdx>, 
 L<cwb-config>, L<cwb-decode-nqrfile>, L<cwb-decode>, L<cwb-describe-corpus>, L<cwb-encode>, L<cwb-huffcode>, 
 L<cwb-itoa>, L<cwb-lexdecode>, L<cwb-makeall>, L<cwb-scan-corpus>, L<cwb-s-decode>, L<cwb-s-encode>.
 

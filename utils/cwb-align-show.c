@@ -244,7 +244,7 @@ alignshow_print_next_region(FILE *f)
     alignshow_end_of_alignment();
   if (NULL == fgets(line, CL_MAX_LINE_LENGTH, f))
     alignshow_end_of_alignment();
-  if (5 > (args = sscanf(line, "%d %d %d %d %s %d", &f1, &l1, &f2, &l2, type, &quality))) {
+  if (4 > (args = sscanf(line, "%d %d %d %d %s %d", &f1, &l1, &f2, &l2, type, &quality))) {
     fprintf(stderr, "%s: format error in line\n\t%s", progname, line);
     fprintf(stderr, "*** IGNORED ***\n");
     return;
@@ -252,9 +252,12 @@ alignshow_print_next_region(FILE *f)
 
   /* print separator bar */
   if (args == 6)
-    sprintf(line, "%s-alignment [%d, %d] x [%d, %d] (%d)", type, f1, l1, f2, l2, quality);
+    sprintf(line, "%s-alignment bead [%d, %d] x [%d, %d] (%d)", type, f1, l1, f2, l2, quality);
+  else if (args == 5)
+    sprintf(line, "%s-alignment bead [%d, %d] x [%d, %d] ", type, f1, l1, f2, l2);
   else
-    sprintf(line, "%s-alignment [%d, %d] x [%d, %d] ", type, f1, l1, f2, l2);
+    sprintf(line, "alignment bead [%d, %d] x [%d, %d] ", f1, l1, f2, l2);
+
   n = (2 * COL_WIDTH + COL_SEP) - strlen(line);
   printf("%s", line);
   while ((n--) > 0) printf("=");
@@ -390,14 +393,12 @@ main(int argc, char** argv)
     alignshow_goodbye(1);
   }
   if (NULL == (s1 = cl_new_attribute(corpus1, s1_name, ATT_STRUC))) {
-    fprintf(stderr, "%s: can't open s-attribute %s.%s\n",
+    fprintf(stderr, "%s warning: can't open s-attribute %s.%s (ignored)\n",
             progname, corpus1_name, s1_name);
-    alignshow_goodbye(1);
   }
   if (NULL == (s2 = cl_new_attribute(corpus2, s2_name, ATT_STRUC))) {
-    fprintf(stderr, "%s: can't open s-attribute %s.%s\n",
+    fprintf(stderr, "%s warning: can't open s-attribute %s.%s (ignored)\n",
             progname, corpus2_name, s2_name);
-    alignshow_goodbye(1);
   }
 
   printf("Displaying alignment for [%s, %s] from file %s\n",
