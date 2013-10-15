@@ -126,7 +126,8 @@ print_corpus_info_header(CorpusList *cl,
 FILE *
 open_temporary_file(char *tmp_name_buffer)
 {
-  char *intermed_buffer;
+  char *tempfile_name;
+  char prefix[64]; /* holds "cqpt.$$", so 64 chars is plenty of headroom */
   FILE *fd = NULL;
 
   assert((tmp_name_buffer != NULL) && "Invalid NULL argument in open_temporary_file().");
@@ -137,17 +138,18 @@ open_temporary_file(char *tmp_name_buffer)
    * after copy#1 calls it but before copy#1 opens the file.
    *
    * For this reason, the process ID is used to make the filename unique to this process.
-   * But we then need to try to open the file for read to check whether it exists (because
-   * tempnam() doesn't guarantee that the filename will still not exist once we add an
-   * arbitrary numerical prefix!)
    */
-  do {
-    if (fd)
-      fclose(fd);
-    intermed_buffer = tempnam(TEMPDIR_PATH, "cqpt."); /* we need to catch the pointer in order to free it below */
-    sprintf(tmp_name_buffer, "%d.%s", (int)getpid(), intermed_buffer);
-    cl_free(intermed_buffer);
-  } while (NULL != (fd = fopen(tmp_name_buffer, "r")));
+  sprintf(prefix, "cqpt.%d", (unsigned int)getpid()); /* "cqpt.$$" */
+  tempfile_name = tempnam(TEMPDIR_PATH, prefix); /* string is allocated by tempnam(), needs to be free'd below */
+  if (strlen(tempfile_name) >= TEMP_FILENAME_BUFSIZE) {
+    perror("open_temporary_file(): filename too long for buffer");
+    cl_free(tempfile_name);
+    return NULL;
+  }
+  else {
+    strcpy(tmp_name_buffer, tempfile_name);
+    cl_free(tempfile_name);
+  }
 
   fd = fopen(tmp_name_buffer, "w");
 
