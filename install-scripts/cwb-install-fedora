@@ -14,7 +14,7 @@ then
 	exit
 fi
 
-yum install autoconf bison flex gcc pkgconfig glibc glibc-common glibc-devel glibc-headers make ncurses ncurses-libs pcre pcre-devel glib glib-devel readline readline-devel
+yum install autoconf bison flex gcc pkgconfig glibc glibc-common glibc-devel glibc-headers make ncurses ncurses-libs ncurses-devel pcre pcre-devel glib glib-devel readline readline-devel
 
 CONFIG_FLAGS=`./install-scripts/cwb-config-basic`
 

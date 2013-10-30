@@ -24,6 +24,7 @@ information provided on the wiki, you should join the CWBdev mailing list
 
 and ask your question there.
 
+
         PREREQUISITES
 
  - any modern Unix flavour (must be POSIX compatible)
@@ -43,6 +44,18 @@ and ask your question there.
  - GNU install or a compatible program
  - Perl with pod2man script for rebuilding manual pages
  - GNU less pager for interactive display of query results in CQP
+
+
+        PREREQUISITE LIBRARIES ON LINUX: A WARNING
+
+If you have installed the prerequisite libraries listed above from source,
+then you will have all the files you need. However, if you are on Linux and
+have installed the libraries via your distro's repository, you may have to
+install *more than one package per library* to be able to build CWB 
+properly. For instance, on Fedora, installing the package "ncurses" is not
+sufficient to have the library available for building extra software - 
+you also need the "ncurses-devel" package. The details of precisely what 
+packages you need vary from distro to distro. 
 
 
         QUICK INSTALLATION
@@ -103,8 +116,9 @@ instructions above.
 
 The Linux variants with specific scripts are currently Ubuntu and Fedora.
 
-The Ubuntu script will probably work on other Debian variants, and the
-Fedora script will probably work on other RPM-based Linux distros.  
+The Ubuntu script is known to work with Debian, and will probably work on 
+other Debian variants such as Mint; the Fedora script will probably work 
+on other RPM-based Linux distros.  
 
 From the main CWB directory (the one containing this INSTALL file), run
 
@@ -342,6 +356,7 @@ Note that so far, cross-compilation has been tested with the following
 Unix-like starting points:
 
  - Ubuntu
+ - Debian
  - [add others here]
 
 The resulting Windows binaries have been tested on the following Windows 
@@ -468,7 +483,7 @@ also be an option. We used the following procedure:
  - cross your fingers and build!
 
 The files to extract are listed below. Note this is a maximal, "better safe
-than sorry" list, to avoid problems based on intra-Glib dependencies; ypackagesou
+than sorry" list, to avoid problems based on intra-Glib dependencies; you
 might also be able to build with a more limited set of files.
 
  - Library files (from glib-dev_$version_win32.zip/lib):
