@@ -1949,7 +1949,7 @@ cl_string_reverse(const char *s, CorpusCharset charset)
 
   if (charset != utf8) {
     reversed = cl_strdup(s);
-    g_strreverse((gchar *)s);
+    g_strreverse((gchar *)reversed);
   }
   else {
     reversed = (char *)g_utf8_strreverse((gchar *)s, -1);
