@@ -192,12 +192,18 @@ void
 do_cqi_corpus_charset(void)
 {
   char *c;
-
+  CorpusList *cl;
   c = cqi_read_string();
   if (server_debug)
     fprintf(stderr, "CQi: CQI_CORPUS_CHARSET('%s')\n", c);
-  /* this is a dummy until we've implemented the registry extensions */
-  cqi_data_string("latin1");
+
+  cl = findcorpus(c, SYSTEM, 0);
+  if (cl == NULL || !access_corpus(cl)) {
+    cqi_command(CQI_CQP_ERROR_NO_SUCH_CORPUS);
+  }
+  else {
+    cqi_data_string(cl_charset_name(cl->corpus->charset));
+  }
   free(c);
 }
 
