@@ -65,6 +65,36 @@ hash_string(char *string) {
   return result;
 }
 
+/** TODO: consider alternative hash functions
+
+Code above (purloined from Perl source code) seems to be from Don Knuth's "Art of Computer Programming",
+except for using (res * 33) instead of (res << 5).
+
+Cf. discussion and several better hashing algorithms suggested here:
+http://burtleburtle.net/bob/hash/
+
+Prime-number-sized hash tables are required by Knuth's algorithm, but make hashing more expensive.
+Growing a hash from 2^n to 2^(n+1) also gives a highly predicatble redistribution of buckets.
+Good hash functions should not require division by prime number in order to achieve good distribution.
+
+DJB2:
+unsigned long hash = 5381;
+int c;
+
+while (c = *str++)
+    hash = ((hash << 5) + hash) + c; // hash * 33 + c 
+
+DJB2a:
+    hash = hash * 33 ^ str[i]
+
+MurmurHash:
+see http://en.wikipedia.org/wiki/MurmurHash
+
+Experimental comparison:
+http://programmers.stackexchange.com/questions/49550/which-hashing-algorithm-is-best-for-uniqueness-and-speed
+
+***/
+
 
 /*
  * cl_lexhash / cl_lexhash_entry  object definition

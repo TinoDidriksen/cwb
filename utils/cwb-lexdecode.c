@@ -262,7 +262,7 @@ main(int argc, char **argv) {
     lexdecode_usage();
 
   /* parse arguments */
-  while ((c = getopt(argc, argv, "+P:Sr:fnlsp:cdF:O0Nh")) != EOF) {
+  while ((c = getopt(argc, argv, "+P:Sr:fnlbsp:cdF:O0Nh")) != EOF) {
 
     switch (c) {
     case 'S':                        /* S: show lexicon size only */
