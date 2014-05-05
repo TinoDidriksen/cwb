@@ -1857,15 +1857,15 @@ main(int argc, char **argv)
                   i++;
                 j = i + strlen(buf+i); /* find last '>' character on line */
                 while ((j > i) && (buf[j] != '>'))
-                  j--;
+                  j--;  /* if no '>' was found, we have j==i and the annotation string is empty */
                 if (buf[j-1] == '/') {
-                  /* empty tag : open and close */
+                  /* empty tag : terminate annotation string, open range, and close range */
                   buf[j-1] = '\0';
                   range_open(&ranges[rng], line, buf+i);
                   range_close(&ranges[rng], line);
                 }
                 else {
-                  /* start tag: open */
+                  /* start tag : terminate annotation string and open range */
                   buf[j] = '\0';
                   range_open(&ranges[rng], line, buf+i);
                 }
