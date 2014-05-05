@@ -1851,15 +1851,24 @@ main(int argc, char **argv)
               }
             }
             else {
-              if (k == 1) {     /* XML start tag */
+              if (k == 1) {     /* XML start tag or empty tag */
                 i++;            /* identify annotation string, i.e. tag attributes (if there are any) */
                 while ((buf[i] == ' ') || (buf[i] == '\t')) /* skip whitespace between element name and first attribute */
                   i++;
                 j = i + strlen(buf+i); /* find last '>' character on line */
                 while ((j > i) && (buf[j] != '>'))
                   j--;
-                buf[j] = '\0';  /* terminate annotation string (if no '>' was found, we have j==i and the annotation string is empty */
-                range_open(&ranges[rng], line, buf+i);
+                if (buf[j-1] == '/') {
+                  /* empty tag : open and close */
+                  buf[j-1] = '\0';
+                  range_open(&ranges[rng], line, buf+i);
+                  range_close(&ranges[rng], line);
+                }
+                else {
+                  /* start tag: open */
+                  buf[j] = '\0';
+                  range_open(&ranges[rng], line, buf+i);
+                }
               }
               else {            /* XML end tag */
                 range_close(&ranges[rng], line - 1); /* end tag belongs to previous line! */
