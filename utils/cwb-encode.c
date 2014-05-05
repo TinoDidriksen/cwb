@@ -946,7 +946,7 @@ range_open(Range *rng, int start_pos, char *annot)
   }
   
   /* if rng has element attribute children, try to parse the annotation string into
-     XML attribute="value" or attribute=id pairs (destructively modyfing the original) 
+     XML attribute="value" or attribute=id pairs (destructively modifying the original)
      NB: there must not be any leading whitespace in annot
      NB: we don't bother about recursion here; the child attributes will take care of that themselves */
   if (rng->has_children) {
@@ -974,7 +974,7 @@ range_open(Range *rng, int start_pos, char *annot)
       /* now annot[point] should be the separator '=' char */
       if (annot[point] != '=') {
         if (!silent) {
-          fprintf(stderr, "Attributes of open tag <%s ...> ignored because of syntax error (", rng->name);
+          fprintf(stderr, "Attributes of open tag <%s ...> ignored because of syntax error (``='' not found) (", rng->name);
           encode_print_input_lineno();
           fprintf(stderr, ").\n");
         }
@@ -995,7 +995,7 @@ range_open(Range *rng, int start_pos, char *annot)
           point++;
         if (annot[point] == '\0') { /* syntax error: missing end quote */
           if (!silent) {
-            fprintf(stderr, "Attributes of open tag <%s ...> ignored because of syntax error (", rng->name);
+            fprintf(stderr, "Attributes of open tag <%s ...> ignored because of syntax error (value missing end quote) (", rng->name);
             encode_print_input_lineno();
             fprintf(stderr, ").\n");
           }
@@ -1019,7 +1019,7 @@ range_open(Range *rng, int start_pos, char *annot)
         }
         if (strlen(el_att_value) == 0) { /* syntax error: attribute=id with empty value (not allowed) */
           if (!silent) {
-            fprintf(stderr, "Attributes of open tag <%s ...> ignored because of syntax error (", rng->name);
+            fprintf(stderr, "Attributes of open tag <%s ...> ignored because of syntax error (attribute=id with empty value (not allowed)) (", rng->name);
             encode_print_input_lineno();
             fprintf(stderr, ").\n");
           }
@@ -1030,7 +1030,7 @@ range_open(Range *rng, int start_pos, char *annot)
       /* syntax check: el_att_name must be non-empty (values "" and '' are allowed) */
       if (strlen(el_att_name) == 0) {
         if (!silent) {
-          fprintf(stderr, "Attributes of open tag <%s ...> ignored because of syntax error (", rng->name);
+          fprintf(stderr, "Attributes of open tag <%s ...> ignored because of syntax error (empty attribute name)) (", rng->name);
           encode_print_input_lineno();
           fprintf(stderr, ").\n");
         }
@@ -1042,8 +1042,7 @@ range_open(Range *rng, int start_pos, char *annot)
       if (entry == NULL) {      /* undeclared element attribute (ignored) */
         if (!cl_lexhash_freq(rng->el_undeclared_attributes, el_att_name)) {
           if (!silent) {
-            fprintf(stderr, "Undeclared element attribute <%s %s=...> ignored (",
-                    rng->name, el_att_name);
+            fprintf(stderr, "Undeclared element attribute <%s %s=...> ignored (", rng->name, el_att_name);
             encode_print_input_lineno();
             fprintf(stderr, ", warning issued only once).\n");
           }
@@ -1054,8 +1053,7 @@ range_open(Range *rng, int start_pos, char *annot)
         if (entry->data.integer) {
           /* attribute already handled, i.e. it must have occurred twice in start tag -> issue warning */
           if (!silent) {
-            fprintf(stderr, "Duplicate attribute value <%s %s=... %s=...> ignored (",
-                    rng->name, el_att_name, el_att_name);
+            fprintf(stderr, "Duplicate attribute value <%s %s=... %s=...> ignored (", rng->name, el_att_name, el_att_name);
             encode_print_input_lineno();
             fprintf(stderr, ").\n");
           }
@@ -1074,8 +1072,7 @@ range_open(Range *rng, int start_pos, char *annot)
     /* phew. that was a bit of work; 
        and we still have to make sure that missing element attributes are encoded as empty strings  */
     for (i = 0; i < n_children; i++) {
-      entry = cl_lexhash_find(rng->el_attributes, 
-                              cl_string_list_get(rng->el_atts_list, i));
+      entry = cl_lexhash_find(rng->el_attributes, cl_string_list_get(rng->el_atts_list, i));
       if (entry->data.integer == 0) {
         range_open((Range *) entry->data.pointer, start_pos, "");
       }
@@ -1133,7 +1130,7 @@ wattr_declare(char *name, char *directory, int nr_buckets)
     encode_error("Error: you must specify a directory for CWB data files with the -d option");
 
   wattrs[wattr_ptr].name = cl_strdup(name);
-  if (name[strlen(name)-1] == SUBDIR_SEPARATOR) {
+  if (name[strlen(name)-1] == '/') {
     wattrs[wattr_ptr].name[strlen(name)-1] = '\0';
     wattrs[wattr_ptr].feature_set = 1;
   }
@@ -1816,7 +1813,7 @@ main(int argc, char **argv)
 
     /* This bit runs UNLESS either (a) skip_empty_lines (-s) is active and this an empty line;
      * or (b) xml_aware (-x) is active and this line is an XML comment or declaration, i.e. <? or <!
-     * To put it another way "if (this is a line that should be encoded) " ...  */
+     * To put it another way "if (this is a line that should be encoded)" ...  */
     if ( (! (skip_empty_lines && (buf[0] == '\0')) ) &&                            /* skip empty lines with -s  */
          (! (xml_aware && (buf[0] == '<') && ((buf[1] == '?') || (buf[1] == '!'))) ) /* skip XML declarations/comments with -x  */
       ) {
