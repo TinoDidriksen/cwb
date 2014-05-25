@@ -81,7 +81,7 @@ typedef struct _huffman_code_descriptor {
 /* ================================================== ATTRIBUTE COMPONENTS */
 
 /**
- * ComponentID: index for the array of components in each Attribute object.
+ * ComponentID: indices for the array of components in each Attribute object.
  */
 typedef enum wattr_components {
   CompDirectory,                /**< the directory where an attribute is stored  */
@@ -94,8 +94,8 @@ typedef enum wattr_components {
   CompLexiconIdx,               /**< index to wordlist */
   CompLexiconSrt,               /**< sorted index to wordlist */
 
-  CompAlignData,                /**< alignment data */
-  CompXAlignData,               /**< extended alignment attribute */
+  CompAlignData,                /**< data of alignment attribute */
+  CompXAlignData,               /**< data of extended-type alignment attribute */
 
   CompStrucData,                /**< structure data */
   CompStrucAVS,                 /**< structure attribute values */
@@ -109,8 +109,8 @@ typedef enum wattr_components {
   CompCompRFX,                  /**< index for CompCompRFX (subst CompRCIdx) */
 
   CompLast                      /**< MUST BE THE LAST ELEMENT OF THIS ENUM
-                                     -- it is used for limiting loops on
-                                     component arrays. */
+                                     -- it is used for limiting loops on component arrays
+                                     and for the [size] in the declaration of such arrays */
 } ComponentID;
 
 /**
@@ -144,7 +144,7 @@ typedef struct TComponent {
 
   MemBlob data;                 /**< the actual contents of this component */
 
-  /* struct TComponent *next; */
+  /* struct TComponent *next; *//* formerly a linked list, now an array */
 } Component;
 
 
@@ -206,13 +206,13 @@ typedef struct {
 
 
 
-/* typedef union _Attribute Attribute; now in <cl.h> */
+/* typedef union _Attribute Attribute; in <cl.h> */
 
 /**
  * The Attribute object.
  *
  * The Attribute object is a union of structures, one for each of the various
- * kinds of attribute (positional (P), structural (S), alignment, dynamic).
+ * kinds of attribute (positional (P), structural (S), alignment (A), dynamic).
  *
  * The "any" member allows the shared fields to be accessed even if it's not
  * known what the type of the Attribute you're working with is.
@@ -240,7 +240,6 @@ Attribute *setup_attribute(Corpus *corpus,
                            int type,
                            char *data);
 
-/* find_attribute() and attr_drop_attribute() function prototypes now in <cl.h> */
 
 
 

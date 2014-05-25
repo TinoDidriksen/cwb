@@ -87,6 +87,8 @@ struct TCorpus {
 
 /* ---------------------------------------------------------------------- */
 
+/* external variable declarations: from the registry parser */
+
 extern char *cregin_path;
 extern char *cregin_name;
 
