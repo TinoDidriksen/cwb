@@ -84,7 +84,7 @@ int skip_empty_lines = 0;               /**< skip empty lines when encoding? */
 unsigned line = 0;                      /**< corpus position currently being encoded (ie cpos of _next_ token) */
 /* unsigned so it doesn't wrap after first 2^31 tokens and we can abort encoding when corpus size is exceeded */
 int strip_blanks = 0;                   /**< strip leading and trailing blanks from input and token annotations */
-cl_string_list input_files = NULL;      /**< list of input file (-f option(s)) */
+cl_string_list input_files = NULL;      /**< list of input file(s) (-f option(s)) */
 int nr_input_files = 0;                 /**< number of input files (length of list after option processing) */
 int current_input_file = 0;             /**< index of input file currently being processed */
 char *current_input_file_name = NULL;   /**< filename of current input file, for error messages */
@@ -108,8 +108,8 @@ int clean_strings = 0;                  /**< clean up input strings by replacing
  * TODO should probably be called an SAttr
  */
 typedef struct _Range {
-  char *dir;                    /**< directory where this range is stored */
-  char *name;                   /**< range name */
+  char *dir;                    /**< directory where this s-attribute is stored */
+  char *name;                   /**< name of the s-attribute (range) */
 
   int in_registry;              /**< with "-R {reg_file}", this is set to 1 when the attribute is written to the registry
                                      (avoid duplicates) */
@@ -576,7 +576,7 @@ range_declare(char *name, char *directory, int store_values, int null_attribute)
   char *p, *rec, *ea_start, *ea;
   cl_lexhash_entry entry;
   int i, is_feature_set;
-  char* flag_SV = (store_values) ? "-V" : "-S";
+  char *flag_SV = (store_values) ? "-V" : "-S";
 
   if (debug)
     fprintf(stderr, "ATT: %s %s\n", flag_SV, name);
@@ -609,7 +609,7 @@ range_declare(char *name, char *directory, int store_values, int null_attribute)
       encode_error("Usage error: feature set marker '/' is meaningless with -S flag in %s %s !", flag_SV, name);
     if (ea_start != NULL)
       encode_error("Usage error: values of s-attribute %s cannot be feature sets if element attributes are declared (%s %s).",
-                    buf, flag_SV, name);
+                   buf, flag_SV, name);
   }
   else {
     is_feature_set = 0;
