@@ -37,7 +37,9 @@
  *******************************************************************
  */
 
-/* TODO: these should be either (a) dynamic - set at runtime or (b) bound to a setting in config.mk or definitions.mk
+/* TODO: these should be either
+ * (a) dynamic - set at runtime or
+ * (b) bound to a setting in config.mk or definitions.mk
  * changing these settings should not require hacking the source! */
 
 /**
@@ -77,9 +79,10 @@ typedef struct component_field_spec {
   ComponentID id;        /**< the specifier for what kind of blob of info this component is; also used
                               as the index for this component in its Attribute's component array. */
   char *name;            /**< String used as the label for this component  (abbreviation of the
-                              relevant label used in the ComponentID enumeration). */
+                              relevant label from in the ComponentID enumeration). */
   int using_atts;        /**< The attribute type of the Attributes that use this component */
-  char *default_path;    /**< The default location of the file corresponding to this component */
+  char *default_path;    /**< The default location of the file corresponding to this component;
+                              can contain variables ($DIR=directory, $ANAME=attribute name) */
 } component_field_spec;
 
 /**
@@ -232,6 +235,8 @@ aid_name(int i)
   case ATT_DYN:   return "Dynamic Attribute"; break;
   default:        return "ILLEGAL ATTRIBUTE TYPE"; break;
   }
+  /* NOTREACHED */
+  return NULL;
 }
 
 /**
@@ -258,6 +263,8 @@ argid_name(int i)
   case ATTAT_PAREF:  return "PARef"; break;
   default:           return "ILLEGAL*ARGUMENT*TYPE"; break;
   }
+  /* NOTREACHED */
+  return NULL;
 }
 
 
@@ -608,7 +615,8 @@ declare_component(Attribute *attribute, ComponentID cid, char *path)
             cid_name(cid));
     return NULL;
   }
-  else if ((component = attribute->any.components[cid]) == NULL) {
+
+  if ((component = attribute->any.components[cid]) == NULL) {
 
     component = new(Component);
 
@@ -619,25 +627,17 @@ declare_component(Attribute *attribute, ComponentID cid, char *path)
 
     init_mblob(&(component->data));
 
-    /* important to do this before the call to component_full_name */
     attribute->any.components[cid] = component;
     
-    /* initialize component path */
+    /* we can then initialize the component path within the attribute */
     (void) component_full_name(attribute, cid, path);
-
-    return component;
   }
   else {
-
     fprintf(stderr, "attributes:declare_component(): Warning:\n"
             "  Component %s of %s declared twice\n",
             cid_name(cid), attribute->any.name);
-    return component;
   }
-
-  /* notreached */
-  assert("Notreached point reached ..." && 0);
-  return NULL;
+  return component;
 }
 
 
@@ -737,6 +737,7 @@ component_state(Attribute *attribute, ComponentID cid)
  *                             path (NB: NOT to the path in the actual component! which
  *                             is a copy). If a path already exists, a pointer to that
  *                             path. NULL in case of error in Component_Field_Specs.
+ *                             TODO: could this be a void function?
  */
 char *
 component_full_name(Attribute *attribute, ComponentID cid, char *path)
@@ -850,8 +851,8 @@ component_full_name(Attribute *attribute, ComponentID cid, char *path)
  * "Loading" means that the file specified by the component's "path" member
  * is read into the "data" member.
  *
- * If the component is CompHuffCodes, the data is also copied to the
- * attribute's pos.hc member.
+ * If the component is CompHuffCodes, part of the data is also copied to the
+ * attribute's pos.hc member (that is, the beginning of the file).
  *
  * Note that the action of this function is dependent on the component's state.
  * If the component's state is ComponentUnloaded, the component is loaded.
@@ -884,7 +885,7 @@ load_component(Attribute *attribute, ComponentID cid)
 
     if (cid == CompHuffCodes) {
 
-      if (item_sequence_is_compressed(attribute)) {
+      if (cl_sequence_compressed(attribute)) {
 
         if (read_file_into_blob(comp->path, MMAPPED, sizeof(int), &(comp->data)) == 0)
           fprintf(stderr, "attributes:load_component(): Warning:\n"
@@ -1045,7 +1046,7 @@ create_component(Attribute *attribute, ComponentID cid)
       fprintf(stderr, "attributes:create_component(): Warning:\n"
               "  Can't create the '%s' component of %s attribute %s.\n"
               "  Use the appropriate external tool to create it.\n",
-               cid_name(cid), aid_name(attribute->type), attribute->any.name);
+              cid_name(cid), aid_name(attribute->type), attribute->any.name);
       return NULL;
       break;
       
@@ -1086,8 +1087,8 @@ create_component(Attribute *attribute, ComponentID cid)
  * @param try_creation  Boolean. True = attempt to create a
  *                      component that does not exist. False = don't.
  *                      This behaviour only applies when
- *                      ALLOW_COMPONENT CREATION is defined; otherwise
- *                      component creation will never be attempted.
+ *                      CL_ENSURE_COMPONENT_ALLOW_CREATION is defined;
+ *                      otherwise component creation will never be attempted.
  * @return              A pointer to the specified component (or NULL
  *                      if the component cannot be "ensured").
  */
@@ -1097,7 +1098,6 @@ ensure_component(Attribute *attribute, ComponentID cid, int try_creation)
   Component *comp = NULL;
   
   if ((comp = attribute->any.components[cid]) == NULL) {
-
     /*  component is undeclared */
     fprintf(stderr, "attributes:ensure_component(): Warning:\n"
             "  Undeclared component: %s\n", cid_name(cid));
@@ -1149,7 +1149,7 @@ ensure_component(Attribute *attribute, ComponentID cid, int try_creation)
 #else
         fprintf(stderr, "Sorry, but this program is not set up to allow the\n"
                 "creation of corpus components. Please refer to the manuals\n"
-                "or use the ''makeall'' tool.\n");
+                "or use the ''cwb-makeall'' tool.\n");
 #ifdef CL_ENSURE_COMPONENT_EXITS
         exit(1);
 #endif
@@ -1226,8 +1226,7 @@ comp_drop_component(Component *comp)
 
   if (comp->id == CompHuffCodes) {
 
-    /* it may be empty, since declare_component doesn't yet load the
-     * data */
+    /* it may be empty, since declare_component doesn't yet load the data */
 
     cl_free(comp->attribute->pos.hc);
   }
@@ -1371,9 +1370,10 @@ describe_component(Component *component)
 
 /* =============================================== SET ATTRIBUTES */
 
+/* TODO the feature set functions don't really seemt o belong in this file */
 
 /**
- * Generates a set attribute value.
+ * Generates a feature-set attribute value.
  *
  * @param s      The input string.
  * @param split  Boolean; if True, s is split on whitespace.

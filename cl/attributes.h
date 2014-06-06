@@ -84,29 +84,37 @@ typedef struct _huffman_code_descriptor {
  * ComponentID: indices for the array of components in each Attribute object.
  */
 typedef enum wattr_components {
+  /* note that the enum name "wattr_components" is misleading, as all att types are covered here */
+
+  /* all attributes have this component */
   CompDirectory,                /**< the directory where an attribute is stored  */
 
-  CompCorpus,                   /**< the sequence of word IDs */
+  /* components that make up a positional attribute */
+  CompCorpus,                   /**< the sequence of type IDs */
   CompRevCorpus,                /**< reversed file of corpus */
   CompRevCorpusIdx,             /**< index to reversed file  */
-  CompCorpusFreqs,              /**< absolute frequencies of corpus  */
-  CompLexicon,                  /**< wordlist */
-  CompLexiconIdx,               /**< index to wordlist */
-  CompLexiconSrt,               /**< sorted index to wordlist */
+  CompCorpusFreqs,              /**< absolute frequencies of types in corpus */
+  CompLexicon,                  /**< type lexicon */
+  CompLexiconIdx,               /**< index to type lexicon */
+  CompLexiconSrt,               /**< sorted index to type lexicon */
 
+  /* components for alignment attributes (each a-attribute has one of these) */
   CompAlignData,                /**< data of alignment attribute */
   CompXAlignData,               /**< data of extended-type alignment attribute */
 
+  /* components that make up a structural attribute */
   CompStrucData,                /**< structure data */
   CompStrucAVS,                 /**< structure attribute values */
   CompStrucAVX,                 /**< structure attribute value index */
 
+  /* compressed components involving Huffman coding (for a positional attribute) */
   CompHuffSeq,                  /**< Huffman compressed item sequence */
-  CompHuffCodes,                /**< Code descriptor data for CompHuffSeq */
-  CompHuffSync,                 /**< Synchronisation of Compressed Item Seq */
+  CompHuffCodes,                /**< Code descriptor data for Compressed Item Seq */
+  CompHuffSync,                 /**< Synchronisation for a Compressed Item Seq */
 
+  /* compressed components for the reversed-index (for a positional attribute) */
   CompCompRF,                   /**< compressed reversed file (CompRevCorpus) */
-  CompCompRFX,                  /**< index for CompCompRFX (subst CompRCIdx) */
+  CompCompRFX,                  /**< index for CompCompRF (substitute for CompRevCorpusIdx) */
 
   CompLast                      /**< MUST BE THE LAST ELEMENT OF THIS ENUM
                                      -- it is used for limiting loops on component arrays
@@ -250,7 +258,7 @@ int drop_attribute(Corpus *corpus,
 
 
 
-/* ======================================== COMPONENTS FOR ALL ATTRS */
+/* ======================================== COMPONENT FUNCTIONS */
 
 
 Component *load_component(Attribute *attribute, ComponentID component);

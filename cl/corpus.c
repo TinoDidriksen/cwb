@@ -545,6 +545,9 @@ cl_delete_corpus(Corpus *corpus)
  * Prints a description of the corpus to STDOUT.
  *
  * TODO might be nice to have this function offer an option of XML-style output.
+ * TODO might also be nice to have it return a string, or send to a parameter stream,
+ * so that the caller can decide what to do with it: direct UI formatting does not really
+ * belong in the low-level CL.
  */
 void
 describe_corpus(Corpus *corpus)

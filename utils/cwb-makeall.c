@@ -104,7 +104,6 @@ makeall_make_component(Attribute *attr, ComponentID cid)
 int
 validate_revcorp(Attribute *attr)
 {
-
   Component *revcorp = ensure_component(attr, CompRevCorpus, 0);
   int *ptab;                        /* table of index offsets for each lexicon entry */
   int lexsize, corpsize;
@@ -198,22 +197,22 @@ makeall_do_attribute(Attribute *attr, ComponentID cid, int validate)
 
     /* lexicon and lexicon offsets must have been created by encode */
     if (! (component_ok(attr, CompLexicon) && component_ok(attr, CompLexiconIdx))) {
-      /* if none of the components exits, we assume that the attribute will be created later & skip it */
+      /* if none of the components exists, we assume that the attribute will be created later & skip it */
       if (!component_ok(attr, CompLexicon) && !component_ok(attr, CompLexiconIdx) &&
           !component_ok(attr, CompLexiconSrt) &&
           !component_ok(attr, CompCorpus) && !component_ok(attr, CompCorpusFreqs) &&
           !component_ok(attr, CompHuffSeq) && !component_ok(attr, CompHuffCodes) &&
           !component_ok(attr, CompHuffSync) &&
           !component_ok(attr, CompRevCorpus) && !component_ok(attr, CompRevCorpusIdx) &&
-          !component_ok(attr, CompCompRF) && !component_ok(attr, CompCompRFX))
-        {
-          /* issue a warning message & return */
-          printf(" ! attribute not created yet (skipped)\n");
-          if (strcmp(attr->any.name, "word") == 0) {
-            fprintf(stderr, "WARNING. The 'word' attribute must be created before using CQP on this corpus!\n");
-          }
-          return;
+          !component_ok(attr, CompCompRF) && !component_ok(attr, CompCompRFX
+          ))  {
+        /* issue a warning message & return */
+        printf(" ! attribute not created yet (skipped)\n");
+        if (strcmp(attr->any.name, "word") == 0) {
+          fprintf(stderr, "WARNING. The 'word' attribute must be created before using CQP on this corpus!\n");
         }
+        return;
+      }
       else {
         fprintf(stderr, "ERROR. Lexicon is missing. You must use the 'encode' tool first!\n");
         exit(1);
@@ -258,7 +257,7 @@ makeall_do_attribute(Attribute *attr, ComponentID cid, int validate)
     }
   }
   else {
-    /* create requested component only */
+    /* cid != CompLast; so, create requested component only */
     printf("Processing component %s of ATTRIBUTE %s\n",
            cid_name(cid), attr->any.name);
     makeall_make_component(attr, cid);
@@ -420,6 +419,7 @@ main(int argc, char **argv)
     for (i = optind; i < argc; i++) {
       if ((attribute = cl_new_attribute(corpus, argv[i], ATT_POS)) != NULL) {
         makeall_do_attribute(attribute, cid, validate);
+        /* TODO why do we not need to drop components here, when the for-loop below needs to?? */
       }
       else {
         fprintf(stderr, "p-attribute %s.%s not defined. Aborted.\n",

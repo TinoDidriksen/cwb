@@ -226,6 +226,8 @@ alloc_mblob(MemBlob *blob, int nr_items, int item_size, int clear_blob)
 /**
  * Frees the memory used by a MemBlob.
  *
+ * (A more transparent name would be "free_mblob".)
+ *
  * This works regardless of the method used to allocate the blob.
  */
 void 

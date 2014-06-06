@@ -27,6 +27,7 @@
 
 /* doesn't seem to exist outside Solaris, so we define it here */
 #define log2(x) (log(x)/log(2.0))
+/* TODO actually log2 is now a function in C99 and in POSIX... */
 
 /* ---------------------------------------------------------------------- */
 
@@ -214,7 +215,6 @@ compress_reversed_index(Attribute *attr, char *output_fn)
       fprintf(stderr, "Index compression requires the REVCIDX component\n");
       compressrdx_cleanup(1);
     }
-
   }
 
   nr_elements = cl_max_id(attr);

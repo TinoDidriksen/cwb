@@ -40,6 +40,7 @@
 /** User privileges of new files (octal format) */
 #define UMASK              0644
 
+/* TODO the following belongs in the CL. */
 /** Default string used as value of P-attributes when a value is missing ie if a tab-delimited field is empty */
 #define UNDEF_VALUE "__UNDEF__"
 /** Default string containing the characters that can function as field separators */
@@ -56,7 +57,7 @@
  */
 #define MAX_INPUT_LINE_LENGTH  65536
 
-/** Normal extension for CWB input text files. (.gz may be added ot this if the file is compressed.) */
+/** Normal extension for CWB input text files. (.gz may be added to this if the file is compressed.) */
 #define DEFAULT_INFILE_EXTENSION ".vrt"
 
 /* implicit knowledge about CL component files naming conventions */
@@ -105,7 +106,7 @@ int clean_strings = 0;                  /**< clean up input strings by replacing
  * Range object: represents an S-attribute being encoded, and holds some
  * information about the currently-being-processed instance of that S-attribute.
  *
- * TODO should probably be called an SAttr
+ * TODO should probably be called an SAttr or SAttEncoder or something.
  */
 typedef struct _Range {
   char *dir;                    /**< directory where this s-attribute is stored */
@@ -156,9 +157,10 @@ int range_ptr = 0;
  * TODO should probably be called a PAttr
  */
 typedef struct {
-  char *name;
-  cl_lexhash lh;
-  int position;
+  char *name;                   /**< TODO */
+  cl_lexhash lh;                /**< String hash object containing the lexicon for the encoded P attrbute */
+  int position;                 /**< Byte index of the lexicon file in progress; contains total number of bytes
+                                     written so far (== the beginning of the -next- string that is written) */
   int feature_set;              /**< Boolean: is this a feature set attribute? => validate and normalise format */
   FILE *lex_fd;                 /**< file handle of lexicon component */
   FILE *lexidx_fd;              /**< file handle of lexicon index component */
@@ -394,6 +396,7 @@ encode_error(char *format, ...)
  * @see        DEFAULT_INFILE_EXTENSION
  * @param dir  Path of directory to look in.
  * @return     List of paths to files (*including* the directory name).
+ *             Returned as a cl_string_list object.
  */
 cl_string_list
 encode_scan_directory(char *dir)
@@ -1084,7 +1087,9 @@ range_open(Range *rng, int start_pos, char *annot)
 }
 
 /**
- * Gets the index (in wattrs) of the P-attribute with the given name.
+ * Finds a p-attribute (in the global wattrs array).
+ *
+ * Returns the index (in wattrs) of the P-attribute with the given name.
  *
  * @see         wattrs
  * @param name  The P-attribute to search for.
@@ -1108,7 +1113,8 @@ wattr_find(char *name)
  * Note: corpus_fd is a binary file, lex_fd is a text file(*), and lexidx_fd is
  * a binary file.
  *
- * (*) But lexicon items are delimited by '\0' not by '\n'.
+ * (*) But lexicon items are delimited by '\0' not by '\n'. Therefore '\n' is never written,
+ * so the text/binary distinction doesn't matter much.
  *
  * @param name        Identifier string of the p-attribute
  * @param directory   Directory in which CWB data files are to be created.
@@ -1128,7 +1134,9 @@ wattr_declare(char *name, char *directory, int nr_buckets)
   /* TODO why is this a parameter rather than a global ... ? */
   if (directory == NULL)
     encode_error("Error: you must specify a directory for CWB data files with the -d option");
+  /* This should be checked in option parsing, NOT here. (Specifically, in the -S and -P options.) */
 
+  /* copy the name supplied as an argument (first removing feature set flag / if needful */
   wattrs[wattr_ptr].name = cl_strdup(name);
   if (name[strlen(name)-1] == '/') {
     wattrs[wattr_ptr].name[strlen(name)-1] = '\0';
@@ -1142,6 +1150,8 @@ wattr_declare(char *name, char *directory, int nr_buckets)
   
   wattrs[wattr_ptr].position = 0;
 
+  /* We now create paths for each of the three files that this encoder generates.
+   * The paths aren't stored in the Wattr - only the file handles from opening them. */
   sprintf(corname, POS_CORPUS, directory, wattrs[wattr_ptr].name);
   sprintf(lexname, POS_LEX,    directory, wattrs[wattr_ptr].name);
   sprintf(idxname, POS_LEXIDX, directory, wattrs[wattr_ptr].name);
@@ -1176,7 +1186,6 @@ wattr_close_all(void)
   int i;
 
   for (i = 0; i < wattr_ptr; i++) {
-
     if (EOF == fclose(wattrs[i].lex_fd)) {
       perror("fclose() failed");
       encode_error("Error writing .lexicon file for %s attribute", wattrs[i].name);
@@ -1202,7 +1211,6 @@ wattr_close_all(void)
  * @param argv  argv - passed from main()
  *
  */
-
 void
 encode_parse_options(int argc, char **argv)
 {
@@ -1447,26 +1455,39 @@ encode_parse_options(int argc, char **argv)
 /**
  * Processes a token data line.
  *
+ * That is, it processes a line that is *not* an XML line.
+ *
+ * Note that this is destructive - the argument character
+ * string will be changed *in situ* via an strtok-like mechanim.
+ *
  * @param str  A string containing the line to process.
  */
 void
 encode_add_wattr_line(char *str)
 {
-  int fc, id, l;
+  /* fc = field counter (current column number, zero indexed)
+   * id = container for lexicon ID int.
+   * length = temp holder for a strlen return. */
+  int fc, id, length;
+  /* field = the current column (string).
+   * token = token we will store (same as field, except in case of feature sets).
+   * Both are pointers to suitable chunks of the parameter string. */
   char *field, *token;
+
   cl_lexhash_entry entry;
 
-  /* the following tokenization code messes around with the containts of linebuf[] in main()! */
+  /* the following tokenization code messes around with the containts of the str parameter,
+   * which (in the usage in this program) means changing linebuf[] in main()! */
   for (field = encode_strtok(str, field_separators), fc = 0;
        fc < wattr_ptr; 
        field = encode_strtok(NULL, field_separators), fc++) {
     /* LOOP across each column in the line... */
     
     if ((field != NULL) && strip_blanks) { /* need to strip both leading & trailing blanks from field values */
-      int len = strlen(field);
-      while ((len > 0) && (field[len-1] == ' ')) {
-        len--;
-        field[len] = '\0';
+      length = strlen(field);
+      while ((length > 0) && (field[length-1] == ' ')) {
+        length--;
+        field[length] = '\0';
       }
       while (*field == ' ') 
         field++;
@@ -1489,7 +1510,9 @@ encode_add_wattr_line(char *str)
           encode_print_input_lineno();
           fprintf(stderr, ")\n");
         }
-        token = cl_strdup("|"); /* so we always have to free() token for feature set attributes */
+        token = cl_strdup("|");
+        /* so we always have to cl_free() token for feature set attributes,
+         * because either cl_make_set or cl_strdup was used */
       }
     }
     else {
@@ -1497,11 +1520,11 @@ encode_add_wattr_line(char *str)
     }
 
     /* check annotation length & truncate if necessary (assumes it's ok to modify token[] destructively) */
-    l = strlen(token);
-    if (l >= CL_MAX_LINE_LENGTH) {
+    length = strlen(token);
+    if (length >= CL_MAX_LINE_LENGTH) {
       if (!silent) {
         fprintf(stderr, "Value of p-attribute '%s' exceeds maximum string length (%d > %d chars), truncated (", 
-                wattrs[fc].name, l, CL_MAX_LINE_LENGTH-1);
+                wattrs[fc].name, length, CL_MAX_LINE_LENGTH-1);
         encode_print_input_lineno();
         fprintf(stderr, ").\n");
       }
@@ -1527,7 +1550,7 @@ encode_add_wattr_line(char *str)
     }
 
     if (wattrs[fc].feature_set)
-      cl_free(token); /* string has been allocated by cl_make_set() */
+      cl_free(token); /* string has been allocated by cl_make_set(). See above.  */
 
     NwriteInt(id, wattrs[fc].corpus_fd);
   } /* end for loop (for each column in input data...) */

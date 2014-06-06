@@ -15,6 +15,16 @@
  *  WWW at http://www.gnu.org/copyleft/gpl.html).
  */
 
+/**
+ * @file
+ *
+ * This file contains functions for creating four different P-attribute components:
+ * namely CompLexiconSrt, CompCorpusFreqs, CompRevCorpus, and CompRevCorpusIdx.
+ *
+ * These are all produced by permutation of a previously encoded attribute
+ * (CompCorpus, CompLExicon, etc.)
+ */
+
 #include <ctype.h>
 #include <sys/types.h>
 
@@ -66,8 +76,8 @@ scompare(const void *idx1, const void *idx2)
 /* note, the following functions are documented in attributes.c (a general overview)
  * in the context of the create_component() function that calls them */
 
-/* note: these functions aren't guaranteed to load the component after creating it! */
-/* (in fact, creat_rev_corpus() would run out of address space if it tried that on a large corpus) */
+/* note: these functions aren't guaranteed to load the component after creating it!
+ * (in fact, creat_rev_corpus() would run out of address space if it tried that on a large corpus) */
 
 /**
  * creates a sorted index from the (already existing) lexicon index of the Attribute.
@@ -85,10 +95,10 @@ creat_sort_lexicon(Component *lexsrt)
   assert(lexsrt && "creat_sort_lexicon called with NULL component");
   assert(lexsrt->attribute && "attribute of component is null");
 
-  assert(comp_component_state(lexsrt) == ComponentDefined);
+  assert(comp_component_state(lexsrt) == ComponentDefined && "component is not set to Defined state");
 
   /* make sure both the lexicon and the lexicon index components for this Att are in memory */
-  lex = ensure_component(lexsrt->attribute, CompLexicon, 1);
+  lex    = ensure_component(lexsrt->attribute, CompLexicon,    1);
   lexidx = ensure_component(lexsrt->attribute, CompLexiconIdx, 1);
 
   assert(lex != NULL);
@@ -105,9 +115,9 @@ creat_sort_lexicon(Component *lexsrt)
     return 0;
   }
 
-  /* sanity check the stats of the new read-in and the old read-in match */
-  assert(lexidx->data.size == lexsrt->data.size);
-  assert(lexidx->data.nr_items == lexsrt->data.nr_items);
+  /* sanity check: make sure that the stats of the new read-in and the old read-in match */
+  assert(lexidx->data.size      == lexsrt->data.size);
+  assert(lexidx->data.nr_items  == lexsrt->data.nr_items);
   assert(lexidx->data.item_size == lexsrt->data.item_size);
 
   lexsrt->size = lexidx->size;
@@ -120,12 +130,12 @@ creat_sort_lexicon(Component *lexsrt)
 
   SortLexicon = &(lex->data);                /* for the comparison function */
   SortIndex = &(lexidx->data);
-
   qsort(lexsrt->data.data, lexsrt->size, sizeof(int), scompare);
 
   if (write_file_from_blob(lexsrt->path, &(lexsrt->data), 1)) {
 
-    /* ok, we now have to convert the table to NETWORK order in case
+    /* ok, we now have to convert the table to NETWORK order,
+     * like in the file we just wrote, in case
      * other (later) steps rely on its format. */
 
     /* convert network byte order to native integers */
@@ -140,7 +150,7 @@ creat_sort_lexicon(Component *lexsrt)
 
 
 /**
- * creates frequency table component.
+ * Creates the CompCorpusFreqs component (list of type frequencies for a given p-attribute)
  *
  * @see create_component
  */
@@ -150,7 +160,7 @@ creat_freqs(Component *freqs)
   FILE *fd;
   int mc_buf[BUFSIZE];
 
-  char *corpus_fn;
+  char *corpus_fn; /* filename of CompCorpus */
 
   int i, k, ptr;
 
@@ -167,12 +177,13 @@ creat_freqs(Component *freqs)
     assert(freqs);
   }
 
+  /* load a copy of the CompLexiconIdx file into the CompCorpusFreqs data block */
   if (!read_file_into_blob(lexidx->path, MALLOCED, sizeof(int), &(freqs->data))) {
     fprintf(stderr, "Can't open %s, can't create freqs component\n", lexidx->path);
     perror(lexidx->path);
     return 0;
   }
-  memset((char *)freqs->data.data, '\0', freqs->data.size);
+  memset((void *)freqs->data.data, '\0', freqs->data.size);
   assert(lexidx->data.size == freqs->data.size);
 
   freqs->size = lexidx->size;
@@ -187,7 +198,6 @@ creat_freqs(Component *freqs)
   }
 
   /* do the counts */
-
   do {
     i = fread(&mc_buf[0], sizeof(int), BUFSIZE, fd);
     for ( k = 0; k < i; k++) {
@@ -202,7 +212,6 @@ creat_freqs(Component *freqs)
 
   /* first, we write the table to the file in order to convert it from
      host to network format. */
-
   if (write_file_from_blob(freqs->path, &(freqs->data), 1)) {
 
     /* ok, we now have to convert the table to NETWORK order in case
@@ -228,18 +237,18 @@ creat_freqs(Component *freqs)
  *
  * @see create_component
  * @see makeall_do_attribute
+ * @return  number of passes made through the corpus.
  */
 int
 creat_rev_corpus(Component *revcorp)
 {
-
   Component *freqs;
   int cpos = 0, f, id, ints_written, pass;
 
   int datasize;
   int primus, secundus, lexsize, buf_used;
   int *buffer;
-  size_t bufsize;                     /* size of buffer (measured in number of 4-byte integers, not bytes!!) */
+  size_t bufsize;                     /* size of buffer (measured in number of 4-byte integers) */
   int **ptab;                         /* pointers into <buffer> */
   int *ptr;
 
@@ -293,7 +302,7 @@ creat_rev_corpus(Component *revcorp)
   pass = 0;                        /* count pass for debugging output */
   while (primus < lexsize) {
 
-    /* see how many IDs fit into the buffer in one pass */
+    /* see how many lexicon IDs fit into the buffer in one pass */
     buf_used = 0;                /* how many buffer entries are used */
     for (secundus = primus + 1; secundus < lexsize; secundus++) {
       /* increment secundus to fit as many IDs as possible into the buffer for this pass */
@@ -306,7 +315,7 @@ creat_rev_corpus(Component *revcorp)
         buf_used += f;
       }
     }
-    secundus--; /* this is the last valid ID we're indexing in this pass */
+    secundus--; /* this is the last valid lexicon ID we're indexing in this pass */
 
     pass++;
     if (cl_debug) {
@@ -342,7 +351,8 @@ creat_rev_corpus(Component *revcorp)
 
     /* now start next pass ... */
     primus = secundus + 1;
-  }                                             /* endwhile (primus < lexsize) */
+
+  } /* endwhile (primus < lexsize) */
 
   /* we're done: close REVCORP filehandle */
   fclose(revcorp_fd);
@@ -361,7 +371,7 @@ creat_rev_corpus(Component *revcorp)
   /* new in 2.2.b79: a newly created component isn't loaded automatically, in order to
      avoid running out address space for large corpora [status should be ComponentUnloaded] */
 
-  /* returns number of passes now */
+  /* return number of passes */
   return pass;
 }
 
@@ -370,6 +380,7 @@ creat_rev_corpus(Component *revcorp)
  * creates index for reversed corpus
  *
  * @see create_component
+ * @return  Returns 1.
  */
 int
 creat_rev_corpus_idx(Component *revcidx)
@@ -401,7 +412,6 @@ creat_rev_corpus_idx(Component *revcidx)
 
   sum = 0;
   for (k = 0; k < freqs->size; k++) { /* for each entry in freqs ... */
-
     i = ntohl(freqs->data.data[k]);    /* the frequency of word[k] */
 
     /* the start of word[k] is the sum of freqs of words[i<k] */
@@ -414,9 +424,7 @@ creat_rev_corpus_idx(Component *revcidx)
      is, the length of the corpus file / sizeof(int). Check this. */
 
   /* WE DO NOT CONVERT the table from host to network order while
-   * writing it, since it's already been created in network order!!!
-   * */
-
+   * writing it, since it's already been created in network order!!! */
   if (write_file_from_blob(revcidx->path, &(revcidx->data), 0) == 0) {
     fprintf(stderr, "Can't open %s for writing", revcidx->path);
     perror(revcidx->path);

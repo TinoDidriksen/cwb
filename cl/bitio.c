@@ -36,7 +36,7 @@
 int
 BFopen(char *filename, char *type, BFile *bf)
 {
-  /* force binary-mnode open */
+  /* force binary-mode open */
   char passmode[3] = { '\0', 'b', '\0' };
 
   bf->mode = type[0];
@@ -83,7 +83,7 @@ BSopen(unsigned char *base, char *type, BStream *bf)
  * If this is an output buffer, it is flushed before closing.
  *
  * @param stream  The file buffer to close.
- * @return        Always returns true.
+ * @return        Returns true iff the file was closed successfully.
  */
 int
 BFclose(BFile *stream)
@@ -484,7 +484,7 @@ BSposition(BStream *stream)
  *
  * @param stream  The stream whose position marker is changed.
  * @param offset  The desired new offset.
- * @return  Always true.
+ * @return        Always true.
  */
 int
 BSseek(BStream *stream, off_t offset)

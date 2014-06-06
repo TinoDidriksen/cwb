@@ -43,7 +43,8 @@ void huffcode_usage(char *msg, int error_code);
 /* ---------------------------------------------------------------------- */
 
 /**
- * Prints a binary representation of an integer to a stream.
+ * Prints, to the specified stream, a string containing
+ * a binary representation of an integer.
  *
  * @param i       Integer to print
  * @param width   Number of bits in the integer
@@ -177,14 +178,11 @@ sift(int *heap, int heap_size, int node)
  
     if ((child < heap_size) && 
         (heap[heap[child]] < heap[heap[child-1]])) {
-      
       /* select right branch in heap[child+1-1] */
-      
       child++;
     }
     
     if (heap[heap[node-1]] > heap[heap[child-1]]) {
-      
       /* root is larger than selected child, so we have to swap and
        * recurse down */
 
@@ -195,7 +193,6 @@ sift(int *heap, int heap_size, int node)
       heap[node-1] = tmp;
       
       /* recurse downwards */
-      
       node = child;
       child = node * 2;
     }
@@ -242,10 +239,10 @@ WriteHCD(char *filename, HCD *hc)
 }
 
 /**
- * Reads a Huffman compressed sequence from file.
+ * Reads a Huffman Code Descriptor from file.
  *
- * @param filename  Path to file where compressed sequence is saved.
- * @param hc        Pointer to location where the sequence's descriptor block will be loaded to.
+ * @param filename  Path to file where descriptor is saved.
+ * @param hc        Pointer to location where the descriptor block will be loaded to.
  * @return          Boolean: true for all OK, false for error.
  */
 int
@@ -253,7 +250,7 @@ ReadHCD(char *filename, HCD *hc)
 {
   FILE *fd;
 
-  if ((fd = fopen(filename, "r")) == NULL) {
+  if ((fd = fopen(filename, "rb")) == NULL) {
     perror(filename);
     return 0;
   }
@@ -273,7 +270,8 @@ ReadHCD(char *filename, HCD *hc)
     return 1;
   }
 }
-/* should these two functions perhaps be in cl/attributes.h? (prototype of HCD is in attributes.h) or all HCD object in separate module? */
+/* TODO: should these two functions perhaps be in cl/attributes.h? (prototype of HCD is in attributes.h)
+ *       or all HCD object in separate module? */
 
 
 /* ================================================== COMPRESSION */
@@ -377,7 +375,7 @@ compute_code_lengths(Attribute *attr, HCD *hc, char *fname)
 
   for (i = 0; i < hc->size; i++) {
     heap[i] = hc->size + i;
-    heap[hc->size+i] = get_id_frequency(attr, i) + 1;
+    heap[hc->size+i] = cl_id2freq(attr, i) + 1;
     /* add-one trick needed to avoid unsupported Huffman codes > 31 bits for very large corpora of ca. 2 billion words:
        theoretical optimal code length for hapax legomena in such corpora is ca. 31 bits, and the Huffman algorithm 
        sometimes generates 32-bit codes; with add-one trick, the theoretical optimal code length is always <= 30 bits */    
@@ -415,7 +413,6 @@ compute_code_lengths(Attribute *attr, HCD *hc, char *fname)
      * bottom up, left to right,
      * for each root of each subtree, sift if necessary
      */
-
     sift(heap, h, i);
   }
 
@@ -720,7 +717,6 @@ compute_code_lengths(Attribute *attr, HCD *hc, char *fname)
       for (i = 0; i < hc->length; i++) {
 
         /* SYNCHRONIZE */
-
         if ((i % SYNCHRONIZATION) == 0) {
           if (i > 0)
             BFflush(&bfd);
@@ -733,9 +729,7 @@ compute_code_lengths(Attribute *attr, HCD *hc, char *fname)
           cdperror("(aborting) cl_cpos2id() failed");
           exit(1);
         }
-
         else {
-
           assert((id >= 0) && (id < hc->size) && "Internal Error");
 
           cl = codelength[id];
@@ -746,9 +740,7 @@ compute_code_lengths(Attribute *attr, HCD *hc, char *fname)
                     id, code, cl, i);
             exit(1);
           }
-
         }
-
       }
 
       fclose(sync);
@@ -756,8 +748,8 @@ compute_code_lengths(Attribute *attr, HCD *hc, char *fname)
     }
   }
 
-  free(codelength);
-  free(heap);
+  cl_free(codelength);
+  cl_free(heap);
  
   return 1;
 }
@@ -899,7 +891,8 @@ decode_check_huff(Attribute *attr, char *fname)
   printf("!! You can delete the file <%s> now.\n",
          component_full_name(attr, CompCorpus, NULL));
   
-  return;                        /* exits on error, so there's no return value */
+  return;
+  /* exits on error, so there's no return value */
 }
 
 

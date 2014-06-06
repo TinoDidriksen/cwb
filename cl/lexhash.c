@@ -101,7 +101,7 @@ http://programmers.stackexchange.com/questions/49550/which-hashing-algorithm-is-
  */
 
 
-/* cl_lexhash_entry now in <cl.h> */
+/* cl_lexhash_entry is in <cl.h> */
 
 /**
  * A function pointer type defining functions that can be used as the "cleanup" for a deleted cl_lexhash_entry.
@@ -457,8 +457,6 @@ cl_lexhash_add(cl_lexhash hash, char *token)
   }
   return entry;
 }
-
-/* returns ID of <token>, -1 if not in hash */
 
 /**
  * Gets the ID of a particular string within a lexhash.

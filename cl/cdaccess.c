@@ -33,7 +33,7 @@
 #include "cdaccess.h"
 
 /**
- * If COMPRESS_DEBUG is set to a positive integer, get_id_at_position() will
+ * If COMPRESS_DEBUG is set to a positive integer, cl_cpos2id() will
  * print debugging messages. (2 prints more than 1!)
  */
 #define COMPRESS_DEBUG 0
@@ -77,7 +77,8 @@ cl_strcmp(char *s1, char *s2)
   register signed char* c1;
   register signed char* c2;
 
-  c1 = (signed char *)s1; c2 = (signed char *)s2;
+  c1 = (signed char *)s1;
+  c2 = (signed char *)s2;
 
   for ( ; *c1 == *c2; c1++,c2++)
     if ( *c1 == '\0')
@@ -88,6 +89,9 @@ cl_strcmp(char *s1, char *s2)
 
 /**
  * Gets a string describing the error identified by an error number.
+ *
+ * The string is a pointer to an internal constant string, i.e.,
+ * do not modify or free it!
  *
  * @param error_num  Error number integer (a CDA_* constant as defined in cl.h)
  */
@@ -321,7 +325,7 @@ cl_id2strlen(Attribute *attribute, int id)
     if ((id + 1) == lexidx->size) {
 
       /* last word */
-      s = get_string_of_id(attribute, id);
+      s = cl_id2str(attribute, id);
 
       if (s != NULL) {
         cl_errno = CDA_OK;
@@ -472,7 +476,7 @@ cl_sequence_compressed(Attribute *attribute)
 }
 
 /**
- * Check whether the index (inverted file) of the given P-attribute is compressed.
+ * Check whether the reverse-corpus index (inverted file) of the given P-attribute is compressed.
  *
  * See comments in body of function for what counts as "compressed".
  *
@@ -492,7 +496,7 @@ cl_index_compressed(Attribute *attribute)
    * in memory, we do not use the compressed inverted file.
    */
 
-  if ((component_state(attribute, CompRevCorpus) == ComponentLoaded) &&
+  if ((component_state(attribute, CompRevCorpus)    == ComponentLoaded) &&
       (component_state(attribute, CompRevCorpusIdx) == ComponentLoaded))
     return 0;
 
@@ -533,8 +537,7 @@ cl_max_cpos(Attribute *attribute)
 
   check_arg(attribute, ATT_POS, cl_errno);
 
-  if (item_sequence_is_compressed(attribute) == 1) {
-
+  if (cl_sequence_compressed(attribute) == 1) {
     ensure_component(attribute, CompHuffCodes, 0);
     if (attribute->pos.hc == NULL) {
       cl_errno = CDA_ENODATA;
@@ -543,12 +546,10 @@ cl_max_cpos(Attribute *attribute)
     cl_errno = CDA_OK;
 
     return attribute->pos.hc->length;
-
   }
   else {
 
     corpus = ensure_component(attribute, CompCorpus, 0);
-
     if (corpus == NULL) {
       cl_errno = CDA_ENODATA;
       return CDA_ENODATA;
@@ -679,14 +680,14 @@ cl_id2cpos_oldstyle(Attribute *attribute, int id, int *freq, int *restrictor_lis
 
   check_arg(attribute, ATT_POS, NULL);
 
-  size  = get_attribute_size(attribute);
+  size  = cl_max_cpos(attribute);
   if ((size <= 0) || (cl_errno != CDA_OK)) {
     /*       fprintf(stderr, "Cannot determine size of PA %s\n", */
     /*        attribute->any.name); */
       return NULL;
   }
 
-  range  = get_id_range(attribute);
+  range  = cl_max_id(attribute);
   if ((range <= 0) || (cl_errno != CDA_OK)) {
     /*       fprintf(stderr, "Cannot determine ID range of PA %s\n", */
     /*        attribute->any.name); */
@@ -701,7 +702,7 @@ cl_id2cpos_oldstyle(Attribute *attribute, int id, int *freq, int *restrictor_lis
     return NULL;
   }
 
-  *freq = get_id_frequency(attribute, id);
+  *freq = cl_id2freq(attribute, id);
   if ((*freq < 0) || (cl_errno != CDA_OK)) {
     /*       fprintf(stderr, "Frequency %d of ID %d illegal (PA %s)\n", */
     /*        *freq, id, attribute->any.name); */
@@ -714,9 +715,8 @@ cl_id2cpos_oldstyle(Attribute *attribute, int id, int *freq, int *restrictor_lis
 
 
   buffer = (int *)cl_malloc(*freq * sizeof(int));
-  /* error handling removed because cl_malloc() is now used */
 
-  if (inverted_file_is_compressed(attribute) == 1) {
+  if (cl_index_compressed(attribute)) {
 
     BStream bs;
     unsigned int i, b, last_pos, gap, offset, ins_ptr, res_ptr;
@@ -770,7 +770,7 @@ cl_id2cpos_oldstyle(Attribute *attribute, int id, int *freq, int *restrictor_lis
 
     BSclose(&bs);
 
-      /* reduce, if possible */
+    /* reduce, if possible */
 
     if (ins_ptr < *freq && ins_ptr != *freq) {
       if (ins_ptr == 0) {
@@ -783,7 +783,7 @@ cl_id2cpos_oldstyle(Attribute *attribute, int id, int *freq, int *restrictor_lis
       *freq = ins_ptr;
     }
 
-  }
+  } /* endif cl_index_compressed */
   else {
 
     revcorp = ensure_component(attribute, CompRevCorpus, 0);
@@ -841,9 +841,7 @@ cl_id2cpos_oldstyle(Attribute *attribute, int id, int *freq, int *restrictor_lis
         }
         *freq = ins_ptr;
       }
-
     }
-
   }
 
   cl_errno = CDA_OK;
