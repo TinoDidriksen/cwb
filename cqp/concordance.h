@@ -37,43 +37,6 @@ typedef struct _ConcLineField {
   int type;
 } ConcLineField;
 
-/* ========================================== */
-
-/* No longer used. TODO - delete in future. -- AH 2014-06-15
-typedef union _concordanceLineElement {
-
-  int type;			/* simple string or subtree * /
-
-  struct {
-    int type;			/* leaf * /
-    int ElementType;		/* type of this element * /
-
-    int length;			/* length of s * /
-    char *s;			/* s itself * /
-  } simpleString;
-
-  struct {
-    int type;
-    int ElementType;		/* type of the captured elements * /
-
-    int nr_subelements;
-    union _concordanceLineElement **subElements;
-  } nestedString;
-
-} ConcordanceLineElement;
-
-typedef ConcordanceLineElement *ConcordanceLine;
-*/
-
-/* ========================================== */
-
-/* this function not exported :
-int append(char *s, char *suffix, int *sp, int max_sp);
-*/
-
-/* void add_to_string(char **s, int *spos, int *ssize, char *suffix); */
-
-/* ======================================== */
 
 
 
