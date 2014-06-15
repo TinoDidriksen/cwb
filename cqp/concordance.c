@@ -30,12 +30,12 @@
 
 #define MAXKWICLINELEN 65535
 
+
+
+/* NOT USED -- TODO to delete -- AH 2014-06-15
+
+
 #define SRESIZE 1024
-
-
-/* ---------------------------------------------------------------------- */
-
-/* ---------------------------------------------------------------------- */
 
 void add_to_string(char **s, int *spos, int *ssize, char *suffix)
 {
@@ -60,6 +60,7 @@ void add_to_string(char **s, int *spos, int *ssize, char *suffix)
   }
   ((*s)[*spos]) = '\0';
 }
+*/
 
 /**
  * Reverses the argument string (destructively, that is, in situ).
@@ -92,10 +93,12 @@ srev(char *s)
   return s;
 }
 
-/* ---------------------------------------------------------------------- */
 
 /**
  * Appends one string to another while keeping track of the overall length.
+ *
+ * (Thus more efficient than strcat(); also there is buffer overflow protection,
+ * because of the max_sp paramter.)
  *
  * @param s       The string to modify.
  * @param suffix  The string you want to append to s.
@@ -107,7 +110,7 @@ srev(char *s)
  *                be written to).
  * @return        The number of characters copied.
  */
-/* inline */ int
+int
 append(char *s, char *suffix, int *sp, int max_sp)
 {
   char *k = suffix;
@@ -129,6 +132,9 @@ append(char *s, char *suffix, int *sp, int max_sp)
 
 /* ============================== get_print_attribute_values() */
 
+/**
+ * TODO document this!
+ */
 int
 get_print_attribute_values(ContextDescriptor *cd,
                            int position,
@@ -415,14 +421,16 @@ get_position_values(ContextDescriptor *cd,
   s[*sp] = '\0';
 
 #if 0
-  fprintf(stderr,
-          "get_position_values() at pos %d: ``%s''\n",
-          position, s);
+  fprintf(stderr, "get_position_values() at pos %d: ``%s''\n", position, s);
 #endif
 
   return 1;
 }
 
+/**
+ * Adds the asserted number of positions (nr_positions) specified by this_token_start and this_token_end
+ * to an array of integers in returned_positions
+ */
 void
 remember_this_position(int position,
                        int this_token_start, int this_token_end,
@@ -445,8 +453,12 @@ remember_this_position(int position,
 }
 
 /**
+ * TODO write something here.
+ *
  * @return  A pointer to a function-internal static string buffer containing
  *          the requested string. Do not free it.
+ *          The function will return NULL if the requested string would have
+ *          been zero-length.
  */
 char *
 get_field_separators(int position, 
@@ -709,14 +721,14 @@ compose_kwic_line(Corpus *corpus,
      */
 
 #if 0
-    fprintf(stderr, "line bef srev(): >>%s<<\n", line + index);
+    fprintf(stderr, "line before srev(): >>%s<<\n", line + index);
 #endif
 
     line[line_p] = '\0';
     srev(line+index);
 
 #if 0
-    fprintf(stderr, "line aft srev(): >>%s<<\n", line + index);
+    fprintf(stderr, "line after srev(): >>%s<<\n", line + index);
 #endif
 
     /* der spannende Teil: wir müssen wg srev() die Liste der
@@ -737,8 +749,7 @@ compose_kwic_line(Corpus *corpus,
           new_end   = line_p - 1 - old_start;
 
 #if 0
-          fprintf(stderr, "Patching [%d,%d] to [%d,%d]\n",
-                  old_start, old_end, new_start, new_end);
+          fprintf(stderr, "Patching [%d,%d] to [%d,%d]\n", old_start, old_end, new_start, new_end);
 #endif
 
           returned_positions[el_c * 2] = new_start + 1;
@@ -1213,6 +1224,7 @@ MakeConcordanceLine(Corpus *corpus,
   return NULL;
 }
 
+/* TODO: is this function called anywhere? */
 void FreeConcordanceLine(ConcordanceLine *line_p)
 {
   if (line_p) {

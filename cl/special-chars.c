@@ -2975,6 +2975,7 @@ void
 cl_autostring_concat(ClAutoString dst, const char *src)
 {
   int bytes_needed;
+  char *c;
 
   if (NULL == dst)
     return;
@@ -2988,7 +2989,10 @@ cl_autostring_concat(ClAutoString dst, const char *src)
     dst->data = cl_realloc(dst->data, dst->bytes_allocated);
   }
 
-  strcat(dst->data, src);
+  for (c = dst->data[dst->len] ; src ; ++c, ++src)
+    *c = *src;
+  *c = '\0';
+
   dst->len = bytes_needed - 1;
 }
 
