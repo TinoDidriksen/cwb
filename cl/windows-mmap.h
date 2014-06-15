@@ -30,13 +30,23 @@
 #include <io.h>
 
 /* macro definitions extracted from git/git-compat-util.h */
+#ifndef PROT_READ
 #define PROT_READ  1
+#endif
+#ifndef PROT_WRITE
 #define PROT_WRITE 2
+#endif
+#ifndef MAP_FAILED
 #define MAP_FAILED ((void*)-1)
+#endif
 
 /* macro definitions extracted from /usr/include/bits/mman.h */
+#ifndef MAP_SHARED
 #define MAP_SHARED	0x01		/* Share changes.  */
+#endif
+#ifndef MAP_PRIVATE
 #define MAP_PRIVATE	0x02		/* Changes are private.  */
+#endif
 
 
 void *mmap(void *start, size_t length, int prot, int flags, int fd, off_t offset);

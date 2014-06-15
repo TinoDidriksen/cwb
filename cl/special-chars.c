@@ -2812,3 +2812,203 @@ cl_strcpy(char *buf, const char *src)
     buf[CL_MAX_LINE_LENGTH-1] = '\0';
   return buf;
 }
+
+
+
+
+/*
+ *
+ * CL AutoString -- fully encapsulated automagically-expanding string!
+ *
+ */
+
+typedef struct ClAutoString *ClAutoString;
+
+ClAutoString cl_autostring_new(const char *data, size_t init_bytes);
+void cl_autostring_delete(ClAutoString string);
+void cl_autostring_set_increment(ClAutoString string, size_t new_increment);
+char *cl_autostring_ptr(ClAutoString string);
+size_t cl_autostring_len(ClAutoString string);
+void cl_autostring_reclaim_mem(ClAutoString string);
+void cl_autostring_copy(ClAutoString dst, const char *src);
+void cl_autostring_concat(ClAutoString dst, const char *src);
+void cl_autostring_truncate(ClAutoString string, int new_length);
+
+
+/**
+ * Underlying structure for the ClAutoString object.
+ */
+struct ClAutoString {
+  char *data;
+  size_t len;
+  size_t bytes_allocated;
+  size_t increment;
+};
+
+
+
+
+/**
+ * Creates a new autostring object. The stirng is initialised to data (or to a zero-length string if data is NULL).
+ *
+ * Initially, init_bytes is allocated (and the increment step is the same size), unless the string is longer...
+ * in which case the length of the string becomes the inital amount of memory allocated.
+ *
+ * Use -1 or 0 for init_len, and the length of the specified string is used as the initial allocation.
+ */
+ClAutoString
+cl_autostring_new(const char *data, size_t init_bytes)
+{
+  ClAutoString s;
+  int len;
+
+  /* calculate initial size of data */
+  if (1 > init_bytes)
+    init_bytes = CL_MAX_LINE_LENGTH;
+  if (data)
+    if ( (len = 1 + strlen(data)) > init_bytes)
+       init_bytes = len;
+
+  s = cl_malloc(sizeof(struct ClAutoString));
+
+  s->data = (char *)cl_malloc(init_bytes);
+  s->bytes_allocated = init_bytes;
+  s->increment = init_bytes;
+
+  if (data) {
+    s->len = len;
+    strcpy(s->data, data);
+  }
+  else {
+    s->len = 0;
+    s->data[0] = '\0';
+  }
+
+  return s;
+}
+
+/**
+ * Delete an autostring object.
+ */
+void
+cl_autostring_delete(ClAutoString string)
+{
+  if (NULL == string)
+    return;
+  cl_free(string->data);
+  cl_free(string);
+}
+
+
+void
+cl_autostring_set_increment(ClAutoString string, size_t new_increment)
+{
+  if (NULL == string)
+    return;
+  string->increment = new_increment;
+}
+
+/**
+ * Get a pointer to the string data inside the AutoString (or NULL if the object is NULL).
+ */
+char *
+cl_autostring_ptr(ClAutoString string)
+{
+  if (NULL == string)
+    return NULL;
+  return string->data;
+}
+
+/**
+ * Get the length of the currently-stored string (or negative value in case NULL object is passed).
+ */
+size_t
+cl_autostring_len(ClAutoString string)
+{
+  if (NULL == string)
+    return -1;
+  return string->len;
+}
+
+/**
+ * Tries to free up unused memory by making the AutoString use only as many increments of size as necessary.
+ */
+void
+cl_autostring_reclaim_mem(ClAutoString string)
+{
+  if (NULL == string)
+    return;
+  string->data = cl_realloc(string->data, 1 + ( (string->len + 1) / string->increment ));
+}
+
+/**
+ * Copy the string in src into the AutyoString in dst, automatically reallocating memory if necessary.
+ */
+void
+cl_autostring_copy(ClAutoString dst, const char *src)
+{
+  size_t bytes_needed;
+
+  if (NULL == dst)
+    return;
+  if (NULL == src) {
+    dst->data[0] = '\0';
+    dst->len = 0;
+  }
+  else {
+    bytes_needed = 1 + strlen(src);
+
+    if (bytes_needed > dst->bytes_allocated) {
+      dst->bytes_allocated = dst->increment * (1 + (bytes_needed / dst->increment));
+      dst->data = cl_realloc(dst->data, dst->bytes_allocated);
+    }
+
+    strcpy(dst->data, src);
+    dst->len = bytes_needed - 1;
+  }
+}
+
+/**
+ * Concatenate the string src onto the end of the AutoStreing in dst, automatically reallocating memory if necessary.
+ */
+void
+cl_autostring_concat(ClAutoString dst, const char *src)
+{
+  int bytes_needed;
+
+  if (NULL == dst)
+    return;
+  if (NULL == src)
+    return;
+
+  bytes_needed = dst->len + strlen(src) + 1;
+
+  if (bytes_needed > dst->bytes_allocated) {
+    dst->bytes_allocated = dst->increment * (1 + (bytes_needed / dst->increment));
+    dst->data = cl_realloc(dst->data, dst->bytes_allocated);
+  }
+
+  strcat(dst->data, src);
+  dst->len = bytes_needed - 1;
+}
+
+/**
+ * Truncates the AutoString to the length specified. Note, does not respect UTF-8 encoding,
+ * so if the string is UTF8 you need to ascertain in advance that the curt-off does not break
+ * any UTF-8 characters into bits.
+ *
+ * This function should be used if the character buffer is tampered with by direct access (which
+ * of course will not update the internal member of the object that tracks string length....).
+ */
+void
+cl_autostring_truncate(ClAutoString string, int new_length)
+{
+  if (NULL == string)
+    return;
+  if (new_length > string->len)
+    return;
+  else {
+    string->len = new_length;
+    string->data[new_length] = '\0';
+  }
+}

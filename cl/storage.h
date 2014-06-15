@@ -26,13 +26,21 @@
 #include "windows-mmap.h"
 #endif
 
+/* some old non-POSIX unixes may lack this constant... */
+#ifndef MAP_FAILED
+#define MAP_FAILED ((void *) -1)
+#endif
 
 /* data allocation methods */
 
-#define UNALLOCATED 0
-#define MMAPPED  1    /**< Flag: use mmap() to allocate memory */
-#define MALLOCED 2    /**< Flag: use malloc() to allocate memory */
-#define PAGED    3
+#define UNALLOCATED 0 /**< Flag: no memory has been allocated */
+#define MMAPPED  1    /**< Flag: indicates use of mmap() to allocate memory  in a MemBlob*/
+#define MALLOCED 2    /**< Flag: indicates use of malloc() to allocate memory */
+
+/* TODO use these new, clearer macros in future */
+#define MEMBLOB_UNALLOCATED 0 /**< Flag: indicates no memory has been allocated */
+#define MEMBLOB_MMAPPED  1    /**< Flag: indicates use of mmap() to allocate memory in a MemBlob */
+#define MEMBLOB_MALLOCED 2    /**< Flag: indicates use of malloc() to allocate memory in a MemBlob  */
 
 
 #define SIZE_BIT   0
@@ -115,16 +123,15 @@ int write_file_from_blob(char *filename,
 /* ==================================================== LOW LEVEL FUNCTIONS */
 
 void *mmapfile(char *filename, size_t *len_ptr, char *mode);
-
 void *mallocfile(char *filename, size_t *len_ptr, char *mode);
 
 /* a new-style API for MemBlobs */
-/* NB argument orders for the read/write functions are wrong... */
+/* TODO argument orders for the read/write functions are wrong... */
 #define memblob_read_from_file read_file_into_blob
-#define memblob_write_to_file write_file_from_blob
-#define memblob_free mfree
-#define memblob_clear init_mblob
-#define memblob_allocate alloc_mblob
+#define memblob_write_to_file  write_file_from_blob
+#define memblob_free           mfree
+#define memblob_clear          init_mblob
+#define memblob_allocate       alloc_mblob
 
 
 #endif

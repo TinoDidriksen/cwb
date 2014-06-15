@@ -36,6 +36,7 @@
 
 /**
  * Flags used in calls to mmap.
+ * TODO: actually, only used when calling mmap() for read: should be renamed to indicate this.
  * @see mmapfile
  */
 #if defined(__FreeBSD__)
@@ -50,6 +51,8 @@
 
 
 /* ============================================================ */
+
+/* TODO Nwrite / Nread belong elsewhere surely? */
 
 /**
  * Writes a 32-bit integer to file, converting to network byte order.
@@ -159,7 +162,7 @@ NreadInts(int *vals, int nr_vals, FILE *fd)
 void
 init_mblob(MemBlob *blob)
 {
-  assert((blob != NULL) && "You can't pass a NULL blob to init_mblob");
+  assert((blob != NULL) && "CL Memblob: init_mblob(): You can't pass a NULL blob!");
 
   blob->data = NULL;
   blob->size = 0;
@@ -174,7 +177,7 @@ init_mblob(MemBlob *blob)
 }
 
 /**
- * Allocates memory for a blob of the requested size.
+ * Allocates memory for a blob of the requested size, using malloc(2).
  *
  * A block of memory holding nr_items of size item_size is created
  * in the specified MemBlob.
@@ -190,9 +193,9 @@ alloc_mblob(MemBlob *blob, int nr_items, int item_size, int clear_blob)
 {
   int size;
   
-  assert((blob != NULL) && "alloc_mblob(): You can't pass a NULL blob!");
-  assert((item_size >= 0) && "alloc_mblob(): item_size must be >= 0!");
-  assert((nr_items > 0) && "alloc_mblob(): nr_items must be > 0!");
+  assert( (blob != NULL)   &&  "CL MemBlob: alloc_mblob(): You can't pass a NULL blob!");
+  assert( (item_size >= 0) &&  "CL MemBlob: alloc_mblob(): item_size must be >= 0!");
+  assert( (nr_items > 0)   &&  "CL MemBlob: alloc_mblob(): nr_items must be > 0!");
 
   blob->item_size = item_size;
   blob->nr_items = nr_items;
@@ -226,8 +229,6 @@ alloc_mblob(MemBlob *blob, int nr_items, int item_size, int clear_blob)
 /**
  * Frees the memory used by a MemBlob.
  *
- * (A more transparent name would be "free_mblob".)
- *
  * This works regardless of the method used to allocate the blob.
  */
 void 
@@ -240,32 +241,27 @@ mfree(MemBlob *blob)
   if (blob->data != NULL) {
     switch (blob->allocation_method) {
     case UNALLOCATED: 
-      fprintf(stderr, "storage:mfree():\n"
-              "  Blob flag is UNALLOCATED, but data present -- no free\n");
+      fprintf(stderr, "CL MemBlob:mfree():  Blob flag is UNALLOCATED, but data present -- no free\n");
       break;
     case MMAPPED:
       map_len = (blob->size > 0) ? blob->size : MMAP_EMPTY_LEN;
       if (munmap((void *)blob->data, map_len) < 0)
-        perror("storage:munmap()");
+        perror("CL MemBlob:munmap()");
       break;
     case MALLOCED:
-      free((void *)blob->data);
-      break;
-    case PAGED:
-      assert("CL: Paged memory not yet implemented" && 0);
+      cl_free(blob->data);
       break;
     default:
-      assert("CL: Illegal memory storage class in storage:mfree()" && 0);
+      assert("CL MemBlob:mfree(): Illegal memory storage class" && 0);
       break;
     }
-    if (blob->fname != NULL)
-      free(blob->fname);
+    cl_free(blob->fname);
     init_mblob(blob);
   }
-  else if (blob->allocation_method != UNALLOCATED)
-    fprintf(stderr, "storage:mfree():\n"
-            "  No data, but Blob flag isn't UNALLOCATED\n");
-  
+  else {
+    if (blob->allocation_method != UNALLOCATED)
+      fprintf(stderr, "CL MemBlob:mfree():  No data, but MemBlob flag isn't UNALLOCATED\n");
+  }
 }
 
 
@@ -278,13 +274,11 @@ mfree(MemBlob *blob)
  *
  * @param filename  Name of the file to map.
  * @param len_ptr   The number of bytes the returned pointer points to.
- * @param mode      Can be either "r", "w", "rb" or "wb". If mode is "r",
- *                  len_ptr is taken as an input parameter (*len_ptr bytes
+ * @param mode      Can be either "r", "w", "rb" or "wb". (a "+" can be used too, but is ignored.)
+ *                  If mode is "r", the amount of memory allocated (size of file) is placed in len_ptr.
+ *                  If mode is "w", len_ptr is taken as an input parameter (*len_ptr bytes
  *                  are allocated).
- *                  {NB I copied this from existing notes but surely shouldn't
- *                  the comment about len_ptr apply if mode is "w" not "r"? -- AH}
- * @return          The contents of file in filename as a pointer to a
- *                  memory area.
+ * @return          The contents of file in filename as a pointer to a memory area.
  */
 void *
 mmapfile(char *filename, size_t *len_ptr, char *mode)
@@ -305,18 +299,18 @@ mmapfile(char *filename, size_t *len_ptr, char *mode)
     fd = open(filename, O_RDONLY|binflag);
     
     if (fd == EOF) {
-      fprintf(stderr, "mmapfile()<storage.c>: Can't open file %s ... \n\tReason: ", 
-              filename);
+      fprintf(stderr, "CL MemBlob:mmapfile(): Can't open file %s ... \n\tReason: ", filename);
       perror(NULL);
     }
     else if(fstat(fd, &stat_buf) == EOF) {
-      fprintf(stderr, "mmapfile()<storage.c>: Can't fstat() file %s ... \n\tReason: ", 
-              filename);
+      fprintf(stderr, "CL MemBlob:mmapfile(): Can't fstat() file %s ... \n\tReason: ", filename);
       perror(NULL);
     }
     else {
       *len_ptr = stat_buf.st_size;
-      map_len = (stat_buf.st_size > 0) ? stat_buf.st_size : MMAP_EMPTY_LEN; /* if file is empty, mmap() beyond end of file, but report empty size to CL */
+      /* if file is empty, mmap() beyond end of file, but report empty size to CL */
+      map_len = (stat_buf.st_size > 0) ? stat_buf.st_size : MMAP_EMPTY_LEN;
+
       space = mmap(NULL, map_len, PROT_READ, MMAPFLAGS, fd, 0);
     }
 
@@ -326,16 +320,17 @@ mmapfile(char *filename, size_t *len_ptr, char *mode)
     break;
 
   case 'w':
-
+    /* if the file does not exist, create; then mmap it, unless both open/create were unsuccessful. */
     if ((fd = open(filename, O_RDWR|O_CREAT|binflag, 0666)) == EOF)
       fd = creat(filename, 0666);
 
     if (fd == EOF) {
-      fprintf(stderr, "mmapfile()<storage.c>: Can't create file %s ...\n\tReason: ", 
-              filename);
+      fprintf(stderr, "CL MemBlob:mmapfile(): Can't create file %s ...\n\tReason: ", filename);
       perror(NULL);
     }
     else {
+      /* scroll to the len_ptr'th byte, then overwrite the last integer with a random integer (why? not sure  -- AH),
+       * then rewind file */
       lseek(fd, *len_ptr - sizeof(int), SEEK_SET);
       write(fd, &fd, sizeof(int));
       lseek(fd, 0, SEEK_SET);
@@ -347,16 +342,13 @@ mmapfile(char *filename, size_t *len_ptr, char *mode)
       close(fd);
     
     break;
+
   default:
-    fprintf(stderr, "mmapfile()<storage.c>: Mode '%s' is not supported ...\n", mode);
+    fprintf(stderr, "CL MemBlob:mmapfile(): Mode '%s' is not supported ...\n", mode);
   }
 
-#if defined(__svr4__)
   if (space == MAP_FAILED) {
-#else
-  if (space == (void *)-1) {        /* do we need this fallback ? */
-#endif
-    fprintf(stderr, "mmapfile()<storage.c>: Can't mmap() file %s ...\n"
+    fprintf(stderr, "CL MemBlob:mmapfile(): Can't mmap() file %s ...\n"
             "\tYou have probably run out of memory / address space!\n"
             "\tError Message: ",
             filename);
@@ -390,16 +382,15 @@ mallocfile(char *filename, size_t *len_ptr, char *mode)
   space = NULL;
 
   switch(mode[0]) {
-    case 'r':
-
+  case 'r':
     fd = open(filename, O_RDONLY|binflag);
 
     if (fd == EOF) {
-      fprintf(stderr, "storage:mallocfile():\n  can't open %s -- ", filename);
+      fprintf(stderr, "CL MemBlob:mallocfile():  can't open %s -- ", filename);
       perror(NULL);
     } 
     else if(fstat(fd, &stat_buf) == EOF) {
-      fprintf(stderr, "storage:mallocfile():\n  can't stat %s -- ", filename);
+      fprintf(stderr, "CL MemBlob:mallocfile():  can't stat %s -- ", filename);
       perror(NULL);
     }
     else {
@@ -408,9 +399,9 @@ mallocfile(char *filename, size_t *len_ptr, char *mode)
       space = (void *)cl_malloc(*len_ptr);
       
       if (read(fd, space, *len_ptr) != *len_ptr) {
-        fprintf(stderr, "storage:mallocfile():\n  couldn't read file contents -- ");
+        fprintf(stderr, "CL MemBlob:mallocfile():  couldn't read file contents -- ");
         perror(NULL);
-        free(space);
+        cl_free(space);
         space = NULL;
       }
     }
@@ -424,7 +415,7 @@ mallocfile(char *filename, size_t *len_ptr, char *mode)
       fd = creat(filename, 0666);
 
     if(fd == EOF) {
-      fprintf(stderr, "storage:mallocfile():\n  can't open/create %s for writing -- ", filename);
+      fprintf(stderr, "CL MemBlob:mallocfile():  can't open/create %s for writing -- ", filename);
 
       perror(NULL);
     }
@@ -432,9 +423,9 @@ mallocfile(char *filename, size_t *len_ptr, char *mode)
       space = cl_malloc(*len_ptr);
       
       if (write(fd, space, *len_ptr) != *len_ptr) {
-        fprintf(stderr, "storage:mallocfile():\n  couldn't write file -- ");
+        fprintf(stderr, "CL MemBlob:mallocfile():  couldn't write file -- ");
         perror(NULL);
-        free(space);
+        cl_free(space);
         space = NULL;
       }
     }
@@ -445,7 +436,7 @@ mallocfile(char *filename, size_t *len_ptr, char *mode)
     break;
 
   default:
-    fprintf(stderr, "storage:mallocfile():\n  mode %s is not supported\n", mode);
+    fprintf(stderr, "CL MemBlob:mallocfile():  mode %s is not supported\n", mode);
   }
   return space;
 
@@ -479,7 +470,7 @@ read_file_into_blob(char *filename,
 {
   int result;
 
-  assert("You must not pass a NULL blob!" && (blob != NULL));
+  assert("CL MemBlob:read_file_into_blob(): You must not pass a NULL blob!" && (blob != NULL));
 
   blob->item_size = item_size;
   blob->allocation_method = allocation_method;
@@ -491,8 +482,7 @@ read_file_into_blob(char *filename,
   else if (allocation_method == MALLOCED)
     blob->data = (int *)mallocfile(filename, &(blob->size), "rb");
   else {
-    fprintf(stderr, "storage:read_file_into_blob():\n"
-            "  allocation method %d is not supported\n", allocation_method);
+    fprintf(stderr, "CL MemBlob:read_file_into_blob(): allocation method %d is not supported\n", allocation_method);
     return 0;
   }
 
@@ -514,6 +504,9 @@ read_file_into_blob(char *filename,
 /**
  * Writes the data stored in a blob to file.
  *
+ * Note that here we are writing to a new file: we are *not*
+ * writing back to the file the data came from, if MMAPPED.
+ *
  * In Windows, the write is always binary-mode.
  *
  * @param filename           The file to write to.
@@ -530,28 +523,24 @@ write_file_from_blob(char *filename,
   int result = 0;
   FILE *fd;
 
-  assert("You must not pass a NULL blob!" && (blob != NULL));
+  assert("CL MemBlob:write_file_from_blob(): You must not pass a NULL blob!" && (blob != NULL));
 
   blob->changed = 0;
 
   if ((blob->data == NULL) || (blob->size == 0)) {
-    fprintf(stderr, "storage:write_file_from_blob():\n"
-            "  no data in blob, nothing to write...\n");
+    fprintf(stderr, "CL MemBlob:write_file_from_blob(): no data in blob, nothing to write...\n");
     result = 0;
   }
   else {
-
     switch (blob->allocation_method) {
     case UNALLOCATED:
-      fprintf(stderr, "storage:write_file_from_blob():\n"
-              "  tried to write unallocated blob...\n");
+      fprintf(stderr, "CL MemBlob:write_file_from_blob(): tried to write unallocated blob...\n");
       result = 0;
       break;
     case MMAPPED:
     case MALLOCED:
       if ((fd = fopen(filename, "wb")) == NULL) {
-        fprintf(stderr, "storage:write_file_from_blob():\n"
-                "  Can't open output file %s\n", filename);
+        fprintf(stderr, "CL MemBlob:write_file_from_blob(): Can't open output file %s\n", filename);
         result = 0;
       }
       else {
@@ -564,8 +553,7 @@ write_file_from_blob(char *filename,
       }
       break;
     default:
-      fprintf(stderr, "storage:write_file_from_blob():\n"
-              "  unsupported allocation method %d...\n", blob->allocation_method);
+      fprintf(stderr, "CL MemBlob:write_file_from_blob(): unsupported allocation method # %d...\n", blob->allocation_method);
       result = 0;
       break;
     }
