@@ -239,7 +239,6 @@ void cl_string_list_qsort(cl_string_list l);                 /* sort list (using
 
 
 
-
 /*
  *
  * SECTION 1.4 -- INTERNAL RANDOM NUMBER GENERATOR
@@ -325,8 +324,40 @@ void cl_set_memory_limit(int megabytes);  /* 0 or less turns limit off */
  */
 
 /*
- *  misc CL utility functions
+ *  misc CL utility objects/functions
  */
+
+/**
+ * A single-string object whose memory allocation grows automatically.
+ */
+/**
+ * Underlying structure for the ClAutoString object.
+ *
+ * (Its members are not hidden, but you are advised not to tinker with
+ * them directly unless you really know what you are doing; reading from
+ * them is usually safe but changing them other than via the object methods
+ * is not safe at all.)
+ */
+struct ClAutoString {
+  char *data;                /**< The actual character data (null-terminated string). */
+  size_t len;                /**< Length of the string, strlen-style (count of bytes not including the final zero byte). */
+  size_t bytes_allocated;    /**< Amount of memory currently allocated at the location pointed to by data. */
+  size_t increment;          /**< When the data buffer is too small, it will be increased by the lowest sufficient multiple
+                                  of the increment value (specified at object creation time; can be reset later; defaults to CL_MAX_LINE_LENGTH). */
+};
+typedef struct ClAutoString *ClAutoString;
+/* the ClAutoString object API */
+ClAutoString cl_autostring_new(const char *data, size_t init_bytes);
+void cl_autostring_delete(ClAutoString string);
+void cl_autostring_set_increment(ClAutoString string, size_t new_increment);
+char *cl_autostring_ptr(ClAutoString string);
+size_t cl_autostring_len(ClAutoString string);
+void cl_autostring_reclaim_mem(ClAutoString string);
+void cl_autostring_copy(ClAutoString dst, const char *src);
+void cl_autostring_concat(ClAutoString dst, const char *src);
+void cl_autostring_truncate(ClAutoString string, int new_length);
+
+
 
 /* CL-specific version of strcpy. Don't use unless you know what you're doing. */
 char *cl_strcpy(char *buf, const char *src);
@@ -772,10 +803,14 @@ void cl_string_canonical(char *s, CorpusCharset charset, int flags);
 /* remove or overwrite C0 control characters in a string (modify input string!) */
 int cl_string_zap_controls(char *s, CorpusCharset charset, char replace, int zap_tabs, int zap_newlines);
 
+/* boolean function, is a given byte a UTF-8 continuation byte? */
+int cl_string_utf8_continuation_byte(unsigned char byte);
+
 /* boolean function, returns is string valid?; can repair (in-place edit) 8-bit encoding by replacing invalid chars with '?' */
 int cl_string_validate_encoding(char *s, CorpusCharset charset, int repair);
 
 /* various functions related to sorting/grouping... */
+
 char *cl_string_reverse(const char *s, CorpusCharset charset); /* creates a new string */
 
 int cl_string_qsort_compare(const char *s1,

@@ -11,6 +11,7 @@ Other changes:
  - cwb-align is now safe for use with UTF-8 corpora.
  - there is now a precise limit on the size of a CWB corpus: CL_MAX_CORPUS_SIZE = 2^32 - 1 tokens;
    cwb-encode will discard additional input data with a warning once the limit has been reached
+ - cqp can now cope with concordance left/right contesxt of indefinite size.
 
 Bug fixes:
 
@@ -42,6 +43,10 @@ Bug fixes:
    only for query results containing more than 10 million matches, and usage of implict expansion is deprecated.
    Parser now distinguishes between plain IDs and named query specifiers (e.g. BNC:Result^s), so it is no longer
    possible to use A^s as the name of a query result.
+ 
+ - [2014-06-16: v3.4.8] Fixed bug whereby a UTF-8 character could be broken up, creating invalid sequences, by
+   CQP's system for character-based context size. (CQP is still "dumb" in that it counts strings in bytes not
+   characters in UTF-8, but this is a less critical probklem, or should be.)
 
 Version 3.2
 -----------

@@ -34,6 +34,7 @@
 #include "options.h"
 #include "macro.h"
 #include "variables.h"
+#include "concordance.h"
 #include "output.h"
 #include "ascii-print.h"
 
@@ -500,6 +501,8 @@ main(int argc, char *argv[])
 
   if (macro_debug)
     macro_statistics();
+
+  cleanup_kwic_line_memory();
 
   return (cqp_error_status == 0 ? 0 : 1);
 }

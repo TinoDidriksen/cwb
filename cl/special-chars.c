@@ -1778,6 +1778,20 @@ cl_string_zap_controls(char *s, CorpusCharset charset, char replace, int zap_tab
 
 
 /**
+ * Checks whether a given byte is a UTF-8 continuation byte.
+ *
+ * @byte    Byte to check.
+ * @return  Boolean. True iff the byte is a continuation byte.
+ *          If it is a one-byte character, or a valid start byte, false.
+ */
+int
+cl_string_utf8_continuation_byte(unsigned char byte)
+{
+  return (byte >= 0x80 && byte <=0xbf);
+}
+
+
+/**
  * Checks the encoding of a string.
  *
  * This function looks for bad bytes (or byte sequences in the case of UTF8);
@@ -2818,35 +2832,10 @@ cl_strcpy(char *buf, const char *src)
 
 /*
  *
- * CL AutoString -- fully encapsulated automagically-expanding string!
+ * CL AutoString -- automagically-expanding string!
  *
+ * Additional features: cached length allows speedier concat.
  */
-
-typedef struct ClAutoString *ClAutoString;
-
-ClAutoString cl_autostring_new(const char *data, size_t init_bytes);
-void cl_autostring_delete(ClAutoString string);
-void cl_autostring_set_increment(ClAutoString string, size_t new_increment);
-char *cl_autostring_ptr(ClAutoString string);
-size_t cl_autostring_len(ClAutoString string);
-void cl_autostring_reclaim_mem(ClAutoString string);
-void cl_autostring_copy(ClAutoString dst, const char *src);
-void cl_autostring_concat(ClAutoString dst, const char *src);
-void cl_autostring_truncate(ClAutoString string, int new_length);
-
-
-/**
- * Underlying structure for the ClAutoString object.
- */
-struct ClAutoString {
-  char *data;
-  size_t len;
-  size_t bytes_allocated;
-  size_t increment;
-};
-
-
-
 
 /**
  * Creates a new autostring object. The stirng is initialised to data (or to a zero-length string if data is NULL).
@@ -2900,6 +2889,12 @@ cl_autostring_delete(ClAutoString string)
 }
 
 
+/**
+ * Changes the increment size (measured in bytes).
+ *
+ * Whenever memory reallocation is necessary,
+ * the AutoString will request a multiple of its increment value.
+ */
 void
 cl_autostring_set_increment(ClAutoString string, size_t new_increment)
 {
@@ -2910,6 +2905,8 @@ cl_autostring_set_increment(ClAutoString string, size_t new_increment)
 
 /**
  * Get a pointer to the string data inside the AutoString (or NULL if the object is NULL).
+ *
+ * Equivalent to reading the ->data member, except this function checks for a NULL!
  */
 char *
 cl_autostring_ptr(ClAutoString string)
@@ -2921,12 +2918,14 @@ cl_autostring_ptr(ClAutoString string)
 
 /**
  * Get the length of the currently-stored string (or negative value in case NULL object is passed).
+ *
+ * Equivalent to reading the ->len member, except this function checks for a NULL!
  */
 size_t
 cl_autostring_len(ClAutoString string)
 {
   if (NULL == string)
-    return -1;
+    return 0;
   return string->len;
 }
 
@@ -2977,9 +2976,7 @@ cl_autostring_concat(ClAutoString dst, const char *src)
   int bytes_needed;
   char *c;
 
-  if (NULL == dst)
-    return;
-  if (NULL == src)
+  if (NULL == dst || NULL == src)
     return;
 
   bytes_needed = dst->len + strlen(src) + 1;
@@ -2989,8 +2986,9 @@ cl_autostring_concat(ClAutoString dst, const char *src)
     dst->data = cl_realloc(dst->data, dst->bytes_allocated);
   }
 
-  for (c = dst->data[dst->len] ; src ; ++c, ++src)
-    *c = *src;
+  c = dst->data[dst->len];
+  while ( *src )
+    *c++ = *src++;
   *c = '\0';
 
   dst->len = bytes_needed - 1;

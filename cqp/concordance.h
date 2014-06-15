@@ -39,21 +39,22 @@ typedef struct _ConcLineField {
 
 /* ========================================== */
 
+/* No longer used. TODO - delete in future. -- AH 2014-06-15
 typedef union _concordanceLineElement {
 
-  int type;			/* simple string or subtree */
+  int type;			/* simple string or subtree * /
 
   struct {
-    int type;			/* leaf */
-    int ElementType;		/* type of this element */
+    int type;			/* leaf * /
+    int ElementType;		/* type of this element * /
 
-    int length;			/* length of s */
-    char *s;			/* s itself */
+    int length;			/* length of s * /
+    char *s;			/* s itself * /
   } simpleString;
 
   struct {
     int type;
-    int ElementType;		/* type of the captured elements */
+    int ElementType;		/* type of the captured elements * /
 
     int nr_subelements;
     union _concordanceLineElement **subElements;
@@ -62,33 +63,19 @@ typedef union _concordanceLineElement {
 } ConcordanceLineElement;
 
 typedef ConcordanceLineElement *ConcordanceLine;
+*/
 
 /* ========================================== */
 
+/* this function not exported :
 int append(char *s, char *suffix, int *sp, int max_sp);
+*/
 
-void add_to_string(char **s, int *spos, int *ssize, char *suffix);
+/* void add_to_string(char **s, int *spos, int *ssize, char *suffix); */
 
 /* ======================================== */
 
-int get_print_attribute_values(ContextDescriptor *cd,
-                               int corpus_position,
-                               char *s,    /* array, not malloced */
-                               int *sp,    /* returns used length(s) */
-                               int max_sp, /* length of s */
-                               int add_position_number, /* number lines? */
-                               PrintDescriptionRecord *pdr);
 
-int get_position_values(ContextDescriptor *cd,
-                        int position,
-                        char *s,
-                        int *sp,
-                        int max_sp,
-                        int add_position_number,
-                        ConcLineLayout orientation,
-                        PrintDescriptionRecord *pdr,
-                        int nr_mappings, /* unused */
-                        Mapping *mappings);        /* unused */
 
 char *compose_kwic_line(Corpus *corpus,
                         int match_start,
@@ -108,5 +95,8 @@ char *compose_kwic_line(Corpus *corpus,
                         PrintDescriptionRecord *pdr,
                         int nr_mappings,
                         Mapping *mappings);
+
+
+void cleanup_kwic_line_memory(void);
 
 #endif
