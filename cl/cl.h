@@ -356,6 +356,8 @@ void cl_autostring_reclaim_mem(ClAutoString string);
 void cl_autostring_copy(ClAutoString dst, const char *src);
 void cl_autostring_concat(ClAutoString dst, const char *src);
 void cl_autostring_truncate(ClAutoString string, int new_length);
+void cl_autostring_dump(ClAutoString string);
+
 
 
 

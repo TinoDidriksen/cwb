@@ -88,16 +88,13 @@ get_print_attribute_values(ContextDescriptor *cd,
   }
 
   if (cd->printStructureTags) {
-    
     AttributeInfo *ai;
     int pref_printed = 0;
 
     for (ai = cd->printStructureTags->list; ai; ai = ai->next) {
-      
       char *v;
       
       if (ai->status) {
-        
         assert(ai->attribute);
         
         if (!pref_printed) {
@@ -192,6 +189,7 @@ get_position_values(ContextDescriptor *cd,
   int nr_attrs = 0;
   char *word;
 
+  cl_autostring_truncate(s, 0);
 
   /* insert all s-attribute regions which start or end at the current token into s_att_regions[],
      then sort them to ensure proper nesting, and print from the list */
@@ -390,7 +388,7 @@ get_field_separators(int position,
   int i;
 
   if (NULL == scratch)
-    scratch  = cl_autostring_new(NULL, -1);
+    scratch  = cl_autostring_new(NULL, 0);
   else
     cl_autostring_truncate(scratch, 0);
 
@@ -441,12 +439,12 @@ void
 setup_kwic_line_memory(void)
 {
   if (NULL == line)
-    line  = cl_autostring_new(NULL, -1);
+    line  = cl_autostring_new(NULL, 0);
   else
     cl_autostring_truncate(line, 0);
 
   if (NULL == token)
-    token = cl_autostring_new(NULL, -1);
+    token = cl_autostring_new(NULL, 0);
   else
     cl_autostring_truncate(line, 0);
 }

@@ -2843,7 +2843,7 @@ cl_strcpy(char *buf, const char *src)
  * Initially, init_bytes is allocated (and the increment step is the same size), unless the string is longer...
  * in which case the length of the string becomes the inital amount of memory allocated.
  *
- * Use -1 or 0 for init_len, and the length of the specified string is used as the initial allocation.
+ * Use 0 for init_len, and the length of the specified string is used as the initial allocation.
  */
 ClAutoString
 cl_autostring_new(const char *data, size_t init_bytes)
@@ -2950,6 +2950,7 @@ cl_autostring_copy(ClAutoString dst, const char *src)
 
   if (NULL == dst)
     return;
+
   if (NULL == src) {
     dst->data[0] = '\0';
     dst->len = 0;
@@ -2986,7 +2987,7 @@ cl_autostring_concat(ClAutoString dst, const char *src)
     dst->data = cl_realloc(dst->data, dst->bytes_allocated);
   }
 
-  c = dst->data[dst->len];
+  c = dst->data + dst->len;
   while ( *src )
     *c++ = *src++;
   *c = '\0';
@@ -3014,3 +3015,16 @@ cl_autostring_truncate(ClAutoString string, int new_length)
     string->data[new_length] = '\0';
   }
 }
+
+
+/**
+ * Debug function: dumps the contents of an AutoString to stderr.
+ */
+void
+cl_autostring_dump(ClAutoString string)
+{
+  fprintf(stderr, "CL: Autostring content: \n\t->data %s,"
+                  "\n\t->bytes_allocated %d,\n\t->increment, %d\n\t->len %d\n",
+                  string->data, string->bytes_allocated, string->increment, string->len);
+}
+
