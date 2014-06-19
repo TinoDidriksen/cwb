@@ -64,7 +64,7 @@
 /* ---------------------------------------------------------------------- */
 
 /* configuration variables & command-line switches */
-int debug = 0;                  /** debug mode on/off */
+int debug = 0;                  /**< debug mode on/off */
 int silent = 0;                 /**< avoid messages in -M / -a modes */
 int strip_blanks_in_values = 0; /* Wow, this is unused :o) */
 int set_syntax_strict = 0;      /**< check that set attributes are always given in the same syntax */
@@ -75,7 +75,10 @@ FILE *text_fd = NULL;           /**< stream handle for file to read from. */
 
 /* global variables */
 Corpus *corpus = NULL;          /**< corpus we're working on; at the moment, this is only required for add_to_existing */
+CorpusCharset encoding_charset; /**< a charset object; will be the same as that of corpus if we are adding to an existing corpus,
+                                     otherwise, should be declared. */
 
+/* TODO this would be useful as a general tool , non? */
 enum {
   set_none, set_any, set_regular, set_whitespace
 } set_att = set_none;           /**< feature-set attributes: type of. Initial value: not a feature set.
@@ -121,7 +124,7 @@ char *progname = NULL;
 /**
  * The "structure list" data type is used for 'adding' regions (-a).
  *
- * SL is a really bad name; should be "RegionList".
+ * TODO SL is a really bad name; should be "RegionList".
  *
  * In this case, all existing regions are read into an ordered, bidirectional list;
  * new regions are inserted into that list (overlaps are automatically resolved
@@ -570,7 +573,16 @@ sencode_parse_options(int argc, char **argv)
   /* make sure either -S or -V is used: reset new_satt.name now & check after getopt */
   new_satt.name = NULL;
 
-  while((c = getopt(argc, argv, "+qBd:f:msDS:V:r:C:Mah")) != EOF)
+  while((c = getopt(argc, argv, "+qBd:f:msDS:V:r:C:Mah")) != EOF) /* TODO add flag for charset cf cwb-encode */
+    /*
+     *
+    case 'c':
+      corpus_character_set = cl_charset_name_canonical(optarg);
+      if (corpus_character_set == NULL)
+        encode_error("Invalid character set specified with the -c flag!");
+      break;
+     *
+     */
     switch(c) {
 
       /* q: be silent (quiet) */
