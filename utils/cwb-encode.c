@@ -1561,7 +1561,7 @@ encode_add_wattr_line(char *str)
  * (either from stdin, or from one or more input files).
  *
  * The input files are not passed to the function,
- * but are taken form the program global variables.
+ * but are taken from the program global variables.
  *
  * This function returns False when the last input file
  * has been completely read, and automatically closes files.

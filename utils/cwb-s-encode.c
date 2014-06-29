@@ -74,9 +74,14 @@ int add_to_existing = 0;        /**< add to existing attribute: implies in_memor
 FILE *text_fd = NULL;           /**< stream handle for file to read from. */
 
 /* global variables */
+unsigned long input_line = 0;   /**< input line number (used for error messages) */
 Corpus *corpus = NULL;          /**< corpus we're working on; at the moment, this is only required for add_to_existing */
 CorpusCharset encoding_charset; /**< a charset object; will be the same as that of corpus if we are adding to an existing corpus,
                                      otherwise, should be declared. */
+char *encoding_charset_name = "latin1";
+                                 /**< character set label from the -c option. Value = pre-4.0 default of latin1. */
+int clean_strings = 0;           /**< clean up input strings by replacing invalid bytes with '?' (except for UTF8 encoding)*/
+                                 /* hack for v3.5 for backward compatibility: never clean strings. */
 
 /* TODO this would be useful as a general tool , non? */
 enum {
@@ -377,16 +382,31 @@ sencode_parse_line(char *line, int *start, int *end, char **annot)
   if (has_annotation) {
     field_end = strchr(field, '\t');
     if (field_end != NULL) {
-      return 0;                 /* make sure there are no extra fields */
+      return 0;                 /* return parseerror if there are extra fields */
     }
     else {
       field_end = strchr(field, '\n');
       if (field_end == NULL) {
-        return 0;
+        return 0;               /* return parse error if no terminating line-break found */
       }
       else {
         *field_end = 0;
         *annot = cl_strdup(field);
+        if (!cl_string_validate_encoding(*annot, encoding_charset, clean_strings)) {
+          fprintf(stderr,
+                  "Encoding error on line #%d: an invalid byte or byte sequence for charset \"%s\" was encountered.\n",
+                  input_line,
+                  encoding_charset_name);
+          exit(1);
+        }
+        /* calling this function with no flags will normalize to precomposed form;
+         * but don't bother with the overhead unless the encoding is UTF8  */
+        if (encoding_charset == utf8)
+          cl_string_canonical(*annot, utf8, 0);
+        /* finally, get rid of C0 controls iff the user asked us to clean up strings */
+        if (clean_strings)
+          cl_string_zap_controls(*annot, encoding_charset, '?', 0, 0);
+        /* TODO nb the above will not take effect till be make string-cleanup possible in v4.0 */
       }
     }
   }
@@ -573,16 +593,7 @@ sencode_parse_options(int argc, char **argv)
   /* make sure either -S or -V is used: reset new_satt.name now & check after getopt */
   new_satt.name = NULL;
 
-  while((c = getopt(argc, argv, "+qBd:f:msDS:V:r:C:Mah")) != EOF) /* TODO add flag for charset cf cwb-encode */
-    /*
-     *
-    case 'c':
-      corpus_character_set = cl_charset_name_canonical(optarg);
-      if (corpus_character_set == NULL)
-        encode_error("Invalid character set specified with the -c flag!");
-      break;
-     *
-     */
+  while((c = getopt(argc, argv, "+qBd:f:msDS:V:r:c:C:Mah")) != EOF)
     switch(c) {
 
       /* q: be silent (quiet) */
@@ -628,7 +639,25 @@ sencode_parse_options(int argc, char **argv)
       registry = optarg;
       break;
 
+      /* c: character set for annotations */
+    case 'c':
+      encoding_charset_name = cl_charset_name_canonical(optarg);
+      if (encoding_charset_name == NULL) {
+        fprintf(stderr, "Invalid character set specified with the -c flag!");
+        exit(1);
+      }
+      encoding_charset = cl_charset_from_name(encoding_charset_name);
+      break;
+
       /* C: source corpus */
+      /*
+       * TODO in version 3.9 / 4.0
+       * We should really use the -C flag for annotation cleanup, as per cwb-encode
+       * to accompany the -c option. for now, let's assume cleanup is never enabled,
+       * to preserve backward compatibility.
+       *
+       * We could use -e or -E for the corpus name (short for "existing").
+       */
     case 'C':
       corpus_name = optarg;
       break;
@@ -685,13 +714,14 @@ sencode_parse_options(int argc, char **argv)
     exit(1);
   }
 
-  /* if -C <corpus> was specified, open source corpus */
+  /* if -C <corpus> was specified, open source corpus, and override any specified character set. */
   if (corpus_name != NULL) {
     corpus = cl_new_corpus(registry, corpus_name);
     if (corpus == NULL) {
       fprintf(stderr, "Error: Can't find corpus <%s>!\n", corpus_name);
       exit(1);
     }
+    encoding_charset = cl_corpus_charset(corpus);
   }
 
 }
@@ -746,9 +776,9 @@ sencode_write_region(int start, int end, char *annot)
 
 
 
-/* *************** *\
+/* *************** *
  *      MAIN()     *
-\* *************** */
+ * *************** */
 
 
 
@@ -763,12 +793,13 @@ sencode_write_region(int start, int end, char *annot)
 int
 main(int argc, char **argv)
 {
-  int input_line;
   int start, end;
   char *annot;
   char buf[CL_MAX_LINE_LENGTH];
-  Attribute *att;
-  int V_switch, values, S_annotations_dropped;
+  Attribute *att;              /* the existing s-attribute to add to. */
+  int V_switch,                /* boolean: was -V supplied to the program? */
+      values,                  /* boolean: does the existing s-attribute have values? */
+      S_annotations_dropped;   /* counter of n of annotations ignored from input because we are encoding a -S */
   int i, N;
 
   progname = argv[0];
@@ -785,11 +816,11 @@ main(int argc, char **argv)
       V_switch = new_satt.store_values;
       values = cl_struc_values(att);
       if (V_switch && (!values)) {
-        fprintf(stderr, "Error: Existing regions of -V attribute have no annotations.\n");
+        fprintf(stderr, "Error: The existing regions of an attribute specified as -V have no annotations.\n");
         exit(1);
       }
       else if ((!V_switch) && values) {
-        fprintf(stderr, "Error: Existing regions of -S attributes have annotations.\n");
+        fprintf(stderr, "Error: The existing regions of an attribute specified as -S have annotations.\n");
         exit(1);
       }
       if (!silent)
@@ -811,7 +842,6 @@ main(int argc, char **argv)
   /* loop reading input (stdin or -f <file>) */
   if (in_memory && (!silent))
     printf("[Reading input data]\n");
-  input_line = 0;
   S_annotations_dropped = 0;
   while (fgets(buf, CL_MAX_LINE_LENGTH, text_fd)) {
     input_line++;

@@ -1,6 +1,6 @@
 =head1 NAME
 
-cwb-s-encode - Add structural annotation to an existing CWB corpus
+cwb-s-encode - Add structural attribute to an existing CWB corpus
 
 =head1 SYNOPSIS
 
@@ -76,10 +76,25 @@ so use of B<-a> implies B<-M>.
 
 Strips leading/trailing blanks from the annotations before they are encoded.
 
+=item B<-c> I<charset>
+
+Specifies the character encoding of the annotations in the input file on the s-attribute 
+(thus, it only has any effect if you are creating a B<-V> attribute). 
+
+The possible values for I<charset> are the same as the possible values for the equivalent
+option in B<cwb-encode> (pleaxse see the list in that program's manual). 
+If this option is left unspecified, I<latin1> data will be assumed. Please note that we may change the default
+character set to I<ascii> or I<utf8>, or even remove the default altogether 
+(so that specifying a character set explicitly will be obligatory), in future versions of CWB. 
+
+Note that this option will not have any effect if you are adding data to an existing corpus 
+(specified with the B<-C> option). In that case, the character set assumed for encoding 
+the annotations is that of the existing corpus.
+
 =item B<-C> I<corpus>
 
-Specifies that you want to work on I<corpus> (this is requried if you are adding to existing annotation with the B<-a> option).
-The name of the corpus should be given in the all-lowercase format.
+Specifies that you want to work on I<corpus> (this is requried if you are adding to existing annotation 
+with the B<-a> option). The name of the corpus should be given in the all-lowercase format.
 
 =item B<-d> I<output_dir> 
 

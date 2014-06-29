@@ -39,7 +39,7 @@
  * (function only used by demo version)
  */
 void creg_scan_string(const char *str);
-
+/* TODO - is the above function unused? in this file?  what does "function only used by demo version" mean?*/
 /**
  * File pointer for loading corpus registry.
  *
@@ -56,6 +56,7 @@ extern Corpus *cregcorpus;
  * Function created in output from parsing registry.y
  */
 void cregerror(char *message);
+/* TODO - is the above function unused? in this file? */
 /**
  * Restarts the registry file parse
  *
@@ -120,6 +121,9 @@ static char *regdir = NULL;
 
 /**
  * Gets a string containing the path of the default registry directory.
+ *
+ * Note this is a pointer to an internal string, and therefore must not
+ * be altered or freed.
  *
  * @return  The value of the corpus-module-internal variable regdir,
  *          which is initialised from the environment variable

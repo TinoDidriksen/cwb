@@ -162,7 +162,7 @@ Unicode (UTF-8 encoding)
 =back
 
 If this option is left unspecified, I<latin1> data will be assumed. Please note that we may change the default
-character set to I<ascii>, or even remove the default altogether (so that specifying a character set explicitly will be
+character set to I<ascii> or I<utf8>, or even remove the default altogether (so that specifying a character set explicitly will be
 obligatory), in future versions of CWB. For this reason you are recommended I<always> to supply a B<-c> declaration,
 even if your corpus uses the default ISO-8859-1 character set. 
 
@@ -179,7 +179,7 @@ CWB I<does not> support these Windows code pages. In particular, please note tha
 Windows-1252 cannot be treated as if it were Latin1, because it contains some code points 
 that are invalid in Latin1 (for example, the "curly quote marks", the en-dash, and the em-dash). If you have
 Windows-1252 data, you I<must> either use the B<-C> option, or (preferably) recode it to Latin1 or UTF-8
-before encoding.    
+before encoding.
 
 =item B<-C>
 
