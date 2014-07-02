@@ -416,25 +416,25 @@ main(int argc, char **argv)
   printf("Registry directory: %s\n", corpus->registry_dir);
 
   if (optind < argc) {
+    /* process each specified atttribute (at the end of the invocation) */
     for (i = optind; i < argc; i++) {
       if ((attribute = cl_new_attribute(corpus, argv[i], ATT_POS)) != NULL) {
         makeall_do_attribute(attribute, cid, validate);
         /* TODO why do we not need to drop components here, when the for-loop below needs to?? */
       }
       else {
-        fprintf(stderr, "p-attribute %s.%s not defined. Aborted.\n",
-                corpus_id, attr_name);
+        fprintf(stderr, "p-attribute %s.%s not defined. Aborted.\n", corpus_id, argv[i]);
         exit(1);
       }
     }
   }
   else if (attr_name != NULL) {
+    /* process a specified attribute (via the -P option) */
     if ((attribute = cl_new_attribute(corpus, attr_name, ATT_POS)) != NULL) {
       makeall_do_attribute(attribute, cid, validate);
     }
     else {
-      fprintf(stderr, "p-attribute %s.%s not defined. Aborted.\n",
-              corpus_id, attr_name);
+      fprintf(stderr, "p-attribute %s.%s not defined. Aborted.\n", corpus_id, attr_name);
       exit(1);
     }
   }

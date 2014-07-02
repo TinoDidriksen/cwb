@@ -326,7 +326,7 @@ begin a new flat region).
   
 =item * 
 
-XML attribute-value pairs can be auto-split and indexed as separate s-attribute. In this case, you should append
+XML attribute-value pairs can be auto-split and indexed as separate s-attributes. In this case, you should append
 the relevant attribute names to the attribute specification using + signs.
 
 For example, C<-S s:0+id+len> stores XML tags like C<<s id="abc" len=42>> in s-attributes s, s_id and s_len.
@@ -378,6 +378,26 @@ and discarded from the input data.
 
 All XML tags that have not been declared with a B<-S>, B<-V> or B<-0> flag will be encoded as literal tokens
 (without annotations), accompanied by a warning message.
+
+
+=head1 LIMITS ON NUMBER OF ATTRIBUTES
+
+B<cwb-encode> has a built-in limit on the number of attributes it can create, namely 2,048 attributes,
+of which at most 1,024 can be p-attributes and at most 1,024 can be s-attributes.
+
+Note, however, that encoding a corpus requires a large number of files to be created simultaneously,
+and most operating systems put a limit on the number of files a program is allowed to have open
+at the same time. How you discover this limit is dependent on your operating system and, perhaps, your
+shell; if you are using the popular B<bash> shell, you can find out what the maximum number of open files 
+is with the command C<ulimit -n>. A common value, especially on Linux, is 1,024.
+
+A good rule of thumb for working with this OS-imposed limit is that each attribute requires three files.
+(The exception: s-attributes without annotations only require one file to be created.)
+So, if you are working in an environment which imposes the 1,024-file limit, the maximum number
+of attributes that you can be sure of creating safely create is 341 (one-third of 1,024).
+
+It is possible to add more attributes using subsequent additional runs of B<cwb-encode> (for p-attributes)
+or using B<cwb-s-encode> (for s-attributes).
 
 
 =head1 INPUT FILE FORMAT

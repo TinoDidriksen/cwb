@@ -23,7 +23,10 @@ B<cwb-makeall> will look for the specified corpus in the registry directory, as 
 location is not specified with the B<-r> option, then either a directory specified by the CORPUS_REGISTRY
 environment variable, or CWB's built-in default registry will be used.
 
-B<TODO> Specify what C<[ attribute ... ]> in the Synopsis means?
+By default, as noted above, B<cwb-makeall> processes all p-attributes of a given corpus.
+However, there are two ways to specify that it should only run on certain p-attributes:
+first, a list of attributes can be given after the I<corpus> argument;
+or alternatively, the B<-P> option can be used to specify one single attribute to process.  
 
 
 
@@ -61,6 +64,8 @@ RAM available.
 Specifies the p-attribute to be indexed. If this option is not specified (which is the normal usage), 
 then B<cwb-makeall> will by default process all p-attributes declared in the
 corpus's registry entry. Note that only one P-attribute can be specified using this option.
+Note also that this option will be ignored if any attributes have been specified as arguments
+following the name of the corpus.
 
 =item B<-r> I<registry_dir>
 

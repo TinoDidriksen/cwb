@@ -561,6 +561,7 @@ cl_delete_attribute(Attribute *attribute)
       break;
     }
 
+    /* TODO do we really need to overwrite these members when we are about to free the attribute? */
     attribute->any.mother = NULL;
     attribute->any.type = ATT_NONE;
     attribute->any.next = NULL;
@@ -662,6 +663,7 @@ declare_default_components(Attribute *attribute)
       if (((Component_Field_Specs[i].using_atts & attribute->type) != 0) &&
           (attribute->any.components[i] == NULL))
         (void) declare_component(attribute, i, NULL);
+      /* TODO should the return value of declare_component be checked for error? */
   }
 }
 

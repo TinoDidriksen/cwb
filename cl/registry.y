@@ -159,7 +159,7 @@ Registry        : /* eps */         { cregcorpus = new(Corpus);
                                         cregerror("Illegal corpus declaration -- no attributes defined"); 
                                       }
                                     }
-                | error             { cregerror_cleanup("Parse Error."); YYABORT; }
+                | error             { cregerror_cleanup("Error parsing the main Registry structure."); YYABORT; }
                 ;
 
 Declaration     : Attributes        { /* nop */ }
