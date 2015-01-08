@@ -15,7 +15,7 @@
  *  WWW at http://www.gnu.org/copyleft/gpl.html).
  */
 
-#ifndef _cqp_table_h
+#ifndef _cqp_table_h_
 #define _cqp_table_h_
 
 #include "corpmanag.h"

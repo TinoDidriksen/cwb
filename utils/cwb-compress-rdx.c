@@ -530,7 +530,7 @@ main(int argc, char **argv)
 
 
   /* parse arguments */
-  while ((c = getopt(argc, argv, "+TP:r:f:dDAh")) != EOF) {
+  while ((c = getopt(argc, argv, "+TP:r:f:dD:Ah")) != EOF) {
 
     switch (c) {
       /* T: skip decompression / error checking pass ("I trust you")  */

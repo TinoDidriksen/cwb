@@ -329,7 +329,8 @@ encode_usage(void)
   fprintf(stderr, "  -U <str>  insert <str> for missing columns [default: \"%s\"]\n", undef_value);
   fprintf(stderr, "  -b <n>    number of buckets in lexicon hash tables\n");
   fprintf(stderr, "  -c <charset> specify corpus character set (instead of the default latin1)\n");
-  fprintf(stderr, "     * valid charsets: ascii ; latin1 to latin9 ; arabic, greek, hebrew ; utf8\n");
+  fprintf(stderr, "     * valid charsets: ascii ; latin1 .. latin9 ; arabic, greek, hebrew, cyrillic ; utf8\n");
+  fprintf(stderr, "     * iso-8859-1 .. iso-8859-15 are also accepted, but converted to canonical names above\n");
   fprintf(stderr, "  -C        clean strings, replacing invalid bytes with '?' (not in UTF-8 mode)\n");
   fprintf(stderr, "  -v        verbose mode (show progress messages while encoding)\n");
   fprintf(stderr, "  -q        quiet mode (suppresses most warnings)\n");
