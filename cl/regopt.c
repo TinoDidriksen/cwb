@@ -173,7 +173,7 @@ cl_new_regex(char *regex, int flags, CorpusCharset charset)
   if (cl_debug) {
     int is_pcre_jit_available;
 #ifdef PCRE_CONFIG_JIT
-    pcre_config(PCRE_CONFIG_JIT, is_pcre_jit_available);
+    pcre_config(PCRE_CONFIG_JIT, &is_pcre_jit_available);
 #else
     is_pcre_jit_available = 0;
 #define PCRE_STUDY_JIT_COMPILE 0
