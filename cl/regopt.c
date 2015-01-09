@@ -167,16 +167,28 @@ cl_new_regex(char *regex, int flags, CorpusCharset charset)
   else if (cl_debug)
     fprintf(stderr, "CL: Regex compiled successfully using PCRE library\n");
 
+
+  /* a spot of code to handle use with a pre-JIT version of PCRE.
+   * Note that JIT compilation was added to PCRE v 8.20. */
+  if (cl_debug) {
+    int is_pcre_jit_available;
+#ifdef PCRE_CONFIG_JIT
+    pcre_config(PCRE_CONFIG_JIT, is_pcre_jit_available);
+#else
+    is_pcre_jit_available = 0;
+#define PCRE_STUDY_JIT_COMPILE 0
+#endif
+    fprintf(stderr, "CL: PCRE's JIT compiler is %s.\n", (is_pcre_jit_available ? "available" : "unavailable"));
+  }
   /* always use pcre_study because nearly all our regexes are going to be used lots of times;
    * note that according to man pcre, the optimisation methods are different to those used by
    * the CL's regex optimiser. So it is all good. */
-  rx->extra = pcre_study(rx->needle, 0, &errstring_for_pcre);
+  rx->extra = pcre_study(rx->needle, PCRE_STUDY_JIT_COMPILE, &errstring_for_pcre);
   if (errstring_for_pcre != NULL) {
     rx->extra = NULL;
     if (cl_debug)
       fprintf(stderr, "CL: calling pcre_study failed with message...\n   %s\n", errstring_for_pcre);
-    /* note that failure of pcre_study is not a critical error, we can just continue without
-       the extra info */
+    /* note that failure of pcre_study is not a critical error, we can just continue without the extra info */
   }
   if (cl_debug && rx->extra)
     fprintf(stderr, "CL: calling pcre_study produced useful information...\n");
@@ -346,7 +358,11 @@ cl_delete_regex(CL_Regex rx)
   if (rx->needle)
     pcre_free(rx->needle);         /* free PCRE regex buffer */
   if (rx->extra)
-    pcre_free(rx->extra);          /* and "extra" buffer */
+#ifdef PCRE_CONFIG_JIT
+    pcre_free_study(rx->extra);    /* and "extra" buffer (iff JIT was a possibility)*/
+#else
+    pcre_free(rx->extra);          /* and "extra" buffer (iff we know for certain there was no JIT) */
+#endif
   cl_free(rx->haystack_buf);       /* free string buffer if it was allocated */
   for (i = 0; i < rx->grains; i++)
     cl_free(rx->grain[i]);         /* free grain strings if regex was optimised */
