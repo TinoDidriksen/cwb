@@ -55,7 +55,8 @@ install *more than one package per library* to be able to build CWB
 properly. For instance, on Fedora, installing the package "ncurses" is not
 sufficient to have the library available for building extra software - 
 you also need the "ncurses-devel" package. The details of precisely what 
-packages you need vary from distro to distro. 
+packages you need vary from distro to distro, but in many cases packages
+for building software end in "-devel"  or "-dev".
 
 
         QUICK INSTALLATION
@@ -240,21 +241,21 @@ configuration for standard i386-compatible processors.
 
         INSTALLATION GUIDE FOR MAC OS X
 
-On recent versions of Mac OS X (10.6 "Snow Leopard", 10.7 "Lion", 10.8 "Mountain Lion"),
-it is quite easy to compile and install CWB.
+On recent versions of Mac OS X (10.6 "Snow Leopard", 10.7 "Lion", 10.8 "Mountain Lion",
+and newer versions), it is quite easy to compile and install CWB.
 
  - install XCode and the Command Line Tools
 
-   Lion / Mountain Lion:
+   Lion and later:
      - install XCode from the Mac App store (XCode 4.2.1 or newer)
-     - for recent versions, you then need to run XCode and install Command Line Tools
-       (Downloads | Components in the Preferences dialog)
+     - start XCode and install Command Line Tools
+       (under Downloads | Components in the Preferences dialog)
 
    Snow Leopard:
       - obtain a free Apple developer account
       - install XCode from https://developer.apple.com/xcode/ (XCode 3.2.6 or newer)
 
- - install HomeBrew package manager from http://mxcl.github.com/homebrew/
+ - install HomeBrew package manager from http://brew.sh/
 
 Make sure that no other package managers (Fink, MacPorts) are installed on your
 system, as they might conflict with the build process described here.  Now install
@@ -383,29 +384,47 @@ Otherwise, PCRE and Glib are available to download from these addresses:
 Use the instructions included in the source code downloads to build the 
 libraries.
 
-For PCRE, at least version 7 is recommended. For Glib, at least version 2
-is required.
+For Glib, at least version 2 is required.
 
-You must use a copy of PCRE which has been compiled with Unicode (UTF-8)
-support and Unicode properties support. (You can find out whether this is
-the case using the pcretest utility with the -C option.)
+For PCRE, at least version 7 is required. You must use a copy of PCRE
+which has been compiled with Unicode (UTF-8) support and Unicode
+properties support. (You can find out whether this is the case using the
+pcretest utility with the -C option.)
 
-Note that the CWB build process makes the following assumptions:
+We strongly recommend to use a recent version of PCRE (>= 8.32) with JIT
+compilation enabled (check with "pcretest -C") in order to ensure good
+performance. For complex regular expressions, this will make the lexicon
+search ca. 3x faster (see http://sljit.sourceforge.net/regex_perf.html).
+Note that standard packages shipped with various Linux distributions may
+not include JIT support and you may have to compile PCRE yourself for
+optimal performance. As of January 2015, the following distributions
+appear to include a PCRE version with JIT:
 
- - that the libpcre.* file is installed in a directory in the linker's
-   library search path. If this is NOT the case, edit your configuration
-   file to add a -L<directory> command to the LDFLAGS variable to allow
-   the linker to find your libpcre.a
- - that pcre.h and other PCRE header files can be found via the compiler's
-   include-path. If this is NOT the case, edit your configuration file 
-   to add a -I<directory> command to the CFLAGS variable to allow
-   the compiler to find your pcre.h
+        Ubuntu 14.10 ("Utopic") and newer
+        Debian 7 ("Wheezy") and newer
+        Fedora 20 ("Heisenbug") and newer
+
+Note in particular that the current LTS release of Ubuntu (14.04)
+includes PCRE 8.31 without JIT support.
+
+
+The CWB build process makes the following assumptions:
+
  - that the location of header/library files for Glib can be discovered
    using the pkg-config utility (should be the case if you have used the
-   standard installation procedure).
+   standard installation procedure);
 
-If these assumptions are not true, you may need to hack some of the 
-makefile includes a bit to make things work.
+ - that the location of header/library files for PCRE can be discovered
+   using the pcre-config utility (which should also be the case if you
+   hacve used the standard installation procedure).
+
+If you want to use your own copy of Glib or PCRE instead of the version
+provided by a standard package, set up your search path so that the 
+appropriate pkg-config or pcre-config binary is found first.
+
+If you cannot provide installation details through pkg-config and
+pcre-config, quite a bit of tinkering with the Makefile includes will be
+needed to make things work.
  
  
         PREREQUISITE EXTERNAL LIBRARIES FOR WIN32 BUILD

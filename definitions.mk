@@ -208,8 +208,8 @@ ifdef READLINE_LIBS
 CFLAGS += -DUSE_READLINE
 endif
 
-# Glib header file info (added to CFLAGS_ALL below)
-GLIB_DEFINES = `pkg-config --cflags libpcre` `pkg-config --cflags glib-2.0`
+# Glib and PCRE header file info (added to CFLAGS_ALL below)
+GLIB_DEFINES := $(shell pcre-config --cflags) $(shell pkg-config --cflags glib-2.0)
 
 # define macro variables for some global settings
 INTERNAL_DEFINES = -DREGISTRY_DEFAULT_PATH=\""$(DEFAULT_REGISTRY)"\" -DCOMPILE_DATE=\"$(COMPILE_DATE)\" -DVERSION=\"$(VERSION)\"
@@ -252,7 +252,7 @@ endif
 ifdef __MINGW__
 LDFLAGS_LIBS = -lpcre -lpcre.dll -lglib-2.0
 else
-LDFLAGS_LIBS = `pkg-config --libs libpcre` `pkg-config --libs glib-2.0`
+LDFLAGS_LIBS = $(shell pcre-config --libs) $(shell pkg-config --libs glib-2.0)
 endif 
 
 # complete sets of compiler and linker flags (allows easy specification of specific build rules)

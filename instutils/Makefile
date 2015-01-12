@@ -39,8 +39,8 @@ all:
 	$(MAKE) cwb-config install-cwb.sh
 
 cwb-config:
-	VERSION='$(VERSION)' PREFIX='$(PREFIX)' BINDIR='$(BININSTDIR)' LIBDIR='$(LIBINSTDIR)' INCDIR='$(INCINSTDIR)' MANDIR='$(MANINSTDIR)' CFLAGS='-I$(INCINSTDIR) $(GLIB_DEFINES)' LDFLAGS='-L$(LIBINSTDIR) -lcl $(LIB_REGEX) $(LDFLAGS_ALL)' REGISTRY='$(DEFAULT_REGISTRY)' sh cwb-config.in > cwb-config
-
+	VERSION='$(VERSION)' PREFIX='$(PREFIX)' BINDIR='$(BININSTDIR)' LIBDIR='$(LIBINSTDIR)' INCDIR='$(INCINSTDIR)' MANDIR='$(MANINSTDIR)' CFLAGS='-I$(INCINSTDIR)' LDFLAGS='-L$(LIBINSTDIR) -lcl $(LIB_REGEX) $(LDFLAGS_ALL)' REGISTRY='$(DEFAULT_REGISTRY)' sh cwb-config.in > cwb-config
+## NB: removed $(GLIB_DEFINES) from CFLAGS= above because Glib and PCRE headers shouldn't be needed to link against CL
 
 
 install-cwb.sh:
