@@ -248,8 +248,11 @@ and newer versions), it is quite easy to compile and install CWB.
 
    Lion and later:
      - install XCode from the Mac App store (XCode 4.2.1 or newer)
-     - start XCode and install Command Line Tools
-       (under Downloads | Components in the Preferences dialog)
+     - start XCode and accept Apple license agreement (requires admin password)
+     - depending on your XCode version, do one of the following
+        - go to Preferences dialog, select Downloads | Components, 
+          then install Command Line Tools
+        - enter "xcode-select --install" in a terminal window
 
    Snow Leopard:
       - obtain a free Apple developer account
