@@ -95,6 +95,7 @@ int beam_width = 50;            /**< best path search beam width */
 char prealign_name[CL_MAX_FILENAME_LENGTH] = "";  /**< pre-alignment given by structural attribute */
 int prealign_has_values = 0;    /**< boolean: if 1, regions with same ID values are pre-aligned */
 int verbose = 0;                /**< controls printing of some extra progress info */
+int quiet = 0;                  /**< boolean: if 1, turns off progress messages about the alignment. */
 
 char *registry_directory = NULL; /** string containing location of the registry directory. */
 
@@ -169,7 +170,7 @@ align_parse_args(int ac, char *av[], int min_args)
   int c;
 
   progname = av[0];
-  while ((c = getopt(ac, av, "+hvo:P:S:V:s:w:r:")) != EOF)
+  while ((c = getopt(ac, av, "+hvqo:P:S:V:s:w:r:")) != EOF)
     switch (c) {
       /* -P: positional attribute */
     case 'P':
@@ -188,6 +189,10 @@ align_parse_args(int ac, char *av[], int min_args)
       /* -o: output file */
     case 'o':
       strcpy(outfile_name, optarg);
+      break;
+      /* -q : quiet */
+    case 'q':
+      quiet = 1;
       break;
       /* -s: split factor */
     case 's':
@@ -431,8 +436,10 @@ main(int argc, char *argv[]) {
     fprintf(stderr, "%s: data access error (%s.%s)\n", progname, corpus2_name, s_name);
     exit(1);
   }
-  printf("OPENING %s [%d tokens, %d <%s> regions]\n", corpus1_name, ws1, size1, s_name);
-  printf("OPENING %s [%d tokens, %d <%s> regions]\n", corpus2_name, ws2, size2, s_name);
+  if (!quiet) {
+    printf("OPENING %s [%d tokens, %d <%s> regions]\n", corpus1_name, ws1, size1, s_name);
+    printf("OPENING %s [%d tokens, %d <%s> regions]\n", corpus2_name, ws2, size2, s_name);
+  }
 
   /* open pre-alignment attributes if requested */
   if (*prealign_name != '\0') {
@@ -455,8 +462,9 @@ main(int argc, char *argv[]) {
               progname, corpus2_name, prealign_name);
       exit(1);
     }
-    printf("OPENING prealignment [%s.%s: %d regions, %s.%s: %d regions]\n",
-           corpus1_name, prealign_name, pre1, corpus2_name, prealign_name, pre2);
+    if (!quiet)
+      printf("OPENING prealignment [%s.%s: %d regions, %s.%s: %d regions]\n",
+              corpus1_name, prealign_name, pre1, corpus2_name, prealign_name, pre2);
     if (prealign_has_values) {
       /* -V: check if pre-alignment attributes really have annotations */
       if (! (cl_struc_values(prealign1) && cl_struc_values(prealign2))) {
@@ -510,7 +518,8 @@ main(int argc, char *argv[]) {
   if (prealign1 == NULL) {
 
     /* neither -S nor -V used: just do a global alignment */
-    printf("Running global alignment, please be patient ...\n");
+    if (!quiet)
+      printf("Running global alignment, please be patient ...\n");
     steps = align_do_alignment(fms, 0, size1 - 1, 0, size2 - 1, of);
 
   } /* end of global alignment */
@@ -553,8 +562,9 @@ main(int argc, char *argv[]) {
         exit(1);
       }
 
-      printf("Aligning <%s> region #%d = [%d, %d] x [%d, %d]\n",
-             prealign_name, i, f1, l1, f2, l2);
+
+      if (!quiet)
+        printf("Aligning <%s> region #%d = [%d, %d] x [%d, %d]\n", prealign_name, i, f1, l1, f2, l2);
       steps += align_do_alignment(fms, f1, l1, f2, l2, of);
     }
 
@@ -571,7 +581,8 @@ main(int argc, char *argv[]) {
     int i;
 
     /* read pre-alignment annotations into lexhash */
-    printf("Caching pre-alignment IDs (%s.%s)\n", corpus1_name, prealign_name);
+    if (!quiet)
+      printf("Caching pre-alignment IDs (%s.%s)\n", corpus1_name, prealign_name);
     for (i = 0; i < pre2; i++) {
       value = cl_struc2str(prealign2, i);
       entry = cl_lexhash_add(lh, value);
@@ -585,7 +596,8 @@ main(int argc, char *argv[]) {
       entry = cl_lexhash_find(lh, value);
       if (entry == NULL) {
         /* no match found */
-        printf("[Skipping source region <%s %s>]\n", prealign_name, value);
+        if (!quiet)
+          printf("[Skipping source region <%s %s>]\n", prealign_name, value);
       }
       else {
         int j = entry->data.integer;    /* number of target region */
@@ -602,8 +614,8 @@ main(int argc, char *argv[]) {
           exit(1);
         }
 
-        printf("Aligning <%s %s> regions = [%d, %d] x [%d, %d]\n",
-               prealign_name, value, f1, l1, f2, l2);
+        if (!quiet)
+          printf("Aligning <%s %s> regions = [%d, %d] x [%d, %d]\n", prealign_name, value, f1, l1, f2, l2);
         steps += align_do_alignment(fms, f1, l1, f2, l2, of);
         j++;                    /* go to next target region */
       }
@@ -613,7 +625,8 @@ main(int argc, char *argv[]) {
 
   } /* end of -V type alignment */
 
-  printf("Alignment complete. [created %d alignment regions]\n", steps);
+  if (!quiet)
+    printf("Alignment complete. [created %d alignment regions]\n", steps);
 
 
   /* close output file */

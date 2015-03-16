@@ -200,7 +200,7 @@ create_feature_maps(char **config,
 
 
   /* NOTE there are two passes through the creation of feature maps - two sets of nearly identical code!
-   * First pass to see how many things we need ot count, second pass to count them. */
+   * First pass to see how many things we need to count, second pass to count them. */
 
   /* process feature map configuration: first pass */
   for (config_pointer = 0; config_pointer < config_lines; config_pointer++) {
@@ -274,13 +274,13 @@ create_feature_maps(char **config,
           }
           else {
             int i,f,l; /* temp storage for lexicon index, n of possible features, && word length */
-            char *s;
+            unsigned char *s;
 
             printf("FEATURE: %d-grams, weight=%d ... ", n, weight);
             fflush(stdout);
 
             /* for each entry in source-corpus lexicon, add to the number of features IFF
-             * that lexicon entry is longer than 4 characters */
+             * that lexicon entry is long enough to contain at least one n-gram (for current n) */
             for(i = 0; i < nw1; i++) {
               /* l = cl_id2strlen(w_attr1, i); */
               s = (unsigned char *) cl_strdup(cl_id2str(w_attr1, i));
@@ -302,7 +302,7 @@ create_feature_maps(char **config,
             f = 1;
             for(i = 0 ; i < n; i++)
               f *= char_map_range;
-            /* anmd add that to our total number of features! */
+            /* and add that to our total number of features! */
             r->n_features += f;
             printf("[%d]\n", f);
           }
@@ -429,7 +429,7 @@ create_feature_maps(char **config,
 
   /* set up word-to-feature maps. In these maps, the integer index = the lexicon id of the word,
    * and the value mapped to = a pointer into the fs1 or fs2 array that goes to theplace
-   * in that cell where teh features "belongign" to that word-type begin. */
+   * in that cell where the features "belonging" to that word-type begin. */
   for(i = 0; i <= nw1; i++)
     r->w2f1[i] = fs1 + fcount1[i];
   for(i = 0; i <= nw2; i++)

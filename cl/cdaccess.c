@@ -263,8 +263,7 @@ cl_str2id(Attribute *attribute, char *id_string)
     for(nr = 0; ; nr++) {
 
       if (nr >= 1000000) {
-        fprintf(stderr, "get_id_of_string: too many comparisons with %s\n",
-                id_string);
+        fprintf(stderr, "get_id_of_string: too many comparisons with %s\n", id_string);
         cl_errno = CDA_EOTHER;
         return cl_errno;
       }

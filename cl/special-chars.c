@@ -16,7 +16,7 @@
  */
 /*
  *  Windows/Unicode-compatibility extensions to CWB in this file
- *  Copyright (C) 2010      by ANR Textométrie, ENS de Lyon
+ *  Copyright (C) 2010      by ANR Textomï¿½trie, ENS de Lyon
  */
 
 #include <ctype.h>
@@ -2266,7 +2266,7 @@ cl_string_canonical(char *s, CorpusCharset charset, int flags)
     /* UTF8 accent folding */
     if (idiac) {
       if (NULL == (string = g_utf8_normalize((gchar *)s, -1, G_NORMALIZE_NFD)) ) {
-        fprintf(stderr, "CL: major error, invalid UTF8 string passed to cl_string_canonical...\n");
+        fprintf(stderr, "CL: major error, cannot decompose string: invalid UTF8 string passed to cl_string_canonical...\n");
         return;
       }
 
@@ -2274,7 +2274,7 @@ cl_string_canonical(char *s, CorpusCharset charset, int flags)
         next_char_begins = g_utf8_next_char(current_char);
         if (g_unichar_ismark(g_utf8_get_char(current_char))) {
           /* downcopy to overwrite the mark character */
-          strcpy(current_char, next_char_begins);
+          cl_strcpy(current_char, next_char_begins);
           /* and keep current_char the same */
         }
         else
@@ -2286,9 +2286,8 @@ cl_string_canonical(char *s, CorpusCharset charset, int flags)
       string = (gchar *)s;
 
     /* UTF8 precomposing -- always happens */
-    /* precomposed = g_utf8_normalize(string, -1, G_NORMALIZE_NFC); */ /* -- duplicate call to g_utf8_normalize() removed */
     if (NULL == (precomposed = g_utf8_normalize(string, -1, G_NORMALIZE_NFC)) ) {
-      fprintf(stderr, "CL: major error, invalid UTF8 string passed to cl_string_canonical...\n");
+      fprintf(stderr, "CL: major error, cannot compose string: invalid UTF8 string passed to cl_string_canonical...\n");
       return;
     }
 
@@ -2345,8 +2344,6 @@ cl_string_canonical(char *s, CorpusCharset charset, int flags)
 int
 cl_iso_char_is_alphanumeric(unsigned char c, CorpusCharset charset)
 {
-  /* TODO. This function is an obvious candidate for being "inline" - do we use inline functions? */
-
   if (charset == utf8)
     return 0;
   return (int) checktable_is_alphanum[charset][c];
@@ -2446,7 +2443,8 @@ cl_path_registry_quote(char *path)
         (*p == '-') || (*p == '_') || (*p == '/') ||
         (p > path && (*p == '.' || *p == '\\'))
        )
-      /* pass */ ;
+      /* pass */
+      ;
     else
       need_quotes = 1;
   }

@@ -84,6 +84,10 @@ then the default destination file C<out.align> is used.
 
 If the filename given ends in C<.gz>, the output will be automatically compressed using B<gzip>.
 
+=item B<-q>
+
+Activates quiet mode; many progress messages will be suppressed.
+
 =item B<-P> I<attribute>
 
 Specifies the p-attribute whose content should be analysed to establish the alignment
