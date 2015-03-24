@@ -314,7 +314,7 @@ synchronize(void)
 %type <varsetting> VariableValueSpec
 
 %type <cl> CorpusCommand UnnamedCorpusCommand CID OptionalCID 
-%type <cl> CYCommand Query AQuery CorpusSetExpr SubsetExpr MUQuery 
+%type <cl> CYCommand Query AQuery CorpusSetExpr TranslateExpr SubsetExpr MUQuery 
 %type <cl> StandardQuery TABQuery
 
 %type <ival> OptTargetSign
@@ -396,6 +396,7 @@ command:                                 { prepare_input(); }
 CorpusCommand:  UnnamedCorpusCommand    { $$ = $1; }
                 | ID '=' UnnamedCorpusCommand
                                         { $$ = in_CorpusCommand($1, $3); }
+                | ID '=' TranslateExpr  { $$ = in_CorpusCommand($1, after_CorpusSetExpr($3)); }
                 ;
 
 UnnamedCorpusCommand:
@@ -521,6 +522,9 @@ AttributeSelections:
 AttributeSelection:
                   '+' ID                        { do_attribute_show($2, 1); }
                 | '-' ID                        { do_attribute_show($2, 0); }
+                ;
+
+TranslateExpr:  FROM_SYM CID TO_SYM ID { if (query_lock) {warn_query_lock_violation(); YYABORT;} $$ = do_translate($2, $4) }
                 ;
 
 CorpusSetExpr:  SetOp CID CID           { if (query_lock) {warn_query_lock_violation(); YYABORT;} $$ = do_setop($1, $2, $3); }
@@ -1163,7 +1167,7 @@ AlignmentConstraints:
                          SearchPattern { if (generate_code)
                                            CurEnv->negated = $5;
                                        }
-                   | /* epsilon */     { }
+                   | /* epsilon */     { };
                     ;
 
 OptNot:             '!'                { $$ = 1; }

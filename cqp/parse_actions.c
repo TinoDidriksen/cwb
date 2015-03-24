@@ -555,6 +555,65 @@ do_attribute_show(char *name, int status)
 }
 
 CorpusList *
+do_translate(CorpusList *source, char *target_name) {
+  CorpusList *res, *target;
+  Attribute *alignment;
+  int i, n, bead;
+  int s1, s2, t1, t2;
+  
+  if (generate_code) {
+    assert(source != NULL);
+    target = findcorpus(target_name, SYSTEM, 0);
+    if (target == NULL) {
+      cqpmessage(Warning, "System corpus ``%s'' doesn't exist", target_name);
+      generate_code = 0;
+      return NULL;
+    }
+    alignment = find_attribute(source->corpus, target->corpus->registry_name,
+                               ATT_ALIGN, NULL);
+    if (alignment == NULL) {
+      cqpmessage(Error, "Corpus ``%s'' is not aligned to corpus ``%s''",
+                 source->mother_name, target->mother_name);
+      generate_code = 0;
+      return NULL;      
+    }
+    
+    /* allocate temporary NQR for the translated ranges */
+    res = make_temp_corpus(target, "RHS");
+    res->size = n = source->size;
+    cl_free(res->range);     /* allocate ranges for mapped regions */
+    res->range = (Range *)cl_calloc(n, sizeof(Range));
+    cl_free(res->targets);   /* make sure there are no spurious target / keywords vectors */
+    cl_free(res->keywords);
+    
+    /* translate each matching range into target bead */
+    for (i = 0; i < n; i++) {
+      bead = cl_cpos2alg(alignment, source->range[i].start);
+      if (bead < 0 ||
+          !cl_alg2cpos(alignment, bead, &s1, &s2, &t1, &t2) || 
+          cderrno != CDA_OK) {
+        res->range[i].start = -1;
+      } 
+      else {
+        res->range[i].start = t1;
+        res->range[i].end = t2;
+      }
+    }
+
+    /* remove unaligned items (but not duplicates) */
+    RangeSetop(res, RReduce, NULL, NULL); 
+
+    /* make sure target ranges are sorted (preserving original order with sortidx) */
+    RangeSort(res, 1);
+    
+    return res;
+  } 
+  else
+    return NULL;
+}
+
+
+CorpusList *
 do_setop(RangeSetOp op, CorpusList *c1, CorpusList *c2)
 {
   CorpusList *res;

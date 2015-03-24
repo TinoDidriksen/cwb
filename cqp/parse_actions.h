@@ -91,8 +91,9 @@ void do_save(CorpusList *cl, struct Redir *r);
 
 void do_attribute_show(char *name, int status);
 
-CorpusList *do_setop(RangeSetOp op, CorpusList *c1, CorpusList *c2);
+CorpusList *do_translate(CorpusList *source, char *target_name);
 
+CorpusList *do_setop(RangeSetOp op, CorpusList *c1, CorpusList *c2);
 
 
 void prepare_do_subset(CorpusList *cl, FieldType field);
