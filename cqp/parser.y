@@ -524,7 +524,7 @@ AttributeSelection:
                 | '-' ID                        { do_attribute_show($2, 0); }
                 ;
 
-TranslateExpr:  FROM_SYM CID TO_SYM ID { if (query_lock) {warn_query_lock_violation(); YYABORT;} $$ = do_translate($2, $4) }
+TranslateExpr:  FROM_SYM CID TO_SYM ID { if (query_lock) {warn_query_lock_violation(); YYABORT;} $$ = do_translate($2, $4); }
                 ;
 
 CorpusSetExpr:  SetOp CID CID           { if (query_lock) {warn_query_lock_violation(); YYABORT;} $$ = do_setop($1, $2, $3); }

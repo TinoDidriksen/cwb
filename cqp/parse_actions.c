@@ -1328,7 +1328,7 @@ do_XMLTag(char *s_name, int is_closing, int op, char *regex, int flags)
     }
     else {                        /* close tag -> if label is already defined, it is 'used', i.e. activated */
       label = findlabel(CurEnv->labels, s_name, LAB_RDAT);
-      if ((label != NULL) && (label->flags | LAB_DEFINED)) {
+      if ((label != NULL) && (label->flags & LAB_DEFINED)) {
         label->flags |= LAB_USED; /* activate this label for strict regions */
         CurEnv->patternlist[CurEnv->MaxPatIndex].tag.right_boundary = label;
       }
