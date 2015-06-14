@@ -24,8 +24,11 @@
 #include "compression.h"
 
 
-/** doesn't seem to exist outside Solaris, so we define it here */
+#if __STDC_VERSION__ >= 199901L
+/* C99 has log2() already, but many pre-C99 Cs don't */
+#else
 #define log2(x) (log(x)/log(2.0))
+#endif
 
 /**
  * {I have no idea what this does -- AH}
