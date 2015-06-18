@@ -908,6 +908,12 @@ int cl_regopt_count_get(void);
  *
  *  These lexicon hashes are used, notably, in the encoding of corpora
  *  to CWB-index-format.
+ *
+ *  WARNING: cl_lexhash objects are intended for data sets ranging from 
+ *  a few dozen entries to several million entries. Do not try to store
+ *  more than a billion (distinct) strings in a lexicon hash, otherwise
+ *  bad (and unpredicatble) things will happen. You have been warned!
+ * 
  */
 typedef struct _cl_lexhash *cl_lexhash;
 /**
@@ -919,9 +925,12 @@ typedef struct _cl_lexhash_entry {
   unsigned int freq;                /**< frequency of this type */
   int id;                           /**< the id code of this type */
   /**
-   * This entry's data fields.
+   * This entry's data fields, i.e. its payload.
    * Use as entry->data.integer, entry->data.numeric, ...
-   * TODO --> explanation as to why this is a struct not a union?
+   * To improve the versatility of cl_lexhash, the payload is implemented
+   * as a struct rather than a union, so it can store two numbers and a
+   * pointer at the same time.  This design was inspired by Perl, whose
+   * variables have multiple entries for scalar, array, hash, etc.
    */
   struct _cl_lexhash_entry_data {
     int integer;
@@ -938,6 +947,7 @@ cl_lexhash cl_new_lexhash(int buckets);
 void cl_delete_lexhash(cl_lexhash lh);
 void cl_lexhash_set_cleanup_function(cl_lexhash lh, void (*func)(cl_lexhash_entry));
 void cl_lexhash_auto_grow(cl_lexhash lh, int flag);
+void cl_lexhash_auto_grow_fillrate(cl_lexhash lh, double limit, double target);
 cl_lexhash_entry cl_lexhash_add(cl_lexhash lh, char *token);
 cl_lexhash_entry cl_lexhash_find(cl_lexhash lh, char *token);
 int cl_lexhash_id(cl_lexhash lh, char *token);
