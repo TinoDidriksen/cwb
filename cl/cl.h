@@ -919,9 +919,20 @@ typedef struct _cl_lexhash *cl_lexhash;
 /**
  * Underlying structure for the cl_lexhash_entry class.
  * Unlike most underlying structures, this is public in the CL API.
+ * This is done so that applications can access the embedded payload
+ * directly (as entry->data->integer, ...).
+ *
+ * Such structures MUST NOT be allocated or copied by users! Neither
+ * may internal fields, esp. entry->key, be modified. Only read and
+ * write access to the payload of entries returned by cl_lexhash_find()
+ * and cl_lexhash_add() is allowed.
  */
 typedef struct _cl_lexhash_entry {
-  char *key;                        /**< hash key == form of tokens */
+  /**
+   * Note that the fields of this structure have been re-ordered to
+   * ensure proper alignment without any padding.
+   */
+  struct _cl_lexhash_entry *next;   /**< next entry on the linked-list (ie in the bucket) */
   unsigned int freq;                /**< frequency of this type */
   int id;                           /**< the id code of this type */
   /**
@@ -933,11 +944,11 @@ typedef struct _cl_lexhash_entry {
    * variables have multiple entries for scalar, array, hash, etc.
    */
   struct _cl_lexhash_entry_data {
-    int integer;
-    double numeric;
     void *pointer;
+    double numeric;
+    int integer;
   } data;
-  struct _cl_lexhash_entry *next;   /**< next entry on the linked-list (ie in the bucket) */
+  char key[1];                       /**< hash key == type (embedded in struct) */
 } *cl_lexhash_entry;
 
 /*

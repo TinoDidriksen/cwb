@@ -186,7 +186,7 @@ cl_delete_lexhash_entry(cl_lexhash hash, cl_lexhash_entry entry)
     if (hash->cleanup_func != NULL) {
       (*(hash->cleanup_func))(entry);
     }
-    cl_free(entry->key);
+    /* key is embedded in struct, so it mustn't be deallocated separately */
     cl_free(entry);
   }
 }
@@ -479,8 +479,10 @@ cl_lexhash_add(cl_lexhash hash, char *token)
   }
   else {
     /* token not in hash -> add new entry for this token */
-    entry = (cl_lexhash_entry) cl_malloc(sizeof(struct _cl_lexhash_entry));
-    entry->key = cl_strdup(token);
+    int keylen = strlen(token);
+    /* allocate enough space for key string appended to the struct */
+    entry = (cl_lexhash_entry) cl_malloc(sizeof(struct _cl_lexhash_entry) + keylen);
+    strcpy(entry->key, token); /* embed copy of key in struct */
     entry->freq = 1;
     entry->id = (hash->next_id)++;
     entry->data.integer = 0;            /* initialise data fields to zero values */
