@@ -28,7 +28,7 @@
 #define DEFAULT_NR_OF_BUCKETS 250000
 
 /** Default parameters for auto-growing the table of buckets (@see cl_ngram_hash_auto_grow_fillrate for details). */
-#define DEFAULT_FILLRATE_LIMIT 5.0
+#define DEFAULT_FILLRATE_LIMIT(n) ((n >=5) ? 2.0 : 4.0)
 #define DEFAULT_FILLRATE_TARGET(n) ((n >= 5) ? 0.5 : 1.0) /**< keep memory overhead for bucket table below 50% */
 
 /** Maximum number of buckets n-gram hash will try to allocate when auto-growing. */
@@ -116,7 +116,7 @@ cl_new_ngram_hash(int N, int buckets)
   hash->table = cl_calloc(hash->buckets, sizeof(cl_ngram_hash_entry));
   hash->entries = 0;
   hash->auto_grow = 1;
-  hash->fillrate_limit = DEFAULT_FILLRATE_LIMIT;
+  hash->fillrate_limit = DEFAULT_FILLRATE_LIMIT(N);
   hash->fillrate_target = DEFAULT_FILLRATE_TARGET(N);
   hash->iter_bucket = -1;
   hash->iter_point = NULL;
@@ -201,11 +201,11 @@ cl_ngram_hash_auto_grow(cl_ngram_hash hash, int flag)
  * more expensive (N integer comparisons for each item).
  *
  * Note that the ratio limit / target determines how often the bucket
- * table has to be reallocated; it should not be smaller than 5.0.
+ * table has to be reallocated; it should not be smaller than 4.0.
  * 
- * Reasonable values for the fill rate limit seem to be in the range
- * 5.0-10.0; if speed is crucial, N is relatively large, and memory
- * footprint isn't a concern, smaller values down to 2.0 might be chosen.
+ * A reasonable values for the fill rate limit seems to be around 5.0;
+ * if speed is crucial, N is relatively large, and memory footprint 
+ * isn't a concern, smaller values down to 2.0 might be chosen.
  * The target fill rate should not be set too low for small N. 
  * If N=1, a target fill rate of 0.5 results in 100% memory overhead
  * after expansion of the bucket table (16 bytes per entry vs. 8 bytes
@@ -598,9 +598,9 @@ cl_ngram_hash_iterator_next(cl_ngram_hash hash)
   
   point = hash->iter_point;
   while (point == NULL) {
+    hash->iter_bucket++;
     if (hash->iter_bucket >= hash->buckets) 
       return NULL; /* we've reached the end of the hash */
-    hash->iter_bucket++;
     point = hash->table[hash->iter_bucket];
   }
   hash->iter_point = point->next;

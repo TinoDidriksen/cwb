@@ -20,6 +20,10 @@ Other changes:
  - Implementation of n-gram hashes has been moved from cwb-scan-corpus to the CL library, so it
    can be used by other applications.  In the process, the implementation has been revised for 
    slightly improved efficiency and memory footprint.
+   
+ - cwb-scan-corpus is now faster and uses less memory, especially if used without fine-tuning
+   the number of hash buckets (-b option).  For example, scanning 200 M word corpus for word
+   bigrams (with -C filtering) requires 30% less memory and is twice as fast as before.
 
 Bug fixes:
 

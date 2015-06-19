@@ -54,12 +54,12 @@ Please note that the CWB utilities do not currently support GNU-style C<--long-o
 =item B<-b> I<num>
 
 In order to collect frequency counts in the scanning process, a hash table with a particular number of buckets is used.
-Each bucket can hold a single tuple of key values.  If there are more different types (i.e. key value combinations) than buckets,
-they have to be stored in overflow chains, reducing the computational efficiency of the hashing algorithm.
+Each bucket can hold a single tuple of key values.  If there are more different types (i.e. key value combinations) than buckets, they have to be stored in overflow chains, reducing the computational efficiency of the hashing algorithm.
 
 This option allows the number of buckets to be set by the user, in order to improve the speed of the corpus scan for
 frequency counts involving a very large number of types.  Users who are not already familiar with hash tables
-do not need to understand this option.  The default setting of 1,000,000 buckets will be sufficient for most applications.
+do not need to understand this option.  By default, B<cwb-scan-corpus> will dynamically adjust the hash table size
+while scanning the corpus.
 
 =item B<-C>        
 

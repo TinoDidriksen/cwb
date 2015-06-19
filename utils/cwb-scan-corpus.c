@@ -21,8 +21,6 @@
 #include "../cl/cl.h"
 #include "../cl/special-chars.h"
 
-/** use 1 million buckets by default */
-#define DEFAULT_BUCKETS 1000000
 
 /** maximum value of N (makes life a little easier) */
 #define MAX_N 32
@@ -30,18 +28,6 @@
 /* TODO: rewrite hash entries so that K-tuples can be embedded in the HashEntry struct,
    e.g. as struct { HashEntry next; int freq; int tuple[1]; }; then allocate  sizeof(*HashEntry) + (K-1) * sizeof(int) bytes
    for each structure and access tuple as entry->tuple[i] or in a similar way */
-
-/**
- * Structure representing hash entries.
- *
- * @see Hash
- */
-typedef struct _hash_entry {
-  int *tuple;               /**< K-tuple of lexicon IDs (with K == Hash.K) */
-  int freq;                 /**< frequency of this K-tuple (so far) */
-  struct _hash_entry *next;
-} *HashEntry;
-
 
 /**
  * A specialised hashtable for computing frequency distributions over tuples of lexicon IDs.
@@ -73,8 +59,8 @@ struct _Hash {
 
   int is_constraint[MAX_N]; /**< list of flags marking constraint keys ("?...") */
   int K;                    /**< number of non-constraint keys, i.e. the actual hash table stores K-tuples */
-  int buckets;              /**< no. of buckets in hash table */
-  HashEntry *table;         /**< array of HashEntry pointers == buckets (initialised to NULL, i.e. empty buckets) */
+
+  cl_ngram_hash table;      /**< the actual hash table, a cl_ngram_hash object */
 } Hash;
 
 /* other global variables */
@@ -92,8 +78,8 @@ int global_end = -1;         /**< will be set up in main() unless changed with -
 char *ranges_file = NULL;    /**< file with ranges to scan (pairs of corpus positions) */
 FILE *ranges_fh = NULL;      /**< corresponding filehandle */
 int quiet = 0;               /**< if set, don't show progress information on stderr */
-
-
+int n_buckets = 0;           /**< if set, use fixed number of buckets; otherwise, revert to cl_ngram_hash defaults */
+int debug_level = 0;         /**< CL debug level */
 
 /**
  * Prints a usage message and exits the program.
@@ -116,7 +102,7 @@ scancorpus_usage(void)
   fprintf(stderr, "  <f>  TAB  <key1-value>  TAB  <key2-value>  TAB  ... \n\n");
   fprintf(stderr, "Options:\n");
   fprintf(stderr, "  -r <dir>  use registry directory <dir>\n");
-  fprintf(stderr, "  -b <n>    use <n> hash buckets [default: 1,000,000]\n");
+  fprintf(stderr, "  -b <n>    use <n> hash buckets [default: adjust dynamically]\n");
   fprintf(stderr, "  -o <file> write frequency table to <file> [default"": standard output]\n");
                                                             /* 'default:' confuses Emacs C-mode */
   fprintf(stderr, "            (compressed with gzip if <file> ends in '.gz')\n");
@@ -128,6 +114,7 @@ scancorpus_usage(void)
   fprintf(stderr, "  -e <n>    stop scanning at corpus position <n>\n");
   fprintf(stderr, "  -R <file> read list of corpus ranges to scan from <file>\n");
   fprintf(stderr, "  -q        quiet mode (no progress information on stderr)\n");
+  fprintf(stderr, "  -D        activate CL debugging (use repeatedly for more output)\n");
   fprintf(stderr, "  -h        this help page\n\n");
   fprintf(stderr, "Part of the IMS Open Corpus Workbench v" VERSION "\n\n");
   exit(1);
@@ -147,7 +134,7 @@ scancorpus_parse_options(int argc, char *argv[])
   extern char *optarg;
   int c;
 
-  while ((c = getopt(argc, argv, "+r:b:o:f:F:Cs:e:R:qh")) != EOF) {
+  while ((c = getopt(argc, argv, "+r:b:o:f:F:Cs:e:R:qDh")) != EOF) {
     switch (c) {
     case 'r':                        /* -r <dir> */
       if (reg_dir == NULL)
@@ -158,7 +145,7 @@ scancorpus_parse_options(int argc, char *argv[])
       }
       break;
     case 'b':                        /* -b <n> */
-      Hash.buckets = atoi(optarg);
+      n_buckets = atoi(optarg);
       break;
     case 'o':                        /* -o <file> */
       if (output_file == NULL)
@@ -199,6 +186,9 @@ scancorpus_parse_options(int argc, char *argv[])
     case 'q':
       quiet = 1;
       break;
+    case 'D':
+      debug_level++;
+      break;
     case 'h':                       /* -h */
     default:                        /* unknown option: print usage info */
       scancorpus_usage();
@@ -207,138 +197,6 @@ scancorpus_parse_options(int argc, char *argv[])
 
   return(optind);
 }
-
-
-/* hash utility functions */
-
-/**
- * Checks whether a number is prime.
- *
- * @param n  number to check
- * @return   Boolean
- */
-int
-is_prime(int n)
-{
-  int i;
-  for(i = 2; i*i <= n; i++)
-    if ((n % i) == 0)
-      return 0;
-  return 1;
-}
-
-/**
- * Finds a prime number.
- *
- * @param n  lower bound for the generated prime.
- * @return   The first prime number greater than n,
- *           or 0 if no prime number was found within
- *           the sizeof a signed int.
- */
-int
-find_prime(int n)
-{
-  for( ; n > 0 ; n++)                /* will exit on int overflow */
-    if (is_prime(n))
-      return n;
-  return 0;
-}
-
-
-/**
- * Computes a hash index for an N-tuple of ints.
- *
- * @param N      Size of the tuple.
- * @param tuple  The tuple itself: an array of ints.
- * @return       The hash index calculated.
- */
-unsigned int
-hash_index(int N, int *tuple)
-{
-  unsigned int result = 0;
-  int i;
-
-  for(i = 0 ; i < N; i++)
-    result = (result * 33 ) ^ (result >> 27) ^ tuple[i];
-  return result;
-}
-
-
-/**
- * Compares two N-tuples for equality.
- *
- * @param N    Size of the tuple.
- * @param t1   First tuple (array of ints of size N).
- * @param t2   Second tuple (array of ints of size N).
- * @return     Boolean: true if all ints are identical,
- *             otherwise false.
- */
-int
-tuples_eq(int N, int *t1, int *t2)
-{
-  int i;
-  for (i = 0; i < N; i++) {
-    if (t1[i] != t2[i]) return 0;
-  }
-  return 1;
-}
-
-
-/**
- * Finds an N-tuple in the global hash.
- *
- * @param tuple    The tuple to search for.
- * @param R_index  The index of the bucket containing the
- *                 located HashEntry.
- * @return         The located HashEntry.
- */
-HashEntry
-hash_find(int *tuple, int *R_index)
-{
-  unsigned int index;
-  HashEntry entry;
-
-  index = hash_index(Hash.K, tuple) % Hash.buckets;
-  if (R_index != NULL) *R_index = index;
-  entry = Hash.table[index];
-  while (entry != NULL && !tuples_eq(Hash.K, tuple, entry->tuple)) {
-    entry = entry->next;
-  }
-  return entry;
-}
-
-
-/**
- * Inserts an N-tuple into the global hash.
- *
- * If the N-tuple is already in the hash, its count
- * is incremented by f, but nothing is inserted.
- *
- * @param tuple  The tuple to add (array of ints).
- * @param f      The frequency of the tuple.
- */
-void
-hash_add(int *tuple, int f)
-{
-  HashEntry entry;
-  int index;
-
-  entry = hash_find(tuple, &index);
-  if (entry != NULL) {          /* tuple already in hash -> increment count */
-    entry->freq += f;
-  }
-  else {                        /* add new tuple (to bucket <index> */
-    entry = (HashEntry) cl_malloc(sizeof(struct _hash_entry));
-    entry->tuple = (int *) cl_malloc(Hash.K * sizeof(int));
-    /* bcopy(tuple, entry->tuple, Hash.K * sizeof(int)); */
-    memcpy(entry->tuple, tuple, Hash.K * sizeof(int));    /* we can just copy it verbatim */
-    entry->freq = f;
-    entry->next = Hash.table[index];
-    Hash.table[index] = entry;
-  }
-}
-
-
 
 
 /**
@@ -525,7 +383,7 @@ scancorpus_add_key(char *key)
         }
         Hash.id_list_size[Hash.N] = mark;
       }
-      if (Hash.id_list_size == 0) {
+      if (Hash.id_list_size[Hash.N] == 0) {
         fprintf(stderr, "Warning: no matches for key '%s' -- scan results will be empty\n", key);
       }
     }
@@ -614,19 +472,18 @@ main (int argc, char *argv[])
   int cpos, next_cpos, start_cpos, end_cpos, previous_end;
 
   /* parse command line options */
-  Hash.buckets = DEFAULT_BUCKETS;  /* must pre-initialise Hash.buckets */
   progname = argv[0];
   argind = scancorpus_parse_options(argc, argv);
   if ((argc - argind) < 2) {
     scancorpus_usage();                       /* not enough arguments -> print usage info */
   }
+  if (debug_level > 0)
+    cl_set_debug_level(debug_level);
 
   /* initialise hash */
   Hash.N = 0;                      /* will be incremented when we process the arguments */
   Hash.K = 0;
   Hash.max_offset = 0;
-  Hash.buckets = find_prime(Hash.buckets); /* make sure number of buckets is a prime */
-  Hash.table = cl_calloc(Hash.buckets, sizeof(HashEntry));
   Hash.frequency_values = NULL;
   Hash.frequency = NULL;
 
@@ -640,9 +497,6 @@ main (int argc, char *argv[])
 
   /* now we know the corpus (and its character set) we can initialise the global regular expression object, if needed */
   if (check_words) {
-    int rx_flags;
-    char *cleanup_rx_string;
-
     if (C->charset == utf8) {
       /* utf8: don't fold diacritics, but use Unicode character properties */
       if (NULL == (regular_rx = cl_new_regex("([\\pL\\pM]+|\\pN+)(-([\\pL\\pM]+|\\pN+))*", 0, C->charset)) ) {
@@ -658,6 +512,11 @@ main (int argc, char *argv[])
     scancorpus_add_key(argv[argind]);
     argind++;
   }
+
+  /* now initalise the n-gram hash table */
+  Hash.table = cl_new_ngram_hash(Hash.K, n_buckets);
+  if (n_buckets > 0)
+    cl_ngram_hash_auto_grow(Hash.table, 0);
 
   /* determine size of corpus */
   word = cl_new_attribute(C, "word", ATT_POS);
@@ -745,7 +604,8 @@ main (int argc, char *argv[])
       if ((! quiet) && ((cpos & 0xffff) == 0)) {
         int cpK = cpos >> 10;
         int csK = Csize >> 10;
-        fprintf(stderr, "Progress: %6dK / %dK   \r", cpK, csK);
+        int entriesK = cl_ngram_hash_size(Hash.table) >> 10;
+        fprintf(stderr, "Progress: %7dK / %dK  | %7dK n-grams \r", cpK, csK, entriesK);
         fflush(stderr);
       }
 
@@ -862,16 +722,16 @@ main (int argc, char *argv[])
 
       if (accept) {
         if (Hash.frequency_values) /* note that the frequency attribute is always used with offset 0 */
-          hash_add(tuple, Hash.frequency[cl_cpos2id(Hash.frequency_values, cpos)]);
+          cl_ngram_hash_add(Hash.table, tuple, Hash.frequency[cl_cpos2id(Hash.frequency_values, cpos)]);
         else
-          hash_add(tuple, 1);
+          cl_ngram_hash_add(Hash.table, tuple, 1);
       }
     } /* end of scan loop for current range */
 
   } /* end of loop over ranges */
 
   if (! quiet)
-    fprintf(stderr, "Scan complete.                          \n");
+    fprintf(stderr, "Scan complete.                                         \n");
 
   /* close ranges file (if -R option had been used) */
   if (ranges_fh && ranges_fh != stdin)
@@ -879,10 +739,10 @@ main (int argc, char *argv[])
 
   /* print hash contents to stdout or file (in hash-internal order) */
   {
-    HashEntry entry;
+    cl_ngram_hash_entry entry;
     FILE *of;
     char pipe_cmd[CL_MAX_LINE_LENGTH];
-    int bucket, i, k, l, is_pipe;
+    int i, k, l, is_pipe;
     char *str;
 
     is_pipe = 0;
@@ -918,32 +778,29 @@ main (int argc, char *argv[])
     }
     fflush(stderr);
 
-    for (bucket = 0; bucket < Hash.buckets; bucket++) {
-      entry = Hash.table[bucket];
-      while (entry != NULL) {
-        if (entry->freq >= frequency_threshold) {
-          fprintf(of, "%d", entry->freq);
-          k = 0;
-          for (i = 0; i < Hash.N; i++) {
-            if (! Hash.is_constraint[i]) {
-              if (! Hash.is_structural[i]) {
-                str = cl_id2str(Hash.att[i], entry->tuple[k]);
+    cl_ngram_hash_iterator_reset(Hash.table);
+    while ((entry = cl_ngram_hash_iterator_next(Hash.table)) != NULL) {
+      if (entry->freq >= frequency_threshold) {
+        fprintf(of, "%d", entry->freq);
+        k = 0;
+        for (i = 0; i < Hash.N; i++) {
+          if (! Hash.is_constraint[i]) {
+            if (! Hash.is_structural[i]) {
+              str = cl_id2str(Hash.att[i], entry->ngram[k]);
+            }
+            else {
+              if (entry->ngram[k] < 0) {
+                str = "";
               }
               else {
-                if (entry->tuple[k] < 0) {
-                  str = "";
-                }
-                else {
-                  str = Hash.source_base[i] + entry->tuple[k];
-                }
+                str = Hash.source_base[i] + entry->ngram[k];
               }
-              fprintf(of, "\t%s", str);
-              k++;
             }
+            fprintf(of, "\t%s", str);
+            k++;
           }
-          fprintf(of, "\n");
         }
-        entry = entry->next;
+        fprintf(of, "\n");
       }
     }
 

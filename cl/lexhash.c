@@ -27,8 +27,8 @@
 #define DEFAULT_NR_OF_BUCKETS 250000
 
 /** Default parameters for auto-growing the table of buckets (@see cl_lexhash_auto_grow_fillrate for details). */
-#define DEFAULT_FILLRATE_LIMIT 5.0
-#define DEFAULT_FILLRATE_TARGET 0.5
+#define DEFAULT_FILLRATE_LIMIT 2.0
+#define DEFAULT_FILLRATE_TARGET 0.4
 
 /** Maximum number of buckets lexhash will try to allocate when auto-growing. */
 #define MAX_BUCKETS 1000000007  /* 1 billion (incremented to next prime number) */
@@ -276,10 +276,10 @@ cl_lexhash_auto_grow(cl_lexhash hash, int flag)
  *
  * The limit should not be set too low in order to reduce memory
  * overhead and avoid frequent reallocation due to expansion in 
- * small increments.  Good values seem to be in the range 5.0-10.0;
- * if speed is crucial, smaller values around 2.0 might be chosen.
- * A reasonable value for the target fill rate is 0.5, which corresponds
- * to a 33% overhead over the storage required for entry data structures
+ * small increments.  Good values seem to be in the range 2.0-5.0;
+ * depending on whether speed or memory efficiency is more important.
+ * A reasonable value for the target fill rate is 0.4, which corresponds
+ * to a 42% overhead over the storage required for entry data structures
  * (48 bytes per entry vs. 8 bytes for each bucket).
  * 
  * @see          cl_lexhash_auto_grow, cl_lexhash_check_grow
