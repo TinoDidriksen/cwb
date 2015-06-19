@@ -292,7 +292,7 @@ cl_lexhash_auto_grow_fillrate(cl_lexhash hash, double limit, double target)
 {
   if (hash != NULL) {
     /* set parameters with basic sanity checks */
-    hash->fillrate_target = (target > 0.01) ? target : 0.05;
+    hash->fillrate_target = (target > 0.01) ? target : 0.01;
     hash->fillrate_limit = (limit > 2 * hash->fillrate_target) ? limit : 2 * hash->fillrate_target;
   }
 }
@@ -355,7 +355,7 @@ cl_lexhash_check_grow(cl_lexhash hash)
     old_buckets = hash->buckets;
     if (cl_debug) {
       fprintf(stderr, "[lexhash autogrow: triggered by fill rate = %3.1f (%d/%d)]\n",
-              fill_rate, hash->entries, old_buckets, new_buckets);
+              fill_rate, hash->entries, old_buckets);
     }
     temp = cl_new_lexhash(new_buckets); /* create new hash with target fill rate */
     new_buckets = temp->buckets; /* the actual number of entries (next prime number) */
@@ -597,24 +597,12 @@ cl_lexhash_del(cl_lexhash hash, char *token)
  * Gets the number of different strings stored in a lexhash.
  *
  * This returns the total number of entries in all the
- * buckets in the whole hashtable.
+ * buckets in the whole hash table.
  *
  * @param hash  The hash to size up.
  */
 int 
 cl_lexhash_size(cl_lexhash hash)
 {
-  cl_lexhash_entry entry;
-  int i, size = 0;
-
-  assert((hash != NULL && hash->table != NULL && hash->buckets > 0) && "cl_lexhash object was not properly initialised");
-  for (i = 0; i < hash->buckets; i++) {
-    entry = hash->table[i];
-    while (entry != NULL) {
-      size++;
-      entry = entry->next;
-    }
-  }
-
-  return size;
+  return (hash != NULL) ? hash->entries : 0;
 }

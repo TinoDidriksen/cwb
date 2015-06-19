@@ -62,7 +62,7 @@ REALINCINSTDIR = $(INCINSTDIR)/cwb
 ## CORPUS LIBRARY  headers / sources / objects 
 
 HDRS = globals.h macros.h \
-       list.h lexhash.h \
+       list.h lexhash.h ngram-hash.h \
        bitfields.h storage.h fileutils.h \
        special-chars.h regopt.h \
        corpus.h attributes.h makecomps.h \
@@ -76,7 +76,7 @@ HDRS = globals.h macros.h \
        $(MMAPH)
 
 SRCS = globals.c macros.c \
-       list.c lexhash.c \
+       list.c lexhash.c ngram-hash.c \
        bitfields.c storage.c fileutils.c \
        special-chars.c regopt.c \
        corpus.c attributes.c makecomps.c \
@@ -90,7 +90,7 @@ SRCS = globals.c macros.c \
        $(MMAPS)
  
 OBJS = globals.o macros.o \
-       list.o lexhash.o \
+       list.o lexhash.o ngram-hash.o \
        bitfields.o storage.o fileutils.o \
        special-chars.o regopt.o \
        corpus.o attributes.o \

@@ -97,7 +97,7 @@
  *
  *   3.4                THE cl_lexhash OBJECT
  *
- *   3.5                THE CL_BitVec OBJECT
+ *   3.5                THE cl_ngram_hash OBJECT
  *
  * SECTION 4          THE OLD CL API
  *
@@ -922,10 +922,10 @@ typedef struct _cl_lexhash *cl_lexhash;
  * This is done so that applications can access the embedded payload
  * directly (as entry->data->integer, ...).
  *
- * Such structures MUST NOT be allocated or copied by users! Neither
- * may internal fields, esp. entry->key, be modified. Only read and
- * write access to the payload of entries returned by cl_lexhash_find()
- * and cl_lexhash_add() is allowed.
+ * Such structures MUST NOT be allocated or copied directly by an
+ * application! Neither may internal fields, esp. entry->key, be modified.
+ * Only read and write access to the payload of entries returned by
+ * cl_lexhash_find() and cl_lexhash_add() is allowed.
  */
 typedef struct _cl_lexhash_entry {
   /**
@@ -971,12 +971,77 @@ int cl_lexhash_size(cl_lexhash lh);
 
 /*
  *
- * SECTION 3.5 -- THE CL_BitVec OBJECT
+ * SECTION 3.5 -- THE cl_ngram_hash OBJECT
  *
  */
-typedef struct _CL_BitVec *CL_BitVec;                 /**< The CL_BitVec object: doesn't seem to exist {???-- AH}. */
 
+/**
+ *  The cl_ngram_hash class (hash-based frequency counts for n-grams,
+ *  represented by n-tuples of integer type IDs).
+ *
+ *  A "n-gram hash" is used to collect frequency counts for n-grams,
+ *  which are represented by n-tuples of integer type IDs. The mapping
+ *  between types and IDs is not part of a cl_ngram_hash object and
+ *  must be provided externally.
+ *
+ *  N-gram hashes encapsulate a central aspect of the cwb-scan-corpus
+ *  utility, making efficient n-gram frequency counts available to
+ *  other applications.
+ *
+ *  The implementation of the cl_ngram_hash class is similar to
+ *  cl_lexhash.  However, at the current time there is no mapping to
+ *  unique n-gram IDs and no support for user data (a "payload").
+ *  The sole purpose of the implementation is to enable fast and
+ *  memory-efficient frequency counts for very large sets of n-grams.
+ *
+ *  WARNING: cl_ngram_hash objects cannot store more than 2^32 - 1
+ *  entries. Bad things will happen if you try to do so!
+ * 
+ */
+typedef struct _cl_ngram_hash *cl_ngram_hash;
 
+/**
+ * Underlying structure for the cl_ngram_hash_entry class.
+ * Unlike most underlying structures, this is public in the CL API,
+ * so that applications can iterate through entries, sort them, etc.
+ *
+ * Access the frequency count with entry->freq, and the type IDs
+ * of the tuple members with entry->ngram[0], entry->ngram[1], ...
+ *
+ * Entries MUST NOT be allocated, copied or modified directly by
+ * an application!
+ */
+typedef struct _cl_ngram_hash_entry {
+  struct _cl_ngram_hash_entry *next; /**< next entry on the linked-list (i.e. in the bucket) */
+  unsigned int freq;                 /**< frequency of this type */
+  int ngram[1];                      /**< ngram data embedded in struct */
+} *cl_ngram_hash_entry;
+
+/*
+ * ... and its API ...
+ */
+cl_ngram_hash cl_new_ngram_hash(int N, int buckets);
+void cl_delete_ngram_hash(cl_ngram_hash hash);
+void cl_ngram_hash_auto_grow(cl_ngram_hash hash, int flag);
+void cl_ngram_hash_auto_grow_fillrate(cl_ngram_hash hash, double limit, double target);
+cl_ngram_hash_entry cl_ngram_hash_add(cl_ngram_hash hash, int *ngram, unsigned int f);
+cl_ngram_hash_entry cl_ngram_hash_find(cl_ngram_hash hash, int *ngram);
+int cl_ngram_hash_del(cl_ngram_hash hash, int *ngram);
+int cl_ngram_hash_freq(cl_ngram_hash hash, int *ngram);
+int cl_ngram_hash_size(cl_ngram_hash hash);
+/** 
+ * Returns allocated vector of pointers to all entries of the n-gram hash.
+ * Must be freed by the application and can be modified, e.g. for sorting.
+ * Use cl_ngram_hash_size() to find out how many entries there are.
+ */
+cl_ngram_hash_entry *cl_ngram_hash_get_entries(cl_ngram_hash hash, int *ret_size);
+/**
+ * Simple iterator for the entries of an n-gram hash. There is only a single
+ * iterator for each cl_ngram_hash object. The iterator is invalidated by all
+ * updates of the n-gram hash and will need to be reset afterwards.
+ */
+void cl_ngram_hash_iterator_reset(cl_ngram_hash hash);
+cl_ngram_hash_entry cl_ngram_hash_iterator_next(cl_ngram_hash hash);
 
 
 /*
