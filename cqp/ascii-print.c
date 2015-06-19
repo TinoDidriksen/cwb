@@ -696,8 +696,8 @@ ascii_print_group(Group *group, int expand, FILE *fd)
         nr_targets = 0;
       }
 
-      /* separator bar is meaningless when using the internal grouping algorithm */
-      if ((UseExternalGrouping) || (cell == 0))
+      /* separator bar between groups */
+      if (cell == 0 || (group->is_grouped && nr_targets == 0))
         fprintf(fd, SEPARATOR);
       
       fprintf(fd, "%-28s  %-28s\t%6d\n",

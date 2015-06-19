@@ -129,7 +129,7 @@ void do_info(CorpusList *cl);
 void do_group(CorpusList *cl,
               FieldType target, int target_offset, char *t_att,
               FieldType source, int source_offset, char *s_att,
-              int cut, int expand, struct Redir *redir);
+              int cut, int expand, int is_grouped, struct Redir *redir);
 
 void do_group2(CorpusList *cl,
                FieldType target, int target_offset, char *t_att,

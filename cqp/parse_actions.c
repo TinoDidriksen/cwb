@@ -970,12 +970,12 @@ void
 do_group(CorpusList *cl,
          FieldType target, int target_offset, char *t_att,
          FieldType source, int source_offset, char *s_att,
-         int cut, int expand, struct Redir *redir)
+         int cut, int expand, int is_grouped, struct Redir *redir)
 {
   Group *group;
   
   do_start_timer();
-  group = compute_grouping(cl, source, source_offset, s_att, target, target_offset, t_att, cut);
+  group = compute_grouping(cl, source, source_offset, s_att, target, target_offset, t_att, cut, is_grouped);
   do_timing("Grouping computed");
   if (group) {
     print_group(group, expand, redir);
@@ -992,7 +992,7 @@ do_group2(CorpusList *cl,
   Group *group;
   
   do_start_timer();
-  group = compute_grouping(cl, NoField, 0, NULL, target, target_offset, t_att, cut);
+  group = compute_grouping(cl, NoField, 0, NULL, target, target_offset, t_att, cut, 0);
   do_timing("Grouping computed");
   if (group) {
     print_group(group, expand, r);

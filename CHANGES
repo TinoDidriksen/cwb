@@ -25,6 +25,16 @@ Other changes:
    the number of hash buckets (-b option).  For example, scanning 200 M word corpus for word
    bigrams (with -C filtering) requires 30% less memory and is twice as fast as before.
 
+ - CQP's "group" command has been reimplemented using a hash-based algorithm, making it much
+   more efficient for large frequency counts.  For example, a grouping over approx. 400,000
+   distinct values is now 150x faster than before.  This change also resolves poor performance
+   of CQPweb when executing queries with hits in a very large number of texts (100,000 or more),
+   which is quite common e.g. for Web corpora.
+ 
+ - The "group" command supports computes grouped frequency counts, as the name has always 
+   implied.  Use e.g. "group A match lemma by target lemma;" to sort output by co-occurrence
+   frequency, and "group A match lemma group by target lemma;" to group items by target.
+
 Bug fixes:
 
  - [2011-11-03: v3.4.1] CQP no longer crashes with a segmentation fault when trying to display very long kwic lines
@@ -71,6 +81,13 @@ Enhancements:
  - [2014-06-19] New class cl_ngram_hash (based on cl_lexhash) encapsulates part of the functionality of the
    cwb-scan-corpus tool, making it accessible to other applications.  The new class should be slightly more
    efficient and memory-friendly than the original code because it embeds n-grams directly in the hash entries.
+
+ - [2014-06-19: v3.4.9] cwb-scan-corpus now uses cl_ngram_hash for counting, resulting in substantial performance
+   improvement (both speed and memory footprint) in certain situations.
+
+ - [2015-06-19: v3.4.9] Hash-based reimplementation of CQP's "group" command is much faster for frequency counts
+   over large sets of distinct items (up to 150x speed-up in extreme cases) and supports grouped listing of
+   frequencies (as the name of the command has always implied).
 
 
 Version 3.2

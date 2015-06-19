@@ -1299,7 +1299,7 @@ do_cqi_cqp_fdist_1(void)
   else {
     /* compute_grouping() returns tokens with f > cutoff, but CQi specifies f >= cutoff */
     cutoff = (cutoff > 0) ? cutoff - 1 : 0;
-    table = compute_grouping(cl, NoField, 0, NULL, fieldtype, 0, att, cutoff);
+    table = compute_grouping(cl, NoField, 0, NULL, fieldtype, 0, att, cutoff, 0);
     if (table == NULL) {
       cqi_command(CQI_CQP_ERROR_GENERAL);
     }
@@ -1372,7 +1372,7 @@ do_cqi_cqp_fdist_2(void)
   else {
     /* compute_grouping() returns tokens with f > cutoff, but CQi specifies f >= cutoff */
     cutoff = (cutoff > 0) ? cutoff - 1 : 0;
-    table = compute_grouping(cl, fieldtype1, 0, att1, fieldtype2, 0, att2, cutoff);
+    table = compute_grouping(cl, fieldtype1, 0, att1, fieldtype2, 0, att2, cutoff, 0);
     if (table == NULL) {
       cqi_command(CQI_CQP_ERROR_GENERAL);
     }

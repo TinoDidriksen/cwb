@@ -411,7 +411,7 @@ init_macros(void)
          define_macro("codist", 2, "$0=Word $1=Att2",
                       "/codist[word, '$0', $1]") &&
          define_macro("codist", 3, "$0=Att1 $1=Word $2=Att2",
-                      "_Codist_Results = [$0 = '$1']; group _Codist_Results match $2 by match $0; discard _Codist_Results;") &&
+                      "_Codist_Results = [$0 = '$1']; group _Codist_Results match $2 group by match $0; discard _Codist_Results;") &&
          1
          ))
     {

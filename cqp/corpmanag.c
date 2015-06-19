@@ -1835,7 +1835,7 @@ valid_subcorpus_id(char *corpusname)
 Boolean
 valid_subcorpus_name(char *corpusname)
 {
-  return ((split_subcorpus_name == NULL) ? False : True);
+  return ((split_subcorpus_name(corpusname, NULL) == NULL) ? False : True);
 }
 
 /** Checks whether corpusname is fully qualified (with name of mother corpus); does not imply syntatic validity */

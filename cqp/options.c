@@ -43,8 +43,7 @@
    "sort -k 2 -k 1n "
 
 #define DEFAULT_EXTERNAL_GROUPING_COMMAND \
-   "sort -n %s +0n +1n -2 | uniq -c | sort -n -r +1n +0rn +2n"
-
+   "sort %s -k 1,1n -k 2,2n | uniq -c | sort -k 1,1nr -k 2,2n -k 3,3n"
 /**
  * Global array of options for CQP.
  */

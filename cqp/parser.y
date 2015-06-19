@@ -328,6 +328,10 @@ synchronize(void)
 %type <AnchorPair> TabulationRange
 %type <AttributeSpecification> OptAttributeSpec
 
+/* -------------------- Group */
+
+%type <ival> GroupBy
+
 /* -------------------- Sort */
 
 %type <sortclause> OptionalSortClause SortClause
@@ -713,16 +717,10 @@ InfoCmd:          INFO_SYM CID          { do_info($2); }
                 | INFO_SYM              { do_info(current_corpus); }
                 ;
 
-GroupCmd:       GROUP_SYM CID Anchor ID BY_SYM Anchor ID 
+GroupCmd:       GROUP_SYM CID Anchor ID GroupBy Anchor ID 
                   CutStatement OptExpansion OptionalRedir
                                 { 
-                                  do_group($2, $3.anchor, $3.offset, $4, $6.anchor, $6.offset, $7, $8, $9, &($10)); 
-                                  cl_free($10.name);
-                                }
-              | GROUP_SYM CID Anchor ID FOREACH_SYM Anchor ID 
-                  CutStatement OptExpansion OptionalRedir
-                                { 
-                                  do_group($2, $3.anchor, $3.offset, $4, $6.anchor, $6.offset, $7, $8, $9, &($10));
+                                  do_group($2, $3.anchor, $3.offset, $4, $6.anchor, $6.offset, $7, $8, $9, $5, &($10)); 
                                   cl_free($10.name);
                                 }
               | GROUP_SYM CID Anchor ID 
@@ -733,10 +731,19 @@ GroupCmd:       GROUP_SYM CID Anchor ID BY_SYM Anchor ID
                                 }
               ;
 
+GroupBy:      BY_SYM                  { $$ = 0; } 
+              | FOREACH_SYM           { $$ = 0; }
+              | GROUP_SYM BY_SYM      { $$ = 1; }
+              | GROUP_SYM FOREACH_SYM { $$ = 1; }
+              ;
+
+
 /* the 'expand' flag is not implemented in the group command */
 OptExpansion:    EXPAND_SYM { $$ = 1; } 
                | /* epsilon */ { $$ = 0; }
                ;
+
+
 
 /* ================================================== Tabulate */
 

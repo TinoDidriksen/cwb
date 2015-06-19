@@ -32,7 +32,7 @@
 
 
 typedef struct _id_cnt_mapping {
-  int s, t, freq;
+  int s, t, freq, s_freq;
 } ID_Count_Mapping;
 
 typedef struct _grouptable {
@@ -52,6 +52,7 @@ typedef struct _grouptable {
   int target_offset;
 
   int cutoff_frequency;
+  int is_grouped;
 
   int nr_cells;
   ID_Count_Mapping *count_cells;
@@ -65,7 +66,8 @@ Group *compute_grouping(CorpusList *cl,
 			FieldType target_field,
 			int target_offset,
 			char *target_attr_name,
-			int cutoff_freq);
+			int cutoff_freq,
+      int is_grouped);
 
 void free_group(Group **group);
 

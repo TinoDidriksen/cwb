@@ -39,9 +39,6 @@
 
 #include "html-print.h"
 
-#define SEPARATOR  "#---------------------------------------------------------------------\n"
-#define SEPARATOR2 "#=====================================================================\n"
-
 
 #define GROUP_DEBUG 0
 
@@ -49,52 +46,58 @@
 
 /* ---------------------------------------------------------------------- */
 
-static
-int compare_by_freq(const void *p1, const void *p2)
+/* support function for qsort() of grouping cells, controlled by global variables */
+Group *compare_cells_group = NULL;
+
+static int 
+compare_cells(const void *p1, const void *p2)
 {
-  return ((ID_Count_Mapping *)p2)->freq - ((ID_Count_Mapping *)p1)->freq;
+  ID_Count_Mapping *cell1 = (ID_Count_Mapping *)p1;
+  ID_Count_Mapping *cell2 = (ID_Count_Mapping *)p2;
+  char *w1, *w2;
+  int res, f1, f2;
+  
+  if (compare_cells_group->is_grouped) {
+    /* grouped sort: order by s_freq, then source, then freq, then target */
+    f1 = cell1->s_freq;
+    f2 = cell2->s_freq;
+    res = (f2 > f1) - (f2 < f1); /* corresponds to f2 <=> f1 in Perl */
+    if (res != 0) return res;
+
+    w1 = Group_id2str(compare_cells_group, cell1->s, 0);
+    w2 = Group_id2str(compare_cells_group, cell2->s, 0);
+    res = cl_strcmp(w1, w2);
+    if (res != 0) return res;
+    
+    f1 = cell1->freq;
+    f2 = cell2->freq;
+    res = (f2 > f1) - (f2 < f1);
+    if (res != 0) return res;
+
+    w1 = Group_id2str(compare_cells_group, cell1->t, 1);
+    w2 = Group_id2str(compare_cells_group, cell2->t, 1);
+    res = cl_strcmp(w1, w2);
+    return res;
+  }
+  else {
+    /* ungrouped sort: order by freq, then source, then target */
+    f1 = cell1->freq;
+    f2 = cell2->freq;
+    res = (f2 > f1) - (f2 < f1);
+    if (res != 0) return res;
+
+    w1 = Group_id2str(compare_cells_group, cell1->s, 0);
+    w2 = Group_id2str(compare_cells_group, cell2->s, 0);
+    res = cl_strcmp(w1, w2);
+    if (res != 0) return res;
+
+    w1 = Group_id2str(compare_cells_group, cell1->t, 1);
+    w2 = Group_id2str(compare_cells_group, cell2->t, 1);        
+    res = cl_strcmp(w1, w2);
+    return res;
+  }
 } 
 
-int
-sum_freqs(ID_Count_Mapping *buffer, int bufsize, int cutoff_f)
-{
-  int i, insp;
-
-  insp = 0; 
-  i = 0;
-
-  if (progress_bar) 
-    progress_bar_message(2, 2, " cutoff freq.");
-
-  for (i = 0; i < bufsize; i++) {
-    if (buffer[i].freq >= cutoff_f) {
-      buffer[insp].s = buffer[i].s;
-      buffer[insp].t = buffer[i].t;
-      buffer[insp].freq = buffer[i].freq;
-      insp++;
-    }
-  }
-
-  if (progress_bar) 
-    progress_bar_message(2, 2, " sorting rslt");
-
-  qsort(buffer, insp, sizeof(ID_Count_Mapping), compare_by_freq);
-
-  if (progress_bar) 
-    progress_bar_percentage(2, 2, 100); /* so total percentage runs up to 100% */
-
-  return insp;
-}
-
-static
-int compare_st_cells(const void *p1, const void *p2)
-{
-  int r;
-  r = ((ID_Count_Mapping *)p2)->s - ((ID_Count_Mapping *)p1)->s;
-  if (r == 0) 
-    r = ((ID_Count_Mapping *)p2)->t - ((ID_Count_Mapping *)p1)->t;
-  return r;
-}
 
 int
 get_group_id(Group *group, int i, int target) {
@@ -163,22 +166,23 @@ Group_id2str(Group *group, int id, int target) {
 Group *
 ComputeGroupInternally(Group *group)
 {
-  ID_Count_Mapping node;
-  ID_Count_Mapping *result;
+  cl_ngram_hash pairs, groups; /* frequency counts for (source, target) pairs and groups (= source ID) */
+  cl_ngram_hash_entry item;
 
   int i;
+  int s_t[2]; /* pair of source and target IDs */
   size_t nr_nodes;
   int percentage, new_percentage; /* for ProgressBar */
   int size = group->my_corpus->size;
 
   /* ---------------------------------------------------------------------- */
 
-  nr_nodes = 0;
-  
   if (progress_bar)
     progress_bar_clear_line();
   percentage = -1;
 
+  pairs = cl_new_ngram_hash(2, 0);
+  groups = cl_new_ngram_hash(1, 0);
   EvaluationIsRunning = 1;
 
   for (i = 0; i < size; i++) {
@@ -193,28 +197,48 @@ ComputeGroupInternally(Group *group)
       }
     }
 
-    node.s = get_group_id(group, i, 0);       /* source ID */
-    node.t = get_group_id(group, i, 1);       /* target ID */
-    node.freq = 0;
-  
-    result = binsert_g(&node,
-                       (void **) &(group->count_cells),
-                       &nr_nodes,
-                       sizeof(ID_Count_Mapping),
-                       compare_st_cells);
-
-    result->freq++;
+    s_t[0] = get_group_id(group, i, 0);       /* source ID */
+    s_t[1] = get_group_id(group, i, 1);       /* target ID */
+    cl_ngram_hash_add(pairs, s_t, 1);         /* count frequency of (source, target) pair */
+    cl_ngram_hash_add(groups, s_t, 1);        /* frequency counts for groups (source) */  
   }
 
   if (EvaluationIsRunning) {
-    group->nr_cells = sum_freqs(group->count_cells, nr_nodes, group->cutoff_frequency);
+
+    if (progress_bar) 
+      progress_bar_message(2, 2, " cutoff freq.");
+
+    /* extract vector of pairs above the specified frequency threshold */
+    group->count_cells = (ID_Count_Mapping *)cl_malloc(cl_ngram_hash_size(pairs) * sizeof(ID_Count_Mapping));
+    nr_nodes = 0;
+    cl_ngram_hash_iterator_reset(pairs);
+    while ((item = cl_ngram_hash_iterator_next(pairs)) != NULL) {
+      if (item->freq >= group->cutoff_frequency) {
+        group->count_cells[nr_nodes].s = item->ngram[0];
+        group->count_cells[nr_nodes].t = item->ngram[1];
+        group->count_cells[nr_nodes].freq = item->freq;
+        group->count_cells[nr_nodes].s_freq = cl_ngram_hash_freq(groups, item->ngram);
+        nr_nodes++;
+      }
+    }
     
-    if (progress_bar)
+    /* free unused memory if frequency threshold has filtered out items */
+    if (nr_nodes < cl_ngram_hash_size(pairs))
+      group->count_cells = (ID_Count_Mapping *)cl_realloc(group->count_cells, (nr_nodes * sizeof(ID_Count_Mapping)));
+    group->nr_cells = nr_nodes;
+
+    if (progress_bar) 
+      progress_bar_message(2, 2, " sorting rslt");
+
+    /* now sort entries by decreasing frequency, breaking ties in cl_strcmp() order */
+    compare_cells_group = group;
+    qsort(group->count_cells, nr_nodes, sizeof(ID_Count_Mapping), compare_cells);
+    
+    if (progress_bar) {
+      progress_bar_percentage(2, 2, 100); /* so total percentage runs up to 100% */
       progress_bar_clear_line();
+    }
     
-    if (group->nr_cells < nr_nodes)
-      group->count_cells = 
-        cl_realloc(group->count_cells, (group->nr_cells * sizeof(ID_Count_Mapping)));
   }
   else {
     cqpmessage(Warning, "Group operation aborted by user.");
@@ -222,7 +246,10 @@ ComputeGroupInternally(Group *group)
     free_group(&group);         /* sets return value to NULL to indicate failure */
   }
   EvaluationIsRunning = 0;
-    
+  
+  cl_delete_ngram_hash(pairs); /* free memory */
+  cl_delete_ngram_hash(groups);
+  
   return group;
 }
 
@@ -266,7 +293,7 @@ ComputeGroupExternally(Group *group)
   }
   else {
     int freq, p1, p2, tokens;
-#define GROUP_REALLOC 16
+#define GROUP_REALLOC 1024
 
     while ((tokens = fscanf(pipe, "%d%d%d", &freq, &p1, &p2)) == 3) {
       if (freq > cutoff_freq) {
@@ -288,6 +315,7 @@ ComputeGroupExternally(Group *group)
         group->count_cells[group->nr_cells].s = p1;
         group->count_cells[group->nr_cells].t = p2;
         group->count_cells[group->nr_cells].freq = freq;
+        group->count_cells[group->nr_cells].s_freq = 0;
 
         group->nr_cells = group->nr_cells + 1;
       }
@@ -321,7 +349,8 @@ Group *compute_grouping(CorpusList *cl,
                         FieldType target_field,
                         int target_offset,
                         char *target_attr_name,
-                        int cutoff_freq)
+                        int cutoff_freq,
+                        int is_grouped)
 {
   Group *group;
   Attribute *source_attr, *target_attr;
@@ -458,9 +487,11 @@ Group *compute_grouping(CorpusList *cl,
   group->nr_cells = 0;
   group->count_cells = NULL;
   group->cutoff_frequency = cutoff_freq;
+  group->is_grouped = is_grouped;
 
-  if (UseExternalGrouping && !insecure && !(source_is_struc || target_is_struc))
-    return ComputeGroupExternally(group); /* modifies Group object in place and returns pointer or NULL */
+  if (UseExternalGrouping && !insecure && !(source_is_struc || target_is_struc || is_grouped))
+    /* external grouping doesn't support s-attributes and grouped counts */
+    return ComputeGroupExternally(group); /* modifies Group object in place and returns pointer */
   else
     return ComputeGroupInternally(group);
 }
