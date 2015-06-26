@@ -1042,6 +1042,11 @@ cl_ngram_hash_entry *cl_ngram_hash_get_entries(cl_ngram_hash hash, int *ret_size
  */
 void cl_ngram_hash_iterator_reset(cl_ngram_hash hash);
 cl_ngram_hash_entry cl_ngram_hash_iterator_next(cl_ngram_hash hash);
+/**
+ * Statistics on bucket fill rates for debugging purposes
+ */
+int *cl_ngram_hash_stats(cl_ngram_hash hash, int max_n);
+void cl_ngram_hash_print_stats(cl_ngram_hash hash, int max_n);
 
 
 /*

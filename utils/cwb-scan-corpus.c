@@ -814,6 +814,10 @@ main (int argc, char *argv[])
       fprintf(stderr, "ok.\n");
   } /* endblock print hash contents to stdout */
 
+  /* display hash table usage statistics at higher debug levels (-D -D and above) */
+  if (debug_level >= 2)
+    cl_ngram_hash_print_stats(Hash.table, 20);
+
   /* final act of cleanup */
   if (regular_rx)
     cl_delete_regex(regular_rx);

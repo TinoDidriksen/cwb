@@ -48,7 +48,7 @@
 unsigned int
 hash_ngram(int N, int *tuple)
 {
-  unsigned int result = 0;
+  unsigned int result = 0; /* TODO: 5381 as proposed in DJB2? */
   int i;
 
   for(i = 0 ; i < N; i++)
@@ -57,7 +57,7 @@ hash_ngram(int N, int *tuple)
 }
 
 
-/** TODO: consider alternative hash functions (see cl/ngram_hash.h) */
+/** TODO: consider alternative hash functions (see cl/lexhash.h) */
 
 
 /*
@@ -289,6 +289,8 @@ cl_ngram_hash_check_grow(cl_ngram_hash hash)
     if (cl_debug) {
       fprintf(stderr, "[n-gram hash autogrow: triggered by fill rate = %3.1f (%d/%d)]\n",
               fill_rate, hash->entries, old_buckets);
+      if (cl_debug >= 2)
+        cl_ngram_hash_print_stats(hash, 12);
     }
     N = hash->N;
     temp = cl_new_ngram_hash(N, new_buckets); /* create new hash with target fill rate */
@@ -605,4 +607,70 @@ cl_ngram_hash_iterator_next(cl_ngram_hash hash)
   }
   hash->iter_point = point->next;
   return point;
+}
+
+/**
+ * Compute statistics on bucket fill rates (for debugging and optimization).
+ *
+ * This function returns an allocated integer array of length max_n + 1, whose
+ * i-th entry specifies the number of buckets containing i keys.  For i == 0, this
+ * is the number of empty buckets. The last entry (i == max_n) is the cumulative
+ * number of buckets containing i or more entries.
+ *
+ * @param hash      The n-gram hash.
+ * @param max_n     Count buckets with up to max_n entries.
+ */
+int *
+cl_ngram_hash_stats(cl_ngram_hash hash, int max_n)
+{
+  int *stats;
+  int i, n;
+  cl_ngram_hash_entry point;
+  
+  assert(max_n > 0);
+  assert((hash != NULL && hash->table != NULL && hash->buckets > 0) && "cl_ngram_hash object was not properly initialised");
+  stats = cl_calloc(max_n + 1, sizeof(int));
+
+  for (i = 0; i < hash->buckets; i++) {
+    point = hash->table[i];
+    n = 0;
+    while (point) {
+      point = point->next;
+      n++;
+    }
+    if (n >= max_n)
+      stats[max_n]++;
+    else
+      stats[n]++;
+  }
+  return stats;
+}
+
+/**
+ * Display statistics on bucket fill rates (for debugging and optimization).
+ *
+ * This function prints a table showing the distribution of bucket sizes, i.e.
+ * how many buckets contain a given number of keys.  The table will be printed
+ * to STDERR, as all debugging output in CWB.
+ *
+ * @param hash      The n-gram hash.
+ * @param max_n      Count buckets with up to max_n entries.
+ */
+void
+cl_ngram_hash_print_stats(cl_ngram_hash hash, int max_n)
+{
+  int *stats = cl_ngram_hash_stats(hash, max_n);  /* also performs sanity checks */
+  int i;
+  
+  fprintf(stderr, "N-gram hash fill rate: %5.2f (%d entries in %d buckets)\n",
+          ((double) hash->entries) / hash->buckets, hash->entries, hash->buckets);
+  fprintf(stderr, "# entries: ");
+  for (i = 0; i <= max_n; i++)
+    fprintf(stderr, "%8d", i);
+  fprintf(stderr, "+\n");
+  fprintf(stderr, "bucket cnt:");
+  for (i = 0; i <= max_n; i++)
+    fprintf(stderr, "%8d", stats[i]);
+  fprintf(stderr, "\n");
+  cl_free(stats);
 }

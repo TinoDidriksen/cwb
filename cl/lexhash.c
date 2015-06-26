@@ -61,7 +61,7 @@ find_prime(int n) {
 unsigned int 
 hash_string(char *string) {
   unsigned char *s = (unsigned char *)string;
-  unsigned int result = 0;
+  unsigned int result = 0;   /* TODO: 5381 as proposed in DJB2? */
   for( ; *s; s++)
     result = (result * 33) ^ (result >> 27) ^ *s;
   return result;
@@ -69,11 +69,18 @@ hash_string(char *string) {
 
 /** TODO: consider alternative hash functions
 
-Code above (purloined from Perl source code) seems to be from Don Knuth's "Art of Computer Programming",
-except for using (res * 33) instead of (res << 5).
+The hash function above appears to have been purloined from some version of the Perl source code.
+This claim cannot be confirmed, though. Perl5 has used various hash functions over time, but older
+versions (at least up to Perl 5.8.1) implement the simple DJB2 algorithm (see below).
 
-Cf. discussion and several better hashing algorithms suggested here:
-http://burtleburtle.net/bob/hash/
+According to 
+
+    http://burtleburtle.net/bob/hash/
+  
+the algorithm is recommended in Don Knuth's "Art of Computer Programming" (Vol. 3, Sec. 6.4),
+but we haven't been able to find the actual reference there.
+
+The URL above also discusses properties of hash functions at length and suggests a number of better algorithms.
 
 Prime-number-sized hash tables are required by Knuth's algorithm, but make hashing more expensive.
 Growing a hash from 2^n to 2^(n+1) also gives a highly predicatble redistribution of buckets.
