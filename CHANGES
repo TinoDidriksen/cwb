@@ -22,8 +22,8 @@ Other changes:
    slightly improved efficiency and memory footprint.
    
  - cwb-scan-corpus is now faster and uses less memory, especially if used without fine-tuning
-   the number of hash buckets (-b option).  For example, scanning 200 M word corpus for word
-   bigrams (with -C filtering) requires 30% less memory and is twice as fast as before.
+   the number of hash buckets (-b option).  For example, scanning a 200 M word corpus for word
+   bigrams (with -C filtering) requires 30% less memory and is four times faster than before.
 
  - CQP's "group" command has been reimplemented using a hash-based algorithm, making it much
    more efficient for large frequency counts.  For example, a grouping over approx. 400,000

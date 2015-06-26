@@ -28,8 +28,13 @@
 #define DEFAULT_NR_OF_BUCKETS 250000
 
 /** Default parameters for auto-growing the table of buckets (@see cl_ngram_hash_auto_grow_fillrate for details). */
-#define DEFAULT_FILLRATE_LIMIT(n) ((n >=5) ? 2.0 : 4.0)
-#define DEFAULT_FILLRATE_TARGET(n) ((n >= 5) ? 0.5 : 1.0) /**< keep memory overhead for bucket table below 50% */
+#define DEFAULT_FILLRATE_LIMIT(n) 5.0
+#define DEFAULT_FILLRATE_TARGET(n) 1.0 /**< keep memory overhead for bucket table below 50% */
+
+/* -- fill rate limits could also be adapted to n-gram size, but this doesn't seem to improve speed much --
+#define DEFAULT_FILLRATE_LIMIT(n) ((n >=5) ? 3.0 : 5.0)
+#define DEFAULT_FILLRATE_TARGET(n) ((n >= 5) ? 0.5 : 1.0)
+*/
 
 /** Maximum number of buckets n-gram hash will try to allocate when auto-growing. */
 #define MAX_BUCKETS 1000000007  /**< 1 billion (incremented to next prime number) */
@@ -48,11 +53,13 @@
 unsigned int
 hash_ngram(int N, int *tuple)
 {
-  unsigned int result = 0; /* TODO: 5381 as proposed in DJB2? */
+  unsigned int result = 5381; /* seed value from DJB2, seems slightly better than original seed 0 */
+  unsigned char *buffer = (unsigned char *)tuple;
   int i;
 
-  for(i = 0 ; i < N; i++)
-    result = (result * 33 ) ^ (result >> 27) ^ tuple[i];
+  /* hash function is designed for byte sequence and has poor distribution if applied directly to ints */
+  for(i = 0 ; i < N * sizeof(int); i++)
+    result = (result * 33) ^ (result >> 27) ^ buffer[i];
   return result;
 }
 
@@ -660,10 +667,12 @@ void
 cl_ngram_hash_print_stats(cl_ngram_hash hash, int max_n)
 {
   int *stats = cl_ngram_hash_stats(hash, max_n);  /* also performs sanity checks */
+  double rate, p;
   int i;
   
+  rate = ((double) hash->entries) / hash->buckets;
   fprintf(stderr, "N-gram hash fill rate: %5.2f (%d entries in %d buckets)\n",
-          ((double) hash->entries) / hash->buckets, hash->entries, hash->buckets);
+          rate, hash->entries, hash->buckets);
   fprintf(stderr, "# entries: ");
   for (i = 0; i <= max_n; i++)
     fprintf(stderr, "%8d", i);
@@ -672,5 +681,13 @@ cl_ngram_hash_print_stats(cl_ngram_hash hash, int max_n)
   for (i = 0; i <= max_n; i++)
     fprintf(stderr, "%8d", stats[i]);
   fprintf(stderr, "\n");
+  fprintf(stderr, "expected:  ");
+  p = exp(-rate); /* expected number of entries for ideal hash function (Poisson distribution) */
+  for (i = 0; i < max_n; i++) {
+    fprintf(stderr, "%8.0f", p * hash->buckets);
+    p *= rate / (i + 1);
+  }
+  fprintf(stderr, "\n");
+
   cl_free(stats);
 }
