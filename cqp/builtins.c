@@ -31,7 +31,7 @@
 #include "output.h"
 
 
-/* valid attribute types are ATTAT_INT, ATTAT_POS, ATTAT_STRING, ATTAT_NONE */
+/* valid attribute types are ATTAT_INT, ATTAT_POS, ATTAT_STRING, ATTAT_NONE (declared in cl.h) */
 
 int f_args[]        = {ATTAT_STRING};                 /**< Argument types for builtin function f */
 int distance_args[] = {ATTAT_POS, ATTAT_POS};         /**< Argument types for builtin function distance (or dist) */
@@ -70,6 +70,7 @@ BuiltinF builtin_function[] = {
 
   { -1, NULL,       0, NULL,          ATTAT_NONE }
 };
+/* TODO switch to an enum or to constants instead of integer literals for the first field,  to make the big switch below more reader-friendly. */
 
 
 /**
@@ -103,11 +104,12 @@ attat_name(int type)
 
 
 /**
- * Gets the index of a specified predefined function.
+ * Gets the identifier of a specified predefined function (index into the global array of info about the "builtins").
+ * Returns -1 if the function is not found.
  *
  * @see builtin_function
  * @param name  The name of the function to search for.
- * @return      An index into the builtin_function array.
+ * @return      An index into the builtin_function array (or -1 for not found)
  */
 int 
 find_predefined(char *name)
@@ -160,7 +162,7 @@ common_prefix_length(char *s, char *t)
 
 
 /**
- * Calls a predefined function from the built_function array.
+ * Calls a predefined function from the builtin_function array.
  *
  * @see            builtin_function
  * @param bf_id    The function to call, identified as an index to the builtin_function array.

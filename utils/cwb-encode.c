@@ -1883,10 +1883,11 @@ main(int argc, char **argv)
                 while ((j > i) && (buf[j] != '>'))
                   j--;  /* if no '>' was found, we have j==i and the annotation string is empty */
                 if (buf[j-1] == '/') {
-                  /* empty tag : terminate annotation string, open range, and close range */
+                  /* empty tag : terminate annotation string and open range (i.e. an empty tag is interpreted as being an open tag) */
                   buf[j-1] = '\0';
                   range_open(&ranges[rng], line, buf+i);
-                  range_close(&ranges[rng], line);
+                  /* note that this implicitly closes the previous instance of the empty tag.
+                   * this means that we can work with empty elements by looking just at the "open-point" of each range. */
                 }
                 else {
                   /* start tag : terminate annotation string and open range */
