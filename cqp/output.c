@@ -887,7 +887,7 @@ print_tabulation(CorpusList *cl, int first, int last, struct Redir *rd)
     if (cl->size > 0) {
       /* work around bug: anchor validation will fail for empty query result (but then loop below is void anyway) */
       if (! (pt_validate_anchor(cl, item->anchor1) && pt_validate_anchor(cl, item->anchor2)))
-	return 0;
+        return 0;
     }
     item = item->next;
   }
@@ -905,6 +905,7 @@ print_tabulation(CorpusList *cl, int first, int last, struct Redir *rd)
       int end   = pt_get_anchor_cpos(cl, current, item->anchor2, item->offset2);
       int cpos;
 
+      /* TODO AH 2016-02-22: we need an undefined-check at the other end of the corpus: > corpus-size */
       if (start < 0 || end < 0) /* one of the anchors is undefined -> print single undefined value for entire range */
         start = end = -1;
 
