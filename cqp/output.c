@@ -788,8 +788,19 @@ append_tabulation_item(TabulationItem item) {
   }
 }
 
+/**
+ * Gets the cpos of one of the "anchors" of a particular query result. Used for tabulation.
+ *
+ * @param cl      The query being tabulated.
+ * @param n       The number of the match we are requesting an anchor for (where first match is 0).
+ * @param anchor  Which of the anchors of the query match we are requesting.
+ * @param offset  Integer offset from the anchor that we are requesting.
+ * @return        The cpos of the requested position, or -1 if the requested position would be
+ *                outside the corpus.
+ */
 int
-pt_get_anchor_cpos(CorpusList *cl, int n, FieldType anchor, int offset) {
+pt_get_anchor_cpos(CorpusList *cl, int n, FieldType anchor, int offset)
+{
   int real_n, cpos;
 
   real_n = (cl->sortidx) ? cl->sortidx[n] : n; /* get anchor for n-th match */
@@ -812,11 +823,12 @@ pt_get_anchor_cpos(CorpusList *cl, int n, FieldType anchor, int offset) {
     break;
   }
 
-  if (cpos < 0) return cpos;    /* -1 indicates undefined anchor */
-  
   cpos += offset;
-  if (cpos < 0) cpos = 0;
-  if (cpos >= cl->mother_size) cpos = cl->mother_size - 1;
+
+  /* -1 indicates undefined anchor */
+  if (cpos < 0 || cpos >= cl->mother_size)
+    return -1;
+  /* TODO longterm: CPOS_UNDEFINED as a macro might be a handy thing to have! */
 
   return cpos;
 }
@@ -850,7 +862,7 @@ pt_validate_anchor(CorpusList *cl, FieldType anchor) {
   return 1;
 }
 
-/* tabulate specified query result, using settings from global list of tabulation items;
+/** tabulate specified query result, using settings from global list of tabulation items;
    return value indicates whether tabulation was successful (otherwise, generates error message) */
 int
 print_tabulation(CorpusList *cl, int first, int last, struct Redir *rd)
