@@ -917,8 +917,9 @@ print_tabulation(CorpusList *cl, int first, int last, struct Redir *rd)
       int end   = pt_get_anchor_cpos(cl, current, item->anchor2, item->offset2);
       int cpos;
 
-      /* TODO AH 2016-02-22: we need an undefined-check at the other end of the corpus: > corpus-size */
-      if (start < 0 || end < 0) /* one of the anchors is undefined -> print single undefined value for entire range */
+      /* Negative return value for either start or end means that the position is out-of-bounds (too big or too small)
+       * -> print single undefined value for entire range */
+      if (start < 0 || end < 0)
         start = end = -1;
 
       for (cpos = start; cpos <= end; cpos++) {
