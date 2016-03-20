@@ -163,6 +163,7 @@
 #define CDA_EFSETINV    -17       /**< Error code: invalid feature set format */
 #define CDA_EBUFFER     -18       /**< Error code: buffer overflow (hard-coded internal buffer sizes) */
 #define CDA_EINTERNAL   -19       /**< Error code: internal data consistency error (really bad) */
+#define CDA_CPOSUNDEF   INT_MIN   /**< Error code: undefined corpus position (use this code to avoid ambiguity with negative cpos) */
 
 /* a global variable which will always be set to one of the above constants! */
 extern int cl_errno;

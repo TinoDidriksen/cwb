@@ -15,7 +15,7 @@ Other changes:
  - There is now a precise limit on the size of a CWB corpus: CL_MAX_CORPUS_SIZE = 2^32 - 1 tokens;
    cwb-encode will discard additional input data with a warning once the limit has been reached
 
- - CQP can now cope with concordance left/right contesxt of indefinite size.
+ - CQP can now cope with concordance left/right context of indefinite size.
 
  - Implementation of n-gram hashes has been moved from cwb-scan-corpus to the CL library, so it
    can be used by other applications.  In the process, the implementation has been revised for 
@@ -31,8 +31,8 @@ Other changes:
    of CQPweb when executing queries with hits in a very large number of texts (100,000 or more),
    which is quite common e.g. for Web corpora.
  
- - The "group" command supports computes grouped frequency counts, as the name has always 
-   implied.  Use e.g. "group A match lemma by target lemma;" to sort output by co-occurrence
+ - The "group" command supports properly grouped frequency counts, as the name has always
+   implied.  Use e.g. "group A match lemma by target lemma;" to sort pairs by co-occurrence
    frequency, and "group A match lemma group by target lemma;" to group items by target.
 
 Bug fixes:
@@ -69,6 +69,10 @@ Bug fixes:
  - [2014-06-16: v3.4.8] Fixed bug whereby a UTF-8 character could be broken up, creating invalid sequences, by
    CQP's system for character-based context size. (CQP is still "dumb" in that it counts strings in bytes not
    characters in UTF-8, but this is a less critical probklem, or should be.)
+
+ - [2016-03-20] Edge case in "tabulate" output, which resulted in incorrect CQPweb collocation analysis under
+   certain circumstances, has been fixed.  Precise behaviour for out of bounds values now documented in the
+   CQP Query Language Tutorial.
 
 Enhancements:
 

@@ -16,15 +16,15 @@
 ##  WWW at http://www.gnu.org/copyleft/gpl.html).
 
 ##
-##  PLATFORM CONFIGURATION FILE: Mac OS X 10.6 (Snow Leopard) and 10.7 (Lion) on 64-bit Intel Core2 and newer CPUs
+##  PLATFORM CONFIGURATION FILE: Recent Mac OS X with Xcode 5 or later on 64-bit Intel Core2 and newer CPUs, natively tuned,
 ##                               for main 64-bit architecture only, with external libraries provided by HomeBrew package manager
 ##
 
 ## Inherits from basic Darwin configuration
 include $(TOP)/config/platform/darwin
 
-## Make sure that Apple's gcc is used (not e.g. a fink-installed version)
-CC = /usr/bin/gcc
+## Explicitly use Clang compiler (Apple's gcc is now just a symlink to Clang)
+CC = /usr/bin/clang
 
 ## Only build default 64-bit architecture, optimised for this system
 CFLAGS = -Wall -O3 -arch x86_64 -march=native -mtune=native

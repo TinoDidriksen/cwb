@@ -795,8 +795,8 @@ append_tabulation_item(TabulationItem item) {
  * @param n       The number of the match we are requesting an anchor for (where first match is 0).
  * @param anchor  Which of the anchors of the query match we are requesting.
  * @param offset  Integer offset from the anchor that we are requesting.
- * @return        The cpos of the requested position, or -1 if the requested position would be
- *                outside the corpus.
+ * @return        The cpos of the requested position, which may fall outside the bounds of the corpus
+ *                if an offset has been specified; or CDA_CPOSUNDEF if the anchor has not been set.
  */
 int
 pt_get_anchor_cpos(CorpusList *cl, int n, FieldType anchor, int offset)
@@ -823,14 +823,12 @@ pt_get_anchor_cpos(CorpusList *cl, int n, FieldType anchor, int offset)
     break;
   }
 
-  cpos += offset;
-
-  /* -1 indicates undefined anchor */
+  /* undefined anchor (-1) or invalid anchor position */
   if (cpos < 0 || cpos >= cl->mother_size)
-    return -1;
-  /* TODO longterm: CPOS_UNDEFINED as a macro might be a handy thing to have! */
+    return CDA_CPOSUNDEF;
 
-  return cpos;
+  /* return anchor position with offset, may be out of bounds now */
+  return cpos + offset;
 }
 
 int
@@ -917,17 +915,17 @@ print_tabulation(CorpusList *cl, int first, int last, struct Redir *rd)
       int end   = pt_get_anchor_cpos(cl, current, item->anchor2, item->offset2);
       int cpos;
 
-      /* Negative return value for either start or end means that the position is out-of-bounds (too big or too small)
-       * -> print single undefined value for entire range */
-      if (start < 0 || end < 0)
+      /* if either of the anchors is undefined, print a single undef value for the entire range */
+      if (start == CDA_CPOSUNDEF || end == CDA_CPOSUNDEF)
         start = end = -1;
 
       for (cpos = start; cpos <= end; cpos++) {
-        if (item->attribute_type == ATT_NONE) {
-          fprintf(rd->stream, "%d", cpos);
-        }
-        else {
-          if (cpos >= 0) {      /* undefined anchors print empty string */
+        if (cpos >= 0 && cpos <= cl->mother_size) {
+          /* valid cpos: print cpos or requested attribute */
+          if (item->attribute_type == ATT_NONE) {
+            fprintf(rd->stream, "%d", cpos);
+          }
+          else {
             char *string = NULL;
             if (item->attribute_type == ATT_POS) 
               string = cl_cpos2str(item->attribute, cpos);
@@ -946,7 +944,12 @@ print_tabulation(CorpusList *cl, int first, int last, struct Redir *rd)
             }
           }
         }
-        if (cpos < end)         /* multiple values for tabulation item are separated by blanks */
+        else {
+          /* cpos out of bounds: print -1 or empty string */
+          if (item->attribute_type == ATT_NONE)
+            fprintf(rd->stream, "-1");
+        }
+        if (cpos < end)         /* tokens in a range item are separated by blanks */
           fprintf(rd->stream, " "); 
       }
       if (item->next)           /* multiple tabulation items are separated by TABs */
