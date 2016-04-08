@@ -22,7 +22,7 @@ regions of the corpus as defined by some other s-attribute.
 
 B<cwb-align> is I<not> intended to represent the state-of-the-art in alignment software; rather it is
 intended to provide a basic, fallback option for users of parallel corpora who do not have access to more
-advanced tools. While it will in many cases do a decent job of aligning, say, a pair of romance or Germanic
+advanced tools. While it will in many cases do a decent job of aligning, say, a pair of Romance or Germanic
 languages with a lot of similar vocabulary, it will work much less well if asked to align, say, French and 
 Chinese. 
 
@@ -157,6 +157,10 @@ necessary for matching regions to occur in the same order in source and target c
 
 Naturally B<-V> can only be used if the pre-alignment s-attribute is one that has annotations. 
 
+=item B<-w> I<n>
+
+Specifies the I<beam width> used when calculating alignments. The default is 50. It is usually safe to use the default value.
+
 =back
 
 =head1 CONFIGURATION FLAGS
@@ -176,8 +180,6 @@ Typically, you would want to put more weight on shared words or shared translati
 on shared letter sequences.
 
 The full specification of the possible configuration flags is as follows:
-
-
 
 =over 4
 
