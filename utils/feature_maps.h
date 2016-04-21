@@ -52,7 +52,7 @@ typedef struct feature_maps_t {
  * we can look at, together with weights.
  *
  * Basically, it is a "compiled" version of the features defined by the cwb-align configuration
- * flags *AS APPLIED TO THIS SPECIFIC CORPUS - a massive list of "things to look for"
+ * flags *AS APPLIED TO THIS SPECIFIC CORPUS* - a massive list of "things to look for"
  * when comparing any two potentially-corresponding regions from a source/target corpus pair.
  */
 typedef feature_maps_t *FMS;

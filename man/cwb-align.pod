@@ -258,7 +258,13 @@ Specifies that the appearance of defined translation-equivalent words in the two
 should be used as features for the similarity measurement, with the specified weight.
 
 The file containing the translation equivalents must use the same character encoding as the two corpora;
-character encoding errors will result in B<cwb-align> aborting.
+character encoding errors will result in B<cwb-align> aborting. It should be formatted as follows: 
+one pair of words per line; the source-language word first, then a space, then the target-language equivalent.
+(Words cannot have any whitespace within them: such wordforms are allowed in p-attributes, 
+but the aligner can't make use of them.)
+
+A weight must be given if this configuration flag is used. Normally you would want transaltion equivalents 
+to be weighted similarly to shared words (weight 50 by default).
 
 =back
 

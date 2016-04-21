@@ -126,7 +126,7 @@ init_char_map()
  * FMS = create_feature_maps(config_data, nr_of_config_lines, source_word, target_word, source_s, target_s);
  *
  * @param config              array of strings representing the feature map configuration.
- * @param config_lines        the number of configuration items stored in config_data.
+ * @param config_lines        the number of configuration items stored in config.
  * @param w_attr1             The p-attribute in the first corpus to link.
  * @param w_attr2             The p-attribute in the second corpus to link.
  * @param s_attr1             The s-attribute in the first corpus to link.
@@ -326,14 +326,15 @@ create_feature_maps(char **config,
             exit(1);
           }
           else if(!(wordlist = fopen(filename,"r"))) {
-            fprintf(stderr,"ERROR: Cannot read word list file %s.\n",
-                    filename);
+            fprintf(stderr,"ERROR: Cannot read word list file %s.\n", filename);
             exit(-1);
           }
           else {
             printf("FEATURE: word list %s, weight=%d ... ", filename, weight);
             fflush(stdout);
-            while((nw = fscanf(wordlist,"%s %s",word1,word2))>0) {
+            /* TODO: (in v 3.9). The bilingual lexicon file should use a tab as the divider,
+             * so that words with a space within them - allowed in a p-attribute - can be specified here. */
+            while(0 < (nw = fscanf(wordlist,"%s %s",word1,word2))) {
               /* on first line of file, skip UTF8 byte-order-mark if present */
               if (nl == 0 && charset == utf8 && strlen(word1) > 3)
                 if (word1[0] == (char)0xEF && word1[1] == (char)0xBB && word1[2] == (char)0xBF)
