@@ -85,6 +85,7 @@ describecorpus_show_basic_info (Corpus *corpus, int with_attribute_names)
   printf("registry file:  %s/%s\n", corpus->registry_dir, corpus->registry_name);
   printf("home directory: %s/\n", corpus->path);
   printf("info file:      %s\n", (corpus->info_file) ? corpus->info_file : "(none)");
+  printf("encoding:       %s\n", cl_charset_name(corpus->charset));
   if ((word = cl_new_attribute(corpus, "word", ATT_POS)) == NULL) {
     fprintf(stderr, "ERROR: 'word' attribute is missing. Aborted.\n");
     exit(1);
