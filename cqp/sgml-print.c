@@ -210,6 +210,17 @@ sgml_puts(FILE *fd, char *s, int flags)
     fputs(s, fd);
 }
 
+/**
+ * Prints a line of text (which will have been previously exrtracted from a corfpus
+ * linked to the present corpus by an a-attribute) following an SGML open-tag.
+ *
+ * The structure is <align name="$att_name">$line_data
+ * And the whole thing is terminated by EOL (note, no close tag as we;'d have in XML!)
+ *
+ * @param stream          Destination for the output.
+ * @param attribute_name  The name of the aligned corpus: printed in the "align" tag as an SGML attribute.
+ * @param line            Character data of the line of aligned-corpus data to print. This is treated as opaque.
+ */
 void
 sgml_print_aligned_line(FILE *stream, char *attribute_name, char *line)
 {

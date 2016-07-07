@@ -280,6 +280,14 @@ html_convert_string(char *s)
 
 /* ---------------------------------------------------------------------- */
 
+/**
+ * Prints a line of text (which will have been previously extracted from a corpus
+ * linked to the present corpus by an a-attribute) within HTML markup.
+ *
+ * @param stream          Destination for the output.
+ * @param attribute_name  The name of the aligned corpus: printed in the leading indicator within the HTML.
+ * @param line            Character data of the line of aligned-corpus data to print. This is treated as opaque.
+ */
 void
 html_print_aligned_line(FILE *stream, 
                         char *attribute_name, 

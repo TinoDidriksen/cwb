@@ -218,6 +218,13 @@ latex_convert_string(char *s)
   return latex_s;
 }
 
+/**
+ * Does nothing: we don't support printing alignment data in LaTeX mode.
+ *
+ * @param stream          Destination for the output.
+ * @param attribute_name  The name of the aligned corpus.
+ * @param line            Character data of the line of aligned-corpus data to print.
+ */
 void
 latex_print_aligned_line(FILE *stream, char *attribute_name, char *line)
 {

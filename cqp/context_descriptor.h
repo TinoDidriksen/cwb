@@ -67,7 +67,7 @@ typedef struct _context_description_block {
   AttributeList *attributes;         /**< positional attributes to print */
   AttributeList *strucAttributes;    /**< structural attributes to print */
   AttributeList *printStructureTags; /**< structure tag (values) to print */
-  AttributeList *alignedCorpora;     /**< aligned lines to print */
+  AttributeList *alignedCorpora;     /**< aligned corpora from which to print parallel data */
 
 } ContextDescriptor;
 

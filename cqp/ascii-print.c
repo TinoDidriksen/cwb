@@ -449,6 +449,16 @@ ascii_print_field(FieldType field, int at_end)
   return sc_before_token;
 }
 
+/**
+ * Prints a line of text (which will have been previously exrtracted from a corfpus
+ * linked to the present corpus by an a-attribute) with a brief character-mode
+ * start-of-line flag ("-->$att_name: ").
+ *
+ * @param stream          Destination for the output.
+ * @param highlighting    Boolean: if true, use colour/bold highlighting for the leading indicator on the line.
+ * @param attribute_name  The name of the aligned corpus: printed in the leading indicator
+ * @param line            Character data of the line of aligned-corpus data to print. This is treated as opaque.
+ */
 void
 ascii_print_aligned_line(FILE *stream, 
                          int highlighting,
