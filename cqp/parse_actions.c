@@ -2833,10 +2833,9 @@ prepare_input(void)
  * This is done, e.g., by the CQP-syntax "expand" command, to include context
  * into the matches found by a query.
  *
- * Each corpus interval stored in the CorpusList is extended by an amount
- * dependant on the information in the global
- * variable "expansion", a Context object (which have been put there by the
- * parser).
+ * Each corpus interval stored in the CorpusList is extended by an amount, and in a direction,
+ * dependant on the information in the global variable "expansion", a Context object
+ * (information which has been put there by the parser).
  *
  * @see       expansion
  * @param cl  The subcorpus to expand.
@@ -2847,11 +2846,9 @@ expand_dataspace(CorpusList *cl)
   int i, res;
 
   if (cl == NULL)
-    cqpmessage(Warning,
-               "The selected corpus is empty.");
+    cqpmessage(Warning, "The selected corpus is empty.");
   else if (cl->type == SYSTEM)
-    cqpmessage(Warning,
-               "You can only expand subcorpora, no system corpora (unchanged)");
+    cqpmessage(Warning, "You can only expand subcorpora, no system corpora (unchanged)");
   else if (expansion.size > 0) {
 
     for (i = 0; i < cl->size; i++) {
@@ -2862,7 +2859,7 @@ expand_dataspace(CorpusList *cl)
         if (res >= 0)
           cl->range[i].start = res;
         else
-          cqpmessage(Warning, "'expand' statement failed.\n");
+          cqpmessage(Warning, "'expand' statement failed (while expanding corpus interval leftwards).\n");
       }
       if (expansion.direction == right || expansion.direction == leftright) {
         res = calculate_rightboundary(cl,
@@ -2871,7 +2868,7 @@ expand_dataspace(CorpusList *cl)
         if (res >= 0)
           cl->range[i].end = res;
         else
-          cqpmessage(Warning, "'expand' statement failed.\n");
+          cqpmessage(Warning, "'expand' statement failed (while expanding corpus interval rightwards).\n");
       }
     }
 

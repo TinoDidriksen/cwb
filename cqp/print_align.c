@@ -179,7 +179,7 @@ printAlignedStrings(Corpus *sourceCorpus,
         switch (GlobalPrintMode) {
         case PrintASCII:
         case PrintUNKNOWN:
-          if (s == NULL)
+          if (s == NULL) {
             s = compose_kwic_line(alignedCorpus,
                                   alg_start, alg_end,
                                   &AlignedCorpusCD,
@@ -191,8 +191,9 @@ printAlignedStrings(Corpus *sourceCorpus,
                                   ConcLineHorizontal,
                                   &ASCIIPrintDescriptionRecord,
                                   0, NULL);
-            if (sanitise_aligned_data)
+            if (s && sanitise_aligned_data)
               cl_string_validate_encoding(s, ascii, 1);
+          }
           ascii_print_aligned_line(stream, highlighting, ai->name, s ? s : "(null)");
           break;
 

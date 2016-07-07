@@ -207,7 +207,7 @@ verify_context_descriptor(Corpus *corpus,
 }
 
 /**
- * Creates a ContextDescriptor object.
+ * Creates (and initialises) a ContextDescriptor object.
  */
 ContextDescriptor *
 NewContextDescriptor(void)
