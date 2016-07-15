@@ -71,7 +71,7 @@ HDRS = barlib.h feature_maps.h
 #       cwb-align           EasyAlign sentence aligner (operates on CWB-encoded corpora)
 #       cwb-align-show      simple terminal-based viewer for EasyAlign alignment files (.align)
 #       cwb-align-encode    encode .align file into CWB format (.alx, and .alg for backward compatibility)
-#	cwb-align-decode    decode alignment attribute from binary representation into .align format
+#       cwb-align-decode    decode alignment attribute from binary representation into .align format
 #       cwb-check-input     program for checking wellformedness of vertical files
 
 PROGRAMS = cwb-atoi$(EXEC_SUFFIX) cwb-itoa$(EXEC_SUFFIX) \
@@ -131,6 +131,10 @@ install: $(PROGRAMS)
 release: $(PROGRAMS)
 	if [ ! -d "$(RELEASE_DIR)/bin" ]; then $(INSTALL) $(INST_FLAGS_DIR) "$(RELEASE_DIR)/bin"; fi;
 	for i in $(PROGRAMS); do $(INSTALL) $(INST_FLAGS_BIN) $$i "$(RELEASE_DIR)/bin"; done
+ifdef __MINGW__
+	# Do not include cwb-atoi and cwb-atoi in Windows release as they trigger malware alerts in much antivirus software
+	for i in cwb-atoi$(EXEC_SUFFIX) cwb-itoa$(EXEC_SUFFIX) ; do $(RM) "$(RELEASE_DIR)/bin/$$i"; done
+endif
 
 uninstall:
 	@$(ECHO) "ERROR: uninstall operation is currently not supported!"
