@@ -1655,14 +1655,13 @@ encode_get_input_line(char *buffer, int bufsize)
     if (!cl_string_validate_encoding(buffer, encoding_charset, clean_strings))
       encode_error("Encoding error: an invalid byte or byte sequence for charset \"%s\" was encountered.\n",
                    corpus_character_set);
-    /* calling this function with no flags will normalize to precomposed form;
-     * but don't bother with the overhead unless the encoding is UTF8  */
+    /* normalize UTF8 to precomposed form, but don't bother with the redundant function call otherwise */
     if (encoding_charset == utf8)
-      cl_string_canonical(buffer, utf8, 0);
+      cl_string_canonical(buffer, utf8, CANONICAL_NFC);
     /* finally, get rid of C0 controls iff the user asked us to clean up strings */
     if (clean_strings)
       cl_string_zap_controls(buffer, encoding_charset, '?', 0, 0);
-    /* note we DIDN'T zap tab and newline, becuase this string has yet to be column-split */
+    /* note we DIDN'T zap tab and newline, because this string has yet to be column-split */
   }
   return ok;
 }

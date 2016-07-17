@@ -801,7 +801,13 @@ char *cl_charset_name_canonical(char *name_to_check);
 
 /* the case/diacritic string normalization features used by CL regexes and CQP (modify input string!) */
 void cl_string_canonical(char *s, CorpusCharset charset, int flags);
-/* modifies string <s> in place; flags are IGNORE_CASE and IGNORE_DIAC */
+/* modifies string <s> in place; flags are IGNORE_CASE, IGNORE_DIAC, CANONICAL_NFC */
+
+/**
+ * Flag: convert UTF-8 string to pre-composed normal form (NFC), the standard representation used by CWB-indexed corpora.
+ * All UTF-8 strings passed in from external sources need to be normalized with CANONICAL_NFC.
+ */
+#define CANONICAL_NFC 8  /* must be compatible with IGNORE_* below */
 
 /* remove or overwrite C0 control characters in a string (modify input string!) */
 int cl_string_zap_controls(char *s, CorpusCharset charset, char replace, int zap_tabs, int zap_newlines);

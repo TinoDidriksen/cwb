@@ -1994,10 +1994,13 @@ cl_string_reverse(const char *s, CorpusCharset charset)
  * buffers are used - but this doesn't dispense with all need for allocation.
  * [Another option would be to allow a buffer to be optionally supplied....]
  *
+ * If charset == utf8 and strings are passed in from external sources, the
+ * flag CANONICAL_NFC should always be specified to obtain consistent results.
+ *
  * @param s1       First string to compare.
  * @param s2       Second string to compare.
  * @param charset  Character set of the two strings.
- * @param flags    IGNORE_CASE, IGNORE_DIAC, both, or neither.
+ * @param flags    IGNORE_CASE, IGNORE_DIAC, CANONICAL_NFC
  * @param reverse  Boolean: if true, strings are compared from end to beginning,
  *                 rather than beginning to end.
  * @return         0 if the strings are the same. 1 if s1 is greater.
@@ -2057,6 +2060,10 @@ cl_string_qsort_compare(const char *s1,
   }
   /* at this point, straight comparison is all we need */
 
+
+  /*
+   * ***TODO*** replace code below by simple strcmp() regardless of charset
+   */
 
   /* the actual comparison begins here. There are two versions:
    * 8-bit (binary compare) and utf8 (depends on GLib and on the current locale). */
@@ -2228,43 +2235,49 @@ cl_id_tolower(char * s)
  *
  * Note also that the arguments of this string were changed in v3.2.1. Now,
  * a CorpusCharset is needed. This is because string canonicalising works
- * differently in UTF8. In UTF8, the "composed" status of ALL strings is
- * standardised (this is not dependent on flags; so this function should
- * always be called on all strings that are going to be inserted into or
- * searched for within, an indexed corpus; then we know we are always
- * dealing with maximally-precomposed strings). Then case folding / accent
- * folding is done by calling Unicode-aware functions. This is in contrast
- * to the process for Latin1, which just uses a straightforward mapping
- * table for both sorts of folding.
+ * differently in UTF8, where case folding / accent folding is done by calling
+ * Unicode-aware functions. By contrast, the process for Latin1 just uses a
+ * straightforward mapping table for both sorts of folding.
+ * In UTF8, an additional flag CANONICAL_NFC can be passed to normalize the
+ * string into the canonical pre-composed form (NFC) used internally by CWB.
+ * All strings that are going to be inserted into or searched for within an
+ * indexed corpus should be processed in this way.
  *
- * @param s        The string (currently: must be Ascii, Latin-1, or UTF8, but
+ * @param s        The string (currently: must be ASCII, Latin-1, or UTF8, but
  *                 this is not checked for you!)
- * @param charset  The character set to use in standardising. If this is utf8,
+ * @param charset  The character set to assume or the string. If this is utf8,
  *                 complex accent and/or case folding will be done, as per the
- *                 unicode standard. If it is anything else, the Latin1 mapping
- *                 tables will be used (currently no other ISO mapping tables
- *                 are built in and activated in the CL).
+ *                 Unicode standard. If it is anything else, internal byte mapping
+ *                 tables will be used.
  * @param flags    The flags that specify which conversions are required.
- *                 Can be IGNORE_CASE and/or IGNORE_DIAC.
+ *                 Can be IGNORE_CASE | IGNORE_DIAC | CANONICAL_NFC
  */
 void 
 cl_string_canonical(char *s, CorpusCharset charset, int flags)
 {
+  int icase = (flags & IGNORE_CASE) != 0;
+  int idiac = (flags & IGNORE_DIAC) != 0;
+  int nfc = (flags & CANONICAL_NFC) != 0;
+
   /* this function has two branches controlled by an if: (a) utf8, (b) everything else. */
   if (charset == utf8) {
 
     /* pointers for UTF8 processing */
     gchar *string = NULL;
-    gchar *precomposed = NULL;
-    gchar *folded = NULL;
+    gchar *new_string = NULL;
     gchar *current_char;
     gchar *next_char_begins;
 
-    int icase = (flags & IGNORE_CASE) != 0;
-    int idiac = (flags & IGNORE_DIAC) != 0;
+    /* GLib documentation insists that g_utf8_* functions must only be used on valid UTF-8 strings;
+     * let's assume that a string passed without CANONICAL_NFC is from an internal source and hence safe */
+    if (nfc && !g_utf8_validate((gchar *)s, -1, NULL)) {
+      fprintf(stderr, "CL: invalid UTF8 string passed to cl_string_canonical ...\n");
+      return;
+    }
 
     /* UTF8 accent folding */
     if (idiac) {
+      /* convert to decomposed normal form, then strip all combining characters */
       if (NULL == (string = g_utf8_normalize((gchar *)s, -1, G_NORMALIZE_NFD)) ) {
         fprintf(stderr, "CL: major error, cannot decompose string: invalid UTF8 string passed to cl_string_canonical...\n");
         return;
@@ -2285,26 +2298,32 @@ cl_string_canonical(char *s, CorpusCharset charset, int flags)
     else
       string = (gchar *)s;
 
-    /* UTF8 precomposing -- always happens */
-    if (NULL == (precomposed = g_utf8_normalize(string, -1, G_NORMALIZE_NFC)) ) {
-      fprintf(stderr, "CL: major error, cannot compose string: invalid UTF8 string passed to cl_string_canonical...\n");
-      return;
+    /* UTF8 pre-composed normal form (always needed after accent folding) */
+    if (nfc || idiac) {
+      new_string = g_utf8_normalize(string, -1, G_NORMALIZE_NFC);
+      if (string != s)
+        cl_free(string); /* free temporary string allocated by accent folding above */
+      string = new_string;
+      if (string == NULL) {
+        fprintf(stderr, "CL: major error, cannot compose string: invalid UTF8 string passed to cl_string_canonical...\n");
+        return;
+      }
     }
-
-    if (string != s)
-      cl_free(string);
 
     /* UTF8 case folding */
     if (icase) {
-      folded = g_utf8_casefold(precomposed, -1);
-      cl_free(precomposed);
+      new_string = g_utf8_casefold(string, -1);
+      if (string != s)
+        cl_free(string); /* free temporary string allocated by one of the steps above */
+      string = new_string;
     }
-    else
-      folded = precomposed;
 
-    /* Note: if you haven't allocated enough memory at s, this will cause a buffer overflow. */
-    strcpy(s, folded);
-    cl_free(folded);
+    /* copy string back into input argument if any changes have been made */
+    if (string != s) {
+      /* Note: if you haven't allocated enough memory at s, this will cause a buffer overflow. */
+      strcpy(s, string);
+      cl_free(string);
+    }
 
   }
   /* end chunk dealing with UTF8 normalisation */
@@ -2318,7 +2337,7 @@ cl_string_canonical(char *s, CorpusCharset charset, int flags)
     if (charset == unknown_charset)
       charset = ascii;
 
-    if (flags) {                  /* don't waste time if no flags are specified */
+    if (icase || idiac) { /* don't waste time if no relevant flags are specified */
       maptable = cl_string_maptable(charset, flags);
       for (p = (unsigned char *)s; *p; p++) {
         *p = maptable[*p];

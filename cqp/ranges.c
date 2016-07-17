@@ -1830,7 +1830,10 @@ SortSubcorpus(CorpusList *cl, SortClause sc, int count_mode, struct Redir *redir
               fprintf(redir->stream, "%d\t", first);
             for (k = 0; k < len; k++) {
               int cpos = start + step * k;
-              char *token = cl_strdup(cl_cpos2str(srt_attribute, cpos));
+              char *token_ro = cl_cpos2str(srt_attribute, cpos);
+              /* allocate extra mem in case of UTF8 folding */
+              char *token = cl_malloc( (strlen(token_ro) + 1) * (cl->corpus->charset == utf8 ? 2 : 1) );
+              strcpy(token, token_ro);
               cl_string_canonical(token, cl->corpus->charset, sc->flags); /* normalise token if %cd was given */
               if (srt_reverse) {
                 /* reverse the token */

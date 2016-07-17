@@ -141,7 +141,7 @@ cl_new_regex(char *regex, int flags, CorpusCharset charset)
 
   /* pre-process regular expression (translate latex escapes and normalise) */
   cl_string_latex2iso(regex, preprocessed_regex, l);
-  cl_string_canonical(preprocessed_regex, charset, rx->flags);
+  cl_string_canonical(preprocessed_regex, charset, rx->flags | CANONICAL_NFC);
 
   /* add start and end anchors to improve performance of regex matcher for expressions such as ".*ung" */
   sprintf(anchored_regex, "^(?:%s)$", preprocessed_regex);
@@ -239,7 +239,9 @@ int cl_regex_optimised(CL_Regex rx)
  * settings that rx was created with are used.
  *
  * @param rx   The regular expression to match.
- * @param str  The string to compare the regex to.
+ * @param str  The string to compare the regex to. If UTF-8 encoding is used,
+ *             this string must be in canonical NFC form, so the caller may
+ *             need to run cl_string_canonical with flag CANONICAL_NFC first.
  * @return     Boolean: true if the regex matched, otherwise false.
  */
 int
@@ -260,7 +262,13 @@ cl_regex_match(CL_Regex rx, char *str)
     haystack = str;
   len = strlen(haystack);
 
-  if (optimised) {
+  /* Beta versions 3.4.10+ leading up to 3.5:
+   *  - use regexp optimizer only if cl_optimize is set
+   *  - allows comparative testing & benchmarking
+   *  - question: is the optimizer still worth the effort for PCRE with JIT?
+   *  - switch optimizer back to default before release **TODO**
+   */
+  if (optimised && cl_optimize) {
     /* this 'optimised' matcher may look fairly bloated, but it's still way ahead of POSIX regexen */
     /* string offset where first character of each grain would be */
     grain_match = 0;
@@ -303,9 +311,9 @@ cl_regex_match(CL_Regex rx, char *str)
     cl_regopt_successes++;
     result = PCRE_ERROR_NOMATCH;  /* the return code from PCRE when there is, um, no match */
   }
-#if 0
-  /* for debug purposes: always call pcre regardless of whether the grains matched. */
-  /* this allows the code in the below #if 1 to check whether or not grains are behaving as they should. */
+#if 1
+  /* set to 0 for debug purposes: always calls PCRE regardless of whether grains matched. */
+  /* this allows the code in the #if 1 below to check whether or not grains are behaving as they should. */
   else {
 #else
   if (1) {
@@ -453,7 +461,7 @@ char *
 read_matchall(char *mark)
 {
   if (*mark == '.') {
-    /* read the matchall diot */
+    /* read the matchall dot */
     return mark + 1;
   }
   else if (*mark == '[') {

@@ -25,7 +25,7 @@
 /**
  * Maximum number of grains of optimisation.
  *
- * There's no point in scanning for too many grains, but regexps can be bloody inefficient.
+ * There's no point in scanning for too many grains, but some regexps used to be bloody inefficient.
  */
 #define MAX_GRAINS 12
 

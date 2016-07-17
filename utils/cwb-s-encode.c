@@ -399,14 +399,13 @@ sencode_parse_line(char *line, int *start, int *end, char **annot)
                   encoding_charset_name);
           exit(1);
         }
-        /* calling this function with no flags will normalize to precomposed form;
-         * but don't bother with the overhead unless the encoding is UTF8  */
+        /* normalize UTF8 to precomposed form, but don't bother with the redundant function call otherwise */
         if (encoding_charset == utf8)
-          cl_string_canonical(*annot, utf8, 0);
+          cl_string_canonical(*annot, utf8, CANONICAL_NFC);
         /* finally, get rid of C0 controls iff the user asked us to clean up strings */
         if (clean_strings)
           cl_string_zap_controls(*annot, encoding_charset, '?', 0, 0);
-        /* TODO nb the above will not take effect till be make string-cleanup possible in v4.0 */
+        /* TODO nb the above will not take effect till we make string-cleanup possible in v4.0 */
       }
     }
   }
