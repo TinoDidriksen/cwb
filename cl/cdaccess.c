@@ -1400,7 +1400,7 @@ cl_regex2id(Attribute *attribute, char *pattern, int flags, int *number_of_match
       /* len = strlen(word); */
     }
 
-    if (cl_regex_match(rx, word)) {    /* regex match */
+    if (cl_regex_match(rx, word, 0)) {    /* regex match */
       bitmap[bitmap_offset] |= bitmap_mask; /* set bit */
       match_count++;
     }

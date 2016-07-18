@@ -390,7 +390,7 @@ eval_constraint(AVS avs, int corppos, RefTab labelrefs, RefTab target_labelrefs)
         char *val = cl_struc2str(avs->tag.attr, struc);
         if (val) {
           if (avs->tag.rx)
-            result = cl_regex_match(avs->tag.rx, val); /* pre-compiled regex available */
+            result = cl_regex_match(avs->tag.rx, val, 0); /* pre-compiled regex available */
           else
             result = (0 == strcmp(avs->tag.constraint, val)); /* no pre-compiled regex -> match as plain string */
         }
@@ -1057,8 +1057,8 @@ eval_bool(Constrainttree ctptr, RefTab rt, int corppos)
 
               /* perform a regular expression match of the two */
               return((ctptr->node.op_id == cmp_eq) ?
-                     cl_regex_match(ctptr->node.right->leaf.rx, ls) :
-                     !cl_regex_match(ctptr->node.right->leaf.rx, ls));
+                     cl_regex_match(ctptr->node.right->leaf.rx, ls, 0) :
+                     !cl_regex_match(ctptr->node.right->leaf.rx, ls, 0));
             }
           }
           else {
@@ -1822,7 +1822,7 @@ matchfirstpattern(AVS pattern,
         val = cl_struc2str(pattern->tag.attr, i);
         if (val) {
           if (pattern->tag.rx)
-            ok = cl_regex_match(pattern->tag.rx, val);
+            ok = cl_regex_match(pattern->tag.rx, val, 0);
           else
             ok = (0 == strcmp(pattern->tag.constraint, val));
           if (pattern->tag.negated)

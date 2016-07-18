@@ -62,6 +62,10 @@ int cl_regopt_anchor_end;          /**< Boolean: whether grains are anchored at 
 /**  A jump table for Boyer-Moore search algorithm; use _unsigned_ char as index; @see make_jump_table */
 int cl_regopt_jumptable[256];
 
+/** whether the regular expression is in UTF-8 encoding (set before calling cl_regopt_analyse()) */
+int cl_regopt_utf8;
+
+
 /**
  * Intermediate buffer for grains.
  *
@@ -73,7 +77,7 @@ char *grain_buffer[MAX_GRAINS];
 int grain_buffer_grains = 0;
 
 /** A buffer for grain strings. @see local_grain_data */
-char public_grain_data[CL_MAX_LINE_LENGTH];
+char public_grain_data[CL_MAX_LINE_LENGTH]; /* input regexp shouldn't be longer than CL_MAX_LINE_LENGTH, so all grains must fit */
 /** A buffer for grain strings. @see public_grain_data */
 char local_grain_data[CL_MAX_LINE_LENGTH];
 
@@ -126,6 +130,8 @@ cl_new_regex(char *regex, int flags, CorpusCharset charset)
   int options_for_pcre = 0;
   const char *errstring_for_pcre = NULL;
   int erroffset_for_pcre = 0;
+  int is_pcre_jit_available; /* in some cases, PCRE + JIT may be faster without the optimizer */
+
 
   /* allocate temporary strings */
   l = strlen(regex);
@@ -135,24 +141,26 @@ cl_new_regex(char *regex, int flags, CorpusCharset charset)
   /* allocate and initialise CL_Regex object */
   rx = (CL_Regex) cl_malloc(sizeof(struct _CL_Regex));
   rx->haystack_buf = NULL;
+  rx->haystack_casefold = NULL;
   rx->charset = charset;
-  rx->flags = flags & (IGNORE_CASE | IGNORE_DIAC); /* mask unsupported flags */
-  rx->grains = 0; /* indicates no optimisation -> other opt. fields are invalid */
+  rx->icase = (flags & IGNORE_CASE); /* handled separately in CWB 3.4.10+ */
+  rx->idiac = (flags & IGNORE_DIAC);
+  rx->grains = 0; /* indicates no optimisation -> other optimizer-related fields are invalid */
 
-  /* pre-process regular expression (translate latex escapes and normalise) */
+  /* pre-process regular expression (translate latex escapes, normalize, fold accents if required) */
   cl_string_latex2iso(regex, preprocessed_regex, l);
-  cl_string_canonical(preprocessed_regex, charset, rx->flags | CANONICAL_NFC);
+  cl_string_canonical(preprocessed_regex, charset, rx->idiac | CANONICAL_NFC); /* only fold accents at this stage */
 
   /* add start and end anchors to improve performance of regex matcher for expressions such as ".*ung" */
   sprintf(anchored_regex, "^(?:%s)$", preprocessed_regex);
 
   /* compile regular expression with PCRE library function */
+  options_for_pcre = (rx->icase) ? PCRE_CASELESS : 0; /* case folding is left to the PCRE matcher */
   if (charset == utf8) {
     if (cl_debug)
       fprintf(stderr, "CL: enabling PCRE's UTF8 mode for regex %s\n", anchored_regex);
     /* note we assume all strings have been checked upon input (i.e. indexing or by the parser) */
-    options_for_pcre = PCRE_UTF8|PCRE_NO_UTF8_CHECK;
-    /* we do our own case folding, so we don't need the PCRE_CASELESS flag */
+    options_for_pcre |= PCRE_UTF8|PCRE_NO_UTF8_CHECK;
   }
   rx->needle = pcre_compile(anchored_regex, options_for_pcre, &errstring_for_pcre, &erroffset_for_pcre, NULL);
   if (rx->needle == NULL) {
@@ -169,20 +177,18 @@ cl_new_regex(char *regex, int flags, CorpusCharset charset)
 
 
   /* a spot of code to handle use with a pre-JIT version of PCRE.
-   * Note that JIT compilation was added to PCRE v 8.20. */
-  if (cl_debug) {
-    int is_pcre_jit_available;
+   * Note that JIT compilation was added to PCRE v8.20. */
 #ifdef PCRE_CONFIG_JIT
-    pcre_config(PCRE_CONFIG_JIT, &is_pcre_jit_available);
+  pcre_config(PCRE_CONFIG_JIT, &is_pcre_jit_available);
 #else
-    is_pcre_jit_available = 0;
+  is_pcre_jit_available = 0;
 #define PCRE_STUDY_JIT_COMPILE 0
 #endif
+  if (cl_debug)
     fprintf(stderr, "CL: PCRE's JIT compiler is %s.\n", (is_pcre_jit_available ? "available" : "unavailable"));
-  }
+
   /* always use pcre_study because nearly all our regexes are going to be used lots of times;
-   * note that according to man pcre, the optimisation methods are different to those used by
-   * the CL's regex optimiser. So it is all good. */
+   * with recent version of PCRE, this will also JIT-compile the expression for much faster matching */
   rx->extra = pcre_study(rx->needle, PCRE_STUDY_JIT_COMPILE, &errstring_for_pcre);
   if (errstring_for_pcre != NULL) {
     rx->extra = NULL;
@@ -193,16 +199,21 @@ cl_new_regex(char *regex, int flags, CorpusCharset charset)
   if (cl_debug && rx->extra)
     fprintf(stderr, "CL: calling pcre_study produced useful information...\n");
 
-  /* allocate string buffer for cl_regex_match() function if flags are present */
-  if (flags)
-    rx->haystack_buf = (char *) cl_malloc(CL_MAX_LINE_LENGTH); /* this is for the string being matched, not the regex! */
-
   /* attempt to optimise regular expression */
+  cl_regopt_utf8 = (charset == utf8);
   optimised = cl_regopt_analyse(preprocessed_regex);
+  /* **TODO** may decide to disable optimizer if PCRE has JIT and only %c flag is specified */
   if (optimised) {
-    /* copy optimiser data to CL_Regex object */
-    regopt_data_copy_to_regex_object(rx);
+    /* copy optimiser data to CL_Regex object and construct jump table for Boyer-Moore search */
+    regopt_data_copy_to_regex_object(rx); /* will also casefold grains if rx->icase is set */
   }
+
+  if (rx->idiac)
+    /* allocate string buffer for accent folding in cl_regex_match() */
+    rx->haystack_buf = (char *) cl_malloc(CL_MAX_LINE_LENGTH); /* this is for the string being matched, not the regex! */
+  if (rx->icase && optimised)
+    /* allocate second buffer for case-folded version (only needed for optimizer) */
+    rx->haystack_casefold = (char *) cl_malloc(2 * CL_MAX_LINE_LENGTH);
 
   cl_free(preprocessed_regex);
   cl_free(anchored_regex);
@@ -239,28 +250,29 @@ int cl_regex_optimised(CL_Regex rx)
  * settings that rx was created with are used.
  *
  * @param rx   The regular expression to match.
- * @param str  The string to compare the regex to. If UTF-8 encoding is used,
- *             this string must be in canonical NFC form, so the caller may
- *             need to run cl_string_canonical with flag CANONICAL_NFC first.
+ * @param str  The string to compare the regex to.
+ * @param normalize_utf8  If a UTF-8 string from an external source is passed,
+ *                        set to True to ensure CANONICAL_NFC normalization.
  * @return     Boolean: true if the regex matched, otherwise false.
  */
 int
-cl_regex_match(CL_Regex rx, char *str)
+cl_regex_match(CL_Regex rx, char *str, int normalize_utf8)
 {
-  char *haystack; /* either the original string to match against, or a pointer to rx->haystack_buf */
+  char *haystack_pcre, *haystack; /* possibly case/accent folded versions of str for PCRE regexp and optimizer, respectively */
   int optimised = (rx->grains > 0);
   int i, di, k, max_i, len, jump;
   int grain_match, result;
   int ovector[30]; /* memory for pcre to use for back-references in pattern matches */
+  int do_nfc = (normalize_utf8 && (rx->charset == utf8)) ? CANONICAL_NFC : 0; /* whether we need to normalize the input to NFC */
 
-  if (rx->flags) { /* normalise input string if necessary */
-    haystack = rx->haystack_buf;
-    strcpy(haystack, str);
-    cl_string_canonical(haystack, rx->charset, rx->flags);
+  if (rx->idiac || do_nfc) { /* perform accent folding on input string if necessary */
+    haystack_pcre = rx->haystack_buf;
+    strcpy(haystack_pcre, str);
+    cl_string_canonical(haystack_pcre, rx->charset, rx->idiac | do_nfc);
   }
   else
-    haystack = str;
-  len = strlen(haystack);
+    haystack_pcre = str;
+  len = strlen(haystack_pcre);
 
   /* Beta versions 3.4.10+ leading up to 3.5:
    *  - use regexp optimizer only if cl_optimize is set
@@ -269,7 +281,14 @@ cl_regex_match(CL_Regex rx, char *str)
    *  - switch optimizer back to default before release **TODO**
    */
   if (optimised && cl_optimize) {
-    /* this 'optimised' matcher may look fairly bloated, but it's still way ahead of POSIX regexen */
+    if (rx->icase) {
+      haystack = rx->haystack_casefold;
+      strcpy(haystack, haystack_pcre);
+      cl_string_canonical(haystack, rx->charset, rx->icase);
+    }
+    else
+      haystack = haystack_pcre;
+    /* this 'optimised' matcher may look fairly complicated, but it's still way ahead of POSIX regexen */
     /* string offset where first character of each grain would be */
     grain_match = 0;
     max_i = len - rx->grain_len; /* stop trying to match when i > max_i */
@@ -305,7 +324,7 @@ cl_regex_match(CL_Regex rx, char *str)
     grain_match = 1;
 
   /* if there was a grain-match, we call pcre_exec, which might match or might not find a match in the end;
-   * but if there wasn't a grain-match, we know that pcre won't match; so we don't bother calling it. */
+   * but if there wasn't a grain-match, we know that PCRE won't match; so we don't bother calling it. */
 
   if (!grain_match) { /* enabled since version 2.2.b94 (14 Feb 2006) -- before: && cl_optimize */
     cl_regopt_successes++;
@@ -318,7 +337,7 @@ cl_regex_match(CL_Regex rx, char *str)
 #else
   if (1) {
 #endif
-    result = pcre_exec(rx->needle, rx->extra, haystack,
+    result = pcre_exec(rx->needle, rx->extra, haystack_pcre,
                        len, 0, PCRE_NO_UTF8_CHECK,
                        ovector, 30);
     if (result < PCRE_ERROR_NOMATCH && cl_debug)
@@ -331,7 +350,7 @@ cl_regex_match(CL_Regex rx, char *str)
   /* debugging code used before version 2.2.b94, modified to pcre return values & re-enabled in 3.2.b3 */
   /* check for critical error: optimiser didn't accept candidate, but regex matched */
   if ((result > 0) && !grain_match)
-    fprintf(stderr, "CL ERROR: regex optimiser did not accept '%s' although it should have!\n", haystack);
+    fprintf(stderr, "CL ERROR: regex optimiser did not accept '%s' although it should have!\n", str);
 #endif
 
   return (result > 0); /* return true if regular expression matched */
@@ -371,7 +390,8 @@ cl_delete_regex(CL_Regex rx)
 #else
     pcre_free(rx->extra);          /* and "extra" buffer (iff we know for certain there was no JIT) */
 #endif
-  cl_free(rx->haystack_buf);       /* free string buffer if it was allocated */
+  cl_free(rx->haystack_buf);       /* free string buffers if they were allocated */
+  cl_free(rx->haystack_casefold);
   for (i = 0; i < rx->grains; i++)
     cl_free(rx->grain[i]);         /* free grain strings if regex was optimised */
 
@@ -799,14 +819,13 @@ update_grain_buffer(int front_aligned, int anchored)
 /**
  * Computes a jump table for Boyer-Moore searches.
  *
- * Unlike the textbook version, this jumptable includes the last
- * character of each grain (in order to avoid running the string
- * comparing loops every time).
+ * Unlike the textbook version, this jumptable includes the last character of each grain
+ * (so we don't have to start the string comparison loops every time).
  *
  * A non-exported function.
  */
 void
-make_jump_table(void)
+make_jump_table(CL_Regex rx)
 {
   int j, k, jump;
   unsigned int ch;
@@ -814,25 +833,25 @@ make_jump_table(void)
 
   /* clear the jump table */
   for (ch = 0; ch < 256; ch++)
-    cl_regopt_jumptable[ch] = 0;
+    rx->jumptable[ch] = 0;
 
-  if (cl_regopt_grains > 0) {
-    /* compute smallest jump distance for each character (0 -> matches last character of one or more grains) */
+  if (rx->grains > 0) {
+    /* compute smallest jump distance for each byte (0 -> matches last byte of one or more grains) */
     for (ch = 0; ch < 256; ch++) {
-      jump = cl_regopt_grain_len; /* if character isn't contained in any of the grains, jump by grain length */
+      jump = rx->grain_len; /* if character isn't contained in any of the grains, jump by grain length */
 
-      for (k = 0; k < cl_regopt_grains; k++) { /* for each grain... */
-        grain = (unsigned char *) cl_regopt_grain[k] + cl_regopt_grain_len - 1; /* pointer to last character in grain */
-        for (j = 0; j < cl_regopt_grain_len; j++, grain--) {
+      for (k = 0; k < rx->grains; k++) { /* for each grain... */
+        grain = (unsigned char *) rx->grain[k] + rx->grain_len - 1; /* pointer to last byte in grain */
+        for (j = 0; j < rx->grain_len; j++, grain--) {
           if (*grain == ch) {
             if (j < jump)
               jump = j;
-            break; /* can't find shorter jump dist. for this grain; any jump found on subsequent loops would be longer */
+            break; /* can't find shorter jump distance for this grain */
           }
         }
       }
 
-      cl_regopt_jumptable[ch] = jump;
+      rx->jumptable[ch] = jump;
     }
     if (cl_debug) { /* in debug mode, print out the entire jumptable */
       fprintf(stderr, "CL: cl_regopt_jumptable for Boyer-Moore search is\n");
@@ -840,13 +859,16 @@ make_jump_table(void)
         fprintf(stderr, "CL: ");
         for (j = 0; j < 15; j++) {
           ch = k + j;
-          fprintf(stderr, "|%2d %c ", cl_regopt_jumptable[ch], ch);
+          if (ch >= 32 & ch < 127)
+            fprintf(stderr, "|%2d %c  ", rx->jumptable[ch], ch);
+          else
+            fprintf(stderr, "|%2d %02X ", rx->jumptable[ch], ch);
         }
         fprintf(stderr, "\n");
       }
     }
   }
-  /* if cl_regopt_grains not > 0, don't do anything (just clear the jumptable, as above */
+  /* if no grains have been found, don't do anything (just clear the jump table) */
 }
 
 
@@ -863,10 +885,32 @@ regopt_data_copy_to_regex_object(CL_Regex rx)
   rx->grain_len = cl_regopt_grain_len;
   rx->anchor_start = cl_regopt_anchor_start;
   rx->anchor_end = cl_regopt_anchor_end;
-  for (i = 0; i < 256; i++)
-    rx->jumptable[i] = cl_regopt_jumptable[i];
-  for (i = 0; i < rx->grains; i++)
-    rx->grain[i] = cl_strdup(cl_regopt_grain[i]);
+
+  for (i = 0; i < rx->grains; i++) {
+    int bytes_needed = ((rx->icase) ? 2 : 1) * strlen(cl_regopt_grain[i]) + 1;
+    rx->grain[i] = cl_malloc(bytes_needed); /* case-folding may increase string length */
+    strcpy(rx->grain[i], cl_regopt_grain[i]);
+    if (rx->icase)
+      cl_string_canonical(rx->grain[i], rx->charset, rx->icase);
+  }
+
+  if (cl_debug) {
+    fprintf(stderr, "CL: Regex optimised, %d grain(s) of length %d\n",
+        rx->grains, rx->grain_len);
+    fprintf(stderr, "CL: grain set is");
+    for (i = 0; i < rx->grains; i++) {
+      fprintf(stderr, " [%s]", rx->grain[i]);
+    }
+    if (cl_regopt_anchor_start)
+      fprintf(stderr, " (anchored at beginning of string)");
+    if (cl_regopt_anchor_end)
+      fprintf(stderr, " (anchored at end of string)");
+    fprintf(stderr, "\n");
+  }
+
+  if (rx->grains > 0)
+    make_jump_table(rx); /* compute jump table for Boyer-Moore search */
+
   if (cl_debug)
     fprintf(stderr, "CL: using %d grain(s) for optimised regex matching\n", rx->grains);
 }
@@ -879,6 +923,12 @@ regopt_data_copy_to_regex_object(CL_Regex rx)
  * try to extract a set of grains from regular expression {regex_string}. These
  * grains are then used by the CL regex matcher and cl_regex2id()
  * for faster regular expression search.
+ *
+ * The function only recognizes relatively simple regular expressions without
+ * recursive nesting, which roughly correspond to wildcard searches similar to
+ * SQL's LIKE operator. Searching for a fixed prefix, suffix or infix (or a
+ * small set of alternatives) will see the most noticeable performance improvement.
+ * Any more complex expression is passed directly to the standard PCRE evaluation.
  *
  * If successful, this function returns True and stores the grains
  * in the optiomiser's global variables above (from which they should be copied
@@ -935,6 +985,11 @@ cl_regopt_analyse(char *regex)
    */
   ok = 1;
   while (ok) {
+    /* accept if we're at end of string */
+    if (*mark == '\0') {
+      ok = (cl_regopt_grains > 0) ? 1 : 0;
+      return ok;
+    }
     at_start = (mark == regex);
     point = read_grain(mark);
     if (point > mark) { /* found single grain segment -> copy to local buffer */
@@ -976,33 +1031,13 @@ cl_regopt_analyse(char *regex)
       }
       else {
         point = read_wildcard(mark);
-        if (point > mark) { /* found segment matching some substring -> skip */
+        if (point > mark) { /* found segment matching some (possibly empty) substring -> skip */
           mark = point;
         }
         else {
           ok = 0; /* no recognised segment starting at mark */
         }
       }
-    }
-    /* accept if we're at end of string */
-    if (*mark == '\0') {
-      ok = (cl_regopt_grains > 0) ? 1 : 0;
-      if (cl_debug && ok) {
-        fprintf(stderr, "CL: Regex optimised, %d grain(s) of length %d\n",
-            cl_regopt_grains, cl_regopt_grain_len);
-        fprintf(stderr, "CL: grain set is");
-        for (i = 0; i < cl_regopt_grains; i++) {
-          fprintf(stderr, " [%s]", cl_regopt_grain[i]);
-        }
-        if (cl_regopt_anchor_start)
-          fprintf(stderr, " (anchored at beginning of string)");
-        if (cl_regopt_anchor_end)
-          fprintf(stderr, " (anchored at end of string)");
-        fprintf(stderr, "\n");
-      }
-      if (ok)
-        make_jump_table(); /* compute jump table for Boyer-Moore search */
-      return ok;
     }
   } /* endwhile ok */
 

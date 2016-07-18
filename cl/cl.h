@@ -862,7 +862,7 @@ int cl_string_qsort_compare(const char *s1,
  *
  * Associated with the CL regular expression engine are macros for three flags: IGNORE_CASE,
  * IGNORE_DIAC and IGNORE_REGEX. All three are used by the related cl_regex2id(), but only
- * the first two are used by the CL_Regex object.
+ * the first two are used by the CL_Regex object (since it does not support non-regexp search).
  *
  * @see cl_regex2id
  */
@@ -876,10 +876,22 @@ typedef struct _CL_Regex *CL_Regex;
 #define IGNORE_REGEX 4
 
 /* ... and the regex API ... */
+/**
+ * The constructor is used to compile a regular expression with the specified flags (IGNORE_CASE
+ * and/or IGNORE_DIAC) and for the specified character encoding. It also checks whether an optimized
+ * matcher using Boyer-Moore search for literal "grains" as a pre-filter can be used.
+ */
 CL_Regex cl_new_regex(char *regex, int flags, CorpusCharset charset);
 int cl_regex_optimised(CL_Regex rx); /* 0 = not optimised; otherwise, value indicates level of optimisation */
-int cl_regex_match(CL_Regex rx, char *str); /* automatically uses normalisation flags from constructor;
-                                               returns True when regex matches */
+/**
+ * The match function for a pre-compiled regex object automatically uses case/accent folding flags
+ * and character encoding specified in the constructor.  If UTF-8 strings from external sources are
+ * passed, normalization to NFC can be requested by setting the third argument to True.
+ * Returns True iff regex matches */
+int cl_regex_match(CL_Regex rx, char *str, int normalize_utf8);
+/**
+ * Free all resources associated with the pre-compiled regex.
+ */
 void cl_delete_regex(CL_Regex rx);
 extern char cl_regex_error[];
 

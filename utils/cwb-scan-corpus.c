@@ -220,7 +220,7 @@ scancorpus_word_is_regular(char *s)
 
   /* otherwise, different approach of utf8 versus iso8859 */
   if (C->charset == utf8)
-    return cl_regex_match(regular_rx, s);
+    return cl_regex_match(regular_rx, s, 0);
   else {
     char *p = s;
     while (*p) {
@@ -679,7 +679,7 @@ main (int argc, char *argv[])
               }
               Hash.constraint_ok[i] = 1;
               if (Hash.regex[i] != NULL) {
-                if (cl_regex_match(Hash.regex[i], str)) {
+                if (cl_regex_match(Hash.regex[i], str, 0)) {
                   if (Hash.is_negated[i]) Hash.constraint_ok[i] = 0;  /* negated regex matches -> reject */
                 }
                 else {

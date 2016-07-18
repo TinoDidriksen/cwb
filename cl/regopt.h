@@ -40,10 +40,12 @@ struct _CL_Regex {
   pcre *needle;                      /**< buffer for the actual regex object (PCRE) */
   pcre_extra *extra;                 /**< buffer for PCRE's internal optimisation data */
   CorpusCharset charset;             /**< the character set in use for this regex */
-  int flags;                         /**< flags for this regex: can be IGNORE_CASE and/or IGNORE_DIAC */
-  char *haystack_buf;                /**< a buffer of size CL_MAX_LINE_LENGTH used for normalisation by cl_regex_match().
-                                          It will be allocated iff one of the flags %c or %d is set.
-                                          Note this buffer is for the string being tested NOT for the regular expression. */
+  int icase;                         /**< whether IGNORE_CASE flag was set for this regex (needs special processing) */
+  int idiac;                         /**< whether IGNORE_DIAC flag was set for this regex */
+  char *haystack_buf;                /**< a buffer of size CL_MAX_LINE_LENGTH used for accent folding by cl_regex_match(), allocated only if IGNOR_DIAC was specified */
+  char *haystack_casefold;           /**< additional, larger buffer for a case-folded version, allocated only if optimizer is active and IGNORE_CASE was specified */
+  /* Note: these buffers are for the string being tested, NOT for the regular expression.
+   * They are allocated once here to avoid frequent small allocation and deallocations in cl_regex_match(). */
 
   /* data from optimiser (see global variables in regopt.c for comments) */
   int grains;                        /**< number of grains (0 = not optimised). @see cl_regopt_grains */
