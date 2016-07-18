@@ -15,6 +15,9 @@
 ##  Public License for more details (in the file "COPYING", or available via
 ##  WWW at http://www.gnu.org/copyleft/gpl.html).
 
+## NB -- this file is currently a placeholder for what will later be a config file allowing
+## build-with-MinGW actually natively on Win64. 
+
 ##
 ##  TEMPLATE FOR PLATFORM CONFIGURATION FILES
 ##

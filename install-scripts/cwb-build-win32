@@ -1,7 +1,10 @@
 #!/bin/bash
 
 # Note : this is a build script, not an install script, for cross-compilation.
-# So no need to run as root.
+# So no need to run as root. 
+
+# ALSO NOTE, we assume cross-compilation, not native via MinGW-on-Windows
+# (since we still haven't really got the latter to work yet).
 
 
 # load config.mk
@@ -10,7 +13,7 @@ config_file=$(cat config.mk)
 
 # alter platform
 target="PLATFORM=darwin-universal"
-rep="PLATFORM=mingw"
+rep="PLATFORM=mingw-cross"
 
 config_file=${config_file/"$target"/"$rep"}
 

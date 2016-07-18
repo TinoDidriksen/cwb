@@ -74,6 +74,11 @@ Bug fixes:
    certain circumstances, has been fixed.  Precise behaviour for out of bounds values now documented in the
    CQP Query Language Tutorial.
 
+ - [2016-07-19] Fixed bug in settings for cross-compile to Windows. Removed cwb-atoi.exe and cwb-itoa.exe from 
+   Windows release builds, as they trigger malware alerts both on SF.net (our distributiojn platform) and on
+   some (but not all) standalone antivirus software. 
+   
+
 Enhancements:
 
  - [2014-06-18] Revised implementation of cl_lexhash class. Auto-growing is now based on fill rate statistic
