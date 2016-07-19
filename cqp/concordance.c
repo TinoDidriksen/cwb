@@ -28,6 +28,7 @@
 #include "attlist.h"
 #include "options.h"
 
+/** maximum length of a KWIC line (bytes). */
 #define MAXKWICLINELEN 65535
 
 
@@ -68,8 +69,15 @@ srev(char *s)
 
 /**
  * TODO document this!
- * Prints attribuite values into a ClAutoString.
+ * Prints attribute values into a ClAutoString.
  *
+ * @param cd                   Print settings (context size/type; atts to print)
+ * @param position             ???
+ * @param s                    Results will be concatenated onto this string.
+ * @param sp
+ * @param max_sp
+ * @param add_position_number  Boolean: whether or not to add a position number (start of concordance line)
+ * @param pdr                  Print settings (of main mode) to use
  */
 void
 get_print_attribute_values(ContextDescriptor *cd,
@@ -370,13 +378,21 @@ remember_this_position(int position,
  */
 static ClAutoString scratch = NULL;
 /**
- * TODO write something here.
+ * This oddly-named function prints a series of "fields"
+ * to an internal buffer.
  *
- * @return  A pointer to a module-internal static string buffer containing
- *          the requested string. Do not free it or alter it.
- *          The buffer's content will change when this function is called again.
- *          The function will return NULL if the requested string would have
- *          been zero-length.
+ * (What are "fields" in this context????)
+ *
+ * @param position   ??
+ * @param fields     ??
+ * @param nr_fields  ??
+ * @param at_end     Boolean:
+ * @param pdr        The PDR for the current concordance printout.
+ * @return           A pointer to a module-internal static string buffer containing
+ *                   the requested string. Do not free it or alter it.
+ *                   The buffer's content will change when this function is called again.
+ *                   The function will return NULL if the requested string would have
+ *                   been zero-length.
  */
 char *
 get_field_separators(int position, 
@@ -387,23 +403,26 @@ get_field_separators(int position,
 {
   int i;
 
+  /* start with an empty string ... */
   if (NULL == scratch)
-    scratch  = cl_autostring_new(NULL, 0);
+    scratch = cl_autostring_new(NULL, 0);
   else
     cl_autostring_truncate(scratch, 0);
 
-  if (fields && nr_fields > 0 && 
-      position >= 0 && pdr && pdr->printField) {
+  if (fields && nr_fields > 0 && position >= 0 && pdr && pdr->printField) {
     if (at_end) {
       for (i = nr_fields; i > 0; i--) {
         if (position == fields[i-1].end_position) {
+          /* note call to the "business end" which is the func pointer in the PDR */
           cl_autostring_concat(scratch, pdr->printField(fields[i-1].type, at_end));
         }
       }
     }
     else {
+      /* if not at_end then... */
       for (i = 0; i < nr_fields; i++) {
         if (position == fields[i].start_position) {
+          /* note call to the "business end" which is the func pointer in the PDR */
           cl_autostring_concat(scratch, pdr->printField(fields[i].type, at_end));
         }
       }
@@ -496,12 +515,22 @@ compose_kwic_line(Corpus *corpus,
                   Mapping *mappings)
 {
   int acc_len;  /* Accurate length - for counting context in characters */
+  /* TODO replace the single variable above with the following pair of variables */
+
+  /* length of the string assembled, in bytes */
+  unsigned length_bytes;
+  /* length of the string assembled, in characters; == length_bytes in all cases other than charset==utf8 */
+  unsigned length_characters;
+
   int old_len;  /* Old length - for tracking the n bytes added by a concatenate operation */
 
+  /* total N of tokens on the attribute (first on the list of attributes-to-print);
+   * used as a maximum for sanity-check */
   int text_size;
+
   int start, end, index;
 
-  /* dummies: because the arguemtns fo some other functions requires an int to pass... */
+  /* dummies: because the arguments of some other functions require an int to be passed... */
   int line_p;
   int token_p;
 
@@ -513,6 +542,7 @@ compose_kwic_line(Corpus *corpus,
   int rng_s, rng_e, rng_n, nr_ranges;
 
   int this_token_start, this_token_end;
+  int token_length_characters;
 
   int el_c = 0;
 
@@ -536,12 +566,12 @@ compose_kwic_line(Corpus *corpus,
     number_lines = cd->print_cpos;
   }
 
-  /* make a dummy attribute list in case we don't yet have one. */
+  /* make a dummy attribute list (with default p-attribute as its only member) in case we don't yet have one. */
 
   if (cd->attributes == NULL ||
       cd->attributes->list == NULL) {
     default_list = NewAttributeList(ATT_POS);
-    (void) AddNameToAL(default_list, DEFAULT_ATT_NAME, 1, 0);
+    AddNameToAL(default_list, DEFAULT_ATT_NAME, 1, 0);
     cd->attributes = default_list;
   }
   
@@ -598,7 +628,10 @@ compose_kwic_line(Corpus *corpus,
   switch(cd->left_type) {
   case CHAR_CONTEXT:
     
-    acc_len = 0;                /* we have 0 characters so far */
+//    acc_len = 0;
+    /* we have 0 characters so far */
+    length_bytes = 0;
+    length_characters = 0;
     enough_context = 0;
 
     /* make a note of the old starting point, for purposes of srev() */
@@ -607,7 +640,8 @@ compose_kwic_line(Corpus *corpus,
     /* NUR linken Kontext ohne MatchToken berechnen */
     
     for (start = match_start - 1; (start >= 0 && !enough_context); start--) {
-      if (acc_len >= cd->left_width)
+//      if (acc_len >= cd->left_width)
+      if (length_characters >= cd->left_width)
         enough_context++;
       else {
         /* we do not yet have enough context, so get position values into (blank) string object token */
@@ -620,12 +654,15 @@ compose_kwic_line(Corpus *corpus,
                             pdr,
                             nr_mappings,
                             mappings);
-        if (token->len > 0) {
+        token_length_characters = cl_charset_strlen(corpus->charset, token->data);
+        if (token_length_characters > 0) {
 
           if (line->len > index) {   /* no blank before first token to the left of match */
             old_len = line->len;
             cl_autostring_concat(line, pdr->TokenSeparator);
-            acc_len += line->len - old_len;
+//            acc_len += line->len - old_len;
+            length_bytes += line->len - old_len;
+            length_characters += cl_charset_strlen(corpus->charset, pdr->TokenSeparator);
           }
 
           this_token_start = line->len;
@@ -637,21 +674,35 @@ compose_kwic_line(Corpus *corpus,
 
           cl_autostring_concat(line, pdr->BeforeToken);
 
-          if (token->len + acc_len < cd->left_width) {
-            old_len = line->len;
+          if (token_length_characters + length_characters < cd->left_width) {
+//          if (token->len + acc_len < cd->left_width) {
             cl_autostring_concat(line, token->data);
-            acc_len += line->len - old_len;
+  //          acc_len += token->len;
+            length_bytes += token->len;
+            length_characters += token_length_characters;
           }
           else {
-            /* not enough space for the whole token, so only copy its last several bytes */
-            char *mark = token->data + (token->len - (cd->left_width - acc_len));
-            /* but if we have a partial UTF-8 character, rewind to its beginning. */
-            if (corpus->charset == utf8)
-              while (cl_string_utf8_continuation_byte(*mark))
-                --mark;
+            /* not enough space for the whole token */
+            char *mark;
+            if (corpus->charset != utf8) {
+              /* ... so only copy its last several bytes */
+              mark = token->data + (token->len - (cd->left_width - length_bytes));
+            }
+            else {
+              /* ... so only copy its last several characters */
+              mark = token->data + token->len;
+              while (token_length_characters + length_characters > cd->left_width) {
+                do {
+                  --mark;
+                } while (cl_string_utf8_continuation_byte(*mark));
+                --token_length_characters;
+              }
+            }
             old_len = line->len;
             cl_autostring_concat(line, mark);
-            acc_len += line->len - old_len;
+//            acc_len += line->len - old_len;
+            length_bytes += line->len - old_len;
+            length_characters += cl_charset_strlen(corpus->charset, mark);
           }
 
           cl_autostring_concat(line, pdr->AfterToken);
@@ -678,9 +729,11 @@ compose_kwic_line(Corpus *corpus,
     } /* endfor */
 
     /* auffüllen (padding) mit Blanks, bis linker Kontext erreicht */
-    while (acc_len < cd->left_width) {
+//    while (acc_len < cd->left_width) {
+    while (length_characters < cd->left_width) {
       cl_autostring_concat(line, " ");
-      acc_len++; /* pretend to fill in necessary number of blanks, even if buffer is already full */
+      ++length_bytes, ++length_characters;
+      //acc_len++; /* pretend to fill in necessary number of blanks, even if buffer is already full */
     }
 
     /* die bisherige Zeile (Linkskontext des Match-Tokens) umdrehen, aber nicht evtl. printStructures */
@@ -713,10 +766,8 @@ compose_kwic_line(Corpus *corpus,
           fprintf(stderr, "Patching [%d,%d] to [%d,%d]\n", old_start, old_end, new_start, new_end);
 #endif
 
-          returned_positions[el_c * 2] = new_start + 1;
+          returned_positions[el_c * 2]     = new_start + 1;
           returned_positions[(el_c * 2)+1] = new_end + 1;
-
-          /* weia... */
         }
       }
     }
@@ -862,7 +913,8 @@ compose_kwic_line(Corpus *corpus,
   if (line->len > 0)
     cl_autostring_concat(line, pdr->TokenSeparator);
   
-    *s_mb = line->len;
+  /* out parameter: byte offset of begin-point of the hit */
+  *s_mb = line->len;
 
   cl_autostring_concat(line, left_marker);
   
@@ -903,6 +955,7 @@ compose_kwic_line(Corpus *corpus,
   
   cl_autostring_concat(line, right_marker);
 
+  /* out parameter: byte offset of begin-point of waht follows the hit */
   *s_me = line->len;
 
 
@@ -917,14 +970,18 @@ compose_kwic_line(Corpus *corpus,
   switch(cd->right_type) {
   case CHAR_CONTEXT:
     
-    acc_len = 0;                /* we have 0 characters so far */
+    //acc_len = 0;
+    /* we have 0 characters so far */
+    length_bytes = 0;
+    length_characters = 0;
     enough_context = 0;
 
     /* nun rechten Kontext ohne MatchToken berechnen */
 
-    for (start = match_end+1; (start < text_size && !enough_context); start++) {
+    for (start = match_end + 1; (start < text_size && !enough_context); start++) {
       cl_autostring_truncate(token, 0);
-      if (acc_len >= cd->right_width)
+      if (length_characters >= cd->right_width)
+//      if (acc_len >= cd->right_width)
         enough_context++; /* stop if the requested number of characters have been generated */
       else {
         get_position_values(cd,
@@ -939,7 +996,8 @@ compose_kwic_line(Corpus *corpus,
         if (line->len > 0) {
           old_len = line->len;
           cl_autostring_concat(line, pdr->TokenSeparator);
-          acc_len += line->len - old_len;
+          length_bytes += line->len - old_len;
+          length_characters += cl_charset_strlen(corpus->charset, pdr->TokenSeparator);
         }
 
         this_token_start = line->len;
@@ -952,15 +1010,24 @@ compose_kwic_line(Corpus *corpus,
 
         old_len = line->len;
         cl_autostring_concat(line, token->data);
-        acc_len += line->len - old_len;
-        if (acc_len > cd->right_width) {
-          int truncpoint = line->len - (acc_len - cd->right_width);
-          /* add extra bytes to complete the final UTF-8 character, if necessary */
-          if (corpus->charset == utf8)
-            while(cl_string_utf8_continuation_byte(line->data[truncpoint + 1]))
-              truncpoint++;
-          cl_autostring_truncate(line, truncpoint);
-          acc_len = cd->right_width;
+        length_bytes += line->len - old_len;
+        length_characters += cl_charset_strlen(corpus->charset, token->data);
+        if (length_characters > cd->right_width) {
+          if (corpus->charset != utf8) {
+            /* simple truncation by count of bytes */
+            cl_autostring_truncate(line, line->len - (length_characters - cd->right_width));
+            length_characters = length_bytes = cd->right_width;
+          }
+          else {
+            /* rewind through the string until we have removed the correct n of characters */
+            char *mark = line->data + (line->len - 1);
+            while (length_characters > cd->right_width) {
+              while (cl_string_utf8_continuation_byte(mark))
+                --mark;
+              --length_characters, --mark;
+            }
+            cl_autostring_truncate(line, (mark - line->data));
+          }
         }
 
         cl_autostring_concat(line, pdr->AfterToken);

@@ -54,13 +54,15 @@
 
 /* ---------------------------------------------------------------------- */
 
-/** doesn't currently appear to be used anywhere? */
+/** [TODO get rid?] doesn't currently appear to be used anywhere? */
 #define USE_OLD_COMPOSE  
 
 /* ---------------------------------------------------------------------- */
 
 /**
  * Convert string function for ASCII mode.
+ *
+ * This is used for the "printToken" function in the relevant PDR.
  *
  * @param s  The string to convert.
  * @return   s (ie no change).
@@ -72,16 +74,14 @@ ascii_convert_string(char *s)
   return s;
 }
 
-char *
-ascii_print_field(FieldType field, int at_end);
+char *ascii_print_field(FieldType field, int at_end);
 
 /* ---------------------------------------------------------------------- */
 
 /**
  * Print description record for ASCII print mode.
  */
-PrintDescriptionRecord 
-ASCIIPrintDescriptionRecord = {
+PrintDescriptionRecord ASCIIPrintDescriptionRecord = {
   "%9d: ",                            /* CPOSPrintFormat */
   
   NULL,                               /* BeforePrintStructures */
@@ -115,8 +115,7 @@ ASCIIPrintDescriptionRecord = {
 /**
  * Print description record for Highlighted-ASCII print mode.
  */
-PrintDescriptionRecord 
-ASCIIHighlightedPrintDescriptionRecord = {
+PrintDescriptionRecord ASCIIHighlightedPrintDescriptionRecord = {
   "%9d: ",                            /* CPOSPrintFormat */
   
   NULL,                               /* BeforePrintStructures */
@@ -591,7 +590,7 @@ ascii_print_corpus_header(CorpusList *cl,
 
   int i;
   
-  (void) time(&now);
+  time(&now);
   /*   pwd = getpwuid(geteuid()); */
   /* disabled because of incompatibilities between different Linux versions */
 
