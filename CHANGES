@@ -99,6 +99,8 @@ Bug fixes:
  - [2016-07-19: v3.4.10] Fixed serious bugs with case-insensitive PCRE regular expressions, caused by previous
    approach of case-folding the regexp itself (which modifies escape sequences such as \W and \pL). 
 
+ - [2016-07-19] Sort order is no longer locale-dependent for corpora with UTF-8 encoding.
+
 Enhancements:
 
  - [2014-06-18] Revised implementation of cl_lexhash class. Auto-growing is now based on fill rate statistic

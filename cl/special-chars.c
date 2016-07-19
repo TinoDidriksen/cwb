@@ -41,7 +41,7 @@
  *
  * Use a CorpusCharset value as the index into this array.
  */
-const unsigned char identity_tab[unknown_charset][256];
+unsigned char identity_tab[unknown_charset][256];
 int identity_tab_init[unknown_charset] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
 /**
@@ -1747,7 +1747,7 @@ cl_string_maptable(CorpusCharset charset, int flags)
 int
 cl_string_zap_controls(char *s, CorpusCharset charset, char replace, int zap_tabs, int zap_newlines)
 {
-  unsigned char *str = s;
+  unsigned char *str = (unsigned char *)s;
   int i;
   /* number of replacements made */
   int num = 0;
@@ -1769,7 +1769,7 @@ cl_string_zap_controls(char *s, CorpusCharset charset, char replace, int zap_tab
       else
         /* it is safe to do a bare down-copy because
          * the C0s are all single-byte under UTF-8 */
-        for (i = 0 ; *(str+i) = *(str+i+1) ; i++)
+        for (i = 0 ; (str[i] = str[i+1]) ; i++)
           ;
     }
   return num;
@@ -1829,7 +1829,7 @@ cl_string_validate_encoding(char *s, CorpusCharset charset, int repair)
   switch (charset) {
   case utf8:
     do {
-      if (g_utf8_validate((gchar *)str, 1, &bad))
+      if (g_utf8_validate((gchar *)str, 1, (const gchar **)&bad))
         return 1;
       else if (!repair)
         return 0;
@@ -1983,7 +1983,7 @@ cl_string_reverse(const char *s, CorpusCharset charset)
   char *reversed;
 
   if (charset != utf8) {
-    reversed = cl_strdup(s);
+    reversed = cl_strdup((char *)s);
     g_strreverse((gchar *)reversed);
   }
   else {
@@ -1993,7 +1993,7 @@ cl_string_reverse(const char *s, CorpusCharset charset)
 }
 
 /**
- * Compares two strings in a qsort-stylie!
+ * Compares two strings in a qsort-style
  *
  * This function is designed to be suitable for use as a callback
  * with qsort(). As such, its return values are negative if s1 is "less than"
@@ -2038,8 +2038,8 @@ cl_string_qsort_compare(const char *s1,
   static char *buffer2;
   static int   buffers_allocated = 0;
 
-  char *comp1;
-  char *comp2;
+  const char *comp1;
+  const char *comp2;
 
   /* preparatory string manipulation... */
   if (!flags && !reverse) {
@@ -2056,24 +2056,33 @@ cl_string_qsort_compare(const char *s1,
       buffers_allocated = 1;
       /* alternative would be to allocate 2 * strlen(s1 or s2), and reallocate
        * whenever more is needed */
-      /* note also that this memory will NEVER be freed before the rpogram exits.*/
+      /* note also that this memory will NEVER be freed before the program exits.*/
     }
 
     strcpy(buffer1, s1);
     strcpy(buffer2, s2);
 
-    /* canonicalise BEFORE reversing (may not work as expected after reversing utf8! */
+    /* canonicalise BEFORE reversing (may not work as expected after reversing utf8) */
     if (flags) {
       cl_string_canonical(buffer1, charset, flags);
       cl_string_canonical(buffer2, charset, flags);
     }
     if (reverse) {
-      char *temp;
-      /* note we cannot use cl_strcpy() because the limit is CL_MAX_LINE_LENGTH * 2 */
-      strcpy(buffer1, (temp = cl_string_reverse(buffer1, charset)) );
-      cl_free(temp);
-      strcpy(buffer2, (temp = cl_string_reverse(buffer2, charset)) );
-      cl_free(temp);
+      /* cl_string_reverse() unnecessarily allocates memory for non-UTF8 to provide a consistent API,
+       * so we call the GLib functions directly here
+       */
+      if (charset == utf8) {
+        char *temp;
+        /* note we cannot use cl_strcpy() because the limit is CL_MAX_LINE_LENGTH * 2 */
+        strcpy(buffer1, (temp = g_utf8_strreverse(buffer1, -1)));
+        cl_free(temp);
+        strcpy(buffer2, (temp = g_utf8_strreverse(buffer2, -1)));
+        cl_free(temp);
+      }
+      else {
+        g_strreverse(buffer1);
+        g_strreverse(buffer2);
+      }
     }
     /* in either case, we compare the buffers, not the orig string */
     comp1 = buffer1;
@@ -2081,74 +2090,79 @@ cl_string_qsort_compare(const char *s1,
   }
   /* at this point, straight comparison is all we need */
 
-
-  /*
-   * ***TODO*** replace code below by simple strcmp() regardless of charset
+  /* Versions of CWB prior to 3.4.10 used an explicit unsigned char string comparison for 8-bit
+   * character sets (which should be identical to strcmp() on all known platforms) and g_utf8_collate
+   * for UTF-8 (which is locale-dependent and hence unpredictable).
+   * Since the most important goal is to ensure a consistent and well-defined sort order, we now
+   * use plain strcmp() in both cases. While the C standard fails to specify the precise behaviour,
+   * all known platforms use unsigned characters for the comparison.
    */
+  return strcmp(comp1, comp2);
 
-  /* the actual comparison begins here. There are two versions:
-   * 8-bit (binary compare) and utf8 (depends on GLib and on the current locale). */
-  if (charset != utf8) {
-    /* 8 bit mode */
-    int l1, l2, minl, i;
-    unsigned char *p1, *p2;
-
-    l1 = strlen(comp1);
-    l2 = strlen(comp2);
-    /* pointers set to first character of the string */
-    p1 = (unsigned char *)comp1;
-    p2 = (unsigned char *)comp2;
-
-    minl = MIN(l1, l2);
-
-    /* count up to minimum length with i, also increment pointers */
-    for (i = 1; i <= minl; i++, p1++, p2++) {
-      /* if there is a difference (based on binary order
-       * of *p1 and *p2) return it */
-      if (*p1 < *p2)
-        return -1;
-      else if (*p1 > *p2)
-        return 1;
-    }
-    /* if we're here, then the whole minl length was the same */
-    if (l1 < l2)
-      return -1;
-    else if (l1 > l2)
-      return 1;
-    else
-      return 0;
-  }
-  else {
-    /* utf8 mode */
-    int result = (int)g_utf8_collate((gchar *)comp1, (gchar *)comp2);
-    /* TODO: for now we are using the collate function from GLib.
-     * In practice, this may not be appropriate as it is locale-dependent -
-     * so, for example, it may impose case-insensitivity or accent-insensitivity
-     * if the locale says it is appropriate to do so,
-     * even if we avoided these things above!
-     *
-     * This is because GLib does not do its own collation, but passes off to
-     * strcoll() or to wcscoll() (or at least, a poke at GLib's internals certainly
-     * suggests that's what's going on) -- which are opaque and may vary across systems.
-     * All GLib does is wrap around these functions to standardise how they need to be
-     * called.
-     * Would binary comparison for UTF8 (as with the 8 bit charsets) be better?
-     * It would give odd results for sorting (e.g. Urdu letters after entire
-     * Arabic alphabet; all Latin1 accented characters at the end of the
-     * alphabet) but we wouldn't have to worry about a-acute and a-grave being
-     * grouped together for counting purposes.
-     *
-     * Offer utf8_as_binary as an option to this function?????
-     */
-    if (result < 0)
-      return -1;
-    else if (result > 0)
-      return 1;
-    else
-      return 0;
-  }
-
-  /* this point not reached */
+  /* Below is the old code for reference -- or to marvel at the inefficiency of the strcmp reimplementation.
+   */
+  //
+  //  /* the actual comparison begins here. There are two versions:
+  //   * 8-bit (binary compare) and utf8 (depends on GLib and on the current locale). */
+  //  if (charset != utf8) {
+  //    /* 8 bit mode */
+  //    int l1, l2, minl, i;
+  //    unsigned char *p1, *p2;
+  //
+  //    l1 = strlen(comp1);
+  //    l2 = strlen(comp2);
+  //    /* pointers set to first character of the string */
+  //    p1 = (unsigned char *)comp1;
+  //    p2 = (unsigned char *)comp2;
+  //
+  //    minl = MIN(l1, l2);
+  //
+  //    /* count up to minimum length with i, also increment pointers */
+  //    for (i = 1; i <= minl; i++, p1++, p2++) {
+  //      /* if there is a difference (based on binary order
+  //       * of *p1 and *p2) return it */
+  //      if (*p1 < *p2)
+  //        return -1;
+  //      else if (*p1 > *p2)
+  //        return 1;
+  //    }
+  //    /* if we're here, then the whole minl length was the same */
+  //    if (l1 < l2)
+  //      return -1;
+  //    else if (l1 > l2)
+  //      return 1;
+  //    else
+  //      return 0;
+  //  }
+  //  else {
+  //    /* utf8 mode */
+  //    int result = (int)g_utf8_collate((gchar *)comp1, (gchar *)comp2);
+  //    /* For now we are using the collate function from GLib.
+  //     * In practice, this may not be appropriate as it is locale-dependent -
+  //     * so, for example, it may impose case-insensitivity or accent-insensitivity
+  //     * if the locale says it is appropriate to do so,
+  //     * even if we avoided these things above!
+  //     *
+  //     * This is because GLib does not do its own collation, but passes off to
+  //     * strcoll() or to wcscoll() (or at least, a poke at GLib's internals certainly
+  //     * suggests that's what's going on) -- which are opaque and may vary across systems.
+  //     * All GLib does is wrap around these functions to standardise how they need to be
+  //     * called.
+  //     * Would binary comparison for UTF8 (as with the 8 bit charsets) be better?
+  //     * It would give odd results for sorting (e.g. Urdu letters after entire
+  //     * Arabic alphabet; all Latin1 accented characters at the end of the
+  //     * alphabet) but we wouldn't have to worry about a-acute and a-grave being
+  //     * grouped together for counting purposes.
+  //     *
+  //     * Offer utf8_as_binary as an option to this function?????
+  //     */
+  //    if (result < 0)
+  //      return -1;
+  //    else if (result > 0)
+  //      return 1;
+  //    else
+  //      return 0;
+  //  }
 }
 
 /**
@@ -2482,9 +2496,9 @@ cl_path_registry_quote(char *path)
         (*p >= '0' && *p <= '9') ||
         (*p == '-') || (*p == '_') || (*p == '/') ||
         (p > path && (*p == '.' || *p == '\\'))
-       )
+       ) {
       /* pass */
-      ;
+    }
     else
       need_quotes = 1;
   }
@@ -3062,7 +3076,7 @@ void
 cl_autostring_dump(ClAutoString string)
 {
   fprintf(stderr, "CL: Autostring content: \n\t->data %s,"
-                  "\n\t->bytes_allocated %d,\n\t->increment, %d\n\t->len %d\n",
+                  "\n\t->bytes_allocated %ld,\n\t->increment, %ld\n\t->len %ld\n",
                   string->data, string->bytes_allocated, string->increment, string->len);
 }
 
