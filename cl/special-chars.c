@@ -1790,13 +1790,25 @@ cl_string_utf8_continuation_byte(unsigned char byte)
   return (byte >= 0x80 && byte <=0xbf);
 }
 
+/*
+ * Charset sensitive strlen wrapper. If the charset is utf8, calls
+ * a Glib function that calculates the size in characters. Otherwise,
+ * returns the size in bytes.
+ */
+size_t
+cl_charset_strlen(CorpusCharset charset, char *s)
+{
+  return (charset == utf8 ? (size_t) g_utf8_strlen((gchar *)s, -1) : strlen(s));
+}
+
 
 /**
  * Checks the encoding of a string.
  *
  * This function looks for bad bytes (or byte sequences in the case of UTF8);
- * if any are present, it judges the string invalid.  For ISO8859-* encodings,
- * the string can optionally be "repaired" in-place by replacing bad bytes with
+ * if any are present, it judges the string invalid.
+ *
+ * The string can optionally be "repaired" in-place by replacing bad bytes with
  * '?' characters.  If the "repair" is successful, the function returns True.
  *
  * What counts as "bad" is of course relative to the character set that the
@@ -1804,23 +1816,32 @@ cl_string_utf8_continuation_byte(unsigned char byte)
  *
  * @param s        Null-terminated string to check.
  * @param charset  CorpusCharset of the string's encoding.
- * @param repair   if True, replace invalid 8-bit characters by '?'
+ * @param repair   if True, replace invalid bytes by '?'
  * @return         Boolean: true for valid, false for invalid.
  */
 int
 cl_string_validate_encoding(char *s, CorpusCharset charset, int repair)
 {
-  /* cast as unsigned string to allow hex comparisons,
-   * (but pass signed version to Glib for UTF8) */
+  /* cast as unsigned string to allow hex comparisons (but pass signed version to Glib for UTF8) */
   unsigned char *str = (unsigned char *)s;
+  unsigned char *bad; /* for Glib out parameter */
 
   switch (charset) {
   case utf8:
-    /* return using our own Boolean convention rather than Glib's */
-    return (g_utf8_validate((gchar *)str, -1, NULL) ? 1 : 0);
+    do {
+      if (g_utf8_validate((gchar *)str, 1, &bad))
+        return 1;
+      else if (!repair)
+        return 0;
+      else /* invalid and repair is true */
+        *bad = '?';
+        /* and continue ... */
+      /* note this will loop until all bad bytes in the string have been overwritten */
+    } while (1);
+    break;
 
   /* all the others are of the same pattern:
-     check each character in string, if in illegal zone, return false or overwrite with '?'.
+     check each character in string, if in illegal zone, return false or overwrite with '?';
      we short-circuit the tests where possible. */
   case ascii:
     for (; *str ; str++)

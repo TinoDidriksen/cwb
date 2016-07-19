@@ -787,7 +787,7 @@ typedef enum ECorpusCharset {
   arabic, greek,  hebrew, latin5, latin6,
   latin7, latin8, latin9,
   utf8,
-  /* everything else is 'unknown' .. client apps should check the corresponding property value */
+  /* everything else is 'unknown' */
   unknown_charset
 } CorpusCharset;
 
@@ -796,6 +796,7 @@ CorpusCharset cl_corpus_charset(Corpus *corpus);
 char *cl_charset_name(CorpusCharset id);
 CorpusCharset cl_charset_from_name(char *name);
 char *cl_charset_name_canonical(char *name_to_check);
+size_t cl_charset_strlen(CorpusCharset charset, char *s);
 
 /* the main functions for which CorpusCharset "matters" are the following... */
 
