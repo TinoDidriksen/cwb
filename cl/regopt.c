@@ -155,7 +155,9 @@ cl_new_regex(char *regex, int flags, CorpusCharset charset)
   sprintf(anchored_regex, "^(?:%s)$", preprocessed_regex);
 
   /* compile regular expression with PCRE library function */
-  options_for_pcre = (rx->icase) ? PCRE_CASELESS : 0; /* case folding is left to the PCRE matcher */
+  options_for_pcre = PCRE_UCP; /* use Unicode properties for \w, \d, etc. */
+  if (rx->icase)
+    options_for_pcre |= PCRE_CASELESS; /* case folding is left to the PCRE matcher */
   if (charset == utf8) {
     if (cl_debug)
       fprintf(stderr, "CL: enabling PCRE's UTF8 mode for regex %s\n", anchored_regex);
