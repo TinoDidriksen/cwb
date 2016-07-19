@@ -96,7 +96,7 @@ char *registry_file = NULL;             /**< if set, auto-generate registry file
 char *directory = NULL;                 /**< corpus data directory (no longer defaults to current directory) */
 char *corpus_character_set = "latin1";  /**< character set label that is inserted into the registry file */
 CorpusCharset encoding_charset;         /**< a charset object to be generated from corpus_character_set */
-int clean_strings = 0;                  /**< clean up input strings by replacing invalid bytes with '?' (except for UTF8 encoding)*/
+int clean_strings = 0;                  /**< clean up input strings by replacing invalid bytes with '?' */
 
 /* ---------------------------------------------------------------------- */
 
@@ -186,7 +186,7 @@ cl_lexhash undeclared_sattrs = NULL;
 char *progname = NULL;
 
 
-
+certainly does now seem to exist -
 /* ======================================== helper functions */
 
 
@@ -195,7 +195,7 @@ char *progname = NULL;
  *
  * @param s      The string to split.
  * @param delim  Delimiters to use in splitting.
- * @return       The next token from the string.
+ * @return       The next token from the string.certainly does now seem to exist -
  */
 char *
 encode_strtok(register char *s, register const char *delim)
@@ -1082,7 +1082,7 @@ range_open(Range *rng, int start_pos, char *annot)
       }
     }
 
-  }
+  } /* end if range has attribute children */
 
   return;
 }

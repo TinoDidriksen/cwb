@@ -202,7 +202,6 @@ compress_reversed_index(Attribute *attr, char *output_fn)
    * .corpus.rev and .corpus.rdx components in order to force
    * subsequent CL calls to use the uncompressed data.
    */
-
   {
     Component *comp;
 
@@ -315,7 +314,7 @@ compress_reversed_index(Attribute *attr, char *output_fn)
  * Checks a compressed reversed index for errors by decompressing it.
  *
  * This function this assumes that compress_reversed_index() has been called
- * beforehand and made sure that the _uncompressed_ index is used by CL
+ * beforehand and made sure that the _uncompressed_ index is usable by CL
  * access functions.
  *
  * @param attr      The attribute to check the index of.
@@ -420,7 +419,7 @@ decompress_check_reversed_index(Attribute *attr, char *output_fn)
       }
       if (pos != true_pos) {
         fprintf(stderr, "ERROR: wrong occurrence of token #%d at cpos %d (correct cpos: %d). Aborted.\n",
-              i, pos, true_pos);
+                i, pos, true_pos);
         compressrdx_cleanup(1);
       }
 
@@ -477,7 +476,7 @@ compressrdx_usage(char *msg, int error_code)
 }
 
 /**
- * Cleans up memory prior to an error-prompted exit.
+ * Cleans up memory prior to an (error-prompted or normal) exit.
  *
  * @param error_code  Value to be returned by the program when it exits.
  */
@@ -633,5 +632,5 @@ main(int argc, char **argv)
   }
   
   compressrdx_cleanup(0);
-  return 0;                        /* to keep gcc from complaining */
+  return 0;                        /* never reached; to keep gcc from complaining */
 }

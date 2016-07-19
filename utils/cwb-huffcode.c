@@ -171,8 +171,8 @@ sift(int *heap, int heap_size, int node)
    * 2i+1. So we maintain this scheme and decrement just before
    * addressing the array.
    *
-   * left child in 2*node, right child in 2*node + 1, parent in
-   * node */
+   * left child in 2*node, right child in 2*node + 1, parent in node
+   */
 
   while (child <= heap_size) {
  
@@ -294,7 +294,7 @@ compute_code_lengths(Attribute *attr, HCD *hc, char *fname)
   int nr_codes = 0;
 
   int *heap = NULL;
-  unsigned *codelength = NULL;        /* was char[], probably to save space; but that's unnecessary and makes gcc complain */
+  unsigned *codelength = NULL;
 
   int issued_codes[MAXCODELEN];
   int next_code[MAXCODELEN];
@@ -336,12 +336,10 @@ compute_code_lengths(Attribute *attr, HCD *hc, char *fname)
               corpus->registry_dir, corpus->registry_name, attr->any.name);
       exit(1);
     }
-
   }
 
   /*
-   * strongly follows Witten/Moffat/Bell: ``Managing Gigabytes'', 
-   * pp. 335ff.
+   * strongly follows Witten/Moffat/Bell: ``Managing Gigabytes'', pp. 335ff.
    */
 
   hc->size = cl_max_id(attr);                /* the size of the attribute (nr of items) */
@@ -360,7 +358,7 @@ compute_code_lengths(Attribute *attr, HCD *hc, char *fname)
   hc->min_codelen = 100;
   hc->max_codelen = 0;
 
-  memset((char *)hc->lcount, '\0', MAXCODELEN * sizeof(int));
+  memset((char *)hc->lcount,   '\0', MAXCODELEN * sizeof(int));
   memset((char *)hc->min_code, '\0', MAXCODELEN * sizeof(int));
   memset((char *)hc->symindex, '\0', MAXCODELEN * sizeof(int));
 
@@ -383,8 +381,7 @@ compute_code_lengths(Attribute *attr, HCD *hc, char *fname)
 
   /* ============================== PROTOCOL ============================== */
   if (do_protocol > 0)
-    fprintf(protocol, "Allocated heap with %d cells for %d items\n\n",
-            hc->size * 2, hc->size);
+    fprintf(protocol, "Allocated heap with %d cells for %d items\n\n", hc->size * 2, hc->size);
   if (do_protocol > 2)
     print_heap(heap, hc->size, "After Initialization");
   /* ============================== PROTOCOL ============================== */
@@ -400,7 +397,7 @@ compute_code_lengths(Attribute *attr, HCD *hc, char *fname)
    * we address the heap in the following manner: when we start array
    * indices at 1, the left child is at 2i, and the right child is at
    * 2i+1. So we maintain this scheme and decrement just before
-   * adressing the array. 
+   * addressing the array.
    */
 
   /*
@@ -509,8 +506,7 @@ compute_code_lengths(Attribute *attr, HCD *hc, char *fname)
 
   /* ================================================== Phase 3 */
 
-  /* compute the code lengths. We don't have any freqs in heap any
-   * more, only pointers to parents */
+  /* compute the code lengths. We don't have any freqs in heap any more, only pointers to parents */
 
   heap[0] = -1U;
 
@@ -757,9 +753,6 @@ compute_code_lengths(Attribute *attr, HCD *hc, char *fname)
 
 
 /* ================================================== DECOMPRESSION & ERROR CHECKING */
-
-/* this
-    */
 
 /**
  * Checks a huffcoded attribute for errors by decompressing it.

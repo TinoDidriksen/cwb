@@ -366,8 +366,8 @@ main(int argc, char *argv[])
     }
 
     if (compatibility) {
-      /* source and target regions of .alg file must be contiguous; store start points only; */
-      /* hence we must collapse crossing alignments into one larger region (I know that's bullshit) */
+      /* source and target regions of .alg file must be contiguous; store start points only;
+       * hence we must collapse crossing alignments into one larger region (I know that's bullshit) */
       if ((f1 > current1) && (f2 > current2)) {
         if (reverse) {
           NwriteInt(f2, alg); NwriteInt(f1, alg);
