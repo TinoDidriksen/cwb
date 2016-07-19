@@ -185,8 +185,9 @@ before encoding.
 
 Activates cleanup mode. In this mode, when a character occurs in the input data
 that is not valid for the declared character encoding, instead of causing an error it will
-be replaced by '?' in the indexed data. Please note that cleanup mode does not work
-for UTF-8 data.
+be replaced by '?' in the indexed data.
+For UTF-8 data, a '?' replaces each invalid I<byte> (so a single invalid character may be represented by a 
+sequence of question marks).
 
 =item B<-d> I<data_directory>  
 
