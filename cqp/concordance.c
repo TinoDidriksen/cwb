@@ -16,6 +16,7 @@
  */
 
 #include <stdio.h>
+#include <glib.h>
 
 #include "../cl/globals.h"
 #include "../cl/macros.h"
@@ -48,15 +49,15 @@
 static char *
 srev(char *s)
 {
-  register char b;
+  register char buf;
   register int i, l;
 
   l = strlen(s);
 
   for (i = 0; i < l/2; i++) {
-    b = s[l-i-1];
+    buf = s[l-i-1];
     s[l-i-1] = s[i];
-    s[i] = b;
+    s[i] = buf;
   }
 
   return s;
@@ -68,15 +69,19 @@ srev(char *s)
 /* ============================== get_print_attribute_values() */
 
 /**
- * TODO document this!
- * Prints attribute values into a ClAutoString.
+ * Prints s-attribute values into a ClAutoString, for use in a printed concordance line.
+ *
+ * (Note, the function is called "attribute values" but it very specifically means s-attribvutes.)
+ *
+ * The s-attributes that will be printed are determined by the contents of the ContextDescriptor
+ * object; the PrintDescriptionRecord determines what they look like.
  *
  * @param cd                   Print settings (context size/type; atts to print)
- * @param position             ???
+ * @param position             The CPOS to be used in the position at the start
  * @param s                    Results will be concatenated onto this string.
- * @param sp
- * @param max_sp
- * @param add_position_number  Boolean: whether or not to add a position number (start of concordance line)
+ * @param sp                   Depracated argument: not used by func
+ * @param max_sp               Depracated argument: not used by func
+ * @param add_position_number  Boolean: whether or not to make  a position number (start of concordance line)
  * @param pdr                  Print settings (of main mode) to use
  */
 void
@@ -89,15 +94,15 @@ get_print_attribute_values(ContextDescriptor *cd,
                            PrintDescriptionRecord *pdr)
 {
   if (add_position_number && pdr->CPOSPrintFormat) {
-    static char num[CL_MAX_LINE_LENGTH];  /* another 'Oli': this was num[16], definitely not enough for HTML output */
+    static char rendered_cpos[CL_MAX_LINE_LENGTH];  /* another 'Oli': this was num[16], definitely not enough for HTML output */
     
-    sprintf(num, pdr->CPOSPrintFormat, position);
-    cl_autostring_concat(s, num);
+    sprintf(rendered_cpos, pdr->CPOSPrintFormat, position);
+    cl_autostring_concat(s, rendered_cpos);
   }
 
   if (cd->printStructureTags) {
     AttributeInfo *ai;
-    int pref_printed = 0;
+    int pref_printed = 0; /* boolean: has the prefix been printed? */
 
     for (ai = cd->printStructureTags->list; ai; ai = ai->next) {
       char *v;
@@ -344,7 +349,7 @@ get_position_values(ContextDescriptor *cd,
 
 
 #if 0
-  fprintf(stderr, "get_position_values() at pos %d: ``%s''\n", position, s);
+  fprintf(stderr, "get_position_values() at pos %d: ``%s''\n", position, s->data);
 #endif
 }
 
@@ -377,16 +382,18 @@ remember_this_position(int position,
  * Scratch string used by get_field_separators only.
  */
 static ClAutoString scratch = NULL;
+/*TODO why is the above file-scope-static ratrher than func-scope-static? I did it, and ca't remember... */
 /**
- * This oddly-named function prints a series of "fields"
+ * This oddly-named function prints a series of separators for "fields"
  * to an internal buffer.
  *
- * (What are "fields" in this context????)
+ * "Field" in this poition means one of the 4 anchor points (begin, end, target, keyword).
  *
- * @param position   ??
- * @param fields     ??
- * @param nr_fields  ??
- * @param at_end     Boolean:
+ * @param position   The corpus position (cpos) whose field-sepaators we want.
+ * @param fields     Pointer to array of ConcLineFields object (each of which specifies one of the 4 anchors).
+ * @param nr_fields  Number of items in the "fields" array.
+ * @param at_end     Boolean: if true, we get the end-separators for the fields at this cpos;
+ *                   if false, we get the beginning-separators for the fields at this cpos.
  * @param pdr        The PDR for the current concordance printout.
  * @return           A pointer to a module-internal static string buffer containing
  *                   the requested string. Do not free it or alter it.
@@ -492,6 +499,11 @@ cleanup_kwic_line_memory(void)
  *
  * @param match_start  A corpus position
  * @param match_end    A corpus position
+ *
+ * @param fields       Array of ConcLineFields object (each of which specifies one of the 4 anchors).
+ * @param nr_fields    Number of items in the "fields" array.
+ *
+ * roughnotes: I THINK returned_positions is just a blob of memory that the func is being allowd to use.
  * @return             String containing the output line.
  */
 char *
@@ -625,6 +637,13 @@ compose_kwic_line(Corpus *corpus,
   }
 
 
+  /*
+   * ==========================================================================
+   * first big job: use designated method to put together the left-hand co-text
+   * ==========================================================================
+   */
+
+
   switch(cd->left_type) {
   case CHAR_CONTEXT:
     
@@ -686,15 +705,16 @@ compose_kwic_line(Corpus *corpus,
             char *mark;
             if (corpus->charset != utf8) {
               /* ... so only copy its last several bytes */
-              mark = token->data + (token->len - (cd->left_width - length_bytes));
+              mark = token->data + (token->len - (cd->left_width - length_characters));
             }
             else {
               /* ... so only copy its last several characters */
-              mark = token->data + token->len;
+              mark = token->data;
               while (token_length_characters + length_characters > cd->left_width) {
-                do {
-                  --mark;
-                } while (cl_string_utf8_continuation_byte(*mark));
+//                do {
+//                  --mark;
+//                } while (cl_string_utf8_continuation_byte(*mark));
+                mark = g_utf8_next_char(mark);
                 --token_length_characters;
               }
             }
@@ -728,7 +748,7 @@ compose_kwic_line(Corpus *corpus,
       }
     } /* endfor */
 
-    /* auffüllen (padding) mit Blanks, bis linker Kontext erreicht */
+    /* pad with blanks until we reach the designated width for left co-text */
 //    while (acc_len < cd->left_width) {
     while (length_characters < cd->left_width) {
       cl_autostring_concat(line, " ");
@@ -736,7 +756,8 @@ compose_kwic_line(Corpus *corpus,
       //acc_len++; /* pretend to fill in necessary number of blanks, even if buffer is already full */
     }
 
-    /* die bisherige Zeile (Linkskontext des Match-Tokens) umdrehen, aber nicht evtl. printStructures */
+    /* Now we need to reverse order of characters of the left co-text assembled in the preceding code;
+     * but we DON'T flip any printStructures */
 
 #if 0
     fprintf(stderr, "line before srev(): >>%s<<\n", line + index);
@@ -748,7 +769,7 @@ compose_kwic_line(Corpus *corpus,
     fprintf(stderr, "line after srev(): >>%s<<\n", line + index);
 #endif
 
-    /* der spannende Teil: wir müssen wg srev() die Liste der returned_positions angleichen... */
+    /* now the fun bit: because of the srev() call abnove, we now need to align the list of returned_positions ... */
 
     if (position_list && (nr_positions > 0)) {
 
@@ -873,7 +894,7 @@ compose_kwic_line(Corpus *corpus,
                           orientation,
                           pdr,
                           nr_mappings, mappings);
-      /* Trennzeichen einfügen, falls schon tokens in line drin sind */
+      /* Insert a separator iff there are already 1+ tokens in the line */
       if (line->len > 0)
         cl_autostring_concat(line, pdr->TokenSeparator);
 
@@ -905,7 +926,7 @@ compose_kwic_line(Corpus *corpus,
 
   /*
    * =======================================================================
-   * Der linke Kontext ist berechnet. Nun werden die Match-Tokens eingefügt.
+   * Left-hand co-text is now fully built, so now we insert the match tokens
    * =======================================================================
    */
 
@@ -961,9 +982,9 @@ compose_kwic_line(Corpus *corpus,
 
 
   /*
-   * ==================================================
-   * nun muss noch der Rechtskontext hinzugefügt werden
-   * ==================================================
+   * ======================================================
+   * now all we have to do is add on the right-hand co-text
+   * ======================================================
    */
 
 
@@ -1002,7 +1023,7 @@ compose_kwic_line(Corpus *corpus,
 
         this_token_start = line->len;
 
-        /* jetzt den Feldstart */
+        /* now the beginning-of-field separators */
         if ((word = get_field_separators(start, fields, nr_fields, 0, pdr)))
           cl_autostring_concat(line, word);
         
@@ -1022,11 +1043,11 @@ compose_kwic_line(Corpus *corpus,
             /* rewind through the string until we have removed the correct n of characters */
             char *mark = line->data + (line->len - 1);
             while (length_characters > cd->right_width) {
-              while (cl_string_utf8_continuation_byte(mark))
+              while (cl_string_utf8_continuation_byte(*mark))
                 --mark;
               --length_characters, --mark;
             }
-            cl_autostring_truncate(line, (mark - line->data));
+            cl_autostring_truncate(line, (mark - line->data + 1));
           }
         }
 

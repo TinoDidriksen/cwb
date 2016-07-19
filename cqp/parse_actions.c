@@ -3017,11 +3017,10 @@ do_dump(CorpusList *cl, int first, int last, struct Redir *rd)
     l = (last < cl->size) ? last : cl->size - 1;
     for (i = f; i <= l; i++) {
       j = (cl->sortidx) ? cl->sortidx[i] : i;
-      target = (cl->targets) ? cl->targets[j] : -1;
+      target  = (cl->targets)  ? cl->targets[j]  : -1;
       keyword = (cl->keywords) ? cl->keywords[j] : -1;
       rg = cl->range + j;
-      fprintf(rd->stream, "%d\t%d\t%d\t%d\n", 
-              rg->start, rg->end, target, keyword);
+      fprintf(rd->stream, "%d\t%d\t%d\t%d\n", rg->start, rg->end, target, keyword);
     }
 
     close_stream(rd);

@@ -2876,7 +2876,7 @@ cl_strcpy(char *buf, const char *src)
  */
 
 /**
- * Creates a new autostring object. The stirng is initialised to data (or to a zero-length string if data is NULL).
+ * Creates a new autostring object. The string is initialised to data (or to a zero-length string if data is NULL).
  *
  * Initially, init_bytes is allocated (and the increment step is the same size), unless the string is longer...
  * in which case the length of the string becomes the inital amount of memory allocated.
@@ -2979,7 +2979,7 @@ cl_autostring_reclaim_mem(ClAutoString string)
 }
 
 /**
- * Copy the string in src into the AutyoString in dst, automatically reallocating memory if necessary.
+ * Copy the string in src into the AutoString in dst, automatically reallocating memory if necessary.
  */
 void
 cl_autostring_copy(ClAutoString dst, const char *src)
@@ -3007,7 +3007,7 @@ cl_autostring_copy(ClAutoString dst, const char *src)
 }
 
 /**
- * Concatenate the string src onto the end of the AutoStreing in dst, automatically reallocating memory if necessary.
+ * Concatenate the string src onto the end of the AutoString in dst, automatically reallocating memory if necessary.
  */
 void
 cl_autostring_concat(ClAutoString dst, const char *src)
@@ -3035,7 +3035,7 @@ cl_autostring_concat(ClAutoString dst, const char *src)
 
 /**
  * Truncates the AutoString to the length specified. Note, does not respect UTF-8 encoding,
- * so if the string is UTF8 you need to ascertain in advance that the curt-off does not break
+ * so if the string is UTF8 you need to ascertain in advance that the cut-off does not break
  * any UTF-8 characters into bits.
  *
  * This function should be used if the character buffer is tampered with by direct access (which

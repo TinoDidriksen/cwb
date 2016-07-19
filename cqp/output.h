@@ -28,6 +28,9 @@
 /**
  * The Redir structure: contains information about
  * redirecting output to a file or pipe.
+ *
+ * NB this oufght really to be "OutputRedir" as it is the
+ * distaff counterpart of InputRedir...
  */
 struct Redir {
   char *name;     /**< file name for redirection; if NULL, stdout is used */

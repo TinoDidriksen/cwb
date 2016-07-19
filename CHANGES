@@ -1,7 +1,7 @@
 Version 3.4 (in progress)
 -----------
 
-Other changes:
+New features:
 
  - cwb-scan-corpus now accepts negated regular expression constraints (e.g. 'lemma+0!=/anti.*/c').
    The -C option is consistently ignored for constraint keys ('?...'), and documented to be.
@@ -9,6 +9,10 @@ Other changes:
 
  - cwb-lexdecode now has a "no-blanks" option (-b) to turn off the padding of numeric columns with
    spaces to the minimum width of seven.
+
+ - cwb-encode can now apply cleanup (-C) to UTF-8 data.
+
+ - cwb-encode now accepts XML "empty" tags <likeThis/> , but treats them as opening tags.
 
  - cwb-align is now safe for use with UTF-8 corpora.
 
@@ -68,15 +72,19 @@ Bug fixes:
  
  - [2014-06-16: v3.4.8] Fixed bug whereby a UTF-8 character could be broken up, creating invalid sequences, by
    CQP's system for character-based context size. (CQP is still "dumb" in that it counts strings in bytes not
-   characters in UTF-8, but this is a less critical probklem, or should be.)
+   characters in UTF-8, but this is a less critical problem, or should be.)
 
  - [2016-03-20] Edge case in "tabulate" output, which resulted in incorrect CQPweb collocation analysis under
    certain circumstances, has been fixed.  Precise behaviour for out of bounds values now documented in the
    CQP Query Language Tutorial.
 
- - [2016-07-19] Fixed bug in settings for cross-compile to Windows. Removed cwb-atoi.exe and cwb-itoa.exe from 
-   Windows release builds, as they trigger malware alerts both on SF.net (our distributiojn platform) and on
+ - [2016-07-19: v3.4.10] Fixed bug in settings for cross-compile to Windows. Removed cwb-atoi.exe and cwb-itoa.exe from 
+   Windows release builds, as they trigger malware alerts both on SF.net (our distribution platform) and on
    some (but not all) standalone antivirus software. 
+
+ - [2016-07-19: v3.4.10] Fixed CQP bug for fixed-character width concordance. First, it will no longer split UTF-8 characters apart
+   at the far left/far right of the concordance. Second, it will count the number of co-text characters 
+   accurately (previously, you would often get fewer characters than you asked for with UTF-8 corpora).
    
 
 Enhancements:
@@ -138,7 +146,7 @@ Heiden and colleagues on the Textometrie project. There are no other new feature
 Version 3.0
 -----------
 
-This will be the first official release of the IMS Open Corpus Workbench.
+This was the first official release of the IMS Open Corpus Workbench.
  - released April 2010, after some testing by developer community (and perhaps an overhaul of installation procedure)
  - binary packages for various platforms (but not all) are available as well as the source.
 

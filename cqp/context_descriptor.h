@@ -51,15 +51,24 @@
  * merely specify the "Context" size; it also specifies
  * which attributes get printed, and so on.
  *
+ * (It would be better called a "concordance line co-text
+ * configuration object".)
+ *
  * @see PrintDescriptionRecord
+ *
+ * TODO why is it necessary for concordance-printing
+ * options to be spread across two separate objects?
  */
 typedef struct _context_description_block {
+  /* oh hurray look, yet another **different** way for the struct tag to correspond to the classname........... */
 
   /* ==================== left context scope description variables */
 
   int left_width;                    /**< Amount of context to show before the match, in units specified by left_type */
   int left_type;                     /**< Unit in which context is measured;
                                           Set to one of the constants: CHAR_CONTEXT, WORD_CONTEXT, STRUC_CONTEXT, ALIGN_CONTEXT */
+  /* TODO Is being able to have the left co-text measured in words and the right context in (say) paragraphs something we really are bovvered about? */
+
   char *left_structure_name;
   Attribute *left_structure;
 

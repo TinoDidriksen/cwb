@@ -186,7 +186,6 @@ cl_lexhash undeclared_sattrs = NULL;
 char *progname = NULL;
 
 
-certainly does now seem to exist -
 /* ======================================== helper functions */
 
 
@@ -195,7 +194,7 @@ certainly does now seem to exist -
  *
  * @param s      The string to split.
  * @param delim  Delimiters to use in splitting.
- * @return       The next token from the string.certainly does now seem to exist -
+ * @return       The next token from the string.
  */
 char *
 encode_strtok(register char *s, register const char *delim)

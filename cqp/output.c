@@ -263,7 +263,7 @@ open_pager(char *cmd, CorpusCharset charset)
 }
 
 /**
- * Open the stream within a Redir structure.
+ * Open the (output) stream within a Redir structure.
  *
  * @param rd       Redir structure to be opened.
  * @param charset  The charset to be used. Only has an effect if the stream
@@ -346,7 +346,7 @@ open_stream(struct Redir *rd, CorpusCharset charset)
 }
 
 /**
- * Closes the stream within a Redir structure.
+ * Closes the (output) stream within a Redir structure.
  *
  * @param rd  The Redir stream to close.
  * @return    True for all OK, false if closing did not work. If rd does not

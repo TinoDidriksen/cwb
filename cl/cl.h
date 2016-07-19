@@ -329,9 +329,6 @@ void cl_set_memory_limit(int megabytes);  /* 0 or less turns limit off */
  */
 
 /**
- * A single-string object whose memory allocation grows automatically.
- */
-/**
  * Underlying structure for the ClAutoString object.
  *
  * (Its members are not hidden, but you are advised not to tinker with
@@ -346,6 +343,9 @@ struct ClAutoString {
   size_t increment;          /**< When the data buffer is too small, it will be increased by the lowest sufficient multiple
                                   of the increment value (specified at object creation time; can be reset later; defaults to CL_MAX_LINE_LENGTH). */
 };
+/**
+ * A single-string object whose memory allocation grows automatically.
+ */
 typedef struct ClAutoString *ClAutoString;
 /* the ClAutoString object API */
 ClAutoString cl_autostring_new(const char *data, size_t init_bytes);
@@ -479,7 +479,7 @@ typedef union _Attribute Attribute;
 #define ATT_STRUC      (1<<1)
 /** Alignment attributes, ie a set of zones of alignment between a source and target corpus */
 #define ATT_ALIGN      (1<<2)
-/** Dynamic attributes, ?? */
+/** Dynamic attributes, ie a depracated feature, but its datatypes are still used for some CQP function parameters/returns */
 #define ATT_DYN        (1<<6)
 
 /** shorthand for "any / all types of attribute" */
@@ -675,6 +675,7 @@ typedef struct _DCR {
    * @see CL_DYN_STRING_SIZE
    */
   char dynamic_string_buffer[CL_DYN_STRING_SIZE];
+  /* TODO - use a ClAutoString instead? */
 } DynCallResult;
 
 /* result and argument types of dynamic attributes; ATTAT = attribute argument type */
@@ -879,8 +880,8 @@ typedef struct _CL_Regex *CL_Regex;
 /* ... and the regex API ... */
 /**
  * The constructor is used to compile a regular expression with the specified flags (IGNORE_CASE
- * and/or IGNORE_DIAC) and for the specified character encoding. It also checks whether an optimized
- * matcher using Boyer-Moore search for literal "grains" as a pre-filter can be used.
+ * and/or IGNORE_DIAC and/or CANONICAL_NFC) and for the specified character encoding.
+ * It also checks whether an optimized matcher using Boyer-Moore search for literal "grains" as a pre-filter can be used.
  */
 CL_Regex cl_new_regex(char *regex, int flags, CorpusCharset charset);
 int cl_regex_optimised(CL_Regex rx); /* 0 = not optimised; otherwise, value indicates level of optimisation */
@@ -910,7 +911,7 @@ int cl_regopt_count_get(void);
  */
 
 /**
- *  The cl_lexhash class (lexicon hashes, with IDs and frequency counts)
+ *  The cl_lexhash class (lexicon hashes, with IDs and frequency counts).
  *
  *  A "lexicon hash" links strings to integers. Each cl_lexhash object
  *  represents an entire table of such things; individual string-to-int
@@ -932,7 +933,7 @@ int cl_regopt_count_get(void);
  *  WARNING: cl_lexhash objects are intended for data sets ranging from 
  *  a few dozen entries to several million entries. Do not try to store
  *  more than a billion (distinct) strings in a lexicon hash, otherwise
- *  bad (and unpredicatble) things will happen. You have been warned!
+ *  bad (and unpredictable) things will happen. You have been warned!
  * 
  */
 typedef struct _cl_lexhash *cl_lexhash;

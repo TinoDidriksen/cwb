@@ -134,6 +134,7 @@ char *LastW;
 
 #define MAX_CHAR 0x4000
 /* TODO do we need a 16Kb string given the limits on string length elsewhere in CWB/CQP ?
+ * Is there any way we could make this an AutoStreing instead, maybe?
  * If we do, should this name be more transparent? (CH_ARR_MAX better perhaps) */
 static char ChArr[MAX_CHAR];
 char *ChP;
@@ -143,7 +144,7 @@ int LINE;
 /** The number of errors enocuntered while parsing a regex to a DFA */
 int ERRORS;
 
-/** The maximum number of erros that the regex2dfa module will allow before killing the program */
+/** The maximum number of errors that the regex2dfa module will allow before killing the program */
 #define MAX_ERRORS 25
 
 #define HASH_MAX 0x200
@@ -153,6 +154,7 @@ Symbol FirstB, LastB;
 
 /** TODO needs a comment! */
 #define NN 0x200
+/** TODO needs a comment! */
 Exp ExpHash[NN];
 
 #define EQU_EXTEND 0x200
@@ -234,8 +236,7 @@ REGEX2DFA_ERROR(char *Format, ...)
   va_start(AP, Format); vfprintf(stderr, Format, AP); va_end(AP);
   fputc('\n', stderr);
   if (++ERRORS == MAX_ERRORS) {
-    fprintf(stderr, "regex2dfa: Reached the %d error limit.\n",
-            MAX_ERRORS);
+    fprintf(stderr, "regex2dfa: Reached the %d error limit.\n", MAX_ERRORS);
     exit(1);
   }
 }
@@ -322,7 +323,7 @@ LEX(void)
   }
 }
 
-/** TODO delete: has been replaced throughout with cl_malloc */
+/** TODO delete: has been replaced throughout with cl_malloc *
 void *
 Allocate(unsigned Bytes)
 {
@@ -330,7 +331,7 @@ Allocate(unsigned Bytes)
   return X;
 }
 
-/** TODO delete: has been replaced throughout with cl_realloc */
+/** TODO delete: has been replaced throughout with cl_realloc *
 void *
 Reallocate(void *X, unsigned Bytes)
 {
@@ -338,7 +339,7 @@ Reallocate(void *X, unsigned Bytes)
   return X;
 }
 
-/** TODO delete: has been replaced throughout with cl_strdup (was only used once anyway) */
+/** TODO delete: has been replaced throughout with cl_strdup (was only used once anyway) *
 char *
 CopyS(char *S)
 {
@@ -347,6 +348,7 @@ CopyS(char *S)
   strcpy(NewS, S); 
   return NewS;
 }
+*/
 
 /** Creates a one-byte hash of the string S. */
 byte
