@@ -23,6 +23,9 @@ FOR V 3.5.0
 - Modify the corpus encoding and CQP tutorials to take account of the fact that the user might be using Win.
 - Modify the CQP tutorial to reflect the fact that we are now on PCRE.
 
+- Implement our own PCRE character tables for all 8-bit encodings to enable case-insensitive matching beyond ASCII.
+- Test revised implementation of regular expression matching and the optimizer (esp. with %c and %d flags).
+- Re-enable regexp optimizer by default (perhaps after testing phase).
 
 
 THINGS THAT ARE ON THE LIST, BUT WON'T BE TACKLED TILL 3.9/4.0

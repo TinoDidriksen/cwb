@@ -38,6 +38,15 @@ New features:
  - The "group" command supports properly grouped frequency counts, as the name has always
    implied.  Use e.g. "group A match lemma by target lemma;" to sort pairs by co-occurrence
    frequency, and "group A match lemma group by target lemma;" to group items by target.
+   
+ - KWIC displays with character contexts now work correctly for UTF-8 encoded corpora.
+ 
+ - Full support for PCRE regular expressions, including case (%c) and accent (%d) folding.
+   Case-folding now uses PCRE's caseless mode rather than case-folding input strings.
+   If PCRE is compiled with JIT capability, this is much faster than the previous approach
+   (and than using the regexp optimizer, which still needs case-folding). The optimizer
+   now parses regexps more defensively and recognizes a larger subset of PCRE syntax, which
+   should cover most wildcard-like searches carried out by users.
 
 Bug fixes:
 
@@ -78,14 +87,17 @@ Bug fixes:
    certain circumstances, has been fixed.  Precise behaviour for out of bounds values now documented in the
    CQP Query Language Tutorial.
 
- - [2016-07-19: v3.4.10] Fixed bug in settings for cross-compile to Windows. Removed cwb-atoi.exe and cwb-itoa.exe from 
-   Windows release builds, as they trigger malware alerts both on SF.net (our distribution platform) and on
+ - [2016-07-19: v3.4.10] Fixed bug in settings for cross-compile to Windows. Removed cwb-atoi.exe and cwb-itoa.exe
+   from Windows release builds, as they trigger malware alerts both on SF.net (our distribution platform) and on
    some (but not all) standalone antivirus software. 
 
- - [2016-07-19: v3.4.10] Fixed CQP bug for fixed-character width concordance. First, it will no longer split UTF-8 characters apart
-   at the far left/far right of the concordance. Second, it will count the number of co-text characters 
-   accurately (previously, you would often get fewer characters than you asked for with UTF-8 corpora).
-   
+ - [2016-07-19: v3.4.10] Fixed CQP bug for fixed-character width concordance. First, it will no longer split
+   UTF-8 characters apart at the far left/far right of the concordance. Second, it will count the number of
+   co-text characters accurately (previously, you would often get fewer characters than you asked for with
+   UTF-8 corpora).
+ 
+ - [2016-07-19: v3.4.10] Fixed serious bugs with case-insensitive PCRE regular expressions, caused by previous
+   approach of case-folding the regexp itself (which modifies escape sequences such as \W and \pL). 
 
 Enhancements:
 

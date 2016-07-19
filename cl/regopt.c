@@ -19,6 +19,8 @@
  *  Copyright (C) 2010      by ANR Textométrie, ENS de Lyon
  */
 
+#include <glib.h>
+
 #include "globals.h"
 #include "regopt.h"
 
@@ -54,13 +56,10 @@
 /* optimiser variables */
 
 char *cl_regopt_grain[MAX_GRAINS]; /**< list of 'grains' (any matching string must contain one of these) */
-int cl_regopt_grain_len;           /**< all the grains have the same length */
+int cl_regopt_grain_len;           /**< length of shortest grain (in characters) */
 int cl_regopt_grains;              /**< number of grains */
 int cl_regopt_anchor_start;        /**< Boolean: whether grains are anchored at beginning of string */
 int cl_regopt_anchor_end;          /**< Boolean: whether grains are anchored at end of string */
-
-/**  A jump table for Boyer-Moore search algorithm; use _unsigned_ char as index; @see make_jump_table */
-int cl_regopt_jumptable[256];
 
 /** whether the regular expression is in UTF-8 encoding (set before calling cl_regopt_analyse()) */
 int cl_regopt_utf8;
@@ -72,7 +71,8 @@ int cl_regopt_utf8;
  * When a regex is parsed, grains for each segment are written to this intermediate buffer;
  * if the new set of grains is better than the current one, it is copied to the cl_regopt_ variables.
  */
-char *grain_buffer[MAX_GRAINS];
+char *grain_buffer[MAX_GRAINS];   /**< grains in the local buffer may have different lengths */
+int grain_buffer_len[MAX_GRAINS]; /**< the length of each grain (in characters) */
 /** The number of grains currently in the intermediate buffer. @see grain_buffer */
 int grain_buffer_grains = 0;
 
@@ -107,12 +107,33 @@ char cl_regex_error[CL_MAX_LINE_LENGTH];
 /**
  * Create a new CL_regex object (ie a regular expression buffer).
  *
- * The regular expression is preprocessed according to the flags, and
- * anchored to the start and end of the string. (That is, ^ is added to
- * the start, $ to the end.)
+ * The regular expression is preprocessed according to the flags and charset,
+ * and anchored to the start and end of the string (i.e. wrapped in ^(?:...)$).
  *
- * Then the resulting regex is compiled (using PCRE) and
- * optimised.
+ * Then the resulting regex is compiled (using PCRE) and optimized by
+ * scanning it for literal string ("grains") that must be contained in the
+ * match and can be used as a fast pre-filter.
+ *
+ * The optimizer only understands a subset of PCRE syntax:
+ *  - literal characters (alphanumeric, safe punctuation, escaped punctuation)
+ *  - numeric character codes (\x and \o)
+ *  - escape sequences for character classes and Unicode properties
+ *  - all repetition operators
+ *  - simple alternatives (...|...|...)
+ *  - nested capturing (...) and non-capturing (?:...) groups
+ * Any regexp that contains other syntactic elements such as
+ *  - character sets [...]
+ *  - named groups, look-ahead and look-behind patterns, etc.
+ *  - backreferences
+ *  - modifiers such as (?i)
+ * cannot be parsed and optimized. Note that even if a regexp is parsed by
+ * the optimizer, it might not be able to extract all grains (because grain
+ * recognition uses an even more restrictive syntax).
+ *
+ * The optimizer is always disabled with IGNORE_DIAC if either PCRE JIT is
+ * available or the charset is UTF-8. Testing has showed that in these cases
+ * the overhead from case-folding each input string outweighs the benefits
+ * of the optimizer.
  *
  * @param regex    String containing the regular expression
  * @param flags    IGNORE_CASE, or IGNORE_DIAC, or both, or 0.
@@ -125,7 +146,7 @@ cl_new_regex(char *regex, int flags, CorpusCharset charset)
   char *preprocessed_regex; /* allocate dynamically to support very long regexps (from RE() operator) */
   char *anchored_regex;
   CL_Regex rx;
-  int error_num, optimised, i, l;
+  int optimised, l;
 
   int options_for_pcre = 0;
   const char *errstring_for_pcre = NULL;
@@ -204,7 +225,27 @@ cl_new_regex(char *regex, int flags, CorpusCharset charset)
   /* attempt to optimise regular expression */
   cl_regopt_utf8 = (charset == utf8);
   optimised = cl_regopt_analyse(preprocessed_regex);
-  /* **TODO** may decide to disable optimizer if PCRE has JIT and only %c flag is specified */
+
+  /* decide whether it makes sense to use the optimizer:
+   *  - testing showed that it is usually faster to rely directly on PCRE's caseless matching than
+   *    casefold each input string for a Boyer-Moore search
+   *  - this is always the case if PCRE has JIT capability
+   *  - without JIT, it is still usually better to avoid expensive UTF-8 case-folding
+   * NB: accent-folding for %d cannot be avoided, so it makes no sense to disable the optimizer there
+   * NB: cannot debug the optimizer with %c any more (because regopt_data_copy_to_regex_object will not be called)
+   */
+  if (rx->icase && (charset == utf8 || is_pcre_jit_available)) {
+    if (optimised && cl_debug) {
+      int i;
+      fprintf(stderr, "CL: Found grain set with %d items(s)", cl_regopt_grains);
+      for (i = 0; i < cl_regopt_grains; i++) {
+        fprintf(stderr, " [%s]", cl_regopt_grain[i]);
+      }
+      fprintf(stderr, "\nCL: but optimization disabled for case-insensitive search\n");
+    }
+    optimised = 0;
+  }
+
   if (optimised) {
     /* copy optimiser data to CL_Regex object and construct jump table for Boyer-Moore search */
     regopt_data_copy_to_regex_object(rx); /* will also casefold grains if rx->icase is set */
@@ -409,38 +450,56 @@ cl_delete_regex(CL_Regex rx)
  * Is the given character a 'safe' character which will only match itself in a regex?
  *
  * What counts as safe: A to Z, a to z, 0 to 9, minus, quote marks, percent,
- * ampersand, slash, excl mark, colon, semi colon, character, underscore,
- * any value over 0x7f (ISO 8859 extension or UTF-8 non-ASCII character).
+ * ampersand, slash, excl mark, colon, semi colon, character, underscore, tilde,
+ * any values above 0x7f (ISO 8859 extension or UTF-8 non-ASCII character).
  *
  * What counts as not safe therefore includes: brackets, braces, square brackets;
  * questionmark, plus, and star; circumflex and dollar sign; dot; hash; backslash, etc.
- *
  * (But, in UTF8, Unicode PUNC area equivalents of these characters will be safe.)
  *
- * @param c  The character (cast to unsigned for the comparison.
+ * A safe character can never be the start of a meta element (even if it might appear
+ * as part of one), so it's safe to include in a literal grain.
+ *
+ * @param c  The character (cast to unsigned for the comparison).
  * @return   True for non-special characters; false for special characters.
  */
 int
 is_safe_char(unsigned char c)
 {
-  /* c <= 255 produces 'comparison is always true' compiler warning */
   /* note: this function is UTF8-safe because byte values above 0x7f 
    * (forming UTF-8 multi-byte sequences) are always allowed */
-  if(
+  if (
       (c >= 'A' && c <= 'Z') ||
       (c >= 'a' && c <= 'z') ||
       (c >= '0' && c <= '9') ||
-      (
-        c == '-' || c == '"' || c == '\'' || c == '%' ||
-        c == '&' || c == '/' || c == '_'  || c == '!' ||
-        c == ':' || c == ';' || c == ','
-      ) ||
-      (c >= 128)
-    )   {
+      (c >= 128) /* & (c <= 255); omitted to avoid compiler warnings */
+  ) {
     return 1;
   }
   else {
-    return 0;
+    switch (c) {
+    case '!':
+    case '"':
+    case '#':
+    case '%':
+    case '&':
+    case '\'':
+    case ',':
+    case '-':
+    case '/':
+    case ':':
+    case ';':
+    case '<':
+    case '=':
+    case '>':
+    case '@':
+    case '_':
+    case '`':
+    case '~':
+      return 1;
+    default:
+      return 0;
+    }
   }
 }
 
@@ -450,7 +509,7 @@ is_safe_char(unsigned char c)
  * ASCII alphanumeric characters comprise A-Z, a-z and 0-9; they are the only 
  * characters that form special escape sequences in PCRE regular expressions.
  *
- * @param c  The character (cast to unsigned for the comparison.
+ * @param c  The character (cast to unsigned for the comparison).
  * @return   True if ASCII alphanumeric; false otherwise.
  */
 int
@@ -465,196 +524,420 @@ is_ascii_alnum(unsigned char c) {
   }
 }
 
+/**
+ * Is the given character ASCII punctuation?
+ *
+ * ASCII punctuation symbols are the only characters that may need to be protected
+ * by a \ in regular expressions. They cannot form special escape sequences.
+ *
+ * @param c  The character (cast to unsigned for the comparison).
+ * @return   True if ASCII alphanumeric; false otherwise.
+ */
+int
+is_ascii_punct(unsigned char c) {
+  switch (c) {
+  case '!':
+  case '"':
+  case '#':
+  case '$':
+  case '%':
+  case '&':
+  case '(':
+  case '\'':
+  case ')':
+  case '*':
+  case '+':
+  case ',':
+  case '-':
+  case '.':
+  case '/':
+  case ':':
+  case ';':
+  case '<':
+  case '=':
+  case '>':
+  case '?':
+  case '@':
+  case '[':
+  case '\\':
+  case ']':
+  case '^':
+  case '_':
+  case '`':
+  case '{':
+  case '|':
+  case '}':
+  case '~':
+    return 1;
+  default:
+    return 0;
+  }
+}
 
 /**
- * Reads in a matchall (dot wildcard) or safe character -
- * part of the CL Regex Optimiser.
+ * Is the given character a valid hexadecimal digit?
  *
- * This function reads in matchall, any safe character,
- * or a reasonably safe-looking character class.
+ * @param c  The character (cast to unsigned for the comparison).
+ * @return   True if valid hexidecimal digit; false otherwise.
+ */
+int
+is_hexadecimal(unsigned char c) {
+  if ((c >= 'A' && c <= 'F') ||
+      (c >= 'a' && c <= 'f') ||
+      (c >= '0' && c <= '9')) {
+    return 1;
+  }
+  else {
+    return 0;
+  }
+}
+
+
+/**
+ * Read in an escape sequence for a character or class - part of the CL Regex Optimiser.
+ *
+ * This function reads one of the following escape sequences:
+ *   \x##, \x{###} ... hexadecimal character code
+ *   \o{###}       ... octal character code
+ *   \w, \W, \d, \D, \s, \S  ...  generic character types
+ *   \p#, \p{###}  ... Unicode properties
+ *   \P#, \P{###}  ... negated Unicode properties
+ *   \X            ... Unicode extended grapheme cluster
+ */
+char *
+read_escape_seq(char *mark)
+{
+  char *point = mark;
+  if (*point != '\\')
+    return mark;
+  else
+    point++;
+  switch (*point) {
+  case 'x':
+    point++;
+    if (*point == '{') {
+      point++;
+      while (is_hexadecimal(*point))
+        point++;
+      if (*point == '}')
+        return point + 1;
+    }
+    else {
+      if (is_hexadecimal(point[0]) && is_hexadecimal(point[1]))
+        return point + 2;
+    }
+    return mark; /* not recognised */
+  case 'o':
+    point++;
+    if (*point == 'o') {
+      point++;
+      while (*point >= '0' && *point <= '7')
+        point++;
+      if (*point == '}')
+        return point + 1;
+    }
+    return mark; /* not recognised */
+  case 'w':
+  case 'W':
+  case 'd':
+  case 'D':
+  case 's':
+  case 'S':
+  case 'X':
+    return point + 1;
+  case 'p':
+  case 'P':
+    point++;
+    if (*point >= 'A' && *point <= 'Z')
+      return point + 1;
+    else if (*point == '{') {
+      point++;
+      while (is_ascii_alnum(*point) || *point == '_' || *point == '&')
+        point++;
+      if (*point == '}')
+        return point + 1;
+    }
+    return mark; /* not recognised */
+  default:
+    return mark; /* not recognised */
+  }
+}
+
+/**
+ * Reads in an element matching some character - part of the CL Regex Optimiser.
+ *
+ * This function reads in an element known to match some character.
+ * The following elements are currently recognized:
+ *  - a matchall (.)
+ *  - a safe literal character or escaped ASCII punctuation
+ *  - an escape sequence for a simple character class (\w, \d, etc.)
+ *  - an escape sequence for a Unicode property
+ *  - a hexadecimal (\x) or octal (\o) character code
+ *  - a simple character set such as [a-z], [A-Z] and [0-9]
+ * The precise syntax of character sets is rather messy, so we will not
+ * make an attempt to recognize more complex sets.
  *
  * @param mark  Pointer to location in the regex string from
  *              which to read.
  * @return      Pointer to the first character after the character
  *              (class) it has read in (or the original "mark"
- *              pointer if something suitable was not read).
+ *              pointer if nothing suitable was found).
  */
 char *
 read_matchall(char *mark)
 {
+  char *point = mark;
+  char *p2;
+
   if (*mark == '.') {
     /* read the matchall dot */
     return mark + 1;
   }
-  else if (*mark == '[') {
-    char *point = mark + 1;
-    /* [AH: the original list, and the original comment to go with them ]:
-    * according to the POSIX standard, \ does not have a special meaning in a character class;
-       we won't skip it or any other special characters with possibly messy results;
-       we just accept | as a special optimisation for the matches and contains operators in CQP
-    while (*point != ']' && *point != '\\' && *point != '[' && *point != '\0') { */
-    /* [AH: new version] the following characters are "not safe-looking" within a character class in PCRE: 
-    while (*point != ']' && *point != '\\' && *point != '[' && *point != '\0'
-            && *point != '-' && *point != '^') { */
-    /* [SE: reverted] to original version: range '-' and negation '^' are unproblematic since we treat
-       any character class as a matchall; we could even accept named sets such as [:alnum:], but this 
-       would make the analyzer much more complicated */
-    while (*point != ']' && *point != '\\' && *point != '[' && *point != '\0') {
-      point++;
-    }
-    /* if we got to ] without hitting a "messy" character, read the entire character class.
-     * otherwise read nothing.  */
-    return (*point == ']') ? point + 1 : mark;
-  }
   else if (is_safe_char(*mark)) {
-    return mark + 1;
+    /* a literal character */
+    if (cl_regopt_utf8)
+      return g_utf8_next_char(mark);
+    else
+      return mark + 1;
   }
   else if (*mark == '\\') {
-    /* \ escapes punctuation etc. to literal, but forms escape sequence with alphanumeric characters */
-    char *point = mark + 1;
-    if (is_ascii_alnum(*point)) {
-      char c = *point;
-      if (c == 'w' || c == 'W' || c == 'd' || c == 'D' || c == 's' || c == 'S') {
-        return point + 1; /* accept simple escape sequences \w, \W, \d, \D, \s, \S as wildcards */
-      }
+    /* check for a supported escape sequence */
+    return read_escape_seq(mark);
+  }
+  else if (*mark == '[') {
+    /* a character set */
+    point = mark + 1;
+    if (*point == '^')
+      point++; /* negated character set */
+    while (1) {
+      if (is_safe_char(*point) || (*point == '-'))
+        point++;
       else {
-        return mark; /* other escape sequences are considered unsafe (but might want to add \p{xxx}) */
+        p2 = read_escape_seq(point);
+        if (p2 > point)
+          point = p2;
+        else
+          break;
       }
     }
-    else {
-      return point + 1; /* \ not followed by alphanumeric character -> should be safe */
-    }
+    if (*point == ']' && point > mark + 1)
+      return point + 1; /* note that we exclude [] because of ambiguity with []..] */
   }
-  else {
-    return mark;
-  }
+  return mark; /* no element has been recognized */
 }
 
 /**
- * Reads in a repetition marker - part of the CL Regex Optimiser.
+ * Reads in a repetition operator - part of the CL Regex Optimiser.
  *
- * This function reads in a Kleene star (asterisk), ?, +, or
- * the general repetition modifier {n,n}; it returns a pointer
- * to the first character after the repetition modifier it has
- * found.
+ * This function reads in any repetition operator allowed in PCRE syntax:
+ *  - * (Kleene star), ?, +
+ *  - {n}, {n,m}, {,m}, {n,}
+ *  - optionally followed by a non-greedy (?) or possessive (+) modifier
+ * it returns a pointer to the first character after the repetition modifier
+ * it has found. If *one_or_more is not null, it is set to True if the
+ * quantifier operator mandates at least one repetition (i.e. it does not
+ * make the preceding element optional).
  *
  * @param mark  Pointer to location in the regex string from
  *              which to read.
+ * @param one_or_more  Optional pointer to integer, which will be set
+ *                     to True if repetition is not optional.
  * @return      Pointer to the first character after the star
  *              or other modifier it has read in (or the original
- *              "mark" pointer if a repetion modifier was not
+ *              "mark" pointer if a repetition modifier was not
  *              read).
  */
 char *
-read_kleene(char *mark)
+read_kleene(char *mark, int *one_or_more)
 {
+  int plus = 0; /* repetition is non-optional, i.e. 1 or more */
+  int ok = 1;   /* whether a valid quantifier has been recognized */
   char *point = mark;
-  if (*point == '?' || *point == '*' || *point == '+') {
+  if (*point == '?' || *point == '*') {
+    plus = 0;
     point++;
-    if (*point == '?' || *point == '+')
-      point++; /* lazy or possessive quantifier */
-    return point;
+  }
+  else if (*point == '+') {
+    plus = 1;
+    point++;
   }
   else if (*point == '{') {
     point++;
+    plus = (*point >= '1' && *point <= '9');
     while ((*point >= '0' && *point <= '9') || (*point == ',')) {
       point++;
     }
     if (*point != '}')
-      return mark;
-    point++;
+      ok = 0;
+    else
+      point++;
+  }
+  else
+    ok = 0;
+
+  if (ok) {
     if (*point == '?' || *point == '+')
       point++; /* lazy or possessive quantifier */
+    if (one_or_more)
+      *one_or_more = plus;
     return point;
   }
-  else {
+  else
     return mark;
-  }
 }
 
 /**
  * Reads in a wildcard - part of the CL Regex Optimiser.
  *
- * This function reads in a wildcard segment matching arbitrary
- * substring (but without a '|' symbol); it returns a pointer
- * to the first character after the wildcard segment.
+ * This function reads in a wildcard segment consisting of an
+ * element matching some character (read_matchall) or a capturing
+ * or non-capturing group, followed by an optional quantifier (read_kleene).
+ * It returns a pointer to the first character after the wildcard segment.
  *
- * Note that effectively, wildcard equals matchall plus kleene.
+ * Groups are parsed recursively and must consist of one or more
+ * alternatives containing only valid wildcard segments.
  *
  * @param mark  Pointer to location in the regex string from which to read.
  * @return      Pointer to the first character after the
  *              wildcard segment (or the original "mark" pointer
- *              if a wildcard was not read).
+ *              if a wildcard segment was not found).
  */
 char *
 read_wildcard(char *mark)
 {
-  char *point;
+  char *point, *p2;
   point = read_matchall(mark);
   if (point > mark) {
-    return read_kleene(point);
+    return read_kleene(point, NULL);
   }
-  else {
-    return mark;
+  else if (*point == '(') {
+    point++;
+    if (*point == '?') {
+      if (point[1] == ':')
+        point += 2;  /* non-capturing group */
+      else
+        return mark; /* other special elements are not supported */
+    }
+    while (1) {
+      /* body of group must consist only of wildcard segments and disjunction operators */
+      p2 = read_wildcard(point);
+      if (p2 > point)
+        point = p2;
+      else if (*point == '|')
+        point++;
+      else
+        break;
+    }
+    if (*point == ')')
+      return read_kleene(point + 1, NULL);
   }
+  return mark; /* no wildcard segment found */
 }
 
 /**
- * Reads in a grain from a regex - part of the CL Regex Optimiser.
+ * Reads in a literal grain from a regex - part of the CL Regex Optimiser.
  *
- * A grain is a string of safe symbols not followed by ?, *, or {..}.
+ * A grain is a string of safe symbols: alphanumeric, safe punctuation and
+ * escaped punctuation; numeric character codes (\x, \u) are not supported.
+ * The last symbol might be followed by a repetition operator. It is only
+ * included in the grain if the repetition count is at least one.
+ *
  * This function finds the longest grain it can starting at the point
- * in the regex indicated by mark; backslash-escaped characters are
- * allowed but the backslashes must be stripped by the caller.
+ * in the regex indicated by mark.  If *grain is not NULL, the grain data
+ * are unescaped and copied to the specified buffer.  Note that the buffer
+ * will be mangled even if no grain is matched; it is guaranteed to contain
+ * a NUL-terminated string, though.  If *len is not null, the length of the
+ * grain (in characters) is stored there.
  *
  * @param mark  Pointer to location in the regex string from
  *              which to read.
+ * @param grain Optional pointer to a buffer into which the grain data
+ *              will be copied. Guaranteed to contain a NUL-terminated
+ *              string even if no grain is found.
+ * @param len   Pointer to integer in which length of grain in characters
+ *              will be stored.
  * @return      Pointer to the first character after the grain
  *              it has read in (or the original "mark" pointer
  *              if no grain is found).
  */
 char *
-read_grain(char *mark)
+read_grain(char *mark, char *grain, int *len)
 {
   char *point = mark;
-  int last_char_escaped = 0, glen;
+  char *grain_point = grain;
+  char *grain_last_char = grain; /* pointer to start of last symbol in grain buffer */
+  char *end, *q;
+  int glen = 0; /* length of grain in characters */
+  int one_or_more;
 
-  glen = 0; /* effective length of grain */
-  while ( is_safe_char(*point) || (*point == '\\' && !is_ascii_alnum(point[1])) ) {
-    if (*point == '\\' && point[1]) {
-      /* skip backslash and escaped character (but not at end of string, where backslash is literal;
-       * the skipped character must not be alphanumeric, otherwise it might form an escape sequence */
-      point++;
-      last_char_escaped = 1;
+  /* read sequence of safe literal characters */
+  while (
+      is_safe_char(*point) ||
+      (*point == '\\' && is_ascii_punct(point[1]))
+  ) {
+    if (*point == '\\') {
+      /* copy escaped character to grain */
+      if (grain) {
+        grain_last_char = grain_point;
+        *grain_point++ = point[1];
+      }
+      glen++;
+      point += 2;
     }
     else {
-      last_char_escaped = 0;
+      /* copy complete character to grain */
+      end = (cl_regopt_utf8) ? g_utf8_next_char(point) : point + 1;
+      if (grain) {
+        grain_last_char = grain_point;
+        for (q = point; q < end; q++) {
+          *grain_point++ = *q;
+        }
+      }
+      glen++;
+      point = end;
     }
-    point++;
-    glen++;
   }
-  if (point > mark) {        /* if followed by a quantifier, shrink grain by one char */
-    if (read_kleene(point) > point) {
-      point--; /* could be improved to accept grain for non-optional quantifier (+, {1,}, etc) */
-      glen--;
-      if (last_char_escaped) /* if last character was escaped, make sure to remove the backslash as well */
-        point--;
+
+  if (glen > 0) {
+    /* check for quantifier on last symbol of grain */
+    end = read_kleene(point, &one_or_more);
+    if (end > point) {
+      /* remove last symbol from grain if made optional by quantifier */
+      if (!one_or_more) {
+        glen--;
+        if (grain)
+          grain_point = grain_last_char;
+      }
     }
+    point = end;
   }
-  if (glen >= 2)
+
+  if (grain)
+    *grain_point = '\0'; /* NUL-terminated extracted grain */
+  if (len)
+    *len = glen;
+
+  if (glen > 0)
     return point;
   else
     return mark;
 }
 
 /**
- * Finds grains in a disjunction group - part of the CL Regex Optimiser.
+ * Finds grains in a simple disjunction group - part of the CL Regex Optimiser.
  *
- * This function find grains in disjunction group within a regular expression;
- * the grains are then stored in the grain_buffer.
+ * This function parses a simple parenthesized disjunction within a regular expression
+ * and attempts to extract one grain from each alternative. Grains are written to the
+ * local grain buffer. If a complete grain set has been found, the functions returns
+ * a pointer to the first character after the disjunction. Otherwise it returns mark
+ * and the caller can try to accept the group with read_matchall.
  *
- * The first argument, mark, must point to the '(' at beginning of the
- * disjunction group.
+ * For simplicity, only the first grain in each alternative is considered. This makes
+ * it easier to check start/end alignment of the grains. Note that the local grain
+ * buffer is always mangled, even if the function is unsuccessful.
+ *
+ * The first argument, mark, must point to the '(' at the beginning of the
+ * disjunction group (unless no_paren is set).
  *
  * The booleans align_start and align_end are set to true if the grains from
  * *all* alternatives are anchored at the start or end of the disjunction
@@ -666,160 +949,145 @@ read_grain(char *mark)
  *                     description).
  * @param align_start  See function description.
  * @param align_end    See function description.
+ * @param no_paren     Attempt to read a top-level disjunction without parentheses,
+ *                     which must extend to the end of the string.
  * @return             A pointer to first character after the disjunction group
  *                     iff the parse succeeded, the original pointer in
  *                     the mark argument otherwise.
  *
  */
 char *
-read_disjunction(char *mark, int *align_start, int *align_end)
+read_disjunction(char *mark, int *align_start, int *align_end, int no_paren)
 {
-  char *point, *p2, *q, *buf;
-  int grain, failed;
+  char *point, *p2, *buf;
+  int grain;
 
-  
-  if (*mark == '(') {
-    point = mark + 1;
-    buf = local_grain_data;
-    grain_buffer_grains = 0;
-    grain = 0;
-    failed = 0;
-
-    if (*point == '?') {
-      point++;  /* don't accept special (?...) groups, except for simple non-capturing (?:...) */
-      if (*point == ':')
-        point++;
-      else
-        return mark; /* failed to parse disjunction */
-    }
-
-    /* if we can extend the disjunction parser to allow parentheses around the initial segment of 
-       an alternative, then regexen created by the matches operator will also be optimised! */
-    *align_start = *align_end = 1;
-    while (1) { /* loop over alternatives in disjunction */
-      for (p2 = read_grain(point); p2 == point; p2 = read_grain(point)) {
-        p2 = read_wildcard(point); /* try skipping data until grain is found */
-        if (p2 > point) {
-          point = p2; /* advance point and look for grain again */
-          *align_start = 0; /* grain in this alternative can't be aligned at start */
-        }
-        else
-          break;                   /* didn't find grain and can't skip any further, so give up */
-      }
-      if (p2 == point) {
-        failed = 1;                /* no grain found in this alternative -> return failure */
-        break;
-      }
-      if (grain < MAX_GRAINS) {
-        grain_buffer[grain] = buf; /* copy grain into local grain buffer */
-        for (q = point; q < p2; q++) {
-          if (*q == '\\')
-            q++;                   /* skip backslash used as escape character */
-          *buf++ = *q;
-        }
-        *buf++ = '\0';
-      }
-      grain++;
-      point = p2;
-      while (*point != '|') {
-        p2 = read_wildcard(point); /* try skipping data up to next | or ) */
-        if (p2 > point) {
-          point = p2;
-          *align_end = 0;          /* grain in this alternative can't be aligned at end */
-        }
-        else
-          break;
-      }
-      if (*point == '|')
-        point++;                   /* continue with next alternative */
-      else
-        break;                     /* abort scanning */
-    } /* endwhile loop over alternatives in disjunction */
-
-    if (*point == ')' && !failed) {
-      /* if point is at ) character, we've successfully read the entire disjunction */
-      grain_buffer_grains = (grain > MAX_GRAINS) ? 0 : grain;
-      return point + 1;            /* continue parsing after disjunction */
-    }
-    else {
-      return mark;                 /* failed to parse disjunction and identify grains */
-    }
+  point = mark;
+  if (no_paren) {
+    if (*point == '(')
+      return mark; /* bare disjunction must not be parenthesized */
   }
   else {
-    return mark;
+    if (*point == '(') {
+      point++;
+      if (*point == '?') {
+        point++;
+        /* don't accept special (?...) elements, except for simple non-capturing (?:...) */
+        if (*point == ':')
+          point++;
+        else
+          return mark; /* failed to parse disjunction */
+      }
+    }
+    else
+      return mark; /* disjunction group must be parenthesized */
   }
+  
+  buf = local_grain_data;
+  grain_buffer_grains = 0;
+  grain = 0;
+
+  /* Note: if we can extend the disjunction parser further to allow parentheses around the
+   * initial segment of an alternative, then regexen created by the matches operator will
+   * also be optimised. */
+  *align_start = *align_end = 1;
+  while (1) { /* loop over alternatives in disjunction, using first grain found in each */
+    p2 = read_grain(point, buf, &(grain_buffer_len[grain])); /* attempt to read a grain */
+    while (p2 == point) {
+      p2 = read_wildcard(point); /* try skipping a wildcard element */
+      if (p2 > point) {
+        point = p2;       /* advance point and look for grain again */
+        *align_start = 0; /* grain in this alternative can't be aligned at start */
+      }
+      else
+        return mark;      /* no grain found in this alternative -> unsuccessful */
+      p2 = read_grain(point, buf, &(grain_buffer_len[grain]));
+    }
+    grain_buffer[grain] = buf; /* store grain in local grain buffer */
+    buf += strlen(buf) + 1;
+    grain++;
+    if (grain >= MAX_GRAINS)
+      return mark; /* too many alternatives, can't extract full grain set */
+    point = p2;
+    while (*point != '|' && *point != ')') {
+      p2 = read_wildcard(point); /* try skipping data up to next | or ) */
+      if (p2 > point) {
+        point = p2;
+        *align_end = 0;          /* grain in this alternative can't be aligned at end */
+      }
+      else
+        break;
+    }
+    if (*point == '|')
+      point++;                   /* continue with next alternative */
+    else
+      break;                     /* abort scanning */
+  } /* end of while (1) loop over alternatives in disjunction */
+
+  if ((!no_paren && *point == ')') ||
+      (no_paren && *point == '\0')) {
+    /* we've successfully read the entire disjunction */
+    grain_buffer_grains = grain;
+    if (grain >= 1)
+      return point + 1;          /* success */
+  }
+
+  return mark;  /* unsuccessful */
 }
 
 /**
  * Updates the public grain buffer -- part of the CL Regex Optimiser.
  *
  * This function copies the local grains to the public buffer, if they
- * are better than the set of grains currently there.
+ * are better than the set of grains currently there. The decision is
+ * made with a heuristic based on the character length of the shortest
+ * grain and the number of different grains.
  *
  * A non-exported function.
  *
- * @param front_aligned  Boolean: if true, grain strings are aligned on
- *                       the left when they are reduced to equal lengths.
- * @param anchored       Boolean: if true, the grains are anchored at
- *                       beginning or end of string, depending on
- *                       front_aligned.
+ * @param at_start  Boolean: if True, all grains are anchored on the left
+ * @param at_end    Boolean: if True, all grains are anchored on the right
+ *
  */
 void
-update_grain_buffer(int front_aligned, int anchored)
+update_grain_buffer(int at_start, int at_end)
 {
   char *buf = public_grain_data;
   int i, len, N;
 
   N = grain_buffer_grains;
   if (N > 0) {
-    len = CL_MAX_LINE_LENGTH;
-    for (i = 0; i < N; i++) {
-      int l = strlen(grain_buffer[i]);
-      if (l < len)
-        len = l;
+    len = grain_buffer_len[0];
+    for (i = 1; i < N; i++) {
+      if (grain_buffer_len[i] < len)
+        len = grain_buffer_len[i];
     }
     if (len >= 2) { /* minimum grain length is 2 */
       /* we make a heuristic decision whether the new set of grains is better than the current one;
          based on grain length and the number of grains */
-      if (    (len >  (cl_regopt_grain_len + 1))
+      if (
+          (len > (cl_regopt_grain_len + 1))
           || ((len == (cl_regopt_grain_len + 1)) && (N <= (3 * cl_regopt_grains) ))
           || ((len ==  cl_regopt_grain_len)      && (N < cl_regopt_grains))
           || ((len == (cl_regopt_grain_len - 1)) && ((3 * N) < cl_regopt_grains))
-          ) {
+      ) {
         /* the new set of grains is better, copy them to the output buffer */
         for (i = 0; i < N; i++) {
-          int l, diff;
           strcpy(buf, grain_buffer[i]);
           cl_regopt_grain[i] = buf;
-          l = strlen(buf);
-          assert((l >= len) && "Sorry, I messed up grain lengths while optimising a regex.");
-          if (l > len) { /* reduce grains to common length */
-            diff = l - len;
-            if (front_aligned) {
-              buf[len + 1] = '\0'; /* chop off tail */
-            }
-            else {
-              cl_regopt_grain[i] += diff; /* chop off head, i.e. advance string pointer */
-            }
-          }
-          buf += l + 1;
+          buf += strlen(buf) + 1;
         }
         cl_regopt_grains = N;
         cl_regopt_grain_len = len;
-        cl_regopt_anchor_start = cl_regopt_anchor_end = 0;
-        if (anchored) {
-          if (front_aligned)
-            cl_regopt_anchor_start = 1;
-          else
-            cl_regopt_anchor_end = 1;
-        }
+        cl_regopt_anchor_start = at_start;
+        cl_regopt_anchor_end = at_end;
       }
     }
   }
 }
 
 /**
- * Computes a jump table for Boyer-Moore searches.
+ * Computes a jump table for Boyer-Moore searches -- part of the CL Regex Optimiser.
  *
  * Unlike the textbook version, this jumptable includes the last character of each grain
  * (so we don't have to start the string comparison loops every time).
@@ -875,26 +1143,75 @@ make_jump_table(CL_Regex rx)
 
 
 /**
- * Internal regopt function: copies optimiser data from internal global variables
- * to the member variables of argument CL_Regex object.
+ * Copy grain set from internal global variables to CL_Regex object -- part of the CL Regex Optimiser.
+ *
+ * This function carries out four important tasks:
+ *  - It copies the grain set found by cl_regopt_analyse from the internal global buffer
+ *    to member variables of the specified CL_Regex object.
+ *  - It casefolds the grains if required (i.e. if rx->icase is True).
+ *  - It cuts grains to equal byte length, preserving start/end anchoring if possible.
+ *    Note that our implementation of Boyer-Moore search requires equally sized grains.
+ *  - It calls make_jump_table to generate a lookup table for the Boyer-Moore search.
+ *
+ * This is a  non-exported function.
+ *
+ * @param rx    a pointer to an initialized CL_Regex object
  */
 void
 regopt_data_copy_to_regex_object(CL_Regex rx)
 {
-  int i;
+  char *grain;
+  int i, l, len, cut_prefix;
 
   rx->grains = cl_regopt_grains;
-  rx->grain_len = cl_regopt_grain_len;
+
+  if (rx->icase) {
+    /* casefold strings if required (in case this reduces byte length) */
+    grain = local_grain_data; /* we can use this static buffer for the casefolded grains */
+    for (i = 0; i < rx->grains; i++) {
+      strcpy(grain, cl_regopt_grain[i]);
+      cl_string_canonical(grain, rx->charset, IGNORE_CASE);
+      cl_regopt_grain[i] = grain; /* pointers into static buffer, so we can just move them */
+      grain += strlen(grain) + 1;
+    }
+  }
+
+  /* determine common byte length of grains */
+  len = CL_MAX_LINE_LENGTH;
+  for (i = 0; i < rx->grains; i++) {
+    l = strlen(cl_regopt_grain[i]);
+    if (l < len)
+      len = l;
+  }
+
+  /* determine whether to remove prefix or suffix of grains to reduce to common length */
+  cut_prefix = (cl_regopt_anchor_end && !cl_regopt_anchor_start);
+
+  /* now allocate copy of each grain (reduced to specified number of bytes) */
+  for (i = 0; i < rx->grains; i++) {
+    grain = cl_regopt_grain[i];
+    l = strlen(grain);
+    if (l > len) {
+      /* need to shorten */
+      if (cut_prefix) {
+        rx->grain[i] = cl_strdup(grain + l - len);
+        cl_regopt_anchor_start = 0; /* no longer anchored left */
+      }
+      else {
+        rx->grain[i] = cl_strdup(grain);
+        rx->grain[i][len] = '\0';
+        cl_regopt_anchor_end = 0;  /* no longer anchored right */
+      }
+    }
+    else {
+      /* grain already has the desired length */
+      rx->grain[i] = cl_strdup(grain);
+    }
+  }
+
+  rx->grain_len = len;
   rx->anchor_start = cl_regopt_anchor_start;
   rx->anchor_end = cl_regopt_anchor_end;
-
-  for (i = 0; i < rx->grains; i++) {
-    int bytes_needed = ((rx->icase) ? 2 : 1) * strlen(cl_regopt_grain[i]) + 1;
-    rx->grain[i] = cl_malloc(bytes_needed); /* case-folding may increase string length */
-    strcpy(rx->grain[i], cl_regopt_grain[i]);
-    if (rx->icase)
-      cl_string_canonical(rx->grain[i], rx->charset, rx->icase);
-  }
 
   if (cl_debug) {
     fprintf(stderr, "CL: Regex optimised, %d grain(s) of length %d\n",
@@ -903,15 +1220,16 @@ regopt_data_copy_to_regex_object(CL_Regex rx)
     for (i = 0; i < rx->grains; i++) {
       fprintf(stderr, " [%s]", rx->grain[i]);
     }
-    if (cl_regopt_anchor_start)
+    if (rx->anchor_start)
       fprintf(stderr, " (anchored at beginning of string)");
-    if (cl_regopt_anchor_end)
+    if (rx->anchor_end)
       fprintf(stderr, " (anchored at end of string)");
     fprintf(stderr, "\n");
   }
 
+  /* compute jump table for Boyer-Moore search */
   if (rx->grains > 0)
-    make_jump_table(rx); /* compute jump table for Boyer-Moore search */
+    make_jump_table(rx);
 
   if (cl_debug)
     fprintf(stderr, "CL: using %d grain(s) for optimised regex matching\n", rx->grains);
@@ -923,7 +1241,7 @@ regopt_data_copy_to_regex_object(CL_Regex rx)
  *
  * Part of the regex optimiser. For a given regular expression, this function will
  * try to extract a set of grains from regular expression {regex_string}. These
- * grains are then used by the CL regex matcher and cl_regex2id()
+ * grains are then used by the CL regex matcher and cl_regex2id() as a pre-filter
  * for faster regular expression search.
  *
  * The function only recognizes relatively simple regular expressions without
@@ -931,10 +1249,12 @@ regopt_data_copy_to_regex_object(CL_Regex rx)
  * SQL's LIKE operator. Searching for a fixed prefix, suffix or infix (or a
  * small set of alternatives) will see the most noticeable performance improvement.
  * Any more complex expression is passed directly to the standard PCRE evaluation.
+ * See cl_new_regex() for an overview of the supported subsets of PCRE syntax.
  *
  * If successful, this function returns True and stores the grains
- * in the optiomiser's global variables above (from which they should be copied
- * to a CL_Regex object's corresponding members).
+ * in the optiomiser's global variables above, from which they then must be
+ * copied to a CL_Regex object with regopt_data_copy_to_regex_object(). This step
+ * will also casefold grains if necessary and prepare the Boyer-Moore jump tables.
  *
  * Usage: optimised = cl_regopt_analyse(regex_string);
  *
@@ -946,8 +1266,8 @@ regopt_data_copy_to_regex_object(CL_Regex rx)
 int
 cl_regopt_analyse(char *regex)
 {
-  char *point, *mark, *q, *buf;
-  int i, ok, at_start, at_end, align_start, align_end, anchored;
+  char *point, *mark;
+  int ok, at_start, at_end, one_or_more, align_start, align_end;
 
   mark = regex;
   if (cl_debug) {
@@ -957,34 +1277,38 @@ cl_regopt_analyse(char *regex)
   cl_regopt_grain_len = 0;
   cl_regopt_anchor_start = cl_regopt_anchor_end = 0;
 
-  /*
-   * Algorithm:
+  /**
+   * The code below parses a regular expression using the supported PCRE subset
+   * and attempts to extract a literal string ("grain") that must occur in every
+   * match of the regular expression. In a disjunction group, each alternative
+   * must contain a grain in order to be used for optimized matching; we refer to
+   * this as a complete grain set.
    *
-   * while (1)
-   *   read_grain
-   *   if (grain found)
-   *     copy grain to grain buffer (skipping any escaping \ )
-   *     update_grain_buffer
-   *   else
-   *     read_disjunction
-   *     if (disjunction group found)
-   *       if (disjunction group followed by optional marker ?, * or {})
-   *         read_kleene (to skip the ?or * or {}) and don't save the disjunction group
-   *       else
-   *         update_grain_buffer
-   *     else
-   *       read_wildcard
-   *       if (wildcard found)
-   *         skip past the wildcard
-   *       else
-   *         we didn't find any grain, so do nothing
-   *   if (we are at end of string)
-   *     print out the grain set, if one was found, in debug mode
-   *     make_jump_table
-   *     return ok
-   *   else loop round again
+   * The algorithm scans the regular expression from left to right,
+   * looking for the following supported elements in the specified order:
    *
+   *  1. a literal grain (read_grain)
+   *  2. a parenthesized disjunction containing grains (read_disjunction)
+   *  3. a segment matching some, possibly empty substring (read_wildcard),
+   *     including recursively nested capturing or non-capturing groups
+   *
+   * See the respective functions for further information on these elements.
+   * Grains are collected by read_grain and read_disjunction in a local buffer.
+   * If a complete grain set has been found, it replaces the previous global
+   * grain set if it is considered to be more effective based on the length
+   * and number of grains.
+   *
+   * As a special case, the optimizer first attempts to match the entire
+   * regexp as a simple disjunction (read_disjunction) without parentheses.
    */
+
+  /* check for a bare disjunction at top level (not parenthesized) */
+  point = read_disjunction(mark, &align_start, &align_end, 1);
+  if (point > mark) {
+    update_grain_buffer(align_start, align_end);
+    return (cl_regopt_grains > 0) ? 1 : 0;
+  }
+
   ok = 1;
   while (ok) {
     /* accept if we're at end of string */
@@ -993,42 +1317,33 @@ cl_regopt_analyse(char *regex)
       return ok;
     }
     at_start = (mark == regex);
-    point = read_grain(mark);
-    if (point > mark) { /* found single grain segment -> copy to local buffer */
-      buf = local_grain_data;
-      for (q = mark; q < point; q++) {
-        if (*q == '\\')
-          q++; /* skip backslash used as escape character */
-        *buf++ = *q;
-      }
-      *buf++ = '\0';
+    /* check for a grain */
+    point = read_grain(mark, local_grain_data, &(grain_buffer_len[0]));
+    if (point > mark) {
       grain_buffer[0] = local_grain_data;
       grain_buffer_grains = 1;
       mark = point;
       /* update public grain set */
       at_end = (*mark == '\0');
-      anchored = (at_start || at_end);
-      update_grain_buffer(at_start, anchored);
-      if (*mark == '+')
-        mark++; /* last character of grain may be repeated -> skip the '+' */
+      update_grain_buffer(at_start, at_end);
     }
     else {
-      point = read_disjunction(mark, &align_start, &align_end);
-      if (point > mark) { /* found disjunction group, which is automatically stored in the local grain buffer */
+      /* check for a simple parenthesized disjunction */
+      point = read_disjunction(mark, &align_start, &align_end, 0);
+      if (point > mark) {
         mark = point;
-        /* can't accept grain set if disjunction could be optional: (..)?, (..)*, (..){0,} */
-        if ((*mark == '?') || (*mark == '*') || (*mark == '{')) {
-          mark = read_kleene(mark); /* accept as wildcard segment */
-        }
-        else {
+        at_end = (*mark == '\0'); /* can only be anchored if there's no quantifier */
+        /* can't accept grain set if there's a quantifier that makes the group optional */
+        point = read_kleene(mark, &one_or_more);
+        if (point == mark)
+          one_or_more = 1; /* no quantifier found, so not optional */
+        else
+          mark = point;
+        if (one_or_more) {
           /* update public grain set */
-          at_end = (*mark == '\0');
           at_start = (at_start && align_start); /* check that grains within disjunction are aligned, too */
           at_end = (at_end && align_end);
-          anchored = (at_start || at_end);
-          update_grain_buffer(at_start, anchored);
-          if (*mark == '+')
-            mark++;
+          update_grain_buffer(at_start, at_end);
         }
       }
       else {
@@ -1041,7 +1356,7 @@ cl_regopt_analyse(char *regex)
         }
       }
     }
-  } /* endwhile ok */
+  } /* end of while (ok) */
 
   /* couldn't analyse regexp -> no optimisation */
   return 0;
