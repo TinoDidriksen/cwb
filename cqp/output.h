@@ -50,7 +50,10 @@ struct InputRedir {
 
 /**
  * TabulationItem object: contains the data structures needed by
- * CQP's "tabulate" command.
+ * CQP's "tabulate" command. Each TabulationItem defines a single
+ * column in the tabulation output. A since global linked-list of
+ * TabulationItems, whose head is stored as TabulationList, is
+ * used to hold the tabulation specification requested by the user.
  *
  * Note that TabulationItem is typedefed as a pointer-to-structure.
  *
@@ -62,9 +65,9 @@ typedef struct _TabulationItem {
   int attribute_type;                   /**< ATT_NONE = cpos, ATT_POS, ATT_STRUC */
   int flags;                            /**< normalization flags (%c and %d) */
   FieldType anchor1;                    /**< start of token sequence to be tabulated */
-  int offset1;                          /**< ??  */
+  int offset1;                          /**< first cpos offset (from the anchor: e.g. match[-1], etc.  */
   FieldType anchor2;                    /**< end of token sequence (may be identical to start) */
-  int offset2;                          /**< ??  */
+  int offset2;                          /**< second cpos offset (from the anchor: e.g. match[5], etc.  */
   struct _TabulationItem *next;         /**< next tabulation item */
 } *TabulationItem;
 

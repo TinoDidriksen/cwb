@@ -34,9 +34,10 @@ typedef enum outputmode {
 } PrintMode;
 
 /**
- * PrintOptions
+ * PrintOptions: records a set of print options.
  *
- * All members starting in print_ are Boolean.
+ * All members starting in print_ are Boolean, to be interpreted as
+ * print_XX --> "XX is to be printed"
  */
 typedef struct _print_option_rec_ {
   int print_header;                /**< Can be: header/hdr,noheader */
@@ -52,7 +53,7 @@ typedef struct _print_option_rec_ {
  * Contains strings / function pointers that control the printing
  * mode (esp. the format of an individual concordance line).
  *
- * Note that currently it is not possible for these to be defined at
+ * Note that currently it is not possible for a new PDR to be defined at
  * runtime. It must be done at compile-time.
  */
 typedef struct _print_descr_rec_ {
@@ -88,7 +89,9 @@ typedef struct _print_descr_rec_ {
   char *AfterConcordance;             /**< what to print after the concordance */
 
   char *(*printToken)(char *);        /**< function pointer for printing a token */
-  char *(*printField)(FieldType, int); /**< function pointer for printing a field */
+  char *(*printField)(FieldType, int); /**< function pointer for printing a field
+                                        *   i.e. for highlighting a token that is one of the 4 anchor points;
+                                        *   if NULL, these aren't printed. */
   
 } PrintDescriptionRecord;
 
@@ -100,7 +103,7 @@ extern PrintOptions GlobalPrintOptions;
 
 AttributeList *ComputePrintStructures(CorpusList *cl);
 
-void ParsePrintOptions();
+void ParsePrintOptions(void);
 
 void CopyPrintOptions(PrintOptions *target, PrintOptions *source);
 

@@ -24,9 +24,9 @@
 /* The following constant define flags for the four different ways of measuring context-width: */
 
 /** Context width measured in characters */
-#define CHAR_CONTEXT -1
+#define CHAR_CONTEXT  -1
 /** Context width measured in tokens */
-#define WORD_CONTEXT -2
+#define WORD_CONTEXT  -2
 /** Context width measured in terms of an s-attribute */
 #define STRUC_CONTEXT -3
 /** Context width measured in terms of an a-attribute - that is, alignment blocks as the unit of context */
@@ -40,6 +40,18 @@
  *
  * It is passed around between different print functions
  * so that they know what to do!
+ *
+ * Note that the options contained here are settable
+ * by the user. This is in contrast to the "options"
+ * held in the PrintDecriptionRecord, which are built-in
+ * for each print style; the user can choose among modes
+ * but cannot modify the settings individually.
+ *
+ * TODO This object is confusingly named, as it DOES NOT
+ * merely specify the "Context" size; it also specifies
+ * which attributes get printed, and so on.
+ *
+ * @see PrintDescriptionRecord
  */
 typedef struct _context_description_block {
 
@@ -72,7 +84,9 @@ typedef struct _context_description_block {
 } ContextDescriptor;
 
 
-/* Contextdescriptor methods */
+/* ContextDescriptor methods */
+
+/* TODO not much naming convention stability among these descriptors! */
 
 int verify_context_descriptor(Corpus *corpus, 
                               ContextDescriptor *cd,

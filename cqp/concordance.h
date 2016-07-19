@@ -24,13 +24,19 @@
 #include "context_descriptor.h"
 #include "print-modes.h"
 
-/* ============================== Affix lists */
-
+/** ConcLineLayout enum represents the possible layout modes (horizontal/vertical) */
 typedef enum _conclinelayout {
   ConcLineHorizontal,
   ConcLineVertical
 } ConcLineLayout;
 
+/**
+ * ConcLineField :  a concordance line "field" is one of the four "anchors":
+ * that is, match, matchend, target, keyword. This object contains a record
+ * of the location of one such anchor point and its type. This can be passed to
+ * a "field-printing" function to perform special rendering of tokens in the
+ * "anchor" within a concordance line.
+ */
 typedef struct _ConcLineField {
   int start_position;
   int end_position;
