@@ -63,9 +63,14 @@
  *
  * When it is false, many actions simply have no effect, because they are
  * set to only actually do anything "if (generate_code)".
+ *
+ * Some functions will set it to 0 when an action works to block later actions.
+ *
+ * In some cases, setting this to  0 is linked with "YYABORT" in comments.
  */
 int generate_code;
-int within_gc;                   /**< TODO would be very useful to have a desc for this */
+int within_gc;                   /**< TODO would be very useful to have a desc for this ;
+                                      seems to be about whether or not we are within a global constraint */
 
 CYCtype last_cyc;                /**< type of last corpus yielding command */
 
@@ -1202,11 +1207,13 @@ do_AnchorPoint(FieldType field, int is_closing)
         cqpmessage(Error, "<keyword> anchor not defined in %s", query_corpus->name);
         generate_code = 0;
       }
+      break;
     default:
+      /* should not be reachable */
       assert("Internal error in do_AnchorPoint()" && 0);
     }
 
-  }    
+  }
 
   if (generate_code) {
     CurEnv->MaxPatIndex++;
@@ -1218,7 +1225,8 @@ do_AnchorPoint(FieldType field, int is_closing)
     res = CurEnv->MaxPatIndex;
   }
   
-  if (!generate_code) res = -1;
+  if (!generate_code)
+    res = -1;
 
   return res;
 }
@@ -1585,11 +1593,12 @@ OptimizeStringConstraint(Constrainttree left,
       
       assert(right->leaf.pat_type == NORMAL);
       
-      id = get_id_of_string(left->pa_ref.attr, right->leaf.ctype.sconst);
+      id = cl_str2id(left->pa_ref.attr, right->leaf.ctype.sconst);
       
       if (id < 0) {
 
         if (catch_unknown_ids) {
+          /* nb effectively if (0) since catch_unknown_ids is initialised to 0 and no code changes it -- AH*/
           cqpmessage(Error, "The string ``%s'' is not in the value space of ``%s''\n",
                      right->leaf.ctype.sconst, left->pa_ref.attr->any.name);
           generate_code = 0;
@@ -1640,7 +1649,7 @@ do_StringConstraint(char *s, int flags)
                  def_unbr_attr, query_corpus->name,
                  DEFAULT_ATT_NAME);
       
-      (void) set_string_option_value("DefaultNonbrackAttr", DEFAULT_ATT_NAME);
+      set_string_option_value("DefaultNonbrackAttr", DEFAULT_ATT_NAME);
       
       if ((attr = find_attribute(query_corpus->corpus,
                                  DEFAULT_ATT_NAME,
@@ -1741,7 +1750,7 @@ do_SimpleVariableReference(char *varName)
                  def_unbr_attr, query_corpus->name,
                  DEFAULT_ATT_NAME);
       
-      (void) set_string_option_value("DefaultNonbrackAttr", DEFAULT_ATT_NAME);
+      set_string_option_value("DefaultNonbrackAttr", DEFAULT_ATT_NAME);
       
       if ((attr = find_attribute(query_corpus->corpus,
                                  DEFAULT_ATT_NAME,
@@ -1769,13 +1778,11 @@ prepare_AlignmentConstraints(char *id)
   CorpusList *cl;
   
   if ((cl = findcorpus(id, SYSTEM, 0)) == NULL) {
-    cqpmessage(Warning,
-               "System corpus ``%s'' is undefined", id);
+    cqpmessage(Warning, "System corpus ``%s'' is undefined", id);
     generate_code = 0;
   }
   else if (!access_corpus(cl)) {
-    cqpmessage(Warning,
-               "Corpus ``%s'' can't be accessed", id);
+    cqpmessage(Warning, "Corpus ``%s'' can't be accessed", id);
     generate_code = 0;
   }
   else if ((algattr = find_attribute(Environment[0].query_corpus->corpus,
@@ -1787,9 +1794,7 @@ prepare_AlignmentConstraints(char *id)
     generate_code = 0;
   }
   else if (!next_environment()) {
-    cqpmessage(Error,
-               "Can't allocate another evaluation environment"
-               " (too many alignments)");
+    cqpmessage(Error, "Can't allocate another evaluation environment (too many alignments)");
     generate_code = 0;
     query_corpus = NULL;
   }
@@ -2109,7 +2114,7 @@ do_LabelReference(char *label_name, int auto_delete)
     } 
     else {
       /* reference to (value of) structural attribute at label */
-      if (!structure_has_values(attr)) {
+      if (!cl_struc_values(attr)) {
         cqpmessage(Error,
                    "Need attribute with values (``%s'' has no values)",
                    hack);
@@ -2765,9 +2770,8 @@ do_printVariableSize(char *varName)
     }
     printf("$%s has %d entries\n", v->my_name, size);
   }
-  else {
+  else
     cqpmessage(Error, "%s: no such variable", varName);
-  }
 }
 
 void
@@ -2799,12 +2803,10 @@ do_AddSubVariables(char *var1Name, int add, char *var2Name)
   int i, N;
   
   if ((v1 = FindVariable(var1Name)) == NULL) {
-    cqpmessage(Error, "Variable $%s not defined.",
-               var1Name);
+    cqpmessage(Error, "Variable $%s not defined.", var1Name);
   }
   else if ((v2 = FindVariable(var2Name)) == NULL) {
-    cqpmessage(Error, "Variable $%s not defined.",
-               var2Name);
+    cqpmessage(Error, "Variable $%s not defined.", var2Name);
   }
   else {
     items = GetVariableStrings(v2, &N);
