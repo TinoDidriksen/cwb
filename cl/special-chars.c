@@ -2273,19 +2273,19 @@ cl_id_tolower(char * s)
  * differently in UTF8, where case folding / accent folding is done by calling
  * Unicode-aware functions. By contrast, the process for Latin1 just uses a
  * straightforward mapping table for both sorts of folding.
+ *
  * In UTF8, an additional flag CANONICAL_NFC can be passed to normalize the
  * string into the canonical pre-composed form (NFC) used internally by CWB.
  * All strings that are going to be inserted into or searched for within an
  * indexed corpus should be processed in this way.
  *
- * @param s        The string (currently: must be ASCII, Latin-1, or UTF8, but
- *                 this is not checked for you!)
- * @param charset  The character set to assume or the string. If this is utf8,
- *                 complex accent and/or case folding will be done, as per the
- *                 Unicode standard. If it is anything else, internal byte mapping
- *                 tables will be used.
+ * @param s        The string.
+ * @param charset  The character set in which the string is encoded.
+ *                 If this is utf8, complex accent and/or case folding will be done,
+ *                 as per the Unicode standard.
+ *                 If it is anything else, internal byte mapping tables will be used.
  * @param flags    The flags that specify which conversions are required.
- *                 Can be IGNORE_CASE | IGNORE_DIAC | CANONICAL_NFC
+ *                 Can be IGNORE_CASE | IGNORE_DIAC | CANONICAL_NFC .
  */
 void 
 cl_string_canonical(char *s, CorpusCharset charset, int flags)

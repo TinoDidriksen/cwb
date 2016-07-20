@@ -2788,7 +2788,7 @@ do_SetVariableValue(char *varName, char operator, char *varValues)
       cqpmessage(Error, "Error in variable value definition.");
   }
   else
-    cqpmessage(Warning, "Can't find variable, probably fatal");
+    cqpmessage(Warning, "Can't create variable, probably fatal (bad variable name?)");
 }
 
 void

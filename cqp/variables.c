@@ -70,6 +70,11 @@ FindVariable(char *varname)
   return NULL;
 }
 
+/**
+ * Tests whether a given string exists within the variable.
+ *
+ * @return  Boolean: true if the variable contains the string.
+ */
 int
 VariableItemMember(Variable v, char *item)
 {
@@ -82,6 +87,11 @@ VariableItemMember(Variable v, char *item)
   return 0;
 }
 
+/**
+ * Adds a string to the variable.
+ *
+ * @return  Always 1.
+ */
 int
 VariableAddItem(Variable v, char *item)
 {
@@ -89,6 +99,8 @@ VariableAddItem(Variable v, char *item)
 
   if (!VariableItemMember(v, item)) {
     
+    /* Since the contents of the variable changes here, it will no longer be valid against
+     * any corpus / attrribute it has previously been checked against. */
     v->valid = 0;
     
     for (i = 0; i < v->nr_items; i++)
@@ -116,6 +128,7 @@ VariableAddItem(Variable v, char *item)
         assert(0 && "Big Problem here!");
       }
 
+      /* insert the new item into the FIRST newly allocated item; then set the REST as empty. */
       v->items[i].sval = cl_strdup(item);
       v->items[i].free = 0;
       v->items[i].ival = -1;
@@ -163,7 +176,11 @@ VariableSubtractItem(Variable v, const char *item)
   return 1;
 }
 
-/** Deletes and frees up all memory associated with the strings contained by this variable. */
+/**
+ * Deletes and frees up all memory associated with the strings contained by this variable.
+ *
+ * The variable continues to exist, but is now empty.
+ */
 int
 VariableDeleteItems(Variable v)
 {
@@ -181,6 +198,16 @@ VariableDeleteItems(Variable v)
   return 1;
 }
 
+/**
+ * Deletes all the memory associated with a given variable.
+ * If the Variable is in VariableSpace, that slot in VariableSpace is emptied out.
+ *
+ * @param vp  Note that this function takes a POINTER
+ *            to a Variable object, not a Variable itself (even though
+ *            Variable IS a pointer type)... allowing the object to be set
+ *            to NULL once emptied out.
+ * @return    Always 1.
+ */
 int
 DropVariable(Variable *vp)
 {
@@ -200,9 +227,10 @@ DropVariable(Variable *vp)
       break;
     }
 
-  if (i >= nr_variables) {
+  /* triggered if the variable object supplied is NOT in VariableSpace, which all Variables should be. */
+  if (i >= nr_variables)
     fprintf(stderr, "Error #5 in variable logic. Please contact developer.\n");
-  }
+
   
   *vp = NULL;
   vp = NULL;
@@ -211,7 +239,9 @@ DropVariable(Variable *vp)
 }
 
 /**
- * Creates a new Variable (list of strings) with the specified name within the global VariableSpace.
+ * Creates a new Variable (set of strings) with the specified name within the global VariableSpace.
+ *
+ * Returns NULL only if the variable string name was NULL.
  */
 Variable
 NewVariable(char *varname)
@@ -219,6 +249,7 @@ NewVariable(char *varname)
   Variable v;
   int i;
 
+  /* the caller may or may not have checked this. */
   if (varname == NULL)
     return NULL;
 
@@ -248,10 +279,11 @@ NewVariable(char *varname)
     else
       VariableSpace = (Variable *)cl_realloc(VariableSpace, 
                                           nr_variables * sizeof(Variable));
+    /* no longer necessary: cl_malloc/_realloc checks for this.
     if (VariableSpace == NULL) {
       fprintf(stderr, "Fatal Error: Variable space out of memory.\n");
       assert(0 && "Sorry, big problem here!");
-    }
+    } */
     
     VariableSpace[i++] = v;
 
@@ -262,6 +294,9 @@ NewVariable(char *varname)
   return v;
 }
 
+/**
+ * Sets the value of a variable; returns true for success, false for failure.
+ */
 int
 SetVariableValue(char *varName, 
                  char operator,
@@ -274,9 +309,9 @@ SetVariableValue(char *varName,
   if ((v = FindVariable(varName)) == NULL) {
 
     v = NewVariable(varName);
-    
+
     if (v == NULL) {
-      cqpmessage(Error, "Out of memory.");
+      cqpmessage(Error, "Bad variable name supplied!");
       return 0;
     }
   }
@@ -319,7 +354,6 @@ SetVariableValue(char *varName,
     VariableDeleteItems(v);
 
     if ((fd = open_file(varValues, "r"))) {
-      
       int l;
       char s[CL_MAX_LINE_LENGTH];
 
@@ -340,8 +374,7 @@ SetVariableValue(char *varName,
     }
     else {
       perror(varValues);
-      cqpmessage(Warning, "Can't open %s: no such file or directory",
-                 varValues);
+      cqpmessage(Warning, "Can't open %s: no such file or directory", varValues);
       return 0;
     }
     break;
@@ -361,7 +394,7 @@ SetVariableValue(char *varName,
 int variables_iterator_idx;
 
 /**
- * Resets the variables iterator to the beginning of the global VariableSpace array.
+ * Resets the global variables iterator to the beginning of the global VariableSpace array.
  */
 void 
 variables_iterator_new(void)
@@ -380,12 +413,10 @@ variables_iterator_new(void)
 Variable 
 variables_iterator_next(void)
 {
-  if (variables_iterator_idx < nr_variables) {
+  if (variables_iterator_idx < nr_variables)
     return VariableSpace[variables_iterator_idx++];
-  }
-  else {
+  else
     return NULL;
-  }
 }
 
 
@@ -433,6 +464,7 @@ VerifyVariable(Variable v, Corpus *corpus, Attribute *attribute)
       /* check each string against the lexicon: store matching lexicon ID, if there is one. */
       if (!v->items[i].free) {
         if (v->items[i].sval == NULL) {
+          /* string shouldn't be NULL if free has been set to True */
           fprintf(stderr, "Error #1 in variable logic. Contact developer.\n");
           v->items[i].ival = -1;
         }
@@ -499,7 +531,7 @@ GetVariableItems(Variable v,
                  int *nr_items)
 {
   int *items;
-  int i, ip;
+  int i, ip; /* ip = index into the new "items" array, whereas i indexes the v->items array */
 
   if (VerifyVariable(v, corpus, attribute)) {
     if (v->nr_valid_items > 0) {
