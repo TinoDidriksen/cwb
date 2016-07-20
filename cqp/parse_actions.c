@@ -60,13 +60,18 @@
  *
  * A boolean; seems to be some kind of error-indicator (set to true
  * if a query worked, false if it didn't, things like that).
+ *
+ * When it is false, many actions simply have no effect, because they are
+ * set to only actually do anything "if (generate_code)".
  */
 int generate_code;
 int within_gc;                   /**< TODO would be very useful to have a desc for this */
 
 CYCtype last_cyc;                /**< type of last corpus yielding command */
 
+/** The corpus (or subcorpus) which is "active" in the sense that the query will be executed within it. */
 CorpusList *query_corpus = NULL;
+/** Used for preserving former values of query_corpus (@see query_corpus), so it can be reset to a former value). */
 CorpusList *old_query_corpus = NULL;
 
 int catch_unknown_ids = 0;
@@ -81,11 +86,12 @@ Context expansion;
 /**
  * Buffer for storing regex strings. As it says on the tin.
  *
- * Doesn't seem currently to be in use anywhere.
+ * TODO Doesn't seem currently to be in use anywhere, except in one func which itself is not used.
  */
 char regex_string[CL_MAX_LINE_LENGTH];
-/* index into the regex string buffer, storing a current position. @ see regex_string_pos */
+/** index into the regex string buffer, storing a current position. @ see regex_string_pos */
 int regex_string_pos;
+/** length of search string: is written to by evaltree2searchstr() but then seems never to be read.  TODO . */
 int sslen;
 
 /* ======================================== predeclared functions */
@@ -754,7 +760,7 @@ do_sleep(int duration)
 #ifndef __MINGW__
     sleep(duration);       /* sleep in number of seconds (normal POSIX function) */
 #else
-    Sleep(duration*1000);  /* sleep in number of milliseconds (Windows "equivalent" */
+    Sleep(duration*1000);  /* sleep in number of milliseconds (Windows "equivalent") */
 #endif
   }
 }
@@ -2211,13 +2217,16 @@ do_IDReference(char *id_name, int auto_delete)  /* auto_delete may only be set i
   return res;
 }
 
-
+/**
+ * Implements expansion of a variable within the RE() operator.
+ */
 Constrainttree
-do_flagged_re_variable(char *varname, int flags) {
+do_flagged_re_variable(char *varname, int flags)
+{
   Constrainttree tree;
   Variable var;
   char *s, *mark, **items;
-  int length, i, l, N;
+  int length, i, l, N_strings;
   
   tree = NULL;
   if (flags == IGNORE_REGEX) {
@@ -2227,27 +2236,37 @@ do_flagged_re_variable(char *varname, int flags) {
 
   var = FindVariable(varname);
   if (var != NULL) {
-    items = GetVariableStrings(var, &N);
-    if (items == NULL || N == 0) {
+    items = GetVariableStrings(var, &N_strings);
+    if (items == NULL || N_strings == 0) {
       cqpmessage(Error, "Variable $%s is empty.", varname);
       generate_code = 0;
     }
     else {
       /* compute length of interpolated regular expression */
       length = 1;
-      for (i = 0; i < N; i++) 
+      for (i = 0; i < N_strings; i++)
         length += strlen(items[i]) + 1;
       s = cl_malloc(length);
       l = sprintf(s, "%s", items[0]);
       mark = s + l;        /* <mark> points to the trailing null byte */
-      for (i = 1; i < N; i++) {
+      for (i = 1; i < N_strings; i++) {
         l = sprintf(mark, "|%s", items[i]);
         mark += l;
       }
       cl_free(items);
       /* now <s> contains the disjunction over all REs stored in <var> */
-      tree = do_flagged_string(s, flags);
-      /* note that <s> is inserted into the constraint tree and mustn't be freed here */
+
+      /* since the var strings were loaded without charset checking,
+       * we need to now check the regex for the present corpus's encoding. */
+      if (! cl_string_validate_encoding(s, query_corpus->corpus->charset, 0)){
+        cqpmessage(Error, "Variable $%s used with RE() includes one or more strings with characters that are invalid\n"
+                "in the encoding specified for corpus [%s]", varname, query_corpus->corpus->name);
+        generate_code = 0;
+        cl_free(s);
+      }
+      else
+        tree = do_flagged_string(s, flags);
+        /* note that <s> is inserted into the constraint tree and mustn't be freed here */
     }
   }
   else {

@@ -19,13 +19,7 @@
 #define _cqp_eval_h_
 
 #include "../cl/cdaccess.h"
-/*
-#ifndef __MINGW__
-#include <regex.h>
-#else
-#include "../mingw-libgnurx-2.5.1/regex.h"
-#endif
-*/
+
 
 #include "regex2dfa.h"
 #include "corpmanag.h"
@@ -92,7 +86,7 @@ enum bnodetype { bnode,                 /**< boolean evaluation node            
 /**
  * Union of structures underlying the Constraint / Constrainttree objects.
  *
- * Each Constraint is a node in the Constrainttree.
+ * Each Constraint is a node in the Constrainttree, i.e. a single element of a compiled CQP query.
  */
 typedef union c_tree {
 
@@ -185,7 +179,7 @@ typedef union c_tree {
     union {
       char        *sconst;               /**< operand is a string constant.           */
       int          iconst;               /**< operand is a integer constant.          */
-      int          cidconst;             /**< operand is {?? corpus position??} constant */
+      int          cidconst;             /**< operand is {?? corpus position?? corpus lexicon id??} constant */
       double       fconst;               /**< operand is a float (well, double) constant */
     }              ctype;
   }                leaf;
@@ -440,7 +434,7 @@ void cqp_run_tab_query(int implode);
 
 /* ======================================== */
 
-int next_environment();
+int next_environment(); /* TODO duplicate declaration -- see upwards from here! */
 
 int free_environment(int thisenv);
 

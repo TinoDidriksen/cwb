@@ -21,7 +21,6 @@ FOR V 3.5.0
 - Get cwb-config to work on Windows (maybe by reimplementing it in VB script?)
 - Ferret out any non-checked input in CQP for character set checking.
 - Modify the corpus encoding and CQP tutorials to take account of the fact that the user might be using Win.
-- Modify the CQP tutorial to reflect the fact that we are now on PCRE.
 
 - Implement our own PCRE character tables for all 8-bit encodings to enable case-insensitive matching beyond ASCII.
 - Test revised implementation of regular expression matching and the optimizer (esp. with %c and %d flags).
@@ -52,8 +51,11 @@ This is just a vague list to record roughly what we intend to be doing down the 
 THINGS FROM THE ABOVE LIST THAT ARE NOW COMPLETE
 ================================================
 
+- Make fixed-char KWIC output "work", or at least approximate working, with UTF-8, as a stopgap before 3.9/4.0
 - Complete documentation of aligned corpora in core and CWB-Perl
+- Make fixed-char KWIC output "work", or at least approximate working, with UTF-8, as a stopgap before 3.9/4.0
 - (Change version number in the Perl modules)
 - Update CWB-Perl for changes in the CL API in v3.1 & 3.2 (most notably, Unicode)
 - Write a definitive documentation of the problems with UTF-8 characters in Windows and how to get round them
   -- This is "kind of" complete, in that the website FAQ now contains all our best advice on this. 
+- Modify the CQP tutorial to reflect the fact that we are now on PCRE.

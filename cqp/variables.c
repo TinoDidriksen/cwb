@@ -38,7 +38,7 @@
 /** How many pointers to allocate space for at one time to a Variable's  ->items array*/
 #define ITEM_REALLOC 8
 
-/** How many pointers to allocate space for at one time to the gloval array VariableSpace */
+/** How many pointers to allocate space for at one time to the global array VariableSpace */
 #define VARIABLE_REALLOC 16
 
 /** Number of variables in VariableArray (exported)*/
@@ -106,12 +106,9 @@ VariableAddItem(Variable v, char *item)
       v->nr_items += ITEM_REALLOC;
       
       if (v->items == NULL) 
-        v->items = (VariableItem *)cl_malloc(sizeof(VariableItem) *
-                                          v->nr_items);
+        v->items = (VariableItem *)cl_malloc(sizeof(VariableItem) * v->nr_items);
       else 
-        v->items = (VariableItem *)cl_realloc(v->items,
-                                           sizeof(VariableItem) *
-                                           v->nr_items);
+        v->items = (VariableItem *)cl_realloc(v->items, sizeof(VariableItem) * v->nr_items);
       
       if (v->items == NULL) {
         fprintf(stderr, "Fatal Error #6: no memory left.");
@@ -135,31 +132,47 @@ VariableAddItem(Variable v, char *item)
   return 1;
 }
 
+/**
+ * Remove a string from a defined Variable.
+ *
+ * Identification of the string to remove is by bytewise identity.
+ *
+ * @param v     The variable.
+ * @param item  The string to take out of the variable.
+ * @return     Always 1
+ */
 int
-VariableSubtractItem(Variable v, char *item)
+VariableSubtractItem(Variable v, const char *item)
 {
   int i;
 
+  /* by altering the list, it is automatically no longer valid:
+   * it will need to be rechecked if it has already been checked. */
   v->valid = 0;
 
-  for (i = 0; i < v->nr_items; i++)
-    
-    /* wir l�schen _alle_ vorkommen eines items in der Liste! */
-    
-    if (!v->items[i].free && 
-        v->items[i].sval != NULL &&
-        strcmp(v->items[i].sval, item) == 0) {
+  for (i = 0; i < v->nr_items; i++) {
+    /* if this item is the string we want to remove, free the string, set the integer value to -1, and flag as free.
+     * IE everything in the item gets scrubbed. */
+    if (!v->items[i].free && v->items[i].sval != NULL && strcmp(v->items[i].sval, item) == 0) {
       cl_free(v->items[i].sval);
       v->items[i].ival = -1;
       v->items[i].free++;
     }
+  }
   
   return 1;
 }
 
+/** Deletes and frees up all memory associated with the strings contained by this variable. */
 int
 VariableDeleteItems(Variable v)
 {
+  int i;
+
+  /* first, free the strings. */
+  for (i = 0; i < v->nr_items; i++)
+    cl_free(v->items[i].sval);
+
   v->valid = 0;
   v->nr_items = 0;
   v->nr_valid_items = 0;
@@ -197,6 +210,9 @@ DropVariable(Variable *vp)
   return 1;
 }
 
+/**
+ * Creates a new Variable (list of strings) with the specified name within the global VariableSpace.
+ */
 Variable
 NewVariable(char *varname)
 {
@@ -373,17 +389,29 @@ variables_iterator_next(void)
 }
 
 
-/** check variable's strings against corpus.attribute lexicon */
+/**
+ * Verify a variable for use with a given p-attribute of a given corpus.
+ *
+ * This associates the variable with the supplied corpus/attribute,
+ * plus checks the variable's strings against the relevant attribute lexicon.
+ *
+ * @return  Boolean: true for all OK, false if something went wrong (problem with
+ *          the arguments, or if none of the variable's strings match the
+ *          lexicon). Same as the value of the Variable's "valid" flag after this
+ *          function has run.
+ */
 int
-VerifyVariable(Variable v, 
-               Corpus *corpus,
-               Attribute *attribute)
+VerifyVariable(Variable v, Corpus *corpus, Attribute *attribute)
 {
   int i;
+  char *str;
 
+  /* nr valid = n of strings in the var that are also in the corpus lexicon. */
   int nr_valid, nr_invalid;
 
-  if (v->valid == 0 || 
+  /* only verify the variable if (a) it is not already verified,
+   * or (b) it is verified, but for another corpus. */
+  if ( (! v->valid) ||
       v->my_corpus == NULL || v->my_attribute == NULL ||
       strcmp(v->my_corpus, corpus->registry_name) != 0 ||
       strcmp(v->my_attribute, attribute->any.name) != 0) {
@@ -392,25 +420,38 @@ VerifyVariable(Variable v,
     cl_free(v->my_corpus);
     cl_free(v->my_attribute);
 
-    if (attribute->any.type != ATT_POS) {
+    if (attribute->any.type != ATT_POS)
       return 0;
-    }
 
-    v->my_corpus = cl_strdup(corpus->registry_name);
+    v->my_corpus    = cl_strdup(corpus->registry_name);
     v->my_attribute = cl_strdup(attribute->any.name);
     
     nr_valid = 0;
     nr_invalid = 0;
     
     for (i = 0; i < v->nr_items; i++) {
-
+      /* check each string against the lexicon: store matching lexicon ID, if there is one. */
       if (!v->items[i].free) {
         if (v->items[i].sval == NULL) {
           fprintf(stderr, "Error #1 in variable logic. Contact developer.\n");
           v->items[i].ival = -1;
         }
-        else
-          v->items[i].ival = get_id_of_string(attribute, v->items[i].sval);
+        else {
+          /* Variable strings are not verified on load - so we now need to check against the corpus charset. */
+          if (!cl_string_validate_encoding(v->items[i].sval, corpus->charset, 0))
+            cqpmessage(Error,
+                "Variable $%s includes one or more strings with characters that are invalid\n"
+                "in the encoding specified for corpus [%s]", v->my_name, v->my_corpus);
+          /* In utf8: lookup against canonicalised string. Otherwise: lookup against the string as-is. */
+          if (utf8 == corpus->charset) {
+            str = strdup(v->items[i].sval);
+            cl_string_canonical(str, corpus->charset, CANONICAL_NFC);
+            v->items[i].ival = cl_str2id(attribute, str);
+            cl_free(str);
+          }
+          else
+            v->items[i].ival = cl_str2id(attribute, v->items[i].sval);
+        }
 
         if (v->items[i].ival < 0)
           nr_invalid++;
@@ -419,7 +460,7 @@ VerifyVariable(Variable v,
       }
     }
     
-    v->nr_valid_items = nr_valid;
+    v->nr_valid_items   = nr_valid;
     v->nr_invalid_items = nr_invalid;
     
     if (nr_valid > 0)

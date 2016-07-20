@@ -27,19 +27,25 @@
 
 /** VariableItem object: an item within a variable */
 typedef struct _variable_item {
-  int free;
-  char *sval;
-  int ival;
+  int free;               /**< Boolean flag: is this item empty? */
+  char *sval;             /**< The actual string value of the item. */
+  int ival;               /**< Lexicon number associated with the item.
+                               Set to -1 on creation, but when the variable is verified
+                               against a corpus attribute, it is set to the lexicon number
+                               from that attribute. */
 } VariableItem;
 
 /**
- * The Variable object.
+ * The Variable object: a list of strings that can be used as a variable within
+ * a query (to match all tokens whose type is identical to one of the strings
+ * on the list).
  *
  * (Plus also VariableBuffer: the former is a pointer to the latter.)
  */
 typedef struct _variable_buf {
 
-  int valid;              /**< flag: whether I'm valid or not */
+  int valid;              /**< flag: whether I'm valid or not (valid = associated with a corpus/attribute,
+                               and known to match at least one entry in that attribute's lexicon) */
   char *my_name;          /**< my name */
 
   char *my_corpus;        /**< name of corpus I'm valid for */
@@ -48,8 +54,8 @@ typedef struct _variable_buf {
   int nr_valid_items;     /**< only valid after validation */
   int nr_invalid_items;
   
-  int nr_items;           /**< number of items */
-  VariableItem *items;    /**< set of items */
+  int nr_items;           /**< number of items (size of the "items" array) */
+  VariableItem *items;    /**< array of items - the set of strings within the variable. */
   
 } VariableBuffer, *Variable;
 
@@ -66,7 +72,7 @@ int VariableItemMember(Variable v, char *item);
 
 int VariableAddItem(Variable v, char *item);
 
-int VariableSubtractItem(Variable v, char *item);
+int VariableSubtractItem(Variable v, const char *item);
 
 int VariableDeleteItems(Variable v);
 
@@ -85,9 +91,7 @@ Variable variables_iterator_next(void);
 
 
 int
-VerifyVariable(Variable v, 
-               Corpus *corpus,
-               Attribute *attribute);
+VerifyVariable(Variable v, Corpus *corpus, Attribute *attribute);
 
 int *
 GetVariableItems(Variable v, 
