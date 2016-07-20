@@ -1829,7 +1829,7 @@ cl_string_validate_encoding(char *s, CorpusCharset charset, int repair)
   switch (charset) {
   case utf8:
     do {
-      if (g_utf8_validate((gchar *)str, 1, (const gchar **)&bad))
+      if (g_utf8_validate((gchar *)str, -1, (const gchar **)&bad))
         return 1;
       else if (!repair)
         return 0;
