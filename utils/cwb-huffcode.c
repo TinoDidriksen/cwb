@@ -293,8 +293,9 @@ compute_code_lengths(Attribute *attr, HCD *hc, char *fname)
 
   int nr_codes = 0;
 
-  int *heap = NULL;
-  unsigned *codelength = NULL;
+  unsigned int *heap = NULL;
+  /* must be unsigned: because of add-1 trick below to avoid codes longer than 32 bits, cumulative frequencies in heap may exceed 2G limit */
+  unsigned int *codelength = NULL;
 
   int issued_codes[MAXCODELEN];
   int next_code[MAXCODELEN];
@@ -364,19 +365,28 @@ compute_code_lengths(Attribute *attr, HCD *hc, char *fname)
 
   memset((char *)issued_codes, '\0', MAXCODELEN * sizeof(int));
 
-  codelength = (unsigned *)cl_calloc(hc->size, sizeof(unsigned));
+  codelength = (unsigned int *)cl_calloc(hc->size, sizeof(unsigned));
 
 
   /* =========================================== make & initialize the heap */
 
-  heap = (int *)cl_malloc(hc->size * 2 * sizeof(int));
+  heap = (unsigned int *)cl_malloc(hc->size * 2 * sizeof(int));
+  /* The heap initially consists of two consecutive arrays:
+   * a) an array of pointers into the second array (given as offsets on heap[])
+   * b) an array of frequency counts for the leaves of the Huffman tree
+   * In the algorithm below, inner nodes of the tree are created by merging the two least frequent
+   * nodes. The corresponding frequency counts, which are no longer needed, are replaced by pointers
+   * to the parent node.
+   */
 
   for (i = 0; i < hc->size; i++) {
     heap[i] = hc->size + i;
     heap[hc->size+i] = cl_id2freq(attr, i) + 1;
     /* add-one trick needed to avoid unsupported Huffman codes > 31 bits for very large corpora of ca. 2 billion words:
-       theoretical optimal code length for hapax legomena in such corpora is ca. 31 bits, and the Huffman algorithm 
-       sometimes generates 32-bit codes; with add-one trick, the theoretical optimal code length is always <= 30 bits */    
+     * theoretical optimal code length for hapax legomena in such corpora is ca. 31 bits, and the Huffman algorithm
+     * sometimes generates 32-bit codes; with add-one trick, the theoretical optimal code length is always <= 30 bits
+     * NB: this means that cumulative frequency counts may exceed the corpus size and hence the 2G limit (-> unsigned int)
+     */
   }
 
   /* ============================== PROTOCOL ============================== */
@@ -527,16 +537,16 @@ compute_code_lengths(Attribute *attr, HCD *hc, char *fname)
   for (i = 0; i < hc->size; i++) {
 
     int cl = heap[i+hc->size];
+    if (cl == 0) {
+      assert((hc->size == 1) && "Major error: code length of 0 bits should only happen for lexicon size = 1");
+      cl = 1; /* special case: if lexicon contains only a single type, generate 1-bit code '0' */
+    }
 
     sum_bits += cl * get_id_frequency(attr, i);
-
     codelength[i] = cl;
-    if (cl == 0)
-      continue;
 
     if (cl > hc->max_codelen)
       hc->max_codelen = cl;
-
     if (cl < hc->min_codelen)
       hc->min_codelen = cl;
 
@@ -602,7 +612,7 @@ compute_code_lengths(Attribute *attr, HCD *hc, char *fname)
 
     /* ============================== PROTOCOL ============================== */
     if (do_protocol > 1) {
-      fprintf(protocol, "\n");
+      fprintf(protocol, "\n");
       fprintf(protocol, "   Item   f(item)  CL      Bits     Code, String\n");
       fprintf(protocol, "------------------------------------"
               "------------------------------------\n");

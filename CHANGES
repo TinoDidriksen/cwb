@@ -100,6 +100,10 @@ Bug fixes:
    approach of case-folding the regexp itself (which modifies escape sequences such as \W and \pL). 
 
  - [2016-07-19] Sort order is no longer locale-dependent for corpora with UTF-8 encoding.
+ 
+ - [2016-07-20] Fixed bug #58: cwb-huffcode used to fail on p-attributes with a single unique type, for which
+   the Huffmann algorithm would determine an optimal code length of 0 bits. Simply force code length to 1 bit
+   in this special case, which will automatically generate the code '0' for the single type. 
 
 Enhancements:
 
@@ -113,7 +117,7 @@ Enhancements:
    cwb-scan-corpus tool, making it accessible to other applications.  The new class should be slightly more
    efficient and memory-friendly than the original code because it embeds n-grams directly in the hash entries.
 
- - [2014-06-19: v3.4.9] cwb-scan-corpus now uses cl_ngram_hash for counting, resulting in substantial performance
+ - [2015-06-19: v3.4.9] cwb-scan-corpus now uses cl_ngram_hash for counting, resulting in substantial performance
    improvement (both speed and memory footprint) in certain situations.
 
  - [2015-06-19: v3.4.9] Hash-based reimplementation of CQP's "group" command is much faster for frequency counts
