@@ -30,64 +30,52 @@
 /** the top of the range of char_map's outputs @see char_map */
 int char_map_range = 0;
 /**
- * A character map for measuring character n-gram similarity.
+ * A character map for computing n-gram features
  *
- * For the contents of this array post-initialisation, see the algorithm in the
- * initialisation function. Basically, when all is said and done, all possible bytes
- * map to a number that represents position in the (unaccented, caseless) Latin alphabet, where
+ * After initialisation, this array maps character codes which are to be included
+ * in n-grams to a position index without gaps, and all other codes to the index 1.
+ *
+ * Basically, when all is said and done, all possible bytes map to a number that
+ * represents position in the (unaccented, caseless) Latin alphabet, where
  * where (a|A) => 2, and (any punctuation or non-letter) => 1.
  *
  * This includes, incidentally, UTF-8 component bytes in the upper half of the 8 bit space.
- * So all such component bytes count as "just punctuation" in the character n-gram
- * comparisons.
+ * So all such component bytes count as "just punctuation" in the character n-gram comparisons.
+ * As a consequence, n-gram features are next to useless with non-latin alphabets.
  */
 unsigned char char_map[256];
 
-/** initialises char_mpa, qv @see char_map */
+/** initialises char_map, @see char_map for details */
 void
 init_char_map()
 {
   int i;
   unsigned char *map = char_map;
-/* OLD charmap for Latin-1 accent mapping. Now ignored.
-  unsigned char
-    map_from[]="��������������������������������������������������������������",
-    map_to[]  ="AAAAAAACEEEEIIIIDNOOOOOOUUUUYFSAAAAAAACEEEEIIIIDNOOOOOOUUUUYFY",
-    *f = map_from,
-    *t = map_to;       */
-
   /* the outputs of the map are initialised to 0 */
-  for(i = 0; i < 256; i++)
+  for (i = 0; i < 256; i++)
     map[i] = 0;
-
-  /* assign output for accented characters in the map from the two strings above
-  while(*f) {
-    map[*f++] = *t++;
-  }
-  NO - don't do this, because instead, de-accenting will be dealt with using the CL string functions
-  after the strings to be mapped have been retrieved from the lexicon.
-  */
 
   /* lowercase letters map to themselves */
   for(i = 'a'; i <= 'z'; i++)
     map[i] = i;
   /* uppercase letters map to the corresponding lowercase */
+  /* this isn't really needed any more since we apply %cd folding beforehand, but what the heck */
   for(i = 'A'; i <= 'Z'; i++)
     map[i] = i + 0x20;
   
   for(i = 1; i < 256; i++) {
-    /* anything which HAS been assigned an output has (0x61-2) subtracted from it, i.e. 63.
-     * so the map output now = the alphabet offset where 'a' = 2 (in ascii terms, an offset from 0x3f) */
-    if(map[i]>0)
+    /* anything which HAS been assigned an output has (0x61 - 2) = 95 subtracted from it,
+     * so the map output now = the alphabet offset where 'a' -> 2, 'b' -> 3, etc. */
+    if(map[i] > 0)
       map[i] -= 0x5f;
-    /* anything which HASN'T got an output yet gets 1, i.e. all non-letters */
+    /* anything which HASN'T got an output yet (i.e. all non-letters) is mapped to 1 */
     else
       map[i] = 1;
     
     /* increase char_map_range from its start value of zero to the highest possible value.
      * Note this is deterministic. */
-    if(map[i] >= char_map_range) {
-      char_map_range = map[i]+1;
+    if (map[i] >= char_map_range) {
+      char_map_range = map[i] + 1;
     }
   }
 }
@@ -95,26 +83,26 @@ init_char_map()
 
 
 
-/*
-
-  Methods for the FMS class. Here is how it works:
-
-  FMS = create_feature_maps(config, config_lines, source, target, source_s, target_s);
-
-  Gegeben: Feature-Map-Konfiguration (ASCII, in einzelne Eintraege aufgeteilt)
-           Word- oder Lemma-Attribut von Quellcorpus(source) und Zielcorpus(target),
-           Satzmarkierungen fuer beide Corpora (source_s, target_s)
-
-  Gesucht: Menge der relevanten Features, Abbildung der jeweiligen
-           Woerter in Mengen von Features (Featuremaps).
-           Wird zusammen mit den Attributen in FMS-Struktur zurueckgeliefert.
-
-  Um eine kompakte Kodierung zu erhalten, wird der Aufbau der
-  Feature-Vektoren in zwei Schritten durchgefuehrt:
-  1. Features identifizieren und Anzahl pro Wort ermitteln
-  2. Aufbau der Tabellen
-
-*/
+/**
+ *
+ * Methods for the FMS class. Here is how it works:
+ *
+ * FMS = create_feature_maps(config, config_lines, source, target, source_s, target_s);
+ *
+ * Input:  feature map configuration (ASCII, parsed into separate items)
+ *         word (or lemma) p-attributes of source and target corpus
+ *         s-attributes for sentence boundaries in both corpora (source_s, target_s)
+ *
+ * Output: set of relevant features
+ *         mapping from lexicon IDs to feature sets
+ *         wrapped in FMS struct returned from the function
+ *
+ * In order to ensure a maximally compact encoding, feature sets are generated with
+ * a two-pass algorithm:
+ *
+ *  1. identify relevant features + number of active features for each lexicon ID
+ *  2. generate the actual feature sets
+ */
 
 /**
  * Creates feature maps for a source/target corpus pair.
@@ -151,6 +139,7 @@ create_feature_maps(char **config,
   int config_pointer;
 
   char *b, command[CL_MAX_LINE_LENGTH], dummy[CL_MAX_LINE_LENGTH];
+  char word1[2 * CL_MAX_LINE_LENGTH], word2[2 * CL_MAX_LINE_LENGTH]; /* buffers for case/accent-folded strings (might be longer than input with UTF-8 */
 
   int current_feature;
   int weight;                         /* holds the weight assigned to the feature(s) we're working on */
@@ -196,7 +185,12 @@ create_feature_maps(char **config,
   fcount1 = (unsigned int*) calloc(nw1 + 1, sizeof(unsigned int));
   fcount2 = (unsigned int*) calloc(nw2 + 1, sizeof(unsigned int));
 
+  /* initialise feature counts: character count ("primary feature") is always present, but weight 0 if not specified */
   r->n_features = 1;
+  for (i = 0; i < nw1; i++)
+    fcount1[i]++;
+  for (i = 0; i < nw2; i++)
+    fcount2[i]++;
 
 
   /* NOTE there are two passes through the creation of feature maps - two sets of nearly identical code!
@@ -222,7 +216,7 @@ create_feature_maps(char **config,
           int i1, i2; /* i1 and i2 are temporary indexes into the lexicons of the two corpora */
           int f1, f2; /* f1 and f2 are temporary storage for frequencies from the corpus lexicons */
           float threshold;
-          int n_shared = 0; /* numebr fo shared words - only calculated for the purpose of printing it */
+          int n_shared = 0; /* number of shared words - only calculated for the purpose of printing it */
 
           if(sscanf(config[config_pointer],"%2s:%d:%f %s",command,&weight,&threshold,dummy) != 3) {
             fprintf(stderr,"ERROR: wrong # of args: %s\n",config[config_pointer]);
@@ -273,29 +267,25 @@ create_feature_maps(char **config,
             exit(1);
           }
           else {
-            int i,f,l; /* temp storage for lexicon index, n of possible features, && word length */
+            int i,f,l; /* temp storage for lexicon index, n of possible features and word length */
             unsigned char *s;
 
             printf("FEATURE: %d-grams, weight=%d ... ", n, weight);
             fflush(stdout);
 
-            /* for each entry in source-corpus lexicon, add to the number of features IFF
-             * that lexicon entry is long enough to contain at least one n-gram (for current n) */
+            /* for each entry in source-corpus lexicon, add all possible n-grams contained in this word
+             * to its feature count; note that we have to apply case/accent-folding first to obtain accurate counts */
             for(i = 0; i < nw1; i++) {
-              /* l = cl_id2strlen(w_attr1, i); */
-              s = (unsigned char *) cl_strdup(cl_id2str(w_attr1, i));
-              cl_string_canonical( (char *)s, charset, IGNORE_CASE | IGNORE_DIAC);
-              l = strlen(s);
-              cl_free(s);
+              strcpy(word1, cl_id2str(w_attr1, i));
+              cl_string_canonical(word1, charset, IGNORE_CASE | IGNORE_DIAC);
+              l = strlen(word1);
               fcount1[i] += (l >= n) ? l - n + 1 : 0;
             }
             /* same for target corpus */
             for(i = 0; i < nw2; i++) {
-              /* l = cl_id2strlen(w_attr2, i); */
-              s = (unsigned char *) cl_strdup(cl_id2str(w_attr2, i));
-              cl_string_canonical( (char *)s, charset, IGNORE_CASE | IGNORE_DIAC);
-              l = strlen(s);
-              cl_free(s);
+              strcpy(word2, cl_id2str(w_attr2, i));
+              cl_string_canonical(word2, charset, IGNORE_CASE | IGNORE_DIAC);
+              l = strlen(word2);
               fcount2[i] += (l >= n) ? l - n + 1 : 0;
             }
             /* set f to number of possible features (= number of possible characters to the power of n) */
@@ -376,22 +366,18 @@ create_feature_maps(char **config,
           }
           else {
             /* primary feature -> don't create additional features */
-            /* first entry in a token's feature list is character count */ 
-            for (i=0; i<nw1; i++)
-              fcount1[i]++;
-            for (i=0; i<nw2; i++)
-              fcount2[i]++;
+            /* first entry in a token's feature list is always the character count */
             printf("FEATURE: character count, weight=%d ... [1]\n", weight);
           }
           break;
         default:
-          fprintf(stderr,"ERROR: unknown feature: %s\n",config[config_pointer]);
+          fprintf(stderr, "ERROR: unknown feature: %s\n", config[config_pointer]);
           exit(1);
           break;
         }
       }
       else {
-        fprintf(stderr,"ERROR: feature parse error: %s\n", config[config_pointer]);
+        fprintf(stderr, "ERROR: feature parse error: %s\n", config[config_pointer]);
         exit(1);
       }
     }
@@ -456,9 +442,7 @@ create_feature_maps(char **config,
           int i1, i2, f1, f2;
           float threshold;
           
-          if(sscanf(config[config_pointer],"%2s:%d:%f %s",command,&weight,&threshold,dummy)!=3)
-            ;
-          else {
+          if (sscanf(config[config_pointer],"%2s:%d:%f %s",command,&weight,&threshold,dummy) == 3) {
             printf("PASS 2: Processing shared words (th=%4.1f%c).\n", threshold * 100, '\%');
             /* for each word in the lexicon of the source corpus.... check it exists, get
              * corresponding word in target corpus. As before.
@@ -486,13 +470,12 @@ create_feature_maps(char **config,
         case '4': { 
           int n;
 
-          if(sscanf(config[config_pointer],"%1s%d:%d %s", command, &n, &weight, dummy) != 3)
-            ;
-          else if( n <= 0 || n > 4 )
-            ;
-          else {
+          if (
+              (sscanf(config[config_pointer], "%1s%d:%d %s", command, &n, &weight, dummy) == 3)
+              && ( n >= 1 && n <= 4 )
+          ) {
             int i, f, ng, l;
-            unsigned char *s, *s_orig;
+            unsigned char *s;
 
             printf("PASS 2: Processing %d-grams.\n",n);
 
@@ -501,43 +484,43 @@ create_feature_maps(char **config,
               f *= char_map_range; /* so, as before, f = number of possible n-grams for this n */
 
             /* add a feature weight for each of the possible n-grams */
-            for(i = current_feature; i < current_feature + f; i++)
+            for (i = current_feature; i < current_feature + f; i++)
               r->fweight[i] = weight;
 
             /* for each word in the SOURCE lexicon, acquire the possible n-gram features */
-            for(i = 0; i < nw1; i++) {
-              s_orig = s = (unsigned char *) cl_strdup(cl_id2str(w_attr1, i));
-              cl_string_canonical( (char *)s, charset, IGNORE_CASE | IGNORE_DIAC);
+            for (i = 0; i < nw1; i++) {
+              strcpy(word1, cl_id2str(w_attr1, i));
+              cl_string_canonical(word1, charset, IGNORE_CASE | IGNORE_DIAC);
               ng = 0;
               l = 0;
+              s = word1;
               while (*s) {
                 /* read and process 1 character */
-                ng = ( (ng * char_map_range) + char_map[*s]) % f;
+                ng = ((ng * char_map_range) + char_map[*s]) % f;
                 l++;
                 s++;
                 /* begin setting features as soon as we've accumulated the first N-gram */
                 if (l >= n)
                   *(--r->w2f1[i]) = current_feature + ng;
               }
-              cl_free(s_orig);
             }
 
             /* same again for words in the TARGET lexicon */
-            for(i = 0; i < nw2; i++) {
-              s_orig = s = (unsigned char *) cl_strdup(cl_id2str(w_attr2, i));
-              cl_string_canonical( (char *)s, charset, IGNORE_CASE | IGNORE_DIAC);
+            for (i = 0; i < nw2; i++) {
+              strcpy(word2, cl_id2str(w_attr2, i));
+              cl_string_canonical(word2, charset, IGNORE_CASE | IGNORE_DIAC);
               ng = 0;
               l = 0;
+              s = word2;
               while (*s) {
                 /* read and process 1 character */
-                ng = ( (ng * char_map_range) + char_map[*s]) % f;
+                ng = ((ng * char_map_range) + char_map[*s]) % f;
                 l++;
                 s++;
                 /* begin setting features as soon as we've accumulated the first N-gram */
                 if (l >= n)
                   *(--r->w2f2[i]) = current_feature + ng;
               }
-              cl_free(s_orig);
             }
             
             current_feature += f;
@@ -553,11 +536,9 @@ create_feature_maps(char **config,
           int nw, nl = 0, i1 ,i2;
 
           /* note that we RESCAN the wordlist file, this time adding weights, pointers etc. */
-          if(sscanf(config[config_pointer], "%2s:%d:%s %s", command, &weight, filename, dummy) != 3)
-            ;
-          else if(!(wordlist = fopen(filename,"r")))
-            exit(-1);
-          else {
+          if (sscanf(config[config_pointer], "%2s:%d:%s %s", command, &weight, filename, dummy) == 3) {
+            if (!(wordlist = fopen(filename,"r")))
+              exit(-1);
             printf("PASS 2: Processing word list %s\n", filename);
             while((nw = fscanf(wordlist, "%s %s", word1, word2))>0) {
               /* skip utf-8 prefix if present */
