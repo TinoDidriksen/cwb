@@ -103,7 +103,10 @@ Bug fixes:
  
  - [2016-07-20] Fixed bug #58: cwb-huffcode used to fail on p-attributes with a single unique type, for which
    the Huffmann algorithm would determine an optimal code length of 0 bits. Simply force code length to 1 bit
-   in this special case, which will automatically generate the code '0' for the single type. 
+   in this special case, which will automatically generate the code '0' for the single type.
+ 
+ - [2016-07-20] Fixed bug #49: SIGPIPE handler is now installed automatically by open_stream() and checked
+   by all CQP commands that print substantial amounts of output (cat, dump, sort, count, group, tabulate).  
 
 Enhancements:
 
