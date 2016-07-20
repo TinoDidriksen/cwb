@@ -656,7 +656,7 @@ ascii_print_output(CorpusList *cl,
   if ((last >= cl->size) || (last < 0))
     last = cl->size - 1;
 
-  for (i = first; (i <= last) && (!broken_pipe); i++) {
+  for (i = first; (i <= last) && !broken_pipe; i++) {
     
     if (cl->sortidx)
       real_line = cl->sortidx[i];
@@ -690,7 +690,7 @@ ascii_print_group(Group *group, int expand, FILE *fd)
   last_source_id = -666;
   nr_targets = 0;
 
-  for (cell = 0; cell < group->nr_cells; cell++) {
+  for (cell = 0; (cell < group->nr_cells) && !broken_pipe; cell++) {
 
     source_id = group->count_cells[cell].s;
     source_s = Group_id2str(group, source_id, 0);

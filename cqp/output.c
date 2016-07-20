@@ -263,7 +263,31 @@ open_pager(char *cmd, CorpusCharset charset)
 }
 
 /**
- * Open the (output) stream within a Redir structure.
+ * Callback handler for SIGPIPE (installed by open_stream())
+ */
+int broken_pipe = 0;
+
+static void
+bp_signal_handler(int signum)
+{
+#ifndef __MINGW__
+  broken_pipe = 1;
+  /* fprintf(stderr, "Handle broken pipe signal\n"); */
+
+  if (signal(SIGPIPE, bp_signal_handler) == SIG_ERR)
+    perror("Can't reinstall signal handler for broken pipe"); /* Is this still necessary on modern platforms? */
+#endif
+}
+
+
+/**
+ * Open the (output) stream within a Redir(ection) structure.
+ *
+ * If output is sent to a pipe, a signal handler for SIGPIPE is automatically
+ * installed and configured to set the global variable broken_pipe to True.
+ * Output functions should check this variable and abort if it is set. The
+ * signal handler is uninstalled when close_pipe is called, which may lead to
+ * undesired behaviour if multiple streams are open at the same time.
  *
  * @param rd       Redir structure to be opened.
  * @param charset  The charset to be used. Only has an effect if the stream
@@ -342,11 +366,22 @@ open_stream(struct Redir *rd, CorpusCharset charset)
       rd->is_pipe = False;
     }
   }
+
+  broken_pipe = 0;
+#ifndef __MINGW__
+  if (rd->stream != NULL && rd->is_pipe && handle_sigpipe) {
+    if (signal(SIGPIPE, bp_signal_handler) == SIG_ERR)
+      perror("Can't install signal handler for broken pipe (ignored)");
+  }
+#endif
+
   return (rd->stream == NULL ? 0 : 1);
 }
 
 /**
  * Closes the (output) stream within a Redir structure.
+ *
+ * If output was being sent to a pipe, SIGPIPE is set back to the SIG_IGN handler.
  *
  * @param rd  The Redir stream to close.
  * @return    True for all OK, false if closing did not work. If rd does not
@@ -359,6 +394,14 @@ close_stream(struct Redir *rd)
   int rv = 1;
 
   if (rd->stream) {
+
+#ifndef __MINGW__
+    if (rd->is_pipe && handle_sigpipe) {
+      if (signal(SIGPIPE, SIG_IGN) == SIG_ERR)
+        perror("Can't reinstall SIG_IGN signal handler (ignored)");
+    }
+#endif
+
     if (rd->is_pipe)
       rv = ! pclose(rd->stream); /* pclose returns 0 = success, non-zero = failure */
     else if (rd->stream != stdout)
@@ -441,25 +484,6 @@ close_input_stream(struct InputRedir *rd)
 
 /* ---------------------------------------------------------------------- */
 
-
-int broken_pipe;
-
-static void 
-bp_signal_handler(int signum)
-{
-#ifndef __MINGW__
-  broken_pipe = 1;
-
-  /* fprintf(stderr, "Handle broken pipe signal\n"); */
-
-  if (signal(SIGPIPE, bp_signal_handler) == SIG_ERR)
-    perror("Can't reinstall signal handler for broken pipe");
-#endif
-}
-
-
-/* ---------------------------------------------------------------------- */
-
 /* print_output():
  * Ausgabe von CL, ohne Header, auf stream
  */
@@ -499,6 +523,7 @@ print_output(CorpusList *cl,
  * Prints a corpus, typically (some of) the matches of a query.
  *
  * (Not sure why it's called "catalog"; is this a pun on the cat keyword? -- AH 2012-07-17)
+ * (I suspect that it's a misinterpretation of what "cat" stands for. -- SE 2016-07-20)
  *
  * The query is represented by a subcorpus (cl); only results
  * #first..#last; will be printed; use (0,-1) for entire corpus.
@@ -562,19 +587,10 @@ catalog_corpus(CorpusList *cl,
     if (GlobalPrintMode == PrintHTML)
       printHeader = True;
 
-#ifndef __MINGW__
-    if (rd->is_pipe && handle_sigpipe) {
-      if (signal(SIGPIPE, bp_signal_handler) == SIG_ERR)
-        perror("Can't install signal handler for broken pipe (ignored)");
-    }
-#endif
-
     /* do the job. */
     
     verify_context_descriptor(cl->corpus, &CD, 1);
     
-    broken_pipe = 0;
-
     /* first version (Oli Christ):
        if ((!silent || printHeader) && !(rd->stream == stdout || rd->is_paging));
        */
@@ -599,13 +615,6 @@ catalog_corpus(CorpusList *cl,
                  isatty(fileno(rd->stream)) || rd->is_paging, 
                  &CD, first, last, mode);
 
-#ifndef __MINGW__
-    if (rd->is_paging && handle_sigpipe) {
-      if (signal(SIGPIPE, SIG_IGN) == SIG_ERR)
-        perror("Can't reinstall SIG_IGN signal handler");
-    }
-#endif
-    
   }
 
   close_stream(rd);
@@ -908,7 +917,7 @@ print_tabulation(CorpusList *cl, int first, int last, struct Redir *rd)
   }
 
   /* tabulate selected attribute values for matches <first> .. <last> */
-  for (current = first; current <= last; current++) {
+  for (current = first; (current <= last) && !broken_pipe; current++) {
     TabulationItem item = TabulationList;
     while (item) {
       int start = pt_get_anchor_cpos(cl, current, item->anchor1, item->offset1);

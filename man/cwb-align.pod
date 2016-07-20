@@ -231,7 +231,7 @@ more heavily than C<-3>, and so on; the default configuration (see below) does n
 When letter saequences are compared, the comparison is case-insensitive and diacritic-insensitive.
 
 Only the letters C<A> to C<Z> are counted for the comparison; numbers, punctuation and any other symbol will be
-ignored. This means that the letter-sequence features are of no use at all, and should nto be used,
+ignored. This means that the letter-sequence features are of no use at all, and should not be used,
 if either or both of the corpora is in a language that does not use the Latin alphabet.
 
 =item B<-2:<I<weightE<gt>>>

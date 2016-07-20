@@ -377,7 +377,7 @@ void latex_print_output(CorpusList *cl,
   if ((last >= cl->size) || (last < 0))
     last = cl->size - 1;
 
-  for (line = first; (line <= last) && (!broken_pipe); line++) {
+  for (line = first; (line <= last) && !broken_pipe; line++) {
 
     if (cl->sortidx)
       real_line = cl->sortidx[line];
@@ -471,7 +471,7 @@ latex_print_group(Group *group, int expand, FILE *fd)
 
   fprintf(fd, "\\begin{tabular}{llr}\n");
 
-  for (cell = 0; cell < group->nr_cells; cell++) {
+  for (cell = 0; (cell < group->nr_cells) && !broken_pipe; cell++) {
 
     source_id = group->count_cells[cell].s;
     

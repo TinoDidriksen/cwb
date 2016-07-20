@@ -1816,7 +1816,7 @@ SortSubcorpus(CorpusList *cl, SortClause sc, int count_mode, struct Redir *redir
 
       /* if successful, display groups with their frequencies */
       if (open_stream(redir, cl->corpus->charset)) {
-        for (i = 0; i < n_groups; i++) {
+        for (i = 0; (i < n_groups) && !broken_pipe; i++) {
           int first = group_first[groupidx[i]];
           int size = group_size[groupidx[i]];
           if (size >= count_mode) {
@@ -1840,14 +1840,6 @@ SortSubcorpus(CorpusList *cl, SortClause sc, int count_mode, struct Redir *redir
                 char *temp = cl_string_reverse(token, cl->corpus->charset);
                 cl_free(token);
                 token = temp;
-                /* old version
-                int t_last = strlen(token) - 1; 
-                int t_i;
-                for (t_i = 0; t_i < t_last - t_i; t_i++) {
-                  char temp = token[t_i];
-                  token[t_i] = token[t_last - t_i];
-                  token[t_last - t_i] = temp;
-                } */
               }
               if (k > 0) fprintf(redir->stream, " ");
               fprintf(redir->stream, "%s", token);

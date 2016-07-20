@@ -3036,7 +3036,7 @@ do_dump(CorpusList *cl, int first, int last, struct Redir *rd)
 
     f = (first >= 0) ? first : 0;
     l = (last < cl->size) ? last : cl->size - 1;
-    for (i = f; i <= l; i++) {
+    for (i = f; (i <= l) && !broken_pipe; i++) {
       j = (cl->sortidx) ? cl->sortidx[i] : i;
       target  = (cl->targets)  ? cl->targets[j]  : -1;
       keyword = (cl->keywords) ? cl->keywords[j] : -1;

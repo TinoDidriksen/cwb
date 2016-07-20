@@ -78,7 +78,7 @@ extern TabulationItem TabulationList;
 
 /* ---------------------------------------------------------------------- */
 
-extern int broken_pipe;
+extern int broken_pipe;  /**< while an output stream is open, this will be set to True if a SIGPIPE is received (on supported platforms) */
 
 /* ---------------------------------------------------------------------- */
 
