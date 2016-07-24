@@ -26,10 +26,6 @@ For more information, see the CWB homepage
 
     http://cwb.sourceforge.net/
 
-and the CWB development and user documentation wiki
-
-    http://cwb.sslmit.unibo.it/
-
 
 Installation instructions are detailed in the file "INSTALL" (in this directory).
 
@@ -51,4 +47,4 @@ Street Fifth Floor, Boston, MA 02110-1301 USA.
 
 See the file "COPYING" for additional licensing information concerning third-party
 open-source software packages used by the IMS Open Corpus Workbench.
-soft
+

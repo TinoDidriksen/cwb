@@ -16,9 +16,9 @@
 ##  WWW at http://www.gnu.org/copyleft/gpl.html).
 
 
-# *********************************************************
-# *  Edit this file to configure the CWB for your system  *
-# *********************************************************
+# **********************************************************
+# * Edit this file to configure CWB for your system *
+# **********************************************************
 
 # 
 # PLATFORM-SPECIFIC CONFIGURATION (OS and CPU type)
@@ -35,7 +35,8 @@
 #         darwin-port-universal - universal build for i386 and x86_64 architectures on OS X 10.5+, using MacPorts
 #       solaris       SUN Solaris 8 for SPARC CPU
 #       cygwin        Win32 build using Cygwin emulation layer (experimental)
-#       mingw         Cross-compile for Win32 from a *nix system with MinGW installed (experimental)
+#       mingw-cross   Cross-compile for Win32-on-i586 from a *nix system with MinGW installed (experimental)
+#       mingw-native  Build natively on Win32 using MinGW (new, at research stage only, does not work yet)
 #
 ifndef PLATFORM
 PLATFORM=darwin-universal
@@ -158,13 +159,18 @@ include $(TOP)/config/site/$(SITE)
 # a "guess" as to where they might be. Define the following variables if (a) you want to
 # override the guess or (b) you want to make for Windows without using the auto-build script.
 #
-
+## Library/Include/DLL/PKG-config files for the cross compiler are to be found beneath this folder
+# MINGW_CROSS_HOME =
+## The mingw-cross config file will ATTEMPT to set this by asking the cross compiler program to tell us. 
+## If its attempt is no good, you can overrride the setting  directly above. 
+#
 ## Path to the directory containing libpcre-0.dll
 # LIBPCRE_DLL_PATH = 
 ## Path to the directory containing libglib-2.0-0.dll
 # LIBGLIB_DLL_PATH =
 ## If they are in the same place, just define this variable (overrides the preceding two)
 # LIB_DLL_PATH =
+# If no LIB_DLL variables are set, they are assumed to be in $MINGW_CROSS_HOME/bin.
 
 
 

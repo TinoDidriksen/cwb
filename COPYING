@@ -7,7 +7,8 @@ The IMS Open Corpus Workbench (CWB) is licensed under the GNU General Public
 License, version 2 or newer. Copies of both version 2 and version 3 of the GPL
 are included in this file.
 
-CWB makes use of three libraries: PCRE, GLib, and GNU Readline.
+CWB makes use of four external libraries: PCRE and GLib (in all versions), and GNU 
+Readline and ncurses (in some versions).
 
 Binary releases of CWB may redistribute elements of the PCRE library (due to this 
 library being statically linked into the CWB executables[*]). PCRE is 
@@ -31,11 +32,19 @@ source code on the website operated by its primary maintainers:
 
     http://www.gnu.org/software/readline
 
+Binary releases of CWB may redistribute elements of the GNU-maintained ncurses library
+(due to this library being statically linked into the CWB executables[*]). ncurses
+is licensed under the X11 licence, which permits such binary redistribution so 
+long as the copyright notice is included with the redistribution. We include it in 
+a subsequent section of this file. For more information on ncurses, see:
+
+    https://www.gnu.org/software/ncurses/
+
 Binary releases of CWB may redistribute elements of the GLib library (due to 
 this library being statically linked into the CWB executables[*]). GLib is
 licensed under the GNU Library General Public Licence (or GNU Lesser General
 Public Licence as it is now known), version 2 or newer, which permits such binary
-redistribution when linked within  a GPL-covered work such as CWB if equivalent 
+redistribution when linked within a GPL-covered work such as CWB if equivalent 
 access to the source code is given (section 6 of the LGPL version 2). Our 
 understanding is that this requirement can be fulfilled by providing "equivalent
 access" in the same way as specified by the GPL version 3, i.e. by providing 
@@ -56,6 +65,8 @@ In the remainder of this file, you will find
   (3) The contents of PCRE's "licence.txt" file,
       which includes the text of the BSD licence.
   (4) The GNU Library General Public License version 2.
+  (5) The ncurses copyright and permission notice,
+      which includes the text of the X11 licence.
 
 
 [*] Windows releases of CWB also include copies of the PCRE and GLib libraries
@@ -1645,3 +1656,36 @@ necessary.  Here is a sample; alter the names:
   Ty Coon, President of Vice
 
 That's all there is to it!
+
+
+==============================================================================
+                         (5)
+        ncurses copyright and permission notice
+   (reproduced from the file "COPYING" in the ncurses release)  
+            
+Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, distribute with modifications, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included
+in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+Except as contained in this notice, the name(s) of the above copyright
+holders shall not be used in advertising or otherwise to promote the
+sale, use or other dealings in this Software without prior written
+authorization.
+

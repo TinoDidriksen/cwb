@@ -843,6 +843,7 @@ cl_charset_name_canonical(char *name_to_check)
 
 /**
  * Adds a property to the list of corpus properties.
+ * Use this function from registry.y only!
  *
  * If the property is already defined, ignore and warn.
  * If the property is 'charset', corpus charset is set as well.
@@ -855,8 +856,8 @@ void
 add_corpus_property(Corpus *corpus, char *property, char *value)
 {
   CorpusProperty new_prop;
-  CorpusCharset charset;
-  int i;
+//  CorpusCharset charset;
+//  int i;
 
   if (cl_corpus_property(corpus, property) != NULL) {
     fprintf(stderr,

@@ -189,8 +189,7 @@ CFLAGS += $(DEBUG_FLAGS) $(SITE_CFLAGS)
 LDFLAGS += $(DEBUG_FLAGS) $(SITE_LDFLAGS)
 
 # termcap/curses/readline DISALLOWED under MinGW, even if set elsewhere
-# (because we don't want to link against a Unix libncurses / readline);
-# cmd.exe gives us commandline editing anyway.
+# (because cmd.exe gives us commandline editing anyway).
 ifdef __MINGW__
 READLINE_LIBS = 
 TERMCAP_LIBS =
@@ -209,7 +208,19 @@ CFLAGS += -DUSE_READLINE
 endif
 
 # Glib and PCRE header file info (added to CFLAGS_ALL below)
-GLIB_DEFINES := $(shell pcre-config --cflags) $(shell pkg-config --cflags glib-2.0)
+ifndef __MINGW__
+PCRE_DEFINES := $(shell pcre-config --cflags)
+GLIB_DEFINES := $(shell pkg-config  --cflags glib-2.0)
+else
+# Library/Include/DLL/PKG-config files for the cross compiler are to be found beneath this folder
+ifndef MINGW_CROSS_HOME
+MINGW_CROSS_HOME := $(subst install: ,,$(shell $(CC) --print-search-dirs | grep ^install))
+# The above will usually produce the correct result - usually something like
+# /usr/lib/gcc/i586-mingw32msvc/4.2.1-sjlj.  If necessary, override in config.mk
+endif
+PCRE_DEFINES := $(shell $(MINGW_CROSS_HOME)/bin/pcre-config --cflags)
+GLIB_DEFINES := $(shell export PKG_CONFIG_PATH=$(MINGW_CROSS_HOME)/lib/pkgconfig ; pkg-config --cflags glib-2.0) $(shell pkg-config  --cflags glib-2.0)
+endif
 
 # define macro variables for some global settings
 INTERNAL_DEFINES = -DREGISTRY_DEFAULT_PATH=\""$(DEFAULT_REGISTRY)"\" -DCOMPILE_DATE=\"$(COMPILE_DATE)\" -DVERSION=\"$(VERSION)\"
@@ -229,35 +240,39 @@ CL_LIBS = $(LIBCL_PATH)
 # paths to DLL files that need to be installed along with CWB binaries (win only)
 ifdef __MINGW__
 ifdef  LIB_DLL_PATH
-# This general variable, if set, overrrides (and makes unnecessary) both the specific variables.
-LIBPCRE_DLL_PATH = $(LIB_DLL_PATH)
+# This general variable, if set (should only be set by user!), overrrides (and makes unnecessary) both the specific variables.
 LIBGLIB_DLL_PATH = $(LIB_DLL_PATH)
+LIBPCRE_DLL_PATH = $(LIB_DLL_PATH)
 endif
 ifndef LIBGLIB_DLL_PATH
-#$(error Configuration variable LIBGLIB_DLL_PATH is not set (directory containing MinGW-compiled libpcre-0.dll))
+#$(error Configuration variable LIBGLIB_DLL_PATH is not set (directory containing MinGW-compiled libglib-2.0-0.dll))
+LIBGLIB_DLL_PATH = $(MINGW_CROSS_HOME)/bin
 endif
 ifndef LIBPCRE_DLL_PATH
-$(error Configuration variable LIBPCRE_DLL_PATH is not set (directory containing MinGW-compiled libglib-2.0-0.dll))
+LIBPCRE_DLL_PATH = $(MINGW_CROSS_HOME)/bin
+#$(error Configuration variable LIBPCRE_DLL_PATH is not set (directory containing MinGW-compiled libpcre-0.dll))
 endif
 DLLS_TO_INSTALL =                            \
-    $(LIBPCRE_DLL_PATH)/libpcre-0.dll        \
+    $(LIBPCRE_DLL_PATH)/libpcre-1.dll        \
     $(LIBPCRE_DLL_PATH)/libpcreposix-0.dll   \
     $(LIBGLIB_DLL_PATH)/libglib-2.0-0.dll    
-#    mingw-libgnurx-2.5.1/libgnurx-0.dll  
-else
+else # i.e. if ! def __MINGW__
 DLLS_TO_INSTALL = 
 endif 
 
 # Linker flags for libraries used by the CL (to be added to linking commands for all programs)
 ifdef __MINGW__
-LDFLAGS_LIBS = -lpcre -lpcre.dll -lglib-2.0
+#LDFLAGS_LIBS = -lpcre -lpcre.dll -lglib-2.0
+LDFLAGS_LIBS := -L$(MINGW_CROSS_HOME)/lib  -lpcre -lpcre.dll -lglib-2.0               \
+    $(shell $(MINGW_CROSS_HOME)/bin/pcre-config --libs)   \
+    $(shell export PKG_CONFIG_PATH=$(MINGW_CROSS_HOME)/lib/pkgconfig ; pkg-config --libs glib-2.0)
 else
 LDFLAGS_LIBS = $(shell pcre-config --libs) $(shell pkg-config --libs glib-2.0)
 endif 
 
 # complete sets of compiler and linker flags (allows easy specification of specific build rules)
-CFLAGS_ALL = $(CFLAGS) $(INTERNAL_DEFINES) $(GLIB_DEFINES) $(READLINE_DEFINES) $(TERMCAP_DEFINES)
-DEPEND_CFLAGS_ALL = $(DEPEND_CLAGS) $(INTERNAL_DEFINES) $(GLIB_DEFINES) $(READLINE_DEFINES) $(TERMCAP_DEFINES)
+CFLAGS_ALL = $(CFLAGS) $(INTERNAL_DEFINES) $(GLIB_DEFINES) $(PCRE_DEFINES) $(READLINE_DEFINES) $(TERMCAP_DEFINES)
+DEPEND_CFLAGS_ALL = $(DEPEND_CLAGS) $(INTERNAL_DEFINES) $(GLIB_DEFINES) $(PCRE_DEFINES) $(READLINE_DEFINES) $(TERMCAP_DEFINES)
 LDFLAGS_ALL = $(LDFLAGS) $(LDFLAGS_LIBS)
 
 # readline and termcap libraries are only needed for building CQP

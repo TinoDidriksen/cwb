@@ -12,17 +12,16 @@ packages for popular platforms are available from the CWB homepage
 
 together with detailed installation instructions.
 
-The CWB development wiki 
-
-    http://cwb.sslmit.unibo.it/
-
-offers hints for building the CWB on specific platforms and addresses some
-common problems.  If you encounter a problem that you cannot solve with the
-information provided on the wiki, you should join the CWBdev mailing list
+If you encounter a problem that you cannot solve with the information provided
+in this installation guide or on the website, you can join the CWBdev mailing 
+list
 
     http://devel.sslmit.unibo.it/mailman/listinfo/cwb
 
 and ask your question there.
+
+A companion file to this one, INSTALL-WIN, covers additional info related to 
+building/installing on Windows. It can be ignored if you are building on Unix.  
 
 
         PREREQUISITES
@@ -43,7 +42,8 @@ and ask your question there.
  - the GNU Readline library for command-line editing (strongly recommended)
  - GNU install or a compatible program
  - Perl with pod2man script for rebuilding manual pages
- - GNU less pager for interactive display of query results in CQP
+ - GNU less pager for interactive display of query results in CQP 
+   (strongly recommended)
 
 
         PREREQUISITE LIBRARIES ON LINUX: A WARNING
@@ -294,82 +294,6 @@ command-line editing, type
         instutils/find_readline.perl --check
 
 
-        BUILDING WINDOWS BINARIES
-        
-Currently, it is only possible to create Windows binaries via cross-compilation
-on a Unix-like system (if you want to compile on a Windows box your best option
-for now is Cygwin). For cross-compilation, you will need to install:
-
- - the MinGW system including the Windows cross-compiler version of gcc
-
-On Debian/Ubuntu, this can be done by installing the package "mingw32" together
-with two other "mingw32-.*" packages on which it depends. There are also 
-various "mingw32-.*" packages available for Fedora and other RPM-based Linux 
-variants, although cross-compilation probably doesn't require all of them. 
-
-Alternatively the MinGW cross-compiler can be downloaded from the MinGW project
-website:
-
-        http://www.mingw.org/wiki/LinuxCrossMinGW
-
-However you install MinGW, make sure the cross-compiler binary file
-(i586-mingw32msvc-gcc) and the other executables with this prefix are all 
-available via your path.
-
-Then manually edit config.mk to select "mingw" as the configuration file for 
-the "platform".
-
-When you have changed the config.mk file, building the CWB binaries is the same
-as above:
-
-        make clean
-        make depend
-        make all
-
-Running "make install" is meaningless in this case, because of course you will
-want to install the binaries on a different machine. To create an archive for
-easy transport of the Windows .exe files, together with PDFs of the man files,
-run
-
-        make release
-
-This will generate a zip file containing the binary release installer, in the
-"build" directory. Its name is of the form cwb-$version-windows-i586.zip.
-
-Once again, to speed up these steps there is a script which automates the changes
-to config.mk and the various steps of "making":
-
-        ./install-scripts/cwb-build-win32
-
-To actually install, move the zip file to your Windows system, and decompress 
-it.
-
-Then run the install-cwb-win batch file. (If it doesn't find the folders it 
-expects to find, it may ask you some questions.) This script will
-
- - create a folder like C:\Program Files\CWB
- - put all the binary files (plus necessary DLLs) in its "bin" subdirectory
- - also copy across include/library files (whether or not the latter will 
-   actually work if you try to link against them is untested).
-
-You might also want to
- - add the "bin" sub-folder to your PATH environment variable
- - move the PDF files from the "man" sub-folder to somewhere more convenient
-
-Note that so far, cross-compilation has been tested with the following 
-Unix-like starting points:
-
- - Ubuntu
- - Debian
- - [add others here]
-
-The resulting Windows binaries have been tested on the following Windows 
-variants:
-
- - Windows XP SP3 (32 bit)
- - [add others here: windows server, vista, 7, 64-bit windows?]
- 
- 
         INSTALLING PREREQUISITE EXTERNAL LIBRARIES
 
 The Glib and PCRE libraries are needed to compile CWB. If you are using a 
@@ -389,27 +313,27 @@ libraries.
 
 For Glib, at least version 2 is required.
 
-For PCRE, at least version 7 is required. You must use a copy of PCRE
+For PCRE, at least version 8.10 is required. You must use a copy of PCRE
 which has been compiled with Unicode (UTF-8) support and Unicode
 properties support. (You can find out whether this is the case using the
-pcretest utility with the -C option.)
+pcretest utility with the -C option.) Note that the new-and-improved PCRE2
+library (PCRE v10.0.0 and up) is NOT a suitable substitute. 
 
-We strongly recommend to use a recent version of PCRE (>= 8.32) with JIT
+We strongly recommend to use a recent version of PCRE v8 (>= 8.32) with JIT
 compilation enabled (check with "pcretest -C") in order to ensure good
 performance. For complex regular expressions, this will make the lexicon
-search ca. 3x faster (see http://sljit.sourceforge.net/regex_perf.html).
+search *A LOT* faster (see http://sljit.sourceforge.net/regex_perf.html).
 Note that standard packages shipped with various Linux distributions may
 not include JIT support and you may have to compile PCRE yourself for
-optimal performance. As of January 2015, the following distributions
-appear to include a PCRE version with JIT:
+optimal performance. The following Linux distributions appear to include 
+a PCRE version high enough to include JIT:
 
         Ubuntu 14.10 ("Utopic") and newer
         Debian 7 ("Wheezy") and newer
         Fedora 20 ("Heisenbug") and newer
 
-Note in particular that the current LTS release of Ubuntu (14.04)
-includes PCRE 8.31 without JIT support.
-
+For info on PCRE and Glib on Mac OS X, see the specific section above for 
+that OS.
 
 The CWB build process makes the following assumptions:
 
@@ -419,7 +343,7 @@ The CWB build process makes the following assumptions:
 
  - that the location of header/library files for PCRE can be discovered
    using the pcre-config utility (which should also be the case if you
-   hacve used the standard installation procedure).
+   have used the standard installation procedure).
 
 If you want to use your own copy of Glib or PCRE instead of the version
 provided by a standard package, set up your search path so that the 
@@ -428,140 +352,6 @@ appropriate pkg-config or pcre-config binary is found first.
 If you cannot provide installation details through pkg-config and
 pcre-config, quite a bit of tinkering with the Makefile includes will be
 needed to make things work.
- 
- 
-        PREREQUISITE EXTERNAL LIBRARIES FOR WIN32 BUILD
-
-When cross-compiling for Windows, things are a bit different: you need
-versions of these libraries that have been compiled *to run under Windows*,
-not the usual *nix versions. 
-
-For PCRE, we have found it easiest to download the source of the library 
-and use the MinGW cross-compiler to build a copy of the library files. This
-then needs to be placed into the right library directory for the MinGW 
-cross-compiler to find it. The same applies to the header file. We have 
-found that PCRE's "make install" will do this for you, IF it has been
-configured with the right options (if you run the ./configure script without
-the right options, it will be compiled for *nix and placed in the normal
-gcc places, possibly overwriting what you previously had there). 
-
-The "right options" for configuring PCRE are something like the following 
-(assuming that the cross-compiler is i586-mingw32msvc-(gcc|ld|...):
-
-CC=i586-mingw32msvc-gcc CC_FOR_BUILD=gcc  ./configure                     \
-    --host=i586-mingw32msvc                                               \
-    --enable-utf8 --enable-unicode-properties                             \
-    --enable-newline-is-any --disable-cpp --enable-static                 \
-    --exec-prefix=$A_DUMMY_DIRECTORY_FOR_FILES_YOU_WILL_NOT_NEED          \
-    --prefix=$HOME_OF_CROSS_COMPILER_FILES                                \
-    --libdir=$HOME_OF_CROSS_COMPILER_LIB_FILES                            \
-    --oldincludedir=$HOME_OF_CROSS_COMPILER_INCLUDE_FILES
-
-If you don't use PCRE's "make install", but instead move the library/header 
-files  you have built manually to the cross-compiler's directories, 
-these are the files you must make sure get copied:
-
- - Library files:
-    - libpcre.a 
-    - libpcre.dll.a
-    - libpcre.la
-    - libpcreposix.a
-    - libpcreposix.dll.a
-    - libpcreposix.la
- - Header file:
-    - pcre.h
- - Dynamic link libraries:
-    - libpcre-0.dll
-    - libpcreposix-0.dll
- 
-The directories they need to be inserted into are the MinGW compiler's library 
-and include directories. These will usually be something like
-
-        /$libdir/gcc/i586-mingw32msvc/$version
-        /$libdir/gcc/i586-mingw32msvc/$version/include
-        /$libdir/gcc/i586-mingw32msvc/bin
-
-... for library, header, and DLL files respectively (and indeed these are the 
-paths you would also need to specify as --libdir, --prefix, 
-and --oldincludedir when  building PCRE), where the default for $libdir is 
-/usr/lib .  
-
-But, in general, you should make sure to consult the PCRE documentation on
-building for cross-compilation. See http://www.pcre.org/readme.txt .
-
-For Glib, we have had success using pre-built Windows DLL files made available
-by the GTK project, available at 
-
-        http://www.gtk.org/download-windows.html
-
-but building Glib from source using the cross-compiler, as with PCRE, might
-also be an option. We used the following procedure:
-
- - download the binary release (glib_$version_win32.zip) from gtk.org
- - download the dev release (glib-dev_$version_win32.zip) from gtk.org
- - extract the list of header, library and DLL files below from the two
-   download zips, and place them into the appopriate places in the
-   cross-compiler's tree.
- - cross your fingers and build!
-
-The files to extract are listed below. Note this is a maximal, "better safe
-than sorry" list, to avoid problems based on intra-Glib dependencies; you
-might also be able to build with a more limited set of files.
-
- - Library files (from glib-dev_$version_win32.zip/lib):
-    - gio-2.0.lib
-    - glib-2.0.lib
-    - gmodule-2.0.lib
-    - gobject-2.0.lib 
-    - gthread-2.0.lib
-    - libgio-2.0.dll.a
-    - libglib-2.0.dll.a
-    - libgmodule-2.0.dll.a
-    - libgobject-2.0.dll.a
-    - libgthread-2.0.dll.a 
- - Header files (from glib-dev_$version_win32.zip/include/glib-2.0) :
-    - gio/*
-    - glib/*
-    - gobject/*
-    - glib-object.h
-    - glib.h
-    - gmodule.h
- - Dynamic link libraries (from glib_$version_win32.zip/bin):
-    - libgio-2.0-0.dll
-    - libglib-2.0-0.dll
-    - libgmodule-2.0-0.dll
-    - libgobject-2.0-0.dll
-    - libgthread-2.0-0.dll
-
-The appropriate places for these files will be, in general, the same as for 
-the PCRE files; see above.
-
-It is important to note that if you have a *nix system and you have Glib 
-installed with pkg-config, then the results you get back from pkg-config WILL 
-NOT WORK for the cross-compiler. pkg-config will always tell you about
-the files/directories for the *nix system itself, not the differently-
-compiled files you need for the cross-compiler.
-
-For both PCRE and Glib, the cross-compiler needs to know where the header and
-library files are. Assuming you have followed the procedure above, they will
-be in places the cross-compiler checks anyway. But if not, then you may need 
-to add extra compiler/linker flags in the config file to inform it about their
-location.
-
-The cross-compiler doesn't need to know about the location of the DLLs, 
-because it doesn't use them. Instead, they are actually copied into the 
-release file as part of the "make release" command. So the location of 
-the DLLs needs to be available as part of the makefile system. 
-
-You can specify this yourself by adding the appropriate information to 
-your config.mk file (as explained in the comments to that file). You need to
-set either LIB_DLL_PATH (path to a directory containing both PCRE and Glib
-DLLs) or both LIBPCRE_DLL_PATH and LIBGLIB_DLL_PATH.
- 
-If you are using the auto-build script (./install-scripts/cwb-build-win32),
-this script will make a "guess" as to the location of the DLLs. So in this
-case, there is no need to set LIB(PCRE|GLIB|)_DLL_PATH - but if you do, 
-whatever you specify will override the "guess".
 
 
         PACKAGE CONTENTS
@@ -571,7 +361,12 @@ config.mk               makefile configuration
 definitions.mk          standard settings and definitions for make system
 rpm-linux.spec          configuration file for building binary RPM packages
 install.sh              a GNU-compatible install program (shell script)
-README, INSTALL, ...    the usual open source "boilerplate"
+README                  the usual open source "boilerplate"
+INSTALL                 this file
+INSTALL-WIN             supplement to this file on Windows-specific matters
+COPYING                 licence info
+CHANGES                 change log
+AUTHORS                 info on who wrote CWB, copyright, etc. 
 
 doc/                    some technical documentation
 

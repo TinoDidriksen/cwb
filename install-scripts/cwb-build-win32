@@ -26,60 +26,65 @@ target="SITE=beta-install"
 rep="SITE=windows-release"
 config_file=${config_file/"$target"/"$rep"}
 
-
-# find out where the dlls are, and save that folder
-
-# this is a lot easier said than done
-# we need to go through the directories in the library search path of the cross-compiler,
-# and if libpcre.la is there, we can try to extract its dlname= variable.
-# note, this will only work for this particular crosscompiler executable!
-
-paths=$(i586-mingw32msvc-gcc --print-search-dirs | grep "programs: =")
-paths=${paths/"programs: ="/" "}
-paths=$(echo $paths | tr ":" " ")
-
-for i in $paths
-do
-	echo "looking in ${i}libpcre.la ......"
-	if [ -f "${i}libpcre.la" ] ; then
-		echo "found!"
-		LIBPRCE_LA=$(cat "${i}libpcre.la")
-		LIBPCRE_LA_FOUND_IN=$i 
-		break
-	fi
-done
-
-if [ -n "$LIBPCRE_LA_FOUND_IN" ] ; then 
-	echo "-----------> $LIBPCRE_LA_FOUND_IN" 
+##
+## GUESSWORK SKIPPED from now on.
+## users are told to set the MINGW_CROSS_HOME environment variable instead.
+## 
+if false ; then 
+	# find out where the dlls are, and save that folder
 	
-	DLNAME_LINE=$(grep "^dlname='" < "${LIBPCRE_LA_FOUND_IN}libpcre.la")
-	echo "dlname line == $DLNAME_LINE"
-	DLNAME_LINE=$(echo $DLNAME_LINE | tr -d "'")
-	dlname=${DLNAME_LINE/"dlname="/""}
+	# this is a lot easier said than done
+	# we need to go through the directories in the library search path of the cross-compiler,
+	# and if libpcre.la is there, we can try to extract its dlname= variable.
+	# note, this will only work for this particular crosscompiler executable!
+	
+	paths=$(i586-mingw32msvc-gcc --print-search-dirs | grep "programs: =")
+	paths=${paths/"programs: ="/" "}
+	paths=$(echo $paths | tr ":" " ")
+	
+	for i in $paths
+	do
+		echo "looking in ${i}libpcre.la ......"
+		if [ -f "${i}libpcre.la" ] ; then
+			echo "found!"
+			LIBPRCE_LA=$(cat "${i}libpcre.la")
+			LIBPCRE_LA_FOUND_IN=$i 
+			break
+		fi
+	done
+	
+	if [ -n "$LIBPCRE_LA_FOUND_IN" ] ; then 
+		echo "-----------> $LIBPCRE_LA_FOUND_IN" 
+		
+		DLNAME_LINE=$(grep "^dlname='" < "${LIBPCRE_LA_FOUND_IN}libpcre.la")
+		echo "dlname line == $DLNAME_LINE"
+		DLNAME_LINE=$(echo $DLNAME_LINE | tr -d "'")
+		dlname=${DLNAME_LINE/"dlname="/""}
+		
+		
+		echo "$LIBPCRE_LA_FOUND_IN$dlname"
+		deduced_path=$(dirname $LIBPCRE_LA_FOUND_IN$dlname)
+		deduced_path=$(cd "$deduced_path" && pwd)
+		
+		echo "Deduced path to DLLS as $deduced_path..... "
+		
+		# if either (LIBPCRE_DLL_PATH and LIBGLIB_DLL_PATH) or LIB_DLL_PATH are set
+		# in the config file, our guess for the dll location will be overridden,
+		# because we put it at the beginning of the config.mk file.
+		
+		prepend=$( cat <<HERE
+	
+	LIB_DLL_PATH=$deduced_path
 	
 	
-	echo "$LIBPCRE_LA_FOUND_IN$dlname"
-	deduced_path=$(dirname $LIBPCRE_LA_FOUND_IN$dlname)
-	deduced_path=$(cd "$deduced_path" && pwd)
-	
-	echo "Deduced path to DLLS as $deduced_path..... "
-	
-	# if either (LIBPCRE_DLL_PATH and LIBGLIB_DLL_PATH) or LIB_DLL_PATH are set
-	# in the config file, our guess for the dll location will be overridden,
-	# because we put it at the beginning of the config.mk file.
-	
-	prepend=$( cat <<HERE
-
-LIB_DLL_PATH=$deduced_path
-
-
 HERE
-	)
-	config_file="$prepend
-$config_file" 
-
-else 
-	echo "Couldn't find libpcre.la!! If you did not specify dll paths in your config.mk, then make will fail."
+		)
+		config_file="$prepend
+	$config_file" 
+	
+	else 
+		echo "Couldn't find libpcre.la!! If you did not specify dll paths in your config.mk, then make will fail."
+	fi
 fi
 
 
@@ -97,7 +102,6 @@ if [ -f config.mk.bak ] ; then echo "config.mk.bak exists" ; else echo "config.m
 make clean
 make depend
 make cl
-make mingw-libgnurx-2.5.1
 make utils
 make cqp
 

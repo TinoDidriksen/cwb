@@ -19,6 +19,11 @@
 ##  SITE-SPECIFIC CONFIGURATION FILE: Windows binaries cross-compiled via MinGW
 ##
 
+## Note that directories here always refer to locations on the eventual Windows
+## machine where things will be installed - whereas in the "platform" config
+## files, some paths may refer to a Unix machine where the Windows programs are
+## being cross-compiled. 
+
 ## Directory tree where binaries, libraries, header files and man pages will be installed
 ## We can use the Windows environment variable, but we will need to allow an override at 
 ## install time.
@@ -34,15 +39,13 @@ INCINSTDIR = $(PREFIX)\include\cwb
 ## For Windows, the best guess is that the right drive is C:, and a CWB folder exists
 ## Note: \\\\ needed for \\ because the variable is string-embedded multiple times!
 DEFAULT_REGISTRY = C:\\\\CWB\\\\Registry
-
-
-### [AH notes -- I am still not sure about the preceding, we will see if it works out!!]
+## Maintainer's note: monitor the success of the above carefully!
 
 ## Access permission for installed files (octal code for regular files)
 ## Windows doesn't support octal permissions. When NTFS disks are mounted in Linux, all
 ## files appear as having 777 -- so that's what I've gone for here.  
 INST_PERM = 777
 
-## static linking supported by the mingw cross-compiler apparently
+## static linking supported by the mingw cross-compiler
 SITE_CFLAGS =
 SITE_LDFLAGS = -static
