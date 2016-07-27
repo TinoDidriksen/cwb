@@ -40,7 +40,7 @@
  * Note that many functions have two names -- one that follows the standardised format
  * "cl_do_something()", and another that follows no particular pattern. The former
  * are the "new API" (in v3.0.0 or higher of CWB) and the latter are the "old-style" API
- * (depracated, but supported for backward compatibility). The old-style function names
+ * (deprecated, but supported for backward compatibility). The old-style function names
  * SHOULD NOT be used in newly-written code. Such double names mostly exist for the core
  * data-access functions (i.e. for the Corpus and (especially) Attribute objects).
  *
@@ -52,8 +52,8 @@
  * and has the same name as the new function but with the suffix "_oldstyle". The old
  * names are then re-implemented as macros to the _oldstyle functions. But, as should be
  * obvious, while these functions and the macros to them will remain in the public API
- * for backwards-compatibiltiy, they should not be used in new code, and are most
- * definitely depracated!
+ * for backwards-compatibility, they should not be used in new code, and are most
+ * definitely deprecated!
  *
  * The CL header is organised to reflect the conceptual structure of the library. While
  * it is not fully "object-oriented" in style most of the functions are organised around
@@ -803,13 +803,7 @@ size_t cl_charset_strlen(CorpusCharset charset, char *s);
 
 /* the case/diacritic string normalization features used by CL regexes and CQP (modify input string!) */
 void cl_string_canonical(char *s, CorpusCharset charset, int flags);
-/* modifies string <s> in place; flags are IGNORE_CASE, IGNORE_DIAC, CANONICAL_NFC */
-
-/**
- * Flag: convert UTF-8 string to pre-composed normal form (NFC), the standard representation used by CWB-indexed corpora.
- * All UTF-8 strings passed in from external sources need to be normalized with CANONICAL_NFC.
- */
-#define CANONICAL_NFC 8  /* must be compatible with IGNORE_* below */
+/* modifies string <s> in place; flags are IGNORE_CASE, IGNORE_DIAC, REQUIRE_NFC (i.e. same flags as for regex) */
 
 /* remove or overwrite C0 control characters in a string (modify input string!) */
 int cl_string_zap_controls(char *s, CorpusCharset charset, char replace, int zap_tabs, int zap_newlines);
@@ -870,30 +864,24 @@ int cl_string_qsort_compare(const char *s1,
  */
 typedef struct _CL_Regex *CL_Regex;
 
-/** Flag ignore-case in regular expression engine. @see cl_regex2id */
-#define IGNORE_CASE 1
-/** Flag ignore-diacritics in regular expression engine. @see cl_regex2id */
-#define IGNORE_DIAC 2
-/** Flag for: don't use regular expression engine - match as a literal string. @see cl_regex2id */
+/** Flag: ignore-case in regular expression engine; fold case in cl_string_canonical. */
+#define IGNORE_CASE  1
+/** Flag ignore-diacritics in regular expression engine; fold diacritics in cl_string_canonical */
+#define IGNORE_DIAC  2
+/** Flag for: don't use regular expression engine - match as a literal string. */
 #define IGNORE_REGEX 4
+/**
+ * Flag for: string requires enforcement of pre-composed normal form (NFC), which is standard in CWB indexed corpora;
+ * applies only to UTF-8; all UTF-8 strings passed in from external sources need to be normalised in this way;
+ * applies to subject string when used with regex engine, to sole argument string when used with cl_string_canonical;
+ */
+#define REQUIRE_NFC  8
+
 
 /* ... and the regex API ... */
-/**
- * The constructor is used to compile a regular expression with the specified flags (IGNORE_CASE
- * and/or IGNORE_DIAC and/or CANONICAL_NFC) and for the specified character encoding.
- * It also checks whether an optimized matcher using Boyer-Moore search for literal "grains" as a pre-filter can be used.
- */
 CL_Regex cl_new_regex(char *regex, int flags, CorpusCharset charset);
 int cl_regex_optimised(CL_Regex rx); /* 0 = not optimised; otherwise, value indicates level of optimisation */
-/**
- * The match function for a pre-compiled regex object automatically uses case/accent folding flags
- * and character encoding specified in the constructor.  If UTF-8 strings from external sources are
- * passed, normalization to NFC can be requested by setting the third argument to True.
- * Returns True iff regex matches */
 int cl_regex_match(CL_Regex rx, char *str, int normalize_utf8);
-/**
- * Free all resources associated with the pre-compiled regex.
- */
 void cl_delete_regex(CL_Regex rx);
 extern char cl_regex_error[];
 
@@ -1074,7 +1062,6 @@ void cl_ngram_hash_print_stats(cl_ngram_hash hash, int max_n);
  * SECTION 4 -- THE OLD CL API
  *
  * compatibility macros : old names #defined to new names...
- *
  */
 
 /* The old-style names are being phased out in CWB itself; but these macros
@@ -1085,7 +1072,8 @@ void cl_ngram_hash_print_stats(cl_ngram_hash hash, int max_n);
  *
  * The macros are given here in order of old name.
  *
- * As noted in the file intro, all these old function names are DEPRACATED.
+ * As noted in the file intro, all these old function names are DEPRACATED
+ * and will be removed completely in CWB v 3.9 and above.
  */
 #define ClosePositionStream(ps) cl_delete_stream(ps)
 #define OpenPositionStream(a, id) cl_new_stream(a, id)

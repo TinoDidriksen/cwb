@@ -477,7 +477,7 @@ VerifyVariable(Variable v, Corpus *corpus, Attribute *attribute)
           /* In utf8: lookup against canonicalised string. Otherwise: lookup against the string as-is. */
           if (utf8 == corpus->charset) {
             str = strdup(v->items[i].sval);
-            cl_string_canonical(str, corpus->charset, CANONICAL_NFC);
+            cl_string_canonical(str, corpus->charset, REQUIRE_NFC);
             v->items[i].ival = cl_str2id(attribute, str);
             cl_free(str);
           }

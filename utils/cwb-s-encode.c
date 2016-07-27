@@ -401,7 +401,7 @@ sencode_parse_line(char *line, int *start, int *end, char **annot)
         }
         /* normalize UTF8 to precomposed form, but don't bother with the redundant function call otherwise */
         if (encoding_charset == utf8)
-          cl_string_canonical(*annot, utf8, CANONICAL_NFC);
+          cl_string_canonical(*annot, utf8, REQUIRE_NFC);
         /* finally, get rid of C0 controls iff the user asked us to clean up strings */
         if (clean_strings)
           cl_string_zap_controls(*annot, encoding_charset, '?', 0, 0);

@@ -107,12 +107,15 @@ char cl_regex_error[CL_MAX_LINE_LENGTH];
 /**
  * Create a new CL_regex object (ie a regular expression buffer).
  *
- * The regular expression is preprocessed according to the flags and charset,
- * and anchored to the start and end of the string (i.e. wrapped in ^(?:...)$).
+ * This function compiles the regular expression according to the specified flags
+ * (IGNORE_CASE and/or IGNORE_DIAC and/or REQUIRE_NFC) and for the specified
+ * character encoding. The regex is automatically anchored to the start and end of
+ * the string (i.e. wrapped in ^(?:...)$).
  *
- * Then the resulting regex is compiled (using PCRE) and optimized by
- * scanning it for literal string ("grains") that must be contained in the
- * match and can be used as a fast pre-filter.
+ * The regular expression engine used is PCRE. However, the regex is optimized by
+ * scanning it for literal strings ("grains") that must be contained in any
+ * match; the grains can be used as a fast pre-filter (using Boyer-Moore search
+ * for the grains).
  *
  * The optimizer only understands a subset of PCRE syntax:
  *  - literal characters (alphanumeric, safe punctuation, escaped punctuation)
@@ -170,7 +173,7 @@ cl_new_regex(char *regex, int flags, CorpusCharset charset)
 
   /* pre-process regular expression (translate latex escapes, normalize, fold accents if required) */
   cl_string_latex2iso(regex, preprocessed_regex, l);
-  cl_string_canonical(preprocessed_regex, charset, rx->idiac | CANONICAL_NFC); /* only fold accents at this stage */
+  cl_string_canonical(preprocessed_regex, charset, rx->idiac | REQUIRE_NFC); /* only fold accents at this stage */
 
   /* add start and end anchors to improve performance of regex matcher for expressions such as ".*ung" */
   sprintf(anchored_regex, "^(?:%s)$", preprocessed_regex);
@@ -288,15 +291,22 @@ int cl_regex_optimised(CL_Regex rx)
 /**
  * Matches a regular expression against a string.
  *
- * The regular expression contained in the CL_Regex is compared to the string.
- * No settings or flags are passed to this function; rather, the
- * settings that rx was created with are used.
+ * The pre-compiled regular expression contained in the CL_Regex is compared to the string.
+ * This regex automatically uses the case/accent folding flags and character encoding
+ * that were specified when the CL_Regex constructor was called.
  *
- * @param rx   The regular expression to match.
- * @param str  The string to compare the regex to.
- * @param normalize_utf8  If a UTF-8 string from an external source is passed,
- *                        set to True to ensure CANONICAL_NFC normalization.
- * @return     Boolean: true if the regex matched, otherwise false.
+ * If the subject string is a UTF-8 string from an external sources, the caller can request
+ * enforcement of the subject to canonical NFC form by setting the third argument to true.
+ *
+ * @see   cl_new_regex
+ * @param rx              The regular expression to match.
+ * @param str             The subject (the string to compare the regex to).
+ * @param normalize_utf8  If a UTF-8 string from an external source is passed as the subject,
+ *                        set to this parameter to true, and the function will make sure that
+ *                        the comparison is based on the canonical NFC form. For known-NFC
+ *                        strings, this parameter should be false. If the regex is not UTF-8,
+ *                        this parameter is ignored.
+ * @return                Boolean: true if the regex matched, otherwise false.
  */
 int
 cl_regex_match(CL_Regex rx, char *str, int normalize_utf8)
@@ -306,7 +316,7 @@ cl_regex_match(CL_Regex rx, char *str, int normalize_utf8)
   int i, di, k, max_i, len, jump;
   int grain_match, result;
   int ovector[30]; /* memory for pcre to use for back-references in pattern matches */
-  int do_nfc = (normalize_utf8 && (rx->charset == utf8)) ? CANONICAL_NFC : 0; /* whether we need to normalize the input to NFC */
+  int do_nfc = (normalize_utf8 && (rx->charset == utf8)) ? REQUIRE_NFC : 0; /* whether we need to normalize the input to NFC */
 
   if (rx->idiac || do_nfc) { /* perform accent folding on input string if necessary */
     haystack_pcre = rx->haystack_buf;
@@ -400,7 +410,8 @@ cl_regex_match(CL_Regex rx, char *str, int normalize_utf8)
 }
 
 /**
- * Deletes a CL_Regex object.
+ * Deletes a CL_Regex object, and frees all resources associated with
+ * the pre-compiled regex.
  *
  * Note that we use cl_free to deallocate the internal PCRE buffers,
  * not pcre_free, for the simple reason that pcre_free is just a

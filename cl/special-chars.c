@@ -2016,12 +2016,12 @@ cl_string_reverse(const char *s, CorpusCharset charset)
  * [Another option would be to allow a buffer to be optionally supplied....]
  *
  * If charset == utf8 and strings are passed in from external sources, the
- * flag CANONICAL_NFC should always be specified to obtain consistent results.
+ * flag REQUIRE_NFC should always be specified to obtain consistent results.
  *
  * @param s1       First string to compare.
  * @param s2       Second string to compare.
  * @param charset  Character set of the two strings.
- * @param flags    IGNORE_CASE, IGNORE_DIAC, CANONICAL_NFC
+ * @param flags    IGNORE_CASE, IGNORE_DIAC, REQUIRE_NFC
  * @param reverse  Boolean: if true, strings are compared from end to beginning,
  *                 rather than beginning to end.
  * @return         0 if the strings are the same. 1 if s1 is greater.
@@ -2274,7 +2274,7 @@ cl_id_tolower(char * s)
  * Unicode-aware functions. By contrast, the process for Latin1 just uses a
  * straightforward mapping table for both sorts of folding.
  *
- * In UTF8, an additional flag CANONICAL_NFC can be passed to normalize the
+ * In UTF8, an additional flag REQUIRE_NFC can be passed to normalize the
  * string into the canonical pre-composed form (NFC) used internally by CWB.
  * All strings that are going to be inserted into or searched for within an
  * indexed corpus should be processed in this way.
@@ -2285,14 +2285,14 @@ cl_id_tolower(char * s)
  *                 as per the Unicode standard.
  *                 If it is anything else, internal byte mapping tables will be used.
  * @param flags    The flags that specify which conversions are required.
- *                 Can be IGNORE_CASE | IGNORE_DIAC | CANONICAL_NFC .
+ *                 Can be IGNORE_CASE | IGNORE_DIAC | REQUIRE_NFC .
  */
 void 
 cl_string_canonical(char *s, CorpusCharset charset, int flags)
 {
   int icase = (flags & IGNORE_CASE) != 0;
   int idiac = (flags & IGNORE_DIAC) != 0;
-  int nfc = (flags & CANONICAL_NFC) != 0;
+  int nfc   = (flags & REQUIRE_NFC) != 0;
 
   /* this function has two branches controlled by an if: (a) utf8, (b) everything else. */
   if (charset == utf8) {
@@ -2304,7 +2304,7 @@ cl_string_canonical(char *s, CorpusCharset charset, int flags)
     gchar *next_char_begins;
 
     /* GLib documentation insists that g_utf8_* functions must only be used on valid UTF-8 strings;
-     * let's assume that a string passed without CANONICAL_NFC is from an internal source and hence safe */
+     * let's assume that a string passed without REQUIRE_NFC is from an internal source and hence safe */
     if (nfc && !g_utf8_validate((gchar *)s, -1, NULL)) {
       fprintf(stderr, "CL: invalid UTF8 string passed to cl_string_canonical ...\n");
       return;
