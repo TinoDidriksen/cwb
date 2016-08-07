@@ -28,7 +28,7 @@
  * Gets the size of the specified file; returns EOF for error.
  *
  * @param filename  The file to size up.
- * @return          Size of file in bytes.
+ * @return          Size of file in bytes (or EOF if call to stat() failed)
  */
 off_t
 file_length(char *filename)

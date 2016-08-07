@@ -44,7 +44,7 @@
 
 #define subcorpload_debug 0
 
-/** magic number for {?? subcorpus files} */
+/** magic number for subcorpus (incl. query) file format */
 #define SUBCORPMAGIC 36193928
 /* the sum of the original programmers' birthdays: 15081963 (Max) + 21111965 (Oli) */
 
@@ -225,7 +225,17 @@ field_type_to_name(FieldType ft) {
 }
 
 /**
+ * Counts the number of field-value items of a specified type in
+ * the given subcorpus (that is, query resultset).
  *
+ * If the type is MatchField, then the N of values is simply equal
+ * to the number of query results. If it is KeywordField or
+ * TargetField, the number returned is the number of results
+ * where the field exists (which is not always all of them).
+ *
+ * @param cl  The query result to analyse.
+ * @param ft  The field type to count.
+ * @return    The number of values of the speciifed field-type.
  */
 int 
 NrFieldValues(CorpusList *cl, FieldType ft)
@@ -265,7 +275,7 @@ NrFieldValues(CorpusList *cl, FieldType ft)
 
 /* ---------------------------------------------------------------------- */
 
-/* A utility function required by ensure_corpus_size() */
+/** A utility function required by ensure_corpus_size() */
 int
 SystemCorpusSize(Corpus *corpus)
 {
@@ -443,7 +453,7 @@ LoadedCorpus(char *name,
 /* ---------------------------------------------------------------------- */
 
 /**
- * Finds the pointer to the corpus with the given name.
+ * Finds the pointer to the corpus (or subcorpus, or query result) with the given name.
  *
  * When searching for s (name of corpus) strcmp() is used; no
  * case conversion is done.
@@ -651,8 +661,7 @@ duplicate_corpus(CorpusList *cl,
   CorpusList *newc;
 
   if (cl == NULL) {
-    fprintf(stderr, "%s:duplicate_corpus(): WARNING: Called with NULL corpus\n",
-            __FILE__);
+    fprintf(stderr, "%s:duplicate_corpus(): WARNING: Called with NULL corpus\n", __FILE__);
     return NULL;
   }
 
@@ -1002,28 +1011,46 @@ drop_temp_corpora(void)
 
 /* ---------------------------------------------------------------------- */
 
-/* **TODO** change to use cl_id_toupper/cl_id_tolower */
+/**
+ * Creates a copy of the string with the given mode (LOWER/UPPER)
+ * enforced on it.
+ */
 static char *
-changecase_string(char *str, enum case_mode mode)
+changecase_string(const char *str, enum case_mode mode)
 {
   char *str_new;
-  int i, len = strlen(str);
+  /*int i, len = strlen(str);*/
 
   str_new = cl_strdup(str);
 
-  for (i = 0; i <= len; i++)
+  /*
+   for (i = 0; i <= len; i++)
     str_new[i] = (mode == LOWER) ? tolower(str[i]) : toupper(str[i]);
+  */
+  if (mode == LOWER)
+    cl_id_tolower(str_new);
+  else
+    cl_id_toupper(str_new);
 
-  return (str_new);
+  return str_new;
 }
 
+/**
+ * Like changecase_string(), but modifies the string in situ.
+ */
 static char *
 changecase_string_no_copy(char *str, enum case_mode mode)
 {
-  int i;
+  /*int i;*/
 
+  /*
   for (i = 0; str[i]; i++)
     str[i] = (mode == LOWER) ? tolower(str[i]) : toupper(str[i]);
+  */
+  if (mode == LOWER)
+    cl_id_tolower(str);
+  else
+    cl_id_toupper(str);
 
   return str;
 }
@@ -1055,6 +1082,7 @@ get_fulllocalpath(CorpusList *cl, int qualify)
 /* ---------------------------------------------------------------------- */
 
 
+/* TODO change function name. "accessible" is ri-bloody-diculous */
 /**
  * Tests whether a file is accessible.
  *
@@ -1364,7 +1392,12 @@ ensure_syscorpus(char *registry, char *name)
 }
 
 
-
+/**
+ * @param cl
+ * @param advertised_directory
+ * @param advertised_filename
+ * @return                      Boolean: whether the file was loaded correctly.
+ */
 static Boolean
 attach_subcorpus(CorpusList *cl,
                  char *advertised_directory,
@@ -2089,18 +2122,19 @@ show_corpora_files(enum corpus_type ct)
 
 /* NEW FUNCTIONS ================================================== */
 
-/*
- * TODO  (??)
+/* "NEW FUNCTIONS" = an non-iomplemented attempt to change this file's API.
  *
  * None of these functions is used anywhere.
  * Their names are not noticeably better than the original names!
  * Also, they are a deeply inefficient way of rewriting the API; all those unnecessary function calls!
  * And they are gunking up the namespace.
  * Can they be got rid of? -- and maybe rewrite the API the way SE did it in the CL instead -- AH. 26.9.09
+ *
+ * Commented them out. -- AH 6.8.16
  */
 
 
-/* ============================== THE LIST OF CORPORA */
+/* ============================== THE LIST OF CORPORA
 
 void
 CorpusListInit(void)
@@ -2113,7 +2147,7 @@ void CorpusListFree(void)
   free_corpuslist();
 }
 
-/* ============================== CORPUS NAMES */
+/* ============================== CORPUS NAMES *
 
 Boolean
 CorpusNameValid(char *name) {
@@ -2125,7 +2159,7 @@ CorpusNameQualified(char *name) {
   return is_qualified(name);
 }
 
-/* ============================== OPERATIONS ON/WITH CORPORA */
+/* ============================== OPERATIONS ON/WITH CORPORA *
 
 void
 CorpusLoadDescriptors(CorpusType ct)
@@ -2202,4 +2236,7 @@ void CorpusShowNames(CorpusType ct)
 {
   show_corpora_files(ct);
 }
+
+end of commented-out unused functions for alt names
+*/
 
