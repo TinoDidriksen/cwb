@@ -109,7 +109,10 @@ Activates debug mode; additional messages about what B<cwb-s-encode> is doing wi
 =item B<-f> I<file>
 
 Specifies that the input data for the new s-attribute will be read from I<file>.
-By default, data is read from the program's standard input. 
+By default, data is read from the program's standard input. Files with extension
+C<.gz> or C<.bz2> are automatically decompressed. If <file> starts with a pipe
+character (C<|>), it is interpreted as a shell command, which can be useful for
+generating the input format required by B<cwb-s-encode> on the fly.
 
 =item B<-m>
 

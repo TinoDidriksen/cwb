@@ -102,7 +102,7 @@ After the usage message is printed, B<cwb-scan-corpus> will exit.
 Writes the tuple frequency table to I<file>, instead of to standard output, which is the
 default.
 
-The output file will be compressed using B<gzip> if I<file> ends in C<.gz>.
+The output file will be compressed using B<gzip> if I<file> ends in C<.gz> (or with B<bzip2> if I<file> ends in C<.bz2>).
 
 =item B<-q>
 
@@ -120,7 +120,7 @@ the built-in CWB default will be used.
 Specifies that a list of corpus ranges to scan should be read in from from I<file>. I<file>
 can be C<->, in which case ranges will be read from standard input. Ranges are expected to
 be listed one per line, in the form of a start position, followed by whitespace, followed by
-an end position.
+an end position. Files with suffix C<.gz> or C<.bz2> are automatically decompressed.
 
 Note that it does not make sense to combine this option with B<-s> and B<-e>, so if B<-R> is present,
 it overrules both these.

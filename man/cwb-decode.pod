@@ -60,7 +60,7 @@ Specifies the end point (inclusive) for output; the last token printed will be c
 
 =item B<-f> I<file>
 
-Activates matchlist mode (with input from I<file>).
+Activates matchlist mode (with input from I<file>). Files with extension C<.gz> or C<.bz2> are automatically decompressed.
 
 =item B<-h>
 
