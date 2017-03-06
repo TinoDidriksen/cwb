@@ -123,7 +123,7 @@ cl_realloc(void *block, size_t bytes)
  * @return        Pointer to the newly duplicated string
  */
 char *
-cl_strdup(char *string)
+cl_strdup(const char *string)
 {
   char *new_string;
 
@@ -401,7 +401,7 @@ print_indented_list_br(char *label)
     ilist_print_blanks(ilist_indent);
   }
   else {
-    printf(label);
+    printf("%s", label);
     ilist_print_blanks(ilist_indent - llen);
   }
   ilist_cursor = 0;

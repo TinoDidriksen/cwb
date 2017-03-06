@@ -323,32 +323,6 @@ LEX(void)
   }
 }
 
-/** TODO delete: has been replaced throughout with cl_malloc *
-void *
-Allocate(unsigned Bytes)
-{
-  void *X = cl_malloc(Bytes);
-  return X;
-}
-
-/** TODO delete: has been replaced throughout with cl_realloc *
-void *
-Reallocate(void *X, unsigned Bytes)
-{
-  X = cl_realloc(X, Bytes);
-  return X;
-}
-
-/** TODO delete: has been replaced throughout with cl_strdup (was only used once anyway) *
-char *
-CopyS(char *S)
-{
-  char *NewS = (char *)cl_malloc(strlen(S) + 1);
-  
-  strcpy(NewS, S); 
-  return NewS;
-}
-*/
 
 /** Creates a one-byte hash of the string S. */
 byte

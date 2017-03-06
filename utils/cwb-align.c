@@ -359,9 +359,7 @@ main(int argc, char *argv[]) {
   int argindex;                 /* index of first argument in argv[] */
   FMS fms;
   FILE *of;                     /* output file */
-  int of_is_pipe;               /* have to know whether to call fclose() or pclose() */
   int steps = 0;
-  int l;
 
   /* parse command line and read arguments */
   argindex = align_parse_args(argc, argv, 3);
@@ -487,28 +485,12 @@ main(int argc, char *argv[]) {
   /* create feature maps structure */
   fms = create_feature_maps(config, config_lines, word1, word2, s1, s2);
 
-  /* open output file (or pipe to gzip for .gz file) */
-  of_is_pipe = 0;
-  l = strlen(outfile_name);
-  if ((l > 3) && (strncasecmp(outfile_name + l - 3, ".gz", 3) == 0)) {
-    char *pipe_cmd = (char *) cl_malloc(l + 8);
-    sprintf(pipe_cmd, "gzip > %s", outfile_name); /* write .gz file through gzip pipe */
-    of = popen(pipe_cmd, "w");
-    if (of == NULL) {
-      perror(pipe_cmd);
-      fprintf(stderr, "%s: can't write compressed file %s\n", progname, outfile_name);
-      exit(1);
-    }
-    of_is_pipe = 1;
-    cl_free(pipe_cmd);
-  }
-  else {
-    of = fopen(outfile_name, "w");
-    if (of == NULL) {
-      perror(outfile_name);
-      fprintf(stderr, "%s: can't write file %s\n", progname, outfile_name);
-      exit(1);
-    }
+  /* open output file (possibly compressed) */
+  of = cl_open_stream(outfile_name, CL_STREAM_WRITE, CL_STREAM_MAGIC);
+  if (of == NULL) {
+    cl_error(outfile_name);
+    fprintf(stderr, "%s: can't write file %s\n", progname, outfile_name);
+    exit(1);
   }
 
   /* .align header: <source> <s> <target> <s> */
@@ -630,10 +612,7 @@ main(int argc, char *argv[]) {
 
 
   /* close output file */
-  if (of_is_pipe)
-    pclose(of);
-  else
-    fclose(of);
+  cl_close_stream(of);
 
   /* that's it */
   return 0;

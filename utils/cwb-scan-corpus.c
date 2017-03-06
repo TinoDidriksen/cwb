@@ -105,7 +105,7 @@ scancorpus_usage(void)
   fprintf(stderr, "  -b <n>    use <n> hash buckets [default: adjust dynamically]\n");
   fprintf(stderr, "  -o <file> write frequency table to <file> [default"": standard output]\n");
                                                             /* 'default:' confuses Emacs C-mode */
-  fprintf(stderr, "            (compressed with gzip if <file> ends in '.gz')\n");
+  fprintf(stderr, "            (compressed if <file> ends in '.gz' or '.bz2')\n");
   fprintf(stderr, "  -f <n>    include only items with frequency >= <n> in result table\n");
   fprintf(stderr, "  -F <att>  add up frequency values from p-attribute <att>\n");
   fprintf(stderr, "  -C        clean up data, i.e. accept only \"regular\" words\n");
@@ -534,14 +534,10 @@ main (int argc, char *argv[])
 
   /* if -R option was used, open file with ranges of corpus positions ("-" for stdin) */
   if (ranges_file) {
-    if (strcmp(ranges_file, "-") == 0)
-      ranges_fh = stdin;
-    else {
-      ranges_fh = fopen(ranges_file, "r");
-      if (! ranges_fh) {
-        perror(ranges_file);
-        exit(1);
-      }
+    ranges_fh = cl_open_stream(ranges_file, CL_STREAM_READ, CL_STREAM_MAGIC);
+    if (! ranges_fh) {
+      cl_error("Can't load -R file");
+      exit(1);
     }
   }
 
@@ -734,8 +730,8 @@ main (int argc, char *argv[])
     fprintf(stderr, "Scan complete.                                         \n");
 
   /* close ranges file (if -R option had been used) */
-  if (ranges_fh && ranges_fh != stdin)
-    fclose(ranges_fh);
+  if (ranges_fh)
+    cl_close_stream(ranges_fh);
 
   /* print hash contents to stdout or file (in hash-internal order) */
   {
@@ -746,35 +742,15 @@ main (int argc, char *argv[])
     char *str;
 
     is_pipe = 0;
-    if (output_file != NULL) {
-      l = strlen(output_file);
-      if ((l > 3) && (strncasecmp(output_file + l - 3, ".gz", 3) == 0)) {
-        sprintf(pipe_cmd, "gzip > %s", output_file); /* write .gz file through gzip pipe */
-        of = popen(pipe_cmd, "w");
-        if (of == NULL) {
-          perror(pipe_cmd);
-          fprintf(stderr, "Can't write compressed file %s. Aborted.\n", output_file);
-          exit(1);
-        }
-        is_pipe = 1;
-        if (! quiet)
-          fprintf(stderr, "Writing frequency table to compressed file %s ... ", output_file);
-      }
-      else {
-        of = fopen(output_file, "w");
-        if (of == NULL) {
-          perror(output_file);
-          fprintf(stderr, "Can't create file %s. Aborted.\n", output_file);
-          exit(1);
-        }
-        if (! quiet)
-          fprintf(stderr, "Writing frequency table to %s ... ", output_file);
-      }
+    of = cl_open_stream((output_file) ? output_file : "-", CL_STREAM_WRITE, CL_STREAM_MAGIC); /* if NULL, default to STDOUT */
+    if (of == NULL) {
+      cl_error("Can't write output file");
+      fprintf(stderr, "Error: operation aborted\n");
+      exit(1);
     }
     else {
-      of = stdout;
-      if (! quiet)
-        fprintf(stderr, "Printing frequency table on stdout ... \n");
+      if (!quiet)
+        fprintf(stderr, "Writing frequency table to %s ... ", (output_file) ? output_file : "STDOUT");
     }
     fflush(stderr);
 
@@ -804,12 +780,7 @@ main (int argc, char *argv[])
       }
     }
 
-    if (output_file != NULL) {
-      if (is_pipe)
-        pclose(of);
-      else
-        fclose(of);
-    }
+    cl_close_stream(of);
     if (! quiet)
       fprintf(stderr, "ok.\n");
   } /* endblock print hash contents to stdout */
@@ -824,5 +795,3 @@ main (int argc, char *argv[])
 
   exit(0);                        /* that was easy, wasn't it? */
 }
-
-

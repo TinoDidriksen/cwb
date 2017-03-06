@@ -44,7 +44,6 @@ char *registry_dir = NULL;          /**< registry directory (NULL = use CL defau
 
 char *align_name = "";              /**< name of the .align file */
 FILE *af = NULL;                    /**< file handle .align file */
-int af_is_pipe;                     /**< need to know whether to call fclose() or pclose() */
 
 #define MIN_COL_WIDTH 20
 #define MAX_COL_WIDTH 256
@@ -173,16 +172,15 @@ void
 alignshow_goodbye(int error_level)
 {
   if (af != NULL) {
+    cl_close_stream(af);
+    /* -- old code: skip rest of input from pipe to avoid SIGPIPE complaints
     if (af_is_pipe) {
-      /* skip rest of alignment file to avoid "broken pipe" message */
       char line[CL_MAX_LINE_LENGTH];
       while (!feof(af))
         fgets(line, CL_MAX_LINE_LENGTH, af);
       pclose(af);
     }
-    else
-      fclose(af);
-    af = NULL;
+    */
   }
   if (error_level == 0)
     printf("Goodbye.\n");
@@ -335,7 +333,6 @@ main(int argc, char** argv)
   int argindex;                                /* index of first argument in argv[] */
   char line[CL_MAX_LINE_LENGTH];               /* input buffer for .align file */
   char cmd[CL_MAX_LINE_LENGTH];                /* interactive command input */
-  int l;
 
   progname = argv[0];
 
@@ -344,27 +341,11 @@ main(int argc, char** argv)
   align_name = argv[argindex];
 
   /* open alignment file and parse header; .gz files are automatically decompressed */
-  af_is_pipe = 0;
-  l = strlen(align_name);
-  if ((l > 3) && (strncasecmp(align_name + l - 3, ".gz", 3) == 0)) {
-    char *pipe_cmd = (char *) cl_malloc(l+10);
-    sprintf(pipe_cmd, "gzip -cd %s", align_name); /* write .gz file through gzip pipe */
-    af = popen(pipe_cmd, "r");
-    if (af == NULL) {
-      perror(pipe_cmd);
-      fprintf(stderr, "%s: can't read compressed file %s\n", progname, align_name);
-      exit(1);
-    }
-    af_is_pipe = 1;
-    cl_free(pipe_cmd);
-  }
-  else {
-    af = fopen(align_name, "r");
-    if (af == NULL) {
-      perror(align_name);
-      fprintf(stderr, "%s: can't read file %s\n", progname, align_name);
-      exit(1);
-    }
+  af = cl_open_stream(align_name, CL_STREAM_READ, CL_STREAM_MAGIC);
+  if (af == NULL) {
+    perror(align_name);
+    fprintf(stderr, "%s: can't read file %s\n", progname, align_name);
+    exit(1);
   }
 
   /* read header = first line */

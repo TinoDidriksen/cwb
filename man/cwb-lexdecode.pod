@@ -11,31 +11,34 @@ B<cwb-lexdecode> [-r I<registry_dir>] [-P I<attribute>] -S I<corpus>
 
 =head1 DESCRIPTION
 
-This utility can be used to print all or part of the lexicon (or part of it) of a 
-positional attribute to standard output. Optionally, frequency information can also
-be printed.
+This utility can be used to print all or part of the lexicon of a positional
+attribute to standard output. Optionally, frequency information can also be
+printed.
 
 There are several ways to print out only a part of the p-attribute. If a file
 input is specified, words will be read from that file (on a line-by-line basis)
 and the matching lexicon entries output in the same order they are encountered.
 The file can also specify which items are to be printed by giving lexicon ID
 numbers: for this mode, use the B<-N> option.
-The file input can be from standard input if C<-f -> is specified; this allows
+The file input can be from standard input if C<-F -> is specified; this allows
 both piping and a rudimentary interactive mode.
 
-Alternatively, a regular expression can be specified (with B<-p>); in this case
-only entries that match that regular expression will be printed out. This
-is a normal CWB regular expression, and so all the usual rules for string-level
-regular expressions in CQP apply: the PCRE syntax for regular expressions is used,
-the regexp matches the whole item, and it is case-sensitive and accent-sensitive by default. 
-Case-sensitivity and accent-sensitivity can be turned off with the B<-c> and B<-d> flags respectively.
+Alternatively, a regular expression can be specified (with B<-p>); in this
+case only entries that match that regular expression will be printed out. This
+is a normal CWB regular expression, and so all the usual rules for
+string-level regular expressions in CQP apply: the PCRE syntax for regular
+expressions is used, the regexp matches the whole item, and it is
+case-sensitive and accent-sensitive by default.  Case-sensitivity and
+accent-sensitivity can be turned off with the B<-c> and B<-d> flags
+respectively.
 
-Command-line B<options> must be specified before the I<corpus> name. The corpus name is compulsory, and
-must be given in the ALL-UPPERCASE version.
+Command-line B<options> must be specified before the I<corpus> name. The
+corpus name is compulsory, and must be given in the ALL-UPPERCASE version.
 
-B<cwb-lexdecode> will look for the specified corpus in the registry directory, as usual. If a registry
-location is not specified with the B<-r> option, then either a directory specified by the CORPUS_REGISTRY
-environment variable, or CWB's built-in default registry will be used.
+B<cwb-lexdecode> will look for the specified corpus in the registry directory,
+as usual. If a registry location is not specified with the B<-r> option, then
+either a directory specified by the CORPUS_REGISTRY environment variable, or
+CWB's built-in default registry will be used.
 
 
 =head1 OPTIONS
@@ -76,11 +79,14 @@ Displays the corpus frequency of each item that is printed out.
 
 =item B<-F> I<file>
 
-Activates file-input mode. The specified I<file> is opened and read, one line at a time
-(use C<-> to read from standard input). Each line is treated as a single word/annotation,
-and the corresponding lexicon entry is printed. Note that only precise, character-for-character 
-matches are found; no regexp matching is used. Note that the B<-N> option changes this 
-behaviour significantly: numbers are expected in the input file instead.
+Activates file-input mode. The specified I<file> is opened and read, one line
+at a time (files with suffix C<.gz> are automatically decompressed; use C<->
+to read from standard input). Each line is treated as a single word or
+annotation string, and the corresponding lexicon entry is printed. Note that
+only precise, character-for-character matches are found; no regexp matching is
+used.
+Also note that the B<-N> option changes this behaviour significantly: numbers
+are expected in the input file instead.
 
 =item B<-h>
 

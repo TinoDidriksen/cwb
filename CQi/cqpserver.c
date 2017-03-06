@@ -1423,6 +1423,7 @@ interpreter(void)
       switch (cmd) {
       case CQI_CTRL_CONNECT:
         cqiserver_wrong_command_error(cmd);
+        break;
       case CQI_CTRL_BYE:
         if (server_debug) 
           fprintf(stderr, "CQi: CQI_CTRL_BYE()\n");

@@ -4,7 +4,7 @@ cwb-align-encode - Add an alignment attribute to an existing CWB corpus
 
 =head1 SYNOPSIS
 
-B<cwb-align-encode> [-DCvh] [-d I<data_dir>] [-r I<registry_dir>] 
+B<cwb-align-encode> [-DCRvh] [-d I<data_dir>] [-r I<registry_dir>] 
     I<alignment_file>
 
 =head1 DESCRIPTION
@@ -18,13 +18,16 @@ Unlike other attributes, a-attributes cannot be created at the time of initial i
 because an a-attribute presupposes the existence of both the corpus to which it is to be added,
 and the corpus that is the target of the alignment.
 
-B<cwb-align-encode> reads its input from a C<.align> file. The C<.align> file format uses CWB-internal
-corpus positions to identify aligned regions of the corpus.  It is therefore
-recommended not to generate such input files manually. Rather, it is better
-to generate them automatically. 
+B<cwb-align-encode> reads its input from a C<.align> file.  Compressed files with extension
+C<.gz> or C<.bz2> are automatically decompressed.
 
-If your parallel corpus is not already aligned, you can use the B<cwb-align> program to 
-perform the alignment and generate the C<.align> file.  
+The C<.align> file format uses CWB-internal corpus positions to identify
+aligned regions of the corpus.  It is therefore recommended not to generate
+such input files manually. Rather, it is better to generate them
+automatically.
+
+If your parallel corpus is not already aligned, you can use the B<cwb-align> program to
+perform the alignment and generate the C<.align> file.
 
 Alternatively, if your parallel corpus is already aligned, you can use the B<cwb-align-import>
 utility from the Perl/CWB package. This utiltiy imports external
@@ -124,7 +127,8 @@ mentioned I<second>; each row of the input file specifies regions fo the source 
 same order. If the B<-R> option is specified, then the I<second> corpus is the source corpus, and the
 I<first> corpus is the target corpus.
 
-=for comment delete the above if it turns out reverse mode really has been removed. 
+This option works by swapping the source and target ranges of each alignment bead, so it can only be
+used if there are no crossing alignment beads.
 
 =item B<-v>
 

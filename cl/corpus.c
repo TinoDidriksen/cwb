@@ -35,12 +35,6 @@
 /* ---------------------------------Interface to registry parser */
 
 /**
- * Function created in output from parsing registry.y
- * (function only used by demo version)
- */
-void creg_scan_string(const char *str);
-/* TODO - is the above function unused? in this file?  what does "function only used by demo version" mean?*/
-/**
  * File pointer for loading corpus registry.
  *
  * (External variable, defined in the output from parsing registry.y)
@@ -54,9 +48,8 @@ extern FILE *cregin;
 extern Corpus *cregcorpus;
 /**
  * Function created in output from parsing registry.y
- */
 void cregerror(char *message);
-/* TODO - is the above function unused? in this file? */
+ * TODO - is the above function unused? in this file? */
 /**
  * Restarts the registry file parse
  *

@@ -267,7 +267,7 @@ creat_rev_corpus(Component *revcorp)
   assert(freqs->corpus == revcorp->corpus); /* gotta be kidding ... */
 
   lexsize = cl_max_id(attr);        /* this is the number of lexicon entries for this attribute */
-  ptab = (int **) cl_malloc(sizeof(int *) * lexsize); /* table of pointers into <buffer> */
+  ptab = (int **) cl_malloc(sizeof(int *) * ((size_t) lexsize)); /* table of pointers into <buffer> */
 
   /* determine REVCORP size (== number of tokens) */
   datasize = cl_max_cpos(attr);

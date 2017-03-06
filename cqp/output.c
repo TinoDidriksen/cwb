@@ -161,11 +161,16 @@ open_temporary_file(char *tmp_name_buffer)
   }
 }
 
+
 /**
  * This function is a wrapper round fopen() which provides checks for
  * different shorthands for a "home" directory, such as ~ or $HOME.
  *
  * Its arguments and return values are the same as fopen().
+ *
+ * TODO: The function is retained for backward compatibility. Its use should be
+ * replaced by cl_open_stream() with automagic, but care has to be taken
+ * to change the corresponding fclose() calls to cl_close_stream().
  */
 FILE *
 open_file(char *name, char *mode)
@@ -218,7 +223,7 @@ open_file(char *name, char *mode)
  * @param cmd      Program command to start pager procress.
  * @param charset  Charset to which to set the pager-charset-environment variable
  * @return         Writable stream for the pipe to the pager, or NULL if a
- *                 test of the pager program failed.
+ *                 test of the pager program failed; must be closed with cl_close_stream()
  */
 FILE *
 open_pager(char *cmd, CorpusCharset charset)
@@ -253,18 +258,17 @@ open_pager(char *cmd, CorpusCharset charset)
     char *current_value = getenv(less_charset_variable);
 
     /* call setenv() if variable is not set or different from desired value */
-    if (!current_value || strcmp(current_value, new_value)) {
+    if (!current_value || strcmp(current_value, new_value) != 0) {
       setenv(less_charset_variable, new_value, 1);
     }
   }
 
-  pipe = popen(cmd, "w");
-  return pipe;                  /* NULL if popen() failed for some reason */
+  return cl_open_stream(cmd, CL_STREAM_WRITE, CL_STREAM_PIPE);
 }
 
 /**
- * Callback handler for SIGPIPE (installed by open_stream())
- */
+ * Callback handler for SIGPIPE now moved to <cl_broken_pipe>
+ *
 int broken_pipe = 0;
 
 static void
@@ -272,13 +276,11 @@ bp_signal_handler(int signum)
 {
 #ifndef __MINGW__
   broken_pipe = 1;
-  /* fprintf(stderr, "Handle broken pipe signal\n"); */
-
   if (signal(SIGPIPE, bp_signal_handler) == SIG_ERR)
-    perror("Can't reinstall signal handler for broken pipe"); /* Is this still necessary on modern platforms? */
+    perror("Can't reinstall signal handler for broken pipe");
 #endif
 }
-
+ */
 
 /**
  * Open the (output) stream within a Redir(ection) structure.
@@ -297,85 +299,59 @@ bp_signal_handler(int signum)
 int
 open_stream(struct Redir *rd, CorpusCharset charset)
 {
-  int i;
+  int mode;
 
   assert(rd);
+  if (rd->stream != NULL) {
+    /* stream appears to be already open: close, then reopen */
+    cl_close_stream(rd->stream);
+    rd->stream = NULL;
+  }
 
   if (rd->name) {
-    i = 0;
-    while (rd->name[i] == ' ')
-      i++;
-    
-    if ((rd->name[i] == '|') &&
-        (rd->name[i+1] != '\0')) {
-      
-      if (insecure) {
-        /* set stream to NULL to force return value of 0 */
-        rd->stream = NULL;
-        rd->is_pipe = False;
-        rd->is_paging = False;
-      }
-      else {
-        
-        /* we send the output to a pipe */
-        rd->is_pipe = True;
-        rd->is_paging = False;
-        rd->stream = popen(rd->name+i+1, rd->mode);
-      }
-    }
-    else {
-
-      /* normal output to file */
-      rd->is_pipe = False;
-      rd->is_paging = False;
-      rd->stream = open_file(rd->name, rd->mode);
-    }
+    /* open file (with compression and pipe magic) */
+    mode = (strcmp(rd->mode, "a") == 0) ? CL_STREAM_APPEND : CL_STREAM_WRITE;
+    rd->stream = cl_open_stream(rd->name, mode, (insecure) ? CL_STREAM_MAGIC_NOPIPE : CL_STREAM_MAGIC);
+    rd->is_paging = False;
   }
-  else { /* i.e. if rd->name is NULL */
+  else {
     if (pager && paging && isatty(fileno(stdout))) {
       if (insecure) {
         cqpmessage(Error, "Insecure mode, paging not allowed.\n");
-        /* ... and default back to bare stdout */
-        rd->stream = stdout;
-        rd->is_paging = False;
-        rd->is_pipe = False;
-      }
-      else if ((rd->stream = open_pager(pager, charset)) == NULL) {
-        cqpmessage(Warning, "Could not start pager '%s', trying fallback '%s'.\n", pager, CQP_FALLBACK_PAGER);
-        if ((rd->stream = open_pager(CQP_FALLBACK_PAGER, charset)) == NULL) {
-          cqpmessage(Warning, "Could not start fallback pager '%s'. Paging disabled.\n", CQP_FALLBACK_PAGER);
-          set_integer_option_value("Paging", 0);
-          rd->is_pipe = False;
-          rd->is_paging = False;
-          rd->stream = stdout;
-        }
-        else {
-          rd->is_pipe = 1;
-          rd->is_paging = True;
-          set_string_option_value("Pager", cl_strdup(CQP_FALLBACK_PAGER));
-        }
+        /* ... and default back to bare stdout below */
       }
       else {
-        rd->is_pipe = 1;
-        rd->is_paging = True;
+        rd->stream = open_pager(pager, charset);
+        if (rd->stream == NULL) {
+          cqpmessage(Warning, "Could not start pager '%s', trying fallback '%s'.\n", pager, CQP_FALLBACK_PAGER);
+          rd->stream = open_pager(CQP_FALLBACK_PAGER, charset);
+          if (rd->stream == NULL) {
+            cqpmessage(Warning, "Could not start fallback pager '%s'. Paging disabled.\n", CQP_FALLBACK_PAGER);
+            set_integer_option_value("Paging", 0);
+            /* ... and default back to bare stdout below */
+          }
+          else {
+            set_string_option_value("Pager", cl_strdup(CQP_FALLBACK_PAGER));
+          }
+        }
       }
     }
+    /* if not paging or pager failed to start, open stdout */
+    if (rd->stream != NULL) {
+      rd->is_paging = True;
+    }
     else {
-      rd->stream = stdout;
+      rd->stream = cl_open_stream("", CL_STREAM_WRITE, CL_STREAM_STDIO);
       rd->is_paging = False;
-      rd->is_pipe = False;
     }
   }
 
-  broken_pipe = 0;
-#ifndef __MINGW__
-  if (rd->stream != NULL && rd->is_pipe && handle_sigpipe) {
-    if (signal(SIGPIPE, bp_signal_handler) == SIG_ERR)
-      perror("Can't install signal handler for broken pipe (ignored)");
+  if (rd->stream == NULL) {
+    cqpmessage(Error, "Can't write to %s: %s", (rd->name) ? rd->name : "STDOUT", cl_error_string(cl_errno));
+    return 0;
   }
-#endif
-
-  return (rd->stream == NULL ? 0 : 1);
+  else
+    return 1;
 }
 
 /**
@@ -394,21 +370,9 @@ close_stream(struct Redir *rd)
   int rv = 1;
 
   if (rd->stream) {
-
-#ifndef __MINGW__
-    if (rd->is_pipe && handle_sigpipe) {
-      if (signal(SIGPIPE, SIG_IGN) == SIG_ERR)
-        perror("Can't reinstall SIG_IGN signal handler (ignored)");
-    }
-#endif
-
-    if (rd->is_pipe)
-      rv = ! pclose(rd->stream); /* pclose returns 0 = success, non-zero = failure */
-    else if (rd->stream != stdout)
-      rv = ! fclose(rd->stream); /* fclose the same */
-
+    rv = !cl_close_stream(rd->stream); /* returns 0 on success */
     rd->stream = NULL;
-    rd->is_pipe = 0;
+    rd->is_paging = 0;
   }
 
   return rv;
@@ -423,45 +387,53 @@ open_input_stream(struct InputRedir *rd)
   char *tmp;
 
   assert(rd);
-
-  /* TODO: check if stream is already open (options: ignore, warning, silently close old stream) */
+  if (rd->stream != NULL) {
+    /* stream appears to be already open: close, then reopen */
+    cl_close_stream(rd->stream);
+    rd->stream = NULL;
+  }
 
   if (rd->name) {
+    /* Check for old-style pipe notation, i.e.
+     *   ... < "ls -l |";
+     * which is unfortunately documented in the CQP tutorial.  New-style notation
+     *   ... < "| ls -l";
+     * is automatically supported by cl_open_stream();
+     */
     i = strlen(rd->name) - 1;
-    if (i < 0) i = 0;
     while (i > 0 && rd->name[i] == ' ')
       i--;
     
-    if ((rd->name[i] == '|') && i >= 1) {
-
+    if (i >= 1 && (rd->name[i] == '|')) {
       /* read input from a pipe (unless running in "secure" mode) */
       if (insecure) {
+        cqpmessage(Error, "Insecure mode, paging not allowed.\n");
         rd->stream = NULL;
-        rd->is_pipe = False;
+        return 0;
       }
       else {
-        rd->is_pipe = True;
-        tmp = (char *) cl_malloc(i + 1);
+        tmp = (char *) cl_malloc(i + 1); /* pipe command = rd->name[0 .. (i-1)] */
         strncpy(tmp, rd->name, i);
-        tmp[i] = '\0';
-        rd->stream = popen(tmp, "r");
+        /* tmp[i] = '\0'; -- shouldn't be necessary */
+        rd->stream = cl_open_stream(tmp, CL_STREAM_READ, CL_STREAM_PIPE);
         cl_free(tmp);
       }
-
     }
     else {
-
-      /* normal input from a regular file */
-      rd->is_pipe = False;
-      rd->stream = open_file(rd->name, "r");
-
+      /* open stream with CL automagic */
+      rd->stream = cl_open_stream(rd->name, CL_STREAM_READ, (insecure) ? CL_STREAM_MAGIC_NOPIPE : CL_STREAM_MAGIC);
     }
   }
   else {
-    rd->stream = stdin;
-    rd->is_pipe = True;  /* stdin behaves like a pipe */
+    rd->stream = cl_open_stream("", CL_STREAM_READ, CL_STREAM_STDIO);
   }
-  return (rd->stream == NULL ? 0 : 1);
+
+  if (rd->stream == NULL) {
+    cqpmessage(Error, "Can't read from %s: %s", (rd->name) ? rd->name : "STDIN", cl_error_string(cl_errno));
+    return 0;
+  }
+  else
+    return 1;
 }
 
 int
@@ -469,15 +441,11 @@ close_input_stream(struct InputRedir *rd)
 {
   int rv = 1;
 
-  if (rd->stream && rd->stream != stdin) {
-    if (rd->is_pipe)
-      rv = ! pclose(rd->stream); /* pclose returns 0 = success, non-zero = failure */
-    else
-      rv = ! fclose(rd->stream); /* fclose the same; */
+  if (rd->stream) {
+    rv = !cl_close_stream(rd->stream); /* returns 0 on success */
+    rd->stream = NULL;
   }
 
-  rd->stream = NULL;
-  rd->is_pipe = 0;
   return rv;
 }
 
@@ -552,7 +520,6 @@ catalog_corpus(CorpusList *cl,
     default_redir.name = NULL;
     default_redir.mode = "w";
     default_redir.stream = NULL;
-    default_redir.is_pipe = 0;
     rd = &default_redir;
   }
 
@@ -677,7 +644,7 @@ corpus_info(CorpusList *cl)
   FILE *outfd;
   char buf[CL_MAX_LINE_LENGTH];
   int i, ok, stream_ok;
-  struct Redir rd = { NULL, NULL, NULL, 0, 0 }; /* for paging (with open_stream()) */
+  struct Redir rd = { NULL, NULL, NULL, 0 }; /* for paging (with open_stream()) */
 
   CorpusList *mom = NULL;
   CorpusProperty p;
@@ -917,7 +884,7 @@ print_tabulation(CorpusList *cl, int first, int last, struct Redir *rd)
   }
 
   /* tabulate selected attribute values for matches <first> .. <last> */
-  for (current = first; (current <= last) && !broken_pipe; current++) {
+  for (current = first; (current <= last) && !cl_broken_pipe; current++) {
     TabulationItem item = TabulationList;
     while (item) {
       int start = pt_get_anchor_cpos(cl, current, item->anchor1, item->offset1);

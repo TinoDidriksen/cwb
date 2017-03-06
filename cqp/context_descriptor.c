@@ -367,7 +367,7 @@ void
 PrintContextDescriptor(ContextDescriptor *cdp)
 {
   FILE *fd;
-  struct Redir rd = { NULL, NULL, NULL, 0, 0 };        /* for paging (with open_stream()) */
+  struct Redir rd = { NULL, NULL, NULL, 0 };        /* for paging (with open_stream()) */
   int stream_ok;
 
   if (cdp) {

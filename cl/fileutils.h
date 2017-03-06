@@ -32,4 +32,15 @@ int is_directory(char *path);
 int is_file(char *path);
 int is_link(char *path);
 
+/* data structure for managing I/O streams */
+typedef struct _CLStream *CLStream;
+struct _CLStream {
+  FILE *handle;
+  int mode; /* not really needed */
+  int type; /* the specified or guessed stream type */
+  CLStream next;
+};
+
+/* flags and function prototypes are declared in <cl.h> */
+
 #endif

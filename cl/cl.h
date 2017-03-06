@@ -124,8 +124,8 @@
 #ifndef _cwb_cl_h
 #define _cwb_cl_h
 
-#include <strings.h>                /* for size_t */
-
+#include <stdlib.h>                 /* for size_t */
+#include <stdio.h>                  /* for FILE * */
 
 
 /*
@@ -155,7 +155,7 @@
 #define CDA_EALIGN      -9        /**< Error code: no alignment at position */
 #define CDA_EREMOTE     -10       /**< Error code: error in remote access */
 #define CDA_ENODATA     -11       /**< Error code: can't load/create necessary data */
-#define CDA_EARGS       -12       /**< Error code: error in arguments for dynamic call */
+#define CDA_EARGS       -12       /**< Error code: error in arguments for dynamic call or CL function */
 #define CDA_ENOMEM      -13       /**< Error code: memory fault [unused] */
 #define CDA_EOTHER      -14       /**< Error code: other error */
 #define CDA_ENYI        -15       /**< Error code: not yet implemented */
@@ -163,6 +163,8 @@
 #define CDA_EFSETINV    -17       /**< Error code: invalid feature set format */
 #define CDA_EBUFFER     -18       /**< Error code: buffer overflow (hard-coded internal buffer sizes) */
 #define CDA_EINTERNAL   -19       /**< Error code: internal data consistency error (really bad) */
+#define CDA_EACCESS     -20       /**< Error code: insufficient access permissions */
+#define CDA_EPOSIX      -21       /**< Error code: POSIX-level error: check errno or perror() */
 #define CDA_CPOSUNDEF   INT_MIN   /**< Error code: undefined corpus position (use this code to avoid ambiguity with negative cpos) */
 
 /* a global variable which will always be set to one of the above constants! */
@@ -190,7 +192,7 @@ char *cl_error_string(int error_num);
 void *cl_malloc(size_t bytes);
 void *cl_calloc(size_t nr_of_elements, size_t element_size);
 void *cl_realloc(void *block, size_t bytes);
-char *cl_strdup(char *string);
+char *cl_strdup(const char *string);
 /**
  * Safely frees memory.
  *
@@ -360,6 +362,83 @@ void cl_autostring_truncate(ClAutoString string, int new_length);
 void cl_autostring_dump(ClAutoString string);
 
 
+/**
+ * I/O streams with magic for compressed files (.gz, .bz2) and pipes
+ *
+ * These functions can be used to open input and output FILE* streams to compressed files, pipes, and stdin/stdout.
+ * The type of stream is either specified directly with one of the constants below, or automagically guessed from
+ * the filename, according to the following rules:
+ *   - if filename is "-", the stream reads from stdin or writes to stdout (depending on the mode)
+ *   - if filename starts with "|", it is interpreted as a pipe to/from a shell command (the pipe symbol must always at the start, even when reading from a pipe)
+ *   - if filename ends in ".gz" or ".bz2", it is read/written as a compressed file (through a pipe to external gzip and bzip2 utilities)
+ *   - otherwise it is read/written as a plain uncompressed file
+ *   - if filename starts with "~/" or "$HOME/", the prefix is expanded to the current user's home directory
+ * Unless automagic type guessing is explicitly enabled, filenames will always be used literally without any normalization.
+ * Read or write mode is controlled by a separate flag and cannot be set automatically (unlike Perl's "redirect"-style notation).
+ *
+ * Note that automagic opening of pipes to shell commands is a security risk if <filename> comes from an untrusted source.
+ * Use stream type CL_STREAM_MAGIC_NOPIPE to disallow pipes; opening the I/O stream will fail in this case.
+ *
+ * While a stream pipe is active (even if implicitly by reading or writing a compressed file), a signal handler is installed
+ * on supported platforms to catch and ignore SIGPIPE, which sets the global variable <cl_broken_pipe> to True.
+ * Callers writing to a stream might want to check this variable in order to avoid stalling on a broken pipe,
+ * even if they did not explicitly open a pipe stream.
+ */
+
+/** Mode and type flags for I/O streams (NB: these are mutually exclusive and must not be combined with "|") */
+
+/** open in read mode */
+#define CL_STREAM_READ 0
+/** open in write mode */
+#define CL_STREAM_WRITE 1
+/** open in append mode (except for pipe) */
+#define CL_STREAM_APPEND 2
+/** enable automagic recognition of stream type */
+#define CL_STREAM_MAGIC 0
+/** enable automagic, but fail on attempt to open pipe (safe mode for filenames from external sources) */
+#define CL_STREAM_MAGIC_NOPIPE 1
+/** read/write plain uncompressed file */
+#define CL_STREAM_FILE 2
+/** read/write gzip-compressed file */
+#define CL_STREAM_GZIP 3
+/** read/write bzip2-compressed file */
+#define CL_STREAM_BZIP2 4
+/** read/write pipe to shell command */
+#define CL_STREAM_PIPE 5
+/** read from stdin or write to stdout (<filename> is ignored) */
+#define CL_STREAM_STDIO 6
+
+
+/** This variable will be set to True if a SIGPIPE has been caught and ignored.
+ *
+ * It is reset to False whenever a stream is opened or closed, so it is safe to check while writing to a plain file stream.
+ * If multiple pipes are active, there is no way to indicate which one caused the SIGPIPE.
+ */
+extern int cl_broken_pipe;
+
+/**
+ * Open stream of specified (or guessed) type for reading or writing
+ *
+ * I/O streams opened with this function must always be closed with cl_close_stream()!
+ *
+ * @param filename  Filename or shell command
+ * @param mode      Open for reading (CL_STREAM_READ) or writing (CL_STREAM_WRITE)
+ * @param type      Type of stream (see above), or guess automagically from <filename> (CL_STREAM_MAGIC)
+ *
+ * @return          Standard C stream, or NULL on error (with details from <cl_errno> or cl_error())
+ */
+FILE *cl_open_stream(const char *filename, int mode, int type);
+
+/**
+ * Close I/O stream
+ *
+ * This function can only be used for FILE* objects opened with cl_open_stream()!
+ *
+ * @param stream    An I/O stream that has been opened with cl_open_stream()
+ *
+ * @return          0 on success, otherwise the error code returned by fclose() or pclose(); <cl_errno> is set accordingly
+ */
+int cl_close_stream(FILE *stream);
 
 
 /* CL-specific version of strcpy. Don't use unless you know what you're doing. */

@@ -184,7 +184,7 @@ is_num(char *s)
  *           the argument s iff the mode is not one that requires any
  *           encoding. If the argument is NULL, NULL is returned.
  */
-char *
+const char *
 decode_string_escape(const char *s)
 {
   int i, t = 0;
@@ -429,7 +429,7 @@ decode_print_surrounding_s_att_values(int position)
 
     if (printValues[i]) {
 
-      char *sval;
+      const char *sval;
       int snum;
 
       snum = cl_cpos2struc(printValues[i], position);
@@ -487,7 +487,7 @@ decode_print_token_sequence(int start_position, int end_position, Attribute *con
   int lastposa, i, w;
 
   /* pointer used for values of p-attributes */
-  char *wrd;
+  const char *wrd;
 
 
   start_context = start_position;
@@ -859,7 +859,8 @@ main(int argc, char **argv)
   int sp;  /* start position of a match */
   int ep;  /* end position of a match */
 
-  int w, cnt, read_pos_frm_stdin;
+  int w, cnt;
+  int read_pos_from_file;
 
   char s[CL_MAX_LINE_LENGTH];      /* buffer for strings read from file */
   char *token;
@@ -879,7 +880,7 @@ main(int argc, char **argv)
   last = -1;
   maxlast = -1;
 
-  read_pos_frm_stdin = 0;
+  read_pos_from_file = 0;
 
   /* use getopt() to parse command-line options */
   while((c = getopt(argc, argv, "+s:e:r:nLHCxXf:ph")) != EOF)
@@ -932,11 +933,12 @@ main(int argc, char **argv)
       /* f: matchlist mode / read corpus positions from file */
     case 'f':
       input_filename = optarg;
+      read_pos_from_file++;
       break;
 
       /* p: matchlist mode / read corpus positions from stdin */
     case 'p':
-      read_pos_frm_stdin++;
+      read_pos_from_file++; /* defaults to STDIN if input_filename is NULL */
       break;
 
       /* h: help page */
@@ -1064,21 +1066,20 @@ main(int argc, char **argv)
   }
   /* ---- end of parse attribute declarations ---- */
 
-  if (input_filename != NULL) {
-    if (strcmp(input_filename, "-") == 0)
-      input_file = stdin;
-    else if ((input_file = fopen(input_filename, "r")) == NULL) {
-      perror(input_filename);
+  if (read_pos_from_file) {
+    if (input_filename == NULL) input_filename = "-"; /* -p: use STDIN */
+    input_file = cl_open_stream(input_filename, CL_STREAM_READ, CL_STREAM_MAGIC);
+    if (input_file == NULL) {
+      cl_error("Can't read matchlist file (-f)");
       exit(1);
     }
-    read_pos_frm_stdin++;
   }
 
   decode_verify_print_value_list();
 
   /* ------------------------------------------------------------ DECODE CORPUS */
 
-  if (read_pos_frm_stdin == 0) {
+  if (! read_pos_from_file) {
     /*
      * normal mode: decode entire corpus or specified range
      */
@@ -1170,8 +1171,7 @@ main(int argc, char **argv)
       }
     }
 
-    if (input_file != stdin)
-      fclose(input_file);
+    cl_close_stream(input_file);
 
     if ( (mode == XMLMode) || ((mode == EncodeMode) && xml_compatible) ) {
       printf("</matchlist>\n");

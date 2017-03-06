@@ -960,6 +960,7 @@ parse_options(int ac, char *av[])
 
     case 'm':
       enable_macros = 0;        /* -m = DISABLE macros */
+      break;
 
     case 'M':
       macro_init_file = optarg;

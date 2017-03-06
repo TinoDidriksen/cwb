@@ -3036,7 +3036,7 @@ do_dump(CorpusList *cl, int first, int last, struct Redir *rd)
 
     f = (first >= 0) ? first : 0;
     l = (last < cl->size) ? last : cl->size - 1;
-    for (i = f; (i <= l) && !broken_pipe; i++) {
+    for (i = f; (i <= l) && !cl_broken_pipe; i++) {
       j = (cl->sortidx) ? cl->sortidx[i] : i;
       target  = (cl->targets)  ? cl->targets[j]  : -1;
       keyword = (cl->keywords) ? cl->keywords[j] : -1;
@@ -3102,7 +3102,7 @@ do_undump(char *corpname, int extension_fields, int sort_ranges, struct InputRed
   assert((new != NULL) && "failed to create temporary query result for undump");
 
   if (! open_input_stream(rd)) { /* open input file, input pipe, or read from stdin */
-    cqpmessage(Error, "Can't read input to file or pipe\n");
+    /* error message should printed by open_input_stream() */
     drop_temp_corpora();
     return 0;
   }
@@ -3114,22 +3114,23 @@ do_undump(char *corpname, int extension_fields, int sort_ranges, struct InputRed
     }
     else if (2 == sscanf(line, "%d %d", &match, &matchend)) {
       /* looks like undump file without line count => determine number of lines */
-      if (rd->is_pipe) {
-        cqpmessage(Warning, "Sorry, undump files without explict line count can only be read from regular files, not from pipes or standard input");
+      if (rd->stream == stdin) {
+        cqpmessage(Warning, "You must always provide an explicit line count if undump data is entered manually (i.e. read from STDIN)");
       }
       else {
+        /* undump file without header: count lines, then reopen stream */
         size = 1; /* first line is already in buffer */
         while (fgets(line, CL_MAX_LINE_LENGTH, rd->stream))
           size++; /* dump files should not contain any long lines, so this count is correct */
-        /* rewind stream to start of file */
-        if (fseek(rd->stream, 0, SEEK_SET) != 0) {
+        close_input_stream(rd);
+        if (! open_input_stream(rd))
           cqpmessage(Warning, "Can't rewind undump file after counting lines: line count must be given explicitly");
-        }
         else
           ok = 1;
       }
     }
   }
+
   if (!ok) {
     cqpmessage(Error, "Format error in undump file: expecting number of rows on first line");
     close_input_stream(rd);

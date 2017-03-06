@@ -57,7 +57,7 @@
  */
 #define MAX_INPUT_LINE_LENGTH  65536
 
-/** Normal extension for CWB input text files. (.gz may be added to this if the file is compressed.) */
+/** Normal extension for CWB input text files. (must have exactly 4 characters; .gz/.bz2 may be added to this if the file is compressed.) */
 #define DEFAULT_INFILE_EXTENSION ".vrt"
 
 /* implicit knowledge about CL component files naming conventions */
@@ -90,7 +90,6 @@ int nr_input_files = 0;                 /**< number of input files (length of li
 int current_input_file = 0;             /**< index of input file currently being processed */
 char *current_input_file_name = NULL;   /**< filename of current input file, for error messages */
 FILE *input_fd = NULL;                  /**< file handle for current input file (or pipe) (text mode!) */
-int input_file_is_pipe = 0;             /**< so we can properly close input_fd using either fclose() or pclose() */
 unsigned long input_line = 0;           /**< input line number (reset for each new file) for error messages */
 char *registry_file = NULL;             /**< if set, auto-generate registry file named {registry_file}, listing declared attributes */
 char *directory = NULL;                 /**< corpus data directory (no longer defaults to current directory) */
@@ -420,8 +419,9 @@ encode_scan_directory(char *dir)
     char *name = dp->d_name;
     if (name != NULL) {
       int len_name = strlen(name);
-      if ( (len_name >= 5 && (0 == strcmp(name + len_name - 4, DEFAULT_INFILE_EXTENSION)))
-           || (len_name >= 8 && (0 == strcmp(name + len_name - 7, DEFAULT_INFILE_EXTENSION ".gz"))) )
+      if ( (len_name >= 5 && (0 == strcasecmp(name + len_name - 4, DEFAULT_INFILE_EXTENSION)))
+           || (len_name >= 8 && (0 == strcasecmp(name + len_name - 7, DEFAULT_INFILE_EXTENSION ".gz")))
+           || (len_name >= 9 && (0 == strcasecmp(name + len_name - 8, DEFAULT_INFILE_EXTENSION ".bz2"))) )
       {
         char *full_name = (char *) cl_malloc(len_dir + len_name + 2);
         sprintf(full_name, "%s%c%s", dir, SUBDIR_SEPARATOR, name);
@@ -1580,11 +1580,7 @@ encode_add_wattr_line(char *str)
 int
 encode_get_input_line(char *buffer, int bufsize)
 {
-  int ok, len;
-  /* we need to keep track of whether this func has been called recursively ... */
-  static unsigned int recursive_call = 0;
-  char command[CL_MAX_LINE_LENGTH];
-
+  int ok;
 
   if (nr_input_files == 0) {
     /* read one line of text from stdin */
@@ -1597,23 +1593,11 @@ encode_get_input_line(char *buffer, int bufsize)
         return 0;
       
       current_input_file_name = cl_string_list_get(input_files, current_input_file);
-      len = strlen(current_input_file_name);
-      /* if input file has the extension .gz, try opening it with "gzip -cd" */
-      if ((len > 3) && (strncasecmp(current_input_file_name + len - 3, ".gz", 3) == 0)) {
-        input_file_is_pipe = 1;
-        sprintf(command, "gzip -cd %s", current_input_file_name);
-        if ((input_fd = popen(command, "r")) == NULL) {
-          perror(command);
-          encode_error("Can't decompress input file %s!", current_input_file_name);
-        }
-      }
-      /* otherwise, open it as a plain text file */
-      else {
-        input_file_is_pipe = 0;
-        if ((input_fd = fopen(current_input_file_name, "r")) == NULL) {
-          perror(current_input_file_name);
-          encode_error("Can't open input file %s!", current_input_file_name);
-        }
+
+      input_fd = cl_open_stream(current_input_file_name, CL_STREAM_READ, CL_STREAM_MAGIC);
+      if (input_fd == NULL) {
+        cl_error(current_input_file_name);
+        encode_error("Can't open input file %s!", current_input_file_name);
       }
       
       input_line = 0;
@@ -1622,46 +1606,39 @@ encode_get_input_line(char *buffer, int bufsize)
     /* read one line of text from current input file */
     ok = (NULL != fgets(buffer, MAX_INPUT_LINE_LENGTH, input_fd));
 
-    /* on first line of file, skip UTF8 byte-order-mark if present */
-    if (input_line == 0 && encoding_charset == utf8)
-      if (buffer[0] == (char)0xEF && buffer[1] == (char)0xBB && buffer[2] == (char)0xBF)
-         cl_strcpy(buffer, (buffer+3));
-
-    if (! ok) {
+    if (ok) {
+      /* on first line of file, skip UTF8 byte-order-mark if present */
+      if (input_line == 0 && encoding_charset == utf8)
+        if (buffer[0] == (char)0xEF && buffer[1] == (char)0xBB && buffer[2] == (char)0xBF)
+          cl_strcpy(buffer, (buffer+3));
+    }
+    else {
       /* assume we're at end of file -> close current input file, and try reading from next one */
-      if (input_file_is_pipe) 
-        ok = (0 == pclose(input_fd));
-      else
-        ok = (0 == fclose(input_fd));
+      ok = (0 == cl_close_stream(input_fd));
       if (! ok) {
         fprintf(stderr, "ERROR reading from file %s (ignored).\n", current_input_file_name);
-        perror(current_input_file_name);
+        cl_error(current_input_file_name);
       }
 
-      /* use recursive call to open the next input file and read from it */
+      /* use recursive tail call to open the next input file and read from it */
       input_fd = NULL;
       current_input_file++;
-
-      recursive_call++;
-      ok = encode_get_input_line(buffer, bufsize);
-      recursive_call--;
+      return encode_get_input_line(buffer, bufsize);
     }
   } /* end of block to follow if we're not reading from stdin. */
 
-  /* check encoding and standardise Unicode character composition
-   * ONLY if we are at the top of the stack of recursive calls */
-  if (recursive_call == 0) {
-    if (!cl_string_validate_encoding(buffer, encoding_charset, clean_strings))
-      encode_error("Encoding error: an invalid byte or byte sequence for charset \"%s\" was encountered.\n",
-                   corpus_character_set);
-    /* normalize UTF8 to precomposed form, but don't bother with the redundant function call otherwise */
-    if (encoding_charset == utf8)
-      cl_string_canonical(buffer, utf8, REQUIRE_NFC);
-    /* finally, get rid of C0 controls iff the user asked us to clean up strings */
-    if (clean_strings)
-      cl_string_zap_controls(buffer, encoding_charset, '?', 0, 0);
-    /* note we DIDN'T zap tab and newline, because this string has yet to be column-split */
-  }
+  /* check encoding and standardise Unicode character composition */
+  if (!cl_string_validate_encoding(buffer, encoding_charset, clean_strings))
+    encode_error("Encoding error: an invalid byte or byte sequence for charset \"%s\" was encountered.\n",
+        corpus_character_set);
+  /* normalize UTF8 to precomposed form, but don't bother with the redundant function call otherwise */
+  if (encoding_charset == utf8)
+    cl_string_canonical(buffer, utf8, REQUIRE_NFC);
+  /* finally, get rid of C0 controls iff the user asked us to clean up strings */
+  if (clean_strings)
+    cl_string_zap_controls(buffer, encoding_charset, '?', 0, 0);
+  /* note we DIDN'T zap tab and newline, because this string has yet to be column-split */
+
   return ok;
 }
 
@@ -1928,7 +1905,7 @@ main(int argc, char **argv)
         if (line >= CL_MAX_CORPUS_SIZE) {
           /* largest admissible corpus size should be 2^31 - 1 tokens, with maximal cpos = 2^31 - 2 */
           fprintf(stderr, "WARNING: Maximal corpus size has been exceeded.\n");
-          fprintf(stderr, "         Input truncated to the first %ld tokens (", CL_MAX_CORPUS_SIZE);
+          fprintf(stderr, "         Input truncated to the first %d tokens (", CL_MAX_CORPUS_SIZE);
           encode_print_input_lineno();
           fprintf(stderr, ").\n");
           break;

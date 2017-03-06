@@ -394,7 +394,7 @@ sencode_parse_line(char *line, int *start, int *end, char **annot)
         *annot = cl_strdup(field);
         if (!cl_string_validate_encoding(*annot, encoding_charset, clean_strings)) {
           fprintf(stderr,
-                  "Encoding error on line #%d: an invalid byte or byte sequence for charset \"%s\" was encountered.\n",
+                  "Encoding error on line #%ld: an invalid byte or byte sequence for charset \"%s\" was encountered.\n",
                   input_line,
                   encoding_charset_name);
           exit(1);
@@ -616,8 +616,9 @@ sencode_parse_options(int argc, char **argv)
         fprintf(stderr, "Error: -f option used twice\n\n");
         exit(1);
       }
-      if ((text_fd = fopen(optarg, "r")) == NULL) {
-        perror("Can't open input file");
+      text_fd = cl_open_stream(optarg, CL_STREAM_READ, CL_STREAM_MAGIC);
+      if (text_fd == NULL) {
+        cl_error("Can't open input file");
         exit(1);
       }
       break;
@@ -703,7 +704,7 @@ sencode_parse_options(int argc, char **argv)
 
   /* now, check the default and obligatory values */
   if (!text_fd)
-    text_fd = stdin;
+    text_fd = cl_open_stream("", CL_STREAM_READ, CL_STREAM_STDIO); /* open STDIN as a CL stream */
   if (new_satt.name == NULL) {
     fprintf(stderr, "Error: either -S or -V flag must be specified.\n\n");
     exit(1);
@@ -847,32 +848,32 @@ main(int argc, char **argv)
 
     /* check for buffer overflow */
     if (strlen(buf) >= (CL_MAX_LINE_LENGTH - 1)) {
-      fprintf(stderr, "BUFFER OVERFLOW, input line #%d is too long:\n>> %s", input_line, buf);
+      fprintf(stderr, "BUFFER OVERFLOW, input line #%ld is too long:\n>> %s", input_line, buf);
       exit(1);
     }
 
     if (! sencode_parse_line(buf, &start, &end, &annot)) {
-      fprintf(stderr, "FORMAT ERROR on line #%d:\n>> %s", input_line, buf);
+      fprintf(stderr, "FORMAT ERROR on line #%ld:\n>> %s", input_line, buf);
       exit(1);
     }
     if (new_satt.store_values && (annot == NULL)) {
-      fprintf(stderr, "MISSING ANNOTATION on line #%d:\n>> %s", input_line, buf);
+      fprintf(stderr, "MISSING ANNOTATION on line #%ld:\n>> %s", input_line, buf);
       exit(1);
     }
     if ((!new_satt.store_values) && (annot != NULL)) {
       if (! S_annotations_dropped)
-        fprintf(stderr, "WARNING: Annotation for -S attribute ignored on line #%d (warning issued only once):\n>> %s", input_line, buf);
+        fprintf(stderr, "WARNING: Annotation for -S attribute ignored on line #%ld (warning issued only once):\n>> %s", input_line, buf);
       S_annotations_dropped++;
     }
     if ((start <= new_satt.last_cpos) || (end < start)) {
-      fprintf(stderr, "RANGE INCONSISTENCY on line #%d:\n>> %s(end of previous region was %d)\n", input_line, buf, new_satt.last_cpos);
+      fprintf(stderr, "RANGE INCONSISTENCY on line #%ld:\n>> %s(end of previous region was %d)\n", input_line, buf, new_satt.last_cpos);
       exit(1);
     }
     if (annot != NULL && set_att != set_none) {
       /* convert set annotation into standard syntax */
       annot = sencode_check_set(annot);
       if (annot == NULL) {
-        fprintf(stderr, "SET ANNOTATION SYNTAX ERROR on line #%d:\n>> %s", input_line, buf);
+        fprintf(stderr, "SET ANNOTATION SYNTAX ERROR on line #%ld:\n>> %s", input_line, buf);
         exit(1);
       }
     }

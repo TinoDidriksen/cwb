@@ -14,7 +14,7 @@ B<cwb-encode> [-xsBCvqDh] [-d I<data_directory>] [-R I<registry_file>] [-U I<str
 =head1 DESCRIPTION
 
 B<cwb-encode> performs the first step in the indexing of a CWB corpus: it reads in vertical-format text,
-and converts it to the CWB binary index format. 
+and converts it to the CWB binary index format.
 
 CWB indexes consist of a set of binary files, held in some I<data directory>; the location of the data
 files, as well as other metadata, is contained in a I<corpus registry> file. All CWB applications
@@ -31,8 +31,8 @@ and location of the resulting index is determined by the configuration of B<cwb-
 
 The purpose of this manual file is to explain the conventions for calling B<cwb-encode>. It does not attempt
 to explain all the details of the CWB data model or how encoding is accomplished. Nor does it discuss how
-B<cwb-encode> can be used to add additional attributes to an already-encoded corpus. For details on these other issues, 
-please refer to the CWB project's I<CWB Encoding Tutorial> document. 
+B<cwb-encode> can be used to add additional attributes to an already-encoded corpus. For details on these other issues,
+please refer to the CWB project's I<CWB Encoding Tutorial> document.
 
 When B<cwb-encode> is invoked, as well as options, the p-attributes and s-attrributes of the corpus must be declared.
 The declarations have the same format as options, but are B<not optional>!
@@ -42,34 +42,34 @@ a series of tab-delimited values. Each tab-separated column is encoded as a sepa
  
 The first p-attribute in the input data is given the label I<word> by default, as it is assumed to represent
 the form of the token, with addiitonal p-attributes representing word-level annotation. The B<-p> can be used to
-change the default attribute label for the first column; additional columns must be declared with B<-P> flags. 
+change the default attribute label for the first column; additional columns must be declared with B<-P> flags.
 
-S-attributes can be declared with either B<-S> (without annotations) or B<-V> (with annotations). 
+S-attributes can be declared with either B<-S> (without annotations) or B<-V> (with annotations).
 In the input data, they must appear as opening and closing XML tags on separate lines. Additional XML awareness
-can be enabled with the B<-x> option. Note, however, that CWB is I<not> a fully XML-compliant application. 
+can be enabled with the B<-x> option. Note, however, that CWB is I<not> a fully XML-compliant application.
 
-For each encoded attribute, one or more data files are created in the current working directory 
-(or in another directory specified with B<-d>). 
+For each encoded attribute, one or more data files are created in the current working directory
+(or in another directory specified with B<-d>).
 
-The overall name of the corpus is determined by the name of its registry file. Registry files contain a formalised 
+The overall name of the corpus is determined by the name of its registry file. Registry files contain a formalised
 description of an indexed corpus - where its data files are, what p- and s-attributes it has, and so on.
 Registry file names are all-lowercase
 and can contain the letters a to z (no accents), the underscore, the hyphen, and the digits 0 to 9. The name
 of the corpus is then the uppercased version of that filename. You can write a registry file yourself, but it
 is strongly recommended to let B<cwb-encode> do it for you using the B<-R> option.
-  
-After encoding, you should use B<cwb-makeall> to create the 
-required index files and frequency lists, and then compress them with B<cwb-huffcode> and 
+
+After encoding, you should use B<cwb-makeall> to create the
+required index files and frequency lists, and then compress them with B<cwb-huffcode> and
 B<cwb-compress-rdx> (or preferably use the B<cwb-make> program from the CWB/Perl interface).
 
 Two important notes on the usage of B<cwb-encode>:
 
 =over 4
 
-=item * Command-line I<options> (including input files specified with B<-f>) always have to 
+=item * Command-line I<options> (including input files specified with B<-f>) always have to
 precede the I<attribute declaration> flags!
 
-=item * If you re-encode an existing corpus, be sure to delete all old data files, 
+=item * If you re-encode an existing corpus, be sure to delete all old data files,
 in particular the index and any compressed data files, before running B<cwb-encode>!
 
 =back
@@ -99,63 +99,63 @@ Specifies the character encoding of the corpus data. I<charset> can be any of th
 
 =over 4
 
-=item ascii 
+=item ascii
 
 ASCII (7-bit characters only)
 
-=item latin1 
+=item latin1
 
 ISO-8859-1 Western European
 
-=item latin2 
+=item latin2
 
 ISO-8859-2 Central European
 
-=item latin3 
+=item latin3
 
 ISO-8859-3 South European
 
-=item latin4 
+=item latin4
 
 ISO-8859-4 North European
 
-=item cyrillic 
+=item cyrillic
 
 ISO-8859-5 Latin/Cyrillic
 
-=item arabic 
+=item arabic
 
 ISO-8859-6 Latin/Arabic
 
-=item greek 
+=item greek
 
 ISO-8859-7 Latin/Greek
 
-=item hebrew 
+=item hebrew
 
 ISO-8859-8 Latin/Hebrew
 
-=item latin5 
+=item latin5
 
 ISO-8859-9 Turkish
 
-=item latin6 
+=item latin6
 
 ISO-8859-10 Nordic
 
-=item latin7 
+=item latin7
 
 ISO-8859-13 Baltic Rim
 
-=item latin8 
+=item latin8
 
 ISO-8859-14 Celtic
 
-=item latin9 
+=item latin9
 
 ISO-8859-15 Revised Western European
 
-=item utf8 
+=item utf8
 
 Unicode (UTF-8 encoding)
 
@@ -208,13 +208,13 @@ Specifies that the corpus to be indexed should be read from I<input_file>.
 This option can be repeated for as many files as necessary. Files will be added to the corpus in the order that
 they are specified. If no input files are specified, data will be read
 from standard input (in this case, it would normally be piped from another application such as B<cwb-decode>). 
-Gzipped files whose names end C<.gz> will be decompressed automatically.
+Files whose names end in C<.gz> or C<.bz2> will be decompressed automatically.
 
 =item B<-F> I<input_directory>
 
 Specifies that the corpus to be indexed should be read from all suitable files in F<input_directory>.
 
-"Suitable files" are those with the extensions C<.vrt> or C<.vrt.gz>; 
+"Suitable files" are those with the extensions C<.vrt>, C<.vrt.gz> or C<.vrt.bz2>; 
 files will be added to the corpus in alphabetical order (ASCII).
 
 Multiple input directories can be specified (in which case each set of files will be alphabetically-ordered internally,

@@ -127,6 +127,12 @@ Enhancements:
    over large sets of distinct items (up to 150x speed-up in extreme cases) and supports grouped listing of
    frequencies (as the name of the command has always implied).
 
+ - [2017-03-02: v3.4.11] CWB-wide support for reading and writing compressed files with suffix ".gz" or ".bz2",
+   provided by automagic cl_open_stream() and cl_close_stream() functions. (De)compression still relies on
+   external gzip or bzip2 utility, which must be in standard search path.  The CL automagic also supports shell
+   pipes ("| cmd" for both read and write pipes), recognizes "-" for stdin/stdout, expands "~" to the user's
+   home directory.
+
 
 Version 3.2
 -----------

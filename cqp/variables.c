@@ -28,6 +28,7 @@
 #include "variables.h"
 
 #include "output.h"
+#include "options.h"
 
 
 /* TODO: shrink malloced buffers as necessary - for VarSpace as well
@@ -353,7 +354,8 @@ SetVariableValue(char *varName,
 
     VariableDeleteItems(v);
 
-    if ((fd = open_file(varValues, "r"))) {
+    fd = cl_open_stream(varValues, CL_STREAM_READ, (insecure) ? CL_STREAM_MAGIC_NOPIPE : CL_STREAM_MAGIC);
+    if (fd) {
       int l;
       char s[CL_MAX_LINE_LENGTH];
 
@@ -370,10 +372,10 @@ SetVariableValue(char *varName,
         if (l > 0)
           VariableAddItem(v, s);
       }
-      fclose(fd);
+      cl_close_stream(fd);
     }
     else {
-      perror(varValues);
+      cl_error(varValues);
       cqpmessage(Warning, "Can't open %s: no such file or directory", varValues);
       return 0;
     }

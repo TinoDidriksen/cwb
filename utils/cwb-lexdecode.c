@@ -130,11 +130,9 @@ lexdecode_show(char *attr_name, char *rx, int rx_flags)
 
     if (input_filename != NULL) { /* with -F <file> option */
 
-      if (strcmp(input_filename, "-") == 0) {
-        input_fd = stdin;
-      }
-      else if ((input_fd = fopen(input_filename, "r")) == NULL) {
-        perror(input_filename);
+      input_fd = cl_open_stream(input_filename, CL_STREAM_READ, CL_STREAM_MAGIC);
+      if (input_fd == NULL) {
+        cl_error(input_filename);
         exit(1);
       }
 
@@ -164,8 +162,7 @@ lexdecode_show(char *attr_name, char *rx, int rx_flags)
 
       }
 
-      if (input_fd != stdin)
-        fclose(input_fd);
+      cl_close_stream(input_fd);
 
     }
     else {                        /* without -F option */

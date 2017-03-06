@@ -19,6 +19,7 @@
 #include <math.h>
 #include <ctype.h>
 #include <sys/types.h>
+#include <errno.h>
 
 #include "globals.h"
 
@@ -138,7 +139,7 @@ cl_error_string(int error_num)
     s = "CL: can't load and/or create necessary data";
     break;
   case CDA_EARGS:
-    s = "CL: error in arguments of dynamic call";
+    s = "CL: error in arguments of dynamic call or CL function";
     break;
   case CDA_ENOMEM:
     s = "CL: not enough memory";
@@ -160,6 +161,12 @@ cl_error_string(int error_num)
     break;
   case CDA_EINTERNAL:
     s = "CL: internal data inconsistency";
+    break;
+  case CDA_EACCESS:
+    s = "CL: insufficient access permissions";
+    break;
+  case CDA_EPOSIX:
+    s = strerror(errno);
     break;
   default:
     s = "CL: ILLEGAL ERROR NUMBER";

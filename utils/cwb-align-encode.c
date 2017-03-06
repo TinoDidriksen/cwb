@@ -51,9 +51,8 @@ alignencode_usage(void)
   fprintf(stderr, "  -d <dir> write data file(s) to directory <dir>\n");
   fprintf(stderr, "  -D       write files to corpus data directory\n");
   fprintf(stderr, "  -C       compatibility mode (creates .alg file)\n");
-  /*   fprintf(stderr, "  -R       reverse alignment (target -> source)\n"); */
-  /* -R option disabled ... need to re-order alignment file for reverse alignment */
-  /*TODO -R is not actually disabled in code. Has it been re-enabled, or does it need ot be disabled? */
+  fprintf(stderr, "  -R       reverse alignment (target -> source)\n");
+  fprintf(stderr, "           [only works if there are no crossing beads]\n");
   fprintf(stderr, "  -r <reg> use registry directory <reg>\n");
   fprintf(stderr, "  -v       verbose mode\n");
   fprintf(stderr, "  -h       this help page\n\n");
@@ -166,7 +165,6 @@ main(int argc, char *argv[])
 
   char *align_name = NULL;              /* name of the .align file */
   FILE *af = NULL;                      /* alignment file handle */
-  int af_is_pipe;                       /* need to know whether to call fclose() or pclose() */
   char alx_name[CL_MAX_LINE_LENGTH];    /* full pathname of .alx file */
   char alg_name[CL_MAX_LINE_LENGTH];    /* full pathname of optional .alg file */
   FILE *alx=NULL, *alg=NULL;            /* file handles for .alx and optional .alg file */
@@ -189,8 +187,6 @@ main(int argc, char *argv[])
   int current1, current2;
   int mark, n_0_1, n_1_0;
 
-  int l;
-
   progname = argv[0];
 
   /* parse command line and read arguments */
@@ -198,27 +194,11 @@ main(int argc, char *argv[])
   align_name = argv[argindex];
 
   /* open alignment file and parse header; .gz files are automatically decompressed */
-  af_is_pipe = 0;
-  l = strlen(align_name);
-  if ((l > 3) && (strncasecmp(align_name + l - 3, ".gz", 3) == 0)) {
-    char *pipe_cmd = (char *) cl_malloc(l+10);
-    sprintf(pipe_cmd, "gzip -cd %s", align_name); /* write .gz file through gzip pipe */
-    af = popen(pipe_cmd, "r");
-    if (af == NULL) {
-      perror(pipe_cmd);
-      fprintf(stderr, "%s: can't read compressed file %s\n", progname, align_name);
-      exit(1);
-    }
-    af_is_pipe = 1;
-    cl_free(pipe_cmd);
-  }
-  else {
-    af = fopen(align_name, "r");
-    if (af == NULL) {
-      perror(align_name);
-      fprintf(stderr, "%s: can't read file %s\n", progname, align_name);
-      exit(1);
-    }
+  af = cl_open_stream(align_name, CL_STREAM_READ, CL_STREAM_MAGIC);
+  if (af == NULL) {
+    perror(align_name);
+    fprintf(stderr, "%s: can't read file %s\n", progname, align_name);
+    exit(1);
   }
 
   /* read header = first line */
@@ -398,10 +378,7 @@ main(int argc, char *argv[])
   if (compatibility)
     fclose(alg);
 
-  if (af_is_pipe)
-    pclose(af);
-  else
-    fclose(af);
+  cl_close_stream(af);
 
   return 0;
 }

@@ -28,7 +28,6 @@
 #include "../cl/macros.h"
 
 #include <assert.h>
-#include <strings.h>
 #include <string.h>
 
 #define MACRO_HASH_BUCKETS 8000

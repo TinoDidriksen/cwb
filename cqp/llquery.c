@@ -186,7 +186,7 @@ cqp_custom_completion(const char *text, int start, int end) {
   if (text[0] == '$') {
     cc_compl_list_init();       /* init list only if custom completion has been triggered */
     variables_iterator_new();
-    prefix = text + 1;
+    prefix = (char *) text + 1;
     prefix_len = text_len - 1;
     var = variables_iterator_next();
     while (var != NULL) {
@@ -243,7 +243,7 @@ cqp_custom_completion(const char *text, int start, int end) {
   }
   else {
     mother_len = 0;
-    real_name = text;
+    real_name = (char *) text;
     real_len = text_len;
   }
 
@@ -367,7 +367,7 @@ readline_main(void)
       }
 
     if (highlighting) {
-      printf(get_typeface_escape('n')); /* work around 'bug' in less which may not switch off display attributes when user exits */
+      printf("%s", get_typeface_escape('n')); /* work around 'bug' in less which may not switch off display attributes when user exits */
       fflush(stdout);
     }
 

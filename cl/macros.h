@@ -61,12 +61,16 @@
 /**
  * Evaluates to the smaller of two integer arguments.
  */
+#ifndef MIN  /* may already have been imported from glib */
 #define MIN(a,b) ((a)<(b) ? (a) : (b))
+#endif
+
 /**
  * Evaluates to the greater of two integer arguments.
  */
+#ifndef MAX  /* may already have been imported from glib */
 #define MAX(a,b) ((a)>(b) ? (a) : (b))
-
+#endif
 
 /*
  * display progress bar in terminal window (STDERR, child mode: STDOUT)

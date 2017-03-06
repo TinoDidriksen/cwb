@@ -36,7 +36,6 @@ struct Redir {
   char *name;     /**< file name for redirection; if NULL, stdout is used */
   char *mode;     /**< mode for redirection ("w" or "a") */
   FILE *stream;   /**< the actual FILE object to write to. */
-  int is_pipe;    /**< true iff this is a pipe rather than a file. */
   int is_paging;  /**< true iff piping into default pager */
 };
 
@@ -47,7 +46,6 @@ struct Redir {
 struct InputRedir {
   char *name;     /**< file name for redirection */
   FILE *stream;   /**< the actual FILE object to read. */
-  int is_pipe;    /**< true iff this is a pipe rather than a file. */
 };
 
 
@@ -77,11 +75,6 @@ typedef struct _TabulationItem {
 extern TabulationItem TabulationList;
 
 /* ---------------------------------------------------------------------- */
-
-extern int broken_pipe;  /**< while an output stream is open, this will be set to True if a SIGPIPE is received (on supported platforms) */
-
-/* ---------------------------------------------------------------------- */
-
 
 FILE *open_temporary_file(char *tmp_name_buffer);
 

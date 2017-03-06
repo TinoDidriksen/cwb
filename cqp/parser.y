@@ -444,14 +444,15 @@ EOLCmd:           EOL_SYM               { printf("-::-EOL-::-\n"); fflush(stdout
                 ;
 
 Cat:              CAT_SYM OptionalCID
-                          OptionalRedir       { do_cat($2, &($3), 0, -1); } 
+                          OptionalRedir       { do_cat($2, &($3), 0, -1); cl_free($3.name); } 
                   /* cat entire subcorpus */
                 | CAT_SYM OptionalCID OptFROM INTEGER OptTO INTEGER
-                          OptionalRedir       { do_cat($2, &($7), $4, $6); } 
+                          OptionalRedir       { do_cat($2, &($7), $4, $6); cl_free($7.name); } 
                   /* cat part of subcorpus (matches #$3 .. #$4) */
                 | CAT_SYM CorpusSetExpr OptionalRedir   
                           { if (generate_code) 
                               do_cat($2, &($3), 0, -1);
+                            cl_free($3.name);
                             drop_temp_corpora();
                           }
                 ;
@@ -461,36 +462,31 @@ Saving:           SAVE_SYM OptionalCID
                 ;
 
 OptionalRedir:    Redir
-                | /* epsilon */         { $$.name = (char *)NULL;
-                                          $$.mode = (char *)NULL;
-                                          $$.stream = stdout;
-                                          $$.is_pipe = 0;
+                | /* epsilon */         { $$.name = NULL; /* will open STDOUT */
+                                          $$.mode = "w";
+                                          $$.stream = NULL;
                                         }
                 ;
 
 Redir:            '>' STRING            { $$.name = $2;
                                           $$.mode = "w";
                                           $$.stream = NULL;
-                                          $$.is_pipe = 0;
                                         }
                 | APPEND STRING         { $$.name = $2;
                                           $$.mode = "a";
                                           $$.stream = NULL;
-                                          $$.is_pipe = 0;
                                         }
                 ;
 
 
 OptionalInputRedir:    InputRedir
-                | /* epsilon */         { $$.name = (char *)NULL;
-                                          $$.stream = stdin;
-                                          $$.is_pipe = 0;
+                | /* epsilon */         { $$.name = NULL; /* will open STDIN */
+                                          $$.stream = NULL;
                                         }
                 ;
 
 InputRedir:       '<' STRING            { $$.name = $2;
                                           $$.stream = NULL;
-                                          $$.is_pipe = 0;
                                         }
                 ;
 

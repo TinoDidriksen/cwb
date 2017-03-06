@@ -601,7 +601,7 @@ RangeSetop(CorpusList *corpus1,
            * only the one copied is incremented, so the other is still on the
            * pile of intervals to be whiled through.) */
           
-          if ((corpus1->range[i].end == corpus2->range[j].end)) {
+          if (corpus1->range[i].end == corpus2->range[j].end) {
             
             rs_cp_range(tmp, tmp_target, tmp_keyword, ins, corpus1, i);
             i++;
@@ -1282,25 +1282,23 @@ static int *sort_id_cache = NULL;
  * This function can be deleted once it has been checked that
  * all calls to it have been replaced with cl_string_qsort_compare
  *
- */
+ *
 static int
 srt_strcmp(unsigned char *s1, unsigned char *s2, unsigned char *maptable, int reverse)
 {
   int l1, l2, minl, i, c1, c2, step;
   unsigned char *p1, *p2;
 
-  /* do we move in forward steps or backward steps? */
   step = (reverse) ? -1 : +1;
   l1 = strlen((char *) s1);
   l2 = strlen((char *) s2);
-  /* pointers set to either first or last character of the string */
+
   p1 = (reverse) ? s1 + l1 - 1 : s1;
   p2 = (reverse) ? s2 + l2 - 1 : s2;
 
   minl = MIN(l1, l2);
   
   for (i = 1; i <= minl; i++) {
-    /* assign comparison characters from the string */
     if (maptable) {
       c1 = maptable[*p1];
       c2 = maptable[*p2];
@@ -1311,14 +1309,13 @@ srt_strcmp(unsigned char *s1, unsigned char *s2, unsigned char *maptable, int re
     }
     p1 += step;
     p2 += step;
-    /* if there is a difference (based on binary order
-     * of c1 and c2) return */
+
     if (c1 < c2)
       return -1;
     else if (c1 > c2)
       return 1;
   }
-  /* if we're here, then the whole minl length was the same */
+
   if (l1 < l2)
     return -1;
   else if (l1 > l2)
@@ -1326,7 +1323,7 @@ srt_strcmp(unsigned char *s1, unsigned char *s2, unsigned char *maptable, int re
   else
     return 0;
 }
-
+ */
 
 /**
  * Compare two matches according to current sort settings in static variables
@@ -1816,7 +1813,7 @@ SortSubcorpus(CorpusList *cl, SortClause sc, int count_mode, struct Redir *redir
 
       /* if successful, display groups with their frequencies */
       if (open_stream(redir, cl->corpus->charset)) {
-        for (i = 0; (i < n_groups) && !broken_pipe; i++) {
+        for (i = 0; (i < n_groups) && !cl_broken_pipe; i++) {
           int first = group_first[groupidx[i]];
           int size = group_size[groupidx[i]];
           if (size >= count_mode) {
