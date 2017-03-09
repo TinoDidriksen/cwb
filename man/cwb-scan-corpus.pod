@@ -5,7 +5,7 @@ cwb-scan-corpus - Extract n-gram frequency information from a CWB corpus
 =head1 SYNOPSIS
 
 B<cwb-scan-corpus> [-Cqh] [-r I<registry_dir>] [-b I<num>]
-    [-o I<file>] [-f I<n>] [-F I<attribute>]
+    [-o I<file>] [-S] [-f I<n>] [-F I<attribute>]
     [-s I<start>] [-e I<end>] [-R I<file>]
     I<corpus>  I<key1> I<key2> ...
 
@@ -103,6 +103,18 @@ Writes the tuple frequency table to I<file>, instead of to standard output, whic
 default.
 
 The output file will be compressed using B<gzip> if I<file> ends in C<.gz> (or with B<bzip2> if I<file> ends in C<.bz2>).
+
+=item B<-S>
+
+Write n-grams in canonical ordering to the output file, i.e. based on a lexicographic comparison of unsigned byte sequences.
+This is the same ordering obtained on n-gram strings (with elements separated by TAB stops) using C<strcmp()>, or using the
+command-line tool C<sort> in a C<C> locale.
+
+In particular, the following two commands should produce identical output:
+
+  cwb-scan-corpus -o sorted.txt -S CORPUS ...
+
+  cwb-scan-corpus -o "| LANG=C sort -k2 > sorted.txt" CORPUS ...
 
 =item B<-q>
 

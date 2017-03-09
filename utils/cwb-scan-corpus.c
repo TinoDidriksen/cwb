@@ -71,6 +71,7 @@ int check_words = 0;         /**< if set, accept only 'regular' words in frequen
 CL_Regex regular_rx = NULL;  /**< regex object for use when check_words is true. @see scancorpus_word_is_regular */
 char *progname = NULL;       /**< name of this program (from shell command) */
 char *output_file = NULL;    /**< output file name (-o option) */
+int sort_output = 0;         /**< sort output in canonical order (-S option) */
 int frequency_threshold = 0; /**< frequency threshold for result table (-f option) */
 char *frequency_att = NULL;  /**< p-attribute with frequency entries for corpus rows (when abusing corpus as frequency database) */
 int global_start = 0;        /**< start scanning at this cpos (defaults to start of corpus) */
@@ -106,6 +107,7 @@ scancorpus_usage(void)
   fprintf(stderr, "  -o <file> write frequency table to <file> [default"": standard output]\n");
                                                             /* 'default:' confuses Emacs C-mode */
   fprintf(stderr, "            (compressed if <file> ends in '.gz' or '.bz2')\n");
+  fprintf(stderr, "  -S        sort n-grams in canonical order (so they can be merged)\n");
   fprintf(stderr, "  -f <n>    include only items with frequency >= <n> in result table\n");
   fprintf(stderr, "  -F <att>  add up frequency values from p-attribute <att>\n");
   fprintf(stderr, "  -C        clean up data, i.e. accept only \"regular\" words\n");
@@ -134,7 +136,7 @@ scancorpus_parse_options(int argc, char *argv[])
   extern char *optarg;
   int c;
 
-  while ((c = getopt(argc, argv, "+r:b:o:f:F:Cs:e:R:qDh")) != EOF) {
+  while ((c = getopt(argc, argv, "+r:b:o:Sf:F:Cs:e:R:qDh")) != EOF) {
     switch (c) {
     case 'r':                        /* -r <dir> */
       if (reg_dir == NULL)
@@ -154,6 +156,9 @@ scancorpus_parse_options(int argc, char *argv[])
         fprintf(stderr, "Error: -o option used twice.\n");
         exit(1);
       }
+      break;
+    case 'S':                        /* -S */
+      sort_output = 1;
       break;
     case 'f':                        /* -f <n> */
       frequency_threshold = atoi(optarg);
@@ -453,6 +458,88 @@ get_next_range(int *start, int *end)
   }
 }
 
+
+/**
+ * Format n-gram hash entry.
+ *
+ * The formatted n-gram entry is written to the specified stream in format
+ *   <freq> TAB <w1> TAB <w2> TAB ...
+ *
+ * @param fh    output stream (use stdout to display in terminal)
+ * @param entry n-gram hash entry to be printed
+ */
+void
+print_ngram_entry(FILE *fh, cl_ngram_hash_entry entry) {
+  int i, k;
+  char *str;
+
+  fprintf(fh, "%d", entry->freq);
+  k = 0;
+  for (i = 0; i < Hash.N; i++) {
+    if (! Hash.is_constraint[i]) {
+      if (! Hash.is_structural[i]) {
+        str = cl_id2str(Hash.att[i], entry->ngram[k]);
+      }
+      else {
+        if (entry->ngram[k] < 0) {
+          str = "";
+        }
+        else {
+          str = Hash.source_base[i] + entry->ngram[k];
+        }
+      }
+      fprintf(fh, "\t%s", str);
+      k++;
+    }
+  }
+  fprintf(fh, "\n");
+}
+
+/**
+ * Collate two n-gram hash entries in canonical sort order (callback for qsort())
+ *
+ * Canonical sort order iteratively compares the elements of the two n-grams as unsigned byte sequences,
+ * i.e. using strcmp() according to the C99 standard. Since CWB annotation strings must not contain control
+ * characters, this is equivalent to a strcmp() on the full n-grams with TAB separators.
+ *
+ * @param a   pointer to first n-gram entry (i.e. a cl_ngram_hash_entry *)
+ * @param b   pointer to second n-gram entry (i.e. a cl_ngram_hash_entry *)
+ * @return    -1 if a < b, 0 if a == b, +1 if a > b
+ */
+int
+collate_ngram_entries(const void *a, const void *b) {
+  cl_ngram_hash_entry A = *((cl_ngram_hash_entry *) a);
+  cl_ngram_hash_entry B = *((cl_ngram_hash_entry *) b);
+  int i, k, res;
+  char *strA, *strB;
+
+  k = 0;
+  for (i = 0; i < Hash.N; i++) {
+    if (! Hash.is_constraint[i]) {
+      if (! Hash.is_structural[i]) {
+        strA = cl_id2str(Hash.att[i], A->ngram[k]);
+        strB = cl_id2str(Hash.att[i], B->ngram[k]);
+      }
+      else {
+        if (A->ngram[k] < 0)
+          strA = "";
+        else
+          strA = Hash.source_base[i] + A->ngram[k];
+        if (B->ngram[k] < 0)
+          strB = "";
+        else
+          strB = Hash.source_base[i] + B->ngram[k];
+      }
+      res = strcmp(strA, strB);
+      if (res != 0) return(res);
+      k++;
+    }
+  }
+
+  return 0;
+}
+
+
 /* *************** *\
  *      MAIN()     *
 \* *************** */
@@ -736,12 +823,10 @@ main (int argc, char *argv[])
   /* print hash contents to stdout or file (in hash-internal order) */
   {
     cl_ngram_hash_entry entry;
+    cl_ngram_hash_entry *entry_vec;
+    int i, k, n_items = 0;
     FILE *of;
-    char pipe_cmd[CL_MAX_LINE_LENGTH];
-    int i, k, l, is_pipe;
-    char *str;
 
-    is_pipe = 0;
     of = cl_open_stream((output_file) ? output_file : "-", CL_STREAM_WRITE, CL_STREAM_MAGIC); /* if NULL, default to STDOUT */
     if (of == NULL) {
       cl_error("Can't write output file");
@@ -754,35 +839,46 @@ main (int argc, char *argv[])
     }
     fflush(stderr);
 
-    cl_ngram_hash_iterator_reset(Hash.table);
-    while ((entry = cl_ngram_hash_iterator_next(Hash.table)) != NULL) {
-      if (entry->freq >= frequency_threshold) {
-        fprintf(of, "%d", entry->freq);
-        k = 0;
-        for (i = 0; i < Hash.N; i++) {
-          if (! Hash.is_constraint[i]) {
-            if (! Hash.is_structural[i]) {
-              str = cl_id2str(Hash.att[i], entry->ngram[k]);
-            }
-            else {
-              if (entry->ngram[k] < 0) {
-                str = "";
-              }
-              else {
-                str = Hash.source_base[i] + entry->ngram[k];
-              }
-            }
-            fprintf(of, "\t%s", str);
+    if (sort_output) {
+      entry_vec = cl_ngram_hash_get_entries(Hash.table, &n_items);
+      if (frequency_threshold > 1) {
+        /* pre-filter list of items to speed up qsort */
+        k = 0; /* insert point */
+        for (i = 0; i < n_items; i++) {
+          if (entry_vec[i]->freq >= frequency_threshold) {
+            entry_vec[k] = entry_vec[i];
             k++;
           }
         }
-        fprintf(of, "\n");
+        n_items = k;
+      }
+      if (!quiet) {
+        fprintf(stderr, "sorting ... ");
+        fflush(stderr);
+      }
+      if (n_items > 0)
+        qsort(entry_vec, n_items, sizeof(cl_ngram_hash_entry), collate_ngram_entries);
+      if (!quiet) {
+        fprintf(stderr, "saving ... ");
+        fflush(stderr);
+      }
+      for (i = 0; i < n_items; i++)
+        print_ngram_entry(of, entry_vec[i]);
+      cl_free(entry_vec);
+    }
+    else {
+      cl_ngram_hash_iterator_reset(Hash.table);
+      while ((entry = cl_ngram_hash_iterator_next(Hash.table)) != NULL) {
+        if (entry->freq >= frequency_threshold) {
+          print_ngram_entry(of, entry);
+          n_items++;
+        }
       }
     }
 
     cl_close_stream(of);
     if (! quiet)
-      fprintf(stderr, "ok.\n");
+      fprintf(stderr, "%d items.\n", n_items);
   } /* endblock print hash contents to stdout */
 
   /* display hash table usage statistics at higher debug levels (-D -D and above) */

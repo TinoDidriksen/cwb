@@ -548,7 +548,7 @@ cl_ngram_hash_get_entries(cl_ngram_hash hash, int *ret_size)
 
   /* allocate memory for enumeration of entries */
   size = hash->entries;
-  result = cl_malloc(size & sizeof(cl_ngram_hash_entry));
+  result = cl_malloc(size * sizeof(cl_ngram_hash_entry));
   if (ret_size != NULL)
     *ret_size = size;
   
