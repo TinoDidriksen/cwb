@@ -56,6 +56,10 @@ New features:
 
  - cwb-scan-corpus can now optionally sort its output in canonical lexicographic ordering, making
    it easier to merge multiple frequency counts (from different corpora)
+   
+ - [2017-03-16: v3.4.11] New built-in function normalize(string, "%cd") in CQP queries, which applies
+   case- and/or diacritic-folding. The recommended use case is a case-folded (etc.) comparison of two
+   attribute values. Note that any condition involving built-in functions cannot make use of index lookup. 
 
 
 Bug fixes:

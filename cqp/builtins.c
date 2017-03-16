@@ -37,7 +37,7 @@ int f_args[]        = {ATTAT_STRING};                 /**< Argument types for bu
 int distance_args[] = {ATTAT_POS, ATTAT_POS};         /**< Argument types for builtin function distance (or dist) */
 int distabs_args[]  = {ATTAT_POS, ATTAT_POS};         /**< Argument types for builtin function distabs */
 int bound_args[]    = {ATTAT_INT};                    /**< Argument types for builtin functions lbound and rbound */
-int unify_args[]    = {ATTAT_STRING, ATTAT_STRING};   /**< Argument types for builtin functions unify, prefix, is_prefix, minus*/
+int unify_args[]    = {ATTAT_STRING, ATTAT_STRING};   /**< Argument types for builtin functions unify, prefix, is_prefix, minus, normalize */
 int ambiguity_args[]= {ATTAT_STRING};                 /**< Argument types for builtin function ambiguity */
 int string_arg[]    = {ATTAT_STRING};                 /**< Argument types for builtin functions taking a single string argument */
 int arith_args[]    = {ATTAT_INT, ATTAT_INT};         /**< Argument types for builtin arithemtical functions */
@@ -67,6 +67,7 @@ BuiltinF builtin_function[] = {
   { 13, "is_prefix",2, unify_args,    ATTAT_INT },    /* is_prefix(a,b) = 1 iff a is prefix of b */
   { 14, "minus",    2, unify_args,    ATTAT_STRING }, /* minus(a,b) = result of removing (longest) common prefix of a and b from a */
   { 15, "ignore",   1, ignore_args,   ATTAT_INT },    /* takes label as argument, which it ignores; returns True as an int */
+  { 16, "normalize",2, unify_args,    ATTAT_STRING},  /* apply case/diacritic folding to string */
 
   { -1, NULL,       0, NULL,          ATTAT_NONE }
 };
@@ -179,7 +180,7 @@ call_predefined_function(int bf_id,
                          Constrainttree ctptr,
                          DynCallResult *result)
 {
-  int argp, pos;
+  int argp, pos, flags;
   char *str0, *str1;
   Attribute *attr;
 
@@ -194,7 +195,7 @@ call_predefined_function(int bf_id,
   argp = 0;
 
   /* check argument types */
-  /* ATTENTION there are some implicity conversions built-in functions have to provide: 
+  /* ATTENTION there are some implicit conversions built-in functions have to provide:
      - ATTAT_POS and ATTAT_INT are interchangeable (both use .intres, so there's no problem) 
      - ATTAT_PAREF can be cast to ATTAT_STRING (function has to evaluate label reference and retrieve the corresponding token)
      - ATTAT_NONE is accepted for ATTAT_STRING arguments; 
@@ -284,7 +285,7 @@ call_predefined_function(int bf_id,
       errno = 0;                /* might catch some conversion errors */
       value = atoi(str0);
       if (errno != 0) {
-        cqpmessage(Error, "Bulitin integer conversion failed for int(%s).", str0);
+        cqpmessage(Error, "Builtin integer conversion failed for int(%s).", str0);
         return False;                /* probably a conversion error */
       }
 
@@ -519,6 +520,56 @@ call_predefined_function(int bf_id,
     return True;
     break;
     
+  case 16:                        /* normalize (case- and/or diacritic-folding) */
+    /* check for invalid argument types */
+    if (apl[0].type == ATTAT_NONE) {
+      cqpmessage(Error, "First argument to builtin %s() function is undefined.",
+                 builtin_function[bf_id].name);
+      result->type = ATTAT_NONE;
+      return False;
+    }
+    if (apl[1].type != ATTAT_STRING) {
+      cqpmessage(Error, "Second argument to builtin %s() function must be a literal string.",
+                 builtin_function[bf_id].name);
+      result->type = ATTAT_NONE;
+      return False;
+    }
+
+    /* convert 1st argument from PAREF to STRING if necessary */
+    if (apl[0].type == ATTAT_PAREF) {
+      assert(ctptr->func.args[0].param->type == pa_ref);
+      attr = ctptr->func.args[0].param->pa_ref.attr;
+      assert(attr != NULL);
+      str0 = get_string_of_id(attr, apl[0].value.parefres.token_id);
+    }
+    else
+      str0 = apl[0].value.charres;
+    /* 2nd argument must be literal string */
+    str1 = apl[1].value.charres;
+
+    /* determine normalization flags */
+    flags = 0;
+    while (*str1) {
+      if (*str1 == 'c' || *str1 == 'C')
+        flags |= IGNORE_CASE;
+      else if (*str1 == 'd' || *str1 == 'D')
+        flags |= IGNORE_DIAC;
+      else if (*str1 != '%')
+        cqpmessage(Error, "Invalid normalization mode '%s' in builtin %s() function [%%cd]",
+                   apl[1].value.charres, builtin_function[bf_id].name);
+      str1++;
+    }
+    assert(evalenv->query_corpus);
+    assert(evalenv->query_corpus->corpus);
+
+    /* make a copy of the first argument, then modify in-place */
+    strcpy(result->dynamic_string_buffer, str0); /* pray str0 fits into the static buffer */
+    cl_string_canonical(result->dynamic_string_buffer, cl_corpus_charset(evalenv->query_corpus->corpus), flags); /* pray that it still fits :-( */
+    result->type = ATTAT_STRING;
+    result->value.charres = result->dynamic_string_buffer;
+    return True;
+    break;
+
   default:
     fprintf(stderr, "%s, line %d: Illegal bf_id\n", __FILE__, __LINE__);
     break;
