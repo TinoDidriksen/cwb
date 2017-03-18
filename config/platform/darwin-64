@@ -16,8 +16,9 @@
 ##  WWW at http://www.gnu.org/copyleft/gpl.html).
 
 ##
-##  PLATFORM CONFIGURATION FILE: Recent Mac OS X with Xcode 5 or later on 64-bit Intel Core2 and newer CPUs, natively tuned,
-##                               for main 64-bit architecture only, with external libraries provided by HomeBrew package manager
+##  PLATFORM CONFIGURATION FILE: 
+##  Recent Mac OS X with Xcode 5 or later on 64-bit Intel Core2 and newer CPUs, natively tuned,
+##  with prerequisite libraries installed by user or package manager in standard locations
 ##
 
 ## Inherits from basic Darwin configuration

@@ -53,6 +53,14 @@ READLINE_DEFINES =
 TERMCAP_LIBS = -lncurses
 TERMCAP_DEFINES = 
 
+## Glib-2 library with platform-independent utilities (auto-detected with pkg-config by default)
+# GLIB_LIBS = 
+# GLIB_DEFINES = 
+
+## PCRE regular expression library (auto-detected with pcre-config by default)
+# PCRE_LIBS = 
+# PCRE_DEFINES = 
+
 ## Include debugging information in binaries (depends on C compiler, only recommended for developers)
 # DEBUG_FLAGS = -g
 

@@ -16,8 +16,9 @@
 ##  WWW at http://www.gnu.org/copyleft/gpl.html).
 
 ##
-##  PLATFORM CONFIGURATION FILE: Mac OS X 10.6 (Snow Leopard) and 10.7 (Lion) on 64-bit Intel Core2 and newer CPUs
-##                               with external libraries provided by HomeBrew package manager
+##  PLATFORM CONFIGURATION FILE:
+##  Universal binaries for Mac OS X 10.6 (Snow Leopard) and newer
+##  with prerequisite libraries installed by user or package manager in standard locations
 ##
 
 ## Inherits from basic Darwin configuration
@@ -26,7 +27,7 @@ include $(TOP)/config/platform/darwin
 ## Make sure that Apple's gcc is used (not e.g. a fink-installed version)
 CC = /usr/bin/gcc
 
-## needs universal versions of glib and pcre from HomeBrew (see installation notes)
+## needs universal versions of glib and pcre (see installation notes)
 CFLAGS = -Wall -O3 -arch x86_64 -arch i386 -march=core2 -mtune=core2
 
 DEPEND_CFLAGS = -Wall -O3

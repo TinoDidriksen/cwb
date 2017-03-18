@@ -209,8 +209,12 @@ endif
 
 # Glib and PCRE header file info (added to CFLAGS_ALL below)
 ifndef __MINGW__
+ifndef PCRE_DEFINES
 PCRE_DEFINES := $(shell pcre-config --cflags)
+endif
+ifndef GLIB_DEFINES
 GLIB_DEFINES := $(shell pkg-config  --cflags glib-2.0)
+endif
 else
 # Library/Include/DLL/PKG-config files for the cross compiler are to be found beneath this folder
 ifndef MINGW_CROSS_HOME
@@ -228,14 +232,6 @@ INTERNAL_DEFINES = -DREGISTRY_DEFAULT_PATH=\""$(DEFAULT_REGISTRY)"\" -DCOMPILE_D
 # path to locally compiled CL library and linker command
 LIBCL_PATH = $(TOP)/cl/libcl.a
 CL_LIBS = $(LIBCL_PATH) 
-
-# path to internal copy of GNU regex library for use in MinGW (to be removed once PCRE is working with Win)
-#ifdef __MINGW__ 
-#LIBREGEX_PATH = $(TOP)/mingw-libgnurx-2.5.1/libregex.a
-#LIB_REGEX = $(LIBREGEX_PATH)
-#else
-#LIB_REGEX = 
-#endif
 
 # paths to DLL files that need to be installed along with CWB binaries (win only)
 ifdef __MINGW__
@@ -261,13 +257,19 @@ DLLS_TO_INSTALL =
 endif 
 
 # Linker flags for libraries used by the CL (to be added to linking commands for all programs)
-ifdef __MINGW__
+ifndef __MINGW__
+ifndef PCRE_LIBS
+PCRE_LIBS := $(shell pcre-config --libs)
+endif
+ifndef GLIB_LIBS
+GLIB_LIBS := $(shell pkg-config --libs glib-2.0)
+endif
+LDFLAGS_LIBS = $(PCRE_LIBS) $(GLIB_LIBS)  
+else
 #LDFLAGS_LIBS = -lpcre -lpcre.dll -lglib-2.0
 LDFLAGS_LIBS := -L$(MINGW_CROSS_HOME)/lib  -lpcre -lpcre.dll -lglib-2.0               \
     $(shell $(MINGW_CROSS_HOME)/bin/pcre-config --libs)   \
     $(shell export PKG_CONFIG_PATH=$(MINGW_CROSS_HOME)/lib/pkgconfig ; pkg-config --libs glib-2.0)
-else
-LDFLAGS_LIBS = $(shell pcre-config --libs) $(shell pkg-config --libs glib-2.0)
 endif 
 
 # complete sets of compiler and linker flags (allows easy specification of specific build rules)

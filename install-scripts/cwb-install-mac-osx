@@ -37,19 +37,19 @@ then
     fi
     exit
   fi
-  PLATFORM=darwin-port-universal
+  PLATFORM=darwin-port-core2
 else
   echo "External libraries seem to be provided by HomeBrew or installed manually (/usr/local)"
   if [[ !(-f /usr/local/lib/libglib-2.0.dylib || -f /usr/local/lib/libglib-2.0.a) ]]
   then
     echo " *** cannot find external GLib2 library (libglib-2.0) ***"
-    echo "Please install Glib2 with 'brew install glib2 --universal', then re-run this script."
+    echo "Please install Glib2 with 'brew install glib2', then re-run this script."
     exit
   fi
   if [[ !(-f /usr/local/lib/libpcre.dylib || -f /usr/local/lib/libpcre.a) ]]
   then
     echo " *** cannot find external PCRE library (libpcre) ***"
-    echo "Please install PCRE with 'brew install pcre --universal', then re-run this script."
+    echo "Please install PCRE with 'brew install pcre', then re-run this script."
     exit
   fi
   if [[ ! `echo "$readline_check" | grep /usr/local` ]]
@@ -58,7 +58,7 @@ else
     echo "Please install GNU Readline with 'brew install readline', then re-run this script."
     exit
   fi
-  PLATFORM=darwin-universal
+  PLATFORM=darwin-brew
 fi
 
 # run as root! su or sudo.

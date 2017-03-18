@@ -28,18 +28,18 @@
 #       linux         i386-Linux (generic)
 #         linux-64       - configuration for 64-bit CPUs
 #         linux-opteron  - with optimimzation for AMD Opteron processor
-#       darwin        Mac OS X / Darwin [use one of the CPU-specific entries below]
-#         darwin-universal  - recommended universal build on Mac OS X 10.6 (Snow Leopard) and 10.7 (Lion), using HomeBrew package manager to install external libraries
-#         darwin-64         - recommended 64-bit build (main architecture on Snow Leopard and Lion), using HomeBrew package manager
-#         darwin-port-core2 - universal build optimised for Core 2 CPU (requires Xcode 3.1 / OS X 10.5+), using MacPorts to provide external libraries
-#         darwin-port-universal - universal build for i386 and x86_64 architectures on OS X 10.5+, using MacPorts
+#       darwin        Mac OS X / Darwin [use one of the more specific entries below]
+#         darwin-brew       - 64-bit, natively tuned, prerequisites installed with HomeBrew (recommended)
+#         darwin-universal  - universal build on Mac OS X 10.6 and newer
+#         darwin-64         - 64-bit build on Mac OS X 10.6 and newer
+#         darwin-port-core2  - universal build optimized for Core2 CPUs, prerequisites installed with MacPorts (deprecated)
 #       solaris       SUN Solaris 8 for SPARC CPU
 #       cygwin        Win32 build using Cygwin emulation layer (experimental)
 #       mingw-cross   Cross-compile for Win32-on-i586 from a *nix system with MinGW installed (experimental)
 #       mingw-native  Build natively on Win32 using MinGW (new, at research stage only, does not work yet)
 #
 ifndef PLATFORM
-PLATFORM=darwin-universal
+PLATFORM=darwin-brew
 endif
 include $(TOP)/config/platform/$(PLATFORM)
 
@@ -113,6 +113,15 @@ include $(TOP)/config/site/$(SITE)
 # SITE_CFLAGS =
 # SITE_LDFLAGS =
 
+
+#
+# The following settings will only need to be changed in very rare cases.  If necessary, 
+# they are usually set in the platform configuration file to work around OS deficiencies.
+#
+# When (cross-)compiling for Windows with MinGW, most of these settings are ignored
+# and unconditionally replaced by hard-coded defaults. See file INSTALL-WIN for details.
+#
+
 ## Some platforms require special libraries for socket/internet functionality 
 # NETWORK_LIBS =
 
@@ -120,15 +129,17 @@ include $(TOP)/config/site/$(SITE)
 # TERMCAP_LIBS =
 # TERMCAP_DEFINES = 
 
+## GNU Readline library for command-line editing (optional)
+# READLINE_LIBS = -L<path_to_readline_libs> -lreadline -lhistory
+# READLINE_DEFINES = -I<path_to_readline_headers>
 
-#
-# The following settings will only need to be changed in very rare cases.  If necessary, 
-# they are usually set in the platform configuration file to work around OS deficiencies.
-#
+## GLIB2 for platform-independent support functions
+# GLIB_LIBS = -L<path_to_glib_libs> -lglib-2.0
+# GLIB_DEFINES = -I<path_to_glib_headers>
 
-## GNU Readline library for command-line editing
-# READLINE_LIBS = -L <path_to_readline_libs> -lreadline -lhistory
-# READLINE_DEFINES = -I <path_to_readline_headers>
+## PCRE regular expression library (v8.20 or newer strongly recommended)
+# PCRE_LIBS = -L<path_to_pcre_libs> -lpcre
+# PCRE_DEFINES = -I<path_to_pcre_headers>
 
 ## CWB uses Flex/Bison for parsing registry files and CQP commands
 # YACC = bison -d -t

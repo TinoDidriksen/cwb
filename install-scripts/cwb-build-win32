@@ -12,7 +12,7 @@ config_file=$(cat config.mk)
 
 
 # alter platform
-target="PLATFORM=darwin-universal"
+target="PLATFORM=darwin-brew"
 rep="PLATFORM=mingw-cross"
 
 config_file=${config_file/"$target"/"$rep"}

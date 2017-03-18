@@ -120,7 +120,12 @@ Bug fixes:
    in this special case, which will automatically generate the code '0' for the single type.
  
  - [2016-07-20] Fixed bug #49: SIGPIPE handler is now installed automatically by open_stream() and checked
-   by all CQP commands that print substantial amounts of output (cat, dump, sort, count, group, tabulate).  
+   by all CQP commands that print substantial amounts of output (cat, dump, sort, count, group, tabulate).
+
+ - Revised makefile configuration so compiler and linker flags for Glib and PCRE can be set explicitly. Most
+   users will be happy with the default settings (using pkg-config and pcre-config for auto-detection) and 
+   when compiling for Windows with MinGW the new settings are ignored. Default configuration now changed to
+   "darwin-brew", which no longer supports universal binaries on Mac OS X.
 
 Enhancements:
 
