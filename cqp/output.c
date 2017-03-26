@@ -414,7 +414,7 @@ open_input_stream(struct InputRedir *rd)
       else {
         tmp = (char *) cl_malloc(i + 1); /* pipe command = rd->name[0 .. (i-1)] */
         strncpy(tmp, rd->name, i);
-        /* tmp[i] = '\0'; -- shouldn't be necessary */
+        tmp[i] = '\0';
         rd->stream = cl_open_stream(tmp, CL_STREAM_READ, CL_STREAM_PIPE);
         cl_free(tmp);
       }
