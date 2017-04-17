@@ -878,7 +878,7 @@ cl_id2cpos_oldstyle(Attribute *attribute, int id, int *freq, int *restrictor_lis
  */
 typedef struct _position_stream_rec_ {
   Attribute *attribute;         /**< The Attribute on which this PositionStream has been opened. */
-  int id;                       /**< The item whose positions this PositionStream's will read */
+  int id;                       /**< The item whose positions this PositionStream will read */
   int id_freq;                  /**< id frequency (ie frequency of the item in question);
                                      maximum number of positions that can be read */
   int nr_items;                 /**< how many items delivered so far */

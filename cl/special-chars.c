@@ -16,7 +16,7 @@
  */
 /*
  *  Windows/Unicode-compatibility extensions to CWB in this file
- *  Copyright (C) 2010      by ANR Textom�trie, ENS de Lyon
+ *  Copyright (C) 2010      by ANR Textométrie, ENS de Lyon
  */
 
 #include <ctype.h>

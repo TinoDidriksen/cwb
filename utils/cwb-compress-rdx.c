@@ -27,7 +27,7 @@
 
 /* doesn't seem to exist outside Solaris, so we define it here */
 #define log2(x) (log(x)/log(2.0))
-/* TODO actually log2 is now a function in C99 and in POSIX... */
+/* TODO actually log2 is now a math.h function in C99 and in POSIX... */
 
 /* ---------------------------------------------------------------------- */
 
@@ -418,8 +418,8 @@ decompress_check_reversed_index(Attribute *attr, char *output_fn)
         compressrdx_cleanup(1);
       }
       if (pos != true_pos) {
-        fprintf(stderr, "ERROR: wrong occurrence of token #%d at cpos %d (correct cpos: %d). Aborted.\n",
-                i, pos, true_pos);
+        fprintf(stderr, "ERROR: wrong occurrence of type #%d at cpos %d (correct cpos: %d) (on attribute: %s). Aborted.\n",
+                i, pos, true_pos, attr->any.name);
         compressrdx_cleanup(1);
       }
 

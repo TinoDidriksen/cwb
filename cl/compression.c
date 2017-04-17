@@ -106,7 +106,7 @@ write_golomb_code(int x, int b, BFile *bf)
  * Reads an integer from a Golomb-coded bit-file-buffer.
  *
  * @param b   ???
- * @param bf  The bit-filem to read from.
+ * @param bf  The bit-file to read from.
  * @return    The integer that is read.
  */
 int read_golomb_code_bf(int b, BFile *bf)
