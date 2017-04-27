@@ -38,6 +38,7 @@
 #include <errno.h>
 #include <string.h>
 #include <assert.h>
+#include <limits.h>
 
 
 /* byte order conversion functions taken from Corpus Library */
@@ -758,6 +759,10 @@ sencode_write_region(int start, int end, char *annot)
       entry = cl_lexhash_add(LH, annot);
       entry->data.integer = new_satt.offset;
       new_satt.offset += strlen(annot) + 1; /* increment range offset */
+      if (new_satt.offset < 0) {
+        fprintf(stderr, "Too many annotation values for <%s> regions (lexicon size > %d bytes)", new_satt.name, INT_MAX);
+        exit(1);
+      }
       if (0 > fprintf(new_satt.avs, "%s%c", annot, 0)) {
         perror("Error writing to AVS file");
         exit(1);

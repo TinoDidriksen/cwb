@@ -126,6 +126,12 @@ Bug fixes:
    users will be happy with the default settings (using pkg-config and pcre-config for auto-detection) and 
    when compiling for Windows with MinGW the new settings are ignored. Default configuration now changed to
    "darwin-brew", which no longer supports universal binaries on Mac OS X.
+   
+ - [2017-04-27] A little-known (and undocumented) limitation of CWB is that the lexicon of a p-attribute may
+   not exceed a total size of 2 GiB because string offsets are stored as 32-bit integers. The same holds for
+   the "lexicon" of an s-attribute with annotations, i.e. the set of all distinct annotation strings.
+   The cwb-encode and cwb-s-encode utilities now check for integer overflow and abort with an informative
+   error message in this case. 
 
 Enhancements:
 

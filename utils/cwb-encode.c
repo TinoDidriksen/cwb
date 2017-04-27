@@ -19,6 +19,7 @@
 #include <ctype.h>
 #include <math.h>
 #include <stdarg.h>
+#include <limits.h>
 
 #include <sys/types.h>
 #include <time.h>
@@ -825,6 +826,9 @@ range_close(Range *rng, int end_pos)
           entry->data.integer = rng->offset;
           /* update offset (string length + null byte) */
           rng->offset += strlen(rng->annot) + 1;
+          /* check for integer overflow */
+          if (rng->offset < 0)
+            encode_error("Too many annotation values for <%s> regions (lexicon size > %d bytes)", rng->name, INT_MAX);
         }
         rng->num++;
         cl_free(rng->annot);
@@ -1537,6 +1541,8 @@ encode_add_wattr_line(char *str)
       /* new entry -> write LEXIDX & LEXICON files */
       NwriteInt(wattrs[fc].position, wattrs[fc].lexidx_fd);
       wattrs[fc].position += strlen(token) + 1;
+      if (wattrs[fc].position < 0)
+        encode_error("Maximum size of .lexicon file exceeded for %s attribute (> %d bytes)", wattrs[fc].name, INT_MAX);
       if (EOF == fputs(token, wattrs[fc].lex_fd)) {
         perror("fputs() write error");
         encode_error("Error writing .lexicon file for %s attribute.", wattrs[fc].name);

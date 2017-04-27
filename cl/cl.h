@@ -293,6 +293,9 @@ void cl_set_memory_limit(int megabytes);  /* 0 or less turns limit off */
  * cwb-encode will abort once this limit has been reaching, discarding any
  * further input data. The precise value of the limit is 2^32 - 1 tokens,
  * i.e. hex 0x7FFFFFFF and decimal 2147483647.
+ * Note that the largest valid cpos 2^32 - 1 would allow a theoretical corpus
+ * size of 2^32 tokens. But in some places, the corpus size itself is stored
+ * in a signed 32-bit integer variable, hence the lower limit.
  */
 #define CL_MAX_CORPUS_SIZE 2147483647
 
