@@ -753,17 +753,18 @@ get_leaf_value(Constrainttree ctptr,
 
 
 
-/* evaluate the boolean constraint tree by using recursion
- * "corppos" is the current corpus position 
- */
-
-/** Comparison function used when calling qsort(). */
+/** Comparison function used when eval_bool() calls qsort(). */
 static int
 intcompare(const void *i, const void *j)
 {
   return(*(int *)i - *(int *)j);
 }
 
+
+/**
+ * evaluate the boolean constraint tree by using recursion;
+ * "corppos" is the current corpus position
+ */
 Boolean
 eval_bool(Constrainttree ctptr, RefTab rt, int corppos)
 {
@@ -1235,8 +1236,7 @@ eval_bool(Constrainttree ctptr, RefTab rt, int corppos)
 
 
 int
-mark_offrange_cells(Matchlist *matchlist,
-                    CorpusList *corpus)
+mark_offrange_cells(Matchlist *matchlist, CorpusList *corpus)
 {
   int rp, i, del;
 
@@ -1746,9 +1746,9 @@ calculate_initial_matchlist_1(Constrainttree ctptr,
 }
 
 /**
- * Wrapper around calculate_initial_matchlist1, qv.
+ * Wrapper around calculate_initial_matchlist_1, qv.
  *
- * @see calculate_initial_matchlist1
+ * @see calculate_initial_matchlist_1
  */
 Boolean
 calculate_initial_matchlist(Constrainttree ctptr,

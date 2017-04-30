@@ -26,7 +26,7 @@
 #include "symtab.h"
 
 
-#define repeat_inf -1     /**< constant which indicates 'infinite repetition' */
+#define repeat_inf -1     /**< constant which indicates 'infinite repetition' (actually, repetition up to hard_boundary) @see hard_boundary */
 #define repeat_none -2    /**< constant which indicates 'no repetition'       */
 
 /** Number of AVStructures to put in each Patternlist */
@@ -391,7 +391,7 @@ typedef struct evalenv {
 
   Evaltree evaltree;                /**< the evaluation tree (with regular exprs) */
 
-  DFA  dfa;                         /**< the regex NFA for the current query */
+  DFA  dfa;                         /**< the regex DFA for the current query */
 
   int has_target_indicator;         /**< is there a target mark ('@') in the query? */
   LabelEntry target_label;          /**< targets are implemented as a special label "target" now */

@@ -134,7 +134,7 @@ char *LastW;
 
 #define MAX_CHAR 0x4000
 /* TODO do we need a 16Kb string given the limits on string length elsewhere in CWB/CQP ?
- * Is there any way we could make this an AutoStreing instead, maybe?
+ * Is there any way we could make this an AutoString instead, maybe?
  * If we do, should this name be more transparent? (CH_ARR_MAX better perhaps) */
 static char ChArr[MAX_CHAR];
 char *ChP;

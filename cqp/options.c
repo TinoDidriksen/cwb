@@ -101,7 +101,7 @@ CQPOption cqpoptions[] = {
   /* now called DataDirectory, but we keep the old name (secretly) for compatibility */
   { "lcd","LocalCorpusDirectory", OptString,  &LOCAL_CORP_PATH,        NULL,         0,   NULL,   2,     0 },
 
-  /* user options */
+  /* user options: assumed to be settable via the interface (thus the use of the OPTION_CQP flag that makes them visible). */
   { "r",  "Registry",             OptString,  &registry,               NULL,         0,   REGISTRY_ENVVAR,
                                                                                                   1,     OPTION_CQP },
   { "dd", "DataDirectory",        OptString,  &LOCAL_CORP_PATH,        NULL,         0,   DEFAULT_LOCAL_PATH_ENV_VAR,

@@ -51,9 +51,10 @@ Please note that CQP does not currently support GNU-style C<--long-options>.
 =item B<-b> I<num>
 
 Sets a hard boundary for the kleene star in token-sequence regular expressions (I<not> string-matching
-regular expressions). When this option is specified, matches will be made across no more than I<num> tokens. 
-This is basically the same as adding a C<within I<num>> clause to the CQP query; an explicit C<within> clause
-overrides the hard boundary, if specified.
+regular expressions). Matches will be made across no more than I<num> tokens. 
+This is basically the same as adding a C<within I<num>> clause to the CQP query; 
+an explicit C<within> clause overrides the hard boundary, if specified.
+If this option is not used, the hard boundary is set to a default of 500 tokens.
 
 Equivalent to the interactive command C<set HardBoundary I<num>>.  
 

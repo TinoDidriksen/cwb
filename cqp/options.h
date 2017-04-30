@@ -21,11 +21,11 @@
 #include "../cl/globals.h"
 #include "concordance.h"
 
-/** Default value for the HardBoundary configuration option. */
-#define DEFAULT_HARDBOUNDARY 100
-
-/** Flag for CQP configuration options: is this visible interactively in CQP? */
+/** Flag for CQP configuration options: is this visible interactively in CQP? (should prob be called OPTION_CQP_VISIBLE) */
 #define OPTION_CQP    1
+
+/** Default value for the HardBoundary configuration option. */
+#define DEFAULT_HARDBOUNDARY 500
 
 /** Default value for the context scope configuration option (counted in characters) */
 #define DEFAULT_CONTEXT 25
@@ -88,7 +88,7 @@ int macro_debug;                  /**< enable debugging of macros (and print mac
 /* query options */
 int hard_boundary;                /**< Query option: use implicit 'within' clause (unless overridden by explicit spec) */
 int hard_cut;                     /**< Query option: use hard cut value for all queries (cannot be changed) */
-int subquery;                     /**< Query option: use auto-subquery mode */
+int subquery;                     /**< Query option: use auto-subquery mode (TODO rename to auto_subquery for clarity) */
 char *def_unbr_attr;              /**< Query option: unbracketed attribute (attribute matched by "..." patterns) */
 int query_optimize;               /**< Query option: use query optimisation (untested and expensive optimisations) */
 
@@ -189,7 +189,7 @@ typedef enum _opttype {
  * a global variable somewhere. Instead, it holds metadata about the
  * config-option, including a pointer to the actual variable.
  *
- * Note it's possible to have wo CQPOption objects referring to the same
+ * Note it's possible to have two CQPOption objects referring to the same
  * actual variable - in this case the two option names in question
  * would be synonymous.
  *
@@ -199,11 +199,11 @@ typedef struct _cqpoption {
   char    *opt_name;             /**< Name of this option as referred to in the interactive control syntax */
   OptType  type;                 /**< Data type of this configuration option. */
   void    *address;              /**< Pointer to the actual variable that contains this config option. */
-  char    *cdefault;             /**< Default value fo rthis option (string value) */
-  int      idefault;             /**< Default value fo rthis option (integer value) */
+  char    *cdefault;             /**< Default value for this option (string value) */
+  int      idefault;             /**< Default value for this option (integer/boolean value) */
   char    *envvar;               /**< The environment variable from which CQP will take a value for this option */
   int      side_effect;          /**< Ref number of the side effect that changing this option has. @see execute_side_effects */
-  int      flags;                /**< Flags for this option: can include PUBLIC, CQP */
+  int      flags;                /**< Flags for this option: the only one currently used is OPTION_CQP @see OPTION_CQP */
 } CQPOption;
 
 
