@@ -3,28 +3,34 @@ Here is the list of things that need to be done to get all components up to v3.5
 FOR V 3.0.0
 ===========
 
-- Complete CQP tutorial -- searching / using aligned corpora
-- Complete documentation of CWB-Perl
+- Complete documentation of CWB-Perl [SE]
 
 
 FOR V 3.5.0
 ===========
 
-- Get to Zero Known Bugs in the core (most bugs are in things relating to Win32 compatability and UTF8 support)  
-- Get to Zero Known Bugs in CQPweb
-- Get to Zero Known Bugs in CWB-Perl 
-- Get CWB to compile actually on Windows with MinGW rather than (or as well as) cross-compiling
-- Link Glib & PCRE statically not dynamically on Windows so we don't need to mess with DLLs
+- Get to Zero Known Bugs in the core (most bugs are in things relating to Win32 compatability and UTF8 support) [AH/SE]
+- Get to Zero Known Bugs in CWB-Perl [SE]
+- Get CWB to compile actually on Windows with MinGW rather than (or as well as) cross-compiling [AH]
+- Link Glib & PCRE statically not dynamically on Windows so we don't need to mess with DLLs [AH]
 - Work out an install system for the Perl modules on Windows (would be nice to avoid requirement for gcc/gmake if possible;
-  precompiled binary package for Windows installation? Use Strawberry Perl?)
-- Make CQPweb Windows-compatible
-- Get cwb-config to work on Windows (maybe by reimplementing it in VB script?)
-- Ferret out any non-checked input in CQP for character set checking.
-- Modify the corpus encoding and CQP tutorials to take account of the fact that the user might be using Win.
+  precompiled binary package for Windows installation? Use Strawberry Perl?) [AH]
+- Get cwb-config to work on Windows (maybe by reimplementing it in VB script?) [AH]
+- Ferret out any non-checked input in CQP for character set checking. (this may apply 
+  to the cwb-utils as well [AH]
+- Modify the corpus encoding and CQP tutorials to take account of the fact that the user might be using Win. [AH/SE]
 
-- Implement our own PCRE character tables for all 8-bit encodings to enable case-insensitive matching beyond ASCII.
+- Implement our own PCRE character tables for all 8-bit encodings to enable case-insensitive matching beyond ASCII. [AH/SE]
+  -- Build tables from the PCRE code; On basis thereof, build code for folding diacritics.
 - Test revised implementation of regular expression matching and the optimizer (esp. with %c and %d flags).
 - Re-enable regexp optimizer by default (perhaps after testing phase).
+- Add matching-strategy switch flag to the CQP syntax, and add to CQPweb [AH]
+- Add improved documentation/hints on ways to handle character sets on Windows [AH/SE]
+
+[Following do not need to precede "core" 3.5 but are needed for CQPweb to be at 3.5]
+
+- Get to Zero Known Bugs in CQPweb [AH]
+- Make CQPweb Windows-compatible [AH]
 
 
 THINGS THAT ARE ON THE LIST, BUT WON'T BE TACKLED TILL 3.9/4.0
@@ -51,6 +57,7 @@ This is just a vague list to record roughly what we intend to be doing down the 
 THINGS FROM THE ABOVE LIST THAT ARE NOW COMPLETE
 ================================================
 
+- Complete CQP tutorial -- searching / using aligned corpora
 - Make fixed-char KWIC output "work", or at least approximate working, with UTF-8, as a stopgap before 3.9/4.0
 - Complete documentation of aligned corpora in core and CWB-Perl
 - Make fixed-char KWIC output "work", or at least approximate working, with UTF-8, as a stopgap before 3.9/4.0
