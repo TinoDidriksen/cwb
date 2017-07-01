@@ -160,6 +160,9 @@ Enhancements:
  - [2015-06-19: v3.4.9] Hash-based reimplementation of CQP's "group" command is much faster for frequency counts
    over large sets of distinct items (up to 150x speed-up in extreme cases) and supports grouped listing of
    frequencies (as the name of the command has always implied).
+   
+ - [2017-07-01] Undocumented and unsupported TAB queries now work again. No guarantees about performance and
+   semantics of the algorithm.
 
 
 Version 3.2

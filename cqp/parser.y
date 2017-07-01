@@ -1447,8 +1447,8 @@ TabOtherPatterns: TabOtherPatterns
 OptDistance:      '{' INTEGER '}'       { do_OptDistance(&($$), $2, $2); }
                 | '{' INTEGER ',' OptMaxNumber '}'
                                         { do_OptDistance(&($$), $2, $4); }
-                | '{' ',' INTEGER '}'   { do_OptDistance(&($$), 0, $3); }
-                | /* epsilon */         { do_OptDistance(&($$), 0, 0); }
+                | '{' ',' INTEGER '}'   { do_OptDistance(&($$), 1, $3); }
+                | /* epsilon */         { do_OptDistance(&($$), 1, 1); }
                 ;
 
 

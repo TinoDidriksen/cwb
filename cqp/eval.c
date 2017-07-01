@@ -3024,18 +3024,19 @@ cqp_run_tab_query(int implode)
       lists[this_col].start[i] = -1;
     Setop(&(lists[this_col]), Reduce, NULL);
   }
-
-
-  /* delete offrange cells when we are in a subcorpus */
+  /* now we should have parallel matchlists of the same tabsize, so that each row corresponds to a match of the TAB query */
+  for (i = 1; i < nr_columns; i++)
+    assert(lists[0].tabsize == lists[i].tabsize);
 
   if (lists[0].tabsize > 0) {
-
-    mark_offrange_cells(&lists[0], evalenv->query_corpus);
-
-    Setop(&lists[0], Reduce, NULL);
-
+    /* determine matchend anchors = rightmost element of TAB match */
     lists[0].end = (int *)cl_malloc(sizeof(int) * lists[0].tabsize);
-    memcpy(lists[0].end, lists[0].start, sizeof(int) * lists[0].tabsize);
+    for (i = 0; i < lists[0].tabsize; i++)
+      lists[0].end[i] = lists[nr_columns - 1].start[i];
+
+    /* delete offrange cells when we are in a subcorpus */
+    mark_offrange_cells(&lists[0], evalenv->query_corpus);
+    Setop(&lists[0], Reduce, NULL);
   }
   else {
     assert(lists[0].start == NULL);
@@ -3043,7 +3044,7 @@ cqp_run_tab_query(int implode)
 
   set_corpus_matchlists(evalenv->query_corpus, 
                         lists,
-                        nr_columns,
+                        1, /* multiple matchlists are not supported */
                         0);
 
   free(positions);
