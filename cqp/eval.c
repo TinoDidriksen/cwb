@@ -2739,9 +2739,12 @@ simulate_dfa(int envidx, int cut, int keep_old_ranges)
                 matchlist.target_positions[i] = -1;
             }
 
-            /* when 'cut <n>' is specified, try to get <n> matches from every intial pattern; */
-            /* then reduce to a total of <n> matches after sorting */
-            if (cut <= 0)
+            /* If 'cut <n>' is specified, try to get <n> matches from every initial pattern;
+             * then reduce to a total of <n> matches after sorting (this happens in do_StandardQuery<parse_actions.c>).
+             * Exception: aligned queries will remove an unpredictable number of matches below, so we must not apply a cut here and instead rely on the final reduction.
+             * This means that aligned queries will always run to completion even if cut is specified, but the inefficiency can't be helped with the current design.
+             */
+            if (cut <= 0 || eep > 0) /* eep > 0 iff there are alignment constraints */
               maxresult = -1;
             else
               maxresult = cut;

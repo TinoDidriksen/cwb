@@ -131,7 +131,12 @@ Bug fixes:
    not exceed a total size of 2 GiB because string offsets are stored as 32-bit integers. The same holds for
    the "lexicon" of an s-attribute with annotations, i.e. the set of all distinct annotation strings.
    The cwb-encode and cwb-s-encode utilities now check for integer overflow and abort with an informative
-   error message in this case. 
+   error message in this case.
+ 
+ - [2017-07-01] Fixed bug #1: with aligned queries, the "cut" clause was applied to the source language, and
+   alignment constraints would then further reduce the number of matches. The only solution with the current
+   implementation of CQP is to run every aligned query to completion and only then reduce the total number of
+   matches to the specified cut value. 
 
 Enhancements:
 
