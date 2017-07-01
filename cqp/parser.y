@@ -265,10 +265,11 @@ synchronize(void)
 %token EOL_SYM           /* '.EOL.' */
 %token ELLIPSIS          /* '..' or '...' */
 
-%token MATCHALL                 /* [] */
-%token LCSTART                  /* [: */
-%token LCEND                    /* :] */
-%token LCMATCHALL               /* [::] */
+%token MATCHALL          /* [] */
+%token LCSTART           /* [: */
+%token LCEND             /* :] */
+%token LCMATCHALL        /* [::] */
+%token EXTENSION         /* (? */        
 
 %token PLUSEQ
 %token MINUSEQ
@@ -317,6 +318,7 @@ synchronize(void)
 %type <cl> CYCommand Query AQuery CorpusSetExpr TranslateExpr SubsetExpr MUQuery 
 %type <cl> StandardQuery TABQuery
 
+%type <strval> EmbeddedModifier
 %type <ival> OptTargetSign
 %type <apl> FunctionArgList SingleArg
 %type <varval> VarValue
@@ -972,10 +974,15 @@ AQuery:         StandardQuery
               | TABQuery
               ;
 
-StandardQuery:  SearchPattern
+StandardQuery:  EmbeddedModifier
+                SearchPattern
                 AlignmentConstraints
-                CutStatement OptKeep    { $$ = do_StandardQuery($3, $4); }
+                CutStatement OptKeep    { $$ = do_StandardQuery($4, $5, $1); }
 ;
+
+EmbeddedModifier: EXTENSION ID ')'		{ $$ = $2; }
+				| /* epsilon */			{ $$ = NULL; }
+				;
 
 MUQuery:          MU_SYM
                   MUStatement OptKeep CutStatement { $$ = do_MUQuery($2, $3, $4); }

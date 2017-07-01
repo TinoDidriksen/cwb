@@ -135,7 +135,7 @@ void do_group2(CorpusList *cl,
                FieldType target, int target_offset, char *t_att,
                int cut, int expand, struct Redir *r);
 
-CorpusList *do_StandardQuery(int cut_value, int keep_flag);
+CorpusList *do_StandardQuery(int cut_value, int keep_flag, char *modifier);
 
 CorpusList *do_MUQuery(Evaltree evalt, int keep_flag, int cut_value);
 

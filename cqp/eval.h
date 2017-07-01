@@ -24,6 +24,7 @@
 #include "regex2dfa.h"
 #include "corpmanag.h"
 #include "symtab.h"
+#include "options.h"
 
 
 #define repeat_inf -1     /**< constant which indicates 'infinite repetition' (actually, repetition up to hard_boundary) @see hard_boundary */
@@ -406,6 +407,8 @@ typedef struct evalenv {
 
   int negated;                      /**< 1 iff we should negate alignment constr */
 
+  enum _matching_strategy matching_strategy; /**< copied from global option unless overwritten by (?...) directive */
+
 } EvalEnvironment;
 
 /**
@@ -420,8 +423,6 @@ EEP CurEnv, evalenv;
 
 /* ---------------------------------------------------------------------- */
 
-int next_environment();
-
 Boolean eval_bool(Constrainttree ctptr, RefTab rt, int corppos);
 
 /* ==================== the three query types */
@@ -434,7 +435,7 @@ void cqp_run_tab_query(int implode);
 
 /* ======================================== */
 
-int next_environment(); /* TODO duplicate declaration -- see upwards from here! */
+int next_environment();
 
 int free_environment(int thisenv);
 

@@ -210,6 +210,7 @@ typedef struct _cqpoption {
 extern CQPOption cqpoptions[];
 
 
+int find_matching_strategy(const char *s);
 
 int find_option(char *s);
 

@@ -509,6 +509,34 @@ set_default_option_values(void)
 
 
 /**
+ * Look up matching strategy by name.
+ *
+ * Returns the appropriate enum code for the selected matching strategy or -1 if the argument is invalid.
+ *
+ * @param s  Name of the desired matching strategy (case insensitive)
+ * @return   Code of the matching strategy, or -1 if s isn't a recognized matching strategy name.
+ *           The return value can be assigned to enum type matching_strategy unless it is -1.
+ */
+int find_matching_strategy(const char *s) {
+  if (strcasecmp(s, "traditional") == 0) {
+    return traditional;
+  }
+  else if (strcasecmp(s, "shortest") == 0) {
+    return shortest_match;
+  }
+  else if (strcasecmp(s, "standard") == 0) {
+    return standard_match;
+  }
+  else if (strcasecmp(s, "longest") == 0) {
+    return longest_match;
+  }
+  else {
+    printf("invalid matching strategy: %s\n", s);
+    return -1;
+  }
+}
+
+/**
  * Finds the index of an option.
  *
  * Return the index in the global options array of the option with name
@@ -546,6 +574,8 @@ int find_option(char *s)
 void
 execute_side_effects(int opt)
 {
+  int code;
+
   switch (cqpoptions[opt].side_effect) {
   case 0:  /* <no side effect> */
     break;
@@ -593,23 +623,14 @@ execute_side_effects(int opt)
     break;
 
   case 9:  /* set MatchingStrategy ( traditional | shortest | standard | longest ); */
-    if (strcasecmp(matching_strategy_name, "traditional") == 0) {
-      matching_strategy = traditional;
-    }
-    else if (strcasecmp(matching_strategy_name, "shortest") == 0) {
-      matching_strategy = shortest_match;
-    }
-    else if (strcasecmp(matching_strategy_name, "standard") == 0) {
-      matching_strategy = standard_match;
-    }
-    else if (strcasecmp(matching_strategy_name, "longest") == 0) {
-      matching_strategy = longest_match;
-    }
-    else {
+    code = find_matching_strategy(matching_strategy_name);
+    if (code < 0) {
       cqpmessage(Error, "USAGE: set MatchingStrategy (traditional | shortest | standard | longest);");
       matching_strategy = standard_match;
       cl_free(matching_strategy_name);
       matching_strategy_name = strdup("standard");
+    } else {
+      matching_strategy = code;
     }
     break;
     

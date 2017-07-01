@@ -2159,7 +2159,7 @@ simulate(Matchlist *matchlist,
 
           /* bail out on the first winner, unless matching_strategy == longest match */
           /* (in longest_match strategy, wait until we don't have any running states left) */
-          while (((winner < 0) || (matching_strategy == longest_match))
+          while (((winner < 0) || (evalenv->matching_strategy == longest_match))
                  && (running_states > 0)) {
 
             /*
@@ -2177,7 +2177,7 @@ simulate(Matchlist *matchlist,
 
             for (state = 0;
                  (state < evalenv->dfa.Max_States) &&
-                   ((winner < 0) || (matching_strategy == longest_match)) &&  /* abort when we've found a winner, unless strategy is longest match */
+                   ((winner < 0) || (evalenv->matching_strategy == longest_match)) &&  /* abort when we've found a winner, unless strategy is longest match */
                    (running_states > 0);                      /* no remaining active states -> simulation finished */
                  state++) {
 
@@ -2207,7 +2207,7 @@ simulate(Matchlist *matchlist,
 
                 for (p = 0;        /* cycle through all possible transitions from this state */
                      (p < evalenv->dfa.Max_Input)
-                       && ((winner < 0) || (matching_strategy == longest_match)); /* in shortest_match mode, stop evaluation as soon as there is a winner */
+                       && ((winner < 0) || (evalenv->matching_strategy == longest_match)); /* in shortest_match mode, stop evaluation as soon as there is a winner */
                      p++) {
 
                   /* the target state (that is, the state we reach after the transition) */
@@ -2386,7 +2386,7 @@ simulate(Matchlist *matchlist,
 
                         /* if our matching strategy is longest_match, we have to activate the target state,
                          * so our winner can expand to a longer match in queries like ''"ADJA" "NN"+;'' */
-                        if (!this_is_a_winner || (matching_strategy == longest_match)) {
+                        if (!this_is_a_winner || (evalenv->matching_strategy == longest_match)) {
                           /* for zero-width elements, don't increment corpus position (think of "<s><np> ... </np></s>" for instance) */
                           if (zero_width_pattern) {
                             target_vector[target_state] = cpos;  /* this is NOT the effective cpos, otherwise we'd go backwards! */
@@ -2414,7 +2414,7 @@ simulate(Matchlist *matchlist,
 
             /* if we haven't found a winner, or we're looking for other winners,
                check if there are still any active states */
-            if ((winner < 0) || (matching_strategy == longest_match)) {
+            if ((winner < 0) || (evalenv->matching_strategy == longest_match)) {
               running_states = 0;
               for (state = 0; state < evalenv->dfa.Max_States; state++)
                 if (target_vector[state] >= 0)
@@ -3269,6 +3269,7 @@ next_environment(void)
     Environment[eep].search_context.size = 0;
 
     Environment[eep].negated = 0;
+    Environment[eep].matching_strategy = matching_strategy; /* initialize from current global setting */
 
     CurEnv = &Environment[eep];
 

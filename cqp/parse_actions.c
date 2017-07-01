@@ -1012,12 +1012,27 @@ do_group2(CorpusList *cl,
 }
 
 CorpusList *
-do_StandardQuery(int cut_value, int keep_flag)
+do_StandardQuery(int cut_value, int keep_flag, char *modifier)
 {
   CorpusList *res;
   res = NULL;
 
   cqpmessage(Message, "Query");
+
+  /* embedded modifier (?<modifier>) at start of query */
+  if (modifier != NULL) {
+    /* currently, modifiers can only be used to set the matching strategy */
+    int code = find_matching_strategy(modifier);
+    if (code < 0) {
+      cqpmessage(Error, "embedded modifier (?%s) not recognized;\n"
+          "\tuse (?longest), (?shortest), (?standard) or (?traditional) to set matching strategy temporarily",
+          modifier);
+      generate_code = 0;
+    }
+    else
+      Environment[0].matching_strategy = code;
+    cl_free(modifier); /* allocated by lexer */
+  }
   
   if (parseonly || (generate_code == 0))
     res = NULL;
@@ -1035,7 +1050,7 @@ do_StandardQuery(int cut_value, int keep_flag)
     res = Environment[0].query_corpus;
 
     /* the new matching strategies require post-processing of the query result */
-    switch (matching_strategy) {
+    switch (Environment[0].matching_strategy) {
     case shortest_match:
       RangeSetop(res, RMinimalMatches, NULL, NULL);         /* select shortest from several nested matches */
       break;

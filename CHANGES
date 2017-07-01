@@ -59,7 +59,11 @@ New features:
    
  - [2017-03-16: v3.4.11] New built-in function normalize(string, "%cd") in CQP queries, which applies
    case- and/or diacritic-folding. The recommended use case is a case-folded (etc.) comparison of two
-   attribute values. Note that any condition involving built-in functions cannot make use of index lookup. 
+   attribute values. Note that any condition involving built-in functions cannot make use of index lookup.
+   
+ - [2017-07-01: v3.4.12] An embedded modifiers such as "(?longest)" can be used at the start of a CQP query 
+   to change the matching strategy temporarily. This is particularly useful for Web interfaces like CQPweb
+   which do not allow users explicit control over the MatchingStrategy option. 
 
 
 Bug fixes:
