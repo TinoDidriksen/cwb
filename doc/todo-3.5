@@ -16,15 +16,15 @@ FOR V 3.5.0
 - Work out an install system for the Perl modules on Windows (would be nice to avoid requirement for gcc/gmake if possible;
   precompiled binary package for Windows installation? Use Strawberry Perl?) [AH]
 - Get cwb-config to work on Windows (maybe by reimplementing it in VB script?) [AH]
-- Ferret out any non-checked input in CQP for character set checking. (this may apply 
-  to the cwb-utils as well [AH]
+- Add use of Readline library for command completion on Windows (but check: will it interfere with cmd.exe's 
+  command history / left/right scrolling ?) [AH]
+- Ferret out any non-checked input in CQP for character set checking. (this may apply to the cwb-utils as well [AH]
 - Modify the corpus encoding and CQP tutorials to take account of the fact that the user might be using Win. [AH/SE]
 
 - Implement our own PCRE character tables for all 8-bit encodings to enable case-insensitive matching beyond ASCII. [AH/SE]
   -- Build tables from the PCRE code; On basis thereof, build code for folding diacritics.
 - Test revised implementation of regular expression matching and the optimizer (esp. with %c and %d flags).
 - Re-enable regexp optimizer by default (perhaps after testing phase).
-- Add matching-strategy switch flag to the CQP syntax, and add to CQPweb [AH]
 - Add improved documentation/hints on ways to handle character sets on Windows [AH/SE]
 
 [Following do not need to precede "core" 3.5 but are needed for CQPweb to be at 3.5]
@@ -60,9 +60,9 @@ THINGS FROM THE ABOVE LIST THAT ARE NOW COMPLETE
 - Complete CQP tutorial -- searching / using aligned corpora
 - Make fixed-char KWIC output "work", or at least approximate working, with UTF-8, as a stopgap before 3.9/4.0
 - Complete documentation of aligned corpora in core and CWB-Perl
-- Make fixed-char KWIC output "work", or at least approximate working, with UTF-8, as a stopgap before 3.9/4.0
 - (Change version number in the Perl modules)
 - Update CWB-Perl for changes in the CL API in v3.1 & 3.2 (most notably, Unicode)
 - Write a definitive documentation of the problems with UTF-8 characters in Windows and how to get round them
   -- This is "kind of" complete, in that the website FAQ now contains all our best advice on this. 
 - Modify the CQP tutorial to reflect the fact that we are now on PCRE.
+- Add matching-strategy switch flag to the CQP syntax, and add to CQPweb [AH]

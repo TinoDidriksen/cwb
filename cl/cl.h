@@ -760,14 +760,14 @@ typedef struct _DCR {
   /* TODO - use a ClAutoString instead? */
 } DynCallResult;
 
-/* result and argument types of dynamic attributes; ATTAT = attribute argument type */
-#define ATTAT_NONE    0                /**< Dynamic att argument type: none */
-#define ATTAT_POS     1                /**< Dynamic att argument type: ?? */
-#define ATTAT_STRING  2                /**< Dynamic att argument type: string */
-#define ATTAT_INT     3                /**< Dynamic att argument type: integer */
-#define ATTAT_VAR     4                /**< Dynamic att argument type: variable number of string arguments (only in arglist) */
-#define ATTAT_FLOAT   5                /**< Dynamic att argument type: floating point */
-#define ATTAT_PAREF   6                /**< Dynamic att argument type: ?? */
+/* result and argument types of CQP functions (historically: dynamic attributes); ATTAT = attribute argument type */
+#define ATTAT_NONE    0                /**< CQP function argument type: none */
+#define ATTAT_POS     1                /**< CQP function argument type: corpus position */
+#define ATTAT_STRING  2                /**< CQP function argument type: string */
+#define ATTAT_INT     3                /**< CQP function argument type: integer */
+#define ATTAT_VAR     4                /**< CQP function argument type: variable number of string arguments (only in arglist) */
+#define ATTAT_FLOAT   5                /**< CQP function argument type: floating point */
+#define ATTAT_PAREF   6                /**< CQP function argument type: p-attribute reference */
 
 /* and now the functions:
  *
@@ -883,9 +883,12 @@ size_t cl_charset_strlen(CorpusCharset charset, char *s);
 
 /* the main functions for which CorpusCharset "matters" are the following... */
 
-/* the case/diacritic string normalization features used by CL regexes and CQP (modify input string!) */
-void cl_string_canonical(char *s, CorpusCharset charset, int flags);
-/* modifies string <s> in place; flags are IGNORE_CASE, IGNORE_DIAC, REQUIRE_NFC (i.e. same flags as for regex) */
+/* the case/diacritic string normalization features used by CL regexes and CQP (modify input string, unless final arg < 1) */
+char *cl_string_canonical(char *s, CorpusCharset charset, int flags, int inplace_bufsize);
+/* modifies string <s> in place if a buffersize given, otherwise returns a new string;
+ * flags are IGNORE_CASE, IGNORE_DIAC, REQUIRE_NFC (i.e. same flags as for regex) */
+/** Convenience calling-constant that forces cl_string_canonical to return a newly-allocated buffer. @see cl_string_canonical */
+#define CL_STRING_CANONICAL_STRDUP -1
 
 /* remove or overwrite C0 control characters in a string (modify input string!) */
 int cl_string_zap_controls(char *s, CorpusCharset charset, char replace, int zap_tabs, int zap_newlines);

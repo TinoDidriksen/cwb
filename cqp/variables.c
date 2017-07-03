@@ -478,8 +478,7 @@ VerifyVariable(Variable v, Corpus *corpus, Attribute *attribute)
                 "in the encoding specified for corpus [%s]", v->my_name, v->my_corpus);
           /* In utf8: lookup against canonicalised string. Otherwise: lookup against the string as-is. */
           if (utf8 == corpus->charset) {
-            str = strdup(v->items[i].sval);
-            cl_string_canonical(str, corpus->charset, REQUIRE_NFC);
+            str = cl_string_canonical(v->items[i].sval, corpus->charset, REQUIRE_NFC, CL_STRING_CANONICAL_STRDUP);
             v->items[i].ival = cl_str2id(attribute, str);
             cl_free(str);
           }
@@ -589,9 +588,10 @@ GetVariableStrings(Variable v, int *nr_items)
   
   /* count number of items (strings) stored in variable */
   N = 0;
-  for (i=0; i < v->nr_items; i++) {
-    if (!v->items[i].free) N++;
-  }
+  for (i=0; i < v->nr_items; i++)
+    if (!v->items[i].free)
+      N++;
+
   *nr_items = N;
 
   if (N == 0) {

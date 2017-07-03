@@ -2323,8 +2323,7 @@ do_flagged_string(char *s, int flags)
     
     cl_string_latex2iso(s, s, strlen(s));
     
-    if (flags == IGNORE_REGEX ||
-        (strcspn(s, "[](){}.*+|?\\") == strlen(s) && flags == 0)) {
+    if (flags == IGNORE_REGEX || (strcspn(s, "[](){}.*+|?\\") == strlen(s) && flags == 0)) {
 
       res->leaf.ctype.sconst = s;
       res->leaf.pat_type = NORMAL;

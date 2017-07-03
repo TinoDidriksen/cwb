@@ -139,7 +139,7 @@ create_feature_maps(char **config,
   int config_pointer;
 
   char *b, command[CL_MAX_LINE_LENGTH], dummy[CL_MAX_LINE_LENGTH];
-  char word1[2 * CL_MAX_LINE_LENGTH], word2[2 * CL_MAX_LINE_LENGTH]; /* buffers for case/accent-folded strings (might be longer than input with UTF-8 */
+  char word1[2 * CL_MAX_LINE_LENGTH], word2[2 * CL_MAX_LINE_LENGTH];/* buffers for case/accent-folded strings (might be longer than input with UTF-8 */
 
   int current_feature;
   int weight;                         /* holds the weight assigned to the feature(s) we're working on */
@@ -277,14 +277,14 @@ create_feature_maps(char **config,
              * to its feature count; note that we have to apply case/accent-folding first to obtain accurate counts */
             for(i = 0; i < nw1; i++) {
               strcpy(word1, cl_id2str(w_attr1, i));
-              cl_string_canonical(word1, charset, IGNORE_CASE | IGNORE_DIAC);
+              cl_string_canonical(word1, charset, IGNORE_CASE | IGNORE_DIAC, sizeof(word1));
               l = strlen(word1);
               fcount1[i] += (l >= n) ? l - n + 1 : 0;
             }
             /* same for target corpus */
             for(i = 0; i < nw2; i++) {
               strcpy(word2, cl_id2str(w_attr2, i));
-              cl_string_canonical(word2, charset, IGNORE_CASE | IGNORE_DIAC);
+              cl_string_canonical(word2, charset, IGNORE_CASE | IGNORE_DIAC, sizeof(word2));
               l = strlen(word2);
               fcount2[i] += (l >= n) ? l - n + 1 : 0;
             }
@@ -490,7 +490,7 @@ create_feature_maps(char **config,
             /* for each word in the SOURCE lexicon, acquire the possible n-gram features */
             for (i = 0; i < nw1; i++) {
               strcpy(word1, cl_id2str(w_attr1, i));
-              cl_string_canonical(word1, charset, IGNORE_CASE | IGNORE_DIAC);
+              cl_string_canonical(word1, charset, IGNORE_CASE | IGNORE_DIAC, sizeof(word1));
               ng = 0;
               l = 0;
               s = word1;
@@ -508,7 +508,7 @@ create_feature_maps(char **config,
             /* same again for words in the TARGET lexicon */
             for (i = 0; i < nw2; i++) {
               strcpy(word2, cl_id2str(w_attr2, i));
-              cl_string_canonical(word2, charset, IGNORE_CASE | IGNORE_DIAC);
+              cl_string_canonical(word2, charset, IGNORE_CASE | IGNORE_DIAC, sizeof(word2));
               ng = 0;
               l = 0;
               s = word2;
@@ -809,7 +809,7 @@ check_fvectors(FMS fms)
  * Prints the features in an FMS, as applied to a specific lexicon entry, to STDOUT.
  *
  * Usage: show_features(FMS, 1/2, "word");
- *
+ *2 * CL_MAX_LINE_LENGTH
  * This will print all features listed in FMS for the token "word"; "word" is looked up in the
  * source corpus if the 2nd argument == 1, and in the target corpus otherwise.
  *

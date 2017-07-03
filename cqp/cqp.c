@@ -65,10 +65,10 @@ int reading_cqprc = 0;
 /**
  * Global error status for CQP (will be returned to the caller when CQP exits).
  *
- * For the moment, it's simply boolean (0 = all OK, anything else = error.)
+ * For the moment, it's simply boolean (0 = all OK, anything else = error).
  * Later, we might want to define some error macros (maybe have the CDA_
  * macros as a subset for errors bubbling up from CL, plus *also* extra
- * macros for other errors.
+ * macros for other errors).
  *
  * TODO actually get this variable set in various error conditions.
  * TODO work out whether cqpserver should exit with this error.

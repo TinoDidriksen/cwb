@@ -35,6 +35,7 @@ typedef int Boolean;
 #define True 1
 /** DEPRACATED macros for Boolean true and false */
 #define False 0
+/* TODO In CWB 4 we should change both the above, and the more recent "int/1/0" convention, to C11-style bool/true/false */
 
 /**
  * The "corpus yielding command type" type.

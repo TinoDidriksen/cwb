@@ -328,7 +328,7 @@ RE\(                    { return(RE_PAREN); }  /* for [lemma = RE($var)] */
 \+\=                    { return PLUSEQ; }
 \-\=                    { return MINUSEQ; }
 -\>                     { return IMPLIES; }
-\(\?					{ return EXTENSION; } /* for standard query extensions of the form (?...) */
+\(\?                    { return EXTENSION; } /* for standard query extensions of the form (?...) */
 `                       { return ESCAPE_SYM; }
 .                       { return yytext[0]; }
 

@@ -274,12 +274,12 @@ synchronize(void)
 %token PLUSEQ
 %token MINUSEQ
 
-%token UNLOCK_SYM               /* unlock 'QueryLock' mode */
+%token UNLOCK_SYM        /* unlock 'QueryLock' mode */
 
-%token USER_SYM                 /* CQPserver user authentication */
+%token USER_SYM          /* CQPserver user authentication */
 %token HOST_SYM
 
-%token UNDEFINED_MACRO          /* dummy symbol which forces parse error when an undefined macro is encountered */
+%token UNDEFINED_MACRO   /* dummy symbol which forces parse error when an undefined macro is encountered */
 %token MACRO_SYM
 
 %token RANDOMIZE_SYM
@@ -288,7 +288,7 @@ synchronize(void)
 %token INCLUSIVE_SYM
 %token EXCLUSIVE_SYM
 
-%token NULL_SYM           /* 'NULL' */
+%token NULL_SYM          /* 'NULL' */
 
 
   /* operator precedence */
@@ -980,9 +980,9 @@ StandardQuery:  EmbeddedModifier
                 CutStatement OptKeep    { $$ = do_StandardQuery($4, $5, $1); }
 ;
 
-EmbeddedModifier: EXTENSION ID ')'		{ $$ = $2; }
-				| /* epsilon */			{ $$ = NULL; }
-				;
+EmbeddedModifier: EXTENSION ID ')'      { $$ = $2; }
+                | /* epsilon */         { $$ = NULL; }
+                ;
 
 MUQuery:          MU_SYM
                   MUStatement OptKeep CutStatement { $$ = do_MUQuery($2, $3, $4); }

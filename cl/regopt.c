@@ -78,6 +78,8 @@ int grain_buffer_grains = 0;
 
 /** A buffer for grain strings. @see local_grain_data */
 char public_grain_data[CL_MAX_LINE_LENGTH]; /* input regexp shouldn't be longer than CL_MAX_LINE_LENGTH, so all grains must fit */
+/* TODO - above assumes rx no longer than CL_MAX_LINE_LENGTH, but in cl_new_regex(), it is explicitly assumed that
+ *        there may be regexs (with RE() ) that are of any gargantuan length... */
 /** A buffer for grain strings. @see public_grain_data */
 char local_grain_data[CL_MAX_LINE_LENGTH];
 
@@ -146,8 +148,11 @@ char cl_regex_error[CL_MAX_LINE_LENGTH];
 CL_Regex
 cl_new_regex(char *regex, int flags, CorpusCharset charset)
 {
-  char *preprocessed_regex; /* allocate dynamically to support very long regexps (from RE() operator) */
+  /* allocate buffers dynamically to support very long regexps (from RE() operator) */
+  char *delatexed_regex;
+  char *preprocessed_regex;
   char *anchored_regex;
+
   CL_Regex rx;
   int optimised, l;
 
@@ -159,8 +164,7 @@ cl_new_regex(char *regex, int flags, CorpusCharset charset)
 
   /* allocate temporary strings */
   l = strlen(regex);
-  preprocessed_regex = (char *) cl_malloc(l + 1);
-  anchored_regex = (char *) cl_malloc(l + 7);
+  delatexed_regex = (char *) cl_malloc(l + 1);
 
   /* allocate and initialise CL_Regex object */
   rx = (CL_Regex) cl_malloc(sizeof(struct _CL_Regex));
@@ -172,10 +176,13 @@ cl_new_regex(char *regex, int flags, CorpusCharset charset)
   rx->grains = 0; /* indicates no optimisation -> other optimizer-related fields are invalid */
 
   /* pre-process regular expression (translate latex escapes, normalize, fold accents if required) */
-  cl_string_latex2iso(regex, preprocessed_regex, l);
-  cl_string_canonical(preprocessed_regex, charset, rx->idiac | REQUIRE_NFC); /* only fold accents at this stage */
+  cl_string_latex2iso(regex, delatexed_regex, l);
+  /* only fold accents at this stage */
+  preprocessed_regex = cl_string_canonical(delatexed_regex, charset, rx->idiac | REQUIRE_NFC, CL_STRING_CANONICAL_STRDUP);
+  cl_free(delatexed_regex);
 
   /* add start and end anchors to improve performance of regex matcher for expressions such as ".*ung" */
+  anchored_regex = (char *) cl_malloc(strlen(preprocessed_regex) + 7);
   sprintf(anchored_regex, "^(?:%s)$", preprocessed_regex);
 
   /* compile regular expression with PCRE library function */
@@ -278,7 +285,8 @@ cl_new_regex(char *regex, int flags, CorpusCharset charset)
  * @return    0 if rx is not optimised; otherwise an integer
  *            indicating optimisation level.
  */
-int cl_regex_optimised(CL_Regex rx)
+int
+cl_regex_optimised(CL_Regex rx)
 {
   if (rx->grains == 0)
     return 0; /* not optimised */
@@ -301,7 +309,7 @@ int cl_regex_optimised(CL_Regex rx)
  * @see   cl_new_regex
  * @param rx              The regular expression to match.
  * @param str             The subject (the string to compare the regex to).
- * @param normalize_utf8  If a UTF-8 string from an external source is passed as the subject,
+ * @param normalize_utf8  Boolean: if a UTF-8 string from an external source is passed as subject,
  *                        set to this parameter to true, and the function will make sure that
  *                        the comparison is based on the canonical NFC form. For known-NFC
  *                        strings, this parameter should be false. If the regex is not UTF-8,
@@ -321,7 +329,7 @@ cl_regex_match(CL_Regex rx, char *str, int normalize_utf8)
   if (rx->idiac || do_nfc) { /* perform accent folding on input string if necessary */
     haystack_pcre = rx->haystack_buf;
     strcpy(haystack_pcre, str);
-    cl_string_canonical(haystack_pcre, rx->charset, rx->idiac | do_nfc);
+    cl_string_canonical(haystack_pcre, rx->charset, rx->idiac | do_nfc, CL_MAX_LINE_LENGTH);
   }
   else
     haystack_pcre = str;
@@ -337,7 +345,7 @@ cl_regex_match(CL_Regex rx, char *str, int normalize_utf8)
     if (rx->icase) {
       haystack = rx->haystack_casefold;
       strcpy(haystack, haystack_pcre);
-      cl_string_canonical(haystack, rx->charset, rx->icase);
+      cl_string_canonical(haystack, rx->charset, rx->icase, 2 * CL_MAX_LINE_LENGTH);
     }
     else
       haystack = haystack_pcre;
@@ -413,11 +421,6 @@ cl_regex_match(CL_Regex rx, char *str, int normalize_utf8)
  * Deletes a CL_Regex object, and frees all resources associated with
  * the pre-compiled regex.
  *
- * Note that we use cl_free to deallocate the internal PCRE buffers,
- * not pcre_free, for the simple reason that pcre_free is just a
- * function pointer that will normally contain free, and thus we
- * miss out on the checking that cl_free provides.
- *
  * @param rx  The CL_Regex to delete.
  */
 void
@@ -453,8 +456,10 @@ cl_delete_regex(CL_Regex rx)
 }
 
 /*
+ * ================================
  * helper functions (for optimiser)
  * (non-exported in the public API)
+ * ================================
  */
 
 /**
@@ -1181,7 +1186,7 @@ regopt_data_copy_to_regex_object(CL_Regex rx)
     grain = local_grain_data; /* we can use this static buffer for the casefolded grains */
     for (i = 0; i < rx->grains; i++) {
       strcpy(grain, cl_regopt_grain[i]);
-      cl_string_canonical(grain, rx->charset, IGNORE_CASE);
+      cl_string_canonical(grain, rx->charset, IGNORE_CASE, CL_MAX_LINE_LENGTH);
       cl_regopt_grain[i] = grain; /* pointers into static buffer, so we can just move them */
       grain += strlen(grain) + 1;
     }

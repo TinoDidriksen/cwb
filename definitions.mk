@@ -23,7 +23,7 @@
 #
 # CWB version
 #
-VERSION = 3.4.11
+VERSION = 3.4.12
 # 3.4.x = beta versions leading up to new stable 3.5.0
 
 #
@@ -117,6 +117,7 @@ endif
 ifndef TAR
 TAR = tar
 endif
+## note the above assume cross-compilation for Win; different solutions will be needed for native compilation. 
 ## only needed by "make release" for Windows
 ifndef ZIP
 ZIP = zip -r

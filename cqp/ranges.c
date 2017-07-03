@@ -40,7 +40,8 @@
 #define SORT_DEBUG 0
 
 /**
- * Delete a single concordance hit from a query-generated subcorpus.
+ * Delete a single cpos-pair (a corpus zone or single query match)
+ * from a query-generated subcorpus.
  *
  * This function is not currently in use.
  *
@@ -1128,12 +1129,15 @@ SortExternally(void)
             if (value) {
               int i, p = strlen((char *) value);
               if (srt_flags) {
-                /* allocate extra mem in case of UTF8 folding */
-                char *newvalue = cl_malloc( (p + 1) * (srt_cl->corpus->charset == utf8 ? 2 : 1) );
-                strcpy(newvalue, value);
-                cl_string_canonical(newvalue, srt_cl->corpus->charset, srt_flags);
+                // DELETE WHEN  NEW FORM OF CL_STRING_CANONICAL CONFIRMED FUNCTIONAL
+//                /* allocate extra mem in case of UTF8 folding */
+//                char *newvalue = cl_malloc( (p + 1) * (srt_cl->corpus->charset == utf8 ? 2 : 1) );
+//                strcpy(newvalue, value);
+//                cl_string_canonical(newvalue, srt_cl->corpus->charset, srt_flags);
+//                del_value = 1;
+//                value = newvalue;
+                value = cl_string_canonical(value, srt_cl->corpus->charset, srt_flags, CL_STRING_CANONICAL_STRDUP);
                 del_value = 1;
-                value = newvalue;
               }
               if (srt_reverse) {
                 char *newvalue = cl_string_reverse(value, srt_cl->corpus->charset);
@@ -1827,18 +1831,17 @@ SortSubcorpus(CorpusList *cl, SortClause sc, int count_mode, struct Redir *redir
               fprintf(redir->stream, "%d\t", first);
             for (k = 0; k < len; k++) {
               int cpos = start + step * k;
-              char *token_ro = cl_cpos2str(srt_attribute, cpos);
-              /* allocate extra mem in case of UTF8 folding */
-              char *token = cl_malloc( (strlen(token_ro) + 1) * (cl->corpus->charset == utf8 ? 2 : 1) );
-              strcpy(token, token_ro);
-              cl_string_canonical(token, cl->corpus->charset, sc->flags); /* normalise token if %cd was given */
+              char *token_readonly = cl_cpos2str(srt_attribute, cpos);
+              /* normalise token if %cd was given */
+              char *token = cl_string_canonical(token_readonly, cl->corpus->charset, sc->flags, CL_STRING_CANONICAL_STRDUP);
               if (srt_reverse) {
                 /* reverse the token */
                 char *temp = cl_string_reverse(token, cl->corpus->charset);
                 cl_free(token);
                 token = temp;
               }
-              if (k > 0) fprintf(redir->stream, " ");
+              if (k > 0)
+                fprintf(redir->stream, " ");
               fprintf(redir->stream, "%s", token);
               cl_free(token);
             }

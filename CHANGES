@@ -142,6 +142,9 @@ Bug fixes:
    implementation of CQP is to run every aligned query to completion and only then reduce the total number of
    matches to the specified cut value. 
 
+ - [2017-07-02] Fixed bug #41: potential edge-case buffer overflow with cl_string_canonical. We have never had
+   a report of this actually happening to anyone, but we will sleep sounder knowing it can't happen.  
+
 Enhancements:
 
  - [2014-06-18] Revised implementation of cl_lexhash class. Auto-growing is now based on fill rate statistic

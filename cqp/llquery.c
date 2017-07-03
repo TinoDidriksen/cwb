@@ -392,11 +392,11 @@ readline_main(void)
 
     if (input != NULL) {
       input = ensure_semicolon(input); /* add semicolon at end of line if missing (also replaces ws-only lines by "") */
-      if (*input) add_history(input); /* add input line to history (unless it's an empty line) */
-      cqp_parse_string(input);        /* parse & execute query */
+      if (*input) add_history(input);  /* add input line to history (unless it's an empty line) */
+      cqp_parse_string(input);         /* parse & execute query */
     }
     else {
-      exit_cqp = True;                /* NULL means we've had an EOF character */
+      exit_cqp = True;                 /* NULL means we've had an EOF character */
     }
 
     /* reinstall signal handler if necessary */

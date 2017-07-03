@@ -1814,6 +1814,9 @@ cl_charset_strlen(CorpusCharset charset, char *s)
  * What counts as "bad" is of course relative to the character set that the
  * string is encoded in - so this must be specified.
  *
+ * Repairing never changes the length of the string in bytes
+ * (in UTF-8, *each* byte in a bad sequence is changed to a '?').
+ *
  * @param s        Null-terminated string to check.
  * @param charset  CorpusCharset of the string's encoding.
  * @param repair   if True, replace invalid bytes by '?'
@@ -2064,8 +2067,8 @@ cl_string_qsort_compare(const char *s1,
 
     /* canonicalise BEFORE reversing (may not work as expected after reversing utf8) */
     if (flags) {
-      cl_string_canonical(buffer1, charset, flags);
-      cl_string_canonical(buffer2, charset, flags);
+      cl_string_canonical(buffer1, charset, flags, CL_MAX_LINE_LENGTH * 2);
+      cl_string_canonical(buffer2, charset, flags, CL_MAX_LINE_LENGTH * 2);
     }
     if (reverse) {
       /* cl_string_reverse() unnecessarily allocates memory for non-UTF8 to provide a consistent API,
@@ -2263,32 +2266,62 @@ cl_id_tolower(char * s)
  * The "canonical form" of a string is for use in comparisons where
  * case-insensitivity and/or diacritic insensitivity is desired.
  *
- * Note that the string s is modified in place. This means it must have enough
+ * This function has two behaviours: inplace modification, or copy modification.
+ *
+ * INPLACE MODIFICATION:  the string s is modified in place, up to a maximum size of
+ * inplace_bufsize-1 characters (plus NUL terminator). If the normalised string
+ * doesn't fit into the buffer, the extra characters are dropped silently.
+ * Ergo, for things to definitely work correctly, the buffer should have enough
  * memory to cope with any expansions made in Unicode case folding. Ideally,
  * allocate double the length of the string (since case-folding doesn't include
- * any one -> more-than-two mappings so far as I know).
+ * any one -> more-than-two mappings so far as we know). To use the function in this
+ * mode, pass in the amount of memory available at s as the last argument.
+ * In this mode, the return value is always equal to s.
  *
- * Note also that the arguments of this string were changed in v3.2.1. Now,
- * a CorpusCharset is needed. This is because string canonicalising works
- * differently in UTF8, where case folding / accent folding is done by calling
- * Unicode-aware functions. By contrast, the process for Latin1 just uses a
- * straightforward mapping table for both sorts of folding.
+ * COPY MODIFICATION: the string s is modified; a newly-allocated copy is created
+ * and modified; and a pointer to the copy is  returned.
+ * It is then the caller's responsibility to free this memory.
+ * To use the function in this mode, pass a value less than 1 as the last
+ * argument (or the aide memoire constant CL_STRING_CANONICAL_STRDUP).
  *
+ * FLAGS: IGNORE_DIAC and/or IGNORE_CASE, for diacritic/case folding resectively.
  * In UTF8, an additional flag REQUIRE_NFC can be passed to normalize the
  * string into the canonical pre-composed form (NFC) used internally by CWB.
  * All strings that are going to be inserted into or searched for within an
  * indexed corpus should be processed in this way.
  *
- * @param s        The string.
- * @param charset  The character set in which the string is encoded.
- *                 If this is utf8, complex accent and/or case folding will be done,
- *                 as per the Unicode standard.
- *                 If it is anything else, internal byte mapping tables will be used.
- * @param flags    The flags that specify which conversions are required.
- *                 Can be IGNORE_CASE | IGNORE_DIAC | REQUIRE_NFC .
+ * API HISTORY: the arguments of this string were changed in v3.2.1. Now,
+ * a CorpusCharset is needed. This is because string canonicalising works
+ * differently in UTF8, where case folding / accent folding is done by calling
+ * Unicode-aware functions. By contrast, the process for 8-bit charsets just uses a
+ * straightforward mapping table for both sorts of folding.
+ *
+ * The arguments were changed in 3.4.12 to add a fourth argument, inplace_bufsize:
+ * this prevents buffer overflow bylimiting the amount of inplace-overwriting
+ * that can be done.
+ *
+ * @see CL_STRING_CANONICAL_STRDUP
+ *
+ * @param s                The string.
+ * @param charset          The character set in which the string is encoded.
+ *                         If this is utf8, complex accent and/or case folding will be done,
+ *                         as per the Unicode standard.
+ *                         If it is anything else, internal byte mapping tables will be used.
+ * @param flags            The flags that specify which conversions are required.
+ *                         Can be IGNORE_CASE | IGNORE_DIAC | REQUIRE_NFC .
+ * @param inplace_bufsize  Size of the buffer. If > 0, string s will be modified in place,
+ *                         avoiding buffer overruns. If 0 or less, s will be left as is,
+ *                         and a copy created, modified, and returned.
+ *                         The constant CL_STRING_CANONICAL_STRDUP is provided to make this
+ *                         more readable when calling (it's -1).
+ * @return                 The canonical string. If inplace modification was used,
+ *                         this will be the same as s. If not, it will be a newly allocated
+ *                         string. If there is an error of any kind, the return will be
+ *                         inplace/new as expected, but will not contain the requested
+ *                         modifications (or will contain only some of them).
  */
-void 
-cl_string_canonical(char *s, CorpusCharset charset, int flags)
+char *
+cl_string_canonical(char *s, CorpusCharset charset, int flags, int inplace_bufsize)
 {
   int icase = (flags & IGNORE_CASE) != 0;
   int idiac = (flags & IGNORE_DIAC) != 0;
@@ -2306,8 +2339,8 @@ cl_string_canonical(char *s, CorpusCharset charset, int flags)
     /* GLib documentation insists that g_utf8_* functions must only be used on valid UTF-8 strings;
      * let's assume that a string passed without REQUIRE_NFC is from an internal source and hence safe */
     if (nfc && !g_utf8_validate((gchar *)s, -1, NULL)) {
-      fprintf(stderr, "CL: invalid UTF8 string passed to cl_string_canonical ...\n");
-      return;
+      fprintf(stderr, "CL: major error, invalid UTF8 string passed to cl_string_canonical ...\n");
+      return ( 0 < inplace_bufsize ? s : cl_strdup(s) );
     }
 
     /* UTF8 accent folding */
@@ -2315,7 +2348,7 @@ cl_string_canonical(char *s, CorpusCharset charset, int flags)
       /* convert to decomposed normal form, then strip all combining characters */
       if (NULL == (string = g_utf8_normalize((gchar *)s, -1, G_NORMALIZE_NFD)) ) {
         fprintf(stderr, "CL: major error, cannot decompose string: invalid UTF8 string passed to cl_string_canonical...\n");
-        return;
+        return ( 0 < inplace_bufsize ? s : cl_strdup(s) );
       }
 
       for (current_char = string; *current_char != '\0'; /* increment is done in-loop */) {
@@ -2341,7 +2374,7 @@ cl_string_canonical(char *s, CorpusCharset charset, int flags)
       string = new_string;
       if (string == NULL) {
         fprintf(stderr, "CL: major error, cannot compose string: invalid UTF8 string passed to cl_string_canonical...\n");
-        return;
+        return ( 0 < inplace_bufsize ? s : cl_strdup(s) );
       }
     }
 
@@ -2353,33 +2386,75 @@ cl_string_canonical(char *s, CorpusCharset charset, int flags)
       string = new_string;
     }
 
-    /* copy string back into input argument if any changes have been made */
     if (string != s) {
-      /* Note: if you haven't allocated enough memory at s, this will cause a buffer overflow. */
-      strcpy(s, string);
-      cl_free(string);
+      if (0 >= inplace_bufsize)
+        return string; /* changes made: return already-allocated string */
+      else {
+        /* changes made : copy string back into input argument */
+        int len = strlen(string);
+
+        /* limit the number of bytes returned to avoid buffer overflow.
+         * As this is UTF-8, we rewind the string to avoid partial chars. */
+        if (inplace_bufsize <= len) {
+          if (cl_string_utf8_continuation_byte(string[inplace_bufsize-1])){
+            gchar *end = g_utf8_find_prev_char(string, string+inplace_bufsize-1);
+            end = (NULL == end ? string : end);
+            *end = '\0';
+          }
+          else
+            string[inplace_bufsize-1] = '\0';
+        }
+
+        strcpy(s, string);
+        cl_free(string);
+        return s;
+      }
     }
+    else /* no changes made */
+      return ( 0 < inplace_bufsize ? s : cl_strdup(s) ); /* no changes made: return original string or clone */
 
   }
   /* end chunk dealing with UTF8 normalisation */
 
   else {
+
     /* variables for non-UTF8 normalisation */
     register unsigned char *p, *maptable;
-
-    /* this function should in theory never be called with unknown_charset,
-     * but if it is, treat it as ascii for current purposes. */
-    if (charset == unknown_charset)
-      charset = ascii;
+    char *duplicate;
 
     if (icase || idiac) { /* don't waste time if no relevant flags are specified */
+      /* this function should in theory never be called with unknown_charset,
+       * but if it is, treat it as ascii for current purposes. */
+      if (charset == unknown_charset)
+        charset = ascii;
+
       maptable = cl_string_maptable(charset, flags);
-      for (p = (unsigned char *)s; *p; p++) {
-        *p = maptable[*p];
+
+      if (0 < inplace_bufsize) {
+        /* modify in place : cannot overflow, because all changes are one-for-one */
+        for (p = (unsigned char *)s; *p; p++)
+          *p = maptable[*p];
+        return s;
+      }
+      else {
+        /* modify and return a duplicate */
+        for (p = (unsigned char *)duplicate; *p; p++)
+          *p = maptable[*p];
+        duplicate = cl_strdup(s);
+
+        return duplicate;
       }
     }
+    else
+      /* return the unmodified string, or a duplicate, depending on inplace_bufsize. */
+      return ( 0 < inplace_bufsize ? s : cl_strdup(s) );
+
   }
   /* end else for non-utf8 encodings */
+
+  /* NOTREACHED */
+  assert(0 && "Not reached");
+  return NULL;
 }
 
 

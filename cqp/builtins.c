@@ -15,6 +15,10 @@
  *  WWW at http://www.gnu.org/copyleft/gpl.html).
  */
 
+/*
+ * This file contains the "builtin" functions for the CQP query language.
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
@@ -71,14 +75,14 @@ BuiltinF builtin_function[] = {
 
   { -1, NULL,       0, NULL,          ATTAT_NONE }
 };
-/* TODO switch to an enum or to constants instead of integer literals for the first field,  to make the big switch below more reader-friendly. */
+/* TODO switch to an enum or to constants instead of integer literals for the first field, to make the big switch below more reader-friendly. */
 
 
 /**
- * Gets a string containing the name of the specified argument type.
+ * Gets a pointer to a (static, internal) string containing the name of the specified argument type.
  *
  * @param type  One of the ATTAT_x constants (an argument type).
- * @return      The name of the argument type.
+ * @return      The name of the argument type. Do not modify or free.
  */
 char *
 attat_name(int type)
@@ -564,7 +568,7 @@ call_predefined_function(int bf_id,
 
     /* make a copy of the first argument, then modify in-place */
     strcpy(result->dynamic_string_buffer, str0); /* pray str0 fits into the static buffer */
-    cl_string_canonical(result->dynamic_string_buffer, cl_corpus_charset(evalenv->query_corpus->corpus), flags); /* pray that it still fits :-( */
+    cl_string_canonical(result->dynamic_string_buffer, cl_corpus_charset(evalenv->query_corpus->corpus), flags, CL_DYN_STRING_SIZE);
     result->type = ATTAT_STRING;
     result->value.charres = result->dynamic_string_buffer;
     return True;

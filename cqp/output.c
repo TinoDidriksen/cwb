@@ -909,8 +909,8 @@ print_tabulation(CorpusList *cl, int first, int last, struct Redir *rd)
               string = cl_cpos2struc2str(item->attribute, cpos);
             if (string) {
               if (item->flags) {
-                char *copy = cl_strdup(string);
-                cl_string_canonical(copy, cl->corpus->charset, item->flags);
+                /* get canonical string as newly alloc'ed duplicate, then print */
+                char *copy = cl_string_canonical(string, cl->corpus->charset, item->flags, CL_STRING_CANONICAL_STRDUP);
                 fprintf(rd->stream, "%s", copy);
                 cl_free(copy);
               }

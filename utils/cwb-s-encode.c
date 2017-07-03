@@ -338,17 +338,17 @@ SL_insert(int start, int end, char *annot)
  * set to NULL.
  *
  * @param line   The line to be parsed.
- * @param start  Location for the start cpos.
- * @param end    Location for the end cos.
- * @param annot  Location for the annotation string.
- * @return Boolean; true for all OK, false for error.
+ * @param start  Out-parameter: Location to put the start cpos.
+ * @param end    Out-parameter: Location to put the end cos.
+ * @param annot  Out-parameter: Location to put the annotation string.
+ * @return       Boolean; true for all OK, false for error.
  */
 int
 sencode_parse_line(char *line, int *start, int *end, char **annot)
 {
   char *field, *field_end;
   char *line_copy = cl_strdup(line); /* work on copy to retain original for error messages */
-  int has_annotation = 1;
+  int has_annotation = 1; /* Boolean: are there 3 colums on this line? */
 
   /* first field: INT range_start */
   field = line_copy;
@@ -359,7 +359,8 @@ sencode_parse_line(char *line, int *start, int *end, char **annot)
     *field_end = 0;
     errno = 0;
     *start = atoi(field);
-    if (errno != 0 || *start < 0) return 0;
+    if (errno != 0 || *start < 0)
+      return 0;
     field = field_end + 1;
   }
 
@@ -368,6 +369,8 @@ sencode_parse_line(char *line, int *start, int *end, char **annot)
   if (field_end == NULL) {
     has_annotation = 0;
     field_end = strchr(field, '\n');
+    if (field_end && '\r' == *(field_end - 1)) /* if we are on *nix, and the file was generated in Windows... */
+      field_end--;
   }
   if (field_end == NULL)
     return 0;
@@ -375,47 +378,49 @@ sencode_parse_line(char *line, int *start, int *end, char **annot)
     *field_end = 0;
     errno = 0;
     *end = atoi(field);
-    if (errno != 0 || *end < 0) return 0;
+    if (errno != 0 || *end < 0)
+      return 0;
     field = field_end + 1;
   }
 
   /* optional third field: STRING annotation */
   if (has_annotation) {
     field_end = strchr(field, '\t');
-    if (field_end != NULL) {
-      return 0;                 /* return parseerror if there are extra fields */
-    }
+    if (field_end != NULL)
+      return 0;                 /* return parse error if there are extra fields */
     else {
       field_end = strchr(field, '\n');
-      if (field_end == NULL) {
+      if (field_end && '\r' == *(field_end - 1)) /* if we are on *nix, and the file was generated in Windows... */
+        field_end--;
+
+      if (field_end == NULL)
         return 0;               /* return parse error if no terminating line-break found */
-      }
       else {
         *field_end = 0;
-        *annot = cl_strdup(field);
-        if (!cl_string_validate_encoding(*annot, encoding_charset, clean_strings)) {
+        /* nb re clean_strings: it is OK to modify field inplace, because we will free it before we leave the function! */
+        if (!cl_string_validate_encoding(field, encoding_charset, clean_strings)) {
           fprintf(stderr,
                   "Encoding error on line #%ld: an invalid byte or byte sequence for charset \"%s\" was encountered.\n",
                   input_line,
                   encoding_charset_name);
           exit(1);
         }
-        /* normalize UTF8 to precomposed form, but don't bother with the redundant function call otherwise */
+        /* Duplicate into annot; normalize UTF8 to precomposed form, otherwise just duplicate normally. */
         if (encoding_charset == utf8)
-          cl_string_canonical(*annot, utf8, REQUIRE_NFC);
+          *annot = cl_string_canonical(field, utf8, REQUIRE_NFC, CL_STRING_CANONICAL_STRDUP);
+        else
+          *annot = cl_strdup(field);
         /* finally, get rid of C0 controls iff the user asked us to clean up strings */
         if (clean_strings)
           cl_string_zap_controls(*annot, encoding_charset, '?', 0, 0);
-        /* TODO nb the above will not take effect till we make string-cleanup possible in v4.0 */
       }
     }
   }
-  else {
+  else
     *annot = NULL;
-  }
 
   cl_free(line_copy);
-  return 1;                     /* OK */
+  return 1;
 }
 
 
