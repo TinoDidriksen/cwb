@@ -87,7 +87,7 @@ cl_calloc(size_t nr_of_elements, size_t element_size)
  * @see cl_malloc
  * @param block  Pointer to the block to be reallocated
  * @param bytes  Number of bytes to allocate to the resized memory block
- * @ return      Pointer to the block of reallocated memory
+ * @return       Pointer to the block of reallocated memory
  */
 void *
 cl_realloc(void *block, size_t bytes)
@@ -139,18 +139,11 @@ cl_strdup(const char *string)
 
 
 
-
-
-
-
-
 /*
  * built-in random number generator (avoid dependence on quality of system's rand() function)
  *
  * this random number generator is a version of Marsaglia-multicarry which is one of the RNGs used by R
  */
-
-
 
 static unsigned int RNG_I1=1234, RNG_I2=5678;
 
@@ -450,5 +443,38 @@ end_indented_list(void)
   }
   ilist_cursor = 0;
   fflush(stdout);
+}
+
+
+/**
+ * Safely add an offset to a corpus position.
+ *
+ * Return CDA_EPOSORNG if cpos + offset is outside the corpus (clamp = 0),
+ * or clamps the return value to the valid range (clamp = 1).
+ * Particular care is taken to avoid integer overflow if cpos is close to INT_MAX.
+ *
+ * @param cpos         corpus position (must be in valid range)
+ * @param offset       positive or negative offset from corpus position
+ * @param corpus_size  corpus size are returned by cl_max_cpos()
+ * @param clamp        whether to clamp return value (1) or return an error (0)
+ *
+ * @return             cpos + offset (possibly clamped) or CDA_EPOSORNG
+ */
+int
+cl_cpos_offset(int cpos, int offset, int corpus_size, int clamp) {
+  if (offset > 0) {
+    if ((corpus_size - cpos) <= offset)
+      return(clamp ? corpus_size - 1 : CDA_EPOSORNG);
+    else
+      return cpos + offset;
+  }
+  else if (offset < 0) {
+    if (corpus_size + offset < 0)
+      return(clamp ? 0 : CDA_EPOSORNG);
+    else
+      return cpos + offset;
+  }
+  else
+    return cpos;
 }
 

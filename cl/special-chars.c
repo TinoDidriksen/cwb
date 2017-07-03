@@ -2438,9 +2438,9 @@ cl_string_canonical(char *s, CorpusCharset charset, int flags, int inplace_bufsi
       }
       else {
         /* modify and return a duplicate */
+        duplicate = cl_strdup(s);
         for (p = (unsigned char *)duplicate; *p; p++)
           *p = maptable[*p];
-        duplicate = cl_strdup(s);
 
         return duplicate;
       }

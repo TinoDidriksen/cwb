@@ -485,7 +485,7 @@ void cl_path_adjust_independent(char *path); /* makes a path Unixlike, regardles
 char *cl_path_registry_quote(char *path); /* adds registry-format quotes and slashes to a path where necessary;
                                              a newly-allocated string is returned. */
 
-char *cl_path_get_component(char *s); /* tokeniser for string contianing many paths separated by : or ; */
+char *cl_path_get_component(char *s); /* tokeniser for string containing many paths separated by : or ; */
 
 /* validate and manipulate strings that are (sub)corpus identifiers */
 int cl_id_validate(char *s);
@@ -497,6 +497,8 @@ char *cl_make_set(char *s, int split);
 int cl_set_size(char *s);
 int cl_set_intersection(char *result, const char *s1, const char *s2);
 
+/* safely add offset to corpus position (either clamped to corpus, or returns CDA_EPOSORNG if outside) */
+int cl_cpos_offset(int cpos, int offset, int corpus_size, int clamp);
 
 
 
