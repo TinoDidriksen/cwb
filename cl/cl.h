@@ -1062,6 +1062,13 @@ int cl_lexhash_freq(cl_lexhash lh, char *token);
 int cl_lexhash_del(cl_lexhash lh, char *token);
 int cl_lexhash_size(cl_lexhash lh);
 
+/**
+ * Simple iterator for the entries of a lexhash. There is only a single
+ * iterator for each cl_lexhash object. The iterator is invalidated by all
+ * updates of the lexhash and will need to be reset afterwards.
+ */
+void cl_lexhash_iterator_reset(cl_lexhash hash);
+cl_lexhash_entry cl_lexhash_iterator_next(cl_lexhash hash);
 
 
 

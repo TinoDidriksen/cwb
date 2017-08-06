@@ -137,6 +137,8 @@ struct _cl_lexhash {
   int auto_grow;                /**< boolean: whether to expand this hash automatically; true by default */
   double fillrate_limit;        /**< fillrate limit that triggers expansion of bucket table (with auto_grow) */
   double fillrate_target;       /**< target fillrate after expansion of bucket table (with auto_grow) */
+  int iter_bucket;              /**< bucket currently processed by the single iterator of the hash table */
+  cl_lexhash_entry iter_point;  /**< next entry to be returned by the iterator (NULL -> go to next bucket) */
 };
 
 
@@ -167,6 +169,8 @@ cl_new_lexhash(int buckets)
   hash->auto_grow = 1;
   hash->fillrate_limit = DEFAULT_FILLRATE_LIMIT;
   hash->fillrate_target = DEFAULT_FILLRATE_TARGET;
+  hash->iter_bucket = -1;
+  hash->iter_point = NULL;
   return hash;
 }
 
@@ -612,4 +616,52 @@ int
 cl_lexhash_size(cl_lexhash hash)
 {
   return (hash != NULL) ? hash->entries : 0;
+}
+
+
+/**
+ * Iterate over all entries in a lexhash.
+ *
+ * Note that there is only a single iterator for each cl_lexhash object,
+ * so different parts of the application code must not try to iterate through
+ * the hash at the same time.
+ *
+ * This function resets the iterator to the start of the hash.
+ *
+ * @param hash      The lexhash to iterate over.
+ */
+void
+cl_lexhash_iterator_reset(cl_lexhash hash)
+{
+  assert((hash != NULL && hash->table != NULL && hash->buckets > 0) && "cl_lexhash object was not properly initialised");
+  hash->iter_bucket = -1;
+  hash->iter_point = NULL;
+}
+
+/**
+ * Iterate over all entries in a lexhash.
+ *
+ * Note that there is only a single iterator for each cl_lexhash object,
+ * so different parts of the application code must not try to iterate through
+ * the hash at the same time.
+ *
+ * This function returns the next entry from the hash, or NULL if there are
+ * no more entries.  Keep in mind that the hash is traversed in an unspecified order.
+ *
+ * @param hash      The lexhash to iterate over.
+ */
+cl_lexhash_entry
+cl_lexhash_iterator_next(cl_lexhash hash)
+{
+  cl_lexhash_entry point;
+
+  point = hash->iter_point;
+  while (point == NULL) {
+    hash->iter_bucket++;
+    if (hash->iter_bucket >= hash->buckets)
+      return NULL; /* we've reached the end of the hash */
+    point = hash->table[hash->iter_bucket];
+  }
+  hash->iter_point = point->next;
+  return point;
 }
