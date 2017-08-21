@@ -455,7 +455,7 @@ end_indented_list(void)
  *
  * @param cpos         corpus position (must be in valid range)
  * @param offset       positive or negative offset from corpus position
- * @param corpus_size  corpus size are returned by cl_max_cpos()
+ * @param corpus_size  corpus size as returned by cl_max_cpos()
  * @param clamp        whether to clamp return value (1) or return an error (0)
  *
  * @return             cpos + offset (possibly clamped) or CDA_EPOSORNG

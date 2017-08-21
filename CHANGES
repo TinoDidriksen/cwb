@@ -143,7 +143,12 @@ Bug fixes:
    matches to the specified cut value. 
 
  - [2017-07-02] Fixed bug #41: potential edge-case buffer overflow with cl_string_canonical. We have never had
-   a report of this actually happening to anyone, but we will sleep sounder knowing it can't happen.  
+   a report of this actually happening to anyone, but we will sleep sounder knowing it can't happen.
+   
+ - [2017-08-19] Fixed bug #64: CQP grammar accepts negative repetition counts in standard and TAB queries. While
+   we did not receive any bug reports from users, negative counts and other invalid ranges such as {3,2} would
+   result in unexpected behaviour, including segementation faults and memory overflow. Such issues are now
+   captured by the query parser and report a syntax error. 
 
 Enhancements:
 
@@ -163,9 +168,13 @@ Enhancements:
  - [2015-06-19: v3.4.9] Hash-based reimplementation of CQP's "group" command is much faster for frequency counts
    over large sets of distinct items (up to 150x speed-up in extreme cases) and supports grouped listing of
    frequencies (as the name of the command has always implied).
-   
- - [2017-07-01] Undocumented and unsupported TAB queries now work again. No guarantees about performance and
-   semantics of the algorithm.
+ 
+ - [2017-07-01: v3.4.12] MU queries are now documented in the CQP tutorial and have a consistent "filtering"
+   semantics.
+ 
+ - [2017-08-20: v3.4.12] Undocumented and unsupported TAB queries now work again. The matching algorithm has been
+   modified slightly and is explained in the CQP tutorial. However, no guarantees are made wrt. performance and
+   the precise semantics of TAB queries, except for special cases where all distances are either fixed or "*".
 
 
 Version 3.2

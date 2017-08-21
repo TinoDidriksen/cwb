@@ -526,7 +526,7 @@ compose_kwic_line(Corpus *corpus,
                   int nr_mappings,
                   Mapping *mappings)
 {
-  int acc_len;  /* Accurate length - for counting context in characters */
+  // int acc_len;  /* Accurate length - for counting context in characters */
   /* TODO replace the single variable above with the following pair of variables */
 
   /* length of the string assembled, in bytes */

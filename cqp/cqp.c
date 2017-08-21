@@ -93,6 +93,9 @@ int QueryBufferOverflow = 0;                /**< flag which signals buffer overf
 static void
 sigINT_signal_handler(int signum)
 {
+  if (!signal_handler_is_installed)
+    exit(1); /* make sure we abort if Ctrl-C is pressed a second time (even on platforms where signal handlers don't need to be reinstalled) */
+
   if (EvaluationIsRunning) {
     fprintf(stderr, "** Aborting evaluation ... (press Ctrl-C again to exit CQP)\n");
     EvaluationIsRunning = 0;
@@ -141,9 +144,11 @@ int
 initialize_cqp(int argc, char **argv)
 {
   char *home = NULL;
+  char init_file_fullname[CL_MAX_FILENAME_LENGTH];
+#ifdef __MINGW__
   char *homedrive = NULL;
   char *homepath = NULL;
-  char init_file_fullname[CL_MAX_FILENAME_LENGTH];
+#endif
 
   /* file handle for initialisation files, if any */
   FILE *cqprc;

@@ -59,8 +59,6 @@
 /* macro expansion */
 #include "macro.h"
  
-
-
 /* ============================================================ YACC IF */
 
 extern int yychar;
@@ -299,7 +297,7 @@ synchronize(void)
 
 %type <evalt> RegWordfExpr RegWordfTerm RegWordfFactor RegWordfPower
 %type <evalt> Repeat MUStatement MeetStatement UnionStatement
-%type <ival> OptNumber OptInteger OptMaxNumber OptionalFlag CutStatement OptNot OptKeep
+%type <ival> OptNumber OptInteger PosInt OptMaxNumber OptionalFlag CutStatement OptNot OptKeep
 %type <ival> OptExpansion OptPercent InclusiveExclusive
 %type <index> NamedWfPattern WordformPattern XMLTag AnchorPoint
 %type <evalt> TabPatterns TabOtherPatterns
@@ -390,9 +388,9 @@ command:                                 { prepare_input(); }
                   InteractiveCommand ';' { }
                 |                        {if (query_lock) {warn_query_lock_violation(); YYABORT;} }
                   EXIT_SYM               { exit_cqp++; }
-                | error                  { /* in case of syntax errors, don't save 
-                                              history file */
-                                           synchronize();
+                | error                  { if (yychar == YYEMPTY) yychar = yylex(); /* so synchronize works if lookahead yychar is empty */
+                						   synchronize();
+                						   /* in case of syntax errors, don't save history file */
                                            resetQueryBuffer();
                                            YYABORT; /* Oli did this:   yyerrok; */
                                            /* but we don't want to continue processing a line, when part of it failed */
@@ -1053,13 +1051,22 @@ RegWordfPower:    '(' RegWordfExpr ')'  { $$ = $2; }
                                         }
                  ;
 
-Repeat:           '{' INTEGER '}'       { if (generate_code)
+Repeat:           '{' PosInt '}'       { if (generate_code)
                                             NEW_EVALNODE($$, re_repeat, NULL, NULL, $2, $2);
                                           else
                                             $$ = NULL;
                                         }
-                | '{' INTEGER ',' OptMaxNumber '}'
-                                        { if (generate_code)
+                | '{' ',' PosInt '}'    { if (generate_code) /* new syntax for consistency with TAB queries */
+                                            NEW_EVALNODE($$, re_repeat, NULL, NULL, 0, $3);
+                                          else
+                                            $$ = NULL;
+                                        }
+                | '{' PosInt ',' OptMaxNumber '}'
+                                        { if ($4 != repeat_inf && $4 < $2) {
+                                        	yyerror("invalid repetition range (maximum < minimum)");
+                                        	YYERROR;
+                                          }
+                                          if (generate_code)
                                             NEW_EVALNODE($$, re_repeat, NULL, NULL, $2, $4);
                                           else
                                             $$ = NULL;
@@ -1212,7 +1219,16 @@ OptInteger:     INTEGER                 { $$ = $1; }
               | /* epsilon */           { $$ = 0; }
                 ;
 
-OptMaxNumber:   INTEGER                 { $$ = $1; }
+/* a non-negative integer (called PosInt because that is easier to remember) */
+PosInt:			INTEGER					{ if ($1 < 0) {
+											yyerror("expected a non-negative integer value");
+											YYERROR;
+										  }
+										  $$ = $1;
+										}
+				;
+
+OptMaxNumber:   PosInt                  { $$ = $1; }
               | /* epsilon */           { $$ = repeat_inf; }
                 ;
 
@@ -1433,24 +1449,35 @@ TABQuery:        TAB_SYM
                 ;
 
 
-TabPatterns:      NamedWfPattern
+TabPatterns:      WordformPattern
                   TabOtherPatterns      { $$ = make_first_tabular_pattern($1, $2); }
                 ;
 
 TabOtherPatterns: TabOtherPatterns
                   OptDistance
-                  NamedWfPattern        { $$ = add_tabular_pattern($1, &($2), $3); }
+                  WordformPattern       { $$ = add_tabular_pattern($1, &($2), $3); }
                   
                 | /* epsilon */         { $$ = NULL; }
                 ;
 
-OptDistance:      '{' INTEGER '}'       { do_OptDistance(&($$), $2, $2); }
-                | '{' INTEGER ',' OptMaxNumber '}'
-                                        { do_OptDistance(&($$), $2, $4); }
-                | '{' ',' INTEGER '}'   { do_OptDistance(&($$), 1, $3); }
+OptDistance:      '{' PosInt '}'       { do_OptDistance(&($$), $2 + 1, $2 + 1); }
+                | '{' PosInt ',' OptMaxNumber '}'
+                                        { if ($4 == repeat_inf)
+                                        	do_OptDistance(&($$), $2 + 1, repeat_inf);
+                                          else {
+                                            if ($4 < $2) {
+                                        	  yyerror("invalid distance range (maximum < minimum)");
+                                        	  YYERROR;
+                                            }
+                                            do_OptDistance(&($$), $2 + 1, $4 + 1);
+                                          } 
+                                        }
+                | '{' ',' PosInt '}'    { do_OptDistance(&($$), 1, $3 + 1); }
+                | '*'                   { do_OptDistance(&($$), 1, repeat_inf); }
+                | '+'                   { do_OptDistance(&($$), 2, repeat_inf); }
+                | '?'                   { do_OptDistance(&($$), 1, 2); }
                 | /* epsilon */         { do_OptDistance(&($$), 1, 1); }
                 ;
-
 
 /* implementations of the following 'actions' can be found in ../CQi/auth.c */
 AuthorizeCmd:     USER_SYM ID STRING    { add_user_to_list($2, $3); }

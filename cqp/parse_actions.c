@@ -2641,7 +2641,7 @@ do_TABQuery(Evaltree patterns)
     debug_output();
     do_start_timer();
     
-    cqp_run_tab_query(0);
+    cqp_run_tab_query();
     
     cl = Environment[0].query_corpus;
   }

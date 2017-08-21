@@ -27,8 +27,8 @@
 #include "options.h"
 
 
-#define repeat_inf -1     /**< constant which indicates 'infinite repetition' (actually, repetition up to hard_boundary) @see hard_boundary */
-#define repeat_none -2    /**< constant which indicates 'no repetition'       */
+#define repeat_inf  -1  /**< constant which indicates 'infinite repetition' (actually, repetition up to hard_boundary) @see hard_boundary */
+#define repeat_none -2  /**< constant which indicates 'no repetition'       */
 
 /** Number of AVStructures to put in each Patternlist */
 #define MAXPATTERNS 5000
@@ -431,7 +431,7 @@ void cqp_run_query(int cut, int keep_old_ranges);
 
 void cqp_run_mu_query(int keep_old_ranges, int cut_value);
 
-void cqp_run_tab_query(int implode);
+void cqp_run_tab_query();
 
 /* ======================================== */
 

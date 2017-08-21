@@ -296,7 +296,7 @@ calculate_ranges(CorpusList *cl, int cpos, Context spc, int *left, int *right)
     assert(spc.attrib);
     
     if (!get_struc_attribute(spc.attrib, cpos, &rng_s, &rng_e))
-      return(False);
+      return(0);
     
     if (!get_num_of_struc(spc.attrib, cpos, &rng_n))
       return(0);

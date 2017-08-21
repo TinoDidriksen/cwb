@@ -287,7 +287,7 @@ get_matched_corpus_positions(Attribute *attribute,
   /* AH notes Aug 2011: the above comment about 4.0 has nothing to do with the TODO-4.0 plan I sketched out! */
   if (STREQ(regstr, ".*")) {
     if (eval_debug) 
-      fprintf(stderr, "get_matched_corpus_positions: */+ optimization\n");
+      fprintf(stderr, "get_matched_corpus_positions: .* optimization\n");
     
     matchlist->start = (int *)cl_malloc(sizeof(int) * size);
 
@@ -2903,14 +2903,15 @@ cqp_run_mu_query(int keep_old_ranges, int cut_value)
 }
 
 void
-cqp_run_tab_query(int implode)
+cqp_run_tab_query()
 {
   int nr_columns, i, this_col;
   Evaltree col;
 
-  int smallest_col; 
+  int smallest_col, corpus_size;
+  int n_res, max_res;
 
-  Matchlist *lists;
+  Matchlist *lists, result;
   int *positions;
   Evaltree *constraints;
 
@@ -2919,140 +2920,164 @@ cqp_run_tab_query(int implode)
   evalenv = &Environment[0];
 
   assert(evalenv->query_corpus);
-
-  /* here: eval. */
+  corpus_size = evalenv->query_corpus->mother_size;
 
   nr_columns = 0;
   for (col = evalenv->evaltree; col; col = col->tab_el.next) {
     assert(col->type = tabular);
+    if (evalenv->patternlist[col->tab_el.patindex].type != Pattern) {
+      cqpmessage(Error, "matchall [] (or another token pattern matching the entire corpus) is not allowed in TAB query (column #%d)\n", nr_columns + 1);
+      init_matchlist(&result);
+      set_corpus_matchlists(evalenv->query_corpus, &result, 1, 0); /* return empty result set */
+      return;
+    }
     nr_columns++;
   }
-
   assert(nr_columns > 0);
 
-  /* die Matchlisten */
+  /* allocate matchlists for all TAB columns, a vector of list offsets, and a list of constraint trees */
+  lists = (Matchlist *)cl_calloc(nr_columns, sizeof(Matchlist));
+  positions = (int *)cl_calloc(nr_columns, sizeof(int));
+  constraints = (Evaltree *)cl_calloc(nr_columns, sizeof(Evaltree));
 
-  lists = (Matchlist *)cl_malloc(nr_columns * sizeof(Matchlist));
-  memset((char *)lists, '\0', nr_columns * sizeof(Matchlist));
-
-  /* die Positionen in den einzelnen Matchlisten */
-
-  positions = (int *)cl_malloc(nr_columns * sizeof(int));
-  memset((char *)positions, '\0', nr_columns * sizeof(int));
-
-  /* zur Bequemlichkeit, damit wir die Constraints als Array
-   * adressieren koennen */
-
-  constraints = (Evaltree *)cl_malloc(nr_columns * sizeof(Evaltree));
-  memset((char *)constraints, '\0', nr_columns * sizeof(Evaltree));
-
-  /* ---------------------------------------- */
-
+  /* compute matchlists for all column constraints in the TAB query */
   i = 0;
   smallest_col = 0;
   for (col = evalenv->evaltree; col; col = col->tab_el.next) {
-
     constraints[i] = col;
 
     init_matchlist(&lists[i]);
     calculate_initial_matchlist(evalenv->patternlist[col->tab_el.patindex].con.constraint, 
                                 &lists[i], evalenv->query_corpus);
 
-    if (i > 0) {
-      if (lists[smallest_col].tabsize > lists[i].tabsize)
-        smallest_col = i;
-    }
+    /** useful for debugging:
+     * printf("TAB pattern #%d: %d hits %s %s\n", i + 1, lists[i].tabsize,
+     *   (lists[i].is_inverted) ? "(inverted)" : "", (lists[i].matches_whole_corpus) ? "(whole corpus)" : "");
+     */
+    if (lists[smallest_col].tabsize > lists[i].tabsize)
+      smallest_col = i;
     i++;
   }
+  max_res = lists[smallest_col].tabsize;
 
-  /* OK. Let's reduce them. */
+  init_matchlist(&result);
+  if (max_res > 0) {
 
-  /* simple, silly algorithm. Just to test the beast. */
-  /* TODO: optimize by using smallest_col */
+    /* ---------------------------------------- */
+    /* A simple greedy algorithm:
+     *  - for each start position (column 0)
+     *  - find nearest item from next column within distance range
+     *  - if successful, fix this item and proceed to next column
+     *  - if greedy algorithm doesn't find a match, the start position is discarded (even if it might match with different assignment)
+     *  - the original algorithm used to "consume" the items from all columns that participate in a match (so they are no longer available for subsequent matches);
+     *    this produces inconsistent results that are hard to predict, similar to the original implementation of MU queries
+     *    (consider e.g. the sequence A1 .. A2 .. B1 .. C1 .. B2 .. C2: the algorithm would match A1-B1-C1 and A2-B2-C2, but without A1 it would match A2-B1-C1)
+     *  - new algorithm does not to consume items from columns >= 1, so it now predictably matches A1-B1-C1 and A2-B1-C1
+     *  - similar to the standard matching strategy of regular queries, nested matches are discarded, returning only the "early match" A1-B1-C1 in the example
+     *  - as a consequence, each item from any column cannot participate in more than one of the final matches and the result set is bounded by the shortest column
+     *  - TAB queries do not respect the matching strategy setting because this makes little sense without implementing a complete combinatorial search
+     */
 
-  while (positions[0] < lists[0].tabsize) {
+    /* allocate result matchlist (for up to max_res matches) */
+    result.start = (int *)cl_malloc(sizeof(int) * max_res);
+    result.end = (int *)cl_malloc(sizeof(int) * max_res);
+    n_res = 0; /* also serves as pointer into the result matchlist */
 
-    int next_col, this_pos, next_pos, l_pos, r_pos;
+    while (positions[0] < lists[0].tabsize) {
+      int next_col, this_pos, next_pos, l_pos, r_pos, boundary;
 
-    next_pos = -1;
-
-    for (next_col = 1; next_col < nr_columns; next_col++) {
-
-      this_col = next_col - 1;
-
-      /* position in der aktuellen Liste */
-      this_pos = lists[this_col].start[positions[this_col]];
-
-      /* Minimale und maximale CP fuer Hit */
-      l_pos = this_pos + constraints[next_col]->tab_el.min_dist;
-
-      if (constraints[next_col]->tab_el.max_dist == repeat_inf)
-        r_pos = this_pos + hard_boundary;
-      else
-        r_pos = this_pos + constraints[next_col]->tab_el.max_dist;
-
-      while (positions[next_col] < lists[next_col].tabsize &&
-             (next_pos = lists[next_col].start[positions[next_col]]) < l_pos) {
-
-        /* mark for deletion */
-        lists[next_col].start[positions[next_col]] = -1;
-        positions[next_col]++;
-
+      /* The original implementation of TAB queries completely ignored the optional "within" constraint (which defaults to hard_boundary tokens).
+       * In order to evaluate the query correctly, we must first determine a right boundary for the complete TAB match, which will also be used
+       * to cut off unlimited distances (repeat_inf) between TAB columns.
+       */
+      boundary = calculate_rightboundary(evalenv->query_corpus, lists[0].start[positions[0]], evalenv->search_context);
+      if (boundary < 0) {
+        /* can't get a match here (because of a "within <s-att>" constraint);
+         * note that we cannot rely on falling through in the first iteration of the for loop in case there is just a single column
+         * (e.g. "TAB [] within head;" would fail to apply the "within" constraint)
+         */
+        positions[0]++;
+        continue;
       }
 
-      if (positions[next_col] >= lists[next_col].tabsize ||
-          next_pos > r_pos)
-        break;
-    }
+      /* iterate over pairs of adjacent columns, scanning for a greedy match within specified distance */
+      next_pos = -1;
+      for (next_col = 1; next_col < nr_columns; next_col++) {
+        this_col = next_col - 1;
 
-    if (next_col >= nr_columns) {
+        /* offset in matchlist for current column */
+        this_pos = lists[this_col].start[positions[this_col]];
 
-      /* hit */
-      for (i = 0; i < nr_columns; i++)
-        positions[i]++;
-      
-    }
-    else {
-      lists[0].start[positions[0]] = -1;
+        /* valid range for a matching cpos in the next column */
+        l_pos = cl_cpos_offset(this_pos, constraints[next_col]->tab_el.min_dist, boundary + 1, 0); /* NB: set virtual corpus size to boundary + 1 */
+        if (l_pos < 0)
+          break; /* beyond search boundary, no match possible */
+
+        if (constraints[next_col]->tab_el.max_dist == repeat_inf)
+          r_pos = cl_cpos_offset(this_pos, hard_boundary, boundary + 1, 1);
+        else
+          r_pos = cl_cpos_offset(this_pos, constraints[next_col]->tab_el.max_dist, boundary + 1, 1);
+
+        /* scan next column for a potential match (with cpos >= l_pos) */
+        while (positions[next_col] < lists[next_col].tabsize &&
+            (next_pos = lists[next_col].start[positions[next_col]]) < l_pos) {
+          positions[next_col]++;
+        }
+
+        /* no potential match found or not in range (i.e. !(next_pos <= r_pos)) */
+        if (positions[next_col] >= lists[next_col].tabsize || next_pos > r_pos)
+          break;
+      }
+
+      if (next_col >= nr_columns) {
+        /* we have found a greedy match: copy it to the result matchlist */
+        l_pos = lists[0].start[positions[0]]; /* start of match = cpos of first column */
+        r_pos = lists[nr_columns - 1].start[positions[nr_columns - 1]]; /* end of match = cpos of last column */
+        /* discard nested matches; the only possible case is that r_pos == result.end[n_res - 1] */
+        if (n_res == 0 || r_pos > result.end[n_res - 1]) {
+          assert(n_res < max_res);
+          result.start[n_res] = l_pos;
+          result.end[n_res] = r_pos;
+          n_res++;
+        }
+      }
+
       positions[0]++;
     }
-  }
 
-  /* go through all lists and mark positions which are not yet visited */
-  for (this_col = 0; this_col < nr_columns; this_col++) {
-    for (i = positions[this_col]; i < lists[this_col].tabsize; i++)
-      lists[this_col].start[i] = -1;
-    Setop(&(lists[this_col]), Reduce, NULL);
-  }
-  /* now we should have parallel matchlists of the same tabsize, so that each row corresponds to a match of the TAB query */
-  for (i = 1; i < nr_columns; i++)
-    assert(lists[0].tabsize == lists[i].tabsize);
+    /* finalize the result matchlist */
+    if (n_res > 0) {
+      if (n_res < max_res) {
+        /* shorten vectors if necessary */
+        result.start = (int *)cl_realloc(result.start, sizeof(int) * n_res);
+        result.end = (int *)cl_realloc(result.end, sizeof(int) * n_res);
+      }
+      result.tabsize = n_res;
 
-  if (lists[0].tabsize > 0) {
-    /* determine matchend anchors = rightmost element of TAB match */
-    lists[0].end = (int *)cl_malloc(sizeof(int) * lists[0].tabsize);
-    for (i = 0; i < lists[0].tabsize; i++)
-      lists[0].end[i] = lists[nr_columns - 1].start[i];
+      /* delete offrange cells if we are in a subcorpus */
+      if (mark_offrange_cells(&result, evalenv->query_corpus) > 0)
+        Setop(&result, Reduce, NULL);
 
-    /* delete offrange cells when we are in a subcorpus */
-    mark_offrange_cells(&lists[0], evalenv->query_corpus);
-    Setop(&lists[0], Reduce, NULL);
-  }
-  else {
-    assert(lists[0].start == NULL);
-  }
+    }
+    else {
+      /* no matches: return empty matchlist */
+      cl_free(result.start);
+      cl_free(result.end);
+      result.tabsize = 0;
+    }
+
+  } /* otherwise max_res == 0 and result has already been initialized as an empty matchlist */
 
   set_corpus_matchlists(evalenv->query_corpus, 
-                        lists,
-                        1, /* multiple matchlists are not supported */
-                        0);
+                        &result, 1, 0);
 
-  free(positions);
-  free(constraints);
-
+  /* cleanup */
+  cl_free(positions);
+  cl_free(constraints);
   for (i = 0; i < nr_columns; i++)
     free_matchlist(&lists[i]);
-  free(lists);
+  cl_free(lists);
+  free_matchlist(&result);
 }
 
 /* ---------------------------------------------------------------------- */
@@ -3063,15 +3088,12 @@ meet_mu(Matchlist *list1, Matchlist *list2,
         int lw, int rw,
         Attribute *struc)
 {
-  /* this is very similar to Setop(Intersection)/matchlist.c, but we
-   * have to take care of the context (lw, rw, struc) */
-
-  Matchlist tmp;
-
+  /* NB: list1 will be modified in place, list2 remains unchanged and will be deallocated by the caller */
   int i, j, k, start, end;
+  int corpus_size = evalenv->query_corpus->mother_size; /* corpus size needed for boundary checks below */
 
   if ((list1->tabsize == 0) || (list2->tabsize == 0)) {
-    /* Bingo. one of the two is empty. So is their intersection. */
+    /* If one of the two lists is empty, so is their intersection and we're done. */
 
     cl_free(list1->start);
     cl_free(list1->end);
@@ -3079,72 +3101,86 @@ meet_mu(Matchlist *list1, Matchlist *list2,
     list1->matches_whole_corpus = 0;
   }
   else {
-    /* We have to do some work now */
+    /* Implementation modified to give consistent "filtering" semantics (SE, 2017-07-01)
+     *  - result of (meet A B <win>) are those items of A for which at least one item of B occurs within <win>
+     *  - the same item of B can satisfy this constraint for multiple items of A, which is achieved simply by not "consuming" this item
+     *  - because both match lists are ordered, the filter can be applied efficiently in a single forward pass
+     *  - new consistent behaviour is now documented in the CQP Query Language Tutorial
+     */
 
-    tmp.tabsize = MIN(list1->tabsize, list2->tabsize);
-    
-    tmp.start = (int *)cl_malloc(sizeof(int) * tmp.tabsize);
-    tmp.end = NULL;
-    
-    i = 0;                /* the position in list1 */
-    j = 0;                /* the position in list2 */
-    k = 0;                /* the insertion point in the result list */
+    /* since we're filtering list1, we can simply upcopy items that pass the filter */
+    i = 0;                /* index in list1 */
+    j = 0;                /* index in list2 */
+    k = 0;                /* insertion point in list1 as result list */
     
     while ((i < list1->tabsize) && (j < list2->tabsize)) {
+      /* check whether this item from A can be matched against an item from B in the window [start, end] */
       
       if (struc != NULL) {
-
-        if (!get_struc_attribute(struc, list1->start[i],
-                                 &start, &end) || (cderrno != CDA_OK)) {
+        /* s-attribute context: find region containing current point in A, otherwise there can be no match here */
+        if (!get_struc_attribute(struc, list1->start[i], &start, &end)
+            || (cderrno != CDA_OK)) {
           i++;
           continue;
         }
-        else {
-          lw = start - list1->start[i];
-          rw = end   - list1->start[i];
+      }
+      else {
+        /* numeric context: compute start and end as offsets from current corpus position in A
+         *  - in principle, no boundary checks would be needed because we will only compare valid positions (from B) with the window
+         *  - however, we need to check for integer overflow in case we are dealing with a very large corpus
+         *    (or with an idiot who thinks it's funny to specify a context window of -2147483647 +2147483647 in his query)
+         *  - we need to distinguish between two cases: whether the boundary specifies a (i) minimum or (ii) a maximum distance
+         *  - case (i) occurs for a start offset lw > 0 (e.g. 2 5) and for an end offset rw < 0 (e.g. -4 -2)
+         *  - if a minimum distance boundary (i) falls outside the corpus, we cannot possibly find a match -> skip and continue
+         *  - a maximum distance boundary (ii) can simply be clamped to the range of valid corpus positions
+         *  - because of these case distinctions, the boundary checks are fairly expensive, but cannot be avoided without 64bit ints
+         */
+        start = cl_cpos_offset(list1->start[i], lw, corpus_size, lw <= 0); /* clamp to corpus if lw specifies a maximum distance */
+        end   = cl_cpos_offset(list1->start[i], rw, corpus_size, rw >= 0); /* clamp if rw specifies a maximum distance */
+
+        /* if a minimum distance is outside the corpus, there can be no match here */
+        if (start < 0 || end < 0) {
+          i++;
+          continue;
         }
       }
 
-      if (list1->start[i]+rw < list2->start[j]) {
-        i++;
-      }
-      else if (list1->start[i]+lw > list2->start[j]) {
-        j++;
+      /* [start, end] is now a valid cpos range (which may be empty for end < start) and we try to find an item from B in this window */
+      if (end < list2->start[j]) {
+        i++; /* no item of B within context window */
       }
       else {
+        while (j < list2->tabsize && list2->start[j] < start)
+          j++; /* skip items of B before start of current context window */
+        /* note that we never have to move backwards in list2 because the context windows will be strictly increasing */
 
-        assert((list1->start[i]+lw <= list2->start[j]) &&
-               (list1->start[i]+rw >= list2->start[j]));
+        /* now check for a match within the context window unless we have already reached the end of B */
+        if (j < list2->tabsize && list2->start[j] <= end) {
+          assert((start <= list2->start[j]) && (list2->start[j] <= end)); /* verify that this is a valid match, as it should be */
 
-        tmp.start[k] = list1->start[i];
-
-        i++;
-        j++;
-        k++;
+          list1->start[k] = list1->start[i]; /* upcopy match to insertion point within A */
+          i++;
+          k++;
+        }
+        else {
+          i++; /* no match for current point in A */
+        }
       }
-    }
-    
-    assert(k <= tmp.tabsize);
-    
+
+      assert(k <= list1->tabsize && k <= i); /* make sure that the upcopy works correctly */
+    } /* end of loop filtering A against B */
+
     if (k == 0) {
-      /* we did not copy anything. result is empty. */
-      cl_free(tmp.start); tmp.start = NULL;
+      /* the result is empty, so free list1 */
+      cl_free(list1->start); /* also sets the pointer to NULL */
     }
-    else if (k < tmp.tabsize) {
-      
-      /* we did not eliminate any duplicates if k==tmp.tabsize. 
-       * So, in that case, we do not have to bother with reallocs.
-       */
-      
-      tmp.start = (int *)cl_realloc((char *)tmp.start, sizeof(int) * k);
+    else if (k < list1->tabsize) {
+      /* reallocate vector if the number of matches has been reduced */
+      list1->start = (int *)cl_realloc(list1->start, sizeof(int) * k);
     }
-    
-    cl_free(list1->start);
-    
-    list1->start = tmp.start; tmp.start = NULL;
-    list1->end   = NULL;
+
     list1->tabsize = k;
-    list1->matches_whole_corpus = 0;
+    list1->matches_whole_corpus = 0; /* should already be the case */
   } /* end of case where neither of the two matchlists is empty */
 
   return 1;
