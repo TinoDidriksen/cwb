@@ -1860,27 +1860,48 @@ main(int argc, char **argv)
                 i++;            /* identify annotation string, i.e. tag attributes (if there are any) */
                 while ((buf[i] == ' ') || (buf[i] == '\t')) /* skip whitespace between element name and first attribute */
                   i++;
-                j = i + strlen(buf+i); /* find last '>' character on line */
-                while ((j > i) && (buf[j] != '>'))
-                  j--;  /* if no '>' was found, we have j==i and the annotation string is empty */
-                if (buf[j-1] == '/') {
-                  /* empty tag : terminate annotation string and open range (i.e. an empty tag is interpreted as being an open tag) */
-                  buf[j-1] = '\0';
-                  range_open(&ranges[rng], line, buf+i);
-                  /* note that this implicitly closes the previous instance of the empty tag.
-                   * this means that we can work with empty elements by looking just at the "open-point" of each range. */
+                if (separator == '>') {
+                  /* tag without annotations: check that there is no extraneous material on the line */
+                  if (buf[i] != '\0') {
+                    fprintf(stderr, "Warning: extra material after XML tag ignored (");
+                    encode_print_input_lineno();
+                    fprintf(stderr, ").\n");
+                    buf[i] = '\0';
+                  }
                 }
                 else {
-                  /* start tag : terminate annotation string and open range */
-                  buf[j] = '\0';
-                  range_open(&ranges[rng], line, buf+i);
+                  j = i + strlen(buf+i); /* find '>' character marking end of tag (must be last character on line) */
+                  while ((j > i) && (buf[j] == ' ' || buf[j] == '\t' || buf[j] == '\0'))
+                    j--; /* set j to last non-blank character on line, which should be '>' */
+                  if (buf[j] != '>') {
+                    fprintf(stderr, "Malformed XML tag: missing > terminator at end of line (");
+                    encode_print_input_lineno();
+                    fprintf(stderr, ", annotations will be ignored).\n");
+                    buf[i] = '\0'; /* so the annotation string passed to range_open() below is empty */
+                  }
+                  else {
+                    if (buf[j-1] == '/') {
+                      j--; /* empty tag: remove "/" from annotation string and handle as an open tag */
+                      /* Note that this implicitly closes the previous instance of the empty tag:
+                       *  - this means that we can work with empty elements by looking just at the "open-point" of each range;
+                       *  - it also means that empty tags with metadata at the start of each text will automatically extend over the full text.
+                       * However, the approach sketched here only works with "flat" s-attributes declared without recursion (even without :0). */
+                    }
+                    buf[j] = '\0';
+                  }
                 }
+                /* start tag: open range */
+                range_open(&ranges[rng], line, buf+i);
               }
               else {            /* XML end tag */
+                if (separator != '>') {
+                  fprintf(stderr, "Warning: no annotations allowed on XML close tag </%s ...> (", &buf[k]);
+                  encode_print_input_lineno();
+                  fprintf(stderr, ", ignored).\n");
+                }
                 range_close(&ranges[rng], line - 1); /* end tag belongs to previous line! */
               }
             }
-
           }
           else {
             /* no appropriate s-attribute declared -> insert tag literally */
