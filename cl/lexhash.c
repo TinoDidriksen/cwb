@@ -620,13 +620,13 @@ cl_lexhash_size(cl_lexhash hash)
 
 
 /**
- * Iterate over all entries in a lexhash.
+ * Resets a lexhash's entry-iterator to the start of the hash.
+ *
+ * The iterator allows access over all entries in a lexhash.
  *
  * Note that there is only a single iterator for each cl_lexhash object,
  * so different parts of the application code must not try to iterate through
  * the hash at the same time.
- *
- * This function resets the iterator to the start of the hash.
  *
  * @param hash      The lexhash to iterate over.
  */
@@ -639,14 +639,16 @@ cl_lexhash_iterator_reset(cl_lexhash hash)
 }
 
 /**
- * Iterate over all entries in a lexhash.
+ * Gets the next entry from the hash's entry-iterator.
+ *
+ * This function returns the next entry from the hash, or NULL if there are
+ * no more entries. Keep in mind that the hash is traversed in an unspecified order.
+ *
+ * The iterator allows access over all the entries in a lexhash.
  *
  * Note that there is only a single iterator for each cl_lexhash object,
  * so different parts of the application code must not try to iterate through
  * the hash at the same time.
- *
- * This function returns the next entry from the hash, or NULL if there are
- * no more entries.  Keep in mind that the hash is traversed in an unspecified order.
  *
  * @param hash      The lexhash to iterate over.
  */
