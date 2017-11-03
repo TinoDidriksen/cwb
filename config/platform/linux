@@ -28,3 +28,8 @@ INSTALL = install
 ## CPU architecture and operating system used to name binary releases
 RELEASE_ARCH = i386
 RELEASE_OS = linux
+
+## For terminal info: depending on the Linux distro, we might need -lncurses, or -ltinfo, or both.
+## So let's use pkg-config to find out which (since we alredy depend on pkg-config for Glib, etc.)
+TERMCAP_LIBS := $(shell pkg-config --libs ncurses)
+

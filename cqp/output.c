@@ -111,7 +111,7 @@ print_corpus_info_header(CorpusList *cl,
 /**
  * Creates, and opens for text-mode write, a temporary file.
  *
- * Temporary files have the prefix "$PID.cqpt." (where $PID = the process ID of this copy of CQP)
+ * Temporary files have the prefix "cqpt.$PID" (where $PID = the process ID of this copy of CQP)
  * and are placed in the directory defined as TEMPDIR_PATH.
  *
  * @see                   TEMPDIR_PATH
@@ -143,6 +143,7 @@ open_temporary_file(char *tmp_name_buffer)
   tempfile_name = tempnam(TEMPDIR_PATH, prefix); /* string is allocated by tempnam(), needs to be free'd below */
   if (strlen(tempfile_name) >= TEMP_FILENAME_BUFSIZE) {
     perror("open_temporary_file(): filename too long for buffer");
+    *tmp_name_buffer = '\0';
     cl_free(tempfile_name);
     return NULL;
   }
@@ -157,6 +158,7 @@ open_temporary_file(char *tmp_name_buffer)
     return fd;
   else {
     perror("open_temporary_file(): can't create temporary file");
+    *tmp_name_buffer = '\0';
     return NULL;
   }
 }
