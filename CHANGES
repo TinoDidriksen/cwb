@@ -148,7 +148,11 @@ Bug fixes:
  - [2017-08-19] Fixed bug #64: CQP grammar accepts negative repetition counts in standard and TAB queries. While
    we did not receive any bug reports from users, negative counts and other invalid ranges such as {3,2} would
    result in unexpected behaviour, including segementation faults and memory overflow. Such issues are now
-   captured by the query parser and report a syntax error. 
+   captured by the query parser and report a syntax error.
+
+ - [2017-11-13] "cut NQR x [y];" now disallows negative indices and behaves as documented even in edge cases.
+   It is no longer an error to specify x or y exceeding the number of hits; the indices will be clamped 
+   automatically without a warning. A warning is still printed if "cut" results in an empty query result.  
 
 Enhancements:
 

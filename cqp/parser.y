@@ -867,7 +867,7 @@ OptReverse:     REVERSE_SYM   { $$ = 1; }
 
 /* ================================================== Deletions */
 
-Reduction:        REDUCE_SYM OptionalCID TO_SYM INTEGER OptPercent
+Reduction:        REDUCE_SYM OptionalCID TO_SYM PosInt OptPercent
                                         {
                                           do_reduce($2, $4, $5);
                                         }
@@ -875,11 +875,11 @@ Reduction:        REDUCE_SYM OptionalCID TO_SYM INTEGER OptPercent
                                         {
                                           RangeSetop($2, RMaximalMatches, NULL, NULL);
                                         }
-                | CUT_SYM OptionalCID INTEGER
+                | CUT_SYM OptionalCID PosInt
                                         {
                                           do_cut($2, 0, $3-1);
                                         }
-                | CUT_SYM OptionalCID INTEGER INTEGER
+                | CUT_SYM OptionalCID PosInt PosInt
                                         {
                                           do_cut($2, $3, $4);
                                         }                                       
@@ -1207,7 +1207,7 @@ SearchSpace:    WITHIN_SYM OptDirection Description
                                         }
                 ;
 
-CutStatement:   CUT_SYM INTEGER         { $$ = abs($2); }
+CutStatement:   CUT_SYM PosInt          { $$ = $2; }
               | /* epsilon */           { $$ = 0; }
                 ;
 

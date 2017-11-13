@@ -933,27 +933,20 @@ do_cut(CorpusList *cl, int first, int last) {
     generate_code = 0;
     return;
   }
-  if (cl->size == 0) {
+  n_matches = cl->size;
+  if (n_matches == 0) {
     cqpmessage(Warning, "Named query result is empty - can't cut\n");
     return;
   }
 
-  n_matches = cl->size;
-  if (first < 0) first = n_matches - first;
-  if (last < 0) last = n_matches - last;
-  
-  if (first < 0) {
-    cqpmessage(Error, "Invalid range start %d < 0 for cut operator.", first);
-    generate_code = 0;
-    return;
-  }
-  if (last >= n_matches) {
-    cqpmessage(Error, "Invalid range end %d for cut operator (only %d matches).", last, n_matches);
-    generate_code = 0;
-    return;
-  }
+  assert(first >= 0); /* first < 0 is now disallowed by the parser */
+  if (last >= n_matches)
+    last = n_matches - 1; /* must be >= 0 because n_matches > 1 has been checked */
+  if (first >= n_matches)
+    first = n_matches;    /* so the loop below cannot overflow */
+
   if (last < first) {
-    cqpmessage(Warning, "Cut operator applied with empty range %d .. %d - result is empty.", first, last);
+    cqpmessage(Warning, "Cut operator applied with empty range %d .. %d, so result is empty.", first, last);
     first = last = n_matches;        /* delete all matches, ensuring that index does not run out of bounds */
   }
 
