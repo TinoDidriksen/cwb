@@ -180,6 +180,9 @@ Enhancements:
    modified slightly and is explained in the CQP tutorial. However, no guarantees are made wrt. performance and
    the precise semantics of TAB queries, except for special cases where all distances are either fixed or "*".
 
+ - [2017-11-14] Reserved words can be used as identifiers (e.g. attribute names) if they are quoted betweeen
+   backticks, e.g. size `MU`; [`sort` = "A.*"]; show +`no`;  Keep in mind that quotes aren't necessary in label
+   definitions (size: []) or qualified references (size.lemma) and will not be accepted in these contexts.
 
 Version 3.2
 -----------

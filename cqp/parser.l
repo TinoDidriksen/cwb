@@ -281,6 +281,12 @@ RE\(                    { return(RE_PAREN); }  /* for [lemma = RE($var)] */
                           yylval.strval = cl_strdup(yytext);
                           return(NQRID);
                         }
+\`{id}\`                {
+                          /* quoted ID: must still be valid ID but can be a reserved word */
+                          yylval.strval = cl_strdup(yytext + 1); /* strip `...` quotes */
+                          yylval.strval[strlen(yylval.strval) - 1] = '\0';
+                          return(ID);
+                        }                       
 {id}                    { 
                           yylval.strval = cl_strdup(yytext);
                           return(ID);
