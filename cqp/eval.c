@@ -674,7 +674,7 @@ get_leaf_value(Constrainttree ctptr,
           dcr->value.intres += 4;
         /* not really necessary, since get_struc_attribute() returns 0 if we're not inside a region */
       }
-      else if (cderrno != CDA_OK) { /* get_struc_attribtue() sets cderrno=CDA_OK if not in region */
+      else if (cderrno != CDA_ESTRUC) { /* get_struc_attribtue() sets cderrno=CDA_EDSTRUC if not in region */
         return False;                /* this _is_ an error */
       }
       

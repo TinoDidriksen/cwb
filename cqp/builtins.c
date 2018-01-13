@@ -73,6 +73,9 @@ BuiltinF builtin_function[] = {
   { 15, "ignore",   1, ignore_args,   ATTAT_INT },    /* takes label as argument, which it ignores; returns True as an int */
   { 16, "normalize",2, unify_args,    ATTAT_STRING},  /* apply case/diacritic folding to string */
 
+  { 17, "lbound_of",2, distance_args, ATTAT_INT },    /* cpos of start of s-attribute region containing specified position */
+  { 18, "rbound_of",2, distance_args, ATTAT_INT },    /* cpos of end of s-attribute region */
+
   { -1, NULL,       0, NULL,          ATTAT_NONE }
 };
 /* TODO switch to an enum or to constants instead of integer literals for the first field, to make the big switch below more reader-friendly. */
@@ -184,7 +187,7 @@ call_predefined_function(int bf_id,
                          Constrainttree ctptr,
                          DynCallResult *result)
 {
-  int argp, pos, flags;
+  int argp, pos, flags, start, end, n_none;
   char *str0, *str1;
   Attribute *attr;
 
@@ -206,6 +209,7 @@ call_predefined_function(int bf_id,
      so a label reference for a label that hasn't been set can receive special treatment in unify() 
      (all functions that take ATTAT_STRING arguments must be able to handle ATTAT_NONE) */
 
+  n_none = 0; /* check whether any of the arguments are undefined values */
   for (argp = 0; argp < nr_args; argp++) {
     if (! ((apl[argp].type == builtin_function[bf_id].argtypes[argp]) || 
            ((apl[argp].type == ATTAT_INT)   && (builtin_function[bf_id].argtypes[argp] == ATTAT_POS)) ||
@@ -215,15 +219,24 @@ call_predefined_function(int bf_id,
            0
            ))
       {
-        cqpmessage(Error,
-                   "Builtin function %s(): argument type mismatch at arg #%d\n\tExpected %s, got %s.",
-                   builtin_function[bf_id].name,
-                   argp,
-                   attat_name(builtin_function[bf_id].argtypes[argp]),
-                   attat_name(apl[argp].type));
-        return False;
+        if (apl[argp].type == ATTAT_NONE) {
+          n_none++; /* this is not treated as an error */
+        }
+        else {
+          cqpmessage(Error,
+              "Builtin function %s(): argument type mismatch at arg #%d\n\tExpected %s, got %s.",
+              builtin_function[bf_id].name,
+              argp,
+              attat_name(builtin_function[bf_id].argtypes[argp]),
+              attat_name(apl[argp].type));
+          return False;
+        }
       } 
   }
+
+  /* if any arguments are undefined (ATTAT_NONE) without explicit support in the function, return ATTAT_NONE */
+  if (n_none > 0)
+    return True; /* this is defined behaviour, not an evaluation error */
 
   /* 
    * nr of args and types are correct. eval it.
@@ -271,7 +284,6 @@ call_predefined_function(int bf_id,
     break;
 
   case 4:                        /* int (typecast) */
-
     /* convert argument from PAREF to STRING if necessary */
     if (apl[0].type == ATTAT_PAREF) {
       assert(ctptr->func.args[0].param->type == pa_ref);
@@ -301,7 +313,6 @@ call_predefined_function(int bf_id,
     break;
 
   case 5:                        /* lbound */
-
     attr = (ctptr->func.args->param->type == sa_ref)
       ? ctptr->func.args->param->sa_ref.attr
       : NULL;
@@ -319,7 +330,6 @@ call_predefined_function(int bf_id,
     break;
 
   case 6:                        /* rbound */
-
     attr = (ctptr->func.args->param->type == sa_ref)
       ? ctptr->func.args->param->sa_ref.attr
       : NULL;
@@ -337,7 +347,6 @@ call_predefined_function(int bf_id,
     break;
 
   case 7:                        /* unify */
-    
     /* first handle the disallowed case of ATTAT_NONE in the 2nd argument */
     if (apl[1].type == ATTAT_NONE) {
       cqpmessage(Error, "Last argument to builtin unify() function is undefined.");
@@ -387,7 +396,6 @@ call_predefined_function(int bf_id,
     break;
 
   case 8:                        /* ambiguity */
-
     /* in the case of ATTAT_NONE, ambiguity is 0, which means 'no data' */
     /* (it might be cleaner to raise an error in this case, but it's simpler */
     /*  if we can just say ''ambiguity(a.agr) > 1'' whether 'a' has been set or not */
@@ -442,7 +450,6 @@ call_predefined_function(int bf_id,
   case 12:                        /* prefix */
   case 13:                        /* is_prefix */
   case 14:                        /* minus */
-
     /* first handle the disallowed case of ATTAT_NONE type arguments */
     if (apl[0].type == ATTAT_NONE) {
       cqpmessage(Error, "First argument to builtin %s() function is undefined.",
@@ -571,6 +578,42 @@ call_predefined_function(int bf_id,
     cl_string_canonical(result->dynamic_string_buffer, cl_corpus_charset(evalenv->query_corpus->corpus), flags, CL_DYN_STRING_SIZE);
     result->type = ATTAT_STRING;
     result->value.charres = result->dynamic_string_buffer;
+    return True;
+    break;
+
+  case 17:                        /* lbound_of */
+    if (ctptr->func.args->param->type != sa_ref) {
+      cqpmessage(Error, "First argument of built-in lbound_of() function must be s-attribute.");
+      result->type = ATTAT_NONE;
+      return False;
+    }
+    attr = ctptr->func.args[0].param->sa_ref.attr; /* argument 1: s-attribute (we just need the handle) */
+    pos = apl[1].value.intres;                     /* argument 2: reference position */
+    if (!cl_cpos2struc2cpos(attr, pos, &start, &end)) {
+      result->type = ATTAT_NONE;
+      return True; /* return n/a if cpos is not in region (cl_cpos2struc2cpos doesn't distinguish this from true error conditions) */
+    }
+
+    result->type = ATTAT_INT;
+    result->value.intres = start;
+    return True;
+    break;
+
+  case 18:                        /* rbound_of */
+    if (ctptr->func.args->param->type != sa_ref) {
+      cqpmessage(Error, "First argument of built-in rbound_of() function must be s-attribute.");
+      result->type = ATTAT_NONE;
+      return False;
+    }
+    attr = ctptr->func.args[0].param->sa_ref.attr; /* argument 1: s-attribute (we just need the handle) */
+    pos = apl[1].value.intres;                     /* argument 2: reference position */
+    if (!cl_cpos2struc2cpos(attr, pos, &start, &end)) {
+      result->type = ATTAT_NONE;
+      return True; /* return n/a if cpos is not in region (cl_cpos2struc2cpos doesn't distinguish this from true error conditions) */
+    }
+
+    result->type = ATTAT_INT;
+    result->value.intres = end;
     return True;
     break;
 

@@ -61,10 +61,13 @@ New features:
    case- and/or diacritic-folding. The recommended use case is a case-folded (etc.) comparison of two
    attribute values. Note that any condition involving built-in functions cannot make use of index lookup.
    
- - [2017-07-01: v3.4.12] An embedded modifiers such as "(?longest)" can be used at the start of a CQP query 
+ - [2017-07-01: v3.4.12] An embedded modifier such as "(?longest)" can be used at the start of a CQP query 
    to change the matching strategy temporarily. This is particularly useful for Web interfaces like CQPweb
    which do not allow users explicit control over the MatchingStrategy option. 
 
+ - [2018-01-13: v3.4.13] New built-in functions lbound_of(attr, pos) and rbound_of(attr, pos) that return the
+   start/end corpus position of an s-attribute region containing pos (usually _  or a label reference).
+   The second argument is necessitated by technical restrictions on built-in functions.
 
 Bug fixes:
 
@@ -152,7 +155,10 @@ Bug fixes:
 
  - [2017-11-13] "cut NQR x [y];" now disallows negative indices and behaves as documented even in edge cases.
    It is no longer an error to specify x or y exceeding the number of hits; the indices will be clamped 
-   automatically without a warning. A warning is still printed if "cut" results in an empty query result.  
+   automatically without a warning. A warning is still printed if "cut" results in an empty query result.
+
+ - [2018-01-13: v3.4.13] bare reference to s-attribute incorrectly returned an evaluation error (which is
+   interpreted as false in most contexts) if not in a corresponding region, whereas it should have returned the code 0
 
 Enhancements:
 
@@ -183,6 +189,13 @@ Enhancements:
  - [2017-11-14] Reserved words can be used as identifiers (e.g. attribute names) if they are quoted betweeen
    backticks, e.g. size `MU`; [`sort` = "A.*"]; show +`no`;  Keep in mind that quotes aren't necessary in label
    definitions (size: []) or qualified references (size.lemma) and will not be accepted in these contexts.
+   
+ - [2018-01-13: v3.4.134] If a built-in function is called with an undefined value (internal type ATTAT_NONE) and
+   does not explicitly handle such cases, it returns an undefined value (ATTAT_NONE). This change was necessitated by
+   today's bug fix for bare s-attribute references: built-in functions such as distabs(_, lbound_of(title, _)) 
+   may be called with ATTAT_NONE where the call would previously have been skipped due to the error raised by
+   the reference to title outside a <title> region. The new behaviour is consistent with NULL values in SQL.
+   Keep in mind that undefined values evaluate to false in a Boolean context.   
 
 Version 3.2
 -----------

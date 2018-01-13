@@ -1803,6 +1803,9 @@ cl_max_struc(Attribute *a)
  * @param position     The corpus position to search for.
  * @param struc_start  Location for the start position of the instance.
  * @param struc_end    Location for the end position of the instance.
+ *
+ * @return             Boolean: true for all OK, false for error.
+ *
  */
 int
 cl_cpos2struc2cpos(Attribute *attribute,
