@@ -680,6 +680,9 @@ preprocess_input_line(char *line)
   char *p;
   char quote;                /* 0 -> not in string, ' -> single-quoted string, " -> double-quoted string */
 
+  /* remove trailing linebreak (LF or CRLF) */
+  cl_string_chomp(line);
+
   /* skip leading whitespace */
   while ((*line == ' ') || (*line == '\t'))
     line++;
@@ -707,9 +710,9 @@ preprocess_input_line(char *line)
   }
   if (quote) return NULL;        /* unbalanced quotes -> parse error */
 
-  /* remove trailing whitespace (usually including '\n' char) */
+  /* remove trailing whitespace */
   p = line + strlen(line);
-  while ((--p >= line) && ((*p == ' ') || (*p == '\t') || (*p == '\n'))) 
+  while ((--p >= line) && ((*p == ' ') || (*p == '\t')))
     *p = '\0';
 
   return line;

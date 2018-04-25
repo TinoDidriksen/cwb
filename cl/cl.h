@@ -901,15 +901,21 @@ int cl_string_utf8_continuation_byte(unsigned char byte);
 /* boolean function, returns is string valid?; can repair (in-place edit) 8-bit encoding by replacing invalid chars with '?' */
 int cl_string_validate_encoding(char *s, CorpusCharset charset, int repair);
 
-/* various functions related to sorting/grouping... */
-
+/* reverse string (for reverse sorting) */
 char *cl_string_reverse(const char *s, CorpusCharset charset); /* creates a new string */
 
+/* string comparison suitable as qsort() callback */
 int cl_string_qsort_compare(const char *s1,
                             const char *s2,
                             CorpusCharset charset,
                             int flags,
                             int reverse);
+
+/* remove any trailing LF (\n) and CR (\r) characters from string (modified in-place, similar to Perl's chomp operator); */
+/* the main purpose of this function is to help CWB read text files in Windows (CR-LF) format correctly; */
+/* note that charset doesn't have to be specified because LF and CR have the same byte codes in all supported encodings */
+void cl_string_chomp(char *s);
+
 
 /**
  * "Dummy" charset macro for calling cl_string_canonical

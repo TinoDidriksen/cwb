@@ -68,6 +68,10 @@ New features:
  - [2018-01-13: v3.4.13] New built-in functions lbound_of(attr, pos) and rbound_of(attr, pos) that return the
    start/end corpus position of an s-attribute region containing pos (usually _  or a label reference).
    The second argument is necessitated by technical restrictions on built-in functions.
+ 
+ - [2018-04-25: v3.4.14] CWB no longer breaks on input files with Windows-style (CRLF) line endings. In
+   particular, cwb-encode, cwb-s-encode, CQP word lists, macro definition files and CQP scripts handle
+   CRLF files correctly and delete the extra CR characters.
 
 Bug fixes:
 
@@ -190,12 +194,17 @@ Enhancements:
    backticks, e.g. size `MU`; [`sort` = "A.*"]; show +`no`;  Keep in mind that quotes aren't necessary in label
    definitions (size: []) or qualified references (size.lemma) and will not be accepted in these contexts.
    
- - [2018-01-13: v3.4.134] If a built-in function is called with an undefined value (internal type ATTAT_NONE) and
+ - [2018-01-13: v3.4.13] If a built-in function is called with an undefined value (internal type ATTAT_NONE) and
    does not explicitly handle such cases, it returns an undefined value (ATTAT_NONE). This change was necessitated by
    today's bug fix for bare s-attribute references: built-in functions such as distabs(_, lbound_of(title, _)) 
    may be called with ATTAT_NONE where the call would previously have been skipped due to the error raised by
    the reference to title outside a <title> region. The new behaviour is consistent with NULL values in SQL.
-   Keep in mind that undefined values evaluate to false in a Boolean context.   
+   Keep in mind that undefined values evaluate to false in a Boolean context.
+
+ - [2018-04-25: v3.4.14] New CQP command (cat "STRING" [> "file.txt"];) can be used to print arbitrary strings
+   in CQP output, which is convenient for communicating with output post-processor scripts and for prepending
+   a header row to a TAB-delimited output file. Escape sequences \n, \r and \t are interpreted, but no other
+   substitutions are made in the string to be printed.
 
 Version 3.2
 -----------

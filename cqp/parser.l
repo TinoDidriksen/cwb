@@ -115,8 +115,8 @@ flags           %[a-z]+
 /* accents         \\\"|\\,|\\\'|\\`|\\\^ */
 /* -- strings are enclosed in single or double quotes, which can be escaped inside by doubling (automatically removed) */
 /* -- a backslash escapes any following character (except newline), but is passed through together with the character */
-string          \"(\\[^\n]|\"\"|[^"\n])*\"|\'(\\[^\n]|\'\'|[^'\n])*\'
-whitespaces     [ \t\n]+
+string          \"(\\[^\r\n]|\"\"|[^"\r\n])*\"|\'(\\[^\r\n]|\'\'|[^'\r\n])*\'
+whitespaces     [ \t\r\n]+
 emptyconstr     \[[ \t]*\]
 emptylaconstr   \[:[ \t]*:\]
 

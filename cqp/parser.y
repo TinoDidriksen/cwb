@@ -455,6 +455,8 @@ Cat:              CAT_SYM OptionalCID
                             cl_free($3.name);
                             drop_temp_corpora();
                           }
+                | CAT_SYM STRING 
+                          OptionalRedir       { do_echo($2, &($3)); cl_free($3.name); cl_free($2); } 
                 ;
 
 Saving:           SAVE_SYM OptionalCID

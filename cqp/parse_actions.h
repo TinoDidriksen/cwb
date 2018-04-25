@@ -87,6 +87,8 @@ CorpusList *after_Query(CorpusList *cl);
 
 void do_cat(CorpusList *cl, struct Redir *r, int first, int last);
 
+void do_echo(char *s, struct Redir *rd);
+
 void do_save(CorpusList *cl, struct Redir *r);
 
 void do_attribute_show(char *name, int status);

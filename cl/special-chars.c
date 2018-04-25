@@ -1996,6 +1996,29 @@ cl_string_reverse(const char *s, CorpusCharset charset)
 }
 
 /**
+ * Removes all trailing CR and LF characters from specified string (in-place).
+ *
+ * The main purpose of this function is to remove trailing line breaks from input
+ * lines regardless of whether a text file is in Unix (LF) or Windows (CR-LF) format.
+ * All text input except for simple numeric data should be passed through cl_string_chomp().
+ *
+ * @param s     String to chomp (modified in-place).
+ */
+void
+cl_string_chomp(char *s) {
+  char *point = s;
+  /* advance point to NUL terminator */
+  while (*point)
+    point++;
+  point--; /* now points at last byte of string */
+  /* delete CR and LF, but don't move beyond start of string */
+  while (point >= s && (*point == '\r' || *point == '\n')) {
+    *point = '\0';
+    point--;
+  }
+}
+
+/**
  * Compares two strings in a qsort-style
  *
  * This function is designed to be suitable for use as a callback

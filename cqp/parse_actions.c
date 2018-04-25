@@ -507,6 +507,47 @@ do_cat(CorpusList *cl, struct Redir *r, int first, int last)
 }
 
 void
+do_echo(char *s, struct Redir *rd) {
+  char *r, *w;
+  if (!open_stream(rd, unknown_charset)) {
+    cqpmessage(Error, "Can't redirect output to file or pipe\n");
+    return;
+  }
+  /* make copy of s to interpret \t, \r and \n escapes */
+  s = cl_strdup(s);
+  r = w = s;
+  while (*r) {
+    if (*r == '\\' && *(r + 1)) {
+      if (*(r + 1) == 't') {
+        *w++ = '\t';
+        r += 2;
+      }
+      else if (*(r + 1) == 'r') {
+        *w++ = '\r';
+        r += 2;
+      }
+      else if (*(r + 1) == 'n') {
+        *w++ = '\n';
+        r += 2;
+      }
+      else {
+        *w++ = *r++; /* pass through all other escaped symbols */
+        *w++ = *r++;
+      }
+    }
+    else {
+      *w++ = *r++;
+    }
+  }
+  *w = '\0'; /* terminate modified string */
+
+  fprintf(rd->stream, "%s", s);
+  cl_free(s);
+
+  close_stream(rd);
+}
+
+void
 do_save(CorpusList *cl, struct Redir *r)
 {
   if (cl) {

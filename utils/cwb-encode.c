@@ -1806,8 +1806,8 @@ main(int argc, char **argv)
       encode_error("Input line too long (max: %d characters/bytes).", MAX_INPUT_LINE_LENGTH - 2);
     }
 
-    if (linebuf[input_length-1] == '\n') /* chomp $buf; :o) */
-      linebuf[input_length-1] = '\0';
+    /* remove trailing line break (LF or CR-LF) */
+    cl_string_chomp(linebuf);
 
     buf = linebuf;
     if (strip_blanks) {

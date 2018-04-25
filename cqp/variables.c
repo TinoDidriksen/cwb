@@ -360,15 +360,10 @@ SetVariableValue(char *varName,
       char s[CL_MAX_LINE_LENGTH];
 
       while (fgets(s, CL_MAX_LINE_LENGTH, fd) != NULL) {
+        /* remove trailing line break (LF or CR-LF) */
+        cl_string_chomp(s);
 
         l = strlen(s);
-
-        if (l > 0 && s[l-1] == '\n') {
-
-          /* strip trailing newline */
-          s[l-1] = '\0'; l--;
-        }
-
         if (l > 0)
           VariableAddItem(v, s);
       }

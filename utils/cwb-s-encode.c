@@ -337,7 +337,7 @@ SL_insert(int start, int end, char *annot)
  * optional third field is returned in annot - if not present, annot is
  * set to NULL.
  *
- * @param line   The line to be parsed.
+ * @param line   The line to be parsed (without trailing line break).
  * @param start  Out-parameter: Location to put the start cpos.
  * @param end    Out-parameter: Location to put the end cos.
  * @param annot  Out-parameter: Location to put the annotation string.
@@ -368,20 +368,19 @@ sencode_parse_line(char *line, int *start, int *end, char **annot)
   field_end = strchr(field, '\t');
   if (field_end == NULL) {
     has_annotation = 0;
-    field_end = strchr(field, '\n');
-    if (field_end && '\r' == *(field_end - 1)) /* if we are on *nix, and the file was generated in Windows... */
-      field_end--;
+    field_end = field + strlen(field) - 1;
+    if (field_end <= field)
+      return 0;
   }
-  if (field_end == NULL)
-    return 0;
   else {
     *field_end = 0;
-    errno = 0;
-    *end = atoi(field);
-    if (errno != 0 || *end < 0)
-      return 0;
-    field = field_end + 1;
   }
+
+  errno = 0;
+  *end = atoi(field);
+  if (errno != 0 || *end < 0)
+    return 0;
+  field = field_end + 1;
 
   /* optional third field: STRING annotation */
   if (has_annotation) {
@@ -389,31 +388,22 @@ sencode_parse_line(char *line, int *start, int *end, char **annot)
     if (field_end != NULL)
       return 0;                 /* return parse error if there are extra fields */
     else {
-      field_end = strchr(field, '\n');
-      if (field_end && '\r' == *(field_end - 1)) /* if we are on *nix, and the file was generated in Windows... */
-        field_end--;
-
-      if (field_end == NULL)
-        return 0;               /* return parse error if no terminating line-break found */
-      else {
-        *field_end = 0;
-        /* nb re clean_strings: it is OK to modify field inplace, because we will free it before we leave the function! */
-        if (!cl_string_validate_encoding(field, encoding_charset, clean_strings)) {
-          fprintf(stderr,
-                  "Encoding error on line #%ld: an invalid byte or byte sequence for charset \"%s\" was encountered.\n",
-                  input_line,
-                  encoding_charset_name);
-          exit(1);
-        }
-        /* Duplicate into annot; normalize UTF8 to precomposed form, otherwise just duplicate normally. */
-        if (encoding_charset == utf8)
-          *annot = cl_string_canonical(field, utf8, REQUIRE_NFC, CL_STRING_CANONICAL_STRDUP);
-        else
-          *annot = cl_strdup(field);
-        /* finally, get rid of C0 controls iff the user asked us to clean up strings */
-        if (clean_strings)
-          cl_string_zap_controls(*annot, encoding_charset, '?', 0, 0);
+      /* nb re clean_strings: it is OK to modify field inplace, because we will free it before we leave the function! */
+      if (!cl_string_validate_encoding(field, encoding_charset, clean_strings)) {
+        fprintf(stderr,
+            "Encoding error on line #%ld: an invalid byte or byte sequence for charset \"%s\" was encountered.\n",
+            input_line,
+            encoding_charset_name);
+        exit(1);
       }
+      /* Duplicate into annot; normalize UTF8 to precomposed form, otherwise just duplicate normally. */
+      if (encoding_charset == utf8)
+        *annot = cl_string_canonical(field, utf8, REQUIRE_NFC, CL_STRING_CANONICAL_STRDUP);
+      else
+        *annot = cl_strdup(field);
+      /* finally, get rid of C0 controls iff the user asked us to clean up strings */
+      if (clean_strings)
+        cl_string_zap_controls(*annot, encoding_charset, '?', 1, 1);
     }
   }
   else
@@ -861,6 +851,9 @@ main(int argc, char **argv)
       fprintf(stderr, "BUFFER OVERFLOW, input line #%ld is too long:\n>> %s", input_line, buf);
       exit(1);
     }
+
+    /* remove trailing line break (LF or CR-LF) */
+    cl_string_chomp(buf);
 
     if (! sencode_parse_line(buf, &start, &end, &annot)) {
       fprintf(stderr, "FORMAT ERROR on line #%ld:\n>> %s", input_line, buf);
