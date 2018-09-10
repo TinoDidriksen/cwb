@@ -14,7 +14,7 @@ then
 	exit
 fi
 
-apt-get install autoconf bison flex gcc make pkg-config libc6-dev libncurses5 libncurses5-dev libpcre3-dev libglib2.0-0 libglib2.0-dev libreadline6 libreadline6-dev
+apt-get install autoconf bison flex gcc make pkg-config libc6-dev libncurses5 libncurses5-dev libpcre3-dev libglib2.0-0 libglib2.0-dev libreadline-dev
 
 CONFIG_FLAGS=`./install-scripts/cwb-config-basic`
 
