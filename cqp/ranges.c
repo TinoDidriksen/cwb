@@ -340,6 +340,9 @@ calculate_ranges(CorpusList *cl, int cpos, Context spc, int *left, int *right)
   return 1;
 }
 
+/**
+ * Returns -1 if there is no rightboundary found.
+ */
 int
 calculate_rightboundary(CorpusList *cl, int cpos, Context spc)
 {
@@ -348,6 +351,9 @@ calculate_rightboundary(CorpusList *cl, int cpos, Context spc)
   return (calculate_ranges(cl, cpos, spc, &left, &right)? right : -1);
 }
 
+/**
+ * Returns -1 if there is no leftboudnary found.
+ */
 int
 calculate_leftboundary(CorpusList *cl, int cpos, Context spc)
 {

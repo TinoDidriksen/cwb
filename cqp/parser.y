@@ -79,7 +79,7 @@ void warn_query_lock_violation(void) {
 
 /* ============================================================ */
 
-/* note: SYCHRONIZE is a windows API identifier, and it doesn't seem at all
+/* note: SYNCHRONIZE is a windows API identifier, and it doesn't seem at all
 necessary here - it is just defined, then tested.
 So: commented out. AH 2/4/2010
 #define SYNCHRONIZE

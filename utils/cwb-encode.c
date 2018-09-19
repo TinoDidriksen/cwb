@@ -388,7 +388,7 @@ encode_error(char *format, ...)
 /**
  * Get a list of files in a given directory.
  *
- * This function only lists files with .vrt or .vrt.gz extensions,
+ * This function only lists files with .vrt or .vrt.(gz|bz2) extensions,
  * and only files identified  by POSIX stat() as "regular".
  *
  * (Note that .vrt is dependent on DEFAULT_INFILE_EXTENSION.)

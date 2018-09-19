@@ -33,7 +33,7 @@ include $(TOP)/config.mk
 #  depend       update dependencies
 #  install      install tool binaries
 #  uninstall    uninstall tools from chosen location (currently not supported)
-#  relase       install to binary release dir
+#  release      install to binary release dir
 #  size         print size of source code (line counts)
 #
 

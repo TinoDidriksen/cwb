@@ -1067,7 +1067,8 @@ main(int argc, char **argv)
   /* ---- end of parse attribute declarations ---- */
 
   if (read_pos_from_file) {
-    if (input_filename == NULL) input_filename = "-"; /* -p: use STDIN */
+    if (input_filename == NULL)
+      input_filename = "-"; /* -p: use STDIN */
     input_file = cl_open_stream(input_filename, CL_STREAM_READ, CL_STREAM_MAGIC);
     if (input_file == NULL) {
       cl_error("Can't read matchlist file (-f)");

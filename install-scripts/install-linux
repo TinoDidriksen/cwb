@@ -1,0 +1,82 @@
+#!/bin/sh
+
+# Installation for most common Linux distributions
+# Run as root! su or sudo.
+
+who=$(whoami)
+
+if [ "$who" != "root" ]
+then
+    echo "This script must be run as root."
+    echo "Please try again: sudo cwb-install-linux"
+    echo "Thanks!"
+    exit 1
+fi
+
+if [ -f /etc/lsb-release ]
+then
+    # For some versions of Debian/Ubuntu without lsb_release command.
+    . /etc/lsb-release
+    OS=$DISTRIB_ID
+    VER=$DISTRIB_RELEASE
+    INSTALLER='apt-get install -y'
+    PACKAGES='autoconf bison flex gcc make pkg-config libc6-dev libncurses5 libncurses5-dev libpcre3-dev libglib2.0-0 libglib2.0-dev libreadline6 libreadline6-dev'
+elif [ -f /etc/debian_version ]
+then
+    # Debian/Ubuntu/etc.
+    OS=Debian
+    VER=$(cat /etc/debian_version)
+    INSTALLER='apt-get install -y'
+    PACKAGES='autoconf bison flex gcc make pkg-config libc6-dev libncurses5 libncurses5-dev libpcre3-dev libglib2.0-0 libglib2.0-dev libreadline7 libreadline-dev'
+elif [ -f /etc/alpine-release ]
+then
+    # Alpine Linux
+    OS=Alpine
+    VER=$(cat /etc/alpine-release)
+    INSTALLER='apk add'
+    PACKAGES='autoconf bison flex gcc make pkgconf libc-dev ncurses ncurses-dev pcre glib glib-dev readline readline-dev'
+elif [ -f /etc/fedora-release ]
+then
+    # Fedora
+    OS=Fedora
+    VER=$(cat /etc/fedora-release)
+    # Package manager detection requires an extra step on Fedora
+    DnfCheck=$(which dnf)
+    if [ -z "$DnfCheck" ]
+    then
+        # Newer Fedora uses DNF instead of YUM; we assume we have the latter if we can't detect the former.
+        INSTALLER='dnf -y install'
+    else
+        INSTALLER='yum install -y'
+    fi
+    PACKAGES='autoconf bison flex gcc pkgconfig glibc glibc-common glibc-devel glibc-headers make ncurses ncurses-libs ncurses-devel pcre pcre-devel glib2 glib2-devel readline readline-devel'
+elif [ -f /etc/redhat-release ]
+then
+    # Older Red Hat, CentOS, etc.
+    OS=CentOS
+    VER=$(cat /etc/redhat-release)
+    INSTALLER='yum install -y'
+    PACKAGES='autoconf bison flex gcc pkgconfig glibc glibc-common glibc-devel glibc-headers make ncurses ncurses-libs ncurses-devel pcre pcre-devel glib2 glib2-devel readline readline-devel'
+else
+    # Fall back to uname, e.g. "Linux <version>", also works for BSD, etc.
+    OS=$(uname -s)
+    VER=$(uname -r)
+    echo "You seem to be running $OS version $VER. Sorry but CWB auto-install doesn't work on that OS!"
+    echo "You should use manual installation  with 'make' instead (see file INSTALL). 
+    exit 1
+fi
+
+
+CONFIG_FLAGS=$(./install-scripts/config-basic)
+
+# Install OS packages
+$INSTALLER $PACKAGES
+
+make clean $CONFIG_FLAGS \
+&& make depend $CONFIG_FLAGS \
+&& make cl $CONFIG_FLAGS \
+&& make utils $CONFIG_FLAGS \
+&& make cqp $CONFIG_FLAGS \
+&& make install $CONFIG_FLAGS \
+&& make realclean $CONFIG_FLAGS
+

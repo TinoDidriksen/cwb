@@ -3067,7 +3067,7 @@ cl_autostring_ptr(ClAutoString string)
 }
 
 /**
- * Get the length of the currently-stored string (or negative value in case NULL object is passed).
+ * Get the length of the currently-stored string (or 0 in case NULL object is passed).
  *
  * Equivalent to reading the ->len member, except this function checks for a NULL!
  */
@@ -3085,9 +3085,13 @@ cl_autostring_len(ClAutoString string)
 void
 cl_autostring_reclaim_mem(ClAutoString string)
 {
+  size_t new_bytes;
   if (NULL == string)
     return;
-  string->data = cl_realloc(string->data, 1 + ( (string->len + 1) / string->increment ));
+  new_bytes = 1 + ( (string->len + 1) / string->increment );
+  string->data = cl_realloc(string->data, new_bytes);
+  string->bytes_allocated = new_bytes;
+
 }
 
 /**
