@@ -763,7 +763,7 @@ sencode_write_region(int start, int end, char *annot)
         exit(1);
       }
     }
-    id = entry->id;
+    id = entry->id;  /* TODO the value stored in id is never used ... should it be?? */
     offset = entry->data.integer;
 
     NwriteInt(new_satt.num, new_satt.avx);

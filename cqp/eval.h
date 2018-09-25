@@ -342,7 +342,7 @@ typedef AVStructure Patternlist[MAXPATTERNS];
 
 /* ====================================================================== */
 
-enum ctxtdir { leftright, left, right };
+enum ctxtdir { ctxtdir_leftright, ctxtdir_left, ctxtdir_right };
 enum spacet { word, structure };
 
 /**

@@ -1,13 +1,13 @@
-/* 
+/*
  *  IMS Open Corpus Workbench (CWB)
  *  Copyright (C) 1993-2006 by IMS, University of Stuttgart
  *  Copyright (C) 2007-     by the respective contributers (see file AUTHORS)
- * 
+ *
  *  This program is free software; you can redistribute it and/or modify it
  *  under the terms of the GNU General Public License as published by the
  *  Free Software Foundation; either version 2, or (at your option) any later
  *  version.
- * 
+ *
  *  This program is distributed in the hope that it will be useful, but
  *  WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
@@ -55,7 +55,7 @@
 /* ---------------------------------------------------------------------- */
 
 /** [TODO get rid?] doesn't currently appear to be used anywhere? */
-#define USE_OLD_COMPOSE  
+#define USE_OLD_COMPOSE
 
 /* ---------------------------------------------------------------------- */
 
@@ -83,7 +83,7 @@ char *ascii_print_field(FieldType field, int at_end);
  */
 PrintDescriptionRecord ASCIIPrintDescriptionRecord = {
   "%9d: ",                            /* CPOSPrintFormat */
-  
+
   NULL,                               /* BeforePrintStructures */
   " ",                                /* PrintStructureSeparator */
   ": ",                               /* AfterPrintStructures */
@@ -117,7 +117,7 @@ PrintDescriptionRecord ASCIIPrintDescriptionRecord = {
  */
 PrintDescriptionRecord ASCIIHighlightedPrintDescriptionRecord = {
   "%9d: ",                            /* CPOSPrintFormat */
-  
+
   NULL,                               /* BeforePrintStructures */
   " ",                                /* PrintStructureSeparator */
   ": ",                               /* AfterPrintStructures */
@@ -231,7 +231,7 @@ get_screen_escapes(void)
 
   if ((setupterm(term, 1, &status) == ERR) || (status != 1)) {
     return;
-  }  
+  }
 
   /* turn off all attributes */
   sc_all_out = tigetstr("sgr0");
@@ -258,7 +258,7 @@ get_screen_escapes(void)
   if (sc_u_in == NULL) sc_u_in = sc_s_in;
   sc_u_out = tigetstr("rmul");
   if (sc_u_out == NULL) sc_u_out = sc_s_out;
-  
+
   /* bold */
   sc_b_in = tigetstr("bold");
   if (sc_b_in == NULL) {
@@ -281,7 +281,7 @@ get_screen_escapes(void)
   }
 
   escapes_initialized++;
-  
+
   /* in highlighted mode, switch off display attributes at end of line (to be on the safe side) */
   ASCIIHighlightedPrintDescriptionRecord.AfterLine = cl_malloc(strlen(sc_all_out) + 2);
   sprintf(ASCIIHighlightedPrintDescriptionRecord.AfterLine,
@@ -331,7 +331,7 @@ get_typeface_escape(char typeface)
 char *
 get_colour_escape(char colour, int foreground) {
   if (use_colour) {
-    if (*(get_typeface_escape('n')) == 0) 
+    if (*(get_typeface_escape('n')) == 0)
       return "";                /* don't try colour if terminal doesn't support typefaces */
     if (foreground) {
       switch(colour) {
@@ -417,7 +417,7 @@ ascii_print_field(FieldType field, int at_end)
     else
       sc_s_mode = 1;
     break;
-    
+
   case KeywordField:
     if (at_end)
       sc_u_mode = 0;
@@ -436,7 +436,7 @@ ascii_print_field(FieldType field, int at_end)
   default:
     break;
   }
-  
+
   /* now compose escape sequence which has to be sent to the terminal (setting _all_ attributes to their current values) */
   sprintf(sc_before_token + strlen(sc_before_token),
           "%s%s%s%s",
@@ -459,7 +459,7 @@ ascii_print_field(FieldType field, int at_end)
  * @param line            Character data of the line of aligned-corpus data to print. This is treated as opaque.
  */
 void
-ascii_print_aligned_line(FILE *stream, 
+ascii_print_aligned_line(FILE *stream,
                          int highlighting,
                          char *attribute_name,
                          char *line)
@@ -468,7 +468,7 @@ ascii_print_aligned_line(FILE *stream,
     char *red = get_colour_escape('r', 1);
     char *bold = get_typeface_escape('b');
     char *normal = get_typeface_escape('n');
-    fprintf(stream, "%s%s-->%s:%s %s\n", 
+    fprintf(stream, "%s%s-->%s:%s %s\n",
             red, bold,
             attribute_name,
             normal,
@@ -486,7 +486,7 @@ ascii_print_aligned_line(FILE *stream,
  *
  *
  */
-void 
+void
 print_concordance_line(FILE *outfd,
                        CorpusList *cl,
                        int element,
@@ -502,7 +502,7 @@ print_concordance_line(FILE *outfd,
     cqpmessage(Error, "Empty corpus or empty output file");
     return;
   }
-  
+
   if (element < 0 || element >= cl->size) {
     cqpmessage(Error, "Illegal element in print_concordance_line");
     return;
@@ -520,11 +520,11 @@ print_concordance_line(FILE *outfd,
   clf[MatchField].type = MatchField;
   clf[MatchField].start_position = cl->range[element].start;
   clf[MatchField].end_position = cl->range[element].end;
-      
+
   clf[MatchEndField].type = MatchEndField; /* unused, because we use MatchField for the entire match */
   clf[MatchEndField].start_position = -1;
   clf[MatchEndField].end_position = -1;
-      
+
   clf[KeywordField].type = KeywordField;
   if (cl->keywords) {
     clf[KeywordField].start_position = cl->keywords[element];
@@ -534,7 +534,7 @@ print_concordance_line(FILE *outfd,
     clf[KeywordField].start_position = -1;
     clf[KeywordField].end_position = -1;
   }
-      
+
   clf[TargetField].type = TargetField;
   if (cl->targets) {
     clf[TargetField].start_position = cl->targets[element];
@@ -550,7 +550,7 @@ print_concordance_line(FILE *outfd,
   else
     pdr = &ASCIIPrintDescriptionRecord;
 
-  outstr = compose_kwic_line(cl->corpus, 
+  outstr = compose_kwic_line(cl->corpus,
                              cl->range[element].start, cl->range[element].end,
                              &CD,
                              &length,
@@ -564,12 +564,12 @@ print_concordance_line(FILE *outfd,
 
   fputs(outstr, outfd);
   free(outstr);
-  
+
   if (pdr->AfterLine)
     fputs(pdr->AfterLine, outfd);
-  
+
   if (CD.alignedCorpora != NULL)
-    printAlignedStrings(cl->corpus, 
+    printAlignedStrings(cl->corpus,
                         &CD,
                         cl->range[element].start, cl->range[element].end,
                         apply_highlighting,
@@ -577,10 +577,13 @@ print_concordance_line(FILE *outfd,
 }
 
 
-
-void 
-ascii_print_corpus_header(CorpusList *cl, 
-                          FILE *stream)
+/**
+ * Prints a header for a "cat" command.
+ *
+ * Note that the "corpus" here refers to a subcorpus IE query result.
+ */
+void
+ascii_print_corpus_header(CorpusList *cl, FILE *stream)
 {
   time_t now;
 
@@ -589,7 +592,7 @@ ascii_print_corpus_header(CorpusList *cl,
 #endif
 
   int i;
-  
+
   time(&now);
   /*   pwd = getpwuid(geteuid()); */
   /* disabled because of incompatibilities between different Linux versions */
@@ -598,7 +601,7 @@ ascii_print_corpus_header(CorpusList *cl,
   for (i = 0; i < 75; i++)
     fputc('-', stream);
   fputc('\n', stream);
-  
+
   fprintf(stream,
           "#\n"
           "# User:    %s (%s)\n"
@@ -629,20 +632,20 @@ ascii_print_corpus_header(CorpusList *cl,
           (CD.right_type == CHAR_CONTEXT) ? "characters" :
           ((CD.right_type == WORD_CONTEXT) ? "words" :
            (CD.right_structure_name) ? CD.right_structure_name : "???"));
-  
+
   if (cl->query_corpus && cl->query_text) {
     fprintf(stream, "# Query: %s; %s\n", cl->query_corpus, cl->query_text);
   }
-  
-  
+
+
   fputc('#', stream);
   for (i = 0; i < 75; i++)
     fputc('-', stream);
   fputc('\n', stream);
 }
 
-void 
-ascii_print_output(CorpusList *cl, 
+void
+ascii_print_output(CorpusList *cl,
                    FILE *outfd,
                    int interactive,
                    ContextDescriptor *cd,
@@ -657,7 +660,7 @@ ascii_print_output(CorpusList *cl,
     last = cl->size - 1;
 
   for (i = first; (i <= last) && !cl_broken_pipe; i++) {
-    
+
     if (cl->sortidx)
       real_line = cl->sortidx[i];
     else
@@ -674,7 +677,7 @@ ascii_print_output(CorpusList *cl,
   }
 }
 
-void 
+void
 ascii_print_group(Group *group, int expand, FILE *fd)
 {
   int source_id, target_id, count;
@@ -694,7 +697,7 @@ ascii_print_group(Group *group, int expand, FILE *fd)
 
     source_id = group->count_cells[cell].s;
     source_s = Group_id2str(group, source_id, 0);
-   
+
     target_id = group->count_cells[cell].t;
     target_s = Group_id2str(group, target_id, 1);
     count     = group->count_cells[cell].freq;
@@ -708,19 +711,19 @@ ascii_print_group(Group *group, int expand, FILE *fd)
       /* separator bar between groups */
       if (cell == 0 || (group->is_grouped && nr_targets == 0))
         fprintf(fd, SEPARATOR);
-      
+
       fprintf(fd, "%-28s  %-28s\t%6d\n",
               (nr_targets == 0) ? source_s : " ", target_s, count);
     }
     else {
       if (source_id < 0) source_s = "";        /* don't print "(none)" or "(all)" in plain mode (just empty string) */
       if (target_id < 0) target_s = "";
-      if (has_source) 
+      if (has_source)
         fprintf(fd, "%s\t%s\t%d\n", source_s, target_s, count);
-      else 
+      else
         fprintf(fd, "%s\t%d\n", target_s, count);
     }
-    
+
     if (expand) {
       /* Ausgabe der entsprechenden Konkordanzzeilen??? */
     }

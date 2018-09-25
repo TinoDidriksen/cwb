@@ -1,13 +1,13 @@
-/* 
+/*
  *  IMS Open Corpus Workbench (CWB)
  *  Copyright (C) 1993-2006 by IMS, University of Stuttgart
  *  Copyright (C) 2007-     by the respective contributers (see file AUTHORS)
- * 
+ *
  *  This program is free software; you can redistribute it and/or modify it
  *  under the terms of the GNU General Public License as published by the
  *  Free Software Foundation; either version 2, or (at your option) any later
  *  version.
- * 
+ *
  *  This program is distributed in the hope that it will be useful, but
  *  WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
@@ -75,9 +75,9 @@ setenv(const char *name, const char *value, int overwrite) {
 
 /* ---------------------------------------------------------------------- */
 
-void 
-print_corpus_info_header(CorpusList *cl, 
-                         FILE *stream, 
+void
+print_corpus_info_header(CorpusList *cl,
+                         FILE *stream,
                          PrintMode mode,
                          int force)
 {
@@ -87,15 +87,15 @@ print_corpus_info_header(CorpusList *cl,
     case PrintASCII:
       ascii_print_corpus_header(cl, stream);
       break;
-      
+
     case PrintSGML:
       sgml_print_corpus_header(cl, stream);
       break;
-      
+
     case PrintHTML:
       html_print_corpus_header(cl, stream);
       break;
-      
+
     case PrintLATEX:
       latex_print_corpus_header(cl, stream);
       break;
@@ -187,14 +187,14 @@ open_file(char *name, char *mode)
 
     home = getenv("HOME");
 
-    if (!home || home[0] == '\0') 
+    if (!home || home[0] == '\0')
       return NULL;
 
     s_offset = 0;
 
     for (i = 0; s_offset < (CL_MAX_FILENAME_LENGTH-1) && home[i]; i++)
       s[s_offset++] = home[i];
-    
+
     if (name[0] == '~')
       i = 1;
     else
@@ -203,7 +203,7 @@ open_file(char *name, char *mode)
     for ( ; s_offset < (CL_MAX_FILENAME_LENGTH-1) && name[i]; i++)
       s[s_offset++] = name[i];
     s[s_offset] = '\0';
-    
+
     return fopen(s, mode);
   }
   else
@@ -405,7 +405,7 @@ open_input_stream(struct InputRedir *rd)
     i = strlen(rd->name) - 1;
     while (i > 0 && rd->name[i] == ' ')
       i--;
-    
+
     if (i >= 1 && (rd->name[i] == '|')) {
       /* read input from a pipe (unless running in "secure" mode) */
       if (insecure) {
@@ -457,8 +457,8 @@ close_input_stream(struct InputRedir *rd)
 /* print_output():
  * Ausgabe von CL, ohne Header, auf stream
  */
-void 
-print_output(CorpusList *cl, 
+void
+print_output(CorpusList *cl,
              FILE *fd,
              int interactive,
              ContextDescriptor *cd,
@@ -466,23 +466,23 @@ print_output(CorpusList *cl,
              PrintMode mode)
 {
   switch (mode) {
-    
+
   case PrintSGML:
     sgml_print_output(cl, fd, interactive, cd, first, last);
     break;
-    
+
   case PrintHTML:
     html_print_output(cl, fd, interactive, cd, first, last);
     break;
-    
+
   case PrintLATEX:
     latex_print_output(cl, fd, interactive, cd, first, last);
     break;
-    
+
   case PrintASCII:
     ascii_print_output(cl, fd, interactive, cd, first, last);
     break;
-    
+
   default:
     cqpmessage(Error, "Unknown print mode");
     break;
@@ -490,7 +490,10 @@ print_output(CorpusList *cl,
 }
 
 /**
- * Prints a corpus, typically (some of) the matches of a query.
+ * Prints a "corpus", typically (some of) the matches of a query.
+ *
+ * This function supports the "cat" command, i.e. it is the main
+ * "please print concordance" function.
  *
  * (Not sure why it's called "catalog"; is this a pun on the cat keyword? -- AH 2012-07-17)
  * (I suspect that it's a misinterpretation of what "cat" stands for. -- SE 2016-07-20)
@@ -504,10 +507,11 @@ print_output(CorpusList *cl,
  * @param last   Offset of last match to print.
  * @param mode   Print mode to use.
  */
-void 
+void
 catalog_corpus(CorpusList *cl,
                struct Redir *rd,
-               int first, int last,
+               int first,
+               int last,
                PrintMode mode)
 {
   int i;
@@ -557,14 +561,14 @@ catalog_corpus(CorpusList *cl,
       printHeader = True;
 
     /* do the job. */
-    
+
     verify_context_descriptor(cl->corpus, &CD, 1);
-    
+
     /* first version (Oli Christ):
        if ((!silent || printHeader) && !(rd->stream == stdout || rd->is_paging));
        */
-    /* second version (Stefan Evert):     
-       if (printHeader || (mode == PrintASCII && !(rd->stream == stdout || rd->is_paging))); 
+    /* second version (Stefan Evert):
+       if (printHeader || (mode == PrintASCII && !(rd->stream == stdout || rd->is_paging)));
     */
 
     /* header is printed _only_ when explicitly requested now (or, when in HTML mode; see above);
@@ -579,9 +583,9 @@ catalog_corpus(CorpusList *cl,
     }
     else if (printNrMatches && mode == PrintASCII)
       fprintf(rd->stream, "%d matches.\n", cl->size);
-    
-    print_output(cl, rd->stream, 
-                 isatty(fileno(rd->stream)) || rd->is_paging, 
+
+    print_output(cl, rd->stream,
+                 isatty(fileno(rd->stream)) || rd->is_paging,
                  &CD, first, last, mode);
 
   }
@@ -596,7 +600,7 @@ catalog_corpus(CorpusList *cl,
  * @param type    Specifies what type of message (messages of some types are not always printed)
  * @param format  Format string (and ...) are passed as arguments to vfprintf().
  */
-void 
+void
 cqpmessage(MessageType type, char *format, ...)
 {
   va_list ap;
@@ -605,7 +609,7 @@ cqpmessage(MessageType type, char *format, ...)
 
   /* do not print Message unless parser is in verbose mode */
   if ((type != Message) || verbose_parser) {
-    
+
     char *msg;
 
     switch (type) {
@@ -639,7 +643,7 @@ cqpmessage(MessageType type, char *format, ...)
 /**
  * Outputs a blob of information on the mother-corpus of the specified cl.
  */
-void 
+void
 corpus_info(CorpusList *cl)
 {
   FILE *fd;
@@ -656,6 +660,10 @@ corpus_info(CorpusList *cl)
 
     stream_ok = open_stream(&rd, ascii);
     outfd = (stream_ok) ? rd.stream : stdout; /* use pager, or simply print to stdout if it fails */
+
+    /* print name for child mode (added v3.4.15)  */
+    if (child_process)
+      fprintf(outfd, "Name:    %s\n", cl->name);
     /* print size (should be the mother_size entry) */
     fprintf(outfd, "Size:    %d\n", cl->mother_size);
     /* print charset */
@@ -672,18 +680,22 @@ corpus_info(CorpusList *cl)
     p = cl_first_corpus_property(cl->corpus);
     if (p == NULL)
       fprintf(outfd, "\t<none>\n");
-    else 
+    else
       for ( ; p != NULL; p = cl_next_corpus_property(p))
         fprintf(outfd, "\t%s = '%s'\n", p->property, p->value);
     fprintf(outfd, "\n");
-    
+
 
     if (cl->corpus->info_file == NULL)
       fprintf(outfd, "No further information available about %s\n", cl->name);
     else if ((fd = open_file(cl->corpus->info_file, "rb")) == NULL)
+      fprintf(outfd, "No further information available about %s\n", cl->name);
+      /* most of the time this is NOT a problem - it jkust means thwe
+       * default HOME/.info has not been created. So, no need for a warning.
       cqpmessage(Warning,
                  "Can't open info file %s for reading",
                  cl->corpus->info_file);
+       */
     else {
       ok = 1;
       do {
@@ -698,12 +710,12 @@ corpus_info(CorpusList *cl)
       fclose(fd);
     }
 
-    if (stream_ok) 
+    if (stream_ok)
       close_stream(&rd);        /* close pipe to pager if we were using it */
   }
   /* if cl is not actually a full corpus, try to find its mother and call this function on that */
   else if (cl->mother_name == NULL)
-    cqpmessage(Warning, 
+    cqpmessage(Warning,
                "Corrupt corpus information for %s", cl->name);
   else if ((mom = findcorpus(cl->mother_name, SYSTEM, 0)) != NULL) {
     corpus_info(mom);
@@ -720,7 +732,7 @@ corpus_info(CorpusList *cl)
 /* ---------------------------------------------------------------------- */
 
 /** free global list of tabulation items (before building new one) */
-void 
+void
 free_tabulation_list(void) {
   TabulationItem item = TabulationList;
   TabulationItem old = NULL;
@@ -760,7 +772,7 @@ append_tabulation_item(TabulationItem item) {
     TabulationList = item;
   }
   else {                        /* otherwise, seek end of list and append item */
-    while (end->next) 
+    while (end->next)
       end = end->next;
     end->next = item;
   }
@@ -845,8 +857,8 @@ print_tabulation(CorpusList *cl, int first, int last, struct Redir *rd)
 {
   TabulationItem item = TabulationList;
   int current;
-  
-  if (! cl) 
+
+  if (! cl)
     return 0;
 
   if (first <= 0) first = 0;    /* make sure that first and last match to tabulate are in range */
@@ -905,7 +917,7 @@ print_tabulation(CorpusList *cl, int first, int last, struct Redir *rd)
           }
           else {
             char *string = NULL;
-            if (item->attribute_type == ATT_POS) 
+            if (item->attribute_type == ATT_POS)
               string = cl_cpos2str(item->attribute, cpos);
             else
               string = cl_cpos2struc2str(item->attribute, cpos);
@@ -928,7 +940,7 @@ print_tabulation(CorpusList *cl, int first, int last, struct Redir *rd)
             fprintf(rd->stream, "-1");
         }
         if (cpos < end)         /* tokens in a range item are separated by blanks */
-          fprintf(rd->stream, " "); 
+          fprintf(rd->stream, " ");
       }
       if (item->next)           /* multiple tabulation items are separated by TABs */
         fprintf(rd->stream, "\t");
@@ -936,7 +948,7 @@ print_tabulation(CorpusList *cl, int first, int last, struct Redir *rd)
     }
     fprintf(rd->stream, "\n");
   }
-  
+
   close_stream(rd);
   free_tabulation_list();
   return 1;

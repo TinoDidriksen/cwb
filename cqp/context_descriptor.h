@@ -1,13 +1,13 @@
-/* 
+/*
  *  IMS Open Corpus Workbench (CWB)
  *  Copyright (C) 1993-2006 by IMS, University of Stuttgart
  *  Copyright (C) 2007-     by the respective contributers (see file AUTHORS)
- * 
+ *
  *  This program is free software; you can redistribute it and/or modify it
  *  under the terms of the GNU General Public License as published by the
  *  Free Software Foundation; either version 2, or (at your option) any later
  *  version.
- * 
+ *
  *  This program is distributed in the hope that it will be useful, but
  *  WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
@@ -21,16 +21,25 @@
 
 #include "attlist.h"
 
-/* The following constant define flags for the four different ways of measuring context-width: */
+/* The following constant define flags for the four different ways of measuring context-width:
+ * we now have an enum, but we haven't yet removed thesemacros ; so, TODO */
 
-/** Context width measured in characters */
 #define CHAR_CONTEXT  -1
-/** Context width measured in tokens */
 #define WORD_CONTEXT  -2
-/** Context width measured in terms of an s-attribute */
 #define STRUC_CONTEXT -3
-/** Context width measured in terms of an a-attribute - that is, alignment blocks as the unit of context */
 #define ALIGN_CONTEXT -4
+
+typedef enum _context_type {
+  /** Context width measured in characters */
+  char_context = CHAR_CONTEXT,
+  /** Context width measured in tokens */
+  word_context = WORD_CONTEXT,
+  /** Context width measured in terms of an s-attribute */
+  s_att_context = STRUC_CONTEXT,
+  /** Context width measured in terms of an a-attribute - that is, alignment blocks as the unit of context */
+  a_att_context = ALIGN_CONTEXT
+
+} context_type;
 
 /**
  * ContextDescriptor object: a bundle of CQP options
@@ -65,8 +74,9 @@ typedef struct _context_description_block {
   /* ==================== left context scope description variables */
 
   int left_width;                    /**< Amount of context to show before the match, in units specified by left_type */
-  int left_type;                     /**< Unit in which context is measured;
+  context_type left_type;            /**< Unit in which context is measured;
                                           Set to one of the constants: CHAR_CONTEXT, WORD_CONTEXT, STRUC_CONTEXT, ALIGN_CONTEXT */
+  /* TODO use an enum instead (change so far partially implemented) */
   /* TODO Is being able to have the left co-text measured in words and the right context in (say) paragraphs something we really are bovvered about? */
 
   char *left_structure_name;
@@ -75,7 +85,7 @@ typedef struct _context_description_block {
   /* ==================== right context scope description variables */
 
   int right_width;                   /**< Amount of context to show after the match, in units specified by right_type */
-  int right_type;                    /**< Unit in which context is measured;
+  context_type right_type;           /**< Unit in which context is measured;
                                           Set to one of the constants: CHAR_CONTEXT, WORD_CONTEXT, STRUC_CONTEXT, ALIGN_CONTEXT */
   char *right_structure_name;
   Attribute *right_structure;
@@ -97,7 +107,7 @@ typedef struct _context_description_block {
 
 /* TODO not much naming convention stability among these descriptors! */
 
-int verify_context_descriptor(Corpus *corpus, 
+int verify_context_descriptor(Corpus *corpus,
                               ContextDescriptor *cd,
                               int remove_illegal_entries);
 

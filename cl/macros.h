@@ -53,7 +53,7 @@
  * they are considered non-equal when one of both is NULL.
  * @param a  the first string
  * @param b  the second string
- * @return   a Boolean
+ * @return   Boolean
  */
 #define STREQ(a,b) (((a) == (b)) || \
                     ((a) && (b) && (strcmp((a), (b)) == 0)))

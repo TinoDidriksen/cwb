@@ -79,23 +79,27 @@ void warn_query_lock_violation(void) {
 
 /* ============================================================ */
 
-/* note: SYNCHRONIZE is a windows API identifier, and it doesn't seem at all
-necessary here - it is just defined, then tested.
-So: commented out. AH 2/4/2010
-#define SYNCHRONIZE
-*/
 
+/**
+ * Deletes any still-pending input to the CQP parser, to the next
+ * semi-colon or end of line.
+ */ 
 void
 synchronize(void)
 {
-/*#if defined(SYNCHRONIZE)*/
-  int macro_status;
+/* function may be left uncompiled by defining this constant
+ * in the make-configuration file. See the Makefile.         */
+#ifdef CQP_COMPILE_WITHOUT_SYNCHRONIZE
+
+  int macro_status; /*  stores enable_macros status */
 
   /* delete macro buffers & disable macro expansion while sync'ing */
   delete_macro_buffers(1); /* print stack trace on STDERR */
   macro_status = enable_macros;
   enable_macros = 0;
 
+  /* read and throw away characters till we have cleared away 
+   * the rest of what's pending. */
   if (cqp_input_string != NULL) {
     fprintf(stderr, "Synchronizing to end of line ... \n");
     while (!(yychar <= 0))
@@ -107,8 +111,10 @@ synchronize(void)
       yychar = yylex();
   }
 
-  enable_macros = macro_status; /* reset enable_macros to previous value */
-/*#endif*/
+  /* restore enable_macros to previous value */
+  enable_macros = macro_status; 
+
+#endif /* defined CQP_COMPILE_WITHOUT_SYNCHRONIZE */
 }
 
 #define YYERROR_VERBOSE
@@ -499,11 +505,14 @@ Showing:          SHOW_SYM              {
                                           if (strncasecmp($2, "var", 3) == 0) {
                                             do_PrintAllVariables();
                                           }
-                                          else if ((strncasecmp($2, "sys", 3) == 0) || (strncasecmp($2, "corp", 4) == 0)) {
+                                          else if (strncasecmp($2, "active", 6) == 0 || strncasecmp($2, "current", 7) == 0) {
+                                            show_corpus_active();
+                                          }
+                                          else if (strncasecmp($2, "sys", 3) == 0 || strncasecmp($2, "corp", 4) == 0) {
                                             show_corpora_files(SYSTEM);
                                           }
-                                          else if ((strncasecmp($2, "sub", 3) == 0) || (strcasecmp($2, "named") == 0) || (strcasecmp($2, "queries") == 0)) {
-                                            show_corpora_files(SUB);    
+                                          else if (strncasecmp($2, "sub", 3) == 0 || strcasecmp($2, "named") == 0 || strcasecmp($2, "queries") == 0) {
+                                            show_corpora_files(SUB);
                                           }
                                           else {
                                             cqpmessage(Error, "show what?");
@@ -511,7 +520,7 @@ Showing:          SHOW_SYM              {
                                         }
                 | SHOW_SYM 
                   AttributeSelections   /* the actual work is done there */
-                | SHOW_SYM
+                | SHOW_SYM 
                   CD_SYM                { PrintContextDescriptor(&CD); }
                 ;
 
@@ -1240,16 +1249,16 @@ ReStructure:    EXPAND_SYM OptDirection
                                           expansion.size = $4.size;
                                           expansion.attrib = $4.attrib;
                                         }
-              | /* epsilon */           { expansion.direction = leftright;
+              | /* epsilon */           { expansion.direction = ctxtdir_leftright;
                                           expansion.type = word;
                                           expansion.size = 0;
                                           expansion.attrib = NULL;
                                         }
                 ;
 
-OptDirection:   LEFT_SYM               { $$ = left; }
-              | RIGHT_SYM              { $$ = right; }
-              | /* epsilon */          { $$ = leftright; }
+OptDirection:   LEFT_SYM               { $$ = ctxtdir_left; }
+              | RIGHT_SYM              { $$ = ctxtdir_right; }
+              | /* epsilon */          { $$ = ctxtdir_leftright; }
                 ;
 
 Description:    OptNumber ID           { do_Description(&($$), $1, $2); }
@@ -1544,8 +1553,8 @@ ShowMacro:        SHOW_SYM MACRO_SYM    {
                                         }
                 ;
 
-/* a list of strings is concatenated into a single string, in order */
-/* to allow multi-line macro definitions with comments */
+/* a list of strings is concatenated into a single string, in order *
+ * to allow multi-line macro definitions with comments */
 MultiString:      MultiString STRING    {
                                           int l1 = strlen($1), l2 = strlen($2);
                                           char *s = (char *) cl_malloc(l1 + l2 + 2);

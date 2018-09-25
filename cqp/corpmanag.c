@@ -1,13 +1,13 @@
-/* 
+/*
  *  IMS Open Corpus Workbench (CWB)
  *  Copyright (C) 1993-2006 by IMS, University of Stuttgart
  *  Copyright (C) 2007-     by the respective contributers (see file AUTHORS)
- * 
+ *
  *  This program is free software; you can redistribute it and/or modify it
  *  under the terms of the GNU General Public License as published by the
  *  Free Software Foundation; either version 2, or (at your option) any later
  *  version.
- * 
+ *
  *  This program is distributed in the hope that it will be useful, but
  *  WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
@@ -81,10 +81,10 @@ init_corpuslist(void)
 }
 
 /**
- * Resets to empty a CorpusList object.
+ * Resets a CorpusList object to empty.
  *
  * This is done, largely, by freeing all its members
- * (and setting nonfreeable members to 0 or NULL)...
+ * (and setting other members to 0 or NULL)...
  *
  * @param cl         The corpus list to initialise.
  * @param free_name  Boolean: the name, mother_name and mother_sizemembers
@@ -128,7 +128,7 @@ void
 free_corpuslist(void)
 {
   CorpusList *tmp;
-  
+
   while(corpuslist) {
     tmp = corpuslist;
     corpuslist = tmp->next;
@@ -181,17 +181,16 @@ NewCL(void)
 
 /**
  * Returns a FieldType enumeration corresponding to the field name
- * indicated by its stirng argument.
+ * indicated by its string argument.
  */
-FieldType 
+FieldType
 field_name_to_type(char *name)
 {
   if (strcasecmp(name, "nofield") == 0)
     return NoField;
   else if (strcasecmp(name, "keyword") == 0)
     return KeywordField;
-  else if ((strcasecmp(name, "target") == 0) ||
-           (strcasecmp(name, "collocate") == 0))
+  else if ((strcasecmp(name, "target") == 0) || (strcasecmp(name, "collocate") == 0))
     return TargetField;
   else if (strcasecmp(name, "match") == 0)
     return MatchField;
@@ -237,11 +236,11 @@ field_type_to_name(FieldType ft) {
  * @param ft  The field type to count.
  * @return    The number of values of the speciifed field-type.
  */
-int 
+int
 NrFieldValues(CorpusList *cl, FieldType ft)
 {
   int i, nr_items;
-  
+
   nr_items = 0;
 
   if (cl != NULL) {
@@ -263,7 +262,7 @@ NrFieldValues(CorpusList *cl, FieldType ft)
           if (cl->targets[i] >= 0)
             nr_items++;
       break;
-      
+
     default:
     case NoField:
       fprintf(stderr, "Illegal field type %d\n", ft);
@@ -280,11 +279,11 @@ int
 SystemCorpusSize(Corpus *corpus)
 {
   Attribute *attr;
-  
+
   if ((attr = find_attribute(corpus,
                              DEFAULT_ATT_NAME,
                              ATT_POS, NULL)) != NULL)
-    return get_attribute_size(attr);
+    return cl_max_cpos(attr);
   else
     return -1;
 }
@@ -309,7 +308,7 @@ SystemCorpusSize(Corpus *corpus)
 Boolean
 ensure_corpus_size(CorpusList *cl)
 {
-  if (cl->type == SYSTEM) { 
+  if (cl->type == SYSTEM) {
     /* System corpus: check corpus size (may have to be computed now) */
 
     /* Check whether or not the size of the corpus has already been determined. */
@@ -323,7 +322,7 @@ ensure_corpus_size(CorpusList *cl)
         case 0:
           cqpmessage(Warning, "Data access error (%s)\n"
                      "Perhaps the corpus %s is not accessible "
-                     "from the machine you are using.", 
+                     "from the machine you are using.",
                      cdperror_string(cderrno), cl->name);
           break;
         case 1:
@@ -334,14 +333,14 @@ ensure_corpus_size(CorpusList *cl)
         }
 
         /* If we couldn't access the corpus, remove it from the list so
-           the user isn't tempted to try again. 
+           the user isn't tempted to try again.
            Very Microsoftish, isn't it? ;-) */
         dropcorpus(cl);
-        
+
         /* Now tell the calling function that corpus is inaccessible */
         return False;
       }
-      
+
       /* Set size related fields in corpus list entry */
       cl->mother_size = attr_size;
       cl->range[0].end = attr_size - 1;
@@ -357,7 +356,7 @@ ensure_corpus_size(CorpusList *cl)
       /* load subcorpus (the local_dir entry of the corpus structure contains
          the name of the directory where the disk file can be found */
       char filename[CL_MAX_FILENAME_LENGTH];
-      
+
       /* re-create subcorpus filename from corpus structure
          (cf. the treatment in load_corpusnames()) */
       if (cl->mother_name == NULL) {
@@ -388,64 +387,68 @@ ensure_corpus_size(CorpusList *cl)
  * loaded corpora. In case of subcorpora, qualifier is the mother's
  * name. in case of system corpora, qualifier is the registry. If
  * qualifier is NULL, it is neglected and the first matching corpus is
- * returned. If type is not UNDEF, only corpora of that type are
+ * returned. If type is not UNDEF, only a corpus of that type can be
  * returned. No side effects take place.
  *
- * @param name       The corpus we are lookign for.
+ * @param name       The corpus we are looking for.
  * @param qualifier  An extra "bit" of the corpus name (see function description).
- * @param type       Which type of corpus is wanted (may be UNDEF).
- * @return           Pointer to the CorpusList of the corpus that was found.
+ * @param type       Which type of corpus is wanted (may be UNDEF, which finds any except TEMP).
+ * @return           Pointer to the CorpusList of the corpus that was found, or NULL if not found.
  */
 CorpusList *
-LoadedCorpus(char *name,
-             char *qualifier,
-             CorpusType type)
+LoadedCorpus(char *name, char *qualifier, CorpusType type)
 {
-  CorpusList *sp;
+  CorpusList *corp;
 
-  for (sp  = corpuslist; sp; sp = sp->next)
-
-    if ((sp->type == type) ||
-        ((type == UNDEF) && (sp->type != TEMP)))
-
+  for (corp = corpuslist; corp; corp = corp->next) {
+    if (corp->type == type || (type == UNDEF && corp->type != TEMP)) {
       /* the type is ok. Check the name. */
+      if (STREQ(corp->name, name)) {
 
-      if (STREQ(sp->name, name)) {
-        
         /* ignoring the qualifier is OK for system corpora (although its behaviour is not very well defined if there are
            multiple corpora with the same name in different registry directories), but it can get really messy with subcorpora;
            just imagine you've got two subcorpora with the same name (say, A) for two system corpora (say, BNC and WSJ); you
            have activated the BNC, type "cat A;", and what you get are the results for WSJ because LoadedCorpus() happens to
            find WSJ:A first; thus, if we are comparing an unqualified name to a subcorpus, we use the currently activated corpus
            as a qualifier; if no corpus is activated, we revert to guessing, which is useful when a subcorpus is loaded from
-           disk immediately after startup */ 
+           disk immediately after startup */
 
         /* the name is also ok. Check the qualifier */
-        
+
         if (qualifier == NULL) {
-          if (sp->type == SUB) {
+          /* no qualifier was specified.... so TRY TO GUESS. */
+          if (corp->type == SUB) {
             if (current_corpus) {
-              if (current_corpus->type == SUB) {
+              /* use a qualifier guessed from current_corpus to compare */
+              if (current_corpus->type == SUB)
                 qualifier = current_corpus->mother_name;
-              }
-              else {
+              else
                 qualifier = current_corpus->name;
-              }
-              if (STREQ(sp->mother_name, qualifier))
-                return sp;
+              if (STREQ(corp->mother_name, qualifier))
+                return corp;
             }
             else {
-              return sp;
+              /* no current corpus - no guesswork possible. */
+              return corp;
             }
           }
           else {
-            return sp;
+            /* the candidate is not a subcorpus - guesswork possible. */
+            return corp;
           }
         }
-        else if (((sp->type == SYSTEM) && STREQ(sp->registry, qualifier)) ||
-                 ((sp->type == SUB) && STREQ(sp->mother_name, qualifier)))
-          return sp;
+        else {
+          /* we DO have a qualifier */
+          return (
+              (corp->type == SYSTEM && STREQ(corp->registry, qualifier))
+              ||
+              (corp->type == SUB    && STREQ(corp->mother_name, qualifier))
+              )
+              ? corp : NULL;
+        }
       }
+    }
+  }
 
   return NULL;
 }
@@ -517,7 +520,7 @@ findcorpus(char *s, CorpusType type, int try_recursive_search)
   }
   /* (sp==0): try to find corpus through implicit expansion ("A^s" == "A expand to s") */
   else if (type != SYSTEM && expansion && try_recursive_search) {
-      
+
     char new_name[CL_MAX_LINE_LENGTH];
     Context ctx;
 
@@ -534,27 +537,27 @@ findcorpus(char *s, CorpusType type, int try_recursive_search)
       int i;
 
       if (!ensure_corpus_size(sp)) /* delayed loading */
-        return NULL; 
+        return NULL;
       if (!access_corpus(sp))
         return NULL;
       if (sp->type == SYSTEM) {
         cqpmessage(Warning, "Implicit expansion %s only allowed for named query result.", s);
         return NULL;
       }
-      
+
       assert(sp->corpus);
-      
+
       if ((ctx.attrib = find_attribute(sp->corpus, expansion+1, ATT_STRUC, NULL)) == NULL) {
         cqpmessage(Warning, "Can't expand to <%s> regions -- no such structural attribute in %s",
                    expansion+1, sp->mother_name);
         return NULL;
       }
-      ctx.direction = leftright;
+      ctx.direction = ctxtdir_leftright;
       ctx.type = structure;
       ctx.size = 1;
 
       tmp = duplicate_corpus(sp, real_name, True);
-      
+
       if (tmp == NULL) {
         fprintf(stderr, "Internal error in findcorpus() -- this should not happen!\n");
         return NULL;
@@ -635,12 +638,12 @@ dropcorpus(CorpusList *cl)
 }
 
 /**
- * Duplicate a corpus via its CorpusList object.
+ * Duplicate a CorpusList object.
  *
  * duplicate_corpus creates a copy of an existing corpus
  * and casts its type to SUB. The new corpus is given the
  * name "new_name". If a subcorpus of that name is already
- * present, NULL is retured if force_overwrite is False. If
+ * present, NULL is returned if force_overwrite is False. If
  * force_overwrite is True, the old corpus is discarded.
  *
  * @param cl               The corpus to duplicate
@@ -667,7 +670,7 @@ duplicate_corpus(CorpusList *cl,
 
   /* newc = findcorpus(new_name, SUB, 0); */
 
-  newc = LoadedCorpus(new_name, 
+  newc = LoadedCorpus(new_name,
                       (cl->type == SYSTEM ? cl->registry
                                           : cl->mother_name),
                       SUB);
@@ -683,8 +686,8 @@ duplicate_corpus(CorpusList *cl,
       return cl;
     }
     else
-      /* we are not allowed to overwrite myself, so say
-       * that we did not succeed.
+      /* we are not allowed to overwrite myself,
+       * so say that we did not succeed.
        */
       return NULL;
   }
@@ -703,7 +706,7 @@ duplicate_corpus(CorpusList *cl,
     initialize_cl(newc, True);  /* clear all fields of newc */
   else
     newc = NULL;
-  
+
   if (newc) {
     /* newc is not NULL iff we are about to make that copy.
      * newc is "fresh", i.e., all fields either have just been
@@ -813,7 +816,7 @@ make_temp_corpus(CorpusList *cl,
   }
   else
     initialize_cl(newc, True);  /* clear all fields of newc */
-  
+
   if (newc) {
     /* newc is not NULL iff we are about to make that copy.
      * newc is "fresh", i.e., all fields either have just been
@@ -871,7 +874,7 @@ make_temp_corpus(CorpusList *cl,
     else
       newc->range = NULL;
   }
-  
+
   return newc;
 }
 
@@ -898,7 +901,7 @@ assign_temp_to_sub(CorpusList *tmp, char *subname)
             __FILE__);
     return NULL;
   }
-  
+
   assert(tmp->type == TEMP);
 
   if ((cl = findcorpus(subname, SUB, 0)) != NULL) {
@@ -935,12 +938,12 @@ assign_temp_to_sub(CorpusList *tmp, char *subname)
 
     cl->corpus = tmp->corpus; tmp->corpus = NULL;
     cl->size = tmp->size; tmp->size = 0;
-    
+
     if (auto_save)
       save_subcorpus(cl, NULL);
 
     dropcorpus(tmp);
-    
+
     return cl;
   }
   else {
@@ -971,15 +974,15 @@ void
 drop_temp_corpora(void)
 {
   CorpusList *cl, *prev, *del;
-  
 
-  /* could be much more intelligent (exponential, 
+
+  /* could be much more intelligent (exponential,
    * since dropcorpus does the very same linear search
    * too), but keep this until I have some spare
    * time
    * TODO
    */
-  
+
   prev = NULL;
   cl = corpuslist;
 
@@ -988,12 +991,12 @@ drop_temp_corpora(void)
 
       del = cl;
       cl = cl->next;
-      
+
       if (prev == NULL)
         corpuslist = del->next;
       else
         prev->next = del->next;
-      
+
       initialize_cl(del, True);
       free(del);
     }
@@ -1013,20 +1016,13 @@ drop_temp_corpora(void)
 
 /**
  * Creates a copy of the string with the given mode (LOWER/UPPER)
- * enforced on it.
+ * enforced on it. Return is a pointer to newly-allocated string.
  */
 static char *
 changecase_string(const char *str, enum case_mode mode)
 {
-  char *str_new;
-  /*int i, len = strlen(str);*/
+  char *str_new = cl_strdup(str);
 
-  str_new = cl_strdup(str);
-
-  /*
-   for (i = 0; i <= len; i++)
-    str_new[i] = (mode == LOWER) ? tolower(str[i]) : toupper(str[i]);
-  */
   if (mode == LOWER)
     cl_id_tolower(str_new);
   else
@@ -1037,16 +1033,11 @@ changecase_string(const char *str, enum case_mode mode)
 
 /**
  * Like changecase_string(), but modifies the string in situ.
+ * The return value is identical to the first argument.
  */
 static char *
 changecase_string_no_copy(char *str, enum case_mode mode)
 {
-  /*int i;*/
-
-  /*
-  for (i = 0; str[i]; i++)
-    str[i] = (mode == LOWER) ? tolower(str[i]) : toupper(str[i]);
-  */
   if (mode == LOWER)
     cl_id_tolower(str);
   else
@@ -1065,7 +1056,7 @@ get_fulllocalpath(CorpusList *cl, int qualify)
     upname = cl->mother_name ? changecase_string(cl->mother_name, UPPER) : cl_strdup("NONE");
 
     sprintf(fullname, "%s%s%s:%s", LOCAL_CORP_PATH,
-            LOCAL_CORP_PATH[strlen(LOCAL_CORP_PATH)-1] == '/' ? "" : "/",
+            LOCAL_CORP_PATH[strlen(LOCAL_CORP_PATH)-1] == SUBDIR_SEPARATOR ? "" : SUBDIR_SEP_STRING,
             cl->mother_name ? cl->mother_name : "NONE",
             cl->name);
 
@@ -1073,16 +1064,15 @@ get_fulllocalpath(CorpusList *cl, int qualify)
   }
   else
     sprintf(fullname, "%s%s%s", LOCAL_CORP_PATH,
-            LOCAL_CORP_PATH[strlen(LOCAL_CORP_PATH)-1] == '/' ? "" : "/",
+            LOCAL_CORP_PATH[strlen(LOCAL_CORP_PATH)-1] == SUBDIR_SEPARATOR ? "" : SUBDIR_SEP_STRING,
             cl->name);
 
   return cl_strdup(fullname);
-}  
+}
 
 /* ---------------------------------------------------------------------- */
 
 
-/* TODO change function name. "accessible" is ri-bloody-diculous */
 /**
  * Tests whether a file is accessible.
  *
@@ -1096,7 +1086,7 @@ get_fulllocalpath(CorpusList *cl, int qualify)
  * @return      Boolean: true iff file is accessible.
  */
 static Boolean
-accessible(char *dir, char *file)
+is_readable_file(char *dir, char *file)
 {
 
   /* fullname is allocated: lenth of string dir and length of string file */
@@ -1108,24 +1098,22 @@ accessible(char *dir, char *file)
 
   fullname[0] = '\0';
   strcat(fullname, dir);
-  if (fullname[strlen(fullname)-1] != '/')
-    strcat(fullname, "/");
+  if (fullname[strlen(fullname)-1] != SUBDIR_SEPARATOR)
+    strcat(fullname, SUBDIR_SEP_STRING);
   strcat(fullname, file);
-  
+
   success = False;
-  if ((0 == stat(fullname, &filestat)) &&
-      (! S_ISDIR(filestat.st_mode)) &&
-      (access(fullname, R_OK) == 0)) {
+  if (0 == stat(fullname, &filestat) && !(S_ISDIR(filestat.st_mode)) && access(fullname, R_OK) == 0) {
     success = True;
   }
 
-  free(fullname);
-  
+  cl_free(fullname);
+
   return(success);
 }
 
-/* THIS FUNCTION IS CURRENTLY UNUSED */
-/* Its previous purpose was to check the magic number of potential saved query files in the data directory,
+/* THIS FUNCTION IS CURRENTLY UNUSED
+   Its previous purpose was to check the magic number of potential saved query files in the data directory,
    but this caused enormous delays when there were lots of files in this directory (e.g. in BNCweb).  So now
    every file whose name looks right will be inserted into the internal list, but accessing it will fail
    if it turns out to be bogus (which shouldn't happen anyway if the directory is handled by a sane person). */
@@ -1144,10 +1132,10 @@ check_stamp(char *directory, char *fname)
     ok = 0;
   else
     ok = 1;
-  
+
   if (fd)
     fclose(fd);
-  
+
   return ok;
 }
 
@@ -1175,15 +1163,15 @@ load_corpusnames(enum corpus_type ct)
     else
       strcpy(dirlist, registry);
   }
-  else 
+  else
     strcpy(dirlist, LOCAL_CORP_PATH);
 
   for (corpus = corpuslist; corpus != NULL; corpus = corpus->next)
     if ((corpus->type == ct) && (corpus->saved == True))
       corpus->type = TEMP;
   drop_temp_corpora();
-      
-  for (dirname = get_path_component(dirlist); 
+
+  for (dirname = get_path_component(dirlist);
        dirname;
        dirname = get_path_component(NULL)) {
     int optional_dir = 0; /* 1 = optional registry directory -> don't issue warning if not mounted */
@@ -1193,26 +1181,26 @@ load_corpusnames(enum corpus_type ct)
     }
 
     dp = opendir(dirname);
-  
+
     if (dp != NULL) {
 
-      /* discard all (loaded) corpora of this type from 
+      /* discard all (loaded) corpora of this type from
        * list of available corpora.
        */
-      
+
       while ((ep = readdir(dp))) {
         if ((strchr(ep->d_name, '.') == NULL) &&   /* ignore files with '.' char in registry (such as hidden files) */
             (strchr(ep->d_name, '~') == NULL) &&   /* ignore files with '~' char in registry (such as emacs backup files) */
-            (accessible(dirname, ep->d_name))) {   /* ignore directories & files user can't access (hidden from user) */
-          
+            (is_readable_file(dirname, ep->d_name))) {   /* ignore directories & files user can't access (hidden from user) */
+
           if (ct == SUB) {
             char *colon;
 
-            /* It can take quite long to check all files if data directory contains thousands of saved queries 
+            /* It can take quite long to check all files if data directory contains thousands of saved queries
                (as it often does in BNCweb, for instance), and it counteracts the purpose of delayed loading: */
             /*      if (check_stamp(dirname, ep->d_name)) { */
             /* (note that the magic number will be checked when the saved query is loaded with attach_subcorpus()) */
-              
+
             /* saved query results should always be named <CORPUS>:<query name> */
             if ((colon = strchr(ep->d_name, COLON)) != NULL) {
 
@@ -1225,39 +1213,39 @@ load_corpusnames(enum corpus_type ct)
               /* (NB: one data directory constraint is implicit; loading might work, but save_subcorpus() will crash miserably) */
 
               char mother[CL_MAX_FILENAME_LENGTH]; /* Judith vs. Oli, round 231 */
-              
+
               /* allocate memory for the new id */
               corpus = NewCL();
-              
+
               /* fill the values of the new corpuslist element */
               strcpy(mother, ep->d_name);
               mother[colon - ep->d_name] = '\0';
               corpus->mother_name = cl_strdup(mother);
               corpus->name = cl_strdup(colon+1);
-              
+
               corpus->next = corpuslist;
               corpuslist = corpus;
-              
+
               corpus->type = SUB;
               corpus->loaded = corpus->needs_update = False;
               corpus->saved = True;
               /* Delayed loading: We don't want to load ALL subcorpora in
                  the local corpus directory because that gets us into trouble
                  with some MP template suites. So we don't call attach_subcorpus()
-                 now (should be done by ensure_corpus_size() later which is 
+                 now (should be done by ensure_corpus_size() later which is
                  called from findcorpus() etc.). In order to call it later,
                  we have to remember in which directory we found it. */
               corpus->local_dir = cl_strdup(dirname);
               /* attach_subcorpus(corpus, dirname, ep->d_name); */
             }
 
-          } 
+          }
           else {
-            
+
             entry = changecase_string_no_copy(ep->d_name, UPPER);
 
             corpus = LoadedCorpus(entry, NULL, SYSTEM);
-            
+
             if (corpus == NULL) {
               corpus = GetSystemCorpus(entry, dirname);
               if (corpus) {
@@ -1293,6 +1281,11 @@ check_available_corpora(enum corpus_type ct)
 
 /* ---------------------------------------------------------------------- */
 
+/**
+ * Creates a CorpusList object for a named saystem corpus in a specific registry directory.
+ *
+ * @return  Either a pointer to the CorpusList OR NULL if the corpus could not be loaded.
+ */
 CorpusList *
 GetSystemCorpus(char *name, char *registry)
 {
@@ -1300,9 +1293,9 @@ GetSystemCorpus(char *name, char *registry)
   CorpusList *cl;
 
   char *cname;
-  
+
   cname = changecase_string(name, LOWER);
-  this_corpus = setup_corpus(registry, cname);
+  this_corpus = cl_new_corpus(registry, cname);
   free(cname);
 
   if (this_corpus) {
@@ -1319,7 +1312,7 @@ GetSystemCorpus(char *name, char *registry)
     cl->name = cl_strdup(name);
     cl->mother_name = cl_strdup(name);
     cl->mother_size = attr_size;
-    
+
     if (this_corpus->registry_dir)
       cl->registry = cl_strdup(this_corpus->registry_dir);
     else if (registry)
@@ -1332,22 +1325,22 @@ GetSystemCorpus(char *name, char *registry)
 
     cl->type = SYSTEM;
     cl->abs_fn = NULL;
-    
+
     cl->saved = True;
     cl->loaded = True;
     cl->needs_update = False;
 
     cl->corpus = this_corpus;
-    
+
     cl->size = 1;
-    
+
     /* the range of a system corpus is <0, attr_size-1> */
     /* Note that this is [0, -1] on init and must be changed when we
        determine the actual corpus size later on */
     New(cl->range, Range);
     cl->range[0].start = 0;
     cl->range[0].end   = attr_size - 1;
-    
+
     cl->sortidx = NULL;
     cl->targets = NULL;
     cl->keywords = NULL;
@@ -1370,7 +1363,7 @@ ensure_syscorpus(char *registry, char *name)
     /* the system corpus is not yet loaded. Try to get it. */
     /* (of course this shouldn't happen anyway since CQP reads in all
        available system corpora at startup) */
-    
+
     cl = GetSystemCorpus(name, registry);
 
     if (cl == NULL)
@@ -1411,7 +1404,7 @@ attach_subcorpus(CorpusList *cl,
   char        *p;
 
   Boolean load_ok;
-  
+
 
   load_ok = False;
 
@@ -1422,10 +1415,10 @@ attach_subcorpus(CorpusList *cl,
     if (advertised_directory && advertised_filename) {
 
       char sname[CL_MAX_FILENAME_LENGTH];
-      
+
       strcpy(sname, advertised_directory);
-      if (sname[strlen(sname)-1] != '/')
-        strcat(sname, "/");
+      if (sname[strlen(sname)-1] != SUBDIR_SEPARATOR)
+        strcat(sname, SUBDIR_SEP_STRING);
       strcat(sname, advertised_filename);
 
       fullname = cl_strdup(sname);
@@ -1452,9 +1445,9 @@ attach_subcorpus(CorpusList *cl,
 
         /* the subcorpus is treated as a byte array */
         field = (char *)cl_malloc(len);
-        
+
         /* read the subcorpus */
-        
+
         if (len != fread(field, 1, len, fp))
           fprintf(stderr, "Read error while reading subcorpus %s\n", cl->name);
         else if ((*((int *)field) != SUBCORPMAGIC) && (*((int *)field) != SUBCORPMAGIC+1))
@@ -1467,20 +1460,20 @@ attach_subcorpus(CorpusList *cl,
           magic = *((int *)field);
 
           p = ((char *)field) + sizeof(int);
-          
+
           cl->registry = cl_strdup((char *)p);
 
           cl->abs_fn = fullname;
           fullname = NULL;
-          
+
           /* advance p to the end of the 1st string (path of mother's registry) */
           while (*p)
             p++;
           /* skip the '\0' character */
           p++;
-          
+
           cl->mother_name = cl_strdup((char *)p);
-          
+
           mother = ensure_syscorpus(cl->registry, cl->mother_name);
 
           if (mother == NULL || mother->corpus == NULL)
@@ -1499,27 +1492,27 @@ attach_subcorpus(CorpusList *cl,
               p++;
             /* skip the '\0' character */
             p++;
-            
-            /* the length is divisible by 4 -- 
+
+            /* the length is divisible by 4 --
              * advance p over the additional '\0' characters */
 
             while ((p - field) % 4)
               p++;
-          
+
             if (magic == SUBCORPMAGIC) {
 
               cl->size = (len - (p - field)) / (2 * sizeof(int));
-            
+
               /* the integer starts at the current offset */
               cl->range = (Range *)cl_malloc(sizeof(Range) * cl->size);
               memcpy(cl->range, p, sizeof(Range) * cl->size);
-            
+
               cl->sortidx = NULL;
               cl->keywords = NULL;
               cl->targets = NULL;
             }
             else if (magic == (SUBCORPMAGIC + 1)) {
-              
+
               int compsize;
 
               memcpy(&(cl->size), p, sizeof(int));
@@ -1529,7 +1522,7 @@ attach_subcorpus(CorpusList *cl,
 
                 cl->range = (Range *)cl_malloc(sizeof(Range) * cl->size);
                 memcpy(cl->range, p, sizeof(Range) * cl->size);
-                
+
                 p += sizeof(Range) * cl->size;
 
                 memcpy(&compsize, p, sizeof(int));
@@ -1540,7 +1533,7 @@ attach_subcorpus(CorpusList *cl,
                   memcpy(cl->sortidx, p, sizeof(int) * cl->size);
                   p += sizeof(int) * cl->size;
                 }
-                
+
                 memcpy(&compsize, p, sizeof(int));
                 p += sizeof(int);
                 if (compsize > 0) {
@@ -1548,7 +1541,7 @@ attach_subcorpus(CorpusList *cl,
                   memcpy(cl->targets, p, sizeof(int) * cl->size);
                   p += sizeof(int) * cl->size;
                 }
-                
+
                 memcpy(&compsize, p, sizeof(int));
                 p += sizeof(int);
 
@@ -1558,7 +1551,7 @@ attach_subcorpus(CorpusList *cl,
                   p += sizeof(int) * cl->size;
                 }
               }
-              
+
             }
             else {
               assert(0 && "Can't be");
@@ -1569,22 +1562,22 @@ attach_subcorpus(CorpusList *cl,
                       "Header size: %ld\n"
                       "Nr Matches: %d\n"
                       "regdir: %s\n"
-                      "regname: %s\n", 
+                      "regname: %s\n",
                       (long int)(p - field),
                       cl->size,
                       cl->registry,
                       cl->mother_name);
               for (j = 0; j < cl->size; j++)
-                fprintf(stderr, 
+                fprintf(stderr,
                         "range[%d].start = %d\n"
                         "range[%d].end   = %d\n",
                         j, cl->range[j].start, j, cl->range[j].end);
             }
-            
+
             free(field);
             p = NULL;
             field = NULL;
-            
+
             cl->type = SUB;
             cl->saved = True;
             cl->loaded = True;
@@ -1615,7 +1608,7 @@ save_subcorpus(CorpusList *cl, char *fname)
 
   if (cl == NULL)
     return False;
-  else if (cl->loaded == False) 
+  else if (cl->loaded == False)
     return False;
   else if (cl->type != SUB)
     return False;
@@ -1636,7 +1629,7 @@ save_subcorpus(CorpusList *cl, char *fname)
         }
 
         sprintf(outfn, "%s%c%s:%s",
-                LOCAL_CORP_PATH, 
+                LOCAL_CORP_PATH,
                 SUBDIR_SEPARATOR,
                 cl->mother_name ? cl->mother_name : "NONE",
                 cl->name);
@@ -1647,7 +1640,7 @@ save_subcorpus(CorpusList *cl, char *fname)
 
     if ((fp = open_file(fname, "wb")) != NULL) {
 
-      int zero; 
+      int zero;
       zero = 0;
 
       magic = SUBCORPMAGIC + 1; /* new format -- Mon Jul 31 17:19:27 1995 (oli) */
@@ -1660,7 +1653,7 @@ save_subcorpus(CorpusList *cl, char *fname)
       /* fill up */
       for (i = 0; (i+l1+l2)%4 != 0; i++)
         fputc('\0', fp);
-      
+
       /* write the size (the number of ranges) */
 
       fwrite(&cl->size, sizeof(int), 1, fp); /* new Mon Jul 31 17:24:47 1995 (oli) */
@@ -1678,9 +1671,9 @@ save_subcorpus(CorpusList *cl, char *fname)
         else
           fwrite(&zero, sizeof(int), 1, fp); /* new Mon Jul 31 17:24:47 1995 (oli) */
 
-        
+
         /* write the targets new Mon Jul 31 17:24:59 1995 (oli) */
-        
+
         if (cl->targets) {
           fwrite(&cl->size, sizeof(int), 1, fp); /* new Mon Jul 31 17:24:47 1995 (oli) */
           fwrite((char *)cl->targets, sizeof(int), cl->size, fp);
@@ -1688,10 +1681,10 @@ save_subcorpus(CorpusList *cl, char *fname)
         else
           fwrite(&zero, sizeof(int), 1, fp); /* new Mon Jul 31 17:24:47 1995 (oli) */
 
-        
+
         /* write the keywords new Mon Jul 31 17:25:02 1995 (oli) */
 
-        
+
         if (cl->keywords) {
           fwrite(&cl->size, sizeof(int), 1, fp); /* new Mon Jul 31 17:24:47 1995 (oli) */
           fwrite((char *)cl->keywords, sizeof(int), cl->size, fp);
@@ -1704,10 +1697,10 @@ save_subcorpus(CorpusList *cl, char *fname)
 
 
       fclose(fp);
-      
+
       cl->saved = True;
       cl->needs_update = False;
-      
+
       return(True);
     }
     else {
@@ -1721,7 +1714,7 @@ void
 save_unsaved_subcorpora()
 {
   CorpusList *cl;
-  
+
   for (cl = corpuslist; cl; cl = cl->next)
     if ((cl->type == SUB) && (cl->saved == False)) {
       if (LOCAL_CORP_PATH == NULL) {
@@ -1818,7 +1811,7 @@ search_corpus(char *name)
   cl = findcorpus(name, SUB, 0);
   if (cl == NULL)
     cl = findcorpus(name, SYSTEM, 0);
-  
+
   return cl;
 }
 
@@ -1893,12 +1886,12 @@ split_subcorpus_name(char *corpusname, char *mother_name)
   char *mark;
   int i, after_colon;
 
-  if (! (isalnum(corpusname[0]) 
+  if (! (isalnum(corpusname[0])
          || (corpusname[0] == '_')
          || (corpusname[0] == '-')
          || (corpusname[0] == '.')) )
     return NULL;
-    
+
   mark = corpusname;
   if (mother_name)
     mother_name[0] = '\0';
@@ -1914,7 +1907,7 @@ split_subcorpus_name(char *corpusname, char *mother_name)
       mark = corpusname + (i+1); /* local name starts from character i+1 */
       after_colon = 1;
     }
-    else if (! (isalnum(corpusname[0]) 
+    else if (! (isalnum(corpusname[0])
                 || (corpusname[0] == '_')
                 || (corpusname[0] == '-')
                 || (corpusname[0] == '^') /* should also check that there is only one implicit expansion at the end */
@@ -1941,7 +1934,6 @@ touch_corpus(CorpusList *cp)
   else {
     cp->saved = 0;
     cp->needs_update = 1;
-
     return 1;
   }
 }
@@ -1958,7 +1950,7 @@ touch_corpus(CorpusList *cp)
  *               corpus, even if it is ALREADY set to that corpus.
  * @return       Always 1.
  */
-int 
+int
 set_current_corpus(CorpusList *cp, int force)
 {
   if (cp != current_corpus || force) {
@@ -1971,7 +1963,7 @@ set_current_corpus(CorpusList *cp, int force)
       update_context_descriptor(cp->corpus, &CD);
 
       /* if no p-attributes are selected for output, try to switch on the default attribute */
-      for (ai = CD.attributes->list; ai; ai = ai->next) 
+      for (ai = CD.attributes->list; ai; ai = ai->next)
         if (ai->status > 0)
           nr_selected_attributes++;
       if (nr_selected_attributes == 0) {
@@ -2004,7 +1996,7 @@ int
 set_current_corpus_name(char *name, int force)
 {
   CorpusList *cp;
-  
+
   if ((cp = findcorpus(name, UNDEF, 1)) == NULL)
     return 0;
   else
@@ -2030,9 +2022,12 @@ show_corpora_files_sort(const void *p1, const void *p2)
  * Function that does the work for show_corpora_files
  *
  * @see show_corpora_files
+ * @param ct                  Which type of corpus to show. Must be SUB or SYSTEM.
+ * @param only_active_corpus  If true, and ct is SYSTEM,
+ *                            then only that corpus's info is printed.
  */
-void 
-show_corpora_files1(enum corpus_type ct)
+static void
+show_corpora_files_backend(CorpusType ct, int only_active_corpus)
 {
   CorpusList *cl;
   char **list;                  /* list of corpus names (for qsort) */
@@ -2043,21 +2038,31 @@ show_corpora_files1(enum corpus_type ct)
   char label[4];
 
   if (ct == SYSTEM) {
-    /* make list of corpus names, then qsort() and print */
-    /* count nr of system corpora before allocating list */
-    for (cl = corpuslist, N = 0; cl; cl = cl->next)
-      if (cl->type == SYSTEM)
-        N++;
-    list = (char **) cl_malloc(N * sizeof(char *)); /* allocate list */
-    for (cl = corpuslist, i = 0; cl; cl = cl->next) /* compile list of corpus names */
-      if (cl->type == SYSTEM)
-        list[i++] = cl->name;
-    qsort(list, N, sizeof(char *), show_corpora_files_sort);
+    if (only_active_corpus) {
+      if (!current_corpus)
+        return;
+      N = 1;
+      list = (char **) cl_malloc(sizeof(char *));
+      list[0] = current_corpus->name;
+    }
+    else {
+      /* make list of corpus names, then qsort() and print */
+      /* count nr of system corpora before allocating list */
+      for (cl = corpuslist, N = 0; cl; cl = cl->next)
+        if (cl->type == SYSTEM)
+          N++;
+      list = (char **) cl_malloc(N * sizeof(char *)); /* allocate list */
+      for (cl = corpuslist, i = 0; cl; cl = cl->next) /* compile list of corpus names */
+        if (cl->type == SYSTEM)
+          list[i++] = cl->name;
+      qsort(list, N, sizeof(char *), show_corpora_files_sort);
+    }
 
     if (pretty_print) {
       printf("System corpora:\n");
-      start_indented_list(0,0,0);       /* now print sorted list */
+      start_indented_list(0,0,0);
     }
+    /* now print sorted list */
     for (i = 0; i < N; i++) {
       if (pretty_print) {
         if (list[i][0] != initial) {
@@ -2074,24 +2079,24 @@ show_corpora_files1(enum corpus_type ct)
     if (pretty_print)
       end_indented_list();
 
-    free(list);
+    cl_free(list);
   }
   else if (ct == SUB) {
     if (pretty_print)
       printf("Named Query Results:\n");
     for (cl = corpuslist; cl; cl = cl->next)
       if (cl->type == SUB)
-          printf(pretty_print ? "   %c%c%c  %s:%s [%d]\n" : "%c%c%c\t%s:%s\t%d\n",
-                 cl->loaded ? 'm' : '-',
-                 cl->saved ? 'd' : '-',
-                 cl->needs_update ? '*' : '-',
-                 cl->mother_name ? cl->mother_name : "???",
-                 cl->name,
-                 cl->size);
+        printf(pretty_print ? "   %c%c%c  %s:%s [%d]\n" : "%c%c%c\t%s:%s\t%d\n",
+               cl->loaded       ? 'm' : '-',
+               cl->saved        ? 'd' : '-',
+               cl->needs_update ? '*' : '-',
+               cl->mother_name  ? cl->mother_name : "???",
+               cl->name,
+               cl->size
+               );
   }
-  else {
+  else
     assert(0 && "Invalid argument in show_corpora_files()<corpmanag.c>.");
-  }
 }
 
 /**
@@ -2105,16 +2110,28 @@ show_corpora_files1(enum corpus_type ct)
  *
  * For subcorpora, a bundle of other information is shown too.
  *
- * @param ct  Type of corpus to show (SUB, SYSTEM or UNDEF).
+ * @param type  Type of corpus to show (SUB, SYSTEM or UNDEF).
  */
-void 
-show_corpora_files(enum corpus_type ct)
+void
+show_corpora_files(CorpusType type)
 {
-  if (ct == UNDEF) {
-    show_corpora_files1(SYSTEM);
-    show_corpora_files1(SUB);
+  if (type == UNDEF) {
+    show_corpora_files_backend(SYSTEM, 0);
+    show_corpora_files_backend(SUB   , 0);
   }
   else
-    show_corpora_files1(ct);
+    show_corpora_files_backend(type  , 0);
 }
+
+/**
+ * Does the same as show_corpora_files(),
+ * but only prints the ID of the active corpus.
+ * (Added for child mode mostly)
+ */
+void
+show_corpus_active(void)
+{
+  show_corpora_files_backend(SYSTEM, 1);
+}
+
 

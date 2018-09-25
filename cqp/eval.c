@@ -3300,7 +3300,7 @@ next_environment(void)
 
     init_dfa(&Environment[eep].dfa);
 
-    Environment[eep].search_context.direction = leftright;
+    Environment[eep].search_context.direction = ctxtdir_leftright;
     Environment[eep].search_context.type = word;
     Environment[eep].search_context.attrib = NULL;
     Environment[eep].search_context.size = 0;
@@ -3390,7 +3390,7 @@ free_environment(int thisenv)
     if (Environment[thisenv].dfa.TransTable)
       free_dfa(&Environment[thisenv].dfa);
 
-    Environment[thisenv].search_context.direction = leftright;
+    Environment[thisenv].search_context.direction = ctxtdir_leftright;
     Environment[thisenv].search_context.type = word;
     Environment[thisenv].search_context.attrib = NULL;
     Environment[thisenv].search_context.size = 0;

@@ -1,13 +1,13 @@
-/* 
+/*
  *  IMS Open Corpus Workbench (CWB)
  *  Copyright (C) 1993-2006 by IMS, University of Stuttgart
  *  Copyright (C) 2007-     by the respective contributers (see file AUTHORS)
- * 
+ *
  *  This program is free software; you can redistribute it and/or modify it
  *  under the terms of the GNU General Public License as published by the
  *  Free Software Foundation; either version 2, or (at your option) any later
  *  version.
- * 
+ *
  *  This program is distributed in the hope that it will be useful, but
  *  WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
@@ -22,13 +22,25 @@
 #include <time.h>
 
 
+/**
+ * @file
+ *
+ * This file contains a number of generally handy functyions:
+ *
+ * - memory  management (better malloc, free, etc.)
+ * - printing of indented lists
+ * - progress bar printing.
+ *
+ * NB. The latter two things probably ought to be in CQP rather than here.
+ */
+
 
 
 
 
 /*
- * memory allocation functions with integrate success test 
- * (this functions will be used as hooks for the CL MMU)
+ * memory allocation functions with integrated success test
+ * (to be used as hooks for the CL MMU)
  */
 
 /**
@@ -94,7 +106,7 @@ cl_realloc(void *block, size_t bytes)
 {
   void *new_block;
 
-  if (block == NULL) 
+  if (block == NULL)
     new_block = malloc(bytes);	/* some OSs don't fall back to malloc() if block == NULL */
   else
     new_block = realloc(block, bytes);
@@ -103,7 +115,7 @@ cl_realloc(void *block, size_t bytes)
     if (bytes == 0) {
       /* don't warn any more, reallocating to 0 bytes should create no problems, at least on Linux and Solaris */
       /* (the message was probably shown on Linux only, because Solaris doesn't return NULL in this case) */
-      /* fprintf(stderr, "CL: WARNING realloc() to 0 bytes!\n"); */      
+      /* fprintf(stderr, "CL: WARNING realloc() to 0 bytes!\n"); */
     }
     else {
       fprintf(stderr, "CL: Out of memory. (killed)\n");
@@ -170,10 +182,10 @@ cl_set_rng_state(unsigned int i1, unsigned int i2)
  * @param i1  Target location for the value of RNG_I1
  * @param i2  Target location for the value of RNG_I2
  */
-void 
+void
 cl_get_rng_state(unsigned int *i1, unsigned int *i2)
 {
-  *i1 = RNG_I1; 
+  *i1 = RNG_I1;
   *i2 = RNG_I2;
 }
 
@@ -190,6 +202,7 @@ cl_set_seed(unsigned int seed)
 
 /**
  *  Initialises the CL-internal random number generator from the current system time.
+ *  TODO, maybe this name would be bbetter as "cl_seed_time"?
  */
 void
 cl_randomize(void)
@@ -218,8 +231,10 @@ cl_random(void)
  * Part of the CL-internal random number generator.
  *
  * @return  The generated random number.
+ * TODO runif sounds a bit too much like "run if". I (AH) keep getting xconfused.
+ *       .... maybe cl_random_fraction?
  */
-double 
+double
 cl_runif(void)
 {
   return cl_random() * 2.328306437080797e-10; /* = cl_random / (2^32 - 1) */
@@ -233,6 +248,7 @@ cl_runif(void)
 
 /*
  *  display progress bar in terminal window
+ *  TODO: put in another file maybe??
  */
 
 /* non-exported global variables for progress bar */
@@ -328,7 +344,9 @@ progress_bar_percentage(int pass, int total, int percentage)
 
 
 /*
- *  print indented 'tabularised' lists
+ *  print indented 'tabularised' lists.
+ *
+ *  Note that use of global variables makes this non-reentrant
  */
 
 /* status variables (non-exported globals) */
@@ -368,7 +386,7 @@ start_indented_list(int linewidth, int tabsize, int indent)
   ilist_cursor = 0;
   /* indent from left margin */
   ilist_print_blanks(ilist_indent);
-} 
+}
 
 /**
  * Starts a new line in an indented 'tabularised' list.
@@ -383,7 +401,7 @@ void
 print_indented_list_br(char *label)
 {
   int llen = (label != NULL) ? strlen(label) : 0;
-  
+
   if (ilist_cursor != 0) {
     printf("\n");
   }

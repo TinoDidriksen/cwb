@@ -18,12 +18,6 @@
 
 ##  This is the Makefile for the CWB Corpus Query Processor programs. 
 
-
-
-## Read configuration settings and standard definitions
-TOP = $(shell pwd)/..
-include $(TOP)/config.mk
-
 ## The following targets are available:
 #
 #  all          create binaries cqp, cqpcl, and cqpserver
@@ -35,6 +29,18 @@ include $(TOP)/config.mk
 #  release      install to binary release dir
 #  size         print size of source code (line counts)
 #
+
+
+## Read configuration settings and standard definitions
+TOP = $(shell pwd)/..
+include $(TOP)/config.mk
+
+## This is an extra flag for this folder. It is used in the CQP parser; 
+## normally it is not defined, but if it is, the synchronize#() function 
+## becomes a no-op.
+ifdef CQP_COMPILE_WITHOUT_SYNCHRONIZE
+CFLAGS_ALL := -DCQP_COMPILE_WITHOUT_SYNCHRONIZE $(CFLAGS_ALL) 
+endif
 
 .PHONY: all clean realclean depend install uninstall size
 

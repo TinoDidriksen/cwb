@@ -1,13 +1,13 @@
-/* 
+/*
  *  IMS Open Corpus Workbench (CWB)
  *  Copyright (C) 1993-2006 by IMS, University of Stuttgart
  *  Copyright (C) 2007-     by the respective contributers (see file AUTHORS)
- * 
+ *
  *  This program is free software; you can redistribute it and/or modify it
  *  under the terms of the GNU General Public License as published by the
  *  Free Software Foundation; either version 2, or (at your option) any later
  *  version.
- * 
+ *
  *  This program is distributed in the hope that it will be useful, but
  *  WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
@@ -185,7 +185,7 @@ verify_context_descriptor(Corpus *corpus,
     }
 
     /* cd->print_cpos = 0; */
-    
+
     VerifyList(cd->attributes, corpus, remove_illegal_entries);
     if (cd->attributes && cd->attributes->list == NULL)
       DestroyAttributeList(&(cd->attributes));
@@ -201,7 +201,7 @@ verify_context_descriptor(Corpus *corpus,
     VerifyList(cd->alignedCorpora, corpus, remove_illegal_entries);
     if (cd->alignedCorpora && cd->alignedCorpora->list == NULL)
       DestroyAttributeList(&(cd->alignedCorpora));
-      
+
   }
   return result;
 }
@@ -285,11 +285,11 @@ update_context_descriptor(Corpus *corpus, ContextDescriptor *cd)
   if (!cd->printStructureTags)
     cd->printStructureTags = NewAttributeList(ATT_STRUC);
   RecomputeAL(cd->printStructureTags, corpus, 0);
-  
+
   if (!cd->alignedCorpora)
     cd->alignedCorpora = NewAttributeList(ATT_ALIGN);
   RecomputeAL(cd->alignedCorpora, corpus, 0);
-  
+
   for (ai = cd->printStructureTags->list; ai; ) {
 
     /* das Merken des Nachfolgers ist notwendig, weil RemoveName.. die
@@ -303,15 +303,15 @@ update_context_descriptor(Corpus *corpus, ContextDescriptor *cd)
     attr = find_attribute(corpus, ai->name, ATT_STRUC, NULL);
     if (!attr || !structure_has_values(attr))
       RemoveNameFromAL(cd->printStructureTags, ai->name);
-    
+
     ai = next_ai;
   }
-  
+
   return 1;
 }
 
 /** attribute (selected/unselected) print helper routine  */
-void 
+void
 PrintAttributes(FILE *fd, char *header, AttributeList *al, int show_if_annot)
 {
   int line = 0, i;
@@ -319,9 +319,9 @@ PrintAttributes(FILE *fd, char *header, AttributeList *al, int show_if_annot)
 
   if (al && al->list) {
     for (current = al->list; current; current = current->next) {
-      if (line++ == 0) 
+      if (line++ == 0)
         fprintf(fd, "%s", header);
-      else 
+      else
         for (i = strlen(header); i; i--)
           fprintf(fd, " ");
       if (current->status)
@@ -343,7 +343,7 @@ PrintAttributes(FILE *fd, char *header, AttributeList *al, int show_if_annot)
 
 /** attribute print helper routine (non pretty-printing mode)
  *  ( TODO desperately needs a better name ) */
-void 
+void
 PrintAttributesSimple(FILE *fd, char *type, AttributeList *al, int show_if_annot)
 {
   AttributeInfo *ai;
@@ -362,6 +362,8 @@ PrintAttributesSimple(FILE *fd, char *type, AttributeList *al, int show_if_annot
 /**
  * Prints the contents of a ContextDescriptor either to stdout or a pager
  * (NB this uses its own internal stream).
+ *
+ * @param cdp       Context descriptor to print.
  */
 void
 PrintContextDescriptor(ContextDescriptor *cdp)
@@ -378,29 +380,36 @@ PrintContextDescriptor(ContextDescriptor *cdp)
       fprintf(fd, "===Context Descriptor=======================================\n");
       fprintf(fd, "\n");
       fprintf(fd, "left context:     %d ", cdp->left_width);
+
       switch (cdp->left_type) {
-      case CHAR_CONTEXT: 
-        fprintf(fd, "characters\n"); break;
-      case WORD_CONTEXT: 
-        fprintf(fd, "tokens\n"); break;
-      case STRUC_CONTEXT: 
-      case ALIGN_CONTEXT:
-        fprintf(fd, "%s\n",
-                cdp->left_structure_name ? cdp->left_structure_name : "???");
+      case char_context:
+        fprintf(fd, "characters\n");
+        break;
+      case word_context:
+        fprintf(fd, "tokens\n");
+        break;
+      case s_att_context:
+      case a_att_context:
+        fprintf(fd, "%s\n", cdp->left_structure_name ? cdp->left_structure_name : "???");
+        break;
       }
+
       fprintf(fd, "right context:    %d ", cdp->right_width);
+
       switch (cdp->right_type) {
-      case CHAR_CONTEXT: 
-        fprintf(fd, "characters\n"); break;
-      case WORD_CONTEXT: 
-        fprintf(fd, "tokens\n"); break;
-      case STRUC_CONTEXT: 
-      case ALIGN_CONTEXT:
-        fprintf(fd, "%s\n",
-                cdp->right_structure_name ? cdp->right_structure_name : "???");
+      case char_context:
+        fprintf(fd, "characters\n");
+        break;
+      case word_context:
+        fprintf(fd, "tokens\n");
+        break;
+      case s_att_context:
+      case a_att_context:
+        fprintf(fd, "%s\n", cdp->right_structure_name ? cdp->right_structure_name : "???");
+        break;
       }
       fprintf(fd, "corpus position:  %s\n", cdp->print_cpos ? "shown" : "not shown");
-      fprintf(fd, "target anchors:   %s\n", show_targets ? "shown" : "not shown");
+      fprintf(fd, "target anchors:   %s\n", show_targets    ? "shown" : "not shown");
       fprintf(fd, "\n");
       PrintAttributes(fd, "Positional Attributes:", cdp->attributes, 0);
       fprintf(fd, "\n");
@@ -418,7 +427,7 @@ PrintContextDescriptor(ContextDescriptor *cdp)
       PrintAttributesSimple(fd, "a-Att", cdp->alignedCorpora, 0);
     }
 
-    if (stream_ok) 
+    if (stream_ok)
       close_stream(&rd);        /* close pipe to pager if we were using it */
   }
 }

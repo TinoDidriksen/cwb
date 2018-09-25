@@ -1,13 +1,13 @@
-/* 
+/*
  *  IMS Open Corpus Workbench (CWB)
  *  Copyright (C) 1993-2006 by IMS, University of Stuttgart
  *  Copyright (C) 2007-     by the respective contributers (see file AUTHORS)
- * 
+ *
  *  This program is free software; you can redistribute it and/or modify it
  *  under the terms of the GNU General Public License as published by the
  *  Free Software Foundation; either version 2, or (at your option) any later
  *  version.
- * 
+ *
  *  This program is distributed in the hope that it will be useful, but
  *  WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
@@ -47,7 +47,7 @@ typedef struct _InputBuffer {
 InputBuffer InputBufferList = NULL;                /**< list of active input buffers */
 
 
-/* 
+/*
  *  macro definitions & lookup hash
  */
 
@@ -136,11 +136,11 @@ PopInputBuffer(void)
 }
 
 /** has to be called once to initialise the hash */
-void 
+void
 MakeMacroHash(int size)
 {
   int bytes;
-  
+
   MacroHash = (MacroHashTable) cl_malloc(sizeof(struct _MacroHashTable));
 
   MacroHash->size = find_prime(size);
@@ -165,7 +165,7 @@ MacroHashLookup(char *str, int args)
   p = MacroHash->hash[offset];
 
   while (p != NULL) {
-    if ((p->args == args) && (strcmp(p->name, str) == 0)) 
+    if ((p->args == args) && (strcmp(p->name, str) == 0))
       break;
     p = p->next;
   }
@@ -192,11 +192,11 @@ MacroHashAdd(char *str, int args)
   new_macro = (MacroEntry) cl_malloc(sizeof(struct _MacroEntry));
   new_macro->name = cl_strdup(str);
   new_macro->args = args;
-  for (i = 0; i < 10; i++) 
+  for (i = 0; i < 10; i++)
     new_macro->argnames[i] = NULL;
   new_macro->replacement = NULL;
   new_macro->active = 0;
-  
+
   new_macro->next = MacroHash->hash[offset];
   MacroHash->hash[offset] = new_macro;
 
@@ -213,13 +213,13 @@ MacroHashDelete(MacroEntry macro)
 
   offset = hash_macro(macro->name, macro->args) % MacroHash->size; /* find the macro's bucket */
   p = MacroHash->hash[offset];
-  
+
   if (p == macro) {
     MacroHash->hash[offset] = macro->next;
   }
   else {                        /* find macro's predecessor in this bucket */
     while (p != NULL) {
-      if (p->next == macro) 
+      if (p->next == macro)
         break;
       p = p->next;
     }
@@ -287,7 +287,9 @@ MacroAddSegment(MacroEntry macro)
  *
  * Used by the lexer to get its characters; see parser.l where YY_INPUT() is redefined
  * to a macro calling this function.
- * (Not clear why it's in macro.c when it is not specific to just macros.)
+ *
+ * ( TODO Not clear why it's in macro.c when it is not specific to just macros.
+ * (      Why not put this in cqp.c?
  */
 int
 yy_input_char(void)
@@ -317,7 +319,7 @@ yy_input_char(void)
     }
     /* add character to query buffer (turned off while expanding macros) */
     /* (also turned off while reading ~/.cqprc and ~/.cqpmacros; see addHistoryLine() <parse_actions.c>) */
-    /* (not turned off in silent mode (e.g. in child mode), so we get the location of parse errors!) */ 
+    /* (not turned off in silent mode (e.g. in child mode), so we get the location of parse errors!) */
     if (!reading_cqprc && !QueryBufferOverflow && (character >= 0)) {
       if ((QueryBufferP + 1) < QUERY_BUFFER_SIZE) {
         QueryBuffer[QueryBufferP++] = character;
@@ -341,7 +343,7 @@ yy_input_char(void)
 }
 
 /** checks if input is being read from macro expansion */
-int 
+int
 yy_input_from_macro(void)
 {
   return (InputBufferList != NULL);
@@ -426,10 +428,10 @@ unsigned int pseudo_arg_counter = 0; /**< unique number for pseudo argument in e
 /**
  * expand macro <name>:
  *   - read argument list using yy_input_char();
- *   - lookup macro as by <name> and <args> 
+ *   - lookup macro as by <name> and <args>
  *   - push subsituted string on top of input buffer list
  */
-int 
+int
 expand_macro(char *name)
 {
   MacroEntry macro;
@@ -443,7 +445,7 @@ expand_macro(char *name)
 
 
   /* free() macro args allocated during last macro expansion */
-  for (i = 0; i < 10; i++) 
+  for (i = 0; i < 10; i++)
     cl_free(macro_arg[i]);
 
   /* set pseudo argument */
@@ -476,7 +478,7 @@ expand_macro(char *name)
       return 0;
     }
   }
-  
+
   macro = MacroHashLookup(name, args);
   if (macro != NULL) {
     if (macro->active) {
@@ -536,14 +538,14 @@ expand_macro(char *name)
 /**
  * define a new macro:
  *   name = macro name
- *   args = # of arguments (0 .. 9); 
+ *   args = # of arguments (0 .. 9);
  *     alternatively, specify:
  *   argstr = macro argument string (e.g. ``$0=name $1=label'')
  *   definition = macro definition ... this string is substituted for /<name>(...)
  *          $0 .. $9 refer to the macro's arguments and CAN NOT be escaped
  * returns 1 if macro definition was successful, 0 on syntax error
  */
-int 
+int
 define_macro(char *name, int args, char *argstr, char *definition)
 {
   MacroEntry macro;
@@ -573,7 +575,7 @@ define_macro(char *name, int args, char *argstr, char *definition)
     return 0;
   }
   if ((macro = MacroHashLookup(name, args)) != NULL) {
-    if (!silent) 
+    if (!silent)
       fprintf(stderr, "WARNING Macro %s(%d) redefined\n", name, args);
     MacroHashDelete(macro);
   }
@@ -630,16 +632,16 @@ define_macro(char *name, int args, char *argstr, char *definition)
     }
   } /* if (argstr != NULL) ... */
 
-  
+
   /* Chunk macro definition into segments. We assume the following structure
-   *    <string>, <arg>, <string>, <arg>, ..., <string>, EOS 
-   * where each of the strings may be empty. 
+   *    <string>, <arg>, <string>, <arg>, ..., <string>, EOS
+   * where each of the strings may be empty.
    */
   point = definition;
   while (*point != '\0') {
     /* scan string segment (ended by \000 or by $<n>) */
     for (mark = point; *point != '\0'; point++)
-      if (*point == '$' && 
+      if (*point == '$' &&
           (((*(point+1) >= '0') && (*(point+1) <= '9')) || *(point+1) == '$'))
         break;
     /* append string segment to replacement list unless it's empty */
@@ -784,7 +786,7 @@ parse_macro_name(char *text, int *nr_of_args, char **prototype)
  * as is any whitespace at the start or end of a line; blanks are inserted
  * between the lines of a multi-line macro definition
  */
-void 
+void
 load_macro_file(char *filename)
 {
   char input_line[MACRO_FILE_MAX_LINE_LENGTH + 3]; /* line input buffer */
@@ -802,7 +804,7 @@ load_macro_file(char *filename)
     cqpmessage(Error, "Can't open macro definition file '%s'", filename);
     return;
   }
-  
+
   line_number = 0;
   macro_name = NULL;
   macro_prototype = NULL;
@@ -814,7 +816,7 @@ load_macro_file(char *filename)
                  MACRO_FILE_MAX_LINE_LENGTH, filename, line_number);
       break;                        /* stop processing file */
     }
-      
+
     line = preprocess_input_line(input_line);
     if (!line) {
       cqpmessage(Error, "Unbalanced quotation marks (file '%s', line %d)\n", filename, line_number);
@@ -902,7 +904,7 @@ load_macro_file(char *filename)
 
 
 /** delete active input buffers */
-int 
+int
 delete_macro_buffers(int trace) {
   int n = 0, i;
 
@@ -912,7 +914,7 @@ delete_macro_buffers(int trace) {
   while (InputBufferList != NULL) {
     if (trace) {
       fprintf(stderr, "%s(%d): ", InputBufferList->macro->name, InputBufferList->macro->args);
-      for (i = 0; i < InputBufferList->position; i++) 
+      for (i = 0; i < InputBufferList->position; i++)
         fprintf(stderr, "%c", InputBufferList->data[i]);
       fprintf(stderr, " <--\n");
     }
@@ -952,7 +954,7 @@ macro_iterator_next_macro(char *prefix)
         prefix_length = first_paren - prefix;
       }
     }
-  
+
     while (1) {                        /* advance iterator until we find a (matching) macro entry or reach the end of the hash table */
       if (iterator_entry != NULL)
         iterator_entry = iterator_entry->next;
@@ -1003,7 +1005,7 @@ macro_iterator_next_prototype(char *prefix)
   else {
     len = strlen(macro->name) + 4; /* first compute string length required for prototype */
     for (i = 0; i < macro->args; i++) {
-      if (macro->argnames[i] == NULL) 
+      if (macro->argnames[i] == NULL)
         len += 2;
       else
         len += strlen(macro->argnames[i]) + 1;
@@ -1011,7 +1013,7 @@ macro_iterator_next_prototype(char *prefix)
     pt = (char *) cl_malloc(len);           /* allocate macro prototype string */
     sprintf(pt, "/%s[", macro->name);
     for (i = 0; i < macro->args; i++) {
-      if (macro->argnames[i] == NULL) 
+      if (macro->argnames[i] == NULL)
         strcat(pt, "_");
       else
         strcat(pt, macro->argnames[i]);
@@ -1037,7 +1039,7 @@ list_macros_sort(const void *p1, const void *p2)
 
 
 /** list all defined macros on stdout */
-void 
+void
 list_macros(char *prefix)
 {
   int i, len, k, N, l;
@@ -1098,7 +1100,7 @@ list_macros(char *prefix)
 }
 
 /** print definition of macro on stdout */
-void 
+void
 print_macro_definition(char *name, int args)
 {
   MacroEntry macro;
@@ -1148,14 +1150,14 @@ print_macro_definition(char *name, int args)
 /**
  * Prints macro hash statistics on stderr.
  */
-void 
+void
 macro_statistics(void)
 {
   int stat[4] = {0, 0, 0, 0};        /* count buckets: empty / one macro / two macros / more than two */
   MacroEntry m;
   int i, count;
 
-  if (MacroHash == NULL) 
+  if (MacroHash == NULL)
     fprintf(stderr, "Macro hash was not initialised.\n");
   else {
     for (i = 0; i < MacroHash->size; i++) {

@@ -42,11 +42,16 @@
 
 /** File handle used by the CQP-query-language parser. */
 extern FILE *yyin;
-/** Activates the CQP-query-language parser. */
+/** Activates the CQP-query-language parser. Returns a boolean. */
 extern int yyparse (void);
 /** restarts the CQP-query-language parser. */
 extern void yyrestart(FILE *input_file);
 
+
+/** Pointer that stores the address of strings read form the CLI by CQP. */
+char *cqp_input_string;
+/** index into the CQP input string; used for character-by-character read. */
+int cqp_input_string_position;
 
 /** Array of file handles. Allows nested execution of "included" text files full of commands. */
 FILE *cqp_files[MAXCQPFILES];
@@ -308,7 +313,13 @@ initialize_cqp(int argc, char **argv)
 /**
  * Parses a stream for CQP query syntax.
  *
+ * We're assuming that this is a normal pipe, IE, no interactive
+ * shenanigans need to be accounted for (either Readline is unavailable,
+ * or the cqp program was started without -e.).
+ *
  * Note that cqp_parse_file() fclose()s fd unless it is STDOUT.
+ *
+ * @see cqp_parse string
  *
  * @param fd                    File handle of the file to parse.
  * @param exit_on_parse_errors  Boolean: should CQP exit on parse errors?
@@ -324,10 +335,13 @@ cqp_parse_file(FILE *fd, int exit_on_parse_errors)
   quiet = silent || (fd != stdin);
 
   if (cqp_file_p < MAXCQPFILES) {
-
+    /* pile the current yyin file handle into the file stack array. */
     cqp_files[cqp_file_p] = yyin;
     cqp_file_p++;
+    /* this is because if we've come from do_exec(), we need to process the current stream,
+     * then return to the one from which do_exec() was raised! */
 
+    /* pass the stream handle into the parser and re-set the parser state. */
     yyin = fd;
     yyrestart(yyin);
 
@@ -340,6 +354,7 @@ cqp_parse_file(FILE *fd, int exit_on_parse_errors)
       }
 
       if (!quiet) {
+        /* print the prompt with the active corpus displayed. */
         if (current_corpus != NULL)
           if (STREQ(current_corpus->name, current_corpus->mother_name))
             printf("%s> ", current_corpus->name);
@@ -352,18 +367,15 @@ cqp_parse_file(FILE *fd, int exit_on_parse_errors)
           printf("[no corpus]> ");
       }
 
+      /* call the parser! This will read, interpret, and implement a command. */
       cqp_status = yyparse();
-      if ((cqp_status != 0) && exit_on_parse_errors)
+      if (cqp_status && exit_on_parse_errors)
         ok = 0;
 
-      if (child_process && (cqp_status != 0) && !reading_cqprc) {
-        fprintf(stderr, "PARSE ERROR\n"); /*  */
+      if (child_process && cqp_status != 0 && !reading_cqprc) {
+        fprintf(stderr, "PARSE ERROR\n");
       }
       if (child_process && !reading_cqprc) {
-#if 0
-        /* empty lines after commands in child mode have been disabled as of version 2.2.b94 */
-        printf("\n");                /* print empty line as separator in child mode */
-#endif
         fflush(stdout);
         fflush(stderr);
       }
@@ -373,6 +385,7 @@ cqp_parse_file(FILE *fd, int exit_on_parse_errors)
     if (fd != stdin)
       fclose(fd);
 
+    /* we can now revert back to whatever the YY stream was when we began this function. */
     cqp_file_p--;
     yyin = cqp_files[cqp_file_p];
 
@@ -388,10 +401,14 @@ cqp_parse_file(FILE *fd, int exit_on_parse_errors)
 }
 
 /**
- * Parses a string for CQP query syntax.
+ * Parses a string for CQP query syntax. The string is assumed to have
+ * been provided by the Readline library or similar. IE, we are
+ * running with "cqp -e".
  *
- * @param s  The string to parse.
- * @return   Boolean: true = all ok, false = a problem.
+ * @see       USE_READLINE
+ *
+ * @param  s  The string to parse.
+ * @return    Boolean: true = all ok, false = a problem.
  */
 int
 cqp_parse_string(char *s)

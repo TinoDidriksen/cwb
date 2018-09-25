@@ -960,8 +960,8 @@ do_reduce(CorpusList *cl, int number, int percent) {
       size--;
     }
 
-    (void) delete_intervals(cl, lines, UNSELECTED_LINES);
-    (void) destroy_bitfield(&lines);
+    delete_intervals(cl, lines, UNSELECTED_LINES);
+    destroy_bitfield(&lines);
   }
 }
 
@@ -2921,7 +2921,7 @@ expand_dataspace(CorpusList *cl)
   else if (expansion.size > 0) {
 
     for (i = 0; i < cl->size; i++) {
-      if (expansion.direction == left || expansion.direction == leftright) {
+      if (expansion.direction == ctxtdir_left || expansion.direction == ctxtdir_leftright) {
         res = calculate_leftboundary(cl,
                                      cl->range[i].start,
                                      expansion);
@@ -2931,7 +2931,7 @@ expand_dataspace(CorpusList *cl)
           cqpmessage(Warning, "'expand' statement failed (while expanding corpus interval leftwards).\n");
         /* when the expansion fails, the interval in the subcorpus is left as-is. */
       }
-      if (expansion.direction == right || expansion.direction == leftright) {
+      if (expansion.direction == ctxtdir_right || expansion.direction == ctxtdir_leftright) {
         res = calculate_rightboundary(cl,
                                       cl->range[i].end,
                                       expansion);

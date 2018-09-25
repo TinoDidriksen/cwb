@@ -1,13 +1,13 @@
-/* 
+/*
  *  IMS Open Corpus Workbench (CWB)
  *  Copyright (C) 1993-2006 by IMS, University of Stuttgart
  *  Copyright (C) 2007-     by the respective contributers (see file AUTHORS)
- * 
+ *
  *  This program is free software; you can redistribute it and/or modify it
  *  under the terms of the GNU General Public License as published by the
  *  Free Software Foundation; either version 2, or (at your option) any later
  *  version.
- * 
+ *
  *  This program is distributed in the hope that it will be useful, but
  *  WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
@@ -38,7 +38,7 @@
 
 SearchStrategy string_to_strategy(char *s)
 {
-  if (s == NULL) 
+  if (s == NULL)
     return SearchNone;
   else if (strcasecmp(s, "leftmost") == 0)
     return SearchLeftmost;
@@ -57,7 +57,7 @@ SearchStrategy string_to_strategy(char *s)
 
 /* Handling of target, match, keyword. Tue Feb 28 16:02:03 1995 (oli) */
 
-/* target can be any field except NoField (-> CQP dies), 
+/* target can be any field except NoField (-> CQP dies),
    source can be NoField, which deletes the target field (unless that's match or matchend) */
 int
 set_target(CorpusList *corp, FieldType t_id, FieldType s_id)
@@ -91,7 +91,7 @@ set_target(CorpusList *corp, FieldType t_id, FieldType s_id)
     case KeywordField:
       cl_free(corp->keywords);
       break;
-      
+
     case NoField:
     default:
       assert(0 && "Can't be");
@@ -236,7 +236,7 @@ set_target(CorpusList *corp, FieldType t_id, FieldType s_id)
       for (i = 0; i < corp->size; i++)
         corp->range[i].start = corp->range[i].end;
       break;
-      
+
     case KeywordField:
       if (corp->keywords == NULL)
         corp->keywords = (int *)cl_malloc(corp->size * sizeof(int));
@@ -262,7 +262,7 @@ set_target(CorpusList *corp, FieldType t_id, FieldType s_id)
     assert("Can't be" && 0);
     break;
   }
-  
+
   if ((t_id == MatchField) || (t_id == MatchEndField))
     RangeSort(corp, 0);                /* re-sort corpus if match regions were modified */
   touch_corpus(corp);
@@ -335,7 +335,7 @@ int evaluate_target(CorpusList *corp,          /* the corpus */
   }
 
   if (units <= 0) {
-    cqpmessage(Error, "Invalid search space (%d units) in 'set target' command.", 
+    cqpmessage(Error, "Invalid search space (%d units) in 'set target' command.",
                units);
     return 0;
   }
@@ -440,7 +440,7 @@ int evaluate_target(CorpusList *corp,          /* the corpus */
           lbound = rbound = -1;
         }
       }
-      else 
+      else
         lbound = rbound = -1;
 
       break;
@@ -457,7 +457,7 @@ int evaluate_target(CorpusList *corp,          /* the corpus */
           lbound = rbound = -1;
         }
       }
-      else 
+      else
         lbound = rbound = -1;
 
       break;
@@ -474,7 +474,7 @@ int evaluate_target(CorpusList *corp,          /* the corpus */
           lbound = rbound = -1;
         }
       }
-      else 
+      else
         lbound = rbound = -1;
 
       break;
@@ -484,17 +484,17 @@ int evaluate_target(CorpusList *corp,          /* the corpus */
     }
 
     if ((lbound >= 0) && (rbound >= 0)) {
-      
+
       int dist, maxdist;
 
-      if (direction == left) {
+      if (direction == ctxtdir_left) {
         rbound = excl_start;
         if (strategy == SearchNearest)
           strategy = SearchRightmost;
         else if (strategy == SearchFarthest)
           strategy = SearchLeftmost;
       }
-      else if (direction == right) {
+      else if (direction == ctxtdir_right) {
         lbound = excl_start;
         if (strategy == SearchNearest)
           strategy = SearchLeftmost;
@@ -609,13 +609,13 @@ int evaluate_target(CorpusList *corp,          /* the corpus */
     }
   }
 
-  if (progress_bar) 
+  if (progress_bar)
     progress_bar_message(1, 1, "  cleaning up");
 
   switch (t_id) {
   case MatchField:
     for (i = 0; i < corp->size; i++) {
-      if (table[i] >= 0) 
+      if (table[i] >= 0)
         corp->range[i].start = table[i];
       if (corp->range[i].start > corp->range[i].end)
         corp->range[i].start = corp->range[i].end;
@@ -625,7 +625,7 @@ int evaluate_target(CorpusList *corp,          /* the corpus */
 
   case MatchEndField:
     for (i = 0; i < corp->size; i++) {
-      if (table[i] >= 0) 
+      if (table[i] >= 0)
         corp->range[i].end = table[i];
       if (corp->range[i].end < corp->range[i].start)
         corp->range[i].end = corp->range[i].start;
@@ -654,7 +654,7 @@ int evaluate_target(CorpusList *corp,          /* the corpus */
   if ((t_id == MatchField) || (t_id == MatchEndField))
     RangeSort(corp, 0);                /* re-sort corpus if match regions were modified */
 
-  touch_corpus(corp);  
+  touch_corpus(corp);
   if (!EvaluationIsRunning) {
     cqpmessage(Warning, "Evaluation interruted: results may be incomplete.");
     if (which_app == cqp) install_signal_handler();
@@ -688,25 +688,25 @@ int evaluate_subset(CorpusList *cl, /* the corpus */
     }
 
     switch (the_field) {
-    
+
     case MatchField:
       position = cl->range[line].start;
       break;
-      
+
     case MatchEndField:
       position = cl->range[line].end;
       break;
-      
+
     case KeywordField:
       assert(cl->keywords);
       position = cl->keywords[line];
       break;
-      
+
     case TargetField:
       assert(cl->targets);
       position = cl->targets[line];
       break;
-      
+
     case NoField:
     default:
       position = -1;
@@ -718,7 +718,7 @@ int evaluate_subset(CorpusList *cl, /* the corpus */
       cl->range[line].end   = -1;
     }
   }
-  
+
   /* if interrupted, delete part of temporary query result which hasn't been filtered;
      so that the result is incomplete but at least contains only correct matches */
   while (line < cl->size) {
@@ -733,7 +733,7 @@ int evaluate_subset(CorpusList *cl, /* the corpus */
   }
   EvaluationIsRunning = 0;
 
-  if (progress_bar) 
+  if (progress_bar)
     progress_bar_message(0, 0, "  cleaning up");
 
   (void) RangeSetop(cl, RReduce, NULL, NULL);

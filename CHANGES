@@ -205,6 +205,10 @@ Enhancements:
    in CQP output, which is convenient for communicating with output post-processor scripts and for prepending
    a header row to a TAB-delimited output file. Escape sequences \n, \r and \t are interpreted, but no other
    substitutions are made in the string to be printed.
+   
+ - [2018-09-25: v3.4.15] Extended the CQP "show" command to allow "show active"/"show current" to print the
+   name of the presently-active corpus. (In interactive mode, this info is visible in the prompt; but in child
+   mode it's nice to have a direct way to ask this.)
 
 Version 3.2
 -----------
