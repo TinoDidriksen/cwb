@@ -62,7 +62,7 @@ else
     OS=$(uname -s)
     VER=$(uname -r)
     echo "You seem to be running $OS version $VER. Sorry but CWB auto-install doesn't work on that OS!"
-    echo "You should use manual installation  with 'make' instead (see file INSTALL). 
+    echo "You should use manual installation  with 'make' instead (see file INSTALL)."
     exit 1
 fi
 
