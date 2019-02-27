@@ -6,7 +6,7 @@
 
 
 This file describes how to build and install the CWB from source code for
-Microsoft Windows. You should first read the instructions in the main 
+Microsoft Windows.  You should first read the instructions in the main 
 INSTALL file, as the Windows procedures are in large part elaborations on
 the process for Unix.
 
@@ -18,22 +18,22 @@ not apply.
         GENERAL NOTES
 
 CWB is designed for Unix-like (i.e. POSIX-compatible) operatign systems.
-Porting such systems to run on Widnows is a non-trivial undertaking.
+Porting such systems to run on Windows is a non-trivial undertaking.
 Fortunately, there exist projects designed to allow programs for Unix to
-be built for Windows with minimal porting. CWB's Windows installation
+be built for Windows with minimal porting.  CWB's Windows installation
 procedure is built on one such system, MinGW ("Minimalist GNU for Windows").
 
 In theory, MinGW can be used to build Unix-like programs for Windows
 EITHER within Windows itself, OR by creating the Windows executables 
-from a Unix-like machine ("cross-compiling"). We currently only provide 
+from a Unix-like machine ("cross-compiling").  We currently only provide 
 instructions for the LATTER of these, i.e. the cross-compilation;
-we hope to add instructions for building natively on Windows in the near
-future. For the time being, if you do not have a Unix-like machine from
+we hope to move over to building natively on Windows in the near future. 
+For the time being, if you do not have a Unix-like machine from
 which to build Windows binaries, your best option is to install Cygwin
 and build within Cygwin.
 
 The notes in this section are directed at creating a 32-bit Windows build;
-you are welcome to attempt to build targetting Win64 but we do not provide
+you are welcome to attempt to build targeting Win64 but we do not provide
 official instructions yet.
 
 The CWB team has tested cross-compilation using the following Unix OSes:
@@ -81,7 +81,7 @@ On Fedora and derived RPM-based Linux variants, the list of packages begining
 in "mingw32-" is much longer, but cross-compilation doesn't require all of 
 them. You need "mingw32-gcc" and all its dependencies.
  
-Alternatively, or on systems that are not package maanged, the MinGW 
+Alternatively, or on systems that are not package managed, the MinGW 
 cross-compiler can be downloaded from the MinGW project website:
 
         http://www.mingw.org/wiki/LinuxCrossMinGW
@@ -95,8 +95,8 @@ are all available via your path.
 
 Standard Unix puts development files in various known system locations, i.e.
 /usr/lib, /usr/include, and so on. These are for *native* compilation. 
-The cross compiler will have its own equivalent sub-directories, under its
-own base directory. To progress further, we need to know what that is.
+The cross-compiler will have its own equivalent sub-directories, under its
+own base directory.  To progress further, we need to know what that is.
 
 The following shell command should get the cross-compiler to tell you its
 base directory:
@@ -116,17 +116,17 @@ cross-compiler you have installed).
 
 The good news is that if the command above is successful, the CWB "make"
 system will be able to add the "home" directory on its own, as it uses
-that exact command. If that automatic method doesn't work, you will need
+that exact command.  If that automatic method doesn't work, you will need
 to find out what the directory is by exploring your system, and then insert
-the answer manually into your config.mk file. This is explained below.  
+the answer manually into your config.mk file.  This is explained below.  
 
 Either way, you will need to note that directory for use in commands
-for installing cross-compiler versions of PCRE and Glib. Later in this 
+for installing cross-compiler versions of PCRE and Glib.  Later in this 
 document, the variable $MINGW_CROSS_HOME refers to the path to this 
 directory (should be a full, absolute path - not a relative path).
 
 
-        PREREQUISITE EXTERNAL LIBRARIES FOR WIN32 BUILD
+        PREREQUISITE EXTERNAL LIBRARIES FOR WINDOWS BUILD
 
 When cross-compiling for Windows, you need versions of Glib/PCRE 
 that have been compiled *to run under Windows*, not the usual *nix versions.
@@ -142,7 +142,7 @@ series. Once downloaded, decompress the code.
 
 Next, we need to  use the MinGW cross-compiler to build the library files; 
 these then should be placed into the right library directory for the MinGW 
-cross-compiler to find it. The same applies to the header file. We have 
+cross-compiler to find it.  The same applies to the header file.  We have 
 found that PCRE's "make install" will do this for you, *IF* it has been
 configured with the right options (if you run the ./configure script without
 the right options, it will be compiled for Unix and placed in the normal
@@ -164,7 +164,7 @@ The "right options" for configuring PCRE are something like the following
 build CWB for your actual system (usually just "gcc");
 
 .... and where $MINGW_CROSS_HOME is the directory within which header 
-and library files *for the the cross-compiler* live, as noted above. So,
+and library files *for the the cross-compiler* live, as noted above.  So,
 on Ubuntu and with PCRE v8.39, for instance, this adds up to the following:
 
         cd pcre-8.39
@@ -207,24 +207,24 @@ Not all the above are needed for CWB, but it is better to install the
 whole library than part of it, for sake of consistency. 
  
 As an overall general note, you should make sure to consult the PCRE 
-documentation on building for cross-compilation. The first place to 
+documentation on building for cross-compilation.  The first place to 
 check is the README supplied in the PCRE download.
 
 
         (b) PCRE -- download
 
 Some Linux distros provide versions of PCRE precompiled for use with MinGW.
-Fedora, for example, provides the packaeg "mingw32-pcre".  
+Fedora, for example, provides the package "mingw32-pcre".  
 
 Debian/Ubuntu DO NOT provide any such package, so on such systems it is
 necessary to use the build-yourself method above.
 
-Fedora packagings system aside, to our knowledge there are no suitable
+Fedora packaging system aside, to our knowledge there are no suitable
 places to download pre-built Windows versions of the PCRE library. 
 The PCRE homepage contains a link to downloadable binaries provided by the
 GnuWin32 project, but you SHOULD NOT attempt to use these.
 The project is unmaintained and in consequence the PCRE library files
-probided are too old to be suitable for use with CWB.
+provided are too old to be suitable for use with CWB.
 
 
         (c) GLIB -- build-yourself
@@ -257,7 +257,7 @@ The "right options" for configuring Glib are something like the following
 .... where $NORMAL_CC is your *normal* compiler, i.e. the one you'd use to
 build CWB for your actual system (usually just "gcc");
 
-.... and where $MINGW_CROSS_HOME is as explained above. So, on Ubuntu and
+.... and where $MINGW_CROSS_HOME is as explained above.  So, on Ubuntu and
 with Glib 2.48.1, for instance, this adds up to the following:
 
         cd glib-2.48.1
@@ -270,7 +270,7 @@ with Glib 2.48.1, for instance, this adds up to the following:
         sudo make install
 
 You may find that you need to install other libraries in order to build 
-Glib. Unfortunately, this is beyond the scope of this document.
+Glib.  Unfortunately, this is beyond the scope of this document.
 
 
         (d) GLIB -- download
@@ -282,7 +282,7 @@ Debian/Ubuntu DO NOT provide any such package, so on such systems it is
 necessary to use the build-yourself method above.
 
 The GTK project formerly made available pre-built Windows DLL files for 
-Glib (along with its other libraries). You may have used these files 
+Glib (along with its other libraries).  You may have used these files 
 previously - earlier versions of this file pointed to a set of files in
 .zip format accessible via the GTK website at URL
 http://www.gtk.org/download-windows.html .
@@ -361,7 +361,7 @@ your config.mk file (as explained in the comments to that file). You need to
 set either LIB_DLL_PATH (path to a directory containing both PCRE and Glib
 DLLs) or both LIBPCRE_DLL_PATH and LIBGLIB_DLL_PATH.
  
-If you are using the auto-build script (./install-scripts/cwb-build-win32),
+If you are using the auto-build script (./install-scripts/build-win32),
 this script will make a "guess" as to the location of the DLLs. So in this
 case, there is no need to set LIB(PCRE|GLIB|)_DLL_PATH - but if you do, 
 whatever you specify will override the "guess".
@@ -388,7 +388,7 @@ binaries is the same as on Unix:
         make all
 
 Running "make install" is meaningless in this case, because of course you will
-want to install the binaries on a different machine. To create an archive for
+want to install the binaries on a different machine.  To create an archive for
 easy transport of the Windows .exe files, together with PDFs of the man files,
 run
 
@@ -404,10 +404,10 @@ To speed up the steps under the previous heading there is a shell script
 which automates the changes to config.mk and the various steps of "making"; 
 run it as follows:
 
-        ./install-scripts/cwb-build-win32
+        ./install-scripts/build-win32
 
 Note, however, that it does not automate the insertion of $MINGW_CROSS_HOME
-if that is not guessable via the cross-compiler. See above.
+if that is not guessable via the cross-compiler.  See above.
 
 
         INSTALLING ON THE TARGET MACHINE
@@ -415,8 +415,8 @@ if that is not guessable via the cross-compiler. See above.
 To actually install CWB, move the zip file created by the steps above to your 
 Windows system, and decompress it.
 
-Then run the install-cwb-win batch file. (If it doesn't find the folders it 
-expects to find, it may ask you some questions.) This script will
+Then run the install-cwb-win batch file.  (If it doesn't find the folders it 
+expects to find, it may ask you some questions.)  This script will
 
  - create a folder like C:\Program Files\CWB
  - put all the binary files (plus necessary DLLs) in its "bin" subdirectory
@@ -427,6 +427,4 @@ You might also want to
  - add the "bin" sub-folder to your PATH environment variable
  - move the PDF files from the "man" sub-folder to somewhere more convenient
 
-
- 
  

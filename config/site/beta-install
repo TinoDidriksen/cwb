@@ -26,7 +26,7 @@ include $(TOP)/config/site/standard
 ## 
 ## If you want to always install beta versions to the usual location, define 
 ## CWB_LIVE_DANGEROUSLY as an environment variable; a should-be-portable command for this is
-## sudo echo "export CWB_LIVE_DANGEROUSLY=1 && ./install-scripts/cwb-install-$YOUR_OS" | sudo bash
+## sudo echo "export CWB_LIVE_DANGEROUSLY=1 && ./install-scripts/install-$YOUR_OS" | sudo bash
 ifndef CWB_LIVE_DANGEROUSLY
 PREFIX=/usr/local/cwb-$(VERSION)
 endif
