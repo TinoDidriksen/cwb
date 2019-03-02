@@ -5,7 +5,7 @@ cwb-decode - Utility for decoding a CWB corpus into various text formats
 =head1 SYNOPSIS
 
 B<cwb-decode> (-L|-H|-C|-Cx|-X) [-n] [-r I<registry_dir>]
-    [-s I<start>] [-e I<end>] [-p | -f I<file>]
+    [-s I<start>] [-e I<end>] [-p | -f I<file>] [-Sp | -Sf I<file>]
     I<corpus>  [-c I<attribute>] [-ALL]
     (-P I<attribute>|-S I<attribute>|-V I<attribute>|-A I<attribute>)+
 
@@ -17,7 +17,12 @@ In normal mode, the entire corpus (or a segment specified with the C<-s> and C<-
 is printed.
 
 In matchlist mode (C<-p> or C<-f>), (pairs of) corpus positions are read from standard input 
-or a file specified with C<-f>, and the corresponding tokens or ranges are displayed. 
+or a file specified with C<-f>, and the corresponding tokens or ranges are displayed.
+
+In subcorpus mode (C<-Sp> or C<-Sf>), all s-attribute start and end tags in the corpus are printed,
+but tokens (i.e. p-attributes) outside the selected ranges are suppressed.  Since B<cwb-encode> 
+ignores empty s-attribute regions, subcorpus mode can be used to create a physical subcorpus for
+a sequence of cpos ranges.
 
 In either case, the output is to standard output; any accompanying error or warning messages are printed to
 standard error. 
@@ -25,8 +30,7 @@ standard error.
 The attribute declaration flags C<-P>, C<-S>, C<-V> and C<-A> determine which attributes will be printed; 
 use C<-ALL> for all attributes. 
 
-See L<"OUTPUT FORMATS"> below for available output modes. If no output format is specified, Standard format will
-be used.
+See L<"OUTPUT FORMATS"> below for available output modes. If no output format is specified, Standard format will be used.
 
 Command-line B<options> (which control the output format, range of corpus positions, etc.) 
 must be specified before the I<corpus> name, while B<attribute declarations> (which select attributes 
@@ -96,6 +100,14 @@ the built-in CWB default will be used.
 =item B<-s> I<start>
 
 Specifies the start point for output; the first token printed will be corpus position I<start>.
+
+=item B<-Sf> I<file>
+
+Activates subcorpus mode (with input from I<file>).
+
+=item B<-Sp>
+
+Activates subcorpus mode (with input from standard input).
 
 =item B<-X>
 

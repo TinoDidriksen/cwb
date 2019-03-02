@@ -991,8 +991,7 @@ RangeSetop(CorpusList *corpus1,
 
         corpus1->size = ins;
 
-        cl_free(corpus1->sortidx); /* the sort index is no longer valid in this case */
-        /* TODO, shouldn't sortidx be set to NULL then? */
+        cl_free(corpus1->sortidx); /* the sort index is no longer valid in this case -> make sure it is deallocated and set to NULL */
 
         touch_corpus(corpus1);
       }

@@ -70,7 +70,7 @@ int printValuesIndex = 0;                   /**< Number of atts added to printVa
 
 int first_token;            /**< cpos of token to begin output at */
 int last;                   /**< cpos of token to end output at (inclusive; ie this one gets printed!) */
-int maxlast;                /**< maximum ending cpos (deduced from size of p-attribute);  */
+int maxlast;                /**< maximum ending cpos + 1 (deduced from size of p-attribute);  */
 int printnum = 0;           /**< whether or not token numbers are to be printed (-n option) */
 
 
@@ -126,6 +126,7 @@ decode_usage(int exit_code)
   fprintf(stderr, "  -r <dir>  set registry directory\n");
   fprintf(stderr, "  -p        matchlist mode (input from stdin)\n");
   fprintf(stderr, "  -f <file> matchlist mode (input from <file>)\n");
+  fprintf(stderr, "  -Sp, -Sf  subcorpus mode (output all XML tags, but only selected tokens)\n");
   fprintf(stderr, "  -h        this help page\n\n");
   fprintf(stderr, "Attribute declarations:\n");
   fprintf(stderr, "  -P <att>  print p-attribute <att>\n");
@@ -470,16 +471,36 @@ decode_print_surrounding_s_att_values(int position)
   }
 }
 
+/**
+ * Expand range <start> .. <end> to encompass full regions of s-attribute <context>.
+ *
+ * Function arguments are overwritten with the new values.
+ */
+void
+decode_expand_context(int *start, int *end, Attribute *context) {
+  int sp = *start, ep = *end;
+  int dummy;
+
+  assert(ep >= sp);
+  if (!cl_cpos2struc2cpos(context, sp, start, &dummy))
+    *start = sp;
+  if (!cl_cpos2struc2cpos(context, ep, &dummy, end))
+    *end = ep;
+}
+
 /* TODO should the parameters be const int ? */
 /**
  * Prints out the requested attributes for a sequence of tokens
- * (or a single token if end_position == -1).
+ * (or a single token if end_position == -1, which also indicates that we're not in matchlist mode).
  *
  * If the -c flag was used (and, thus, the context parameter is not NULL),
- * then the sequence is extended to the entire s-attribute region (in matchlist mode).
+ * then the sequence is extended to the entire s-attribute region (intended for matchlist mode).
+ *
+ * If the additional skip_token parameter is true, only XML tags before/after each token are printed,
+ * but not the tokens themselves (for subcorpus mode).
  */
 void
-decode_print_token_sequence(int start_position, int end_position, Attribute *context)
+decode_print_token_sequence(int start_position, int end_position, Attribute *context, int skip_token)
 {
   int alg, aligned_start, aligned_end, aligned_start2, aligned_end2,
     rng_start, rng_end, snum;
@@ -492,23 +513,12 @@ decode_print_token_sequence(int start_position, int end_position, Attribute *con
 
   start_context = start_position;
   end_context = (end_position >= 0) ? end_position : start_position;
-  /* above ensures that in non-matchlist mode (where ep == -1), we only print one token */
 
   if (context != NULL) {
 
     /* expand the start_context end_context numbers to the start
      * and end points of the containing region of the context s-attribute */
-    if (!cl_cpos2struc2cpos(context, start_position,
-                            &start_context, &end_context)) {
-      start_context = start_position;
-      end_context = (end_position >= 0) ? end_position : start_position;
-    }
-    else if (end_position >= 0) {
-      if (!cl_cpos2struc2cpos(context, end_position,
-                               &dummy, &end_context)) {
-        end_context = (end_position >= 0) ? end_position : start_position;
-      }
-    }
+    decode_expand_context(&start_context, &end_context, context);
 
     /* indicate that we're showing context */
     switch (mode) {
@@ -655,123 +665,125 @@ decode_print_token_sequence(int start_position, int end_position, Attribute *con
 
     }
 
-    /* now print token with its attribute values (p-attributes only for -C,-H,-X) */
-    if (mode == XMLMode) {
-      printf("<token");
-      if (printnum)
-        printf(" cpos=\"%d\"", w);
-      printf(">");
-    }
+    if (!skip_token) {
+      /* now print token with its attribute values (p-attributes only for -C,-H,-X) */
+      if (mode == XMLMode) {
+        printf("<token");
+        if (printnum)
+          printf(" cpos=\"%d\"", w);
+        printf(">");
+      }
 
-    beg_of_line = 1;
-    /* Loop printing each attribute for this cpos (w) */
-    for (i = 0; i < print_list_index; i++) {
+      beg_of_line = 1;
+      /* Loop printing each attribute for this cpos (w) */
+      for (i = 0; i < print_list_index; i++) {
 
-      switch (print_list[i]->any.type) {
-      case ATT_POS:
-        lastposa = i;
-        if ((wrd = decode_string_escape(cl_cpos2str(print_list[i], w))) != NULL) {
-          switch (mode) {
-          case LispMode:
-            printf("(%s \"%s\")", print_list[i]->any.name, wrd);
-            break;
+        switch (print_list[i]->any.type) {
+        case ATT_POS:
+          lastposa = i;
+          if ((wrd = decode_string_escape(cl_cpos2str(print_list[i], w))) != NULL) {
+            switch (mode) {
+            case LispMode:
+              printf("(%s \"%s\")", print_list[i]->any.name, wrd);
+              break;
 
-          case EncodeMode:
-            if (beg_of_line) {
-              printf("%s", wrd);
-              beg_of_line = 0;
-            }
-            else
-              printf("\t%s", wrd);
-            break;
+            case EncodeMode:
+              if (beg_of_line) {
+                printf("%s", wrd);
+                beg_of_line = 0;
+              }
+              else
+                printf("\t%s", wrd);
+              break;
 
-          case ConclineMode:
-            if (beg_of_line) {
-              printf("%s", wrd);
-              beg_of_line = 0;
-            }
-            else
-              printf("/%s", wrd);
-            break;
+            case ConclineMode:
+              if (beg_of_line) {
+                printf("%s", wrd);
+                beg_of_line = 0;
+              }
+              else
+                printf("/%s", wrd);
+              break;
 
-          case XMLMode:
-            printf(" <attr name=\"%s\">%s</attr>", print_list[i]->any.name, wrd);
-            break;
+            case XMLMode:
+              printf(" <attr name=\"%s\">%s</attr>", print_list[i]->any.name, wrd);
+              break;
 
-          case StandardMode:
-          default:
-            printf("%s=%s\t", print_list[i]->any.name, wrd);
-            break;
-          }
-        }
-        else {
-          cl_error("(aborting) cl_cpos2str() failed");
-          decode_cleanup(1);
-        }
-        break;
-
-      case ATT_ALIGN:
-        /* do not print in encode, concline or xml modes because already done (above) */
-        if ((mode != EncodeMode) && (mode != ConclineMode) && (mode != XMLMode)) {
-          if (
-              ((alg = cl_cpos2alg(print_list[i], w)) >= 0)
-              && (cl_alg2cpos(print_list[i], alg,
-                              &aligned_start, &aligned_end,
-                              &aligned_start2, &aligned_end2))
-              ) {
-            if (mode == LispMode) {
-              printf("(ALG %d %d %d %d)",
-                     aligned_start, aligned_end, aligned_start2, aligned_end2);
-            }
-            else {
-              printf("%d-%d==>%s:%d-%d\t",
-                     aligned_start, aligned_end, print_list[i]->any.name, aligned_start2, aligned_end2);
+            case StandardMode:
+            default:
+              printf("%s=%s\t", print_list[i]->any.name, wrd);
+              break;
             }
           }
-          else if (cl_errno != CDA_OK) {
-            cl_error("(aborting) alignment error");
+          else {
+            cl_error("(aborting) cl_cpos2str() failed");
             decode_cleanup(1);
           }
-        }
-        break;
+          break;
 
-      case ATT_STRUC:
-        /* do not print in encode, concline or xml modes because already done (above) */
-        if ((mode != EncodeMode) && (mode != ConclineMode) && (mode != XMLMode)) {
-          if (cl_cpos2struc2cpos(print_list[i], w, &rng_start, &rng_end)) {
-            /* standard and -L mode don't show tag annotations */
-            printf(mode == LispMode ? "(STRUC %s %d %d)" : "<%s>:%d-%d\t",
-                   print_list[i]->any.name,
-                   rng_start, rng_end);
+        case ATT_ALIGN:
+          /* do not print in encode, concline or xml modes because already done (above) */
+          if ((mode != EncodeMode) && (mode != ConclineMode) && (mode != XMLMode)) {
+            if (
+                ((alg = cl_cpos2alg(print_list[i], w)) >= 0)
+                && (cl_alg2cpos(print_list[i], alg,
+                    &aligned_start, &aligned_end,
+                    &aligned_start2, &aligned_end2))
+            ) {
+              if (mode == LispMode) {
+                printf("(ALG %d %d %d %d)",
+                    aligned_start, aligned_end, aligned_start2, aligned_end2);
+              }
+              else {
+                printf("%d-%d==>%s:%d-%d\t",
+                    aligned_start, aligned_end, print_list[i]->any.name, aligned_start2, aligned_end2);
+              }
+            }
+            else if (cl_errno != CDA_OK) {
+              cl_error("(aborting) alignment error");
+              decode_cleanup(1);
+            }
           }
-          else if (cl_errno != CDA_OK)
-            cl_error("(aborting) cl_cpos2struc2cpos() failed");
-        }
-        break;
+          break;
 
-      case ATT_DYN:
-        /* dynamic attributes aren't implemented */
+        case ATT_STRUC:
+          /* do not print in encode, concline or xml modes because already done (above) */
+          if ((mode != EncodeMode) && (mode != ConclineMode) && (mode != XMLMode)) {
+            if (cl_cpos2struc2cpos(print_list[i], w, &rng_start, &rng_end)) {
+              /* standard and -L mode don't show tag annotations */
+              printf(mode == LispMode ? "(STRUC %s %d %d)" : "<%s>:%d-%d\t",
+                  print_list[i]->any.name,
+                  rng_start, rng_end);
+            }
+            else if (cl_errno != CDA_OK)
+              cl_error("(aborting) cl_cpos2struc2cpos() failed");
+          }
+          break;
+
+        case ATT_DYN:
+          /* dynamic attributes aren't implemented */
+        default:
+          break;
+        }
+      }
+
+      /* print token separator (or end of token in XML mode) */
+      switch (mode) {
+      case LispMode:
+        printf(")\n");
+        break;
+      case ConclineMode:
+        printf(" ");
+        break;
+      case XMLMode:
+        printf(" </token>\n");
+        break;
+      case EncodeMode:
+      case StandardMode:
       default:
+        printf("\n");
         break;
       }
-    }
-
-    /* print token separator (or end of token in XML mode) */
-    switch (mode) {
-    case LispMode:
-      printf(")\n");
-      break;
-    case ConclineMode:
-      printf(" ");
-      break;
-    case XMLMode:
-      printf(" </token>\n");
-      break;
-    case EncodeMode:
-    case StandardMode:
-    default:
-      printf("\n");
-      break;
     }
 
     /* now, after printing all the positional attributes, print end tags with -H,-C,-X */
@@ -859,14 +871,15 @@ main(int argc, char **argv)
   int sp;  /* start position of a match */
   int ep;  /* end position of a match */
 
-  int w, cnt;
-  int read_pos_from_file;
+  int w, cnt, next_cpos;
 
   char s[CL_MAX_LINE_LENGTH];      /* buffer for strings read from file */
   char *token;
 
   char *input_filename = NULL;
   FILE *input_file = stdin;
+  int read_pos_from_file = 0;
+  int subcorpus_mode = 0;
 
   /* ------------------------------------------------- PARSE ARGUMENTS */
 
@@ -880,10 +893,8 @@ main(int argc, char **argv)
   last = -1;
   maxlast = -1;
 
-  read_pos_from_file = 0;
-
   /* use getopt() to parse command-line options */
-  while((c = getopt(argc, argv, "+s:e:r:nLHCxXf:ph")) != EOF)
+  while((c = getopt(argc, argv, "+s:e:r:nLHCxXf:pSh")) != EOF)
     switch(c) {
 
       /* s: start corpus position */
@@ -940,6 +951,10 @@ main(int argc, char **argv)
     case 'p':
       read_pos_from_file++; /* defaults to STDIN if input_filename is NULL */
       break;
+
+    case 'S':
+       subcorpus_mode++; /* subcorpus mode; ignored without -f / -p */
+       break;
 
       /* h: help page */
     case 'h':
@@ -1110,7 +1125,7 @@ main(int argc, char **argv)
     /* decode_print_surrounding_s_att_values(first_token); */ /* don't do that in "normal" mode, coz it doesn't make sense */
 
     for (w = first_token; w <= last; w++)
-      decode_print_token_sequence(w, -1, context);
+      decode_print_token_sequence(w, -1, context, 0);
 
     if ( (mode == XMLMode) || ((mode == EncodeMode) && xml_compatible) ) {
       printf("</corpus>\n");
@@ -1118,21 +1133,26 @@ main(int argc, char **argv)
   }
   else {
     /*
-     * matchlist mode: read (pairs of) corpus positions from stdin or file
+     * matchlist/subcorpus mode: read (pairs of) corpus positions from stdin or file
      */
 
     if ( (mode == XMLMode) || ((mode == EncodeMode) && xml_compatible) ) {
       decode_print_xml_declaration();
-      printf("<matchlist corpus=\"%s\">\n", corpus_id);
+      printf("<%s corpus=\"%s\">\n", subcorpus_mode ? "subcorpus" : "matchlist", corpus_id);
     }
 
     cnt = 0;
+    next_cpos = 0;
     while (fgets(s, CL_MAX_LINE_LENGTH, input_file) != NULL) {
 
       token = strtok(s, " \t\n");
 
       if ((token != NULL) && is_num(token)) {
         sp = atoi(token);
+        if (sp < 0 || sp >= maxlast) {
+          fprintf(stderr, "Corpus position #%d out of range. Aborted.\n", sp);
+          decode_cleanup(1);
+        }
 
         ep = -1;
         if ((token = strtok(NULL, " \t\n")) != NULL) {
@@ -1142,28 +1162,57 @@ main(int argc, char **argv)
           }
           else
             ep = atoi(token);
+          if (ep < 0 || ep >= maxlast) {
+            fprintf(stderr, "Corpus position #%d out of range. Aborted.\n", sp);
+            decode_cleanup(1);
+          }
+          if (ep < sp) {
+            fprintf(stderr, "Invalid range #%d .. #%d. Aborted.\n", sp, ep);
+            decode_cleanup(1);
+          }
         }
 
         cnt++;                  /* count matches in matchlist  */
-        if (mode == XMLMode) {
-          printf("<match nr=\"%d\"", cnt);
-          if (printnum)
-            printf(" start=\"%d\" end=\"%d\"", sp, (ep >= 0) ? ep : sp);
-          printf(">\n");
+        if (subcorpus_mode) {
+          /* subcorpus mode */
+
+          if (context)
+            decode_expand_context(&sp, &ep, context);
+
+          if (sp < next_cpos) {
+            fprintf(stderr, "Error: matches must be non-overlapping and sorted in corpus order in -Sf/-Sp mode (input line #%d)\n", cnt);
+            decode_cleanup(1);
+          }
+
+          if (sp > next_cpos)
+            decode_print_token_sequence(next_cpos, sp - 1, NULL, 1);
+
+          decode_print_token_sequence(sp, ep, NULL, 0); /* note that we've already expanded the context if necessary */
+
+          next_cpos = ep + 1;
         }
         else {
-          /* nothing shown before range */
-        }
+          /* matchlist mode */
 
-        decode_print_surrounding_s_att_values(sp);
+          if (mode == XMLMode) {
+            printf("<match nr=\"%d\"", cnt);
+            if (printnum)
+              printf(" start=\"%d\" end=\"%d\"", sp, (ep >= 0) ? ep : sp);
+            printf(">\n");
+          }
+          else {
+            /* nothing shown before range */
+          }
 
-        decode_print_token_sequence(sp, ep, context);
+          decode_print_surrounding_s_att_values(sp);
+          decode_print_token_sequence(sp, ep, context, 0);
 
-        if (mode == XMLMode) {
-          printf("</match>\n");
-        }
-        else if (mode != ConclineMode) {
-          printf("\n");         /* blank line, unless in -H mode */
+          if (mode == XMLMode) {
+            printf("</match>\n");
+          }
+          else if (mode != ConclineMode) {
+            printf("\n");         /* blank line, unless in -H or -S mode */
+          }
         }
       }
       else {
@@ -1172,10 +1221,13 @@ main(int argc, char **argv)
       }
     }
 
+    if (subcorpus_mode && next_cpos < maxlast)
+      decode_print_token_sequence(next_cpos, maxlast - 1, NULL, 1);
+
     cl_close_stream(input_file);
 
     if ( (mode == XMLMode) || ((mode == EncodeMode) && xml_compatible) ) {
-      printf("</matchlist>\n");
+      printf("</%s>\n", subcorpus_mode ? "subcorpus" : "matchlist");
     }
   }
 

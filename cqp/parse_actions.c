@@ -991,13 +991,30 @@ do_cut(CorpusList *cl, int first, int last) {
     first = last = n_matches;        /* delete all matches, ensuring that index does not run out of bounds */
   }
 
-  for (i = 0; i < first; i++)  {
-    cl->range[i].start = -1;        /* delete all matches before <first> */
-    cl->range[i].end = -1;
+  /* CQP Tutorial documents cut to respect sort order of NQR (Sec. 3.6: Random subsets)
+   * Since it is considered authoritative documentation on CQP, the implementation here has been adjusted in CQP v3.4.15.
+   */
+  if (cl->sortidx) {
+    for (i = 0; i < first; i++)  {
+      int j = cl->sortidx[i];
+      cl->range[j].start = -1;        /* delete all matches before <first> according to current sort order */
+      cl->range[j].end = -1;
+    }
+    for (i = last + 1; i < n_matches; i++)  {
+      int j = cl->sortidx[i];
+      cl->range[j].start = -1;        /* delete all matches after <last> according to current sort order */
+      cl->range[j].end = -1;
+    }
   }
-  for (i = last + 1; i < n_matches; i++)  {
-    cl->range[i].start = -1;        /* delete all matches after <last> */
-    cl->range[i].end = -1;
+  else {
+    for (i = 0; i < first; i++)  {
+      cl->range[i].start = -1;        /* delete all matches before <first> */
+      cl->range[i].end = -1;
+    }
+    for (i = last + 1; i < n_matches; i++)  {
+      cl->range[i].start = -1;        /* delete all matches after <last> */
+      cl->range[i].end = -1;
+    }
   }
 
   RangeSetop(cl, RReduce, NULL, NULL); /* remove matches marked for deletion */

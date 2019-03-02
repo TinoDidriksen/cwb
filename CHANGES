@@ -72,6 +72,10 @@ New features:
  - [2018-04-25: v3.4.14] CWB no longer breaks on input files with Windows-style (CRLF) line endings. In
    particular, cwb-encode, cwb-s-encode, CQP word lists, macro definition files and CQP scripts handle
    CRLF files correctly and delete the extra CR characters.
+   
+ - [2018-06-26: v3.4.15] New "subcorpus" output mode for cwb-decode, which can be used to materialize a
+   physical subcorpus based on a CQP query dump. The CWB/Perl package includes a convenient command-line
+   tool "cwb-make-subcorpus" for this purpose.
 
 Bug fixes:
 
@@ -163,6 +167,9 @@ Bug fixes:
 
  - [2018-01-13: v3.4.13] bare reference to s-attribute incorrectly returned an evaluation error (which is
    interpreted as false in most contexts) if not in a corresponding region, whereas it should have returned the code 0
+
+ - [2019-03-02: v3.4.15] contrary to the CQP Tutorial (Sec. 3.6), the "cut" command did not respect the sort order
+   of a NQR, but always selected items based on the original corpus order; fixed to match documentation
 
 Enhancements:
 
