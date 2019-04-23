@@ -146,8 +146,7 @@ ParsePrintOptions(void)
     char s[CL_MAX_LINE_LENGTH];
     int value;
 
-    /* we must not destructively modify the global variable, as strtok
-       would do */
+    /* we must not destructively modify the global variable, as strtok would do */
 
     cl_strcpy(s, printModeOptions);
 

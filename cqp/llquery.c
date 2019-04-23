@@ -48,7 +48,7 @@
 
 #ifdef USE_READLINE
 
-/* The implementation of custom completion was largely dictated by the Editline library used 
+/* The implementation of custom completion was largely dictated by the Editline library used
  * as a replacement for GNU Readline:
  *  "unlike GNU Readline, Editline expects to get the full list of possible completions
  *   from the custom completion function; therefore, we need some helper routines which
@@ -66,7 +66,8 @@ int cc_compl_list_allocated = 0;  /* number of entries allocated for list (incl.
 
 /* initialise new completion list (size 0) without freeing previous list (which was deallocated by readline library) */
 void
-cc_compl_list_init(void) {
+cc_compl_list_init(void)
+{
   cc_compl_list = (char **) cl_malloc(CC_COMPL_LIST_ALLOC_BLOCK * sizeof(char *));
   cc_compl_list_allocated = CC_COMPL_LIST_ALLOC_BLOCK;
   cc_compl_list_size = 1;
@@ -76,7 +77,8 @@ cc_compl_list_init(void) {
 
 /* add string (must be alloc'ed by caller) to completion list */
 void
-cc_compl_list_add(char *string) {
+cc_compl_list_add(char *string)
+{
   if (cc_compl_list_size >= cc_compl_list_allocated - 1) {
     /* extend list if necessary (NB: need to leave room for NULL marker at end of list) */
     cc_compl_list_allocated += CC_COMPL_LIST_ALLOC_BLOCK;
@@ -88,7 +90,8 @@ cc_compl_list_add(char *string) {
 
 /* internal function for sorting list of completions */
 static int
-cc_compl_list_sort(const void *p1, const void *p2) {
+cc_compl_list_sort(const void *p1, const void *p2)
+{
   char *name1 = *((char **) p1);
   char *name2 = *((char **) p2);
   int result = strcmp(name1, name2);
@@ -97,10 +100,11 @@ cc_compl_list_sort(const void *p1, const void *p2) {
 
 /* sort list and remove (& free) duplicates; returns pointer to list */
 char **
-cc_compl_list_sort_uniq(void) {
+cc_compl_list_sort_uniq(void)
+{
   int mark, point;
   char *lcp, *new_string;
-  
+
   if (cc_compl_list_size <= 1) { /* empty list (only containing dummy entry) */
     /* at least some versions of GNU readline are broken and don't accept an empty list */
     rl_attempted_completion_over = 1; /* so readline doesn't fall back to filename completion */
@@ -145,9 +149,10 @@ cc_compl_list_sort_uniq(void) {
 
 /* custom completion function: complete corpus/subcorpus names */
 char **
-cqp_custom_completion(const char *text, int start, int end) {
+cqp_custom_completion(const char *text, int start, int end)
+{
   /* <line> is the complete input line; <text> to be completed is the substring from <start> to <end> */
-  char *line = rl_line_buffer;  
+  char *line = rl_line_buffer;
   int text_len = end - start; /* length of <text> */
   Variable var;
   CorpusList *cl;
@@ -308,7 +313,8 @@ cqp_custom_completion(const char *text, int start, int end) {
 /* check that line ends in semicolon, otherwise append one to the string
    (returns either same pointer or re-allocated and modified string) */
 char *
-ensure_semicolon (char *line) {
+ensure_semicolon (char *line)
+{
   int i, l;
 
   if (line) {
@@ -360,20 +366,19 @@ readline_main(void)
   /* == the line input loop == */
   while (!exit_cqp) {
 
-    if (input != NULL)
-      {
-        free(input);
-        input = NULL;
-      }
+    if (input != NULL) {
+      free(input);
+      input = NULL;
+    }
 
     if (highlighting) {
       printf("%s", get_typeface_escape('n')); /* work around 'bug' in less which may not switch off display attributes when user exits */
       fflush(stdout);
     }
 
-    if (silent) {
+    if (silent)
       input = readline(NULL);
-    } else {
+    else {
       if (current_corpus != NULL) {
         /* don't use terminal colours for the prompt because they mess up readline's formatting */
         if (STREQ(current_corpus->name, current_corpus->mother_name))
@@ -407,9 +412,8 @@ readline_main(void)
   if (save_on_exit)
     save_unsaved_subcorpora();
 
-  if (!silent) {
+  if (!silent)
     printf("\nDone. Share and enjoy!\n");
-  }
 
 }
 #endif /* USE_READLINE */

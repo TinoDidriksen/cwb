@@ -222,7 +222,7 @@ after_CorpusCommand(CorpusList *cl)
   case Query:
 
     if (cl) {
-      if (subquery)
+      if (auto_subquery)
         set_current_corpus(cl, 0);
       if (autoshow && (cl->size > 0)) {
         catalog_corpus(cl, NULL, 0, -1, GlobalPrintMode);
@@ -243,7 +243,7 @@ after_CorpusCommand(CorpusList *cl)
 
   case SetOperation:
     if (cl) {
-      if (subquery)
+      if (auto_subquery)
         set_current_corpus(cl, 0);
       if (autoshow && (cl->size > 0))
         catalog_corpus(cl, NULL, 0, -1, GlobalPrintMode);
@@ -570,7 +570,7 @@ do_attribute_show(char *name, int status)
 {
   AttributeInfo *ai;
 
-  if ((strcasecmp(name, "cpos") == 0) &&
+  if (strcasecmp(name, "cpos") == 0 &&
       current_corpus &&
       current_corpus->corpus &&
       find_attribute(current_corpus->corpus, name, ATT_STRUC, NULL) == NULL) {

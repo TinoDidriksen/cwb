@@ -20,6 +20,7 @@
 
 #define CQPRC_NAME ".cqprc"
 #define CQPMACRORC_NAME ".cqpmacros"
+
 /** The number of file handles CQP can store in its file-array (ie max number of nested files) @see cqp_parse_file */
 #define MAXCQPFILES 20
 

@@ -30,12 +30,12 @@
  * The FieldType object represents the fields (or 'anchor points') of a subcorpus (inc query result).
  *
  * NoField is always the last field (so it can be used to determine range of field type codes)
- * (the mnemonic is NoField = "no field" = "number of fields")
+ * (the mnemonic is NoField = "no field" = "number of field types")
  */
 typedef enum _field_type {
   MatchField = 0, MatchEndField, TargetField, KeywordField, NoField
 } FieldType;
-
+//TODO these are really not "fields" meanigfully. A better type would be anchhor_match, anchor_matychend, etc.
 
 
 /**

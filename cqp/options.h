@@ -1,13 +1,13 @@
-/* 
+/*
  *  IMS Open Corpus Workbench (CWB)
  *  Copyright (C) 1993-2006 by IMS, University of Stuttgart
  *  Copyright (C) 2007-     by the respective contributers (see file AUTHORS)
- * 
+ *
  *  This program is free software; you can redistribute it and/or modify it
  *  under the terms of the GNU General Public License as published by the
  *  Free Software Foundation; either version 2, or (at your option) any later
  *  version.
- * 
+ *
  *  This program is distributed in the hope that it will be useful, but
  *  WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
@@ -21,8 +21,8 @@
 #include "../cl/globals.h"
 #include "concordance.h"
 
-/** Flag for CQP configuration options: is this visible interactively in CQP? (should prob be called OPTION_CQP_VISIBLE) */
-#define OPTION_CQP    1
+/** Flag for CQP configuration options: is this visible interactively in CQP? */
+#define OPTION_VISIBLE_IN_CQP    1
 
 /** Default value for the HardBoundary configuration option. */
 #define DEFAULT_HARDBOUNDARY 500
@@ -88,7 +88,7 @@ int macro_debug;                  /**< enable debugging of macros (and print mac
 /* query options */
 int hard_boundary;                /**< Query option: use implicit 'within' clause (unless overridden by explicit spec) */
 int hard_cut;                     /**< Query option: use hard cut value for all queries (cannot be changed) */
-int subquery;                     /**< Query option: use auto-subquery mode (TODO rename to auto_subquery for clarity) */
+int auto_subquery;                /**< Query option: use auto-subquery mode */
 char *def_unbr_attr;              /**< Query option: unbracketed attribute (attribute matched by "..." patterns) */
 int query_optimize;               /**< Query option: use query optimisation (untested and expensive optimisations) */
 
@@ -110,7 +110,7 @@ int pretty_print;                 /**< UI option: pretty-print most of CQP's out
 int autoshow;                     /**< UI option: show query results after evaluation (otherwise, just print number of matches) */
 int timing;                       /**< UI option: time queries (printed after execution) */
 
-/* kwic display options */ 
+/* kwic display options */
 int show_tag_attributes;          /**< kwic option: show values of s-attributes as SGML tag attributes in kwic lines */
 int show_targets;                 /**< kwic option: show numbers of target anchors in brackets */
 char *printModeString;            /**< kwic option: string of current printmode */

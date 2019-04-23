@@ -380,6 +380,10 @@ get_colour_escape(char colour, int foreground) {
 /**< 'static' return value of ascii_print_field() */
 char sc_before_token[256];
 
+/**
+ * Print the string required before or after the representation of a token that is
+ * at one of the anchor points (match, matchend, target, keyword).
+ */
 char *
 ascii_print_field(FieldType field, int at_end)
 {

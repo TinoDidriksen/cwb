@@ -235,6 +235,9 @@ field_type_to_name(FieldType ft) {
  * @param cl  The query result to analyse.
  * @param ft  The field type to count.
  * @return    The number of values of the speciifed field-type.
+ *
+ *
+ * TODO : shouldn't MatchEndField yield the same as MatchField?
  */
 int
 NrFieldValues(CorpusList *cl, FieldType ft)
@@ -359,11 +362,10 @@ ensure_corpus_size(CorpusList *cl)
 
       /* re-create subcorpus filename from corpus structure
          (cf. the treatment in load_corpusnames()) */
-      if (cl->mother_name == NULL) {
+      if (cl->mother_name == NULL)
         strcpy(filename, cl->name);
-      } else {
+      else
         sprintf(filename, "%s:%s", cl->mother_name, cl->name);
-      }
       return (attach_subcorpus(cl, cl->local_dir, filename));
     }
 
@@ -2039,11 +2041,15 @@ show_corpora_files_backend(CorpusType ct, int only_active_corpus)
 
   if (ct == SYSTEM) {
     if (only_active_corpus) {
+      /* show either the name or mother name of the curr corpus */
       if (!current_corpus)
         return;
       N = 1;
       list = (char **) cl_malloc(sizeof(char *));
-      list[0] = current_corpus->name;
+      if (current_corpus->type == SYSTEM)
+        list[0] = current_corpus->name;
+      else
+        list[0] = current_corpus->mother_name;
     }
     else {
       /* make list of corpus names, then qsort() and print */

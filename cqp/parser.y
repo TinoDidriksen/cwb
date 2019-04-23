@@ -642,6 +642,7 @@ OptionSetCmd:   SET_SYM ID VarValue     { char *msg;
                                           }
                                           else
                                             msg = set_integer_option_value($2, $3.ival);
+                                            /* integer covers booleans too! */
 
                                           if (msg != NULL)
                                             cqpmessage(Warning,
