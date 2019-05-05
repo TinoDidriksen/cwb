@@ -89,7 +89,7 @@ synchronize(void)
 {
 /* function may be left uncompiled by defining this constant
  * in the make-configuration file. See the Makefile.         */
-#ifdef CQP_COMPILE_WITHOUT_SYNCHRONIZE
+#ifndef CQP_COMPILE_WITHOUT_SYNCHRONIZE
 
   int macro_status; /*  stores enable_macros status */
 
@@ -323,7 +323,7 @@ synchronize(void)
 %type <cl> StandardQuery TABQuery
 
 %type <strval> EmbeddedModifier
-%type <ival> OptTargetSign
+%type <ival> OptTargetSign TargetNumber
 %type <apl> FunctionArgList SingleArg
 %type <varval> VarValue
 %type <rngsetop> SetOp
@@ -1107,10 +1107,34 @@ NamedWfPattern: OptTargetSign
                 WordformPattern         { $$ = do_NamedWfPattern($1, $2, $3); }
                 ;
 
-
-OptTargetSign:    '@'                   { $$ = 1; }
+/* New experimental feature in v3.4.16: numbered target markers @0 .. @9
+ *  - one of these markers is mapped to the target anchor (determined by AnchorNumberTarget option)
+ *  - all other numbered target markers are silently ignored
+ *  - @ by itself always stands for the target anchor (so backward compatibility is guaranteed)
+ *  - @:, @0: ... @9: allowed so CQP macros do not have to distinguish between labels and target anchors 
+ * See "Undocumented CQP" section of the CQP Query Tutorial for further explanations. */
+OptTargetSign:    '@' OptColon          { $$ = 1; }
+	            | '@' TargetNumber OptColon {
+	            						  if ($2 == anchor_number_target)
+	            						    $$ = 1;
+	            						  else
+	            						  	$$ = 0; 
+	            						}
                 | /* epsilon */         { $$ = 0; }
                 ;
+
+OptColon:         ':'
+                | /* epsilon */        
+                ;
+
+TargetNumber:   INTEGER					{ if ($1 < 0 || $1 > 9) {
+											yyerror("expected number between 0 and 9");
+											YYERROR;
+										  }
+										  $$ = $1;
+										}
+				;
+
 
 OptRefId:         LABEL                 { $$ = $1; }
                 | /* epsilon */         { $$ = NULL; }

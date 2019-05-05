@@ -110,10 +110,10 @@ CQPOption cqpoptions[] = {
   { "hf", "HistoryFile",          OptString,  &cqp_history_file,       NULL,         0,   NULL,   0,     OPTION_VISIBLE_IN_CQP },
   { "wh", "WriteHistory",         OptBoolean, &write_history_file,     NULL,         0,   NULL,   0,     OPTION_VISIBLE_IN_CQP },
   { "ms", "MatchingStrategy",     OptString,  &matching_strategy_name, "standard",   0,   NULL,   9,     OPTION_VISIBLE_IN_CQP },
-  { "sr", "StrictRegions",        OptBoolean, &strict_regions,         NULL,         1,   NULL,   0,     OPTION_VISIBLE_IN_CQP},
-  { "p",  "Paging",               OptBoolean, &paging,                 NULL,         1,   NULL,   0,     OPTION_VISIBLE_IN_CQP},
+  { "sr", "StrictRegions",        OptBoolean, &strict_regions,         NULL,         1,   NULL,   0,     OPTION_VISIBLE_IN_CQP },
+  { "p",  "Paging",               OptBoolean, &paging,                 NULL,         1,   NULL,   0,     OPTION_VISIBLE_IN_CQP },
 #ifndef __MINGW__
-  { "pg", "Pager",                OptString,  &pager,                  "less -FRX -+S",0, "CQP_PAGER",0, OPTION_VISIBLE_IN_CQP},
+  { "pg", "Pager",                OptString,  &pager,                  "less -FRX -+S",0, "CQP_PAGER",0, OPTION_VISIBLE_IN_CQP },
   { "h",  "Highlighting",         OptBoolean, &highlighting,           NULL,         1,   NULL,   0,     OPTION_VISIBLE_IN_CQP },
 #else
   /* use more as default pager under Windows (because it exists whereas less may not :-P ) */
@@ -129,14 +129,15 @@ CQPOption cqpoptions[] = {
   { "rc", "RightContext",         OptContext, &CD,                     NULL,         0,   NULL,   0,     OPTION_VISIBLE_IN_CQP },
   { "ld", "LeftKWICDelim",        OptString,  &left_delimiter,         "<",          0,   NULL,   0,     OPTION_VISIBLE_IN_CQP },
   { "rd", "RightKWICDelim",       OptString,  &right_delimiter,        ">",          0,   NULL,   0,     OPTION_VISIBLE_IN_CQP },
-  { "pm", "PrintMode",            OptString,  &printModeString,        "ascii",      0,   NULL,   6,     OPTION_VISIBLE_IN_CQP},
-  { "po", "PrintOptions",         OptString,  &printModeOptions,       NULL,         0,   NULL,   8,     OPTION_VISIBLE_IN_CQP},
-  { "ps", "PrintStructures",      OptString,  &printStructure,         NULL,         0,   NULL,   7,     OPTION_VISIBLE_IN_CQP},
-  { "sta","ShowTagAttributes",    OptBoolean, &show_tag_attributes,    NULL,         1,   NULL,   0,     OPTION_VISIBLE_IN_CQP},
-  { "st", "ShowTargets",          OptBoolean, &show_targets,           NULL,         0,   NULL,   0,     OPTION_VISIBLE_IN_CQP},
+  { "pm", "PrintMode",            OptString,  &printModeString,        "ascii",      0,   NULL,   6,     OPTION_VISIBLE_IN_CQP },
+  { "po", "PrintOptions",         OptString,  &printModeOptions,       NULL,         0,   NULL,   8,     OPTION_VISIBLE_IN_CQP },
+  { "ps", "PrintStructures",      OptString,  &printStructure,         NULL,         0,   NULL,   7,     OPTION_VISIBLE_IN_CQP },
+  { "sta","ShowTagAttributes",    OptBoolean, &show_tag_attributes,    NULL,         1,   NULL,   0,     OPTION_VISIBLE_IN_CQP },
+  { "st", "ShowTargets",          OptBoolean, &show_targets,           NULL,         0,   NULL,   0,     OPTION_VISIBLE_IN_CQP },
   { "as", "AutoShow",             OptBoolean, &autoshow,               NULL,         1,   NULL,   0,     OPTION_VISIBLE_IN_CQP },
   { NULL, "Timing",               OptBoolean, &timing,                 NULL,         0,   NULL,   0,     OPTION_VISIBLE_IN_CQP },
   { "o",  "Optimize",             OptBoolean, &query_optimize,         NULL,         0,   NULL,   3,     OPTION_VISIBLE_IN_CQP },
+  { "ant","AnchorNumberTarget",   OptInteger, &anchor_number_target,   NULL,         0,   NULL,   0,     OPTION_VISIBLE_IN_CQP },
   { "es", "ExternalSort",         OptBoolean, &UseExternalSorting,     NULL,         0,   NULL,   0,     OPTION_VISIBLE_IN_CQP },
   { "esc","ExternalSortCommand",  OptString,  &ExternalSortingCommand, NULL,         0,   NULL,   0,     OPTION_VISIBLE_IN_CQP },
   { "da", "DefaultNonbrackAttr",  OptString,  &def_unbr_attr,          DEFAULT_ATT_NAME,0,NULL,   0,     OPTION_VISIBLE_IN_CQP },
@@ -646,6 +647,20 @@ execute_side_effects(int opt)
 }
 
 int
+validate_integer_option_value(int opt, int value)
+{
+  char* optname = cqpoptions[opt].opt_name;
+  if (strcmp(optname, "AnchorNumberTarget") == 0) {
+    if (value < 0 || value > 9) {
+      cqpmessage(Warning, "set %s must be integer in range 0 .. 9", optname);
+      return 0;
+    }
+  }
+  return 1;
+}
+
+
+int
 validate_string_option_value(int opt, char *value)
 {
 #ifdef __NEVER__
@@ -695,13 +710,6 @@ validate_string_option_value(int opt, char *value)
 
   return 1;
 }
-
-int
-validate_integer_option_value(int opt, int value)
-{
-  return 1;
-}
-
 
 /**
  * Sets a string-valued option.

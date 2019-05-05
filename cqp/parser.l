@@ -274,9 +274,6 @@ RE\(                    { return(RE_PAREN); }  /* for [lemma = RE($var)] */
                             yylval.strval[yyleng-1] = '\0';
                           return(LABEL);
                         }
-@:                      { /* allowing @: targets makes distinction between labels & target in macros unnecessary */
-                          return('@');
-                        }
 {nqrid}                 { 
                           yylval.strval = cl_strdup(yytext);
                           return(NQRID);

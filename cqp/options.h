@@ -91,6 +91,7 @@ int hard_cut;                     /**< Query option: use hard cut value for all 
 int auto_subquery;                /**< Query option: use auto-subquery mode */
 char *def_unbr_attr;              /**< Query option: unbracketed attribute (attribute matched by "..." patterns) */
 int query_optimize;               /**< Query option: use query optimisation (untested and expensive optimisations) */
+int anchor_number_target;         /**< Query option: which marker @0 ... @9 will be mapped to the target anchor */
 
 /** matching strategy */
 enum _matching_strategy { traditional, shortest_match, standard_match, longest_match } matching_strategy;

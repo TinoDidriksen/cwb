@@ -77,6 +77,12 @@ New features:
    physical subcorpus based on a CQP query dump. The CWB/Perl package includes a convenient command-line
    tool "cwb-make-subcorpus" for this purpose.
 
+ - [2019-05-05: v3.4.16] Experimental feature allowing multiple target markers @0 .. @9. Only one of these
+   markers is "active", as determined by the AnchorNumberTarget option, and corresponds to the @ marker.
+   This allows front-end wrappers to emulate multiple target positions by re-running a query with different
+   settings of AnchorNumberTarget; see "Undocumented CQP" in the CQP tutorial for details.
+   NB: This feature is work-in-progress and may be altered or extended within v3.4.16
+
 Bug fixes:
 
  - [2011-11-03: v3.4.1] CQP no longer crashes with a segmentation fault when trying to display very long kwic lines
@@ -170,6 +176,8 @@ Bug fixes:
 
  - [2019-03-02: v3.4.15] contrary to the CQP Tutorial (Sec. 3.6), the "cut" command did not respect the sort order
    of a NQR, but always selected items based on the original corpus order; fixed to match documentation
+   
+ - [2019-05-05: v3.4.16] fix handling of parsing errors in CQP queries, which was broken by r1075 (2018-09-26). 
 
 Enhancements:
 
