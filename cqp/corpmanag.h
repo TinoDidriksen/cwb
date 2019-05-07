@@ -35,7 +35,7 @@
 typedef enum _field_type {
   MatchField = 0, MatchEndField, TargetField, KeywordField, NoField
 } FieldType;
-//TODO these are really not "fields" meanigfully. A better type would be anchhor_match, anchor_matychend, etc.
+/*TODO these are really not "fields" meaningfully. A better type would be anchor_match, anchor_matchend, etc. */
 
 
 /**

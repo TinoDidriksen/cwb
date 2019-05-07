@@ -34,6 +34,7 @@ typedef struct _Matchlist
   int *start;                       /**< Table of match start anchors (corpus posiitons) */
   int *end;                         /**< Table of match end anchors (corpus positions) */
   int *target_positions;            /**< Table of target anchors (corpus positions) */
+  int *keyword_positions;           /**< Table of keyword anchors (corpus positions) */
   int  tabsize;                     /**< Number of integers in each of the three arrays */
   int  matches_whole_corpus;        /**< Boolean: if true, every position in the cirpus matches.
                                          In this case, we avoid copying.*/

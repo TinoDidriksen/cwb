@@ -1117,6 +1117,8 @@ OptTargetSign:    '@' OptColon          { $$ = 1; }
 	            | '@' TargetNumber OptColon {
 	            						  if ($2 == anchor_number_target)
 	            						    $$ = 1;
+	            						  else if ($2 == anchor_number_keyword)
+	            						    $$ = 2;
 	            						  else
 	            						  	$$ = 0; 
 	            						}

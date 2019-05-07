@@ -174,8 +174,7 @@ set_corpus_matchlists(CorpusList *cp,
     cl_free(cp->sortidx);
 
     if (matchlist[0].tabsize > 0)
-      cp->range = 
-        (Range *)cl_malloc(sizeof(Range) * matchlist[0].tabsize);
+      cp->range = (Range *)cl_malloc(sizeof(Range) * matchlist[0].tabsize);
     
     cp->size = matchlist[0].tabsize;
     
@@ -188,6 +187,11 @@ set_corpus_matchlists(CorpusList *cp,
       cp->targets = matchlist[0].target_positions;
       matchlist[0].target_positions = NULL;
     }
+    if (matchlist[0].keyword_positions) {
+      cp->keywords = matchlist[0].keyword_positions;
+      matchlist[0].keyword_positions = NULL;
+    }
+
 
     assert((nr_lists <= 1) && "set_corpus_matchlists(): multiple lists not supported!");
   }
@@ -2008,7 +2012,7 @@ simulate(Matchlist *matchlist,
     boundary, b1, b2,
     running_states,
     winner,
-    my_target,
+    my_target, my_keyword,
     this_is_a_winner;
 
   int *help;
@@ -2073,6 +2077,7 @@ simulate(Matchlist *matchlist,
        */
     
       my_target = -1;
+      my_keyword = -1;
 
       if (debug_simulation)
         fprintf(stderr, "Looking at matchlist element %d (cpos %d)\n"
@@ -2306,10 +2311,9 @@ simulate(Matchlist *matchlist,
                                                            reftab_vector[state], reftab_target_vector[target_state]);
                       }    /* if ((state == start_state) && ... ) ...  */
 
-                      /* now set target for this transition */
-                      if (transition_valid && matchlist->target_positions) {/* the second condition should be unecessary */
-                        int pattern_is_targeted;
-
+                      /* now set target / keyword for this transition */
+                      if (transition_valid) {
+                        int pattern_is_targeted; /* 0 = not marked, 1 = marked as target, 2 = marked as keyword */
                         if (condition->type == Pattern) {
                           pattern_is_targeted = condition->con.is_target;
                         }
@@ -2320,9 +2324,13 @@ simulate(Matchlist *matchlist,
                           pattern_is_targeted = 0;
                         }
 
-                        if (pattern_is_targeted) {
+                        if (pattern_is_targeted == 1) {
                           set_reftab(reftab_target_vector[target_state], evalenv->target_label->ref, /* the special "target" label */
                                      effective_cpos); /* since only patterns can be targeted, this is ==cpos at the moment, but why not change it? */
+                        }
+                        if (pattern_is_targeted == 2) {
+                          set_reftab(reftab_target_vector[target_state], evalenv->keyword_label->ref, /* the special "keyword" label */
+                                     effective_cpos);
                         }
                       }
 
@@ -2379,6 +2387,10 @@ simulate(Matchlist *matchlist,
                           if (evalenv->has_target_indicator) {
                             my_target = get_reftab(reftab_target_vector[target_state],
                                                    evalenv->target_label->ref, -1);
+                          }
+                          if (evalenv->has_keyword_indicator) {
+                            my_keyword = get_reftab(reftab_target_vector[target_state],
+                                                   evalenv->keyword_label->ref, -1);
                           }
                           /* NB If (matching_strategy == longest_match) later winners will overwrite
                              the <winner> and <my_target> variables */
@@ -2482,6 +2494,12 @@ simulate(Matchlist *matchlist,
             matchlist->target_positions[i] = my_target;
           else
             matchlist->target_positions[i] = -1;
+        }
+        if (matchlist->keyword_positions) {
+          if (matchlist->start[i] >= 0)
+            matchlist->keyword_positions[i] = my_keyword;
+          else
+            matchlist->keyword_positions[i] = -1;
         }
 
         i++;
@@ -2631,7 +2649,7 @@ simulate_dfa(int envidx, int cut, int keep_old_ranges)
   RefTab *reftab_vector;        /* the reference tables corresponding to the state vector */
   RefTab *reftab_target_vector; /* the reference tables corresponding to the target vector */
 
-  int allocate_target_space;
+  int allocate_target_space, allocate_keyword_space;
 
   /* We can avoid wasting memory if the first transition of the FSA is
      deterministic, because there's no need to collect matches in 
@@ -2660,6 +2678,7 @@ simulate_dfa(int envidx, int cut, int keep_old_ranges)
     init_matchlist(&total_matchlist);
 
   allocate_target_space = evalenv->has_target_indicator;
+  allocate_keyword_space = evalenv->has_keyword_indicator;
 
   assert(evalenv->query_corpus);
 
@@ -2737,6 +2756,11 @@ simulate_dfa(int envidx, int cut, int keep_old_ranges)
               matchlist.target_positions = (int *)cl_malloc(sizeof(int) * matchlist.tabsize);
               for (i = 0; i < matchlist.tabsize; i++)
                 matchlist.target_positions[i] = -1;
+            }
+            if (allocate_keyword_space) {
+              matchlist.keyword_positions = (int *)cl_malloc(sizeof(int) * matchlist.tabsize);
+              for (i = 0; i < matchlist.tabsize; i++)
+                matchlist.keyword_positions[i] = -1;
             }
 
             /* If 'cut <n>' is specified, try to get <n> matches from every initial pattern;
@@ -3294,6 +3318,8 @@ next_environment(void)
 
     Environment[eep].has_target_indicator = 0;
     Environment[eep].target_label = NULL;
+    Environment[eep].has_keyword_indicator = 0;
+    Environment[eep].keyword_label = NULL;
 
     Environment[eep].match_label = NULL;
     Environment[eep].matchend_label = NULL;
@@ -3349,7 +3375,7 @@ free_environment(int thisenv)
         free_booltree(Environment[thisenv].patternlist[i].con.constraint);
         Environment[thisenv].patternlist[i].con.constraint = NULL;
         Environment[thisenv].patternlist[i].con.label = NULL;
-        Environment[thisenv].patternlist[i].con.is_target = False;
+        Environment[thisenv].patternlist[i].con.is_target = 0;
         Environment[thisenv].patternlist[i].con.lookahead = False;
         break;
 
@@ -3370,7 +3396,7 @@ free_environment(int thisenv)
 
       case MatchAll:
         Environment[thisenv].patternlist[i].matchall.label = NULL;
-        Environment[thisenv].patternlist[i].matchall.is_target = False;
+        Environment[thisenv].patternlist[i].matchall.is_target = 0;
         Environment[thisenv].patternlist[i].matchall.lookahead = False;
         break;
 
@@ -3425,6 +3451,7 @@ show_environment(int thisenv)
     printf("\n ================= ENVIRONMENT #%d ===============\n\n", thisenv);
 
     printf("Has %starget indicator.\n", Environment[thisenv].has_target_indicator ? "" : "no ");
+    printf("Has %skeyword indicator.\n", Environment[thisenv].has_keyword_indicator ? "" : "no ");
 
     if (show_compdfa) {
       printf("\n==================== DFA:\n\n");

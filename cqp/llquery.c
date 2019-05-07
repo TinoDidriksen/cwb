@@ -154,6 +154,7 @@ cqp_custom_completion(const char *text, int start, int end)
   /* <line> is the complete input line; <text> to be completed is the substring from <start> to <end> */
   char *line = rl_line_buffer;
   int text_len = end - start; /* length of <text> */
+  int point, k;
   Variable var;
   CorpusList *cl;
   char *prototype, *prefix;
@@ -171,11 +172,12 @@ cqp_custom_completion(const char *text, int start, int end)
    */
 
   /* must check for file name completion first because absolute path would be mistaken for a macro invocation */
-  if ((--start >= 0) && (line[start] == '"' || line[start == '\''])) {
-    while ((--start >= 0) && (line[start] == ' ')) {
+  point = start;
+  if ((--point >= 0) && (line[point] == '"' || line[point] == '\'')) {
+    while ((--point >= 0) && (line[point] == ' ')) {
       /* nop */
     }
-    if ((start >= 0) && ((line[start] == '>') || (line[start] == '<'))) {
+    if ((point >= 0) && ((line[point] == '>') || (line[point] == '<'))) {
       /* looks like a redirection (more or less ...), so return NULL and let readline handle filename completion */
       return NULL;
     }
@@ -233,11 +235,41 @@ cqp_custom_completion(const char *text, int start, int end)
   }
 
   /* at the moment, everything else triggers (sub)corpus name completion */
+  cc_compl_list_init(); /* init completion list now to be built up in steps (D) and (E) */
 
   /*
-   *  (D) (sub)corpus name completion (should be triggered by uppercase letter)
+   *  (D) After "set ..." we expect either a subcorpus name or an option name or abbreviation
+   *      We handle option names here and then fall through to subcorpus completion (E)
    */
-  cc_compl_list_init();
+  if (strncmp(line, "set ", 4) == 0) {
+    point = start;
+    while((--point >= 0) && (line[point] == ' ')) {
+      /* nop */
+    }
+    if (point == 2) {
+      /* we're completing first word after "set", so trigger option name completion */
+      k = 0;
+      while (cqpoptions[k].opt_name != NULL) {
+        if (cqpoptions[k].flags & OPTION_VISIBLE_IN_CQP) {
+          completion = cqpoptions[k].opt_name;
+          if (strncasecmp(completion, text, text_len) == 0)
+            cc_compl_list_add(cl_strdup(completion));
+
+          /* we could also complete abbreviations, but their use is discourage with completion available */
+          /*
+          completion = cqpoptions[k].opt_abbrev;
+          if (completion && strncasecmp(completion, text, text_len) == 0)
+            cc_compl_list_add(cl_strdup(completion));
+           */
+        }
+        k++;
+      }
+    }
+  }
+
+  /*
+   *  (E) (sub)corpus name completion (should be triggered by uppercase letter)
+   */
   colon = strchr(text, ':');
   if ((colon != NULL) && ((mother_len = colon - text) < CL_MAX_LINE_LENGTH)) {
     /* full subcorpus specifier: ''HGC:Last'' */

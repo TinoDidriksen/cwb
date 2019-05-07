@@ -1432,12 +1432,14 @@ do_XMLTag(char *s_name, int is_closing, int op, char *regex, int flags)
 
 int
 do_NamedWfPattern(int is_target, char *label, int pat_idx) {
+  /* is_target = 0 (no marker), 1 (marked as target), 2 (marked as keyword) */
   int res;
   LabelEntry lab;
 
   res = -1;
 
   cqpmessage(Message, "NamedWfPattern");
+  assert(is_target == 0 || is_target == 1 || is_target == 2);
 
   if (generate_code) {
     if (label != NULL) {
@@ -1457,14 +1459,12 @@ do_NamedWfPattern(int is_target, char *label, int pat_idx) {
 
     case Pattern:
       CurEnv->patternlist[pat_idx].con.label = lab;
-      CurEnv->patternlist[pat_idx].con.is_target =
-        (is_target == 1 ? True : False);
+      CurEnv->patternlist[pat_idx].con.is_target = is_target;
       break;
 
     case MatchAll:
       CurEnv->patternlist[pat_idx].matchall.label = lab;
-      CurEnv->patternlist[pat_idx].matchall.is_target =
-        (is_target == 1 ? True : False);
+      CurEnv->patternlist[pat_idx].matchall.is_target = is_target;
 
       break;
 
@@ -1477,7 +1477,11 @@ do_NamedWfPattern(int is_target, char *label, int pat_idx) {
       CurEnv->has_target_indicator = 1;
       CurEnv->target_label = labellookup(CurEnv->labels, "target", LAB_DEFINED|LAB_USED, 1);
       /* the special "target" label is never formally ``used'' in the construction of the
-         NFA, so we declared it as both DEFINED and USED (which it will be in <eval.h>) */
+         NFA, so we declare it as both DEFINED and USED (which it will be in <eval.h>) */
+    }
+    if (is_target == 2) {
+      CurEnv->has_keyword_indicator = 1;
+      CurEnv->keyword_label = labellookup(CurEnv->labels, "keyword", LAB_DEFINED|LAB_USED, 1);
     }
 
     res = pat_idx;

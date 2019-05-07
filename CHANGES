@@ -77,11 +77,11 @@ New features:
    physical subcorpus based on a CQP query dump. The CWB/Perl package includes a convenient command-line
    tool "cwb-make-subcorpus" for this purpose.
 
- - [2019-05-05: v3.4.16] Experimental feature allowing multiple target markers @0 .. @9. Only one of these
-   markers is "active", as determined by the AnchorNumberTarget option, and corresponds to the @ marker.
-   This allows front-end wrappers to emulate multiple target positions by re-running a query with different
-   settings of AnchorNumberTarget; see "Undocumented CQP" in the CQP tutorial for details.
-   NB: This feature is work-in-progress and may be altered or extended within v3.4.16
+ - [2019-05-05: v3.4.16] Experimental feature allowing multiple target markers @0 .. @9. Only two of these
+   markers are "active" at the same time, as determined by the AnchorNumberTarget and AnchorNumberKeyword
+   options; they set the target (equivalent to @) and keyword anchors, respectively.
+   This allows front-end wrappers to emulate up to 10 target positions by re-running a query with different
+   settings of AnchorNumberTarget and AnchorNumberKeyword; see "Undocumented CQP" in the CQP tutorial for details.
 
 Bug fixes:
 
@@ -224,6 +224,10 @@ Enhancements:
  - [2018-09-25: v3.4.15] Extended the CQP "show" command to allow "show active"/"show current" to print the
    name of the presently-active corpus. (In interactive mode, this info is visible in the prompt; but in child
    mode it's nice to have a direct way to ask this.)
+   
+ - [2018-05-06: v3.4.16] Command-line completion now also works for option names after the "set" keyword at 
+   the start of a line. Option abbreviations are deliberately not supported.
+
 
 Version 3.2
 -----------

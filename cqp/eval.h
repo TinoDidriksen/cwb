@@ -301,7 +301,7 @@ typedef union _avs {
   struct {
     AVSType type;                /* set to MatchAll */
     LabelEntry label;
-    Boolean is_target;
+    Boolean is_target;           /**< whether pattern is marked as target (= 1) or keyword (= 2) */
     Boolean lookahead;           /**< whether pattern is just a lookahead constraint */
   } matchall;
 
@@ -310,11 +310,11 @@ typedef union _avs {
     AVSType type;                /* set to Pattern */
     LabelEntry label;
     Constrainttree constraint;
-    Boolean is_target;
+    Boolean is_target;           /**< whether pattern is marked as target (= 1) or keyword (= 2) */
     Boolean lookahead;           /**< whether pattern is just a lookahead constraint */
   } con;
 
-  /** a structure describing tag */
+  /** a structure describing an XML tag */
   struct {
     AVSType type;                /* set to Tag */
     int is_closing;
@@ -396,9 +396,10 @@ typedef struct evalenv {
 
   int has_target_indicator;         /**< is there a target mark ('@') in the query? */
   LabelEntry target_label;          /**< targets are implemented as a special label "target" now */
+  int has_keyword_indicator;        /**< is there a keyword mark (default '@9') in the query? */
+  LabelEntry keyword_label;         /**< keywords are implemented as a special label "keyword" */
 
-  LabelEntry match_label;           /**< special "match" and "matchend"-Labels for access
-                                         to start & end of match within query */
+  LabelEntry match_label;           /**< special "match" and "matchend"-Labels for access to start & end of match within query */
   LabelEntry matchend_label;
 
   Context search_context;           /**< the search context (within...) */

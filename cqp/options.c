@@ -138,6 +138,7 @@ CQPOption cqpoptions[] = {
   { NULL, "Timing",               OptBoolean, &timing,                 NULL,         0,   NULL,   0,     OPTION_VISIBLE_IN_CQP },
   { "o",  "Optimize",             OptBoolean, &query_optimize,         NULL,         0,   NULL,   3,     OPTION_VISIBLE_IN_CQP },
   { "ant","AnchorNumberTarget",   OptInteger, &anchor_number_target,   NULL,         0,   NULL,   0,     OPTION_VISIBLE_IN_CQP },
+  { "ank","AnchorNumberKeyword",  OptInteger, &anchor_number_keyword,  NULL,         9,   NULL,   0,     OPTION_VISIBLE_IN_CQP },
   { "es", "ExternalSort",         OptBoolean, &UseExternalSorting,     NULL,         0,   NULL,   0,     OPTION_VISIBLE_IN_CQP },
   { "esc","ExternalSortCommand",  OptString,  &ExternalSortingCommand, NULL,         0,   NULL,   0,     OPTION_VISIBLE_IN_CQP },
   { "da", "DefaultNonbrackAttr",  OptString,  &def_unbr_attr,          DEFAULT_ATT_NAME,0,NULL,   0,     OPTION_VISIBLE_IN_CQP },
@@ -650,11 +651,21 @@ int
 validate_integer_option_value(int opt, int value)
 {
   char* optname = cqpoptions[opt].opt_name;
-  if (strcmp(optname, "AnchorNumberTarget") == 0) {
+  int is_ant = (strcmp(optname, "AnchorNumberTarget") == 0);
+  int is_ank = (strcmp(optname, "AnchorNumberKeyword") == 0);
+  int tmp;
+  if (is_ant || is_ank) {
     if (value < 0 || value > 9) {
       cqpmessage(Warning, "set %s must be integer in range 0 .. 9", optname);
       return 0;
     }
+    tmp = is_ant ? anchor_number_keyword : anchor_number_target;
+    if (value == tmp) {
+      cqpmessage(Warning, "set %s must be different from %s (= %d)",
+          optname, (is_ant ? "AnchorNumberKeyword" : "AnchorNumberTarget"), tmp);
+      return 0;
+    }
+
   }
   return 1;
 }
@@ -794,7 +805,7 @@ set_integer_option_value(char *opt_name, int value)
 }
 
 
-/* TODO following docblock doesn;t actually match the function!!! */
+/* TODO following docblock doesn't actually match the function!!! */
 /* these two set integer or string-valued options. An error string
  * is returned if the type of the option does not correspond to
  * the function which is called. Upon success, NULL is returned.

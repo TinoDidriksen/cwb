@@ -41,7 +41,8 @@ init_matchlist(Matchlist *matchlist)
 {
   matchlist->start = (int *)NULL;
   matchlist->end =   (int *)NULL;
-  matchlist->target_positions =   (int *)NULL;
+  matchlist->target_positions =  (int *)NULL;
+  matchlist->keyword_positions = (int *)NULL;
   matchlist->tabsize = 0;
   matchlist->matches_whole_corpus = 0;
   matchlist->is_inverted = 0;
@@ -59,11 +60,12 @@ show_matchlist(Matchlist matchlist)
           matchlist.tabsize, matchlist.is_inverted ? "" : "not ");
 
   for (i = 0; i < matchlist.tabsize; i++) {
-    fprintf(stderr, "ml[%d] = [%d, %d]@%d\n",
+    fprintf(stderr, "ml[%d] = [%d, %d] @:%d @9:%d\n",
             i,
             matchlist.start[i],
             matchlist.end[i],
-            matchlist.target_positions ? matchlist.target_positions[i] : -1
+            matchlist.target_positions ? matchlist.target_positions[i] : -1,
+            matchlist.keyword_positions ? matchlist.keyword_positions[i] : -1
             );
   }
 }
@@ -97,6 +99,7 @@ free_matchlist(Matchlist *matchlist)
   cl_free(matchlist->start);
   cl_free(matchlist->end);
   cl_free(matchlist->target_positions);
+  cl_free(matchlist->keyword_positions);
 
   init_matchlist(matchlist);
 }
@@ -188,6 +191,10 @@ Setop(Matchlist *list1, MLSetOp operation, Matchlist *list2)
         tmp.target_positions = (int *)cl_malloc(sizeof(int) * tmp.tabsize);
       else
         tmp.target_positions = NULL;
+      if (list1->keyword_positions && list2->keyword_positions)
+        tmp.keyword_positions = (int *)cl_malloc(sizeof(int) * tmp.tabsize);
+      else
+        tmp.keyword_positions = NULL;
 
 
 
@@ -216,6 +223,8 @@ Setop(Matchlist *list1, MLSetOp operation, Matchlist *list2)
 
           if (tmp.target_positions)
             tmp.target_positions[k] = list1->target_positions[i];
+          if (tmp.keyword_positions)
+            tmp.keyword_positions[k] = list1->keyword_positions[i];
 
           k++;
           i++;
@@ -232,6 +241,8 @@ Setop(Matchlist *list1, MLSetOp operation, Matchlist *list2)
 
           if (tmp.target_positions)
             tmp.target_positions[k] = list2->target_positions[j];
+          if (tmp.keyword_positions)
+            tmp.keyword_positions[k] = list2->keyword_positions[j];
 
           k++;
           j++;
@@ -254,7 +265,9 @@ Setop(Matchlist *list1, MLSetOp operation, Matchlist *list2)
               tmp.end[k]   = list1->end[i];
 
             if (tmp.target_positions)
-              tmp.target_positions[k]   = list1->target_positions[i];
+              tmp.target_positions[k]  = list1->target_positions[i];
+            if (tmp.keyword_positions)
+              tmp.keyword_positions[k] = list1->keyword_positions[i];
 
             i++;
             j++;
@@ -271,6 +284,8 @@ Setop(Matchlist *list1, MLSetOp operation, Matchlist *list2)
 
               if (tmp.target_positions)
                 tmp.target_positions[k] = list1->target_positions[i];
+              if (tmp.keyword_positions)
+                tmp.keyword_positions[k] = list1->keyword_positions[i];
 
               i++;
             }
@@ -279,6 +294,8 @@ Setop(Matchlist *list1, MLSetOp operation, Matchlist *list2)
 
               if (tmp.target_positions)
                 tmp.target_positions[k] = list2->target_positions[j];
+              if (tmp.keyword_positions)
+                tmp.keyword_positions[k] = list2->keyword_positions[j];
 
               j++;
             }
@@ -299,15 +316,19 @@ Setop(Matchlist *list1, MLSetOp operation, Matchlist *list2)
           tmp.end = (int *)cl_realloc((char *)tmp.end, sizeof(int) * k);
         if (tmp.target_positions)
           tmp.target_positions = (int *)cl_realloc((char *)tmp.target_positions, sizeof(int) * k);
+        if (tmp.keyword_positions)
+          tmp.keyword_positions = (int *)cl_realloc((char *)tmp.keyword_positions, sizeof(int) * k);
       }
 
       cl_free(list1->start);
       cl_free(list1->end);
       cl_free(list1->target_positions);
+      cl_free(list1->keyword_positions);
 
-      list1->start = tmp.start; tmp.start = NULL;
-      list1->end   = tmp.end;   tmp.end = NULL;
-      list1->target_positions = tmp.target_positions;   tmp.target_positions = NULL;
+      list1->start = tmp.start;  tmp.start = NULL;
+      list1->end   = tmp.end;    tmp.end = NULL;
+      list1->target_positions  = tmp.target_positions;   tmp.target_positions = NULL;
+      list1->keyword_positions = tmp.keyword_positions;  tmp.keyword_positions = NULL;
       list1->tabsize = k;
       list1->matches_whole_corpus = 0;
       list1->is_inverted = 0;
@@ -340,6 +361,7 @@ Setop(Matchlist *list1, MLSetOp operation, Matchlist *list2)
       cl_free(list1->start);
       cl_free(list1->end);
       cl_free(list1->target_positions);
+      cl_free(list1->keyword_positions);
       list1->tabsize = 0;
       list1->matches_whole_corpus = 0;
       list1->is_inverted = 0;
@@ -379,7 +401,10 @@ Setop(Matchlist *list1, MLSetOp operation, Matchlist *list2)
         tmp.target_positions = (int *)cl_malloc(sizeof(int) * tmp.tabsize);
       else
         tmp.target_positions = NULL;
-
+      if (list1->keyword_positions && list2->keyword_positions)
+        tmp.keyword_positions = (int *)cl_malloc(sizeof(int) * tmp.tabsize);
+      else
+        tmp.keyword_positions = NULL;
 
       i = 0;                        /* the position in list1 */
       j = 0;                        /* the position in list2 */
@@ -409,6 +434,8 @@ Setop(Matchlist *list1, MLSetOp operation, Matchlist *list2)
 
             if (tmp.target_positions)
               tmp.target_positions[k]   = list1->target_positions[i];
+            if (tmp.keyword_positions)
+              tmp.keyword_positions[k]   = list1->keyword_positions[i];
 
             i++;
             j++;
@@ -434,7 +461,8 @@ Setop(Matchlist *list1, MLSetOp operation, Matchlist *list2)
         /* we did not copy anything. result is empty. */
         cl_free(tmp.start); tmp.start = NULL;
         cl_free(tmp.end);   tmp.end   = NULL;
-        cl_free(tmp.target_positions); tmp.target_positions = NULL;
+        cl_free(tmp.target_positions);  tmp.target_positions = NULL;
+        cl_free(tmp.keyword_positions); tmp.keyword_positions = NULL;
       }
       else if (k < tmp.tabsize) {
 
@@ -447,17 +475,22 @@ Setop(Matchlist *list1, MLSetOp operation, Matchlist *list2)
           tmp.end = (int *)cl_realloc((char *)tmp.end, sizeof(int) * k);
         if (tmp.target_positions)
           tmp.target_positions = (int *)cl_realloc((char *)tmp.target_positions, sizeof(int) * k);
+        if (tmp.keyword_positions)
+          tmp.keyword_positions = (int *)cl_realloc((char *)tmp.keyword_positions, sizeof(int) * k);
       }
 
       cl_free(list1->start);
       cl_free(list1->end);
       cl_free(list1->target_positions);
+      cl_free(list1->keyword_positions);
 
       list1->start = tmp.start; tmp.start = NULL;
       list1->end   = tmp.end;   tmp.end = NULL;
 
       list1->target_positions   = tmp.target_positions;
       tmp.target_positions = NULL;
+      list1->keyword_positions  = tmp.keyword_positions;
+      tmp.keyword_positions = NULL;
 
       list1->tabsize = k;
       list1->matches_whole_corpus = 0;
@@ -537,6 +570,7 @@ Setop(Matchlist *list1, MLSetOp operation, Matchlist *list2)
       cl_free(list1->start);
       cl_free(list1->end);
       cl_free(list1->target_positions);
+      cl_free(list1->keyword_positions);
       list1->matches_whole_corpus = 0;
       list1->tabsize = 0;
       list1->is_inverted = 0;
@@ -554,6 +588,7 @@ Setop(Matchlist *list1, MLSetOp operation, Matchlist *list2)
       cl_free(list1->start);
       cl_free(list1->end);
       cl_free(list1->target_positions);
+      cl_free(list1->keyword_positions);
 
       list1->start = (int *)cl_malloc(sizeof(int) * tmp.tabsize);
       list1->tabsize = tmp.tabsize;
@@ -572,6 +607,7 @@ Setop(Matchlist *list1, MLSetOp operation, Matchlist *list2)
       tmp.start = (int *)cl_malloc(sizeof(int) * tmp.tabsize);
       tmp.end = NULL;
       tmp.target_positions = NULL;
+      tmp.keyword_positions = NULL;
       tmp.matches_whole_corpus = 0;
 
       j = 0;                        /* index in source list */
@@ -593,6 +629,7 @@ Setop(Matchlist *list1, MLSetOp operation, Matchlist *list2)
       cl_free(list1->start);
       cl_free(list1->end);
       cl_free(list1->target_positions);
+      cl_free(list1->keyword_positions);
 
       list1->start = tmp.start; tmp.start = NULL;
       list1->end   = tmp.end;   tmp.end = NULL;
@@ -633,6 +670,12 @@ Setop(Matchlist *list1, MLSetOp operation, Matchlist *list2)
              (char *)list2->target_positions, sizeof(int) * list2->tabsize);
     }
 
+    if (list2->keyword_positions) {
+      list1->keyword_positions = (int *)cl_malloc(sizeof(int) * list2->tabsize);
+      memcpy((char *)list1->keyword_positions,
+             (char *)list2->keyword_positions, sizeof(int) * list2->tabsize);
+    }
+
     break;
 
   case Uniq:
@@ -663,6 +706,8 @@ Setop(Matchlist *list1, MLSetOp operation, Matchlist *list2)
             list1->end[ins]   = list1->end[i];
             if (list1->target_positions)
               list1->target_positions[ins]   = list1->target_positions[i];
+            if (list1->keyword_positions)
+              list1->keyword_positions[ins]  = list1->keyword_positions[i];
             ins++;
           }
         }
@@ -677,6 +722,8 @@ Setop(Matchlist *list1, MLSetOp operation, Matchlist *list2)
             list1->start[ins] = list1->start[i];
             if (list1->target_positions)
               list1->target_positions[ins]   = list1->target_positions[i];
+            if (list1->keyword_positions)
+              list1->keyword_positions[ins]  = list1->keyword_positions[i];
             ins++;
           }
         }
@@ -694,6 +741,8 @@ Setop(Matchlist *list1, MLSetOp operation, Matchlist *list2)
           list1->end = (int *)cl_realloc(list1->end,   sizeof(int) * ins);
         if (list1->target_positions)
           list1->target_positions = (int *)cl_realloc(list1->target_positions,   sizeof(int) * ins);
+        if (list1->keyword_positions)
+          list1->keyword_positions = (int *)cl_realloc(list1->keyword_positions, sizeof(int) * ins);
         list1->tabsize = ins;
         list1->matches_whole_corpus = 0;
         list1->is_inverted = 0;
@@ -728,6 +777,8 @@ Setop(Matchlist *list1, MLSetOp operation, Matchlist *list2)
               list1->end[ins]   = list1->end[i];
               if (list1->target_positions)
                 list1->target_positions[ins]   = list1->target_positions[i];
+              if (list1->keyword_positions)
+                list1->keyword_positions[ins]  = list1->keyword_positions[i];
             }
             ins++;
           }
@@ -745,6 +796,8 @@ Setop(Matchlist *list1, MLSetOp operation, Matchlist *list2)
               list1->start[ins] = list1->start[i];
             if (list1->target_positions)
               list1->target_positions[ins]   = list1->target_positions[i];
+            if (list1->keyword_positions)
+              list1->keyword_positions[ins]  = list1->keyword_positions[i];
             ins++;
           }
         }
@@ -758,6 +811,7 @@ Setop(Matchlist *list1, MLSetOp operation, Matchlist *list2)
         cl_free(list1->start);
         cl_free(list1->end);
         cl_free(list1->target_positions);
+        cl_free(list1->keyword_positions);
         list1->tabsize = 0;
         list1->matches_whole_corpus = 0;
         list1->is_inverted = 0;
@@ -775,6 +829,8 @@ Setop(Matchlist *list1, MLSetOp operation, Matchlist *list2)
           list1->end = (int *)cl_realloc(list1->end,   sizeof(int) * ins);
         if (list1->target_positions)
           list1->target_positions = (int *)cl_realloc(list1->target_positions, sizeof(int) * ins);
+        if (list1->keyword_positions)
+          list1->keyword_positions = (int *)cl_realloc(list1->keyword_positions, sizeof(int) * ins);
         list1->tabsize = ins;
         list1->matches_whole_corpus = 0;
         list1->is_inverted = 0;
