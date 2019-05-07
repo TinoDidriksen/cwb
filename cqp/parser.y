@@ -1109,6 +1109,7 @@ NamedWfPattern: OptTargetSign
 
 /* New experimental feature in v3.4.16: numbered target markers @0 .. @9
  *  - one of these markers is mapped to the target anchor (determined by AnchorNumberTarget option)
+ *  - a second marker is mapped to the keyword anchor (determined by AnchorNumberKeyword option)
  *  - all other numbered target markers are silently ignored
  *  - @ by itself always stands for the target anchor (so backward compatibility is guaranteed)
  *  - @:, @0: ... @9: allowed so CQP macros do not have to distinguish between labels and target anchors 

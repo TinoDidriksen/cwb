@@ -77,7 +77,7 @@ New features:
    physical subcorpus based on a CQP query dump. The CWB/Perl package includes a convenient command-line
    tool "cwb-make-subcorpus" for this purpose.
 
- - [2019-05-05: v3.4.16] Experimental feature allowing multiple target markers @0 .. @9. Only two of these
+ - [2019-05-07: v3.4.16] Experimental feature allowing multiple target markers @0 .. @9. Only two of these
    markers are "active" at the same time, as determined by the AnchorNumberTarget and AnchorNumberKeyword
    options; they set the target (equivalent to @) and keyword anchors, respectively.
    This allows front-end wrappers to emulate up to 10 target positions by re-running a query with different

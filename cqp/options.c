@@ -138,7 +138,7 @@ CQPOption cqpoptions[] = {
   { NULL, "Timing",               OptBoolean, &timing,                 NULL,         0,   NULL,   0,     OPTION_VISIBLE_IN_CQP },
   { "o",  "Optimize",             OptBoolean, &query_optimize,         NULL,         0,   NULL,   3,     OPTION_VISIBLE_IN_CQP },
   { "ant","AnchorNumberTarget",   OptInteger, &anchor_number_target,   NULL,         0,   NULL,   0,     OPTION_VISIBLE_IN_CQP },
-  { "ank","AnchorNumberKeyword",  OptInteger, &anchor_number_keyword,  NULL,         9,   NULL,   0,     OPTION_VISIBLE_IN_CQP },
+  { "ank","AnchorNumberKeyword",  OptInteger, &anchor_number_keyword,  NULL,         1,   NULL,   0,     OPTION_VISIBLE_IN_CQP },
   { "es", "ExternalSort",         OptBoolean, &UseExternalSorting,     NULL,         0,   NULL,   0,     OPTION_VISIBLE_IN_CQP },
   { "esc","ExternalSortCommand",  OptString,  &ExternalSortingCommand, NULL,         0,   NULL,   0,     OPTION_VISIBLE_IN_CQP },
   { "da", "DefaultNonbrackAttr",  OptString,  &def_unbr_attr,          DEFAULT_ATT_NAME,0,NULL,   0,     OPTION_VISIBLE_IN_CQP },
