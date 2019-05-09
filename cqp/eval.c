@@ -2313,7 +2313,7 @@ simulate(Matchlist *matchlist,
 
                       /* now set target / keyword for this transition */
                       if (transition_valid) {
-                        int pattern_is_targeted; /* 0 = not marked, 1 = marked as target, 2 = marked as keyword */
+                        target_nature pattern_is_targeted; /* 0 = not marked, 1 = marked as target, 2 = marked as keyword */
                         if (condition->type == Pattern) {
                           pattern_is_targeted = condition->con.is_target;
                         }
@@ -2321,14 +2321,14 @@ simulate(Matchlist *matchlist,
                           pattern_is_targeted = condition->matchall.is_target;
                         }
                         else {
-                          pattern_is_targeted = 0;
+                          pattern_is_targeted = IsNotTarget;
                         }
 
-                        if (pattern_is_targeted == 1) {
+                        if (pattern_is_targeted == IsTarget) {
                           set_reftab(reftab_target_vector[target_state], evalenv->target_label->ref, /* the special "target" label */
                                      effective_cpos); /* since only patterns can be targeted, this is ==cpos at the moment, but why not change it? */
                         }
-                        if (pattern_is_targeted == 2) {
+                        if (pattern_is_targeted == IsKeyword) {
                           set_reftab(reftab_target_vector[target_state], evalenv->keyword_label->ref, /* the special "keyword" label */
                                      effective_cpos);
                         }
@@ -3375,7 +3375,7 @@ free_environment(int thisenv)
         free_booltree(Environment[thisenv].patternlist[i].con.constraint);
         Environment[thisenv].patternlist[i].con.constraint = NULL;
         Environment[thisenv].patternlist[i].con.label = NULL;
-        Environment[thisenv].patternlist[i].con.is_target = 0;
+        Environment[thisenv].patternlist[i].con.is_target = IsNotTarget;
         Environment[thisenv].patternlist[i].con.lookahead = False;
         break;
 
@@ -3396,7 +3396,7 @@ free_environment(int thisenv)
 
       case MatchAll:
         Environment[thisenv].patternlist[i].matchall.label = NULL;
-        Environment[thisenv].patternlist[i].matchall.is_target = 0;
+        Environment[thisenv].patternlist[i].matchall.is_target = IsNotTarget;
         Environment[thisenv].patternlist[i].matchall.lookahead = False;
         break;
 

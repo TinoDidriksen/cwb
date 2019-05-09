@@ -287,6 +287,10 @@ typedef enum _avstype {
   Pattern, Tag, MatchAll, Anchor
 } AVSType;
 
+typedef enum target_nature {
+  IsNotTarget = 0, IsTarget = 1, IsKeyword = 2
+} target_nature;
+
 /**
  * The AVStructure object.
  *
@@ -301,7 +305,7 @@ typedef union _avs {
   struct {
     AVSType type;                /* set to MatchAll */
     LabelEntry label;
-    Boolean is_target;           /**< whether pattern is marked as target (= 1) or keyword (= 2) */
+    target_nature is_target;     /**< whether pattern is marked as target (= 1) or keyword (= 2) */
     Boolean lookahead;           /**< whether pattern is just a lookahead constraint */
   } matchall;
 
@@ -310,7 +314,7 @@ typedef union _avs {
     AVSType type;                /* set to Pattern */
     LabelEntry label;
     Constrainttree constraint;
-    Boolean is_target;           /**< whether pattern is marked as target (= 1) or keyword (= 2) */
+    target_nature is_target;     /**< whether pattern is marked as target (= 1) or keyword (= 2) */
     Boolean lookahead;           /**< whether pattern is just a lookahead constraint */
   } con;
 
