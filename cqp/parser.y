@@ -1114,16 +1114,16 @@ NamedWfPattern: OptTargetSign
  *  - @ by itself always stands for the target anchor (so backward compatibility is guaranteed)
  *  - @:, @0: ... @9: allowed so CQP macros do not have to distinguish between labels and target anchors 
  * See "Undocumented CQP" section of the CQP Query Tutorial for further explanations. */
-OptTargetSign:    '@' OptColon          { $$ = 1; }
+OptTargetSign:    '@' OptColon          { $$ = IsTarget; }
 	            | '@' TargetNumber OptColon {
 	            						  if ($2 == anchor_number_target)
-	            						    $$ = 1;
+	            						    $$ = IsTarget;
 	            						  else if ($2 == anchor_number_keyword)
-	            						    $$ = 2;
+	            						    $$ = IsKeyword;
 	            						  else
-	            						  	$$ = 0; 
+	            						  	$$ = IsNotTarget; 
 	            						}
-                | /* epsilon */         { $$ = 0; }
+                | /* epsilon */         { $$ = IsNotTarget; }
                 ;
 
 OptColon:         ':'

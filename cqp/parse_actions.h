@@ -159,7 +159,7 @@ int
 do_XMLTag(char *s_name, int is_closing, int op, char *regex, int flags);
 
 int 
-do_NamedWfPattern(int is_target,
+do_NamedWfPattern(target_nature is_target,
                   char *label,
                   int pat_idx);
 

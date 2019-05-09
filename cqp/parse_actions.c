@@ -1515,7 +1515,7 @@ do_WordformPattern(Constrainttree boolt, int lookahead) {
 
       CurEnv->patternlist[CurEnv->MaxPatIndex].type = MatchAll;
       CurEnv->patternlist[CurEnv->MaxPatIndex].matchall.label = NULL;
-      CurEnv->patternlist[CurEnv->MaxPatIndex].matchall.is_target = False;
+      CurEnv->patternlist[CurEnv->MaxPatIndex].matchall.is_target = IsNotTarget;
       CurEnv->patternlist[CurEnv->MaxPatIndex].matchall.lookahead = lookahead;
     }
     else {
@@ -1527,6 +1527,7 @@ do_WordformPattern(Constrainttree boolt, int lookahead) {
 /*        assert(CurEnv->patternlist[CurEnv->MaxPatIndex].con.constraint == NULL); */
       CurEnv->patternlist[CurEnv->MaxPatIndex].con.constraint = boolt;
       CurEnv->patternlist[CurEnv->MaxPatIndex].con.label      = NULL;
+      CurEnv->patternlist[CurEnv->MaxPatIndex].matchall.is_target = IsNotTarget;
       CurEnv->patternlist[CurEnv->MaxPatIndex].con.lookahead  = lookahead;
     }
     res = CurEnv->MaxPatIndex;
