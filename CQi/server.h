@@ -24,13 +24,13 @@ typedef unsigned char cqi_byte;
 /* utility functions such as cqi_lookup_attribute() set cqi_errno, so
    the calling function can just do cqi_command(cqi_errno) when a utility
    function call fails */
-extern int cqi_errno;
+extern LIBCQP_API int cqi_errno;
 
 /* CQi general error handling:
    cqi_general_error(s) sends a CQI_ERROR_GENERAL_ERROR command and sets
    copies <s> into <cqi_error_string>. The CQI_CTRL_LAST_GENERAL_ERROR()
    function will then return <cqi_error_string> as a STRING */
-extern char cqi_error_string[];
+extern LIBCQP_API char cqi_error_string[];
 void cqi_general_error(char *errstring);
 
 /* accept_connection returns the SOCKSTREAM connection file descriptor,

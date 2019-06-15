@@ -21,7 +21,9 @@
 #include "cqi.h"
 
 #include <sys/types.h>
+#ifndef _MSC_VER
 #include <sys/time.h>
+#endif
 
 #ifndef __MINGW__
 #include <sys/socket.h>
@@ -35,7 +37,6 @@
 
 #include <signal.h>
 #include <string.h>
-#include <unistd.h>
 #include <stdio.h>
 
 #include "../cl/cl.h"           /* this is the local cl.h header */
@@ -73,8 +74,8 @@ cqi_byte netbuf[NETBUFSIZE];      /* do we need it at all? */
 int bytes;                        /* always used for data held in netbuf[] */
 
 
-int cqi_errno = CQI_STATUS_OK;    /**< CQi last error */
-char cqi_error_string[GENERAL_ERROR_SIZE] = "No error.";  /**< String describing the last CQi error.
+LIBCQP_API int cqi_errno = CQI_STATUS_OK;    /**< CQi last error */
+LIBCQP_API char cqi_error_string[GENERAL_ERROR_SIZE] = "No error.";  /**< String describing the last CQi error.
                                                            *   This can be queried by the client. */
 
 /*

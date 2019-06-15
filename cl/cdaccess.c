@@ -42,7 +42,7 @@
 /**
  * Error number for CL: is set after access to any of various corpus-data-access functions.
  */
-int cl_errno = CDA_OK;
+LIBCQPCL_API int cl_errno = CDA_OK;
 
 
 

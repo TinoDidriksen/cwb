@@ -22,7 +22,6 @@
 #include "../cl/attributes.h"
 #include "../cl/cdaccess.h"
 
-#include <sys/time.h>
 #include <time.h>
 
 #ifndef __MINGW__
@@ -37,7 +36,10 @@
 
 
 #include <sys/types.h>
+#ifndef _MSC_VER
 #include <unistd.h>
+#include <sys/time.h>
+#endif
 #include <stdlib.h>
 
 #include "ascii-print.h"

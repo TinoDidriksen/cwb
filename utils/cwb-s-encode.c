@@ -39,6 +39,7 @@
 #include <string.h>
 #include <assert.h>
 #include <limits.h>
+#include <getopt.h>
 
 
 /* byte order conversion functions taken from Corpus Library */

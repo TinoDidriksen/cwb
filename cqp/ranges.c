@@ -21,7 +21,6 @@
 #include <limits.h>
 #include <string.h>
 #include <ctype.h>
-#include <unistd.h>
 
 #include "../cl/globals.h"
 #include "../cl/corpus.h"

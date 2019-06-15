@@ -19,7 +19,7 @@
 #include "auth.h"
 #include "cqi.h"
 
-#include <unistd.h>
+#include <getopt.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
@@ -30,7 +30,6 @@
 #include "../cqp/options.h"
 #include "../cqp/corpmanag.h"
 #include "../cqp/groups.h"
-
 
 /** String containing the username sent by the currently-connect CQi client */
 char *user = "";

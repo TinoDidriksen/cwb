@@ -26,6 +26,7 @@
 #include <dirent.h>
 #include <errno.h>
 #include <sys/stat.h>
+#include <getopt.h>
 
 #include "../cl/globals.h"
 #include "../cl/macros.h"
@@ -241,7 +242,9 @@ encode_strtok(register char *s, register const char *delim)
 /* ======================================== print time */
 
 #include <sys/types.h>
+#ifndef _MSC_VER
 #include <sys/time.h>
+#endif
 
 /**
  * Prints a message plus the current time to the specified file/stream.
@@ -1281,7 +1284,7 @@ encode_parse_options(int argc, char **argv)
     case 'd':
       directory = optarg;
       /* Check if directory exists */
-      if (stat(directory, &dir_status) != 0 || !(dir_status.st_mode & S_IFDIR)) {
+      if (stat(directory, &dir_status) != 0 || !S_ISDIR(dir_status.st_mode)) {
         encode_error("Error: data directory '%s' does not exist.\nPlease create this directory first.",
                      directory);
       }
@@ -1325,7 +1328,7 @@ encode_parse_options(int argc, char **argv)
           /* the registry filename includes a directory part, so check that it exists and is indeed a directory */
           char sep = registry_file[size];
           registry_file[size] = 0; /* now registry_file holds the directory part as a NUL-terminated string */
-          if (stat(registry_file, &dir_status) != 0 || !(dir_status.st_mode & S_IFDIR))
+          if (stat(registry_file, &dir_status) != 0 || !S_ISDIR(dir_status.st_mode))
             encode_error("Error: registry directory '%s' does not exist.\nPlease create this directory first.", registry_file);
           registry_file[size] = sep;
         }

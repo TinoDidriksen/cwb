@@ -32,7 +32,7 @@
  /* ---------------------------------------------------------------------*/
  /*                 Author: Richard Caley                                */
  /************************************************************************/
- 
+
 /* Define if the closedir function returns void instead of int.  */
 /* #undef CLOSEDIR_VOID */
 

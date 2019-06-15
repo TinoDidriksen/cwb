@@ -105,7 +105,7 @@ binsert_g(const void *key,
       
       mid = (low + high)/2;
       
-      comp = (*compar)(*base + (mid * size), key);
+      comp = (*compar)((char*)(*base) + (mid * size), key);
       
       if (comp < 0)
         low = mid + 1;
@@ -116,7 +116,7 @@ binsert_g(const void *key,
     }
 
     if (found)
-      return *base + (mid * size); /* address of element */
+      return (char*)(*base) + (mid * size); /* address of element */
     else {
       
       int ins_pos;
@@ -135,14 +135,14 @@ binsert_g(const void *key,
 
       if (ins_pos < *nel)
 
-        memmove(*base + ((ins_pos+1) * size),
-                *base + ((ins_pos)   * size),
+        memmove((char*)(*base) + ((ins_pos+1) * size),
+                (char*)(*base) + ((ins_pos)   * size),
                 (*nel - ins_pos) * size);
 
-      memmove(*base + (ins_pos * size), key, size);
+      memmove((char*)(*base) + (ins_pos * size), key, size);
       *nel = *nel + 1;
 
-      return *base + (ins_pos * size); /* address of new element */
+      return (char*)(*base) + (ins_pos * size); /* address of new element */
     }
   }
 }

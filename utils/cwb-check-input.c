@@ -35,9 +35,9 @@
 /* includes */
 
 #include <glib.h>
+#include <getopt.h>
 #include "../cl/globals.h"
 #include "../cl/list.h"
-
 
 
 /* defines */

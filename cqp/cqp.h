@@ -29,6 +29,20 @@
 
 #include <stdio.h>
 
+#ifdef _WIN32
+  #ifdef LIBCQP_EXPORTS
+    #define LIBCQP_API __declspec(dllexport)
+  #else
+    #define LIBCQP_API __declspec(dllimport)
+  #endif
+#else
+  #ifdef LIBCQP_EXPORTS
+    #define LIBCQP_API __attribute__ ((visibility ("default")))
+  #else
+    #define LIBCQP_API
+  #endif
+#endif
+
 /** DEPRACATED means of storing a Boolean value  */
 typedef int Boolean;
 
@@ -57,7 +71,7 @@ CYCtype LastExpression;
 
 extern int reading_cqprc;
 
-extern int cqp_error_status;
+extern LIBCQP_API int cqp_error_status;
 
 /* ======================================== Query Buffer Interface */
 

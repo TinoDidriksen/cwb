@@ -15,6 +15,7 @@
  *  WWW at http://www.gnu.org/copyleft/gpl.html).
  */
 
+#include <getopt.h>
 
 #include "../cl/globals.h"
 #include "../cl/cl.h"

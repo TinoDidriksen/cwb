@@ -18,7 +18,6 @@
 #include "parse_actions.h"
 
 #include <stdlib.h>
-#include <sys/time.h>
 #ifndef __MINGW__
 #include <sys/resource.h>
 #else
@@ -28,7 +27,9 @@
 #include <string.h>
 #include <assert.h>
 #include <stdarg.h>
-#include <unistd.h>
+#ifndef _MSC_VER
+#include <sys/time.h>
+#endif
 
 #include "../cl/globals.h"
 #include "../cl/special-chars.h"

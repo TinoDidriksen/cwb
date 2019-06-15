@@ -20,7 +20,9 @@
 
 
 #include <stdio.h>
+#ifndef _MSC_VER
 #include <sys/time.h>
+#endif
 #ifndef __MINGW__
 #include <sys/resource.h>
 #else

@@ -26,9 +26,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#ifndef _MSC_VER
 #include <strings.h>
-#include <assert.h>
 #include <unistd.h>
+#endif
+#include <assert.h>
 
 
 /* global configuration variables */

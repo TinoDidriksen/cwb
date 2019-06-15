@@ -18,9 +18,10 @@
 #include <stdio.h>
 #include <signal.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include <sys/types.h>
+#ifndef _MSC_VER
 #include <sys/time.h>
+#endif
 
 #include "../cl/globals.h"
 #include "../cl/macros.h"
@@ -78,7 +79,7 @@ int reading_cqprc = 0;
  * TODO actually get this variable set in various error conditions.
  * TODO work out whether cqpserver should exit with this error.
  */
-int cqp_error_status = 0;
+LIBCQP_API int cqp_error_status = 0;
 
 /* ======================================== Query Buffer Interface */
 
@@ -183,7 +184,7 @@ initialize_cqp(int argc, char **argv)
   if (setvbuf(stdout, NULL, _IONBF, 0) != 0)
     perror("unbuffer stdout");
 
-  yydebug = parser_debug;
+  //yydebug = parser_debug;
 
   /* before we start looking for files, let's get the home directory, if we can,
    * so we don't have to detect it in more than one place. */

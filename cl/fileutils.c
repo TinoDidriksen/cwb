@@ -177,7 +177,7 @@ CLStream open_streams;
 /**
  * SIGPIPE handler and global status variable
  */
-int cl_broken_pipe = 0;
+LIBCQPCL_API int cl_broken_pipe = 0;
 
 static void
 cl_handle_sigpipe(int signum) {

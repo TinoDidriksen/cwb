@@ -20,9 +20,9 @@
 #include <signal.h>
 #include <stdarg.h>
 #include <stdlib.h>
-#include <unistd.h>
+#ifndef _MSC_VER
 #include <sys/time.h>           /* for select() */
-
+#endif
 
 #include "../cl/globals.h"
 #include "../cl/corpus.h"
@@ -46,7 +46,6 @@
 /* ---------------------------------------------------------------------- */
 
 #include <sys/types.h>
-#include <sys/time.h>
 
 #ifndef __MINGW__
 #include <pwd.h>

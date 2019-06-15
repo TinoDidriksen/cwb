@@ -1,13 +1,13 @@
-/* 
+/*
  *  IMS Open Corpus Workbench (CWB)
  *  Copyright (C) 1993-2006 by IMS, University of Stuttgart
  *  Copyright (C) 2007-     by the respective contributers (see file AUTHORS)
- * 
+ *
  *  This program is free software; you can redistribute it and/or modify it
  *  under the terms of the GNU General Public License as published by the
  *  Free Software Foundation; either version 2, or (at your option) any later
  *  version.
- * 
+ *
  *  This program is distributed in the hope that it will be useful, but
  *  WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
@@ -127,6 +127,23 @@
 #include <stdlib.h>                 /* for size_t */
 #include <stdio.h>                  /* for FILE * */
 
+#ifdef _MSC_VER
+#include <msvc.h>
+#endif
+
+#ifdef _WIN32
+  #ifdef LIBCQPCL_EXPORTS
+    #define LIBCQPCL_API __declspec(dllexport)
+  #else
+    #define LIBCQPCL_API __declspec(dllimport)
+  #endif
+#else
+  #ifdef LIBCQPCL_EXPORTS
+    #define LIBCQPCL_API __attribute__ ((visibility ("default")))
+  #else
+    #define LIBCQPCL_API
+  #endif
+#endif
 
 /*
  *
@@ -168,7 +185,7 @@
 #define CDA_CPOSUNDEF   INT_MIN   /**< Error code: undefined corpus position (use this code to avoid ambiguity with negative cpos) */
 
 /* a global variable which will always be set to one of the above constants! */
-extern int cl_errno;
+extern LIBCQPCL_API int cl_errno;
 
 /* error handling functions */
 void cl_error(char *message);
@@ -417,7 +434,7 @@ void cl_autostring_dump(ClAutoString string);
  * It is reset to False whenever a stream is opened or closed, so it is safe to check while writing to a plain file stream.
  * If multiple pipes are active, there is no way to indicate which one caused the SIGPIPE.
  */
-extern int cl_broken_pipe;
+extern LIBCQPCL_API int cl_broken_pipe;
 
 /**
  * Open stream of specified (or guessed) type for reading or writing
@@ -1011,11 +1028,11 @@ int cl_regopt_count_get(void);
  *  These lexicon hashes are used, notably, in the encoding of corpora
  *  to CWB-index-format.
  *
- *  WARNING: cl_lexhash objects are intended for data sets ranging from 
+ *  WARNING: cl_lexhash objects are intended for data sets ranging from
  *  a few dozen entries to several million entries. Do not try to store
  *  more than a billion (distinct) strings in a lexicon hash, otherwise
  *  bad (and unpredictable) things will happen. You have been warned!
- * 
+ *
  */
 typedef struct _cl_lexhash *cl_lexhash;
 /**
@@ -1105,7 +1122,7 @@ cl_lexhash_entry cl_lexhash_iterator_next(cl_lexhash hash);
  *
  *  WARNING: cl_ngram_hash objects cannot store more than 2^32 - 1
  *  entries. Bad things will happen if you try to do so!
- * 
+ *
  */
 typedef struct _cl_ngram_hash *cl_ngram_hash;
 
@@ -1138,7 +1155,7 @@ cl_ngram_hash_entry cl_ngram_hash_find(cl_ngram_hash hash, int *ngram);
 int cl_ngram_hash_del(cl_ngram_hash hash, int *ngram);
 int cl_ngram_hash_freq(cl_ngram_hash hash, int *ngram);
 int cl_ngram_hash_size(cl_ngram_hash hash);
-/** 
+/**
  * Returns allocated vector of pointers to all entries of the n-gram hash.
  * Must be freed by the application and can be modified, e.g. for sorting.
  * Use cl_ngram_hash_size() to find out how many entries there are.

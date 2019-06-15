@@ -20,7 +20,9 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <dirent.h>
+#ifndef _MSC_VER
 #include <unistd.h>
+#endif
 #include <string.h>
 #include <ctype.h>
 #include <math.h>

@@ -36,13 +36,14 @@
 /* ---------------------------------------------------------------------- */
 
 #include <sys/types.h>
-#include <sys/time.h>
 #include <time.h>
 
 #ifndef __MINGW__
 #include <pwd.h>
 #endif
-#include <unistd.h>
+#ifndef _MSC_VER
+#include <sys/time.h>
+#endif
 
 /* ---------------------------------------------------------------------- */
 

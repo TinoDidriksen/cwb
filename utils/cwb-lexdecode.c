@@ -17,6 +17,7 @@
 
 
 #include <math.h>
+#include <getopt.h>
 
 #include "../cl/globals.h"
 #include "../cl/cl.h"

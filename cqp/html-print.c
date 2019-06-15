@@ -25,7 +25,9 @@
 #include "../cl/cdaccess.h"
 
 #include <sys/types.h>
-#include <unistd.h>
+#ifndef _MSC_VER
+#include <sys/time.h>
+#endif
 #include <stdlib.h>
 
 #include "cqp.h"
@@ -38,7 +40,6 @@
 /* ---------------------------------------------------------------------- */
 
 #include <sys/types.h>
-#include <sys/time.h>
 #include <time.h>
 
 #ifndef __MINGW__
