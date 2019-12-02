@@ -49,13 +49,13 @@
 /* support function for qsort() of grouping cells, controlled by global variables */
 Group *compare_cells_group = NULL;
 
-static int 
+static int
 compare_cells(const void *p1, const void *p2)
 {
   ID_Count_Mapping *cell1 = (ID_Count_Mapping *)p1;
   ID_Count_Mapping *cell2 = (ID_Count_Mapping *)p2;
   char *w1, *w2;
-  int res, f1, f2;
+  int64_t res, f1, f2;
   
   if (compare_cells_group->is_grouped) {
     /* grouped sort: order by s_freq, then source, then freq, then target */
@@ -99,15 +99,15 @@ compare_cells(const void *p1, const void *p2)
 } 
 
 
-int
-get_group_id(Group *group, int i, int target) {
+int64_t
+get_group_id(Group *group, int64_t i, int64_t target) {
   CorpusList *cl = group->my_corpus;
-  int field_type = (target) ? group->target_field : group->source_field;
-  int offset = (target) ? group->target_offset : group->source_offset;
+  int64_t field_type = (target) ? group->target_field : group->source_field;
+  int64_t offset = (target) ? group->target_offset : group->source_offset;
   Attribute *attr = (target) ? group->target_attribute : group->source_attribute;
-  int is_struc = (target) ? group->target_is_struc : group->source_is_struc;
+  int64_t is_struc = (target) ? group->target_is_struc : group->source_is_struc;
   char *base = (target) ? group->target_base : group->source_base;
-  int pos, id;
+  int64_t pos, id;
   
   switch (field_type) {
   case KeywordField:
@@ -149,9 +149,9 @@ get_group_id(Group *group, int i, int target) {
 }
 
 char *
-Group_id2str(Group *group, int id, int target) {
+Group_id2str(Group *group, int64_t id, int64_t target) {
   Attribute *attr = (target) ? group->target_attribute : group->source_attribute;
-  int is_struc = (target) ? group->target_is_struc : group->source_is_struc;
+  int64_t is_struc = (target) ? group->target_is_struc : group->source_is_struc;
   char *base = (target) ? group->target_base : group->source_base;
   if (id == ANY_ID) 
     return "(all)";
@@ -169,11 +169,11 @@ ComputeGroupInternally(Group *group)
   cl_ngram_hash pairs, groups; /* frequency counts for (source, target) pairs and groups (= source ID) */
   cl_ngram_hash_entry item;
 
-  int i;
-  int s_t[2]; /* pair of source and target IDs */
+  int64_t i;
+  int64_t s_t[2]; /* pair of source and target IDs */
   size_t nr_nodes;
-  int percentage, new_percentage; /* for ProgressBar */
-  int size = group->my_corpus->size;
+  int64_t percentage, new_percentage; /* for ProgressBar */
+  int64_t size = group->my_corpus->size;
 
   /* ---------------------------------------------------------------------- */
 
@@ -257,9 +257,9 @@ ComputeGroupInternally(Group *group)
 Group *
 ComputeGroupExternally(Group *group)
 {
-  int i;
-  int size = group->my_corpus->size;
-  int cutoff_freq = group->cutoff_frequency;
+  int64_t i;
+  int64_t size = group->my_corpus->size;
+  int64_t cutoff_freq = group->cutoff_frequency;
 
   char temporary_name[TEMP_FILENAME_BUFSIZE];
   FILE *fd;
@@ -275,7 +275,7 @@ ComputeGroupExternally(Group *group)
   }
 
   for (i = 0; i < size; i++) {
-    fprintf(fd, "%d %d\n", get_group_id(group, i, 0), get_group_id(group, i, 1)); /* (source ID, target ID) */
+    fprintf(fd, "%" PRId64 " %" PRId64 "\n", get_group_id(group, i, 0), get_group_id(group, i, 1)); /* (source ID, target ID) */
   }
   fclose(fd);
 
@@ -292,10 +292,10 @@ ComputeGroupExternally(Group *group)
                sort_call);
   }
   else {
-    int freq, p1, p2, tokens;
+    int64_t freq, p1, p2, tokens;
 #define GROUP_REALLOC 1024
 
-    while ((tokens = fscanf(pipe, "%d%d%d", &freq, &p1, &p2)) == 3) {
+    while ((tokens = fscanf(pipe, "%" PRId64 "%" PRId64 "%" PRId64 "", &freq, &p1, &p2)) == 3) {
       if (freq > cutoff_freq) {
         if ((group->nr_cells % GROUP_REALLOC) == 0) {
           if (group->count_cells == NULL) {
@@ -344,17 +344,17 @@ ComputeGroupExternally(Group *group)
 
 Group *compute_grouping(CorpusList *cl,
                         FieldType source_field,
-                        int source_offset,
+                        int64_t source_offset,
                         char *source_attr_name,
                         FieldType target_field,
-                        int target_offset,
+                        int64_t target_offset,
                         char *target_attr_name,
-                        int cutoff_freq,
-                        int is_grouped)
+                        int64_t cutoff_freq,
+                        int64_t is_grouped)
 {
   Group *group;
   Attribute *source_attr, *target_attr;
-  int source_is_struc = 0, target_is_struc = 0;
+  int64_t source_is_struc = 0, target_is_struc = 0;
   char *source_base = NULL, *target_base = 0;
 
   if ((cl == NULL) || (cl->corpus == NULL)) {
@@ -509,7 +509,7 @@ free_group(Group **group)
   *group = NULL;
 }
 
-void print_group(Group *group, int expand, struct Redir *rd)
+void print_group(Group *group, int64_t expand, struct Redir *rd)
 {
   if (group && open_stream(rd, group->my_corpus->corpus->charset)) {
 

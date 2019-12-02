@@ -45,7 +45,7 @@
  * The DynArg object contains an argument for a dynamic attribute.
  */
 typedef struct _DynArg {
-  int type;
+  int64_t type;
   struct _DynArg *next;
 } DynArg;
 
@@ -55,24 +55,24 @@ DynArg *makearg(char *type_id);
 
 #define SYNCHRONIZATION 128
 /** The maximum length of a single code, which is also the number of possible code lengths */
-#define MAXCODELEN 32
+#define MAXCODELEN 64
 
 /**
  * A Huffman Code Descriptor block (HCD) for Huffman compressed sequences.
  */
 typedef struct _huffman_code_descriptor {
 
-  int size;                       /**< the id range of the item sequence */
-  int length;                     /**< the number of items in the sequence */
+  int64_t size;                       /**< the id range of the item sequence */
+  int64_t length;                     /**< the number of items in the sequence */
 
-  int min_codelen;                /**< minimal code length */
-  int max_codelen;                /**< maximal code length */
+  int64_t min_codelen;                /**< minimal code length */
+  int64_t max_codelen;                /**< maximal code length */
 
-  int lcount[MAXCODELEN];         /**< number of codes of length i */
-  int symindex[MAXCODELEN];       /**< starting point of codes of length i in symbols */
-  int min_code[MAXCODELEN];       /**< minimal code of length i */
+  int64_t lcount[MAXCODELEN];         /**< number of codes of length i */
+  int64_t symindex[MAXCODELEN];       /**< starting point of codes of length i in symbols */
+  int64_t min_code[MAXCODELEN];       /**< minimal code of length i */
 
-  int *symbols;                   /**< the code->id mapping table */
+  int64_t *symbols;                   /**< the code->id mapping table */
 } HCD;
 
 
@@ -148,7 +148,7 @@ typedef struct TComponent {
   Corpus *corpus;               /**< the corpus this component belongs to */
   union _Attribute *attribute;  /**< the attribute this component belongs to */
   ComponentID id;               /**< the type of this component */
-  int size;                     /**< a copy of the number of items in the structure */
+  int64_t size;                /**< a copy of the number of items in the structure */
 
   MemBlob data;                 /**< the actual contents of this component */
 
@@ -160,7 +160,7 @@ char *cid_name(ComponentID cid);
 
 ComponentID component_id(char *name);
 
-int MayHaveComponent(int attr_type, ComponentID cid);
+int64_t MayHaveComponent(int64_t attr_type, ComponentID cid);
 
 
 
@@ -171,10 +171,10 @@ int MayHaveComponent(int attr_type, ComponentID cid);
  * Members found in ALL the different types of Attribute object.
  */
 #define COMMON_ATTR_FIELDS  \
-int type;                  /**< the attribute type */                          \
+int64_t type;                  /**< the attribute type */                          \
 char *name;                /**< the attribute name or multi-purpose field*/    \
 union _Attribute *next;    /**< the next member of the attr chain */           \
-int attr_number;           /**< a number, unique in this corpus, 0 for word */ \
+int64_t attr_number;           /**< a number, unique in this corpus, 0 for word */ \
 char *path;                /**< path to attribute data files */                \
  \
 struct TCorpus *mother;              /**< corpus this att is assigned to */    \
@@ -190,13 +190,13 @@ typedef struct {
 typedef struct {
   COMMON_ATTR_FIELDS;
   HCD *hc;                          /**< positional attribute may have a huffman code descriptor block */
-  int this_block_nr;                /**< number of the current decompression block */
-  int this_block[SYNCHRONIZATION];  /**< the decompression block proper */
+  int64_t this_block_nr;            /**< number of the current decompression block */
+  int64_t this_block[SYNCHRONIZATION];  /**< the decompression block proper */
 } POS_Attribute;
 
 typedef struct {
   COMMON_ATTR_FIELDS;
-  int has_attribute_values;         /**< boolean: whether or not instances of this s-attribute can have values
+  int64_t has_attribute_values;         /**< boolean: whether or not instances of this s-attribute can have values
                                          @see structure_has_values */
 } Struc_Attribute;
 
@@ -207,7 +207,7 @@ typedef struct {
 typedef struct {
   COMMON_ATTR_FIELDS;
   char *call;
-  int res_type;
+  int64_t res_type;
   DynArg *arglist;
 } Dynamic_Attribute;
 
@@ -228,7 +228,7 @@ typedef struct {
  * @see COMMON_ATTR_FIELDS
  */
 union _Attribute {
-  int type;
+  int64_t type;
   Any_Attribute any;
   POS_Attribute pos;
   Struc_Attribute struc;
@@ -245,16 +245,16 @@ union _Attribute {
 
 Attribute *setup_attribute(Corpus *corpus, 
                            char *attribute_name,
-                           int type,
+                           int64_t type,
                            char *data);
 
 
 
 
-int drop_attribute(Corpus *corpus,
+int64_t drop_attribute(Corpus *corpus,
                    char *attribute_name,
-                   int type,
-                   char *data);  /* depends on type, either char* or int*, but ***UNUSED*** */
+                   int64_t type,
+                   char *data);  /* depends on type, either char* or int64_t*, but ***UNUSED*** */
 
 
 
@@ -263,16 +263,16 @@ int drop_attribute(Corpus *corpus,
 
 Component *load_component(Attribute *attribute, ComponentID component);
 
-int drop_component(Attribute *attribute, ComponentID component);
+int64_t drop_component(Attribute *attribute, ComponentID component);
 
-int comp_drop_component(Component *component);
+int64_t comp_drop_component(Component *component);
 
 Component *create_component(Attribute *attribute, ComponentID component);
 
 Component *find_component(Attribute *attribute, ComponentID component);
 
 Component *ensure_component(Attribute *attribute, ComponentID component, 
-                            int try_creation);
+                            int64_t try_creation);
 
 Component *declare_component(Attribute *attribute, ComponentID cid,
                              char *path);

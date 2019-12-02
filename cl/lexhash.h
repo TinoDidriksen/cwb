@@ -25,9 +25,9 @@
 #include "cl.h"
 
 /* some utility functions which can be re-used for other hash tables */
-int is_prime(int n);
-int find_prime(int n);
-unsigned int hash_string(char *s);
+int64_t is_prime(int64_t n);
+int64_t find_prime(int64_t n);
+int64_t hash_string(char *s);
 
 
 

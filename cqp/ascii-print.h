@@ -33,7 +33,7 @@ ascii_convert_string(char *s);
 
 void
 ascii_print_aligned_line(FILE *stream, 
-                         int highlighting,
+                         int64_t highlighting,
                          char *attribute_name,
                          char *line);
 
@@ -44,16 +44,16 @@ ascii_print_corpus_header(CorpusList *cl,
 void 
 ascii_print_output(CorpusList *cl, 
                    FILE *outfd,
-                   int interactive,
+                   int64_t interactive,
                    ContextDescriptor *cd,
-                   int first, int last);
+                   int64_t first, int64_t last);
 
 void 
-ascii_print_group(Group *group, int expand, FILE *fd);
+ascii_print_group(Group *group, int64_t expand, FILE *fd);
 
 
 char *
-get_colour_escape(char colour, int foreground);
+get_colour_escape(char colour, int64_t foreground);
 
 char *
 get_typeface_escape(char typeface);

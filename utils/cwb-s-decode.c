@@ -67,15 +67,15 @@ main(int argc, char **argv)
   char *attr_name = NULL;
   Corpus *corpus = NULL;
   Attribute *att = NULL;
-  int show_values = 1;
-  int show_regions = 1;
+  int64_t show_values = 1;
+  int64_t show_regions = 1;
 
-  int has_values, att_size, n, start, end;
+  int64_t has_values, att_size, n, start, end;
   char *annot;
 
   extern int optind;
   extern char *optarg;
-  int c;
+  int64_t c;
 
   /* ------------------------------------------------- PARSE ARGUMENTS */
 
@@ -164,7 +164,7 @@ main(int argc, char **argv)
       exit(1);
     }
     if (show_regions) {
-      printf("%d\t%d", start, end);
+      printf("%" PRId64 "\t%" PRId64 "", start, end);
       if (show_values)
         printf("\t");
     }

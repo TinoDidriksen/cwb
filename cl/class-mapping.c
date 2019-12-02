@@ -30,7 +30,7 @@
 
 /* ---------------------------------------- prototypes */
 
-int
+void
 drop_single_mapping(SingleMapping *smap);
 
 /* ---------------------------------------- functions */
@@ -48,10 +48,10 @@ drop_single_mapping(SingleMapping *smap);
 
 /* note this DUPLICATES intcompare in cdaccess.c where it is also static... */
 static
-int 
+int
 intcompare(const void *i, const void *j)
 {
-  return(*(int *)i - *(int *)j);
+  return(*(int64_t*)i - *(int64_t*)j);
 }
 
 
@@ -207,11 +207,9 @@ read_mapping(Corpus *corpus,
         while (m &&
                (token = strtok(NULL, " \t\n"))) {
 
-          int id;
-
           /* test: token member of attribute values of my attribute? */
 
-          id = get_id_of_string(attr, token);
+          int64_t id = get_id_of_string(attr, token);
 
           if (id < 0 || cderrno != CDA_OK) {
             *error_string = "token not member of attribute";
@@ -227,7 +225,7 @@ read_mapping(Corpus *corpus,
             break;
           }
           else if (this_class->tokens) {
-            int i;
+            int64_t i;
 
             for (i = 0; i < this_class->nr_tokens; i++)
               if (this_class->tokens[i] == id) {
@@ -243,15 +241,15 @@ read_mapping(Corpus *corpus,
 
             if (this_class->nr_tokens == 0) {
               this_class->tokens =
-                (int *)
-                cl_malloc(sizeof(int) * TOKEN_REALLOC_THRESHOLD);
+                (int64_t*)
+                cl_malloc(sizeof(*this_class->tokens) * TOKEN_REALLOC_THRESHOLD);
             }
             else if (this_class->nr_tokens % TOKEN_REALLOC_THRESHOLD == 0) {
 
               this_class->tokens =
-                (int *)
+                (int64_t*)
                 cl_realloc(this_class->tokens,
-                        sizeof(int) * (this_class->nr_tokens +
+                        sizeof(*this_class->tokens) * (this_class->nr_tokens +
                                        TOKEN_REALLOC_THRESHOLD));
             }
 
@@ -274,7 +272,7 @@ read_mapping(Corpus *corpus,
 
           qsort(this_class->tokens,
                 this_class->nr_tokens,
-                sizeof(int),
+                sizeof(*this_class->tokens),
                 intcompare);
 
         }
@@ -294,7 +292,7 @@ read_mapping(Corpus *corpus,
  * @param smap  Address of the object to delete.
  * @return      Always 1.
  */
-int
+void
 drop_single_mapping(SingleMapping *smap)
 {
 
@@ -304,7 +302,6 @@ drop_single_mapping(SingleMapping *smap)
   free(*smap);
     
   *smap = NULL;
-  return 1;
 }
 
 
@@ -314,7 +311,7 @@ drop_single_mapping(SingleMapping *smap)
  * @param map  Address of the object to delete.
  * @return     Always 1.
  */
-int
+void
 drop_mapping(Mapping *map)
 {
   (*map)->corpus = NULL;
@@ -326,7 +323,6 @@ drop_mapping(Mapping *map)
   free(*map);
 
   *map = NULL;
-  return 1;
 }
 
 /**
@@ -335,7 +331,7 @@ drop_mapping(Mapping *map)
 void
 print_mapping(Mapping map)
 {
-  int cp, tp;
+  int64_t cp, tp;
 
   fprintf(stderr, "---------------------------------------- Mapping: \n");
 
@@ -343,14 +339,14 @@ print_mapping(Mapping map)
   fprintf(stderr, "Valid: %s/%s\n", 
           map->corpus->registry_name,
           map->attribute->any.name);
-  fprintf(stderr, "NrCls: %d\n", 
+  fprintf(stderr, "NrCls: %" PRId64 "\n", 
           map->nr_classes);
 
   for (cp = 0; cp < map->nr_classes; cp++) {
-    fprintf(stderr, "%5d/%s with %d members: \n", 
+    fprintf(stderr, "%5" PRId64 "/%s with %" PRId64 " members: \n", 
             cp, map->classes[cp].class_name, map->classes[cp].nr_tokens);
     for (tp = 0; tp < map->classes[cp].nr_tokens; tp++) {
-      fprintf(stderr, "\t%d/%s", 
+      fprintf(stderr, "\t%" PRId64 "/%s", 
               map->classes[cp].tokens[tp],
               get_string_of_id(map->attribute, map->classes[cp].tokens[tp]));
     }
@@ -375,7 +371,7 @@ SingleMapping
 map_token_to_class(Mapping map, 
                    char *token)
 {
-  int class_num;
+  int64_t class_num;
 
   if ((class_num = map_token_to_class_number(map, token)) >= 0)
     return &(map->classes[class_num]);
@@ -392,13 +388,11 @@ map_token_to_class(Mapping map,
  *               index in the Mapping's "array" of SingleMappings) or -1 if the
  *               token was not found.
  */
-int
+int64_t
 map_token_to_class_number(Mapping map, 
                           char *token)
 {
-  int id;
-
-  id = get_id_of_string(map->attribute, token);
+  int64_t id = get_id_of_string(map->attribute, token);
 
   if (id >= 0 && cderrno == CDA_OK) 
     return map_id_to_class_number(map, id);
@@ -415,11 +409,11 @@ map_token_to_class_number(Mapping map,
  *             index in the Mapping's "array" of SingleMappings) or -1 if the
  *             token was not found.
  */
-int
+int64_t
 map_id_to_class_number(Mapping map, 
-                       int id)
+                       int64_t id)
 {
-  int smp;
+  int64_t smp;
 
   for (smp = 0; smp < map->nr_classes; smp++)
     if (member_of_class_i(map, &(map->classes[smp]), id))
@@ -440,9 +434,9 @@ map_id_to_class_number(Mapping map,
  * @return           A pointer to the token IDs of this class
  *                   (don't free this!!)
  */
-int *
+int64_t *
 map_class_to_tokens(SingleMapping map,
-                    int *nr_tokens)
+                    int64_t *nr_tokens)
 {
   *nr_tokens = map->nr_tokens;
   return map->tokens;
@@ -454,7 +448,7 @@ map_class_to_tokens(SingleMapping map,
 /**
  * Gets the number of classes possessed by this Mapping.
  */
-int
+int64_t
 number_of_classes(Mapping map)
 {
   return map->nr_classes;
@@ -471,7 +465,7 @@ number_of_classes(Mapping map)
 SingleMapping
 find_mapping(Mapping map, char *name)
 {
-  int i;
+  int64_t i;
 
   for (i = 0; i < map->nr_classes; i++)
     if (strcmp(map->classes[i].class_name, name) == 0)
@@ -483,7 +477,7 @@ find_mapping(Mapping map, char *name)
 /**
  * Gets the number of tokens possessed by this Mapping.
  */
-int
+int64_t
 number_of_tokens(SingleMapping map)
 {
   return map->nr_tokens;
@@ -502,12 +496,12 @@ number_of_tokens(SingleMapping map)
  * @param token  The token to look for (identified by its actual string).
  * @return       Boolean.
  */
-int
+bool
 member_of_class_s(Mapping map, 
                   SingleMapping class,
                   char *token)
 {
-  int id;
+  int64_t id;
 
   id = get_id_of_string(map->attribute, token);
 
@@ -526,15 +520,15 @@ member_of_class_s(Mapping map,
  * @param id     The token to look for (identified by its integer ID).
  * @return       Boolean.
  */
-int
+bool
 member_of_class_i(Mapping map, 
                   SingleMapping class,
-                  int id)
+                  int64_t id)
 {
   if (bsearch(&id, 
               class->tokens,
               class->nr_tokens,
-              sizeof(int),
+              sizeof(*class->tokens),
               intcompare) != NULL)
     return 1;
   else

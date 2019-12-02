@@ -64,17 +64,17 @@
  *
  */
 
-int sockfd;                       /**< Connection in:  file-descriptor integer */
-int connfd;                       /**< Connection out: file-descriptor integer */
+int64_t sockfd;                       /**< Connection in:  file-descriptor integer */
+int64_t connfd;                       /**< Connection out: file-descriptor integer */
 FILE *conn_out;                   /**< Connection out: stream for buffered output (don't forget to flush()) */
 struct sockaddr_in my_addr, client_addr;
 struct hostent *remote_host;
 char *remote_address;
 cqi_byte netbuf[NETBUFSIZE];      /* do we need it at all? */
-int bytes;                        /* always used for data held in netbuf[] */
+int64_t bytes;                        /* always used for data held in netbuf[] */
 
 
-LIBCQP_API int cqi_errno = CQI_STATUS_OK;    /**< CQi last error */
+LIBCQP_API int64_t cqi_errno = CQI_STATUS_OK;    /**< CQi last error */
 LIBCQP_API char cqi_error_string[GENERAL_ERROR_SIZE] = "No error.";  /**< String describing the last CQi error.
                                                            *   This can be queried by the client. */
 
@@ -179,8 +179,8 @@ cqi_general_error(char *errstring)
  * @return      A > 0 value (actually the socket ID of the incoming connection)
  *              if all is OK; otherwise -1.
  */
-int 
-accept_connection(int port)
+int64_t 
+accept_connection(uint16_t port)
 {
   const int on = 1;
   socklen_t sin_size = sizeof(struct sockaddr_in);
@@ -200,19 +200,19 @@ accept_connection(int port)
   }
 
   if (server_debug) 
-    fprintf(stderr, "CQi: Opening socket and binding to port %d\n", port);
+    fprintf(stderr, "CQi: Opening socket and binding to port %u\n", port);
 
 #ifdef __MINGW__
   /* startup the use of the Winsock DLL */
   WORD wVersionRequested;
   WSADATA wsaData;
-  int err;
+  int64_t err;
   wVersionRequested = MAKEWORD(2, 2); /* 2.2 is the higher version */
   err = WSAStartup(wVersionRequested, &wsaData);
 
   if (err != 0) {
     char buffer[50];
-    sprintf(buffer,"ERROR WSAStartup failed with error: %d\n",err);
+    sprintf(buffer,"ERROR WSAStartup failed with error: %" PRId64 "\n",err);
     perror(buffer);
     return -1;
   }
@@ -228,7 +228,7 @@ accept_connection(int port)
     perror("ERROR Can't create socket");
     return -1;
   }
-  if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, (const void *)&on, sizeof(int)) < 0)
+  if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, (const void *)&on, sizeof(on)) < 0)
     perror("WARNING Can't set address reuse option"); /* can be ignored... */
 
   my_addr.sin_family = AF_INET;
@@ -236,7 +236,7 @@ accept_connection(int port)
   if (localhost) 
     my_addr.sin_addr.s_addr = inet_addr("127.0.0.1"); /* loopback device */
   else 
-    my_addr.sin_addr.s_addr = htonl(INADDR_ANY);      /* all network devices on local machine */
+    my_addr.sin_addr.s_addr = htonll(INADDR_ANY);      /* all network devices on local machine */
   memset(&(my_addr.sin_zero), '\0', 8);
   if (0 != bind(sockfd, (struct sockaddr *)&my_addr, sizeof(struct sockaddr))) {
     perror("ERROR Can't bind socket to port");
@@ -244,7 +244,7 @@ accept_connection(int port)
   }
 
   if (server_log)
-    printf("Waiting for client on port #%d.\n", port);
+    printf("Waiting for client on port #%u.\n", port);
   if (0 != listen(sockfd, 5)) {
     perror("ERROR listen() failed");
     return -1;
@@ -277,7 +277,7 @@ accept_connection(int port)
       
       if ((select(sockfd+1, &read_fd, NULL, NULL, &tv) <= 0)
           || (!FD_ISSET(sockfd, &read_fd))) {
-        printf("Port #%d timed out in private server mode. Aborting.\n", port);
+        printf("Port #%u timed out in private server mode. Aborting.\n", port);
         exit(1);
       }
     }
@@ -291,7 +291,7 @@ accept_connection(int port)
     if (server_debug) 
       fprintf(stderr, "CQi: Connection established. Looking up client's name.\n");
     remote_address = inet_ntoa(client_addr.sin_addr);
-    remote_host = gethostbyaddr((void *)&(client_addr.sin_addr), 4, AF_INET);
+    remote_host = gethostbyaddr((void *)&(client_addr.sin_addr), sizeof(client_addr.sin_addr), AF_INET);
     if (server_log) {
       printf("Connection established with %s ", remote_address);
       if (remote_host != NULL) 
@@ -311,7 +311,7 @@ accept_connection(int port)
       break;                    /* the child exits the listen() loop */
 
     /* this is the listening 'parent', which exits immediately */
-    printf("Spawned CQPserver, pid = %d.\n", (int)child_pid);
+    printf("Spawned CQPserver, pid = %" PRId64 ".\n", (int64_t)child_pid);
     close(connfd);              /* this is the child's connection */
 
     if (private_server) {
@@ -343,7 +343,7 @@ accept_connection(int port)
   /* check if remote host is in validation list */
   if (!check_host(client_addr.sin_addr)) {
     printf("WARNING %s not in list, connection refused!\n", remote_address);
-    printf("Exit. (pid = %d)\n", (int)getpid());
+    printf("Exit. (pid = %" PRId64 ")\n", (int64_t)getpid());
     close(connfd);
     exit(1);
   }
@@ -384,7 +384,7 @@ accept_connection(int port)
  *
  * @return  Boolean: true if everything OK, otherwise false.
  */
-int 
+int64_t 
 cqi_flush(void)
 {
 #ifdef __MINGW__
@@ -412,22 +412,22 @@ cqi_flush(void)
  * This is the fundamental "sending" function, and the only one that calls the underlying
  * OS-specific file stream/socket functions.
  *
- * @param n        The byte to send. NOTE that as the parameter is an int, numbers bigger than
+ * @param n        The byte to send. NOTE that as the parameter is an int64_t, numbers bigger than
  *                 0xff can be passed. BUT all content except the lowest-order 8-bits are discarded
  *                 (0xff is used as a mask with bitwise-and).
  * @param nosnoop  Boolean: if true, snoop functionality is overridden (to allow for non-repetition
  *                 of messages when called from a function that has already printed a message)
  */
-int 
-cqi_send_byte(int n, int nosnoop)
+int64_t 
+cqi_send_byte(int64_t n, int64_t nosnoop)
 {
 #ifdef __MINGW__
-  unsigned char prep;
-  prep = (unsigned char) 0xff & n;
+  uint8_t prep;
+  prep = (uint8_t) 0xff & n;
 #endif
 
   if (snoop && !nosnoop) {
-    fprintf(stderr, "CQi SEND BYTE   %02X        [= %d]\n", n, n);
+    fprintf(stderr, "CQi SEND BYTE   %02X        [= %" PRId64 "]\n", n, n);
   }
 
   /* note that the actual sending is wrapped in an "if" whose content differs between OSes */
@@ -455,11 +455,11 @@ cqi_send_byte(int n, int nosnoop)
  * This function should be called via one of the cqi_data_* functions
  * and not on its own.
  */
-int 
-cqi_send_word(int n)
+int64_t 
+cqi_send_word(int64_t n)
 {
   if (snoop) {
-    fprintf(stderr, "CQi SEND WORD   %04X      [= %d]\n", n, n);
+    fprintf(stderr, "CQi SEND WORD   %04X      [= %" PRId64 "]\n", n, n);
   }
   if (
       /* exploit the fact that cqi_send_byte() only uses the lowest 8 bytes of its argument */
@@ -478,18 +478,18 @@ cqi_send_word(int n)
 /**
  * Sends an INT to the client.
  *
- * An int consists of four bytes in network order.
+ * An int64_t consists of four bytes in network order.
  *
  * This function should be called via one of the cqi_data_* functions
  * and not on its own.
  *
  * @return  Boolean: true if everything OK, otherwise false.
  */
-int 
-cqi_send_int(int n)
+int64_t 
+cqi_send_int(int64_t n)
 {
   if (snoop) {
-    fprintf(stderr, "CQi SEND INT    %08X  [= %d]\n", n, n);
+    fprintf(stderr, "CQi SEND INT    %08X  [= %" PRId64 "]\n", n, n);
   }
   if (
       /* exploit the fact that cqi_send_byte() only uses the lowest 8 bytes of its argument */
@@ -520,10 +520,10 @@ cqi_send_int(int n)
  *
  * @return  Boolean: true if everything OK, otherwise false.
  */
-int 
+int64_t 
 cqi_send_string(char *str)
 {
-  int len;
+  int64_t len;
 
   if (str == NULL) {
     if (! cqi_send_word(0)) {
@@ -566,8 +566,8 @@ cqi_send_string(char *str)
  *
  * @return  Boolean: true if everything OK, otherwise false.
  */
-int 
-cqi_send_byte_list(cqi_byte *list, int l)
+int64_t 
+cqi_send_byte_list(cqi_byte *list, int64_t l)
 {
   if (!cqi_send_int(l)) {
     perror("ERROR cqi_send_byte_list()");
@@ -593,8 +593,8 @@ cqi_send_byte_list(cqi_byte *list, int l)
  *
  * @return  Boolean: true if everything OK, otherwise false.
  */
-int 
-cqi_send_int_list(int *list, int l)
+int64_t 
+cqi_send_int_list(int64_t *list, int64_t l)
 {
   if (!cqi_send_int(l)) {
     perror("ERROR cqi_send_int_list()");
@@ -619,8 +619,8 @@ cqi_send_int_list(int *list, int l)
  * @param list  pointer to a block of pointers-to-strings; the strings will be sent.
  * @param l     the number of strings to send.
  */
-int 
-cqi_send_string_list(char **list, int l)
+int64_t 
+cqi_send_string_list(char **list, int64_t l)
 {
   if (!cqi_send_int(l)) {
     perror("ERROR cqi_send_string_list()");
@@ -641,7 +641,7 @@ cqi_send_string_list(char **list, int l)
  * Sends a general CQi command, without any arguments.
  */
 void 
-cqi_command(int command)
+cqi_command(int64_t command)
 {
   if (!cqi_send_word(command) || !cqi_flush()) {
     cqi_send_error("cqi_command");
@@ -652,7 +652,7 @@ cqi_command(int command)
  * Sends a byte of data to the client.
  */
 void 
-cqi_data_byte(int n)
+cqi_data_byte(int64_t n)
 {
   if (!cqi_send_word(CQI_DATA_BYTE) || !cqi_send_byte(n, 0) || !cqi_flush()) {
     cqi_send_error("cqi_data_byte");
@@ -663,7 +663,7 @@ cqi_data_byte(int n)
  * Sends a boolean to the client.
  */
 void 
-cqi_data_bool(int n)
+cqi_data_bool(int64_t n)
 {
   if (!cqi_send_word(CQI_DATA_BOOL) || !cqi_send_byte(n, 0) || !cqi_flush()) {
     cqi_send_error("cqi_data_bool");
@@ -674,7 +674,7 @@ cqi_data_bool(int n)
  * Sends an integer to the client.
  */
 void 
-cqi_data_int(int n)
+cqi_data_int(int64_t n)
 {
   if (!cqi_send_word(CQI_DATA_INT) || !cqi_send_int(n) || !cqi_flush()) {
     cqi_send_error("cqi_data_int");
@@ -699,7 +699,7 @@ cqi_data_string(char *str)
  * @param l     the number of bytes to send.
  */
 void 
-cqi_data_byte_list(cqi_byte *list, int l)
+cqi_data_byte_list(cqi_byte *list, int64_t l)
 {
   if (!cqi_send_word(CQI_DATA_BYTE_LIST) || !cqi_send_byte_list(list, l) || !cqi_flush()) {
     cqi_send_error("cqi_data_byte_list");
@@ -713,7 +713,7 @@ cqi_data_byte_list(cqi_byte *list, int l)
  * @param l     the number of bytes to send.
  */
 void 
-cqi_data_bool_list(cqi_byte *list, int l)
+cqi_data_bool_list(cqi_byte *list, int64_t l)
 {
   if (!cqi_send_word(CQI_DATA_BOOL_LIST) || !cqi_send_byte_list(list, l) || !cqi_flush()) {
     cqi_send_error("cqi_data_bool_list");
@@ -727,7 +727,7 @@ cqi_data_bool_list(cqi_byte *list, int l)
  * @param l     the number of integers to send.
  */
 void 
-cqi_data_int_list(int *list, int l)
+cqi_data_int_list(int64_t *list, int64_t l)
 {
   if (!cqi_send_word(CQI_DATA_INT_LIST) || !cqi_send_int_list(list, l) || !cqi_flush()) {
     cqi_send_error("cqi_data_int_list");
@@ -741,7 +741,7 @@ cqi_data_int_list(int *list, int l)
  * @param l     the number of strings to send.
  */
 void 
-cqi_data_string_list(char **list, int l)
+cqi_data_string_list(char **list, int64_t l)
 {
   if (!cqi_send_word(CQI_DATA_STRING_LIST) || !cqi_send_string_list(list, l) || !cqi_flush()) {
     cqi_send_error("cqi_data_string_list");
@@ -755,7 +755,7 @@ cqi_data_string_list(char **list, int l)
  * @param n2  The second integer sent
  */
 void 
-cqi_data_int_int(int n1, int n2)
+cqi_data_int_int(int64_t n1, int64_t n2)
 {
   if (
       !cqi_send_word(CQI_DATA_INT_INT) ||
@@ -777,7 +777,7 @@ cqi_data_int_int(int n1, int n2)
  * @param n4  The fourth integer sent
  */
 void 
-cqi_data_int_int_int_int(int n1, int n2, int n3, int n4)
+cqi_data_int_int_int_int(int64_t n1, int64_t n2, int64_t n3, int64_t n4)
 {
   if (
       !cqi_send_word(CQI_DATA_INT_INT_INT_INT) ||
@@ -799,15 +799,15 @@ cqi_data_int_int_int_int(int n1, int n2, int n3, int n4)
  *
  */
 
-int 
-cqi_recv_bytes(cqi_byte *buf, int bytes)
+int64_t 
+cqi_recv_bytes(cqi_byte *buf, int64_t bytes)
 {
   if (bytes <= 0) {
     return 1;
   }
   else {
     if (snoop) {
-      fprintf(stderr, "CQi RECV BYTE[%d]\n", bytes);
+      fprintf(stderr, "CQi RECV BYTE[%" PRId64 "]\n", bytes);
     }
     if (bytes != recv(connfd, buf, bytes, MSG_WAITALL)) {
       perror("ERROR cqi_recv_bytes()");
@@ -817,7 +817,7 @@ cqi_recv_bytes(cqi_byte *buf, int bytes)
   }
 }
 
-int 
+int64_t 
 cqi_recv_byte(void)
 {
   cqi_byte b;
@@ -831,50 +831,50 @@ cqi_recv_byte(void)
   return b;
 }
 
-int 
+int64_t 
 cqi_read_byte(void)
 {
-  int b = cqi_recv_byte();
+  int64_t b = cqi_recv_byte();
   if (b == EOF) {
     cqi_recv_error("cqi_read_byte");
   }
   return b;
 }
 
-int 
+int64_t 
 cqi_read_bool(void)
 {
-  int b = cqi_recv_byte();
+  int64_t b = cqi_recv_byte();
   if (b == EOF) {
     cqi_recv_error("cqi_read_bool");
   }
   return b;
 }
 
-int 
+int64_t 
 cqi_read_word(void)
 {
-  int n = cqi_read_byte();
+  int64_t n = cqi_read_byte();
   n = (n << 8) | cqi_read_byte();
   if (snoop) {
-    fprintf(stderr, "CQi READ WORD   %04X      [= %d]\n", n, n);
+    fprintf(stderr, "CQi READ WORD   %04X      [= %" PRId64 "]\n", n, n);
   }
   return n;
 }
 
-int 
+int64_t 
 cqi_read_int(void)
 {
-  int n = cqi_read_byte();
-  int minus_bits = ((int)-1) ^ 0xFFFFFFFF; /* extra minus bits if int is > 32 bit*/
+  int64_t n = cqi_read_byte();
+  int64_t minus_bits = ((int64_t)-1) ^ 0xFFFFFFFF; /* extra minus bits if int64_t is > 32 bit*/
 
   n = (n << 8) | cqi_read_byte();
   n = (n << 8) | cqi_read_byte();
   n = (n << 8) | cqi_read_byte();
   if (n & 0x80000000)           /* negative 32bit quantity */
-    n |= minus_bits;            /* expand to full size of int type */
+    n |= minus_bits;            /* expand to full size of int64_t type */
   if (snoop) {
-    fprintf(stderr, "CQi READ INT    %08X  [= %d]\n", n, n);
+    fprintf(stderr, "CQi READ INT    %08X  [= %" PRId64 "]\n", n, n);
   }
   return n;
 }
@@ -882,7 +882,7 @@ cqi_read_int(void)
 char *
 cqi_read_string(void)
 {
-  int len;
+  int64_t len;
   char *s;
 
   len = cqi_read_word();
@@ -895,10 +895,10 @@ cqi_read_string(void)
   return s;
 }  
 
-int
+int64_t
 cqi_read_command(void)
 {
-  int command;
+  int64_t command;
 
   if (server_debug)
     fprintf(stderr, "CQi: waiting for command\n");
@@ -909,10 +909,10 @@ cqi_read_command(void)
   return command;
 }
 
-int
+int64_t
 cqi_read_byte_list(cqi_byte **list)
 {
-  int i, len;
+  int64_t i, len;
 
   len = cqi_read_int();
   if (len <= 0) {
@@ -924,15 +924,15 @@ cqi_read_byte_list(cqi_byte **list)
     for (i=0; i<len; i++)
       (*list)[i] = cqi_read_byte();
     if (snoop)
-      fprintf(stderr, "CQi READ BYTE[%d]\n", len);
+      fprintf(stderr, "CQi READ BYTE[%" PRId64 "]\n", len);
     return len;
   }
 }
 
-int
+int64_t
 cqi_read_bool_list(cqi_byte **list)
 {
-  int i, len;
+  int64_t i, len;
 
   len = cqi_read_int();
   if (len <= 0) {
@@ -944,15 +944,15 @@ cqi_read_bool_list(cqi_byte **list)
     for (i=0; i<len; i++)
       (*list)[i] = cqi_read_byte();
     if (snoop)
-      fprintf(stderr, "CQi READ BOOL[%d]\n", len);
+      fprintf(stderr, "CQi READ BOOL[%" PRId64 "]\n", len);
     return len;
   }
 }
 
-int
-cqi_read_int_list(int **list)
+int64_t
+cqi_read_int_list(int64_t **list)
 {
-  int i, len;
+  int64_t i, len;
 
   len = cqi_read_int();
   if (len <= 0) {
@@ -960,19 +960,19 @@ cqi_read_int_list(int **list)
     return 0;
   }
   else {
-    *list = (int *) cl_malloc(len * sizeof(int));
+    *list = (int64_t*) cl_malloc(len * sizeof(**list));
     for (i=0; i<len; i++)
       (*list)[i] = cqi_read_int();
     if (snoop)
-      fprintf(stderr, "CQi READ INT[%d]\n", len);
+      fprintf(stderr, "CQi READ INT[%" PRId64 "]\n", len);
     return len;
   }
 }
 
-int
+int64_t
 cqi_read_string_list(char ***list)
 {
-  int i, len;
+  int64_t i, len;
   
   len = cqi_read_int();
   if (len <= 0) {
@@ -984,7 +984,7 @@ cqi_read_string_list(char ***list)
     for (i=0; i<len; i++)
       (*list)[i] = cqi_read_string();
     if (snoop)
-      fprintf(stderr, "CQi READ STRING[%d]\n", len);
+      fprintf(stderr, "CQi READ STRING[%" PRId64 "]\n", len);
     return len;
   }
 }
@@ -1008,7 +1008,7 @@ char cqi_id_lc_first[] = "abcdefghijklmnopqrstuvwxyz_";
 char cqi_id_lc[] = "abcdefghijklmnopqrstuvwxyz_-0123456789";
 char cqi_id_all[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_-0123456789";
 
-int 
+int64_t 
 check_corpus_name(char *name) {
   if (
       (strchr(cqi_id_uc_first, *name) == NULL) ||
@@ -1024,7 +1024,7 @@ check_corpus_name(char *name) {
   }
 }
        
-int 
+int64_t 
 check_attribute_name(char *name) {
   if (
       (strchr(cqi_id_lc_first, *name) == NULL) ||
@@ -1040,7 +1040,7 @@ check_attribute_name(char *name) {
   }
 }
        
-int 
+int64_t 
 check_subcorpus_name(char *name) {
   if (
       (strchr(cqi_id_uc_first, *name) == NULL) ||
@@ -1062,7 +1062,7 @@ check_subcorpus_name(char *name) {
 char *
 strdupto(char *str, char *end)
 {
-  int len = end - str;
+  int64_t len = end - str;
   char *ret, *p;
 
   ret = (char *) cl_malloc(len+1);
@@ -1073,7 +1073,7 @@ strdupto(char *str, char *end)
 }
 
 /* new strings are allocated for the output arguments */
-int 
+int64_t 
 split_attribute_spec(char *spec, char **corpus, char **attribute) {
   char *split = strchr(spec, '.');
  
@@ -1092,7 +1092,7 @@ split_attribute_spec(char *spec, char **corpus, char **attribute) {
   return 1;
 }
 
-int 
+int64_t 
 split_subcorpus_spec(char *spec, char **corpus, char **subcorpus) {
   char *split = strchr(spec, ':');
 
@@ -1141,14 +1141,14 @@ combine_subcorpus_spec(char *corpus, char *subcorpus) {
 typedef struct att_bucket {
   char *string;                 /**< the key for this attribute bucket. */
   Attribute *attribute;
-  int type;                     /**< type of the attribute in this bucket: ATT_NONE, ATT_POS, ATT_STRUC, ... */
+  int64_t type;                     /**< type of the attribute in this bucket: ATT_NONE, ATT_POS, ATT_STRUC, ... */
 } AttBucket;
 
 /** Underlying structure for the AttHashTable object.  @see AttHashTable */
 struct att_hashtable {
   AttBucket *space;             /**< the actual array of attribute buckets. */
-  int    code;
-  int    size;
+  int64_t    code;
+  int64_t    size;
 };
 
 /** An AttHashTable object contains space for a hash table of attribute-pointers. */
@@ -1164,9 +1164,9 @@ AttHashTable AttHash = NULL;
  * @see AttHash
  */
 void 
-make_attribute_hash(int size)
+make_attribute_hash(int64_t size)
 {
-  int bytes;
+  int64_t bytes;
   AttHash = (AttHashTable) cl_malloc(sizeof(struct att_hashtable));
   
   AttHash->size = find_prime(size);
@@ -1202,8 +1202,8 @@ AttBucket *
 att_hash_lookup(char *str)
 {
   AttBucket *p, *end;
-  int i = 0;
-  int offset;
+  int64_t i = 0;
+  int64_t offset;
 
   if (AttHash == NULL) 
     cqi_internal_error("att_hash_lookup", "AttHash not initialised.");
@@ -1215,7 +1215,7 @@ att_hash_lookup(char *str)
   /* the primary pointer into the space */
   p = AttHash->space + offset;
 
-  for(i = (int)AttHash->size/5; i>0; p++,i--) {
+  for(i = (int64_t)AttHash->size/5; i>0; p++,i--) {
     if(p >= end) p = AttHash->space;
     if(p->string == NULL) {     /* init new bucket */
       p->string = cl_strdup(str);
@@ -1234,7 +1234,7 @@ att_hash_lookup(char *str)
 }
 
 Attribute *
-cqi_lookup_attribute(char *name, int type)
+cqi_lookup_attribute(char *name, int64_t type)
 {
   AttBucket *p = att_hash_lookup(name);
   if (p->attribute == NULL) {
@@ -1290,7 +1290,7 @@ cqi_lookup_attribute(char *name, int type)
  * @param name  Name of the attribute to be deleted
  * @return      Boolean: true for all OK, otherwise false
  */
-int
+int64_t
 cqi_drop_attribute(char *name) {
   AttBucket *p = att_hash_lookup(name);
 
@@ -1347,7 +1347,7 @@ cqi_find_corpus(char *name)
 /**
  * Activates the named corpus.
  */
-int 
+int64_t 
 cqi_activate_corpus(char *name)
 {
   CorpusList *cl;

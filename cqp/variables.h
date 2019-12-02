@@ -27,9 +27,9 @@
 
 /** VariableItem object: an item within a variable */
 typedef struct _variable_item {
-  int free;               /**< Boolean flag: is this item empty? */
+  int64_t free;               /**< Boolean flag: is this item empty? */
   char *sval;             /**< The actual string value of the item. */
-  int ival;               /**< Lexicon number associated with the item.
+  int64_t ival;               /**< Lexicon number associated with the item.
                                Set to -1 on creation, but when the variable is verified
                                against a corpus attribute, it is set to the lexicon number
                                from that attribute. */
@@ -44,22 +44,22 @@ typedef struct _variable_item {
  */
 typedef struct _variable_buf {
 
-  int valid;              /**< flag: whether I'm valid or not (valid = associated with a corpus/attribute,
+  int64_t valid;              /**< flag: whether I'm valid or not (valid = associated with a corpus/attribute,
                                and known to match at least one entry in that attribute's lexicon) */
   char *my_name;          /**< my name */
 
   char *my_corpus;        /**< name of corpus I'm valid for */
   char *my_attribute;     /**< name of attribute I'm valid for */
 
-  int nr_valid_items;     /**< only valid after validation */
-  int nr_invalid_items;
+  int64_t nr_valid_items;     /**< only valid after validation */
+  int64_t nr_invalid_items;
   
-  int nr_items;           /**< number of items (size of the "items" array) */
+  int64_t nr_items;           /**< number of items (size of the "items" array) */
   VariableItem *items;    /**< array of items - the set of strings within the variable. */
   
 } VariableBuffer, *Variable;
 
-extern int nr_variables;
+extern int64_t nr_variables;
 extern Variable *VariableSpace;
 
 /* ---------------------------------------------------------------------- */
@@ -68,19 +68,19 @@ extern Variable *VariableSpace;
 
 Variable FindVariable(char *varname);
 
-int VariableItemMember(Variable v, char *item);
+bool VariableItemMember(Variable v, char *item);
 
-int VariableAddItem(Variable v, char *item);
+void VariableAddItem(Variable v, char *item);
 
-int VariableSubtractItem(Variable v, const char *item);
+void VariableSubtractItem(Variable v, const char *item);
 
-int VariableDeleteItems(Variable v);
+void VariableDeleteItems(Variable v);
 
-int DropVariable(Variable *vp);
+void DropVariable(Variable *vp);
 
 Variable NewVariable(char *varname);
 
-int
+bool
 SetVariableValue(char *varName, 
                  char operator,
                  char *varValues);
@@ -90,16 +90,16 @@ void variables_iterator_new(void);
 Variable variables_iterator_next(void);
 
 
-int
+bool
 VerifyVariable(Variable v, Corpus *corpus, Attribute *attribute);
 
-int *
+int64_t *
 GetVariableItems(Variable v, 
                  Corpus *corpus,
                  Attribute *attribute,
                  /* returned: */
-                 int *nr_items);
+                 int64_t *nr_items);
 
-char **GetVariableStrings(Variable v, int *nr_items);
+char **GetVariableStrings(Variable v, int64_t *nr_items);
 
 #endif

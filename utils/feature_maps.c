@@ -28,7 +28,7 @@
 #include "barlib.h"
 
 /** the top of the range of char_map's outputs @see char_map */
-int char_map_range = 0;
+int64_t char_map_range = 0;
 /**
  * A character map for computing n-gram features
  *
@@ -43,14 +43,14 @@ int char_map_range = 0;
  * So all such component bytes count as "just punctuation" in the character n-gram comparisons.
  * As a consequence, n-gram features are next to useless with non-latin alphabets.
  */
-unsigned char char_map[256];
+uint8_t char_map[256];
 
 /** initialises char_map, @see char_map for details */
 void
 init_char_map()
 {
-  int i;
-  unsigned char *map = char_map;
+  int64_t i;
+  uint8_t *map = char_map;
   /* the outputs of the map are initialised to 0 */
   for (i = 0; i < 256; i++)
     map[i] = 0;
@@ -123,7 +123,7 @@ init_char_map()
  */
 FMS
 create_feature_maps(char **config,
-                    int config_lines,
+                    int64_t config_lines,
                     Attribute *w_attr1,
                     Attribute *w_attr2,
                     Attribute *s_attr1,
@@ -132,25 +132,25 @@ create_feature_maps(char **config,
 {
   FMS r;
 
-  unsigned int *fcount1, *fcount2;    /* arrays for types in the lexicons of the source
+  uint64_t *fcount1, *fcount2;    /* arrays for types in the lexicons of the source
                                        * & target corpora, respectively, counting how often each is used
                                        * in a feature */
 
-  int config_pointer;
+  int64_t config_pointer;
 
   char *b, command[CL_MAX_LINE_LENGTH], dummy[CL_MAX_LINE_LENGTH];
   char word1[2 * CL_MAX_LINE_LENGTH], word2[2 * CL_MAX_LINE_LENGTH];/* buffers for case/accent-folded strings (might be longer than input with UTF-8 */
 
-  int current_feature;
-  int weight;                         /* holds the weight assigned to the feature(s) we're working on */
-  int need_to_abort;                  /* boolean used during pointer check */
+  int64_t current_feature;
+  int64_t weight;                         /* holds the weight assigned to the feature(s) we're working on */
+  int64_t need_to_abort;                  /* boolean used during pointer check */
 
   /* after we have counted up features, these will become arrays of ints, with one entry per feature */
-  int *fs1, *fs2; 
+  int64_t *fs1, *fs2;
 
-  int i;
-  int nw1;  /* number of types on the word-attribute of the source corpus */
-  int nw2;  /* number of types on the word-attribute of the target corpus */
+  int64_t i;
+  int64_t nw1;  /* number of types on the word-attribute of the source corpus */
+  int64_t nw2;  /* number of types on the word-attribute of the target corpus */
 
   /* one last variable: we need to know the character set of the two corpora for assorted purposes */
   CorpusCharset charset;
@@ -180,10 +180,10 @@ create_feature_maps(char **config,
     exit(1);
   }
   
-  printf("LEXICON SIZE: %d / %d\n", nw1, nw2);
+  printf("LEXICON SIZE: %" PRId64 " / %" PRId64 "\n", nw1, nw2);
 
-  fcount1 = (unsigned int*) calloc(nw1 + 1, sizeof(unsigned int));
-  fcount2 = (unsigned int*) calloc(nw2 + 1, sizeof(unsigned int));
+  fcount1 = (uint64_t*) calloc(nw1 + 1, sizeof(uint64_t));
+  fcount2 = (uint64_t*) calloc(nw2 + 1, sizeof(uint64_t));
 
   /* initialise feature counts: character count ("primary feature") is always present, but weight 0 if not specified */
   r->n_features = 1;
@@ -213,19 +213,19 @@ create_feature_maps(char **config,
         switch(command[1]) {
         /* -S : the "shared words" type of feature */
         case 'S': {
-          int i1, i2; /* i1 and i2 are temporary indexes into the lexicons of the two corpora */
-          int f1, f2; /* f1 and f2 are temporary storage for frequencies from the corpus lexicons */
+          int64_t i1, i2; /* i1 and i2 are temporary indexes into the lexicons of the two corpora */
+          int64_t f1, f2; /* f1 and f2 are temporary storage for frequencies from the corpus lexicons */
           float threshold;
-          int n_shared = 0; /* number of shared words - only calculated for the purpose of printing it */
+          int64_t n_shared = 0; /* number of shared words - only calculated for the purpose of printing it */
 
-          if(sscanf(config[config_pointer],"%2s:%d:%f %s",command,&weight,&threshold,dummy) != 3) {
+          if(sscanf(config[config_pointer],"%2s:%" PRId64 ":%f %s",command,&weight,&threshold,dummy) != 3) {
             fprintf(stderr,"ERROR: wrong # of args: %s\n",config[config_pointer]);
             fprintf(stderr,"Usage: -S:<weight>:<threshold>\n");
             fprintf(stderr,"  Shared words with freq. ratios f1/(f1+f2) and f2/(f1+f2) >= <threshold>.\n");
             exit(1);
           }
           else {
-            printf("FEATURE: Shared words, threshold=%4.1f%c, weight=%d ... ",threshold * 100, '\%', weight);
+            printf("FEATURE: Shared words, threshold=%4.1f%c, weight=%" PRId64 " ... ",threshold * 100, '%', weight);
             fflush(stdout);
 
             /* for each type in target corpus, get its frequency, and the corresponding id and frequency
@@ -244,7 +244,7 @@ create_feature_maps(char **config,
                 }
               }
             }
-            printf("[%d]\n", n_shared);
+            printf("[%" PRId64 "]\n", n_shared);
           }
           break;
         }
@@ -253,9 +253,9 @@ create_feature_maps(char **config,
         case '2':
         case '3':
         case '4': { 
-          int n; /* length of the n-gram, obviously */
+          int64_t n; /* length of the n-gram, obviously */
           
-          if (sscanf(config[config_pointer], "%1s%d:%d %s", command, &n, &weight, dummy) !=3 ) {
+          if (sscanf(config[config_pointer], "%1s%" PRId64 ":%" PRId64 " %s", command, &n, &weight, dummy) !=3 ) {
             fprintf(stderr,"ERROR: wrong # of args: %s\n",config[config_pointer]);
             fprintf(stderr,"Usage: -<n>:<weight>  (n = 1..4)\n");
             fprintf(stderr,"  Shared <n>-grams (single characters, bigrams, trigrams, 4-grams).\n");
@@ -263,14 +263,14 @@ create_feature_maps(char **config,
           }
           else if(n <= 0 || n > 4) {
             /* this shouldn't happen anyway */
-            fprintf(stderr,"ERROR: cannot handle %d-grams: %s\n", n, config[config_pointer]);
+            fprintf(stderr,"ERROR: cannot handle %" PRId64 "-grams: %s\n", n, config[config_pointer]);
             exit(1);
           }
           else {
-            int i,f,l; /* temp storage for lexicon index, n of possible features and word length */
-            unsigned char *s;
+            int64_t i,f,l; /* temp storage for lexicon index, n of possible features and word length */
+            uint8_t *s;
 
-            printf("FEATURE: %d-grams, weight=%d ... ", n, weight);
+            printf("FEATURE: %" PRId64 "-grams, weight=%" PRId64 " ... ", n, weight);
             fflush(stdout);
 
             /* for each entry in source-corpus lexicon, add all possible n-grams contained in this word
@@ -294,7 +294,7 @@ create_feature_maps(char **config,
               f *= char_map_range;
             /* and add that to our total number of features! */
             r->n_features += f;
-            printf("[%d]\n", f);
+            printf("[%" PRId64 "]\n", f);
           }
           break;
         }
@@ -304,12 +304,12 @@ create_feature_maps(char **config,
             word1[CL_MAX_LINE_LENGTH],
             word2[CL_MAX_LINE_LENGTH];
           FILE *wordlist;
-          int nw;      /* number of words scanned from an input line */
-          int nl = 0;  /* counter for the number of lines in the wordlist file we have gone through */
-          int i1,i2;   /* lexicon ids in source and target corpora */
-          int n_matched = 0;  /* counter for n of lines in input file that can be used as a feature. */
+          int64_t nw;      /* number of words scanned from an input line */
+          int64_t nl = 0;  /* counter for the number of lines in the wordlist file we have gone through */
+          int64_t i1,i2;   /* lexicon ids in source and target corpora */
+          int64_t n_matched = 0;  /* counter for n of lines in input file that can be used as a feature. */
 
-          if(sscanf(config[config_pointer],"%2s:%d:%s %s",command,&weight,filename,dummy)!=3) {
+          if(sscanf(config[config_pointer],"%2s:%" PRId64 ":%s %s",command,&weight,filename,dummy)!=3) {
             fprintf(stderr, "ERROR: wrong # of args: %s\n",config[config_pointer]);
             fprintf(stderr, "Usage: -W:<weight>:<filename>\n");
             fprintf(stderr, "  Word list (read from file <filename>).\n");
@@ -320,7 +320,7 @@ create_feature_maps(char **config,
             exit(-1);
           }
           else {
-            printf("FEATURE: word list %s, weight=%d ... ", filename, weight);
+            printf("FEATURE: word list %s, weight=%" PRId64 " ... ", filename, weight);
             fflush(stdout);
             /* TODO: (in v 3.9). The bilingual lexicon file should use a tab as the divider,
              * so that words with a space within them - allowed in a p-attribute - can be specified here. */
@@ -334,11 +334,11 @@ create_feature_maps(char **config,
               if (! (cl_string_validate_encoding(word1, charset, 0)
                   && cl_string_validate_encoding(word2, charset, 0)) ) {
                 fprintf(stderr, "ERROR: character encoding error in the word-list input file with the input word list.\n");
-                fprintf(stderr, "       (The error occurs on line %d.)\n", nl);
+                fprintf(stderr, "       (The error occurs on line %" PRId64 ".)\n", nl);
                 exit(1);
               }
               if (nw != 2)
-                fprintf(stderr,"WARNING: Line %d in word list '%s' contains %d words, ignored.\n",nl,filename,nw);
+                fprintf(stderr,"WARNING: Line %" PRId64 " in word list '%s' contains %" PRId64 " words, ignored.\n",nl,filename,nw);
               else {
                 /* if word1 and word2 both occur in their respective corpora, this is a feature. */
                 if(   (i1 = cl_str2id(w_attr1, word1)) >= 0
@@ -351,14 +351,14 @@ create_feature_maps(char **config,
               }
             }
             fclose(wordlist);
-            printf("[%d]\n", n_matched);
+            printf("[%" PRId64 "]\n", n_matched);
           }         
           break;
         }
         /* -C: the character count type of feature.
          * This feature exists for EVERY word type. */
         case 'C': 
-          if(sscanf(config[config_pointer],"%2s:%d %s",command,&weight,dummy)!=2) {
+          if(sscanf(config[config_pointer],"%2s:%" PRId64 " %s",command,&weight,dummy)!=2) {
             fprintf(stderr, "ERROR: wrong # of args: %s\n",config[config_pointer]);
             fprintf(stderr, "Usage: -C:<weight>\n");
             fprintf(stderr, "  Character count [primary feature].\n");
@@ -367,7 +367,7 @@ create_feature_maps(char **config,
           else {
             /* primary feature -> don't create additional features */
             /* first entry in a token's feature list is always the character count */
-            printf("FEATURE: character count, weight=%d ... [1]\n", weight);
+            printf("FEATURE: character count, weight=%" PRId64 " ... [1]\n", weight);
           }
           break;
         default:
@@ -383,7 +383,7 @@ create_feature_maps(char **config,
     }
   }
 
-  printf("[%d features allocated]\n",r->n_features);
+  printf("[%" PRId64 " features allocated]\n",r->n_features);
 
 
   /*
@@ -399,19 +399,19 @@ create_feature_maps(char **config,
   for(i=1; i<=nw2; i++)
     fcount2[i] += fcount2[i-1];
 
-  printf("[%d entries in source text feature map]\n", fcount1[nw1]);
-  printf("[%d entries in target text feature map]\n", fcount2[nw2]);
+  printf("[%" PRIu64 " entries in source text feature map]\n", fcount1[nw1]);
+  printf("[%" PRIu64 " entries in target text feature map]\n", fcount2[nw2]);
 
 
   /* now we know how much memory we need, let's allocate it. */
-  fs1 = (int *)malloc(sizeof(int) * fcount1[nw1]);
+  fs1 = (int64_t*)malloc(sizeof(*fs1) * fcount1[nw1]);
   assert(fs1);
-  fs2 = (int *)malloc(sizeof(int) * fcount2[nw2]);
+  fs2 = (int64_t*)malloc(sizeof(*fs2) * fcount2[nw2]);
   assert(fs2);
   
-  r->w2f1=(int **)malloc(sizeof(unsigned int *)*(nw1+1));
+  r->w2f1=(int64_t**)malloc(sizeof(uint64_t *)*(nw1+1));
   assert(r->w2f1);
-  r->w2f2=(int **)malloc(sizeof(unsigned int *)*(nw2+1));
+  r->w2f2=(int64_t**)malloc(sizeof(uint64_t *)*(nw2+1));
   assert(r->w2f2);
 
   /* set up word-to-feature maps. In these maps, the integer index = the lexicon id of the word,
@@ -422,7 +422,7 @@ create_feature_maps(char **config,
   for(i = 0; i <= nw2; i++)
     r->w2f2[i] = fs2 + fcount2[i];
 
-  r->fweight = (int*)calloc(r->n_features, sizeof(int));
+  r->fweight = (int64_t*)calloc(r->n_features, sizeof(*r->fweight));
   assert(r->fweight);
 
   r->vstack = NULL;
@@ -439,11 +439,11 @@ create_feature_maps(char **config,
         switch(command[1]) {
         /* -S : the "shared words" type of feature */
         case 'S': {
-          int i1, i2, f1, f2;
+          int64_t i1, i2, f1, f2;
           float threshold;
           
-          if (sscanf(config[config_pointer],"%2s:%d:%f %s",command,&weight,&threshold,dummy) == 3) {
-            printf("PASS 2: Processing shared words (th=%4.1f%c).\n", threshold * 100, '\%');
+          if (sscanf(config[config_pointer],"%2s:%" PRId64 ":%f %s",command,&weight,&threshold,dummy) == 3) {
+            printf("PASS 2: Processing shared words (th=%4.1f%c).\n", threshold * 100, '%');
             /* for each word in the lexicon of the source corpus.... check it exists, get
              * corresponding word in target corpus. As before.
              * BUT this time, IF the criterion is met, we don't just count it, we assign
@@ -468,16 +468,16 @@ create_feature_maps(char **config,
         case '2':
         case '3':
         case '4': { 
-          int n;
+          int64_t n;
 
           if (
-              (sscanf(config[config_pointer], "%1s%d:%d %s", command, &n, &weight, dummy) == 3)
+              (sscanf(config[config_pointer], "%1s%" PRId64 ":%" PRId64 " %s", command, &n, &weight, dummy) == 3)
               && ( n >= 1 && n <= 4 )
           ) {
-            int i, f, ng, l;
-            unsigned char *s;
+            int64_t i, f, ng, l;
+            uint8_t *s;
 
-            printf("PASS 2: Processing %d-grams.\n",n);
+            printf("PASS 2: Processing %" PRId64 "-grams.\n",n);
 
             f = 1;
             for(i = 0; i < n; i++)
@@ -533,10 +533,10 @@ create_feature_maps(char **config,
             word1[CL_MAX_LINE_LENGTH],
             word2[CL_MAX_LINE_LENGTH];
           FILE *wordlist;
-          int nw, nl = 0, i1 ,i2;
+          int64_t nw, nl = 0, i1 ,i2;
 
           /* note that we RESCAN the wordlist file, this time adding weights, pointers etc. */
-          if (sscanf(config[config_pointer], "%2s:%d:%s %s", command, &weight, filename, dummy) == 3) {
+          if (sscanf(config[config_pointer], "%2s:%" PRId64 ":%s %s", command, &weight, filename, dummy) == 3) {
             if (!(wordlist = fopen(filename,"r")))
               exit(-1);
             printf("PASS 2: Processing word list %s\n", filename);
@@ -563,10 +563,10 @@ create_feature_maps(char **config,
           break;
         }
         case 'C': 
-          if (sscanf(config[config_pointer],"%2s:%d %s",command,&weight,dummy) == 2) {
+          if (sscanf(config[config_pointer],"%2s:%" PRId64 " %s",command,&weight,dummy) == 2) {
             printf("PASS 2: Setting character count weight.\n");
             if (r->fweight[0] != 0) {
-              fprintf(stderr, "WARNING: Character count weight redefined (new value is %d)\n", weight);
+              fprintf(stderr, "WARNING: Character count weight redefined (new value is %" PRId64 ")\n", weight);
             }
             /* primary feature */
             r->fweight[0] = weight;
@@ -591,8 +591,8 @@ create_feature_maps(char **config,
   need_to_abort = 0;
   for(i=1;i<nw1;i++) {
     if(r->w2f1[i+1]-r->w2f1[i]!=fcount1[i]-fcount1[i-1]) {
-      fprintf(stderr,"ERROR: fcount1[%d]=%d r->w2f1[%d]-r->w2f1[%d]=%ld w=``%s''\n",
-              i,fcount1[i]-fcount1[i-1], i+1, i,(long int)(r->w2f1[i+1]-r->w2f1[i]),
+      fprintf(stderr,"ERROR: fcount1[%" PRId64 "]=%" PRIu64 " r->w2f1[%" PRId64 "]-r->w2f1[%" PRId64 "]=%" PRId64 " w=``%s''\n",
+              i,fcount1[i]-fcount1[i-1], i+1, i, r->w2f1[i+1]-r->w2f1[i],
               cl_id2str(w_attr1,i));
       need_to_abort=1;
     }
@@ -600,8 +600,8 @@ create_feature_maps(char **config,
 
   for(i=1;i<nw2;i++) {
     if(r->w2f2[i+1]-r->w2f2[i]!=fcount2[i]-fcount2[i-1]) {
-      fprintf(stderr,"ERROR: fcount2[%d]=%d r->w2f2[%d]-r->w2f2[%d]=%ld w=``%s''\n",
-              i,fcount2[i]-fcount2[i-1], i+1, i,(long int)(r->w2f2[i+1]-r->w2f2[i]),
+      fprintf(stderr,"ERROR: fcount2[%" PRId64 "]=%" PRIu64 " r->w2f2[%" PRId64 "]-r->w2f2[%" PRId64 "]=%" PRId64 " w=``%s''\n",
+              i,fcount2[i]-fcount2[i-1], i+1, i, r->w2f2[i+1]-r->w2f2[i],
               cl_id2str(w_attr2,i));
       need_to_abort=1;
     }
@@ -642,18 +642,18 @@ create_feature_maps(char **config,
  * @param l2   Index of last "sentence" of the region to analyse in the target.
  * @return     The similarity measurement for the pair of refgions.
  */
-int
+int64_t
 feature_match(FMS fms,
-              int f1,
-              int l1,
-              int f2,
-              int l2)
+              int64_t f1,
+              int64_t l1,
+              int64_t f2,
+              int64_t l2)
 {
 
-  int *fcount;
-  int match, j, i, id, *f;
-  int cc1 = 0, cc2 = 0;         /* character count */
-  int from, to;                 /* sentence boundaries (as cpos) */
+  int64_t *fcount;
+  int64_t match, j, i, id, *f;
+  int64_t cc1 = 0, cc2 = 0;         /* character count */
+  int64_t from, to;                 /* sentence boundaries (as cpos) */
   
  
   /* get a feature vector from the vstack */
@@ -736,13 +736,13 @@ feature_match(FMS fms,
  * @return        Pointer to array of integers (feature counts) big enough to
  *                hold th
  */
-int *
+int64_t *
 get_fvector(FMS fms){
-  int *res;
+  int64_t *res;
   vstack_t *next;
 
   if(!fms->vstack) {
-    return ((int*)calloc(fms->n_features, sizeof(int)));
+    return ((int64_t*)calloc(fms->n_features, sizeof(*res)));
   }
   else {
     res  = fms->vstack->fcount;
@@ -760,7 +760,7 @@ get_fvector(FMS fms){
  * {That's what it looks like it does, not sure how the function name fits with that... ???? - AH}
  */
 void
-release_fvector(int *fvector, FMS fms)
+release_fvector(int64_t *fvector, FMS fms)
 {
   vstack_t *new;
   
@@ -784,7 +784,7 @@ void
 check_fvectors(FMS fms)
 {
 
-  int i, n;
+  int64_t i, n;
   vstack_t * agenda;
 
   n=0;
@@ -801,7 +801,7 @@ check_fvectors(FMS fms)
     agenda=agenda->next;
   }
   
-  printf("[check_fvectors: All %d feature vectors empty]\n",n);
+  printf("[check_fvectors: All %" PRId64 " feature vectors empty]\n",n);
 }
 
 
@@ -818,21 +818,21 @@ check_fvectors(FMS fms)
  * @param word   The word-type to look up.
  */
 void
-show_features(FMS fms, int which, char *word)
+show_features(FMS fms, int64_t which, char *word)
 {
-  int id, *f;
+  int64_t id, *f;
   Attribute *att;
-  int **w2f;      /* the word-to-feature mapper that we're using here */
+  int64_t **w2f;      /* the word-to-feature mapper that we're using here */
 
   att = (which==1) ? (fms->att1) : (fms->att2);
   w2f = (which==1) ? (fms->w2f1) : (fms->w2f2);
   
   id = cl_str2id(att, word);
 
-  printf("FEATURES of '%s', id=%d :\n", word, id);
-  printf("+ len=%2d  weight=%3d\n", *w2f[id], fms->fweight[0]);
+  printf("FEATURES of '%s', id=%" PRId64 " :\n", word, id);
+  printf("+ len=%2" PRId64 "  weight=%3" PRId64 "\n", *w2f[id], fms->fweight[0]);
   for(f = w2f[id] + 1; f < w2f[id+1]; f++)
-    printf("+ %6d  weight=%3d\n", *f, fms->fweight[*f]);
+    printf("+ %6" PRId64 "  weight=%3" PRId64 "\n", *f, fms->fweight[*f]);
 }
 
 
@@ -879,37 +879,37 @@ show_features(FMS fms, int which, char *word)
  */
 void
 best_path(FMS fms,
-          int f1,
-          int l1,
-          int f2,
-          int l2,
-          int beam_width,       /* beam search */
-          int verbose,          /* print progress info on stdout ? */
+          int64_t f1,
+          int64_t l1,
+          int64_t f2,
+          int64_t l2,
+          int64_t beam_width,       /* beam search */
+          int64_t verbose,          /* print progress info on stdout ? */
           /* output */
-          int *steps,
-          int **out1,
-          int **out2,
-          int **out_quality)
+          int64_t *steps,
+          int64_t **out1,
+          int64_t **out2,
+          int64_t **out_quality)
 {
 
   BARdesc quality, next_x, next_y;  /* three arrays of ints, basically */
   
-  static int max_out_pos = 0;
-  static int *x_out = NULL;
-  static int *y_out = NULL;
-  static int *q_out = NULL;
+  static int64_t max_out_pos = 0;
+  static int64_t *x_out = NULL;
+  static int64_t *y_out = NULL;
+  static int64_t *q_out = NULL;
 
-  int ix, iy, iq, id, idmax, index, dx, dy, aux;
-  int x_start, x_end, x_max, q_max;     /* beam search stuff */
-  int half_beam_width = beam_width / 2;
-  int x_ranges = l1 - f1 + 1, y_ranges = l2 - f2 + 1;
+  int64_t ix, iy, iq, id, idmax, index, dx, dy, aux;
+  int64_t x_start, x_end, x_max, q_max;     /* beam search stuff */
+  int64_t half_beam_width = beam_width / 2;
+  int64_t x_ranges = l1 - f1 + 1, y_ranges = l2 - f2 + 1;
 
   /* allocate/enlarge output arrays if necessary.
    * If all alignments are 1:0 or 0:1 -> x_ranges+y_ranges + 1 pts */
   if (x_ranges + y_ranges + 1 > max_out_pos) {
-    x_out = (int*)realloc(x_out, sizeof(int) * (x_ranges + y_ranges + 1));
-    y_out = (int*)realloc(y_out, sizeof(int) * (x_ranges + y_ranges + 1));
-    q_out = (int*)realloc(q_out, sizeof(int) * (x_ranges + y_ranges + 1));
+    x_out = (int64_t*)realloc(x_out, sizeof(*x_out) * (x_ranges + y_ranges + 1));
+    y_out = (int64_t*)realloc(y_out, sizeof(*y_out) * (x_ranges + y_ranges + 1));
+    q_out = (int64_t*)realloc(q_out, sizeof(*q_out) * (x_ranges + y_ranges + 1));
     max_out_pos = x_ranges+y_ranges+1; 
   }
   /* allocate data array for dynamic programming */
@@ -976,7 +976,7 @@ best_path(FMS fms,
     } /* end of x coordinate loop (diagonal parametrisation) */
     /* new x_max is predicted to be the same as x_max determined for current diagonal */
     if (verbose) { 
-      printf("BEST_PATH: scanning diagonal #%d of %d [max sim = %d]        \r",
+      printf("BEST_PATH: scanning diagonal #%" PRId64 " of %" PRId64 " [max sim = %" PRId64 "]        \r",
              id, idmax, q_max);
       fflush(stdout);
     }

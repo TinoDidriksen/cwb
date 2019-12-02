@@ -45,6 +45,8 @@
 #define DEFAULT_EXTERNAL_GROUPING_COMMAND \
    "sort %s -k 1,1n -k 2,2n | uniq -c | sort -k 1,1nr -k 2,2n -k 3,3n"
 
+enum _which_app which_app;
+
 /**
  * Global array of option defintions for CQP.
  */
@@ -158,7 +160,7 @@ expand_filename(char *fname)
 {
   char fn[CL_MAX_FILENAME_LENGTH];
   char *home;
-  int s, t;
+  int64_t s, t;
 
   s = 0;
   t = 0;
@@ -167,7 +169,7 @@ expand_filename(char *fname)
 
     if (fname[s] == '~' && (home = getenv("HOME")) != NULL) {
 
-      int k;
+      int64_t k;
 
       for (k = 0; home[k]; k++) {
         fn[t] = home[k];
@@ -179,7 +181,7 @@ expand_filename(char *fname)
 
       /*  reference to the name of another component. */
 
-      int rpos;
+      int64_t rpos;
       char rname[CL_MAX_LINE_LENGTH];
       char *reference;
 
@@ -294,9 +296,9 @@ cqp_usage(void)
  * @param opt  Index in the global array of the option to print.
  */
 void
-print_option_value(int opt)
+print_option_value(int64_t opt)
 {
-  int show_lc_rc = 0;                /* "set context;" should also display left and right context settings */
+  int64_t show_lc_rc = 0;                /* "set context;" should also display left and right context settings */
 
   if (cqpoptions[opt].opt_abbrev != NULL)
     printf("[%s]\t", cqpoptions[opt].opt_abbrev);
@@ -324,11 +326,11 @@ print_option_value(int opt)
       break;
 
     case OptBoolean:
-      printf((*((int *)cqpoptions[opt].address)) ? "yes" : "no");
+      printf((*((int64_t*)cqpoptions[opt].address)) ? "yes" : "no");
       break;
 
     case OptInteger:
-      printf("%d", *((int *)cqpoptions[opt].address));
+      printf("%" PRId64 "", *((int64_t*)cqpoptions[opt].address));
       break;
 
     case OptContext:
@@ -337,7 +339,7 @@ print_option_value(int opt)
         show_lc_rc = 1;
       }
       else if (strcasecmp(cqpoptions[opt].opt_name, "LeftContext") == 0) {
-        printf("%d ",
+        printf("%" PRId64 " ",
              ((ContextDescriptor *)cqpoptions[opt].address)->left_width);
 
         switch (((ContextDescriptor *)cqpoptions[opt].address)->left_type) {
@@ -361,7 +363,7 @@ print_option_value(int opt)
         }
       }
       else if (strcasecmp(cqpoptions[opt].opt_name, "RightContext") == 0) {
-        printf("%d ",
+        printf("%" PRId64 " ",
                ((ContextDescriptor *)cqpoptions[opt].address)->right_width);
 
         switch (((ContextDescriptor *)cqpoptions[opt].address)->right_type) {
@@ -413,9 +415,9 @@ print_option_value(int opt)
 void
 print_option_values()
 {
-  int opt;
-  int lc_opt = find_option("LeftContext"); /* left and right context are automatically shown together with context option */
-  int rc_opt = find_option("RightContext");
+  int64_t opt;
+  int64_t lc_opt = find_option("LeftContext"); /* left and right context are automatically shown together with context option */
+  int64_t rc_opt = find_option("RightContext");
 
   if (!silent)
     printf("Variable settings:\n");
@@ -434,7 +436,7 @@ print_option_values()
 void
 set_default_option_values(void)
 {
-  int i;
+  int64_t i;
   char *env;
 
   /* 6502 Assembler was not that bad compared to this ... */
@@ -467,11 +469,11 @@ set_default_option_values(void)
       case OptBoolean:
 
         if (cqpoptions[i].envvar != NULL)
-          *((int *)cqpoptions[i].address) = (getenv(cqpoptions[i].envvar) == NULL)
+          *((int64_t*)cqpoptions[i].address) = (getenv(cqpoptions[i].envvar) == NULL)
             ? cqpoptions[i].idefault
             : atoi(getenv(cqpoptions[i].envvar));
         else
-          *((int *)cqpoptions[i].address) = cqpoptions[i].idefault;
+          *((int64_t*)cqpoptions[i].address) = cqpoptions[i].idefault;
         break;
       default:
         break;
@@ -523,7 +525,7 @@ set_default_option_values(void)
  * @return   Code of the matching strategy, or -1 if s isn't a recognized matching strategy name.
  *           The return value can be assigned to enum type matching_strategy unless it is -1.
  */
-int find_matching_strategy(const char *s) {
+int64_t find_matching_strategy(const char *s) {
   if (strcasecmp(s, "traditional") == 0) {
     return traditional;
   }
@@ -553,9 +555,9 @@ int find_matching_strategy(const char *s) {
  * @return   Index of element in cqpoptions corresponding to the name s,
  *           or -1 if no corresponding element was found.
  */
-int find_option(char *s)
+int64_t find_option(char *s)
 {
-  int i;
+  int64_t i;
 
   for (i = 0; cqpoptions[i].opt_name != NULL; i++)
     if (strcasecmp(cqpoptions[i].opt_name, s) == 0)
@@ -576,9 +578,9 @@ int find_option(char *s)
  * @param opt  The option that has just been set (index into the cqpoptions array).
  */
 void
-execute_side_effects(int opt)
+execute_side_effects(int64_t opt)
 {
-  int code;
+  int64_t code;
 
   switch (cqpoptions[opt].side_effect) {
   case 0:  /* <no side effect> */
@@ -641,19 +643,19 @@ execute_side_effects(int opt)
     break;
 
   default:
-    fprintf(stderr, "Unknown side-effect #%d invoked by option %s.\n",
+    fprintf(stderr, "Unknown side-effect #%" PRId64 " invoked by option %s.\n",
             cqpoptions[opt].side_effect, cqpoptions[opt].opt_name);
     assert(0 && "Aborted. Please contact technical support.");
   }
 }
 
-int
-validate_integer_option_value(int opt, int value)
+int64_t
+validate_integer_option_value(int64_t opt, int64_t value)
 {
   char* optname = cqpoptions[opt].opt_name;
-  int is_ant = (strcmp(optname, "AnchorNumberTarget") == 0);
-  int is_ank = (strcmp(optname, "AnchorNumberKeyword") == 0);
-  int tmp;
+  int64_t is_ant = (strcmp(optname, "AnchorNumberTarget") == 0);
+  int64_t is_ank = (strcmp(optname, "AnchorNumberKeyword") == 0);
+  int64_t tmp;
   if (is_ant || is_ank) {
     if (value < 0 || value > 9) {
       cqpmessage(Warning, "set %s must be integer in range 0 .. 9", optname);
@@ -661,7 +663,7 @@ validate_integer_option_value(int opt, int value)
     }
     tmp = is_ant ? anchor_number_keyword : anchor_number_target;
     if (value == tmp) {
-      cqpmessage(Warning, "set %s must be different from %s (= %d)",
+      cqpmessage(Warning, "set %s must be different from %s (= %" PRId64 ")",
           optname, (is_ant ? "AnchorNumberKeyword" : "AnchorNumberTarget"), tmp);
       return 0;
     }
@@ -671,8 +673,8 @@ validate_integer_option_value(int opt, int value)
 }
 
 
-int
-validate_string_option_value(int opt, char *value)
+int64_t
+validate_string_option_value(int64_t opt, char *value)
 {
 #ifdef __NEVER__
   switch (opt) {
@@ -738,7 +740,7 @@ validate_string_option_value(int opt, char *value)
 char *
 set_string_option_value(char *opt_name, char *value)
 {
-  int opt;
+  int64_t opt;
 
   opt = find_option(opt_name);
 
@@ -783,9 +785,9 @@ set_string_option_value(char *opt_name, char *value)
  * @return          NULL if all OK; otherwise a string describing the problem.
  */
 char *
-set_integer_option_value(char *opt_name, int value)
+set_integer_option_value(char *opt_name, int64_t value)
 {
-  int opt;
+  int64_t opt;
 
   opt = find_option(opt_name);
 
@@ -796,7 +798,7 @@ set_integer_option_value(char *opt_name, int value)
   else if ((cqpoptions[opt].type != OptInteger) && (cqpoptions[opt].type != OptBoolean))
     return "Wrong option type (tried to set string-valued variable to integer value)";
   else if (validate_integer_option_value(opt, value)) {
-    *((int *)cqpoptions[opt].address) = value;
+    *((int64_t*)cqpoptions[opt].address) = value;
     execute_side_effects(opt);
     return NULL;
   }
@@ -816,11 +818,11 @@ set_integer_option_value(char *opt_name, int value)
  * @return          NULL if all OK; otherwise a string describing the problem.
  */
 char *
-set_context_option_value(char *opt_name, char *sval, int ival)
+set_context_option_value(char *opt_name, char *sval, int64_t ival)
 {
-  int opt;
+  int64_t opt;
 
-  int context_type;
+  int64_t context_type;
 
   opt = find_option(opt_name);
 
@@ -900,13 +902,13 @@ set_context_option_value(char *opt_name, char *sval, int ival)
  * @param av  The program's argv.
  */
 void
-parse_options(int ac, char *av[])
+parse_options(int64_t ac, char *av[])
 {
   extern char *optarg;
   /* extern optind and opterr unused, so don't declare them to keep gcc from complaining */
 
-  int c;
-  int opt;
+  int64_t c;
+  int64_t opt;
   char *valid_options = "";        /* set these depending on application */
 
   insecure = 0;
@@ -1022,7 +1024,7 @@ parse_options(int ac, char *av[])
 
         if ((opt >= 0) && (cqpoptions[opt].type == OptBoolean)) {
           /* TOGGLE the default value */
-          *((int *)cqpoptions[opt].address) = cqpoptions[opt].idefault ? 0 : 1;
+          *((int64_t*)cqpoptions[opt].address) = cqpoptions[opt].idefault ? 0 : 1;
           execute_side_effects(opt);
         }
         else if (strcmp(optarg, "ALL") == 0) {

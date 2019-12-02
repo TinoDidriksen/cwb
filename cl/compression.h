@@ -22,11 +22,11 @@
 
 #include "bitio.h"
 
-int compute_ba(int ft, int corpus_size);
+int64_t compute_ba(int64_t ft, int64_t corpus_size);
 
-int read_golomb_code_bs(int b, BStream *bs);
-int read_golomb_code_bf(int b, BFile *bf);
+int64_t read_golomb_code_bs(int64_t b, BStream *bs);
+int64_t read_golomb_code_bf(int64_t b, BFile *bf);
 
-int write_golomb_code(int x, int b, BFile *bf);
+void write_golomb_code(int64_t x, int64_t b, BFile *bf);
 
 #endif

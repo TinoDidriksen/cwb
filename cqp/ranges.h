@@ -37,13 +37,13 @@
  */
 typedef struct _sort_clause {
   char *attribute_name;             /**< attribute on which to sort */
-  int flags;                        /**< constants indicating the %cd flags, if present */
+  int64_t flags;                        /**< constants indicating the %cd flags, if present */
   FieldType anchor1;                /**< Field type of the start of sort region */
-  int offset1;                      /**< Offset of the start of sort region */
+  int64_t offset1;                      /**< Offset of the start of sort region */
   FieldType anchor2;                /**< Field type of the end of sort region */
-  int offset2;                      /**< Offset of the end of sort region */
-  int sort_ascending;               /**< Boolean: sort direction (ascending true/descending false) */
-  int sort_reverse;                 /**< Boolean: reverse sort? (sort reversed character sequences) */
+  int64_t offset2;                      /**< Offset of the end of sort region */
+  int64_t sort_ascending;               /**< Boolean: sort direction (ascending true/descending false) */
+  int64_t sort_reverse;                 /**< Boolean: reverse sort? (sort reversed character sequences) */
   /* struct _sort_clause *next; */  /* used to support multiple sort clauses in a linked list */
 } SortClauseBuffer, *SortClause;
 
@@ -78,36 +78,36 @@ typedef enum rng_setops {
 #define UNSELECTED_LINES 3       /**< delete all but the selected lines */
 
 
-int delete_interval(CorpusList *cp, int interval_number);
+int64_t delete_interval(CorpusList *cp, int64_t interval_number);
 
-int delete_intervals(CorpusList *cp, Bitfield which_intervals, int mode);
+int64_t delete_intervals(CorpusList *cp, Bitfield which_intervals, int64_t mode);
 
-int copy_intervals(CorpusList *cp,
+int64_t copy_intervals(CorpusList *cp,
                    Bitfield which_intervals,
-                   int mode,
+                   int64_t mode,
                    char *subcorpname);
 
-int calculate_ranges(CorpusList *cl, int cpos, Context spc, int *left, int *right);
+int64_t calculate_ranges(CorpusList *cl, int64_t cpos, Context spc, int64_t *left, int64_t *right);
 
-int calculate_rightboundary(CorpusList *cl, 
-                            int cpos,
+int64_t calculate_rightboundary(CorpusList *cl, 
+                            int64_t cpos,
                             Context spc);
 
-int calculate_leftboundary(CorpusList *cl,
-                           int cpos,
+int64_t calculate_leftboundary(CorpusList *cl,
+                           int64_t cpos,
                            Context spc);
 
-int RangeSetop(CorpusList *list1,
+int64_t RangeSetop(CorpusList *list1,
                RangeSetOp operation,
                CorpusList *list2,
                Bitfield restrictor);
 
 
-void RangeSort(CorpusList *c, int mk_sortidx);
+void RangeSort(CorpusList *c, bool mk_sortidx);
 
-int SortSubcorpus(CorpusList *cl, SortClause sc, int count_mode, struct Redir *redir);
+bool SortSubcorpus(CorpusList *cl, SortClause sc, bool count_mode, struct Redir *redir);
 
-int SortSubcorpusRandomize(CorpusList *cl, int seed);
+int64_t SortSubcorpusRandomize(CorpusList *cl, int64_t seed);
 
 void FreeSortClause(SortClause sc);
 

@@ -36,7 +36,7 @@ char *progname = NULL;
  * @param cid   The component ID of the component to check.
  * @return      RUE iff the component has already been created.
  */
-int
+int64_t
 component_ok(Attribute *attr, ComponentID cid)
 {
   ComponentState state;
@@ -69,7 +69,7 @@ component_ok(Attribute *attr, ComponentID cid)
 void
 makeall_make_component(Attribute *attr, ComponentID cid)
 {
-  int state;
+  int64_t state;
 
   if (! component_ok(attr, cid)) {
 
@@ -102,13 +102,13 @@ makeall_make_component(Attribute *attr, ComponentID cid)
  * @param attr  The attribute whose REVCORP should be checked.
  * @return      True for all OK, false for a problem.
  */
-int
+bool
 validate_revcorp(Attribute *attr)
 {
   Component *revcorp = ensure_component(attr, CompRevCorpus, 0);
-  int *ptab;                        /* table of index offsets for each lexicon entry */
-  int lexsize, corpsize;
-  int i, offset, cpos, id;
+  int64_t *ptab;                        /* table of index offsets for each lexicon entry */
+  int64_t lexsize, corpsize;
+  int64_t i, offset, cpos, id;
 
   printf(" ? validating %s ... ", cid_name(CompRevCorpus));
   fflush(stdout);
@@ -129,7 +129,7 @@ validate_revcorp(Attribute *attr)
   }
 
   /* init offsets by calculating REVIDX component from token frequencies */
-  ptab = (int *) cl_calloc(lexsize, sizeof(int));
+  ptab = (int64_t*) cl_calloc(lexsize, sizeof(*ptab));
   offset = 0;
   for (i = 0; i < lexsize; i++) {
     ptab[i] = offset;
@@ -144,7 +144,7 @@ validate_revcorp(Attribute *attr)
       cl_free(ptab);
       return 0;
     }
-    if (ntohl(revcorp->data.data[ptab[id]]) != cpos) {
+    if (ntohll(revcorp->data.data[ptab[id]]) != cpos) {
       printf("FAILED\n");
       cl_free(ptab);
       return 0;
@@ -180,7 +180,7 @@ validate_revcorp(Attribute *attr)
  *                  the resulting revcorp.
  */
 void
-makeall_do_attribute(Attribute *attr, ComponentID cid, int validate)
+makeall_do_attribute(Attribute *attr, ComponentID cid, int64_t validate)
 {
   assert(attr);
 
@@ -321,14 +321,14 @@ main(int argc, char **argv)
 
   extern int optind;
   extern char *optarg;
-  int c;
+  int64_t c;
 
-  int validate = 0;
+  int64_t validate = 0;
 
   char *component = NULL;
 
   ComponentID cid;
-  int i = 0;
+  int64_t i = 0;
 
   /* ------------------------------------------------- PARSE ARGUMENTS */
 

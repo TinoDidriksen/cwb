@@ -27,9 +27,9 @@
 /**
  * boolean: is the byte-order little-endian?
  *
- * CWB default format is 4-byte big-endian = network
+ * CWB default format is 8-byte big-endian = network
  */
-int little_endian = 0;
+bool little_endian = 0;
 
 
 /**
@@ -42,13 +42,12 @@ void
 process_fd(FILE *fd)
 {
   char buf[CL_MAX_LINE_LENGTH];
-  int i;
 
   while(fgets(buf, CL_MAX_LINE_LENGTH, fd)) {
-    i = htonl(atoi(buf));
+    int64_t i = htonll(atoll(buf));
     if (little_endian) 
-      i = cl_bswap32(i);        /* explicit conversion */
-    fwrite(&i, 4, 1, stdout);   /* always write 4 bytes ! */
+      i = cl_bswap64(i);        /* explicit conversion */
+    fwrite(&i, sizeof(i), 1, stdout);   /* always write 8 bytes ! */
   }
 }
 
@@ -62,7 +61,7 @@ int
 main(int argc, char **argv)
 {
   FILE *fd; 
-  int i;
+  int64_t i;
   char *progname = argv[0];
 
   /* default case: we are reading from stdin */
@@ -82,7 +81,7 @@ main(int argc, char **argv)
         fprintf(stderr, "\n");
         fprintf(stderr, "Usage:  %s [options] [file]\n", argv[0]);
         fprintf(stderr, "Reads one integer per line from ASCII file <file> or from standard input\n");
-        fprintf(stderr, "and writes values to standard output as 32-bit integers in network format\n");
+        fprintf(stderr, "and writes values to standard output as 64-bit integers in network format\n");
         fprintf(stderr, "(the format used by CWB binary data files).\n");
         fprintf(stderr, "Options:\n");
         fprintf(stderr, "  -n  convert to network format [default]\n");

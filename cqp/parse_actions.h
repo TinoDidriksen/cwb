@@ -44,8 +44,8 @@
 #define OP_MATCHES  4                /**< grammar constant: matches */
 
 
-extern int generate_code;
-extern int within_gc;
+extern int64_t generate_code;
+extern int64_t within_gc;
 
 extern CYCtype last_cyc;
 
@@ -54,15 +54,15 @@ extern CorpusList *old_query_corpus;
 extern FieldType field_to_set;
 extern SearchStrategy strategy;
 
-extern int catch_unknown_ids;
+extern int64_t catch_unknown_ids;
 
 extern FILE *yyin;
 
 extern Context expansion;
 
 extern char regex_string[];
-extern int regex_string_pos;
-extern int sslen;
+extern int64_t regex_string_pos;
+extern int64_t sslen;
 
 
 /* ======================================== PARSER ACTIONS */
@@ -87,13 +87,13 @@ void prepare_Query();
 
 CorpusList *after_Query(CorpusList *cl);
 
-void do_cat(CorpusList *cl, struct Redir *r, int first, int last);
+void do_cat(CorpusList *cl, struct Redir *r, int64_t first, int64_t last);
 
 void do_echo(char *s, struct Redir *rd);
 
 void do_save(CorpusList *cl, struct Redir *r);
 
-void do_attribute_show(char *name, int status);
+void do_attribute_show(char *name, int64_t status);
 
 CorpusList *do_translate(CorpusList *source, char *target_name);
 
@@ -113,35 +113,35 @@ void do_set_complex_target(CorpusList *cl,
                            SearchStrategy search_strategy,
                            Constrainttree boolt,
                            enum ctxtdir direction,
-                           int number,
+                           int64_t number,
                            char *id,
                            FieldType field,
-                           int inclusive);
+                           int64_t inclusive);
 
-void do_sleep(int duration);
+void do_sleep(int64_t duration);
 
 void do_exec(char *fname);
 
-void do_delete_lines_num(CorpusList *cl, int start, int end);
-void do_delete_lines(CorpusList *cl, FieldType f, int mode);
+void do_delete_lines_num(CorpusList *cl, int64_t start, int64_t end);
+void do_delete_lines(CorpusList *cl, FieldType f, int64_t mode);
 
-void do_reduce(CorpusList *cl, int number, int percent);
-void do_cut(CorpusList *cl, int first, int last);
+void do_reduce(CorpusList *cl, int64_t number, int64_t percent);
+void do_cut(CorpusList *cl, int64_t first, int64_t last);
 
 void do_info(CorpusList *cl);
 
 void do_group(CorpusList *cl,
-              FieldType target, int target_offset, char *t_att,
-              FieldType source, int source_offset, char *s_att,
-              int cut, int expand, int is_grouped, struct Redir *redir);
+              FieldType target, int64_t target_offset, char *t_att,
+              FieldType source, int64_t source_offset, char *s_att,
+              int64_t cut, int64_t expand, int64_t is_grouped, struct Redir *redir);
 
 void do_group2(CorpusList *cl,
-               FieldType target, int target_offset, char *t_att,
-               int cut, int expand, struct Redir *r);
+               FieldType target, int64_t target_offset, char *t_att,
+               int64_t cut, int64_t expand, struct Redir *r);
 
-CorpusList *do_StandardQuery(int cut_value, int keep_flag, char *modifier);
+CorpusList *do_StandardQuery(int64_t cut_value, int64_t keep_flag, char *modifier);
 
-CorpusList *do_MUQuery(Evaltree evalt, int keep_flag, int cut_value);
+CorpusList *do_MUQuery(Evaltree evalt, int64_t keep_flag, int64_t cut_value);
 
 void do_SearchPattern(Evaltree expr,
                       Constrainttree constraint);
@@ -154,20 +154,20 @@ reg_disj(Evaltree left, Evaltree right);
 Evaltree
 reg_seq(Evaltree left, Evaltree right);
 
-int 
-do_AnchorPoint(FieldType field, int is_closing);
+int64_t 
+do_AnchorPoint(FieldType field, int64_t is_closing);
 
-int 
-do_XMLTag(char *s_name, int is_closing, int op, char *regex, int flags);
+int64_t 
+do_XMLTag(char *s_name, int64_t is_closing, int64_t op, char *regex, int64_t flags);
 
-int 
+int64_t 
 do_NamedWfPattern(target_nature is_target,
                   char *label,
-                  int pat_idx);
+                  int64_t pat_idx);
 
-int do_WordformPattern(Constrainttree boolt, int lookahead);
+int64_t do_WordformPattern(Constrainttree boolt, int64_t lookahead);
 
-Constrainttree do_StringConstraint(char *s, int flags);
+Constrainttree do_StringConstraint(char *s, int64_t flags);
 
 Constrainttree do_VariableReference(char *s);
 
@@ -192,19 +192,19 @@ do_RelExpr(Constrainttree left,
 
 Constrainttree do_RelExExpr(Constrainttree left);
 
-Constrainttree do_LabelReference(char *label_name, int auto_delete);
+Constrainttree do_LabelReference(char *label_name, int64_t auto_delete);
 
-Constrainttree do_IDReference(char *id_name, int auto_delete);
+Constrainttree do_IDReference(char *id_name, int64_t auto_delete);
 
-Constrainttree do_flagged_re_variable(char *varname, int flags);
+Constrainttree do_flagged_re_variable(char *varname, int64_t flags);
 
-Constrainttree do_flagged_string(char *s, int flags);
+Constrainttree do_flagged_string(char *s, int64_t flags);
 
-Constrainttree do_mval_string(char *s, int op, int flags);
+Constrainttree do_mval_string(char *s, int64_t op, int64_t flags);
 
 Constrainttree FunctionCall(char *f_name, ActualParamList *apl);
 
-void do_Description(Context *context, int nr, char *name);
+void do_Description(Context *context, int64_t nr, char *name);
 
 Evaltree do_MeetStatement(Evaltree left,
                           Evaltree right,
@@ -220,14 +220,14 @@ void do_StructuralContext(Context *context, char *name);
 CorpusList *do_TABQuery(Evaltree patterns);
 
 
-Evaltree make_first_tabular_pattern(int pattern_index, Evaltree next);
+Evaltree make_first_tabular_pattern(int64_t pattern_index, Evaltree next);
 
 Evaltree
 add_tabular_pattern(Evaltree patterns, 
                     Context *context,
-                    int pattern_index);
+                    int64_t pattern_index);
 
-void do_OptDistance(Context *context, int l_bound, int u_bound);
+void do_OptDistance(Context *context, int64_t l_bound, int64_t u_bound);
 
 /* ======================================== Variable Settings */
 
@@ -239,7 +239,7 @@ void do_printVariableSize(char *varName);
 
 void do_SetVariableValue(char *varName, char operator, char *varValues);
 
-void do_AddSubVariables(char *var1Name, int add, char *var2Name);
+void do_AddSubVariables(char *var1Name, int64_t add, char *var2Name);
 
 /* ======================================== PARSER UTILS */
 
@@ -260,8 +260,8 @@ void do_timing(char *msg);        /* call this to print elapsed time with msg (i
 
 void do_size(CorpusList *cl, FieldType field);
 
-void do_dump(CorpusList *cl, int first, int last, struct Redir *rd);
+void do_dump(CorpusList *cl, int64_t first, int64_t last, struct Redir *rd);
 
-int do_undump(char *corpname, int extension_fields, int sort_ranges, struct InputRedir *rd);
+int64_t do_undump(char *corpname, int64_t extension_fields, int64_t sort_ranges, struct InputRedir *rd);
 
 #endif

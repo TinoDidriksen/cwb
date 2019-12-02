@@ -78,7 +78,7 @@ delete_symbol_table(SymbolTable st)
 
 /** Returns label entry, or NULL if undefined (flags are used _only_ to determine namespace) */
 LabelEntry 
-findlabel(SymbolTable st, char *s, int flags)
+findlabel(SymbolTable st, char *s, int64_t flags)
 {
   LabelEntry l;
 
@@ -101,10 +101,10 @@ findlabel(SymbolTable st, char *s, int flags)
  * if create is set and label does not exist, it is added to the symbol table
  */
 LabelEntry 
-labellookup(SymbolTable st, char *s, int flags, int create)
+labellookup(SymbolTable st, char *s, int64_t flags, int64_t create)
 {
   LabelEntry l;
-  int user_namespace, this_label, is_special;
+  int64_t user_namespace, this_label, is_special;
   
   if ((l = findlabel(st, s, flags)) != NULL) {
     l->flags |= flags;                /* add flags from this call */
@@ -165,11 +165,11 @@ droplabel(SymbolTable st, LabelEntry l)
  * Checks whether all used labels are defined (and vice versa).
  * [only non-special labels in the user namespace will be checked]
  */
-int 
+int64_t 
 check_labels(SymbolTable st)
 {
   LabelEntry l = st->user;
-  int result = 1;
+  int64_t result = 1;
 
   while (l != NULL) {
     if (! (l->flags & LAB_SPECIAL)) {
@@ -193,7 +193,7 @@ print_symbol_table(SymbolTable st)
 {
   LabelEntry l;
   char *namespace;
-  int i;
+  int64_t i;
 
   fprintf(stderr, "Contents of SYMBOL TABLE:\n");
   
@@ -212,7 +212,7 @@ print_symbol_table(SymbolTable st)
       namespace = "???";
     }
     while (l != NULL) {
-      fprintf(stderr, "\t%s\t%s(flags: %d)  ->  RefTab[%d]\n",
+      fprintf(stderr, "\t%s\t%s(flags: %" PRId64 ")  ->  RefTab[%" PRId64 "]\n",
               namespace, l->name, l->flags, l->ref);
       l = l->next;
     }
@@ -220,9 +220,9 @@ print_symbol_table(SymbolTable st)
 }
 
 LabelEntry 
-symbol_table_new_iterator(SymbolTable st, int flags)
+symbol_table_new_iterator(SymbolTable st, int64_t flags)
 {
-  int user_namespace = (flags & LAB_RDAT) ? 0 : 1;
+  int64_t user_namespace = (flags & LAB_RDAT) ? 0 : 1;
   LabelEntry lab;
   
   if (st != NULL) {
@@ -237,7 +237,7 @@ symbol_table_new_iterator(SymbolTable st, int flags)
 }
 
 LabelEntry 
-symbol_table_iterator(LabelEntry prev, int flags)
+symbol_table_iterator(LabelEntry prev, int64_t flags)
 {
   if (prev == NULL) 
     return NULL;
@@ -272,7 +272,7 @@ new_reftab(SymbolTable st)
 
   rt = (RefTab) cl_malloc(sizeof(struct _RefTab));
   rt->size = st->next_index;
-  rt->data = (int *) cl_malloc(rt->size * sizeof(int));
+  rt->data = (int64_t*) cl_malloc(rt->size * sizeof(*rt->data));
 
   return rt;
 }
@@ -295,17 +295,17 @@ dup_reftab(RefTab rt1, RefTab rt2)
   assert(rt1);
   assert(rt2);
   if (rt1->size != rt2->size) {
-    fprintf(stderr, "dup_reftab()<symtab.c>: Tried to dup() RefTab (%d entries) to RefTab of different size (%d entries)\n", rt1->size, rt2->size);
+    fprintf(stderr, "dup_reftab()<symtab.c>: Tried to dup() RefTab (%" PRId64 " entries) to RefTab of different size (%" PRId64 " entries)\n", rt1->size, rt2->size);
     exit(1);
   }
-  (void) memcpy(rt2->data, rt1->data, rt1->size * sizeof(int));
+  (void) memcpy(rt2->data, rt1->data, rt1->size * sizeof(*rt1->data));
 }
 
 /** resets all referenced corpus position to -1 -> undefine all references */
 void 
 reset_reftab(RefTab rt)
 {
-  int i;
+  int64_t i;
   
   assert(rt);
   for (i = 0; i < rt->size; i++)
@@ -314,11 +314,11 @@ reset_reftab(RefTab rt)
 
 /** set references (cpos value in get_reftab is returned for 'this' label (_), set to -1 if n/a) */
 void 
-set_reftab(RefTab rt, int index, int value)
+set_reftab(RefTab rt, int64_t index, int64_t value)
 {
   if (rt != NULL) {
     if ((index < 0) || (index >= rt->size)) {
-      cqpmessage(Error, "RefTab index #%d not in range 0 .. %d", index, rt->size - 1);
+      cqpmessage(Error, "RefTab index #%" PRId64 " not in range 0 .. %" PRId64 "", index, rt->size - 1);
       exit(1);
     }
     else {
@@ -328,15 +328,15 @@ set_reftab(RefTab rt, int index, int value)
 }
 
 /** read references (cpos value in get_reftab is returned for 'this' label (_), set to -1 if n/a) */
-int 
-get_reftab(RefTab rt, int index, int cpos)
+int64_t 
+get_reftab(RefTab rt, int64_t index, int64_t cpos)
 {
   if (index == -1)              /* -1 == 'this' label returns <cpos> value */
     return cpos;
   else if (rt == NULL)          /* NULL is used for dummy reftabs */
     return -1;
   else if ((index < 0) || (index >= rt->size)) {
-    fprintf(stderr, "get_reftab()<symtab.c>: RefTab index #%d not in range 0 .. %d", index, rt->size - 1);
+    fprintf(stderr, "get_reftab()<symtab.c>: RefTab index #%" PRId64 " not in range 0 .. %" PRId64 "", index, rt->size - 1);
     return -1;
   }
   else
@@ -351,10 +351,10 @@ get_reftab(RefTab rt, int index, int cpos)
  * @param cpos  The corpus position
  */
 void 
-print_label_values(SymbolTable st, RefTab rt, int cpos)
+print_label_values(SymbolTable st, RefTab rt, int64_t cpos)
 {
   LabelEntry l;
-  int i;
+  int64_t i;
 
   fprintf(stderr, "Label values:\n");
   if ((st == NULL) || (rt == NULL) || (st->next_index != rt->size)) {
@@ -377,7 +377,7 @@ print_label_values(SymbolTable st, RefTab rt, int cpos)
       fprintf(stderr, "???");
     }
     while (l != NULL) {
-      fprintf(stderr, "%s=%d  ", l->name, get_reftab(rt, l->ref, cpos));
+      fprintf(stderr, "%s=%" PRId64 "  ", l->name, get_reftab(rt, l->ref, cpos));
       l = l->next;
     }
     fprintf(stderr, "\n");

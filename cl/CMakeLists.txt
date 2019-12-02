@@ -9,6 +9,7 @@ set(HDRS globals.h macros.h
 	compression.h
 	binsert.h
 	class-mapping.h
+	cl.h
 	)
 
 set(SRCS globals.c macros.c
@@ -44,7 +45,7 @@ set(SRCS
 	${SRCS})
 
 add_library(cqpcl SHARED ${SRCS})
-target_link_libraries(cqpcl PUBLIC ${GLIB_LIBRARIES} ${PCRE_LIB} ${GTOD_LIB} ${GETOPT_LIB})
+target_link_libraries(cqpcl PUBLIC ${GLIB_LIBRARIES} ${PCRE_LIB} ${GTOD_LIB} ${GETOPT_LIB} ${XXHASH_LIB})
 set_target_properties(cqpcl PROPERTIES COMPILE_DEFINITIONS LIBCQPCL_EXPORTS=1)
 if(WIN32)
 	target_link_libraries(cqpcl PUBLIC "wsock32.lib")

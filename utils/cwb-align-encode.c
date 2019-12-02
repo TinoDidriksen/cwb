@@ -28,12 +28,12 @@
 /** Name of the program (from the shell) */
 char *progname = "";
 
-int compatibility = 0;                /**< create .alg file for backward compatibility ? */
+int64_t compatibility = 0;                /**< create .alg file for backward compatibility ? */
 char *registry_dir = NULL;            /**< CL registry directory */
-int reverse = 0;                      /**< encode inverse alignment? */
+int64_t reverse = 0;                      /**< encode inverse alignment? */
 char *data_dir = NULL;                /**< where to store encoded alignment attribute */
-int data_dir_from_corpus = 0;         /**< determine data directory from registry entry? */
-int verbose = 0;                      /**< print some information about what files are created */
+int64_t data_dir_from_corpus = 0;         /**< determine data directory from registry entry? */
+int64_t verbose = 0;                      /**< print some information about what files are created */
 
 
 /**
@@ -76,12 +76,12 @@ alignencode_usage(void)
  * @return          The value of optind after parsing,
  *                  ie the index of the first argument in argv[]
  */
-int
-alignencode_parse_args(int ac, char *av[], int min_args)
+int64_t
+alignencode_parse_args(int64_t ac, char *av[], int64_t min_args)
 {
   extern int optind;                  /* getopt() interface */
   extern char *optarg;                /* getopt() interface */
-  int c;
+  int64_t c;
 
   while ((c = getopt(ac, av, "hd:DCRr:v")) != EOF)
     switch (c) {
@@ -161,7 +161,7 @@ alignencode_parse_args(int ac, char *av[], int min_args)
 int
 main(int argc, char *argv[])
 {
-  int argindex;                         /* index of first argument in argv[] */
+  int64_t argindex;                         /* index of first argument in argv[] */
 
   char *align_name = NULL;              /* name of the .align file */
   FILE *af = NULL;                      /* alignment file handle */
@@ -177,15 +177,15 @@ main(int argc, char *argv[])
   char s2_name[CL_MAX_FILENAME_LENGTH];
   Corpus *corpus1, *corpus2;            /* corpus handles */
   Attribute *w1, *w2;                   /* attribute handles for 'word' attributes; used to determine corpus size */
-  int size1, size2;                     /* size of source & target corpus */
+  int64_t size1, size2;                     /* size of source & target corpus */
 
   Corpus *source_corpus;                /* encode alignment in this corpus (depends on -R flag, important for -D option) */
   char *source_corpus_name;             /* just for error messages */
   char *attribute_name;                 /* name of alignment attribute (depends on -R flag, must be lowercase) */
 
-  int f1,l1,f2,l2;                      /* alignment regions */
-  int current1, current2;
-  int mark, n_0_1, n_1_0;
+  int64_t f1,l1,f2,l2;                      /* alignment regions */
+  int64_t current1, current2;
+  int64_t mark, n_0_1, n_1_0;
 
   progname = argv[0];
 
@@ -313,7 +313,7 @@ main(int argc, char *argv[])
   while (! feof(af)) {
     if (NULL == fgets(line, CL_MAX_LINE_LENGTH, af))
       break;                        /* end of file (or read error, which we choose to ignore) */
-    if (4 != sscanf(line, "%d %d %d %d", &f1, &l1, &f2, &l2)) {
+    if (4 != sscanf(line, "%" PRId64 " %" PRId64 " %" PRId64 " %" PRId64 "", &f1, &l1, &f2, &l2)) {
       fprintf(stderr, "%s: input format error: %s", progname, line);
       exit(1);
     }
@@ -329,7 +329,7 @@ main(int argc, char *argv[])
     /* check that source regions are non-overlapping and in ascending order */
     if (((reverse) ? f2 : f1) <= mark) {
       fprintf(stderr, "%s: source regions of alignment must be in ascending order\n", progname);
-      fprintf(stderr, "Last region was [*, %d]; current is [%d, %d].\n", mark, f1, l1);
+      fprintf(stderr, "Last region was [*, %" PRId64 "]; current is [%" PRId64 ", %" PRId64 "].\n", mark, f1, l1);
       fprintf(stderr, "Aborted.\n");
       exit(1);
     }
@@ -370,7 +370,7 @@ main(int argc, char *argv[])
   }
 
   if (verbose) {
-    printf("I skipped %d 0:1 alignments and %d 1:0 alignments.\n", n_0_1, n_1_0);
+    printf("I skipped %" PRId64 " 0:1 alignments and %" PRId64 " 1:0 alignments.\n", n_0_1, n_1_0);
   }
 
   /* that's it; close file handles */

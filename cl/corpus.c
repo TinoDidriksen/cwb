@@ -160,7 +160,7 @@ find_corpus(char *registry_dir, char *registry_name)
     registry_dir = cl_standard_registry();
 
   for (c = loaded_corpora; c != NULL; c = c->next) {
-    int l_dir = strlen(c->registry_dir);
+    size_t l_dir = strlen(c->registry_dir);
     if (STREQ(registry_name, c->registry_name) &&             /* corpus ID must be the same */
       (mark = strstr(registry_dir, c->registry_dir)) &&       /* find registry dir of <c> as substring of list <registry_dir> */
                                                           /* now we must check that the substring corresponds
@@ -192,7 +192,7 @@ find_corpus_registry(char *registry_dir, char *registry_name, char **real_regist
 {
   char full_name[CL_MAX_LINE_LENGTH];
 
-  int re_p, ins_p, p, start_of_entry, end_of_entry;
+  int64_t re_p, ins_p, p, start_of_entry, end_of_entry;
 
   FILE *fd;
 
@@ -275,10 +275,10 @@ find_corpus_registry(char *registry_dir, char *registry_name, char **real_regist
  * @param verbose  A boolean. Currently ignored.
  * @return         A boolean: true if access is OK, else false.
  */
-int
-check_access_conditions(Corpus *corpus, int verbose)
+int64_t
+check_access_conditions(Corpus *corpus, int64_t verbose)
 {
-  int access_ok = 1;
+  int64_t access_ok = 1;
 
 #ifndef __MINGW__
 
@@ -310,7 +310,7 @@ check_access_conditions(Corpus *corpus, int verbose)
   if (access_ok && corpus->groupAccessList) {
 
     gid_t gidset[16];
-    int nr_groups;
+    int64_t nr_groups;
 
     if ((nr_groups = getgroups(16, gidset)) < 0) {
       perror("getgroups(2): cant' get group information");
@@ -318,7 +318,7 @@ check_access_conditions(Corpus *corpus, int verbose)
     }
     else {
 
-      int i;
+      int64_t i;
       struct group *grpent = NULL;
 
       for (i = 0; i < nr_groups; i++) {
@@ -330,8 +330,8 @@ check_access_conditions(Corpus *corpus, int verbose)
 
         if (grpent == NULL) {
           perror("getgrgid(2): ");
-          fprintf(stderr, "Can't get group information for gid %d\n",
-              (int) gidset[i]);
+          fprintf(stderr, "Can't get group information for gid %" PRId64 "\n",
+              (int64_t) gidset[i]);
           access_ok = 0;
         }
         else if (memberIDList(grpent->gr_name, corpus->groupAccessList)) {
@@ -471,7 +471,7 @@ cl_new_corpus(char *registry_dir, char *registry_name)
  * @param corpus  The Corpus to delete.
  * @return        Always 1.
  */
-int
+int64_t
 cl_delete_corpus(Corpus *corpus)
 {
   Corpus *prev;
@@ -594,7 +594,7 @@ describe_corpus(Corpus *corpus)
  *                        done with it.
  */
 cl_string_list
-cl_corpus_list_attributes(Corpus *corpus, int attribute_type)
+cl_corpus_list_attributes(Corpus *corpus, int64_t attribute_type)
 {
   cl_string_list attnames;
   Attribute *attr;
@@ -642,7 +642,7 @@ FreeIDList(IDList *list)
  * @param l  The IDList to search.
  * @return   Boolean: true if s is a member of the list, else false.
  */
-int
+int64_t
 memberIDList(char *s, IDList l)
 {
   while (l) {
@@ -785,7 +785,7 @@ charset_spec charset_names[] = {
 char *
 cl_charset_name(CorpusCharset id)
 {
-  int i;
+  int64_t i;
 
   for (i = 0; charset_names[i].name; i++) {
     if (id == charset_names[i].id)
@@ -800,7 +800,7 @@ cl_charset_name(CorpusCharset id)
 CorpusCharset
 cl_charset_from_name(char *name)
 {
-  int i;
+  int64_t i;
   CorpusCharset fallback = unknown_charset;
   for (i = 0; charset_names[i].name; i++) {
     if (strcasecmp(name, charset_names[i].name) == 0) {
@@ -823,7 +823,7 @@ cl_charset_from_name(char *name)
 char *
 cl_charset_name_canonical(char *name_to_check)
 {
-  int i;
+  int64_t i;
   for (i = 0; charset_names[i].name; i++) {
     if (strcasecmp(name_to_check, charset_names[i].name) == 0) {
       return charset_names[i].name;
@@ -850,7 +850,7 @@ add_corpus_property(Corpus *corpus, char *property, char *value)
 {
   CorpusProperty new_prop;
 //  CorpusCharset charset;
-//  int i;
+//  int64_t i;
 
   if (cl_corpus_property(corpus, property) != NULL) {
     fprintf(stderr,

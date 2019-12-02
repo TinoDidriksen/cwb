@@ -59,8 +59,8 @@
  * instead of the more common rl_completion_entry_function / rl_completion_matches() approach.
 */
 char **cc_compl_list = NULL;      /* list of possible completions */
-int cc_compl_list_size = 0;       /* number of completions in list */
-int cc_compl_list_allocated = 0;  /* number of entries allocated for list (incl. NULL terminator) */
+int64_t cc_compl_list_size = 0;       /* number of completions in list */
+int64_t cc_compl_list_allocated = 0;  /* number of entries allocated for list (incl. NULL terminator) */
 #define CC_COMPL_LIST_ALLOC_BLOCK 256 /* how many list cells to allocate at a time */
 #define RL_DEBUG 0
 
@@ -89,12 +89,12 @@ cc_compl_list_add(char *string)
 }
 
 /* internal function for sorting list of completions */
-static int
+static int64_t
 cc_compl_list_sort(const void *p1, const void *p2)
 {
   char *name1 = *((char **) p1);
   char *name2 = *((char **) p2);
-  int result = strcmp(name1, name2);
+  int64_t result = strcmp(name1, name2);
   return result;
 }
 
@@ -102,7 +102,7 @@ cc_compl_list_sort(const void *p1, const void *p2)
 char **
 cc_compl_list_sort_uniq(void)
 {
-  int mark, point;
+  int64_t mark, point;
   char *lcp, *new_string;
 
   if (cc_compl_list_size <= 1) { /* empty list (only containing dummy entry) */
@@ -139,7 +139,7 @@ cc_compl_list_sort_uniq(void)
   cc_compl_list_size = mark + 1;
   cc_compl_list[cc_compl_list_size] = NULL;
 #if RL_DEBUG
-  printf("\nRETURNING %d COMPLETIONS:\n", cc_compl_list_size);
+  printf("\nRETURNING %" PRId64 " COMPLETIONS:\n", cc_compl_list_size);
   for (mark=0; cc_compl_list[mark]; mark++) {
     printf(" - %s\n", cc_compl_list[mark]);
   }
@@ -149,18 +149,18 @@ cc_compl_list_sort_uniq(void)
 
 /* custom completion function: complete corpus/subcorpus names */
 char **
-cqp_custom_completion(const char *text, int start, int end)
+cqp_custom_completion(const char *text, int64_t start, int64_t end)
 {
   /* <line> is the complete input line; <text> to be completed is the substring from <start> to <end> */
   char *line = rl_line_buffer;
-  int text_len = end - start; /* length of <text> */
-  int point, k;
+  int64_t text_len = end - start; /* length of <text> */
+  int64_t point, k;
   Variable var;
   CorpusList *cl;
   char *prototype, *prefix;
   char mother[CL_MAX_LINE_LENGTH];
   char *real_name, *colon;
-  int mother_len, real_len, prefix_len;
+  int64_t mother_len, real_len, prefix_len;
   char *completion;
 
 #if RL_DEBUG
@@ -289,7 +289,7 @@ cqp_custom_completion(const char *text, int start, int end)
   while (cl != NULL) {
     if ((cl->type == SYSTEM) || (cl->type == SUB)) /* don't show subcorpora with status TEMP */
     {
-      int handled = 0;
+      int64_t handled = 0;
       /* token must be prefix of corpus name (if mother name is given, consider only subcorpora) */
       if ((strncmp(cl->name, real_name, real_len) == 0)
           && (!mother_len || (cl->type == SUB))) {
@@ -347,7 +347,7 @@ cqp_custom_completion(const char *text, int start, int end)
 char *
 ensure_semicolon (char *line)
 {
-  int i, l;
+  int64_t i, l;
 
   if (line) {
     l = strlen(line);
@@ -416,7 +416,7 @@ readline_main(void)
         if (STREQ(current_corpus->name, current_corpus->mother_name))
           sprintf(prompt, "%s> ", current_corpus->name);
         else
-          sprintf(prompt, "%s:%s[%d]> ",
+          sprintf(prompt, "%s:%s[%" PRId64 "]> ",
                   current_corpus->mother_name,
                   current_corpus->name,
                   current_corpus->size);
@@ -487,7 +487,7 @@ main(int argc, char *argv[])
     char *standout = get_typeface_escape('s');
     char *normal = get_typeface_escape('n');
     char sc_colour[256];
-    int i, j;
+    int64_t i, j;
 
     printf("%s%sWelcome%s to %s%sC%s%sQ%s%sP%s -- ", green, bold, normal, red, bold, pink, bold, blue, bold, normal);
     printf("the %s Colourful %s Query %s Processor %s.\n", yellowBack, greenBack, cyanBack, normal);
@@ -495,8 +495,8 @@ main(int argc, char *argv[])
     for (i = 3; i <= 4; i++) {
       printf("[");
       for (j = 0; j < 8; j++) {
-        sprintf(sc_colour, "\x1B[0;%d%dm", i,j);
-        printf("%d%d: %sN%s%sB%s%sU%s%sS%s  ",
+        sprintf(sc_colour, "\x1B[0;%" PRId64 "%" PRId64 "m", i,j);
+        printf("%" PRId64 "%" PRId64 ": %sN%s%sB%s%sU%s%sS%s  ",
                i, j,
                sc_colour,
                sc_colour, bold,

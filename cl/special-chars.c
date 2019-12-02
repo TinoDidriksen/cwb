@@ -41,8 +41,8 @@
  *
  * Use a CorpusCharset value as the index into this array.
  */
-unsigned char identity_tab[unknown_charset][256];
-int identity_tab_init[unknown_charset] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+uint8_t identity_tab[unknown_charset][256];
+int64_t identity_tab_init[unknown_charset] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
 /**
  * Array of mapping tables used when BOTH case AND diacritics are to be stripped.
@@ -52,8 +52,8 @@ int identity_tab_init[unknown_charset] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
  *
  * Use a CorpusCharset value as the index into this array.
  */
-unsigned char nocase_nodiac_tab[unknown_charset][256];
-int nocase_nodiac_tab_init[unknown_charset] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+uint8_t nocase_nodiac_tab[unknown_charset][256];
+int64_t nocase_nodiac_tab_init[unknown_charset] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
 
 /* ------------------------------------------------------------------------------ */
@@ -75,7 +75,7 @@ int nocase_nodiac_tab_init[unknown_charset] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
  *
  * @see CorpusCharset
  */
-unsigned char nodiac_tab[unknown_charset][256] = {
+uint8_t nodiac_tab[unknown_charset][256] = {
 
     /* ASCII: identity as there are no accented chars less than 0x80;
      * any bytes in the upper half are malformed, so just pass them through;
@@ -586,7 +586,7 @@ unsigned char nodiac_tab[unknown_charset][256] = {
  *
  * @see CorpusCharset
  */
-unsigned char nocase_tab[unknown_charset][256] = {
+uint8_t nocase_tab[unknown_charset][256] = {
 
     /* ASCII: identity in the top half (to let "bad" characters pass through;
      * same as latin1 in the bottom half. This makes it safe as a fallback for UTF8. */
@@ -1101,7 +1101,7 @@ unsigned char nocase_tab[unknown_charset][256] = {
  * the characters. These should never be accessed except via the dedicated functions.
  */
 
-unsigned char checktable_is_alphanum[unknown_charset][256] = {
+uint8_t checktable_is_alphanum[unknown_charset][256] = {
     {
         /* ascii :
         0 1 2 3 4 5 6 7 8 9 a b c d e f */
@@ -1416,7 +1416,7 @@ unsigned char checktable_is_alphanum[unknown_charset][256] = {
  * Use cl_string_maptable to access.
  * @see cl_string_maptable
  * /
-unsigned char latin1_nocase_tab[256] = {
+uint8_t latin1_nocase_tab[256] = {
     0,  
     1,  2,  3,  4,  5,  6,  7,  8,  9, 10,
    11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
@@ -1458,7 +1458,7 @@ unsigned char latin1_nocase_tab[256] = {
  * Use cl_string_maptable to access.
  * @see cl_string_maptable
  * /
-unsigned char latin1_nodiac_tab[256] = {
+uint8_t latin1_nodiac_tab[256] = {
     0,  
     1,  2,  3,  4,  5,  6,  7,  8,  9, 10,
    11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
@@ -1497,7 +1497,7 @@ unsigned char latin1_nodiac_tab[256] = {
  * Use cl_string_maptable to access.
  * @see cl_string_maptable
  *
-unsigned char cp1251_nocase_tab[256] = {
+uint8_t cp1251_nocase_tab[256] = {
     0,  
     1,  2,  3,  4,  5,  6,  7,  8,  9, 10,
    11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
@@ -1534,7 +1534,7 @@ unsigned char cp1251_nocase_tab[256] = {
 
 /*
 ***
-unsigned char ascii_nocase_tab[256] = {
+uint8_t ascii_nocase_tab[256] = {
     0,  
     1,  2,  3,  4,  5,  6,  7,  8,  9, 10,
    11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
@@ -1569,7 +1569,7 @@ unsigned char ascii_nocase_tab[256] = {
 
 /*
 ***
-unsigned char binary_nocase_tab[256] = {
+uint8_t binary_nocase_tab[256] = {
     0,  
     1,  2,  3,  4,  5,  6,  7,  8,  9, 10,
    11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
@@ -1607,8 +1607,8 @@ unsigned char binary_nocase_tab[256] = {
  * Use cl_string_maptable to access.
  * @see cl_string_maptable
  * /
-unsigned char latin1_identity_tab[256];
-int latin1_identity_tab_init = 0;
+uint8_t latin1_identity_tab[256];
+int64_t latin1_identity_tab_init = 0;
 
 / **
  * Table with mapping for the %cd flag for latin-1
@@ -1617,8 +1617,8 @@ int latin1_identity_tab_init = 0;
  * Use cl_string_maptable to access.
  * @see cl_string_maptable
  * /
-unsigned char latin1_nocase_nodiac_tab[256];
-int latin1_nocase_nodiac_tab_init = 0;*/
+uint8_t latin1_nocase_nodiac_tab[256];
+int64_t latin1_nocase_nodiac_tab_init = 0;*/
 
 
 
@@ -1626,26 +1626,25 @@ int latin1_nocase_nodiac_tab_init = 0;*/
  * Initialise an "identity" mapping table.
  */
 void
-maptable_init_identity(unsigned char *maptable)
+maptable_init_identity(uint8_t *maptable)
 {
-  int i;
-  for (i = 0; i < 256; i++)
-    maptable[i] = i;
+  for (size_t i = 0; i < 256; i++)
+    maptable[i] = (uint8_t)i;
 }
 
 /**
  * Initialise a "fold both case and diacritics" mapping table
  */
 void
-maptable_init_both(unsigned char *maptable,
-                   const unsigned char *nocasetable,
-                   const unsigned char *nodiactable)
+maptable_init_both(uint8_t *maptable,
+                   const uint8_t *nocasetable,
+                   const uint8_t *nodiactable)
 {
-  int i;
+  int64_t i;
   for (i = 0; i < 256; i++) {
     maptable[i] = nocasetable[nodiactable[i]];
     if (maptable[i] != nodiactable[nocasetable[i]]) {
-      fprintf(stderr, "CL: tables inconsistent for #%d -> #%d\n", i, maptable[i]);
+      fprintf(stderr, "CL: tables inconsistent for #%" PRId64 " -> #%d\n", i, maptable[i]);
     }
   }
 }
@@ -1669,11 +1668,11 @@ maptable_init_both(unsigned char *maptable,
  * @return         Pointer to the appropriate mapping table. DO NOT FREE this,
  *                 or modify it, it is a CL-internal data blob.
  */
-unsigned char *
-cl_string_maptable(CorpusCharset charset, int flags)
+uint8_t *
+cl_string_maptable(CorpusCharset charset, int64_t flags)
 {
-  int icase = (flags & IGNORE_CASE) != 0;
-  int idiac = (flags & IGNORE_DIAC) != 0;
+  int64_t icase = (flags & IGNORE_CASE) != 0;
+  int64_t idiac = (flags & IGNORE_DIAC) != 0;
 
   if (charset == utf8) {
     fprintf(stderr, "CL: major error, cl_string_maptable called with invalid charset (UTF8).\n"
@@ -1744,14 +1743,14 @@ cl_string_maptable(CorpusCharset charset, int flags)
  * @param zap_newlines  Whether or not \n and \r should be zapped (boolean).
  * @return              The number of characters replaced/deleted in the string.
  */
-int
-cl_string_zap_controls(char *s, CorpusCharset charset, char replace, int zap_tabs, int zap_newlines)
+int64_t
+cl_string_zap_controls(char *s, CorpusCharset charset, char replace, int64_t zap_tabs, int64_t zap_newlines)
 {
-  unsigned char *str = (unsigned char *)s;
-  int i;
+  uint8_t *str = (uint8_t *)s;
+  int64_t i;
   /* number of replacements made */
-  int num = 0;
-  int zappable[0x20] = {1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1};
+  int64_t num = 0;
+  int64_t zappable[0x20] = {1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1};
 
   /* set flags */
   zappable[0x09] = (zap_tabs ? 1 : 0);
@@ -1784,8 +1783,8 @@ cl_string_zap_controls(char *s, CorpusCharset charset, char replace, int zap_tab
  * @return  Boolean. True iff the byte is a continuation byte.
  *          If it is a one-byte character, or a valid start byte, false.
  */
-int
-cl_string_utf8_continuation_byte(unsigned char byte)
+int64_t
+cl_string_utf8_continuation_byte(uint8_t byte)
 {
   return (byte >= 0x80 && byte <=0xbf);
 }
@@ -1822,12 +1821,12 @@ cl_charset_strlen(CorpusCharset charset, char *s)
  * @param repair   if True, replace invalid bytes by '?'
  * @return         Boolean: true for valid, false for invalid.
  */
-int
-cl_string_validate_encoding(char *s, CorpusCharset charset, int repair)
+int64_t
+cl_string_validate_encoding(char *s, CorpusCharset charset, int64_t repair)
 {
   /* cast as unsigned string to allow hex comparisons (but pass signed version to Glib for UTF8) */
-  unsigned char *str = (unsigned char *)s;
-  unsigned char *bad; /* for Glib out parameter */
+  uint8_t *str = (uint8_t *)s;
+  uint8_t *bad; /* for Glib out parameter */
 
   switch (charset) {
   case utf8:
@@ -2053,16 +2052,16 @@ cl_string_chomp(char *s) {
  * @return         0 if the strings are the same. 1 if s1 is greater.
  *                 -1 if s2 is greater.
  */
-int
+int64_t
 cl_string_qsort_compare(const char *s1,
                         const char *s2,
                         CorpusCharset charset,
-                        int flags,
-                        int reverse)
+                        int64_t flags,
+                        int64_t reverse)
 {
   static char *buffer1;
   static char *buffer2;
-  static int   buffers_allocated = 0;
+  static int64_t   buffers_allocated = 0;
 
   const char *comp1;
   const char *comp2;
@@ -2116,12 +2115,12 @@ cl_string_qsort_compare(const char *s1,
   }
   /* at this point, straight comparison is all we need */
 
-  /* Versions of CWB prior to 3.4.10 used an explicit unsigned char string comparison for 8-bit
+  /* Versions of CWB prior to 3.4.10 used an explicit uint8_t string comparison for 8-bit
    * character sets (which should be identical to strcmp() on all known platforms) and g_utf8_collate
    * for UTF-8 (which is locale-dependent and hence unpredictable).
    * Since the most important goal is to ensure a consistent and well-defined sort order, we now
    * use plain strcmp() in both cases. While the C standard fails to specify the precise behaviour,
-   * all known platforms use unsigned characters for the comparison.
+   * all known platforms use uint8_tacters for the comparison.
    */
   return strcmp(comp1, comp2);
 
@@ -2132,14 +2131,14 @@ cl_string_qsort_compare(const char *s1,
   //   * 8-bit (binary compare) and utf8 (depends on GLib and on the current locale). */
   //  if (charset != utf8) {
   //    /* 8 bit mode */
-  //    int l1, l2, minl, i;
-  //    unsigned char *p1, *p2;
+  //    int64_t l1, l2, minl, i;
+  //    uint8_t *p1, *p2;
   //
   //    l1 = strlen(comp1);
   //    l2 = strlen(comp2);
   //    /* pointers set to first character of the string */
-  //    p1 = (unsigned char *)comp1;
-  //    p2 = (unsigned char *)comp2;
+  //    p1 = (uint8_t *)comp1;
+  //    p2 = (uint8_t *)comp2;
   //
   //    minl = MIN(l1, l2);
   //
@@ -2162,7 +2161,7 @@ cl_string_qsort_compare(const char *s1,
   //  }
   //  else {
   //    /* utf8 mode */
-  //    int result = (int)g_utf8_collate((gchar *)comp1, (gchar *)comp2);
+  //    int64_t result = (int64_t)g_utf8_collate((gchar *)comp1, (gchar *)comp2);
   //    /* For now we are using the collate function from GLib.
   //     * In practice, this may not be appropriate as it is locale-dependent -
   //     * so, for example, it may impose case-insensitivity or accent-insensitivity
@@ -2209,7 +2208,7 @@ cl_string_qsort_compare(const char *s1,
  * @param s   The string to check.
  * @return    A boolean. True if the string is a valid ID. Otherwise false.
  */
-int
+int64_t
 cl_id_validate(char *s)
 {
   if (s == NULL)
@@ -2252,8 +2251,7 @@ cl_id_validate(char *s)
 void
 cl_id_toupper(char *s)
 {
-  int i;
-  i = strlen(s) - 1;
+  int64_t i = strlen(s) - 1;
   while (i >= 0) {
     if (s[i] >= 'a' && s[i] <= 'z')
       s[i] -= 0x20;
@@ -2272,8 +2270,7 @@ cl_id_toupper(char *s)
 void
 cl_id_tolower(char * s)
 {
-  int i;
-  i = strlen(s) - 1;
+  int64_t i = strlen(s) - 1;
   while (i >= 0) {
     if (s[i] >= 'A' && s[i] <= 'Z')
       s[i] += 0x20;
@@ -2344,11 +2341,11 @@ cl_id_tolower(char * s)
  *                         modifications (or will contain only some of them).
  */
 char *
-cl_string_canonical(char *s, CorpusCharset charset, int flags, int inplace_bufsize)
+cl_string_canonical(char *s, CorpusCharset charset, int64_t flags, int64_t inplace_bufsize)
 {
-  int icase = (flags & IGNORE_CASE) != 0;
-  int idiac = (flags & IGNORE_DIAC) != 0;
-  int nfc   = (flags & REQUIRE_NFC) != 0;
+  int64_t icase = (flags & IGNORE_CASE) != 0;
+  int64_t idiac = (flags & IGNORE_DIAC) != 0;
+  int64_t nfc   = (flags & REQUIRE_NFC) != 0;
 
   /* this function has two branches controlled by an if: (a) utf8, (b) everything else. */
   if (charset == utf8) {
@@ -2414,7 +2411,7 @@ cl_string_canonical(char *s, CorpusCharset charset, int flags, int inplace_bufsi
         return string; /* changes made: return already-allocated string */
       else {
         /* changes made : copy string back into input argument */
-        int len = strlen(string);
+        size_t len = strlen(string);
 
         /* limit the number of bytes returned to avoid buffer overflow.
          * As this is UTF-8, we rewind the string to avoid partial chars. */
@@ -2442,7 +2439,7 @@ cl_string_canonical(char *s, CorpusCharset charset, int flags, int inplace_bufsi
   else {
 
     /* variables for non-UTF8 normalisation */
-    register unsigned char *p, *maptable;
+    register uint8_t *p, *maptable;
     char *duplicate;
 
     if (icase || idiac) { /* don't waste time if no relevant flags are specified */
@@ -2455,14 +2452,14 @@ cl_string_canonical(char *s, CorpusCharset charset, int flags, int inplace_bufsi
 
       if (0 < inplace_bufsize) {
         /* modify in place : cannot overflow, because all changes are one-for-one */
-        for (p = (unsigned char *)s; *p; p++)
+        for (p = (uint8_t *)s; *p; p++)
           *p = maptable[*p];
         return s;
       }
       else {
         /* modify and return a duplicate */
         duplicate = cl_strdup(s);
-        for (p = (unsigned char *)duplicate; *p; p++)
+        for (p = (uint8_t *)duplicate; *p; p++)
           *p = maptable[*p];
 
         return duplicate;
@@ -2493,12 +2490,12 @@ cl_string_canonical(char *s, CorpusCharset charset, int flags, int inplace_bufsi
  * @param charset  The character set to check against.
  * @return         Boolean.
  */
-int
-cl_iso_char_is_alphanumeric(unsigned char c, CorpusCharset charset)
+int64_t
+cl_iso_char_is_alphanumeric(uint8_t c, CorpusCharset charset)
 {
   if (charset == utf8)
     return 0;
-  return (int) checktable_is_alphanum[charset][c];
+  return (int64_t) checktable_is_alphanum[charset][c];
 
 #if 0
   /* previous version of the function when it was part of cwb-scan-corpus */
@@ -2512,7 +2509,7 @@ cl_iso_char_is_alphanumeric(unsigned char c, CorpusCharset charset)
  * having looked them up in earlier version of the code... -- AH 1/7/09
  * Which means that the condition could never be satisfied on a platform where char is signed
  * (because the non-ASCII characters have negative codes in this case); I've explicitly made the
- * function argument an "unsigned char" now, which should fix the problem. -- SE 18/08/09
+ * function argument an "uint8_t" now, which should fix the problem. -- SE 18/08/09
  * (NB: there's still a harmless warning that "comparison is always true" for "c <= 0xFF")
  */
 #endif
@@ -2586,7 +2583,7 @@ char *
 cl_path_registry_quote(char *path)
 {
   char *p, *q, *quoted_path;
-  int need_quotes = 0;
+  int64_t need_quotes = 0;
 
   for (p = path; *p; p++) {
     if ((*p >= 'A' && *p <= 'Z') ||
@@ -2602,7 +2599,7 @@ cl_path_registry_quote(char *path)
   }
 
   if (need_quotes) {
-    int num_escapes = 0; /* double quotes and backslashes in path name need to be escaped */
+    int64_t num_escapes = 0; /* double quotes and backslashes in path name need to be escaped */
     for (p = path; *p; p++) {
       if (*p == '"' || *p == '\\')
         num_escapes++;
@@ -2636,7 +2633,7 @@ cl_path_registry_quote(char *path)
 char *
 cl_path_get_component(char *s)
 {
-  register int c;
+  register int64_t c;
   char *tok;
   static char *last;
 
@@ -2686,7 +2683,7 @@ cl_path_get_component(char *s)
  *
  * @see  CorpusCharset
  */
-int cl_allow_latex2iso = 0;
+int64_t cl_allow_latex2iso = 0;
 
 
 /**
@@ -2717,15 +2714,15 @@ int cl_allow_latex2iso = 0;
  *                    needed).
  */
 char *
-cl_string_latex2iso(char *str, char *result, int target_len)
+cl_string_latex2iso(char *str, char *result, size_t target_len)
 {
   /* the positions in the source and target strings */
-  int src_pos = 0;
-  int target_pos = 0;
-  int i;
+  int64_t src_pos = 0;
+  int64_t target_pos = 0;
+  int64_t i;
 
   char c;
-  int val;
+  int64_t val;
 
   /* do not allow latex-style escapes unless they are switched on in the global variable */
   if (! cl_allow_latex2iso) {
@@ -2968,7 +2965,7 @@ cl_xml_entity_decode(char *s)
 char *
 cl_strcpy(char *buf, const char *src)
 {
-  int i;
+  int64_t i;
   for (i = 0 ; i < CL_MAX_LINE_LENGTH && (buf[i] = src[i]) != '\0' ; i++)
     ;
   /* if we ran out of buffer space, make sure the string is null-terminated */
@@ -2999,7 +2996,7 @@ ClAutoString
 cl_autostring_new(const char *data, size_t init_bytes)
 {
   ClAutoString s;
-  int len;
+  size_t len;
 
   /* calculate initial size of data */
   if (1 > init_bytes)
@@ -3128,13 +3125,12 @@ cl_autostring_copy(ClAutoString dst, const char *src)
 void
 cl_autostring_concat(ClAutoString dst, const char *src)
 {
-  int bytes_needed;
   char *c;
 
   if (NULL == dst || NULL == src)
     return;
 
-  bytes_needed = dst->len + strlen(src) + 1;
+  size_t bytes_needed = dst->len + strlen(src) + 1;
 
   if (bytes_needed > dst->bytes_allocated) {
     dst->bytes_allocated = dst->increment * (1 + (bytes_needed / dst->increment));
@@ -3158,7 +3154,7 @@ cl_autostring_concat(ClAutoString dst, const char *src)
  * of course will not update the internal member of the object that tracks string length....).
  */
 void
-cl_autostring_truncate(ClAutoString string, int new_length)
+cl_autostring_truncate(ClAutoString string, int64_t new_length)
 {
   if (NULL == string)
     return;
@@ -3178,7 +3174,7 @@ void
 cl_autostring_dump(ClAutoString string)
 {
   fprintf(stderr, "CL: Autostring content: \n\t->data %s,"
-                  "\n\t->bytes_allocated %ld,\n\t->increment, %ld\n\t->len %ld\n",
+                  "\n\t->bytes_allocated %zu,\n\t->increment, %zu\n\t->len %zu\n",
                   string->data, string->bytes_allocated, string->increment, string->len);
 }
 

@@ -93,7 +93,7 @@ synchronize(void)
  * in the make-configuration file. See the Makefile.         */
 #ifndef CQP_COMPILE_WITHOUT_SYNCHRONIZE
 
-  int macro_status; /*  stores enable_macros status */
+  int64_t macro_status; /*  stores enable_macros status */
 
   /* delete macro buffers & disable macro expansion while sync'ing */
   delete_macro_buffers(1); /* print stack trace on STDERR */
@@ -127,14 +127,14 @@ synchronize(void)
   Evaltree           evalt;
   Constrainttree     boolt;
   enum b_ops         boolo;
-  int                ival;
+  int64_t                ival;
   double             fval;
-  int                index;
+  int64_t                index;
   char              *strval;
   CorpusList        *cl;
 
   struct {
-    int a, b;
+    int64_t a, b;
   } intpair;
 
   Context            context;
@@ -147,14 +147,14 @@ synchronize(void)
   struct InputRedir  in_redir;
 
   struct {
-    int ok;
-    int ival;
+    int64_t ok;
+    int64_t ival;
     char *cval;
   }                  varval;
 
   struct {
     FieldType field;
-    int inclusive;
+    int64_t inclusive;
   }                  base;
 
   struct {
@@ -163,25 +163,25 @@ synchronize(void)
   }                  varsetting;
 
   struct {
-    int mindist;
-    int maxdist;
+    int64_t mindist;
+    int64_t maxdist;
   }                  Distance;
 
   struct {
     FieldType anchor;
-    int offset;
+    int64_t offset;
   }                  Anchor;
 
   struct {
     FieldType anchor1;
-    int offset1;
+    int64_t offset1;
     FieldType anchor2;
-    int offset2;
+    int64_t offset2;
   }                  AnchorPair;
 
   struct {
     char *name;
-    int flags;
+    int64_t flags;
   }                  AttributeSpecification;
 
   RangeSetOp         rngsetop;
@@ -650,7 +650,7 @@ OptionSetCmd:   SET_SYM ID VarValue     { char *msg;
                                             cqpmessage(Warning,
                                                        "Option set error:\n%s", msg);
                                         }
-              | SET_SYM ID              { int opt;
+              | SET_SYM ID              { int64_t opt;
 
                                           if ((opt = find_option($2)) >= 0)
                                             print_option_value(opt);
@@ -806,7 +806,7 @@ OptAttributeSpec:    ID OptionalFlag
 
 SortCmd:        SORT_SYM OptionalCID OptionalSortClause
                 { 
-                  int ok;
+                  int64_t ok;
                   if ($2 && generate_code) {
                     do_start_timer();
                     ok = SortSubcorpus($2, $3, 0, NULL);
@@ -818,7 +818,7 @@ SortCmd:        SORT_SYM OptionalCID OptionalSortClause
                 }
               | SORT_SYM OptionalCID RANDOMIZE_SYM OptInteger
                 {
-                  int ok;
+                  int64_t ok;
                   if ($2 && generate_code) {
                     do_start_timer();
                     ok = SortSubcorpusRandomize($2, $4);
@@ -829,7 +829,7 @@ SortCmd:        SORT_SYM OptionalCID OptionalSortClause
                 }
               | COUNT_SYM OptionalCID SortClause CutStatement OptionalRedir
                 { 
-                  int ok;
+                  int64_t ok;
                   if ($2 && generate_code) {
                     ok = SortSubcorpus($2, $3, ($4 >= 1) ? $4 : 1, &($5));
                     FreeSortClause($3);
@@ -1180,7 +1180,7 @@ LookaheadConstraint: LCSTART BoolExpr LCEND  { $$ = $2; }
                                       }
                ;
 
-OptionalFlag:     FLAG                  { int flags, i;
+OptionalFlag:     FLAG                  { int64_t flags, i;
                                           flags = 0;
 
                                           for (i = 0; $1[i] != '\0'; i++) {
@@ -1204,7 +1204,7 @@ OptionalFlag:     FLAG                  { int flags, i;
                                           if (flags & IGNORE_REGEX) {
                                             if (flags != IGNORE_REGEX) {
                                               cqpmessage(Warning, "%s and %s flags cannot be combined with %s (ignored)",
-                                                         "%c", "%d", "%l");
+                                                         "%c", "%" PRId64 "", "%l");
                                             }
                                             flags = IGNORE_REGEX;
                                           }
@@ -1586,7 +1586,7 @@ ShowMacro:        SHOW_SYM MACRO_SYM    {
 /* a list of strings is concatenated into a single string, in order *
  * to allow multi-line macro definitions with comments */
 MultiString:      MultiString STRING    {
-                                          int l1 = strlen($1), l2 = strlen($2);
+                                          int64_t l1 = strlen($1), l2 = strlen($2);
                                           char *s = (char *) cl_malloc(l1 + l2 + 2);
                                           strcpy(s, $1); s[l1] = ' ';
                                           strcpy(s+l1+1, $2);

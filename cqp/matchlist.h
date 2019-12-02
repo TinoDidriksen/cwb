@@ -31,14 +31,14 @@
  */
 typedef struct _Matchlist
 {
-  int *start;                       /**< Table of match start anchors (corpus posiitons) */
-  int *end;                         /**< Table of match end anchors (corpus positions) */
-  int *target_positions;            /**< Table of target anchors (corpus positions) */
-  int *keyword_positions;           /**< Table of keyword anchors (corpus positions) */
-  int  tabsize;                     /**< Number of integers in each of the three arrays */
-  int  matches_whole_corpus;        /**< Boolean: if true, every position in the cirpus matches.
+  int64_t *start;                   /**< Table of match start anchors (corpus posiitons) */
+  int64_t *end;                     /**< Table of match end anchors (corpus positions) */
+  int64_t *target_positions;        /**< Table of target anchors (corpus positions) */
+  int64_t *keyword_positions;       /**< Table of keyword anchors (corpus positions) */
+  int64_t  tabsize;                 /**< Number of integers in each of the three arrays */
+  bool  matches_whole_corpus;       /**< Boolean: if true, every position in the cirpus matches.
                                          In this case, we avoid copying.*/
-  int is_inverted;                  /**< Boolean: if true, this matchilist contains ``inverted''
+  bool is_inverted;                 /**< Boolean: if true, this matchilist contains ``inverted''
                                          positions, that is,positions which do NOT match */
 } Matchlist;
 
@@ -64,7 +64,7 @@ typedef enum ml_setops {
   Reduce                        /**< delete -1 items */
 } MLSetOp;
 
-int Setop(Matchlist *list1, MLSetOp operation, Matchlist *list2);
+int64_t Setop(Matchlist *list1, MLSetOp operation, Matchlist *list2);
 
 
 

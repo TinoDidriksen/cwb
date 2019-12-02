@@ -22,6 +22,7 @@
 #include "ngram-hash.h"
 
 #include <math.h>
+#include <xxhash.h>
 
 
 /** Defines the default number of buckets in an n-gram hash. */
@@ -49,17 +50,12 @@
 
 /* find_prime() has been imported from "lexhash.h" */
 
-/** Computes 32bit hash value for n-gram */
-unsigned int
-hash_ngram(int N, int *tuple)
+/** Computes 64bit hash value for n-gram */
+int64_t
+hash_ngram(int64_t N, int64_t *tuple)
 {
-  unsigned int result = 5381; /* seed value from DJB2, seems slightly better than original seed 0 */
-  unsigned char *buffer = (unsigned char *)tuple;
-  int i;
-
-  /* hash function is designed for byte sequence and has poor distribution if applied directly to ints */
-  for(i = 0 ; i < N * sizeof(int); i++)
-    result = (result * 33) ^ (result >> 27) ^ buffer[i];
+  size_t len = N * sizeof(*tuple);
+  int64_t result = llabs(XXH64(tuple, len, 0));
   return result;
 }
 
@@ -85,13 +81,13 @@ hash_ngram(int N, int *tuple)
  */
 struct _cl_ngram_hash {
   cl_ngram_hash_entry *table;   /**< table of buckets; each "bucket" is a pointer to the list of entries that make up that bucket */
-  unsigned int buckets;         /**< number of buckets in the hash table */
-  int N;                        /**< n-gram size */
-  int entries;                  /**< current number of entries in this hash */
-  int auto_grow;                /**< boolean: whether to expand this hash automatically; true by default */
+  int64_t buckets;             /**< number of buckets in the hash table */
+  int64_t N;                   /**< n-gram size */
+  int64_t entries;             /**< current number of entries in this hash */
+  bool auto_grow;               /**< boolean: whether to expand this hash automatically; true by default */
   double fillrate_limit;        /**< fillrate limit that triggers expansion of bucket table (with auto_grow) */
   double fillrate_target;       /**< target fillrate after expansion of bucket table (with auto_grow) */
-  int iter_bucket;              /**< bucket currently processed by the single iterator of the hash table */
+  int64_t iter_bucket;         /**< bucket currently processed by the single iterator of the hash table */
   cl_ngram_hash_entry iter_point;   /**< next entry to be returned by the iterator (NULL -> go to next bucket) */
 };
 
@@ -109,7 +105,7 @@ struct _cl_ngram_hash {
  * @return           The new cl_ngram_hash.
  */
 cl_ngram_hash 
-cl_new_ngram_hash(int N, int buckets)
+cl_new_ngram_hash(int64_t N, int64_t buckets)
 {
   cl_ngram_hash hash;
   
@@ -125,7 +121,7 @@ cl_new_ngram_hash(int N, int buckets)
   hash->auto_grow = 1;
   hash->fillrate_limit = DEFAULT_FILLRATE_LIMIT(N);
   hash->fillrate_target = DEFAULT_FILLRATE_TARGET(N);
-  hash->iter_bucket = -1;
+  hash->iter_bucket = (int64_t)-1;
   hash->iter_point = NULL;
   return hash;
 }
@@ -142,11 +138,10 @@ cl_new_ngram_hash(int N, int buckets)
 void 
 cl_delete_ngram_hash(cl_ngram_hash hash)
 {
-  int i;
   cl_ngram_hash_entry entry, temp;
   
   if (hash != NULL && hash->table != NULL) {
-    for (i = 0; i < hash->buckets; i++) {
+    for (int64_t i = 0; i < hash->buckets; i++) {
       entry = hash->table[i];
       while (entry != NULL) {
         temp = entry;
@@ -174,7 +169,7 @@ cl_delete_ngram_hash(cl_ngram_hash hash)
  *              true is on and false is off.
  */
 void
-cl_ngram_hash_auto_grow(cl_ngram_hash hash, int flag)
+cl_ngram_hash_auto_grow(cl_ngram_hash hash, bool flag)
 {
   if (hash != NULL)
     hash->auto_grow = flag;
@@ -263,13 +258,13 @@ cl_ngram_hash_auto_grow_fillrate(cl_ngram_hash hash, double limit, double target
  * @param hash  The cl_ngram_hash to autogrow.
  * @return      Always 0.
  */
-int
+int64_t
 cl_ngram_hash_check_grow(cl_ngram_hash hash)
 {
   double fill_rate, target_size;
   cl_ngram_hash temp;
   cl_ngram_hash_entry entry, next;
-  int idx, offset, old_buckets, new_buckets, N;
+  int64_t idx, offset, old_buckets, new_buckets, N;
 
   old_buckets = hash->buckets;
   fill_rate = ((double) hash->entries) / old_buckets;
@@ -291,10 +286,10 @@ cl_ngram_hash_check_grow(cl_ngram_hash hash)
       }
     }
     /* now grow bucket table from old_buckets entries to new_buckets entries */
-    new_buckets = (int) target_size;
+    new_buckets = (int64_t) target_size;
     old_buckets = hash->buckets;
     if (cl_debug) {
-      fprintf(stderr, "[n-gram hash autogrow: triggered by fill rate = %3.1f (%d/%d)]\n",
+      fprintf(stderr, "[n-gram hash autogrow: triggered by fill rate = %3.1f (%" PRId64 "/%" PRId64 ")]\n",
               fill_rate, hash->entries, old_buckets);
       if (cl_debug >= 2)
         cl_ngram_hash_print_stats(hash, 12);
@@ -321,7 +316,7 @@ cl_ngram_hash_check_grow(cl_ngram_hash hash)
     cl_free(temp);                      /* we can simply deallocate temp now, having stolen its hash table */
     if (cl_debug) {
       fill_rate = ((double) hash->entries) / hash->buckets;
-      fprintf(stderr, "[n-gram hash autogrow: new fill rate = %3.1f (%d/%d)]\n",
+      fprintf(stderr, "[n-gram hash autogrow: new fill rate = %3.1f (%" PRId64 "/%" PRId64 ")]\n",
               fill_rate, hash->entries, hash->buckets);
     }
     return 1;
@@ -342,7 +337,7 @@ cl_ngram_hash_check_grow(cl_ngram_hash hash)
  * rest of the n-gram hash implementation (except cl_ngram_hash_check_grow, which 
  * re-implements the hashing algorithm for performance reasons).
  *
- * Usage: entry = cl_ngram_hash_find_i(cl_ngram_hash hash, char *token, unsigned int *ret_offset);
+ * Usage: entry = cl_ngram_hash_find_i(cl_ngram_hash hash, char *token, uint64_t *ret_offset);
  *
  * This is a non-exported function.
  *
@@ -354,22 +349,20 @@ cl_ngram_hash_check_grow(cl_ngram_hash hash)
  *                    in the hash).
  */
 cl_ngram_hash_entry
-cl_ngram_hash_find_i(cl_ngram_hash hash, int *ngram, unsigned int *ret_offset)
+cl_ngram_hash_find_i(cl_ngram_hash hash, int64_t *ngram, int64_t *ret_offset)
 {
-  unsigned int offset;
-  int N;
   cl_ngram_hash_entry entry;
 
   assert((hash != NULL && hash->table != NULL && hash->buckets > 0) && "cl_ngram_hash object was not properly initialised");
-  N = hash->N;
+  int64_t N = hash->N;
 
   /* get the offset of the bucket to look in by computing the hash of the string */
-  offset = hash_ngram(N, ngram) % hash->buckets;
+  int64_t offset = hash_ngram(N, ngram) % hash->buckets;
   if (ret_offset != NULL)
     *ret_offset = offset;
   /* check all entries in this bucket against the specified key */
   entry = hash->table[offset];
-  while (entry != NULL && memcmp(entry->ngram, ngram, N * sizeof(int)) != 0)
+  while (entry != NULL && memcmp(entry->ngram, ngram, N * sizeof(*ngram)) != 0)
     entry = entry->next;
   return entry;
 }
@@ -387,7 +380,7 @@ cl_ngram_hash_find_i(cl_ngram_hash hash, int *ngram, unsigned int *ret_offset)
  *                    in the hash).
  */
 cl_ngram_hash_entry
-cl_ngram_hash_find(cl_ngram_hash hash, int *ngram)
+cl_ngram_hash_find(cl_ngram_hash hash, int64_t *ngram)
 {
   return cl_ngram_hash_find_i(hash, ngram, NULL);
 }
@@ -410,15 +403,14 @@ cl_ngram_hash_find(cl_ngram_hash hash, int *ngram)
  * @return       A pointer to a (new or existing) entry
  */
 cl_ngram_hash_entry
-cl_ngram_hash_add(cl_ngram_hash hash, int *ngram, unsigned int f)
+cl_ngram_hash_add(cl_ngram_hash hash, int64_t *ngram, uint64_t f)
 {
   cl_ngram_hash_entry entry, insert_point;
-  unsigned int offset;          /* this will be set to the index of the bucket this token should go in
+  int64_t offset;          /* this will be set to the index of the bucket this token should go in
                                    by the call to cl_ngram_hash_find_i                                     */
-  int N;
   
   entry = cl_ngram_hash_find_i(hash, ngram, &offset);
-  N = hash->N;
+  int64_t N = hash->N;
 
   if (entry != NULL) {
     /* token already in hash -> increment frequency count */
@@ -429,8 +421,8 @@ cl_ngram_hash_add(cl_ngram_hash hash, int *ngram, unsigned int f)
     assert((hash->entries < MAX_ENTRIES) && "ngram-hash.c: maximum capacity of n-gram hash exceeded -- program abort");
     
     /* allocate enough space for n-gram appended to the struct */
-    entry = (cl_ngram_hash_entry) cl_malloc(sizeof(struct _cl_ngram_hash_entry) + (N - 1) * sizeof(int));
-    memcpy(entry->ngram, ngram, N * sizeof(int)); /* embed copy of n-gram in struct */
+    entry = (cl_ngram_hash_entry) cl_malloc(sizeof(struct _cl_ngram_hash_entry) + (N - 1) * sizeof(int64_t));
+    memcpy(entry->ngram, ngram, N * sizeof(*ngram)); /* embed copy of n-gram in struct */
     entry->freq = f;
     entry->next = NULL;
 
@@ -462,8 +454,8 @@ cl_ngram_hash_add(cl_ngram_hash hash, int *ngram, unsigned int f)
  * @param ngram  The ngram to look for.
  * @return       The frequency of that n-gram, or 0 if it is not in the hash
  */
-int 
-cl_ngram_hash_freq(cl_ngram_hash hash, int *ngram)
+int64_t
+cl_ngram_hash_freq(cl_ngram_hash hash, int64_t *ngram)
 {
   cl_ngram_hash_entry entry;
 
@@ -483,11 +475,11 @@ cl_ngram_hash_freq(cl_ngram_hash hash, int *ngram)
  * @param ngram  The n-gram to remove.
  * @return       The frequency of the deleted entry (0 if not found).
  */
-int 
-cl_ngram_hash_del(cl_ngram_hash hash, int *ngram)
+int64_t
+cl_ngram_hash_del(cl_ngram_hash hash, int64_t *ngram)
 {
   cl_ngram_hash_entry entry, previous;
-  unsigned int offset, f;
+  int64_t offset, f;
 
   entry = cl_ngram_hash_find_i(hash, ngram, &offset);
   if (entry == NULL) {
@@ -520,7 +512,7 @@ cl_ngram_hash_del(cl_ngram_hash hash, int *ngram)
  *
  * @param hash  The hash to size up.
  */
-int 
+int64_t 
 cl_ngram_hash_size(cl_ngram_hash hash)
 {
   return (hash != NULL) ? hash->entries : 0;
@@ -538,23 +530,21 @@ cl_ngram_hash_size(cl_ngram_hash hash)
  *                  array will be stored in this location. 
  */
 cl_ngram_hash_entry *
-cl_ngram_hash_get_entries(cl_ngram_hash hash, int *ret_size)
+cl_ngram_hash_get_entries(cl_ngram_hash hash, int64_t *ret_size)
 {
   cl_ngram_hash_entry *result, entry;
-  int size, point;
-  unsigned int offset;
-  
+
   assert((hash != NULL && hash->table != NULL && hash->buckets > 0) && "cl_ngram_hash object was not properly initialised");
 
   /* allocate memory for enumeration of entries */
-  size = hash->entries;
+  int64_t size = hash->entries;
   result = cl_malloc(size * sizeof(cl_ngram_hash_entry));
   if (ret_size != NULL)
     *ret_size = size;
   
   /* traverse hash and insert all entries into the array */
-  point = 0;
-  for (offset = 0; offset < hash->buckets; offset++) {
+  int64_t point = 0;
+  for (int64_t offset = 0; offset < hash->buckets; offset++) {
     entry = hash->table[offset];
     while (entry != NULL) {
       assert((point < size) && "ngram-hash.c: major internal inconsistency");
@@ -584,7 +574,7 @@ void
 cl_ngram_hash_iterator_reset(cl_ngram_hash hash)
 {
   assert((hash != NULL && hash->table != NULL && hash->buckets > 0) && "cl_ngram_hash object was not properly initialised");
-  hash->iter_bucket = -1;
+  hash->iter_bucket = (int64_t)-1;
   hash->iter_point = NULL;
 }
 
@@ -627,20 +617,18 @@ cl_ngram_hash_iterator_next(cl_ngram_hash hash)
  * @param hash      The n-gram hash.
  * @param max_n     Count buckets with up to max_n entries.
  */
-int *
-cl_ngram_hash_stats(cl_ngram_hash hash, int max_n)
+int64_t *
+cl_ngram_hash_stats(cl_ngram_hash hash, int64_t max_n)
 {
-  int *stats;
-  int i, n;
   cl_ngram_hash_entry point;
   
   assert(max_n > 0);
   assert((hash != NULL && hash->table != NULL && hash->buckets > 0) && "cl_ngram_hash object was not properly initialised");
-  stats = cl_calloc(max_n + 1, sizeof(int));
+  int64_t *stats = cl_calloc(max_n + 1, sizeof(*stats));
 
-  for (i = 0; i < hash->buckets; i++) {
+  for (int64_t i = 0; i < hash->buckets; i++) {
     point = hash->table[i];
-    n = 0;
+    int64_t n = 0;
     while (point) {
       point = point->next;
       n++;
@@ -664,22 +652,22 @@ cl_ngram_hash_stats(cl_ngram_hash hash, int max_n)
  * @param max_n      Count buckets with up to max_n entries.
  */
 void
-cl_ngram_hash_print_stats(cl_ngram_hash hash, int max_n)
+cl_ngram_hash_print_stats(cl_ngram_hash hash, int64_t max_n)
 {
-  int *stats = cl_ngram_hash_stats(hash, max_n);  /* also performs sanity checks */
+  int64_t *stats = cl_ngram_hash_stats(hash, max_n);  /* also performs sanity checks */
   double rate, p;
-  int i;
+  int64_t i;
   
   rate = ((double) hash->entries) / hash->buckets;
-  fprintf(stderr, "N-gram hash fill rate: %5.2f (%d entries in %d buckets)\n",
+  fprintf(stderr, "N-gram hash fill rate: %5.2f (%" PRId64 " entries in %" PRId64 " buckets)\n",
           rate, hash->entries, hash->buckets);
   fprintf(stderr, "# entries: ");
   for (i = 0; i <= max_n; i++)
-    fprintf(stderr, "%8d", i);
+    fprintf(stderr, "%8" PRId64 "", i);
   fprintf(stderr, "+\n");
   fprintf(stderr, "bucket cnt:");
   for (i = 0; i <= max_n; i++)
-    fprintf(stderr, "%8d", stats[i]);
+    fprintf(stderr, "%8" PRId64 "", stats[i]);
   fprintf(stderr, "\n");
   fprintf(stderr, "expected:  ");
   p = exp(-rate); /* expected number of entries for ideal hash function (Poisson distribution) */

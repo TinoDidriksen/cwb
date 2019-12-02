@@ -26,9 +26,9 @@
 /* LONG and SHORT modes removed. Mon Mar 23 19:25:35 MET 1998 (evert) */
 
 
-int little_endian = 0;  /* CWB default format is 4-byte big-endian = network */
+bool little_endian = 0;  /* CWB default format is 8-byte big-endian = network */
 
-int buf[CL_MAX_LINE_LENGTH];
+int64_t buf[CL_MAX_LINE_LENGTH];
 
 /**
  * Reads one integer at a time from a stream and prints a decimal representation
@@ -39,18 +39,16 @@ int buf[CL_MAX_LINE_LENGTH];
 void
 process_fd(FILE *fd)
 {
-  int N, k, i;
+  int64_t N, k, i;
 
   do {
-    /* currently only works on systems with 32bit ints.
-       should really be fixed some time */
-    N = fread(&buf[0], sizeof(int), CL_MAX_LINE_LENGTH, fd);
+    N = fread(&buf[0], sizeof(*buf), CL_MAX_LINE_LENGTH, fd);
 
     for ( k = 0; k < N; k++) {
-      i = ntohl(buf[k]);        /* convert from CWB to internal format */
+      i = ntohll(buf[k]);        /* convert from CWB to internal format */
       if (little_endian) 
-        i = cl_bswap32(i);      /* explicit conversion */
-      fprintf(stdout, "%d\n", i);
+        i = cl_bswap64(i);      /* explicit conversion */
+      fprintf(stdout, "%" PRId64 "\n", i);
     }
   } while (N == CL_MAX_LINE_LENGTH);
 }
@@ -69,7 +67,7 @@ int
 main(int argc, char **argv)
 {
   FILE *fd;
-  int i;
+  int64_t i;
   char *progname = argv[0];
 
   fd = stdin;  /* initialisation removed from declaration for Gnuwin32 compatibility */

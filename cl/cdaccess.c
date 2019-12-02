@@ -42,7 +42,7 @@
 /**
  * Error number for CL: is set after access to any of various corpus-data-access functions.
  */
-LIBCQPCL_API int cl_errno = CDA_OK;
+LIBCQPCL_API int64_t cl_errno = CDA_OK;
 
 
 
@@ -65,21 +65,21 @@ else if (arg->type != atyp) { \
 }
 
 /**
- * CL internal string comparison (uses signed char on all platforms).
+ * CL internal string comparison (uses int8_t on all platforms).
  */
-int
+int64_t
 cl_strcmp(char *s1, char *s2)
 {
   /* BIG BIG BIG warning:
      although it says unsigned_char_strcmp it really operates
-     on SIGNED char strings (and it didn't even say that explicitly, so the
-     whole thing broke down on 'unsigned char'-machines) !!!  */
+     on int8_t strings (and it didn't even say that explicitly, so the
+     whole thing broke down on 'uint8_t'-machines) !!!  */
 
-  register signed char* c1;
-  register signed char* c2;
+  int8_t* c1;
+  int8_t* c2;
 
-  c1 = (signed char *)s1;
-  c2 = (signed char *)s2;
+  c1 = (int8_t *)s1;
+  c2 = (int8_t *)s2;
 
   for ( ; *c1 == *c2; c1++,c2++)
     if ( *c1 == '\0')
@@ -97,7 +97,7 @@ cl_strcmp(char *s1, char *s2)
  * @param error_num  Error number integer (a CDA_* constant as defined in cl.h)
  */
 char *
-cl_error_string(int error_num)
+cl_error_string(int64_t error_num)
 {
   char *s;
 
@@ -204,7 +204,7 @@ cl_error(char *message)
  *                   attribute, DO NOT FREE!), or NULL if there is an error.
  */
 char *
-cl_id2str(Attribute *attribute, int id)
+cl_id2str(Attribute *attribute, int64_t id)
 {
   Component *lex;
   Component *lexidx;
@@ -224,7 +224,7 @@ cl_id2str(Attribute *attribute, int id)
   }
   else {
     cl_errno = CDA_OK;
-    return ((char *)lex->data.data + ntohl(lexidx->data.data[id]));
+    return ((char *)lex->data.data + ntohll(lexidx->data.data[id]));
   }
 
   assert("Not reached" && 0);
@@ -240,11 +240,9 @@ cl_id2str(Attribute *attribute, int id)
  * @return           Either the integer ID of the item, or an error code (if less than 0).
  *                   In the latter case, the error code will also be written to cl_errno.
  */
-int
+int64_t
 cl_str2id(Attribute *attribute, char *id_string)
 {
-  int low, high, nr, mid, comp;
-
   Component *lexidx;
   Component *lexsrt;
   Component *lex;
@@ -263,11 +261,11 @@ cl_str2id(Attribute *attribute, char *id_string)
     return cl_errno;
   }
   else {
-    low = 0;
-    high = lexidx->size;
+    size_t low = 0;
+    size_t high = lexidx->size;
 
     /*  simple binary search */
-    for(nr = 0; ; nr++) {
+    for(size_t nr = 0; ; nr++) {
 
       if (nr >= 1000000) {
         fprintf(stderr, "get_id_of_string: too many comparisons with %s\n", id_string);
@@ -275,16 +273,16 @@ cl_str2id(Attribute *attribute, char *id_string)
         return cl_errno;
       }
 
-      mid = low + (high - low)/2;
+      size_t mid = low + (high - low)/2;
 
       str2 = (char *)(lex->data.data) +
-        ntohl(lexidx->data.data[ntohl(lexsrt->data.data[mid])]);
+        ntohll(lexidx->data.data[ntohll(lexsrt->data.data[mid])]);
 
-      comp = cl_strcmp(id_string, str2);
+      size_t comp = cl_strcmp(id_string, str2);
 
       if(comp == 0) {
         cl_errno = CDA_OK;
-        return ntohl(lexsrt->data.data[mid]);
+        return ntohll(lexsrt->data.data[mid]);
       }
       if(mid == low) {
         cl_errno = CDA_ENOSTRING;
@@ -309,8 +307,8 @@ cl_str2id(Attribute *attribute, char *id_string)
  * @param id         Identifier of an item on this attribute.
  * @return           The length of the string, or a CDA_ error code
  */
-int
-cl_id2strlen(Attribute *attribute, int id)
+int64_t
+cl_id2strlen(Attribute *attribute, int64_t id)
 {
   Component *lexidx;
   char *s;
@@ -344,8 +342,8 @@ cl_id2strlen(Attribute *attribute, int id)
     }
     else {
       cl_errno = CDA_OK;
-      return (ntohl(lexidx->data.data[id+1]) -
-              ntohl(lexidx->data.data[id])) - 1;
+      return (ntohll(lexidx->data.data[id+1]) -
+              ntohll(lexidx->data.data[id])) - 1;
     }
   }
 
@@ -364,8 +362,8 @@ cl_id2strlen(Attribute *attribute, int id)
  * @param sort_index_position  The offset in the index where the ID code is to be found.
  * @return                     Either the integer ID, or an error code (if less than 0)
  */
-int
-cl_sort2id(Attribute *attribute, int sort_index_position)
+int64_t
+cl_sort2id(Attribute *attribute, int64_t sort_index_position)
 {
   Component *srtidx;
 
@@ -380,7 +378,7 @@ cl_sort2id(Attribute *attribute, int sort_index_position)
 
   if ((sort_index_position >=0) && (sort_index_position < srtidx->size)) {
     cl_errno = CDA_OK;
-    return ntohl(srtidx->data.data[sort_index_position]);
+    return ntohll(srtidx->data.data[sort_index_position]);
   }
   else {
     cl_errno = CDA_EIDXORNG;
@@ -402,8 +400,8 @@ cl_sort2id(Attribute *attribute, int sort_index_position)
  * @param id         Identifier of an item on this attribute.
  * @return           The offset of that item in the sorted wordlist index.
  */
-int
-cl_id2sort(Attribute *attribute, int id)
+int64_t
+cl_id2sort(Attribute *attribute, int64_t id)
 {
   Component *srtidx;
 
@@ -437,7 +435,7 @@ cl_id2sort(Attribute *attribute, int id)
  *
  * @return  Boolean.
  */
-int
+bool
 cl_sequence_compressed(Attribute *attribute)
 {
   ComponentState state;
@@ -488,7 +486,7 @@ cl_sequence_compressed(Attribute *attribute)
  *
  * @return  Boolean.
  */
-int
+bool
 cl_index_compressed(Attribute *attribute)
 {
   ComponentState state;
@@ -536,7 +534,7 @@ cl_index_compressed(Attribute *attribute)
  *
  * @return  The maximum corpus position, or an error code (if less than 0)
  */
-int
+int64_t
 cl_max_cpos(Attribute *attribute)
 {
   Component *corpus;
@@ -579,7 +577,7 @@ cl_max_cpos(Attribute *attribute)
  *
  * @return  The maximum Id, or an error code (if less than 0)
  */
-int
+int64_t
 cl_max_id(Attribute *attribute)
 {
   Component *comp;
@@ -613,8 +611,8 @@ cl_max_id(Attribute *attribute)
  * @return           The frequency count of the item specified
  *                   by id, or an error code (if less than 0)
  */
-int
-cl_id2freq(Attribute *attribute, int id)
+int64_t
+cl_id2freq(Attribute *attribute, int64_t id)
 {
   Component *freqs;
 
@@ -628,7 +626,7 @@ cl_id2freq(Attribute *attribute, int id)
   }
   else if ((id >= 0) && (id < freqs->size)) {
     cl_errno = CDA_OK;
-    return ntohl(freqs->data.data[id]);
+    return ntohll(freqs->data.data[id]);
   }
   else {
     cl_errno = CDA_EIDXORNG;
@@ -677,12 +675,12 @@ cl_id2freq(Attribute *attribute, int id)
  *                              positions; or NULL in case of
  *                              error.
  */
-int *
-cl_id2cpos_oldstyle(Attribute *attribute, int id, int *freq, int *restrictor_list, int restrictor_list_size)
+int64_t *
+cl_id2cpos_oldstyle(Attribute *attribute, int64_t id, int64_t *freq, int64_t *restrictor_list, int64_t restrictor_list_size)
 {
   Component *revcorp, *revcidx;
-  int *buffer;
-  int size, range;
+  int64_t *buffer;
+  int64_t size, range;
 
   check_arg(attribute, ATT_POS, NULL);
 
@@ -702,7 +700,7 @@ cl_id2cpos_oldstyle(Attribute *attribute, int id, int *freq, int *restrictor_lis
 
   if ((id <0) || (id >= range)) {
     cl_errno = CDA_EIDORNG;
-    /*       fprintf(stderr, "ID %d out of range of PA %s\n", */
+    /*       fprintf(stderr, "ID %" PRId64 " out of range of PA %s\n", */
     /*        id, attribute->any.name); */
     *freq = 0;
     return NULL;
@@ -710,7 +708,7 @@ cl_id2cpos_oldstyle(Attribute *attribute, int id, int *freq, int *restrictor_lis
 
   *freq = cl_id2freq(attribute, id);
   if ((*freq < 0) || (cl_errno != CDA_OK)) {
-    /*       fprintf(stderr, "Frequency %d of ID %d illegal (PA %s)\n", */
+    /*       fprintf(stderr, "Frequency %" PRId64 " of ID %" PRId64 " illegal (PA %s)\n", */
     /*        *freq, id, attribute->any.name); */
     return NULL;
   }
@@ -720,12 +718,12 @@ cl_id2cpos_oldstyle(Attribute *attribute, int id, int *freq, int *restrictor_lis
      catch that special case. */
 
 
-  buffer = (int *)cl_malloc(*freq * sizeof(int));
+  buffer = (int64_t*)cl_malloc(*freq * sizeof(*buffer));
 
   if (cl_index_compressed(attribute)) {
 
     BStream bs;
-    unsigned int i, b, last_pos, gap, offset, ins_ptr, res_ptr;
+    int64_t i, b, last_pos, gap, offset, ins_ptr, res_ptr;
 
     revcorp = ensure_component(attribute, CompCompRF, 0);
     revcidx = ensure_component(attribute, CompCompRFX, 0);
@@ -738,9 +736,9 @@ cl_id2cpos_oldstyle(Attribute *attribute, int id, int *freq, int *restrictor_lis
 
     b = compute_ba(*freq, size);
 
-    offset = ntohl(revcidx->data.data[id]); /* byte offset in RFC */
+    offset = ntohll(revcidx->data.data[id]); /* byte offset in RFC */
 
-    BSopen((unsigned char *)revcorp->data.data, "r", &bs);
+    BSopen((uint8_t *)revcorp->data.data, "r", &bs);
     BSseek(&bs, offset);
 
     last_pos = 0;
@@ -784,7 +782,7 @@ cl_id2cpos_oldstyle(Attribute *attribute, int id, int *freq, int *restrictor_lis
         cl_free(buffer);
       }
       else {
-        buffer = cl_realloc(buffer, ins_ptr * sizeof(int));
+        buffer = cl_realloc(buffer, ins_ptr * sizeof(*buffer));
       }
       *freq = ins_ptr;
     }
@@ -804,17 +802,17 @@ cl_id2cpos_oldstyle(Attribute *attribute, int id, int *freq, int *restrictor_lis
     }
 
     memcpy(buffer,
-           revcorp->data.data + ntohl(revcidx->data.data[id]),
-           *freq * sizeof(int));
+           revcorp->data.data + ntohll(revcidx->data.data[id]),
+           *freq * sizeof(*revcorp->data.data));
 
     { /* convert network byte order to native integers */
-      int i;
+      int64_t i;
       for (i = 0; i < *freq; i++)
-        buffer[i] = ntohl(buffer[i]);
+        buffer[i] = ntohll(buffer[i]);
     }
 
     if (restrictor_list != NULL && restrictor_list_size > 0) {
-      int res_ptr, buf_ptr, ins_ptr;
+      int64_t res_ptr, buf_ptr, ins_ptr;
 
       /* force all items to be within the restrictor's ranges */
 
@@ -843,7 +841,7 @@ cl_id2cpos_oldstyle(Attribute *attribute, int id, int *freq, int *restrictor_lis
           cl_free(buffer);
         }
         else {
-          buffer = cl_realloc(buffer, ins_ptr * sizeof(int));
+          buffer = cl_realloc(buffer, ins_ptr * sizeof(*buffer));
         }
         *freq = ins_ptr;
       }
@@ -878,20 +876,20 @@ cl_id2cpos_oldstyle(Attribute *attribute, int id, int *freq, int *restrictor_lis
  */
 typedef struct _position_stream_rec_ {
   Attribute *attribute;         /**< The Attribute on which this PositionStream has been opened. */
-  int id;                       /**< The item whose positions this PositionStream will read */
-  int id_freq;                  /**< id frequency (ie frequency of the item in question);
+  int64_t id;                   /**< The item whose positions this PositionStream will read */
+  int64_t id_freq;              /**< id frequency (ie frequency of the item in question);
                                      maximum number of positions that can be read */
-  int nr_items;                 /**< how many items delivered so far */
+  int64_t nr_items;             /**< how many items delivered so far */
 
-  int is_compressed;            /**< Boolean: attribute REVCORP is compressed? */
+  bool is_compressed;           /**< Boolean: attribute REVCORP is compressed? */
 
   /** for compressed streams, the stream is a BStream object rather than just a pointer. */
   BStream bs;
-  int b;                        /**< relevent for compressed streams */
-  int last_pos;                 /**< relevent for compressed streams */
+  int64_t b;                    /**< relevent for compressed streams */
+  int64_t last_pos;             /**< relevent for compressed streams */
 
   /** pointer to base of stream for uncompressed streams. */
-  int *base;
+  int64_t *base;
 
 } PositionStreamRecord;
 
@@ -909,10 +907,10 @@ typedef struct _position_stream_rec_ {
  */
 PositionStream
 cl_new_stream(Attribute *attribute,
-                   int id)
+                   int64_t id)
 {
   Component *revcorp, *revcidx;
-  int size, freq, range;
+  int64_t size, freq, range;
 
   PositionStream ps = NULL;
 
@@ -948,7 +946,7 @@ cl_new_stream(Attribute *attribute,
 
   if (cl_index_compressed(attribute)) {
 
-    int offset;
+    int64_t offset;
 
     ps->is_compressed = 1;
 
@@ -963,9 +961,9 @@ cl_new_stream(Attribute *attribute,
 
     ps->b = compute_ba(ps->id_freq, size);
 
-    offset = ntohl(revcidx->data.data[id]); /* byte offset in RFC */
+    offset = ntohll(revcidx->data.data[id]); /* byte offset in RFC */
 
-    BSopen((unsigned char *)revcorp->data.data, "r", &(ps->bs));
+    BSopen((uint8_t *)revcorp->data.data, "r", &(ps->bs));
     BSseek(&(ps->bs), offset);
 
     ps->last_pos = 0;
@@ -984,7 +982,7 @@ cl_new_stream(Attribute *attribute,
       return NULL;
     }
 
-    ps->base = revcorp->data.data + ntohl(revcidx->data.data[ps->id]);
+    ps->base = revcorp->data.data + ntohll(revcidx->data.data[ps->id]);
 
   }
 
@@ -994,7 +992,7 @@ cl_new_stream(Attribute *attribute,
 /**
  * Deletes a PositionStream object.
  */
-int
+bool
 cl_delete_stream(PositionStream *ps)
 {
   assert(ps && *ps);
@@ -1030,12 +1028,12 @@ cl_delete_stream(PositionStream *ps)
  *                     read. This may be less than buffer_size (and
  *                     will be 0 if there are no instances of this item left).
  */
-int
+int64_t
 cl_read_stream(PositionStream ps,
-               int *buffer,
-               int buffer_size)
+               int64_t *buffer,
+               int64_t buffer_size)
 {
-  int items_to_read;
+  int64_t items_to_read;
 
   assert(ps);
   assert(buffer);
@@ -1059,7 +1057,7 @@ cl_read_stream(PositionStream ps,
 
   if (ps->is_compressed) {
 
-    int gap, i;
+    int64_t gap, i;
 
     for (i = 0; i < items_to_read; i++,ps->nr_items++) {
 
@@ -1074,15 +1072,15 @@ cl_read_stream(PositionStream ps,
 
     memcpy(buffer,
            ps->base + ps->nr_items,
-           items_to_read * sizeof(int));
+           items_to_read * sizeof(*ps->base));
 
     ps->nr_items += items_to_read;
 
     {
       /* convert network byte order to native integers */
-      int i;
+      int64_t i;
       for (i = 0; i < items_to_read; i++)
-        buffer[i] = ntohl(buffer[i]);
+        buffer[i] = ntohll(buffer[i]);
     }
 
   }
@@ -1107,8 +1105,8 @@ cl_read_stream(PositionStream ps,
  *                   on this attribute, OR a negative value
  *                   if there is an error.
  */
-int
-cl_cpos2id(Attribute *attribute, int position)
+int64_t
+cl_cpos2id(Attribute *attribute, int64_t position)
 {
   Component *corpus;
 
@@ -1121,12 +1119,12 @@ cl_cpos2id(Attribute *attribute, int position)
     Component *cis_map;
     BStream bs;
 
-    unsigned char bit;
-    int item;
-    unsigned int block, rest, offset, max, v, l, i;
+    uint8_t bit;
+    int64_t item;
+    uint64_t block, rest, offset, max, v, l, i;
 
     if (COMPRESS_DEBUG > 1)
-      fprintf(stderr, "Accessing position %d of %s via compressed item sequence\n",
+      fprintf(stderr, "Accessing position %" PRId64 " of %s via compressed item sequence\n",
               position, attribute->any.name);
 
     cis      = ensure_component(attribute, CompHuffSeq, 0);
@@ -1150,7 +1148,7 @@ cl_cpos2id(Attribute *attribute, int position)
          * and hope that we'll get a cache hit next time. */
 
         if (COMPRESS_DEBUG > 0)
-          fprintf(stderr, "Block miss: have %d, want %d\n",
+          fprintf(stderr, "Block miss: have %" PRId64 ", want %" PRId64 "\n",
                   attribute->pos.this_block_nr, block);
 
         /* is the block we read the last block of the corpus? Then, we
@@ -1165,13 +1163,13 @@ cl_cpos2id(Attribute *attribute, int position)
         attribute->pos.this_block_nr = block;
 
 
-        offset = ntohl(cis_sync->data.data[block]);
+        offset = ntohll(cis_sync->data.data[block]);
 
         if (COMPRESS_DEBUG > 1)
-          fprintf(stderr, "-> Block %d, rest %d, offset %d\n",
+          fprintf(stderr, "-> Block %" PRId64 ", rest %" PRId64 ", offset %" PRId64 "\n",
                   block, rest, offset);
 
-        BSopen((unsigned char *)cis->data.data, "r", &bs);
+        BSopen((uint8_t *)cis->data.data, "r", &bs);
         BSseek(&bs, offset);
 
         for (i = 0; i < max; i++) {
@@ -1201,7 +1199,7 @@ cl_cpos2id(Attribute *attribute, int position)
 
           /* we now have the item - store it in the decompression block */
 
-          item = ntohl(attribute->pos.hc->symbols[attribute->pos.hc->symindex[l] + v -
+          item = ntohll(attribute->pos.hc->symbols[attribute->pos.hc->symindex[l] + v -
                                                  attribute->pos.hc->min_code[l]]);
 
           attribute->pos.this_block[i] = item;
@@ -1211,7 +1209,7 @@ cl_cpos2id(Attribute *attribute, int position)
 
       }
       else if (COMPRESS_DEBUG > 0)
-        fprintf(stderr, "Block hit: block[%d,%d]\n", block, rest);
+        fprintf(stderr, "Block hit: block[%" PRId64 ",%" PRId64 "]\n", block, rest);
 
       assert(rest < SYNCHRONIZATION);
 
@@ -1234,7 +1232,7 @@ cl_cpos2id(Attribute *attribute, int position)
 
     if ((position >= 0) && (position < corpus->size)) {
       cl_errno = CDA_OK;
-      return ntohl(corpus->data.data[position]);
+      return ntohll(corpus->data.data[position]);
     }
     else {
       cl_errno = CDA_EPOSORNG;
@@ -1259,9 +1257,9 @@ cl_cpos2id(Attribute *attribute, int position)
  *                   if there is an error.
  */
 char *
-cl_cpos2str(Attribute *attribute, int position)
+cl_cpos2str(Attribute *attribute, int64_t position)
 {
-  int id;
+  int64_t id;
 
   check_arg(attribute, ATT_POS, NULL);
 
@@ -1296,7 +1294,7 @@ cl_cpos2str(Attribute *attribute, int position)
  *                   if there is an error.
  */
 char *
-cl_id2all(Attribute *attribute, int index, int *freq, int *slen)
+cl_id2all(Attribute *attribute, int64_t index, int64_t *freq, int64_t *slen)
 {
   check_arg(attribute, ATT_POS, NULL);
 
@@ -1331,30 +1329,30 @@ cl_id2all(Attribute *attribute, int index, int *freq, int *slen)
  * @param number_of_matches  This is set to the number of item ids found, i.e. the size of the returned buffer.
  * @return                   A pointer to the list of item ids.
  */
-int *
-cl_regex2id(Attribute *attribute, char *pattern, int flags, int *number_of_matches)
+int64_t *
+cl_regex2id(Attribute *attribute, char *pattern, int64_t flags, int64_t *number_of_matches)
 {
   Component *lexidx;
   Component *lex;
-  int *lexidx_data;
+  int64_t *lexidx_data;
   char *lex_data;
 
-  int *table;                   /* list of matching IDs */
-  int match_count;              /* count matches in local variable while scanning */
+  int64_t *table;                   /* list of matching IDs */
+  int64_t match_count;              /* count matches in local variable while scanning */
 
   /* results are stored as a a bitmap: one bit per lexicon item */
   /* note that it would also be possible to use a Bitfield <bitfield.h>, but this custom implementation is somewhat more efficient */
-  unsigned char *bitmap = NULL; /* use bitmap while scanning lexicon to reduce memory footprint and avoid large realloc() */
-  int bitmap_size;              /* size of allocated bitmap in bytes */
-  int bitmap_offset;            /* current bitmap offset (in bytes) */
-  unsigned char bitmap_mask;    /* current bitmap offset (within-byte part, as bit mask) */
+  uint8_t *bitmap = NULL; /* use bitmap while scanning lexicon to reduce memory footprint and avoid large realloc() */
+  int64_t bitmap_size;              /* size of allocated bitmap in bytes */
+  int64_t bitmap_offset;            /* current bitmap offset (in bytes) */
+  uint8_t bitmap_mask;    /* current bitmap offset (within-byte part, as bit mask) */
   /* TODO might move bitmap to static variable and re-allocate only when necessary ... */
   
-  int regex_result, idx, i, len, lexsize;
-  int optimised, grain_match;
+  int64_t idx, lexsize;
+  bool optimised;
 
   CL_Regex rx;
-  char *word, *preprocessed_string;
+  char *word;
 
   check_arg(attribute, ATT_POS, NULL);
 
@@ -1367,7 +1365,7 @@ cl_regex2id(Attribute *attribute, char *pattern, int flags, int *number_of_match
   }
   
   lexsize = lexidx->size;
-  lexidx_data = (int *) lexidx->data.data;
+  lexidx_data = lexidx->data.data;
   lex_data = (char *) lex->data.data;
   match_count = 0;
 
@@ -1381,7 +1379,7 @@ cl_regex2id(Attribute *attribute, char *pattern, int flags, int *number_of_match
 
   /* allocate bitmap for matching IDs */
   bitmap_size = (lexsize + 7) / 8;  /* this is the exact number of bytes needed, I hope */
-  bitmap = (unsigned char *) cl_calloc(bitmap_size, sizeof(unsigned char)); /* initialise: no bits set */
+  bitmap = (uint8_t *) cl_calloc(bitmap_size, sizeof(uint8_t)); /* initialise: no bits set */
   bitmap_offset = 0;
   bitmap_mask = 0x80;           /* start with MSB of first byte */
 
@@ -1389,18 +1387,16 @@ cl_regex2id(Attribute *attribute, char *pattern, int flags, int *number_of_match
 
   /* for each index in the lexicon... */
   for (idx = 0; idx < lexsize; idx++) {
-    int off_start, off_end;     /* start and end offset of current lexicon entry */
-    char *p;
-    int i;
+    int64_t off_start, off_end;     /* start and end offset of current lexicon entry */
 
     /* compute start offset and length of current lexicon entry from lexidx, if possible)
      *  -- no longer necessary because we can't pass len to cl_regex_match
      *  -- although 'twould be a good optimisation if possible to avoid calling strlen
      *  -- pass in via a global variable cl_regopt_haystack_strlenin? */
-    off_start = ntohl(lexidx_data[idx]);
+    off_start = ntohll(lexidx_data[idx]);
     word = lex_data + off_start;
     if (idx < lexsize-1) {
-      off_end = ntohl(lexidx_data[idx + 1]) - 1;
+      off_end = ntohll(lexidx_data[idx + 1]) - 1;
       /* len = off_end - off_start; */
     }
     else {
@@ -1421,18 +1417,18 @@ cl_regex2id(Attribute *attribute, char *pattern, int flags, int *number_of_match
   } /* endfor (loop across lexicon items) */
 
   if (cl_debug && optimised) 
-    fprintf(stderr, "CL: regexp optimiser avoided calling regex engine for %d candidates out of %d strings\n"
-                    "    (%d matching strings in total) \n", cl_regopt_count_get(), lexsize, match_count);
+    fprintf(stderr, "CL: regexp optimiser avoided calling regex engine for %" PRId64 " candidates out of %" PRId64 " strings\n"
+                    "    (%" PRId64 " matching strings in total) \n", cl_regopt_count_get(), lexsize, match_count);
 
   if (match_count == 0) {       /* no matches */
     table = NULL;
   }
   else {                        /* generate list of matching IDs from bitmap */
-    table = (int *) cl_malloc(match_count * sizeof(int));
+    table = (int64_t*) cl_malloc(match_count * sizeof(*table));
     bitmap_offset = 0;
     bitmap_mask = 0x80;
     idx = 0;
-    for (i = 0; i < lexsize; i++) {
+    for (size_t i = 0; i < lexsize; i++) {
       if (bitmap[bitmap_offset] & bitmap_mask) {
         table[idx] = i;
         idx++;
@@ -1469,11 +1465,11 @@ cl_regex2id(Attribute *attribute, char *pattern, int flags, int *number_of_match
  * @return                 Sum of all the frequencies; less than 0 for an error.
  */
 
-int cl_idlist2freq(Attribute *attribute,
-                   int *word_ids,
-                   int number_of_words)
+int64_t cl_idlist2freq(Attribute *attribute,
+                   int64_t *word_ids,
+                   int64_t number_of_words)
 {
-  int k, sum;
+  int64_t k, sum;
 
   check_arg(attribute, ATT_POS, cl_errno);
 
@@ -1502,7 +1498,7 @@ int cl_idlist2freq(Attribute *attribute,
    this definition conforms to ANSI and POSIX standards according to the LDP */
 /** internal function for use with qsort */
 static int intcompare(const void *i, const void *j)
-{ return(*(int *)i - *(int *)j); }
+{ return (*(int64_t*)i - *(int64_t*)j); }
 /* this is used in the following function, thus why it's here. */
 
 
@@ -1559,18 +1555,18 @@ static int intcompare(const void *i, const void *j)
  * @param restrictor_list_size  See function description.
  * @return                      Pointer to the list of corpus positions.
  */
-int *
+int64_t *
 cl_idlist2cpos_oldstyle(Attribute *attribute,
-                        int *word_ids,
-                        int number_of_words,
-                        int sort,
-                        int *size_of_table,
-                        int *restrictor_list,
-                        int restrictor_list_size)
+                        int64_t *word_ids,
+                        int64_t number_of_words,
+                        bool sort,
+                        int64_t *size_of_table,
+                        int64_t *restrictor_list,
+                        int64_t restrictor_list_size)
 {
-  int size, k, p, word_id, freq;
+  int64_t size, k, p, word_id, freq;
 
-  int *table, *start;
+  int64_t *table, *start;
 
   Component *lexidx;
 
@@ -1592,7 +1588,7 @@ cl_idlist2cpos_oldstyle(Attribute *attribute,
 
   if (size > 0) {
 
-    table = (int *)cl_malloc(size * sizeof(int));
+    table = (int64_t*)cl_malloc(size * sizeof(*table));
 
     p = 0;
 
@@ -1613,7 +1609,7 @@ cl_idlist2cpos_oldstyle(Attribute *attribute,
       }
 
       /* lets hack: */
-      memcpy(&table[p], start, freq * sizeof(int));
+      memcpy(&table[p], start, freq * sizeof(*start));
       p += freq;
         
       /* f_o now always mallocs. */
@@ -1623,7 +1619,7 @@ cl_idlist2cpos_oldstyle(Attribute *attribute,
     assert(p == size);
       
     if (sort)
-      qsort(table, size, sizeof(int), intcompare);
+      qsort(table, size, sizeof(*table), intcompare);
       
     *size_of_table = size;
     cl_errno = CDA_OK;
@@ -1659,14 +1655,12 @@ cl_idlist2cpos_oldstyle(Attribute *attribute,
  *                  corpus position can be found. NULL if
  *                  not found.
  */
-int *
-get_previous_mark(int *data, int size, int position)
+int64_t *
+get_previous_mark(int64_t *data, int64_t size, int64_t position)
 {
-  int nr;
-
-  int mid, high, low, comp;
-
-  int max = size/2;
+  int64_t nr;
+  int64_t mid, high, low, comp;
+  int64_t max = size/2;
 
   low = 0;
   nr = 0;
@@ -1683,12 +1677,12 @@ get_previous_mark(int *data, int size, int position)
 
     mid = (low + high)/2;
 
-    comp = position - ntohl(data[mid*2]);
+    comp = position - ntohll(data[mid*2]);
 
     if (comp == 0)
       return &data[mid*2];
     else if (comp > 0) {
-      if (position <= ntohl(data[mid*2+1]))
+      if (position <= ntohll(data[mid*2+1]))
         return &data[mid*2];
       else
         low = mid + 1;
@@ -1718,10 +1712,10 @@ get_previous_mark(int *data, int size, int position)
  * @param cpos   The corpus position to look for.
  * @return       The number of the structure that is found.
  */
-int
-cl_cpos2struc(Attribute *a, int cpos)
+int64_t
+cl_cpos2struc(Attribute *a, int64_t cpos)
 {
-  int struc = -1;
+  int64_t struc = -1;
   if (cl_cpos2struc_oldstyle(a, cpos, &struc))
     return struc;
   else
@@ -1748,12 +1742,12 @@ cl_cpos2struc(Attribute *a, int cpos)
  *               a region or on a bound; or a negative
  *               number (error code) in case of error.
  */
-int
-cl_cpos2boundary(Attribute *a, int cpos) {
+int64_t
+cl_cpos2boundary(Attribute *a, int64_t cpos) {
   /* convenience function: within region or at boundary? */
-  int start = -1, end = -1;
+  int64_t start = -1, end = -1;
   if (cl_cpos2struc2cpos(a, cpos, &start, &end)) {
-    int flags = STRUC_INSIDE;
+    int64_t flags = STRUC_INSIDE;
     if (cpos == start)
       flags |= STRUC_LBOUND;
     if (cpos == end)
@@ -1781,10 +1775,10 @@ cl_cpos2boundary(Attribute *a, int cpos) {
  * @a       The s-attribute to evaluate.
  * @return  The maximum corpus position, or an error code (if less than 0)
  */
-int
+int64_t
 cl_max_struc(Attribute *a)
 {
-  int nr = -1;
+  int64_t nr = -1;
   if (cl_max_struc_oldstyle(a, &nr))
     return nr;
   else
@@ -1807,15 +1801,15 @@ cl_max_struc(Attribute *a)
  * @return             Boolean: true for all OK, false for error.
  *
  */
-int
+int64_t
 cl_cpos2struc2cpos(Attribute *attribute,
-                   int position,
-                   int *struc_start,
-                   int *struc_end)
+                   int64_t position,
+                   int64_t *struc_start,
+                   int64_t *struc_end)
 {
   Component *struc_data;
   
-  int *val;
+  int64_t *val;
 
   check_arg(attribute, ATT_STRUC, cl_errno);
 
@@ -1834,8 +1828,8 @@ cl_cpos2struc2cpos(Attribute *attribute,
                           position);
 
   if (val != NULL) {
-    *struc_start = ntohl(*val);
-    *struc_end   = ntohl(*(val + 1));
+    *struc_start = ntohll(*val);
+    *struc_end   = ntohll(*(val + 1));
     cl_errno = CDA_OK;
     return 1;
   }
@@ -1862,12 +1856,12 @@ cl_cpos2struc2cpos(Attribute *attribute,
  *                   is found will be put.
  * @return           Boolean: true for all OK, false for error.
  */
-int
-cl_cpos2struc_oldstyle(Attribute *attribute, int position, int *struc_num)
+int64_t
+cl_cpos2struc_oldstyle(Attribute *attribute, int64_t position, int64_t *struc_num)
 {
 
   Component *struc_data;
-  int *val;
+  int64_t *val;
 
   check_arg(attribute, ATT_STRUC, cl_errno);
 
@@ -1908,11 +1902,11 @@ cl_cpos2struc_oldstyle(Attribute *attribute, int position, int *struc_num)
  * @param struc_end    Location to put the ending corpus position.
  * @return             boolean: true for all OK, 0 for problem
  */
-int
+int64_t
 cl_struc2cpos(Attribute *attribute,
-              int struc_num,
-              int *struc_start,
-              int *struc_end)
+              int64_t struc_num,
+              int64_t *struc_start,
+              int64_t *struc_end)
 {
   Component *struc_data;
 
@@ -1930,8 +1924,8 @@ cl_struc2cpos(Attribute *attribute,
     return 0;
   }
   else {
-    *struc_start = ntohl(struc_data->data.data[struc_num * 2]);
-    *struc_end   = ntohl(struc_data->data.data[(struc_num * 2)+1]);
+    *struc_start = ntohll(struc_data->data.data[struc_num * 2]);
+    *struc_end   = ntohll(struc_data->data.data[(struc_num * 2)+1]);
     cl_errno = CDA_OK;
     return 1;
   }
@@ -1951,8 +1945,8 @@ cl_struc2cpos(Attribute *attribute,
  * @param nr_strucs    The number of instances is put here.
  * @return             boolean: true for all OK, false for problem.
  */
-int
-cl_max_struc_oldstyle(Attribute *attribute, int *nr_strucs)
+int64_t
+cl_max_struc_oldstyle(Attribute *attribute, int64_t *nr_strucs)
 {
   Component *struc_data;
 
@@ -1978,7 +1972,7 @@ cl_max_struc_oldstyle(Attribute *attribute, int *nr_strucs)
  *
  * @return Boolean.
  */
-int 
+bool 
 cl_struc_values(Attribute *attribute) {
 
   check_arg(attribute, ATT_STRUC, cl_errno);
@@ -2011,7 +2005,7 @@ cl_struc_values(Attribute *attribute) {
 int
 s_v_comp(const void *v1, const void *v2)
 {
-  return ntohl(*((int *)v1)) - ntohl(*((int *)v2));
+  return ntohll(*((int64_t*)v1)) - ntohll(*((int64_t*)v2));
 }
 
 
@@ -2031,7 +2025,7 @@ s_v_comp(const void *v1, const void *v2)
  *
  */
 char *
-cl_struc2str(Attribute *attribute, int struc_num)
+cl_struc2str(Attribute *attribute, int64_t struc_num)
 {
   check_arg(attribute, ATT_STRUC, NULL);
 
@@ -2039,8 +2033,8 @@ cl_struc2str(Attribute *attribute, int struc_num)
 
     /* local structure */
     typedef struct _idx_el { 
-      int id;
-      int offset;
+      int64_t id;
+      int64_t offset;
     } IndexElement;
     
     Component *avs;
@@ -2056,16 +2050,15 @@ cl_struc2str(Attribute *attribute, int struc_num)
       return 0;
     }
 
-    key.id = htonl(struc_num);
+    key.id = htonll(struc_num);
 
     /* current redundant file format allows regions without annotations, so the index file (avx)
      * consists of (region index, ptr) pairs, where ptr is an offset into the lexicon file (avs)
      */
     idx = (IndexElement *)bsearch(&key, avx->data.data, avx->size / 2,
-                                  2 * sizeof(int), s_v_comp);
+                                  2 * sizeof(*avx->data.data), s_v_comp);
     if (idx) {
-      int offset;
-      offset = ntohl(idx->offset);
+      int64_t offset = ntohll(idx->offset);
 
       if (offset >= 0 && offset < avs->data.size) {
         cl_errno = CDA_OK;
@@ -2097,9 +2090,9 @@ cl_struc2str(Attribute *attribute, int struc_num)
  *                  or NULL for error.
  */
 char *
-structure_value_at_position(Attribute *struc, int position)
+structure_value_at_position(Attribute *struc, int64_t position)
 {
-  int snum = -1;
+  int64_t snum = -1;
   
   if ((struc == NULL) || 
       (!get_num_of_struc(struc, position, &snum)))
@@ -2134,12 +2127,12 @@ structure_value_at_position(Attribute *struc, int position)
  * @return          The id of the alignment at this corpus position,
  *                  or -1 for error.
  */
-int
-get_alignment(int *data, int size, int position)   /* ALIGN component */
+int64_t
+get_alignment(int64_t *data, int64_t size, int64_t position)   /* ALIGN component */
 {
-  int nr;
-  int mid, high, low, comp;
-  int max = size/2;
+  int64_t nr;
+  int64_t mid, high, low, comp;
+  int64_t max = size/2;
 
   /* organisation of ALIGN component is
        source boundary #1
@@ -2162,11 +2155,11 @@ get_alignment(int *data, int size, int position)   /* ALIGN component */
 
     mid = (low + high)/2;
 
-    comp = position - ntohl(data[mid*2]);
+    comp = position - ntohll(data[mid*2]);
     if (comp == 0)
       return mid;
     else if (comp > 0) {
-      if ((mid*2 < size) && (position < ntohl(data[(mid+1)*2])))
+      if ((mid*2 < size) && (position < ntohll(data[(mid+1)*2])))
         return mid;
       else
         low = mid + 1;
@@ -2199,12 +2192,12 @@ get_alignment(int *data, int size, int position)   /* ALIGN component */
  * @return          The id of the alignment at this corpus position,
  *                  or -1 for error.
  */
-int
-get_extended_alignment(int *data, int size, int position)   /* XALIGN component */
+int64_t
+get_extended_alignment(int64_t *data, int64_t size, int64_t position)   /* XALIGN component */
 {
-  int nr;
-  int mid, high, low, start, end;
-  int max = size/4;
+  int64_t nr;
+  int64_t mid, high, low, start, end;
+  int64_t max = size/4;
 
   /* organisation of XALIGN component is
        source region #1 start
@@ -2228,8 +2221,8 @@ get_extended_alignment(int *data, int size, int position)   /* XALIGN component 
 
     mid = (low + high)/2;
 
-    start = ntohl(data[mid*4]);
-    end = ntohl(data[mid*4 + 1]);
+    start = ntohll(data[mid*4]);
+    end = ntohll(data[mid*4 + 1]);
     if (start <= position) {
       if (position <= end) {
         return mid;             /* return nr of alignment region */
@@ -2248,86 +2241,13 @@ get_extended_alignment(int *data, int size, int position)   /* XALIGN component 
 
 
 /**
- * Gets the corpus positions of an alignment on the given align-attribute.
- *
- * This is for old-style alignments only: it doesn't (can't) deal with
- * extended alignments. Depracated: use cl_alg2cpos instead (but note its
- * parameters are not identical).
- *
- * @see cl_alg2cpos.
- *
- * @param attribute             The align-attribute to look on.
- * @param position              The corpus position {??} of the alignment whose positions are wanted.
- * @param source_corpus_start   Location to put source corpus start position.
- * @param source_corpus_end     Location to put source corpus end position.
- * @param aligned_corpus_start  Location to put target corpus start position.
- * @param aligned_corpus_end    Location to put target corpus end position.
- * @return                      Boolean: true = all OK, false = problem.
- */
-int
-cl_cpos2alg2cpos_oldstyle(Attribute *attribute, /* accesses alignment attribute */
-                          int position,
-                          int *source_corpus_start,
-                          int *source_corpus_end,
-                          int *aligned_corpus_start,
-                          int *aligned_corpus_end)
-{
-  int *val;
-  int alg;                      /* nr of alignment region */
-
-  Component *align_data;
-
-  check_arg(attribute, ATT_ALIGN, cl_errno);
-
-  *source_corpus_start = -1;
-  *aligned_corpus_start = -1;
-  *source_corpus_end = -1;
-  *aligned_corpus_end = -1;
-
-  align_data = ensure_component(attribute, CompAlignData, 0);
-
-  if (align_data == NULL) {
-    cl_errno = CDA_ENODATA;
-    return 0;
-  }
-  
-  alg = get_alignment(align_data->data.data, 
-                      align_data->size,
-                      position);
-  if (alg >= 0) {
-    val = align_data->data.data + (alg * 2);
-    *source_corpus_start  = ntohl(val[0]);
-    *aligned_corpus_start = ntohl(val[1]);
-    
-    if (val + 3 - align_data->data.data >= align_data->size) {
-      *source_corpus_end = -1;
-      *aligned_corpus_end = -1;
-    }
-    else {
-      *source_corpus_end  = ntohl(val[2])-1;
-      *aligned_corpus_end = ntohl(val[3])-1;
-    }
-      
-    cl_errno = CDA_OK;
-    return 1;
-  }
-  else {
-    cl_errno = CDA_EPOSORNG;
-    return 0;
-  }
-
-  assert("Not reached" && 0);
-  return 0;
-}
-
-/**
  * Checks whether an attribute's XALIGN component exists,
  * that is, whether or not it has extended alignment.
  *
  * @param attribute  An align-attribute.
  * @return           Boolean.
  */
-int
+bool
 cl_has_extended_alignment(Attribute *attribute)
 {
   ComponentState xalign;
@@ -2351,7 +2271,7 @@ cl_has_extended_alignment(Attribute *attribute)
  * @param attribute  An align-attribute.
  * @return           The number of alignments on this attribute.
  */
-int
+int64_t
 cl_max_alg(Attribute *attribute)
 {
   Component *align_data;
@@ -2383,12 +2303,12 @@ cl_max_alg(Attribute *attribute)
  * @param attribute  The align-attribute to look on.
  * @param cpos       The corpus position to look at.
  * @return           The id number of the alignment at this position,
- *                   or a negative int error code.
+ *                   or a negative int64_t error code.
  */
-int
-cl_cpos2alg(Attribute *attribute, int cpos)
+int64_t
+cl_cpos2alg(Attribute *attribute, int64_t cpos)
 {
-  int alg;
+  int64_t alg;
   Component *align_data;
 
 
@@ -2446,15 +2366,16 @@ cl_cpos2alg(Attribute *attribute, int cpos)
  * @param target_region_end    Location to put target corpus end position.
  * @return                     Boolean: true = all OK, false = problem.
  */
-int
+bool
 cl_alg2cpos(Attribute *attribute,
-            int alg,
-            int *source_region_start,
-            int *source_region_end,
-            int *target_region_start,
-            int *target_region_end)
+            int64_t alg,
+            int64_t *source_region_start,
+            int64_t *source_region_end,
+            int64_t *target_region_start,
+            int64_t *target_region_end)
 {
-  int *val, size;
+  int64_t *val;
+  size_t size;
   Component *align_data;
 
   *source_region_start = -1;
@@ -2475,10 +2396,10 @@ cl_alg2cpos(Attribute *attribute,
       return 0;
     }
     val = align_data->data.data + (alg * 2);
-    *source_region_start  = ntohl(val[0]);
-    *target_region_start = ntohl(val[1]);
-    *source_region_end  = ntohl(val[2]) - 1;
-    *target_region_end = ntohl(val[3]) - 1;
+    *source_region_start  = ntohll(val[0]);
+    *target_region_start = ntohll(val[1]);
+    *source_region_end  = ntohll(val[2]) - 1;
+    *target_region_end = ntohll(val[3]) - 1;
     cl_errno = CDA_OK;
     return 1;
   }
@@ -2494,10 +2415,10 @@ cl_alg2cpos(Attribute *attribute,
       return 0;
     }
     val = align_data->data.data + (alg * 4);
-    *source_region_start  = ntohl(val[0]);
-    *source_region_end    = ntohl(val[1]);
-    *target_region_start = ntohl(val[2]);
-    *target_region_end   = ntohl(val[3]);
+    *source_region_start  = ntohll(val[0]);
+    *source_region_end    = ntohll(val[1]);
+    *target_region_start = ntohll(val[2]);
+    *target_region_end   = ntohll(val[3]);
     cl_errno = CDA_OK;
     return 1;
   }
@@ -2513,25 +2434,25 @@ cl_alg2cpos(Attribute *attribute,
  * This is the attribute access function for dynamic attributes.
  *
  * @param attribute  The (dynamic) attribute in question.
- * @param dcr        Location for the result (*int or *char).
- * @param args       Location of the parameters (of *int or *char).
+ * @param dcr        Location for the result (*int64_t or *char).
+ * @param args       Location of the parameters (of *int64_t or *char).
  * @param nr_args    Number of parameters.
  * @return           Boolean: True for all OK, false for error.
  */
-int
+bool
 cl_dynamic_call(Attribute *attribute,
                 DynCallResult *dcr,
                 DynCallResult *args,
-                int nr_args)
+                int64_t nr_args)
 {
   char call[CL_MAX_LINE_LENGTH];
-  char istr[32];
+  char istr[64];
 
-  int i, k, ap, ins;
+  int64_t i, k, ap, ins;
 
   FILE *pipe;
   DynCallResult arg;
-  int argnum, val;
+  int64_t argnum, val;
   DynArg *p;
   char c;
 
@@ -2611,7 +2532,7 @@ cl_dynamic_call(Attribute *attribute,
                   
                 case ATTAT_INT:
                 case ATTAT_POS:
-                  sprintf(istr, "%d", args[ap].value.intres);
+                  sprintf(istr, "%" PRId64 "", args[ap].value.intres);
                   for (k = 0; istr[k]; k++)
                     call[ins++] = istr[k];
 
@@ -2641,7 +2562,7 @@ cl_dynamic_call(Attribute *attribute,
                 
               case ATTAT_INT:
               case ATTAT_POS:
-                sprintf(istr, "%d", args[ap].value.intres);
+                sprintf(istr, "%" PRId64 "", args[ap].value.intres);
                 for (k = 0; istr[k]; k++)
                   call[ins++] = istr[k];
                   
@@ -2687,9 +2608,9 @@ cl_dynamic_call(Attribute *attribute,
     
     switch (attribute->dyn.res_type) {
 
-    case ATTAT_POS:             /* convert output to int */
+    case ATTAT_POS:             /* convert output to int64_t */
     case ATTAT_INT:
-      if (fscanf(pipe, "%d", &(dcr->value.intres)) == 0)
+      if (fscanf(pipe, "%" PRId64 "", &(dcr->value.intres)) == 0)
         dcr->value.intres = -1;
       break;
       
@@ -2735,10 +2656,10 @@ cl_dynamic_call(Attribute *attribute,
  *                   a negative integer is returned if for any argument
  *                   on dyn.arglist, the type is equal to ATTAT_VAR
  */
-int
+int64_t
 cl_dynamic_numargs(Attribute *attribute)
 {
-  int nr;
+  int64_t nr;
   DynArg *arg;
 
   check_arg(attribute, ATT_DYN, cl_errno);

@@ -28,14 +28,14 @@
 /** String set to the name of this program. */
 char *progname;
 
-int print_nr = 0;           /**< boolean: flag whether we should print line numbers */
-int print_freqs = 0;        /**< boolean: print the frequencies of the words? */
-int print_len = 0;          /**< boolean: print the word length s? */
-int dont_pad_cols = 0;      /**< boolean: omit padding spaces on numeric columns? */
-int sort = 0;               /**< boolean: print the lexicon in a sorted order? */
-int input_are_numbers = 0;  /**< boolean: read lexicon IDs from file? */
-int show_size_only = 0;     /**< boolean: do_show should just print the size of the lexicon and exit? */
-int freq_0_if_unknown = 0;  /**< boolean: print out unknown words with freq 0? */
+int64_t print_nr = 0;           /**< boolean: flag whether we should print line numbers */
+int64_t print_freqs = 0;        /**< boolean: print the frequencies of the words? */
+int64_t print_len = 0;          /**< boolean: print the word length s? */
+int64_t dont_pad_cols = 0;      /**< boolean: omit padding spaces on numeric columns? */
+int64_t sort = 0;               /**< boolean: print the lexicon in a sorted order? */
+int64_t input_are_numbers = 0;  /**< boolean: read lexicon IDs from file? */
+int64_t show_size_only = 0;     /**< boolean: do_show should just print the size of the lexicon and exit? */
+int64_t freq_0_if_unknown = 0;  /**< boolean: print out unknown words with freq 0? */
 
 Corpus *corpus = NULL;
 char *corpus_id = NULL;
@@ -52,11 +52,11 @@ char *input_filename = NULL;
  *                    (use NULL to use a default fallback string)
  */
 void
-lexdecode_print_item_info(Attribute *attr, int id, char *fallback_s)
+lexdecode_print_item_info(Attribute *attr, int64_t id, char *fallback_s)
 {
   char *format;
   char *item;
-  int freq, slen;
+  int64_t freq, slen;
 
   if (id >= 0) {
     if (fallback_s == NULL)
@@ -75,7 +75,7 @@ lexdecode_print_item_info(Attribute *attr, int id, char *fallback_s)
     item = NULL;
   }
 
-  format = (dont_pad_cols ? "%d\t" : "%7d\t" );
+  format = (dont_pad_cols ? "%" PRId64 "\t" : "%7" PRId64 "\t" );
   if (print_nr)    printf(format, id);
   if (print_freqs) printf(format, freq);
   if (print_len)   printf(format, slen);
@@ -93,12 +93,12 @@ lexdecode_print_item_info(Attribute *attr, int id, char *fallback_s)
  * @param rx_flags   IGNORE_CASE; IGNORE_DIAC; both; or neither.
  */
 void
-lexdecode_show(char *attr_name, char *rx, int rx_flags)
+lexdecode_show(char *attr_name, char *rx, int64_t rx_flags)
 {
-  int i, k, len, size;
-  int attr_size;
+  int64_t i, k, len, size;
+  int64_t attr_size;
 
-  int *idlist = NULL;
+  int64_t *idlist = NULL;
   FILE *input_fd;
 
   char s[CL_MAX_LINE_LENGTH];
@@ -124,8 +124,8 @@ lexdecode_show(char *attr_name, char *rx, int rx_flags)
   }
 
   if (show_size_only) {
-    printf("Tokens:\t%d\n", attr_size);
-    printf("Types:\t%d\n", size);
+    printf("Tokens:\t%" PRId64 "\n", attr_size);
+    printf("Types:\t%" PRId64 "\n", size);
   }
   else {                        /* without -S option */
 
@@ -245,12 +245,12 @@ main(int argc, char **argv) {
   char *registry_directory = NULL;
   char *attr_name = DEFAULT_ATT_NAME;
   char *rx = NULL;
-  int   rx_flags = 0;
+  int64_t   rx_flags = 0;
 
   extern int optind;
   extern char *optarg;
 
-  int c;
+  int64_t c;
 
   /* ------------------------------------------------- PARSE ARGUMENTS */
 

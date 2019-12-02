@@ -61,9 +61,9 @@ cqiserver_welcome(void)
  * @param cmd  The integer representing the unknown command received from the client.
  */
 void 
-cqiserver_unknown_command_error(int cmd)
+cqiserver_unknown_command_error(int64_t cmd)
 {
-  fprintf(stderr, "CQPserver: unknown CQi command 0x%04X.\n", cmd);
+  fprintf(stderr, "CQPserver: unknown CQi command 0x%04X.\n", (int)cmd);
   exit(1);
 }
 
@@ -73,9 +73,9 @@ cqiserver_unknown_command_error(int cmd)
  * @param cmd  The integer representing the wrong command received from the client.
  */
 void 
-cqiserver_wrong_command_error(int cmd)
+cqiserver_wrong_command_error(int64_t cmd)
 {
-  fprintf(stderr, "CQPserver: command 0x%04X not allowed in this context.\n", cmd);
+  fprintf(stderr, "CQPserver: command 0x%04X not allowed in this context.\n", (int)cmd);
   exit(1);
 }
 
@@ -169,7 +169,7 @@ void
 do_cqi_corpus_list_corpora(void)
 {
   CorpusList *cl;
-  int n = 0;
+  int64_t n = 0;
   
   if (server_debug)
     fprintf(stderr, "CQi: CQI_CORPUS_LIST_CORPORA()\n");
@@ -221,10 +221,10 @@ do_cqi_corpus_properties(void)
 
 /* this part sends attributes of a certain type as a STRING[] to the client */
 void
-send_cqi_corpus_attributes(Corpus *c, int type)
+send_cqi_corpus_attributes(Corpus *c, int64_t type)
 {
   Attribute *a;
-  int len;
+  int64_t len;
   
   cqi_send_word(CQI_DATA_STRING_LIST);
   len = 0;
@@ -240,7 +240,7 @@ send_cqi_corpus_attributes(Corpus *c, int type)
 }
 
 void
-do_cqi_corpus_attributes(int type)
+do_cqi_corpus_attributes(int64_t type)
 {
   char *c, *typename;
   CorpusList *cl;
@@ -315,7 +315,7 @@ do_cqi_cl_attribute_size(void)
 {
   char *a;
   Attribute *attribute;
-  int size;
+  int64_t size;
           
   a = cqi_read_string();        /* need to try all possible attribute types */
   if (server_debug)
@@ -367,7 +367,7 @@ do_cqi_cl_lexicon_size(void)
 {
   char *a;
   Attribute *attribute;
-  int size;
+  int64_t size;
           
   a = cqi_read_string();
   if (server_debug)
@@ -402,7 +402,7 @@ void
 do_cqi_cl_str2id(void)
 {
   char **strlist;
-  int len, i, id;
+  int64_t len, i, id;
   char *a;
   Attribute *attribute;
 
@@ -439,8 +439,8 @@ do_cqi_cl_str2id(void)
 void
 do_cqi_cl_id2str(void)
 {
-  int *idlist;
-  int len, i;
+  int64_t *idlist;
+  int64_t len, i;
   char *a, *str;
   Attribute *attribute;
 
@@ -449,7 +449,7 @@ do_cqi_cl_id2str(void)
   if (server_debug) {
     fprintf(stderr, "CQi: CQI_CL_ID2STR('%s', [", a);
     for (i=0; i<len; i++)
-      fprintf(stderr, "%d ", idlist[i]);
+      fprintf(stderr, "%" PRId64 " ", idlist[i]);
     fprintf(stderr, "])\n");
   }
   attribute = cqi_lookup_attribute(a, ATT_POS);
@@ -475,8 +475,8 @@ do_cqi_cl_id2str(void)
 void
 do_cqi_cl_id2freq(void)
 {
-  int *idlist;
-  int len, i, f;
+  int64_t *idlist;
+  int64_t len, i, f;
   char *a;
   Attribute *attribute;
 
@@ -485,7 +485,7 @@ do_cqi_cl_id2freq(void)
   if (server_debug) {
     fprintf(stderr, "CQi: CQI_CL_ID2FREQ('%s', [", a);
     for (i=0; i<len; i++)
-      fprintf(stderr, "%d ", idlist[i]);
+      fprintf(stderr, "%" PRId64 " ", idlist[i]);
     fprintf(stderr, "])\n");
   }
   attribute = cqi_lookup_attribute(a, ATT_POS);
@@ -513,8 +513,8 @@ do_cqi_cl_id2freq(void)
 void
 do_cqi_cl_cpos2str(void)
 {
-  int *cposlist;
-  int len, i;
+  int64_t *cposlist;
+  int64_t len, i;
   char *a, *str;
   Attribute *attribute;
 
@@ -523,7 +523,7 @@ do_cqi_cl_cpos2str(void)
   if (server_debug) {
     fprintf(stderr, "CQi: CQI_CL_CPOS2STR('%s', [", a);
     for (i=0; i<len; i++)
-      fprintf(stderr, "%d ", cposlist[i]);
+      fprintf(stderr, "%" PRId64 " ", cposlist[i]);
     fprintf(stderr, "])\n");
   }
   attribute = cqi_lookup_attribute(a, ATT_POS);
@@ -549,8 +549,8 @@ do_cqi_cl_cpos2str(void)
 void
 do_cqi_cl_cpos2id(void)
 {
-  int *cposlist;
-  int len, i, id;
+  int64_t *cposlist;
+  int64_t len, i, id;
   char *a;
   Attribute *attribute;
 
@@ -559,7 +559,7 @@ do_cqi_cl_cpos2id(void)
   if (server_debug) {
     fprintf(stderr, "CQi: CQI_CL_CPOS2ID('%s', [", a);
     for (i=0; i<len; i++)
-      fprintf(stderr, "%d ", cposlist[i]);
+      fprintf(stderr, "%" PRId64 " ", cposlist[i]);
     fprintf(stderr, "])\n");
   }
   attribute = cqi_lookup_attribute(a, ATT_POS);
@@ -587,8 +587,8 @@ do_cqi_cl_cpos2id(void)
 void
 do_cqi_cl_cpos2struc(void)
 {
-  int *cposlist;
-  int len, i, struc;
+  int64_t *cposlist;
+  int64_t len, i, struc;
   char *a;
   Attribute *attribute;
 
@@ -597,7 +597,7 @@ do_cqi_cl_cpos2struc(void)
   if (server_debug) {
     fprintf(stderr, "CQi: CQI_CL_CPOS2STRUC('%s', [", a);
     for (i=0; i<len; i++)
-      fprintf(stderr, "%d ", cposlist[i]);
+      fprintf(stderr, "%" PRId64 " ", cposlist[i]);
     fprintf(stderr, "])\n");
   }
   attribute = cqi_lookup_attribute(a, ATT_STRUC);
@@ -628,8 +628,8 @@ do_cqi_cl_cpos2struc(void)
 void
 do_cqi_cl_cpos2lbound(void)
 {
-  int *cposlist;
-  int len, i, struc, lb, rb;
+  int64_t *cposlist;
+  int64_t len, i, struc, lb, rb;
   char *a;
   Attribute *attribute;
 
@@ -638,7 +638,7 @@ do_cqi_cl_cpos2lbound(void)
   if (server_debug) {
     fprintf(stderr, "CQi: CQI_CL_CPOS2LBOUND('%s', [", a);
     for (i=0; i<len; i++)
-      fprintf(stderr, "%d ", cposlist[i]);
+      fprintf(stderr, "%" PRId64 " ", cposlist[i]);
     fprintf(stderr, "])\n");
   }
   attribute = cqi_lookup_attribute(a, ATT_STRUC);
@@ -671,8 +671,8 @@ do_cqi_cl_cpos2lbound(void)
 void
 do_cqi_cl_cpos2rbound(void)
 {
-  int *cposlist;
-  int len, i, struc, lb, rb;
+  int64_t *cposlist;
+  int64_t len, i, struc, lb, rb;
   char *a;
   Attribute *attribute;
 
@@ -681,7 +681,7 @@ do_cqi_cl_cpos2rbound(void)
   if (server_debug) {
     fprintf(stderr, "CQi: CQI_CL_CPOS2RBOUND('%s', [", a);
     for (i=0; i<len; i++)
-      fprintf(stderr, "%d ", cposlist[i]);
+      fprintf(stderr, "%" PRId64 " ", cposlist[i]);
     fprintf(stderr, "])\n");
   }
   attribute = cqi_lookup_attribute(a, ATT_STRUC);
@@ -714,8 +714,8 @@ do_cqi_cl_cpos2rbound(void)
 void
 do_cqi_cl_cpos2alg(void)
 {
-  int *cposlist;
-  int len, i, alg;
+  int64_t *cposlist;
+  int64_t len, i, alg;
   char *a;
   Attribute *attribute;
 
@@ -724,7 +724,7 @@ do_cqi_cl_cpos2alg(void)
   if (server_debug) {
     fprintf(stderr, "CQi: CQI_CL_CPOS2ALG('%s', [", a);
     for (i=0; i<len; i++)
-      fprintf(stderr, "%d ", cposlist[i]);
+      fprintf(stderr, "%" PRId64 " ", cposlist[i]);
     fprintf(stderr, "])\n");
   }
   attribute = cqi_lookup_attribute(a, ATT_ALIGN);
@@ -752,8 +752,8 @@ do_cqi_cl_cpos2alg(void)
 void
 do_cqi_cl_struc2str(void)
 {
-  int *struclist;
-  int len, i;
+  int64_t *struclist;
+  int64_t len, i;
   char *a, *str;
   Attribute *attribute;
 
@@ -762,7 +762,7 @@ do_cqi_cl_struc2str(void)
   if (server_debug) {
     fprintf(stderr, "CQi: CQI_CL_STRUC2STR('%s', [", a);
     for (i=0; i<len; i++)
-      fprintf(stderr, "%d ", struclist[i]);
+      fprintf(stderr, "%" PRId64 " ", struclist[i]);
     fprintf(stderr, "])\n");
   }
   attribute = cqi_lookup_attribute(a, ATT_STRUC);
@@ -788,15 +788,15 @@ do_cqi_cl_struc2str(void)
 void
 do_cqi_cl_id2cpos(void)
 {
-  int *cposlist;
-  int len, id;
+  int64_t *cposlist;
+  int64_t len, id;
   char *a;
   Attribute *attribute;
 
   a = cqi_read_string();
   id = cqi_read_int();
   if (server_debug)
-    fprintf(stderr, "CQi: CQI_CL_ID2CPOS('%s', %d)\n", a, id);
+    fprintf(stderr, "CQi: CQI_CL_ID2CPOS('%s', %" PRId64 ")\n", a, id);
   attribute = cqi_lookup_attribute(a, ATT_POS);
   if (attribute == NULL) {
     cqi_command(cqi_errno);
@@ -816,8 +816,8 @@ do_cqi_cl_id2cpos(void)
 void
 do_cqi_cl_idlist2cpos(void)
 {
-  int *idlist, *cposlist;
-  int i, len, cposlen;
+  int64_t *idlist, *cposlist;
+  int64_t i, len, cposlen;
   char *a;
   Attribute *attribute;
 
@@ -826,7 +826,7 @@ do_cqi_cl_idlist2cpos(void)
   if (server_debug) {
     fprintf(stderr, "CQi: CQI_CL_IDLIST2CPOS('%s', [", a);
     for (i=0; i<len; i++)
-      fprintf(stderr, "%d ", idlist[i]);
+      fprintf(stderr, "%" PRId64 " ", idlist[i]);
     fprintf(stderr, "])\n");
   }
   attribute = cqi_lookup_attribute(a, ATT_POS);
@@ -851,8 +851,8 @@ do_cqi_cl_idlist2cpos(void)
 void
 do_cqi_cl_regex2id(void)
 {
-  int *idlist;
-  int len;
+  int64_t *idlist;
+  int64_t len;
   char *a, *regex;
   Attribute *attribute;
 
@@ -884,14 +884,14 @@ do_cqi_cl_regex2id(void)
 void
 do_cqi_cl_struc2cpos(void)
 {
-  int struc, start, end;
+  int64_t struc, start, end;
   char *a;
   Attribute *attribute;
 
   a = cqi_read_string();
   struc = cqi_read_int();
   if (server_debug)
-    fprintf(stderr, "CQi: CQI_CL_STRUC2CPOS('%s', %d)\n", a, struc);
+    fprintf(stderr, "CQi: CQI_CL_STRUC2CPOS('%s', %" PRId64 ")\n", a, struc);
   attribute = cqi_lookup_attribute(a, ATT_STRUC);
   if (attribute == NULL) {
     cqi_command(cqi_errno);
@@ -908,14 +908,14 @@ do_cqi_cl_struc2cpos(void)
 void
 do_cqi_cl_alg2cpos(void)
 {
-  int alg, s1, s2, t1, t2;
+  int64_t alg, s1, s2, t1, t2;
   char *a;
   Attribute *attribute;
 
   a = cqi_read_string();
   alg = cqi_read_int();
   if (server_debug)
-    fprintf(stderr, "CQi: CQI_CL_ALG2CPOS('%s', %d)\n", a, alg);
+    fprintf(stderr, "CQi: CQI_CL_ALG2CPOS('%s', %" PRId64 ")\n", a, alg);
   attribute = cqi_lookup_attribute(a, ATT_ALIGN);
   if (attribute == NULL) {
     cqi_command(cqi_errno);
@@ -934,7 +934,7 @@ do_cqi_cqp_list_subcorpora(void)
 {
   char *corpus;
   CorpusList *cl, *mother;
-  int n = 0;
+  int64_t n = 0;
   
   corpus = cqi_read_string();
   if (server_debug)
@@ -970,7 +970,7 @@ do_cqi_cqp_list_subcorpora(void)
  *
  * @return  Boolean: true iff the final non-blank character is a semicolon.
  */
-int
+int64_t
 query_has_semicolon(char *query)
 {
   char *p;
@@ -999,7 +999,7 @@ do_cqi_cqp_query(void)
   }
   else {
     char *cqp_query;
-    int len = strlen(child) + strlen(query) + 10;
+    int64_t len = strlen(child) + strlen(query) + 10;
     
     cqp_query = (char *) cl_malloc(len);
     if (!check_subcorpus_name(child) || !cqi_activate_corpus(mother)) {
@@ -1008,7 +1008,7 @@ do_cqi_cqp_query(void)
     else {
       query_lock = floor(1e9 * cl_runif()) + 1; /* activate query lock mode with random key */
 
-      printf("CQPSERVER: query_lock = %d\n", query_lock);
+      printf("CQPSERVER: query_lock = %" PRId64 "\n", query_lock);
       if (query_has_semicolon(query))
         sprintf(cqp_query, "%s = %s", child, query);
       else
@@ -1027,7 +1027,7 @@ do_cqi_cqp_query(void)
           if (server_log) {
             printf("'%s' ran the following query on %s\n", user, mother);
             printf("\t%s\n", cqp_query);
-            printf("and got %d matches.\n", childcl->size);
+            printf("and got %" PRId64 " matches.\n", childcl->size);
           }
           cqi_command(CQI_STATUS_OK);
 
@@ -1091,7 +1091,7 @@ do_cqi_cqp_subcorpus_has_field(void)
   CorpusList *cl;
   cqi_byte field;
   char *fieldname;
-  int field_ok = 1;             /* field valid? */
+  int64_t field_ok = 1;             /* field valid? */
 
   subcorpus = cqi_read_string();
   field = cqi_read_byte();
@@ -1152,7 +1152,7 @@ do_cqi_cqp_subcorpus_has_field(void)
  * @param n  Length of list to send.
  */
 void
-do_cqi_send_minus_one_list(int n)
+do_cqi_send_minus_one_list(int64_t n)
 {
   while (n--) 
     cqi_send_int(-1);
@@ -1164,9 +1164,9 @@ do_cqi_cqp_dump_subcorpus(void)
   char *subcorpus;
   CorpusList *cl;
   cqi_byte field;
-  int i, first, last, size;
+  int64_t i, first, last, size;
   char *fieldname;
-  int field_ok = 1;             /* field valid? */
+  int64_t field_ok = 1;             /* field valid? */
 
   subcorpus = cqi_read_string();
   field = cqi_read_byte();
@@ -1179,7 +1179,7 @@ do_cqi_cqp_dump_subcorpus(void)
     field_ok = 0;
   }
   if (server_debug) 
-    fprintf(stderr, "CQi: CQI_CQP_DUMP_SUBCORPUS('%s', %s, %d, %d)\n", 
+    fprintf(stderr, "CQi: CQI_CQP_DUMP_SUBCORPUS('%s', %s, %" PRId64 ", %" PRId64 ")\n", 
             subcorpus, fieldname, first, last);
 
   cl = cqi_find_corpus(subcorpus);
@@ -1263,14 +1263,14 @@ do_cqi_cqp_fdist_1(void)
 {
   char *subcorpus;
   CorpusList *cl;
-  int cutoff;
+  int64_t cutoff;
   cqi_byte field;
   char *att;
   Group *table;
-  int i, size;
+  int64_t i, size;
   char *fieldname;
   FieldType fieldtype = NoField;
-  int field_ok = 1;             /* field valid? */
+  int64_t field_ok = 1;             /* field valid? */
 
   subcorpus = cqi_read_string();
   cutoff = cqi_read_int();
@@ -1287,7 +1287,7 @@ do_cqi_cqp_fdist_1(void)
     fieldtype = field_name_to_type(fieldname);
   }
   if (server_debug) 
-    fprintf(stderr, "CQi: CQI_CQP_FDIST_1('%s', %d, %s, %s)\n", 
+    fprintf(stderr, "CQi: CQI_CQP_FDIST_1('%s', %" PRId64 ", %s, %s)\n", 
             subcorpus, cutoff, fieldname, att);
   
   cl = cqi_find_corpus(subcorpus);
@@ -1326,14 +1326,14 @@ do_cqi_cqp_fdist_2(void)
 {
   char *subcorpus;
   CorpusList *cl;
-  int cutoff;
+  int64_t cutoff;
   cqi_byte field1, field2;
   char *att1, *att2;
   Group *table;
-  int i, size;
+  int64_t i, size;
   char *fieldname1, *fieldname2;
   FieldType fieldtype1 = NoField, fieldtype2 = NoField;
-  int fields_ok = 1;            /* (both) fields valid? */
+  int64_t fields_ok = 1;            /* (both) fields valid? */
 
   subcorpus = cqi_read_string();
   cutoff = cqi_read_int();
@@ -1360,7 +1360,7 @@ do_cqi_cqp_fdist_2(void)
     fieldtype2 = field_name_to_type(fieldname2);
   }
   if (server_debug) 
-    fprintf(stderr, "CQi: CQI_CQP_FDIST_2('%s', %d, %s, %s, %s, %s)\n", 
+    fprintf(stderr, "CQi: CQI_CQP_FDIST_2('%s', %" PRId64 ", %s, %s, %s, %s)\n", 
             subcorpus, cutoff, fieldname1, att1, fieldname2, att2);
   
   cl = cqi_find_corpus(subcorpus);
@@ -1408,8 +1408,8 @@ do_cqi_cqp_fdist_2(void)
 void 
 interpreter(void)
 {
-  int cmd;
-  int cmd_group;
+  int64_t cmd;
+  int64_t cmd_group;
 
   while (42) {
     cmd = cqi_read_command();
@@ -1615,7 +1615,7 @@ interpreter(void)
 int
 main(int argc, char *argv[])
 {
-  int cmd;
+  int64_t cmd;
 
   which_app = cqpserver;
 
@@ -1673,7 +1673,7 @@ main(int argc, char *argv[])
   user = cqi_read_string();
   passwd = cqi_read_string();
   if (server_log)
-    printf("CQPserver: CONNECT  user = '%s'  passwd = '%s'  pid = %d\n", user, passwd, (int)getpid());
+    printf("CQPserver: CONNECT  user = '%s'  passwd = '%s'  pid = %" PRId64 "\n", user, passwd, (int64_t)getpid());
 
   /* check password here (always required !!) */
   if (!authenticate_user(user, passwd)) {
@@ -1704,7 +1704,7 @@ main(int argc, char *argv[])
   }
 
   /* connection terminated; clean up and exit */
-  printf("CQPserver: Exit. (pid = %d)\n", (int)getpid());
+  printf("CQPserver: Exit. (pid = %" PRId64 ")\n", (int64_t)getpid());
 
   /* TODO should we check cqp_error_status as in the main cqp app? */
   return 0;

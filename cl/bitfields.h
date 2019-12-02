@@ -23,42 +23,42 @@
 
 #include <limits.h>
 
-typedef unsigned char BFBaseType;
+typedef uint8_t BFBaseType;
 
 /**
  * The Bitfield object.
  */
 typedef struct {
-  int elements;         /**< The number of bits in the bitfield */
-  int bytes;            /**< The number of bytes the bitfield occupies */
-  int nr_bits_set;      /**< The number of bits whose value has been assigned. Initialised to 0. */
+  int64_t elements;         /**< The number of bits in the bitfield */
+  int64_t bytes;            /**< The number of bytes the bitfield occupies */
+  int64_t nr_bits_set;      /**< The number of bits whose value has been assigned. Initialised to 0. */
   BFBaseType *field;    /**< the bitfield data itself. All elements initialised to 0. */
 } BFBuf, *Bitfield;
 
 
 
-Bitfield create_bitfield(int nr_of_elements);
+Bitfield create_bitfield(int64_t nr_of_elements);
 
 Bitfield copy_bitfield(Bitfield source);
 
-int destroy_bitfield(Bitfield *bptr);
+int64_t destroy_bitfield(Bitfield *bptr);
 
-int set_bit(Bitfield bitfield, int element);
+int64_t set_bit(Bitfield bitfield, int64_t element);
 
-int clear_bit(Bitfield bitfield, int element);
+int64_t clear_bit(Bitfield bitfield, int64_t element);
 
-int clear_all_bits(Bitfield bitfield);
+int64_t clear_all_bits(Bitfield bitfield);
 
-int set_all_bits(Bitfield bitfield);
+int64_t set_all_bits(Bitfield bitfield);
 
-int get_bit(Bitfield bitfield, int element);
+int64_t get_bit(Bitfield bitfield, int64_t element);
 
-int toggle_bit(Bitfield bitfield, int element);
+int64_t toggle_bit(Bitfield bitfield, int64_t element);
 
-int nr_bits_set(Bitfield bitfield);
+int64_t nr_bits_set(Bitfield bitfield);
 
-int bf_equal(Bitfield bf1, Bitfield bf2);
+int64_t bf_equal(Bitfield bf1, Bitfield bf2);
 
-int bf_compare(Bitfield bf1, Bitfield bf2);
+int64_t bf_compare(Bitfield bf1, Bitfield bf2);
 
 #endif

@@ -27,6 +27,7 @@
 #include <sys/stat.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <io.h>
 
 /* macro definitions extracted from git/git-compat-util.h */
@@ -49,7 +50,7 @@
 #endif
 
 
-void *mmap(void *start, size_t length, int prot, int flags, int fd, off_t offset);
-int munmap(void *start, size_t length);
+void *mmap(void *start, size_t length, int64_t prot, int64_t flags, int64_t fd, off_t offset);
+int64_t munmap(void *start, size_t length);
 
 #endif

@@ -73,7 +73,7 @@ typedef struct _context_description_block {
 
   /* ==================== left context scope description variables */
 
-  int left_width;                    /**< Amount of context to show before the match, in units specified by left_type */
+  int64_t left_width;                    /**< Amount of context to show before the match, in units specified by left_type */
   context_type left_type;            /**< Unit in which context is measured;
                                           Set to one of the constants: CHAR_CONTEXT, WORD_CONTEXT, STRUC_CONTEXT, ALIGN_CONTEXT */
   /* TODO use an enum instead (change so far partially implemented) */
@@ -84,14 +84,14 @@ typedef struct _context_description_block {
 
   /* ==================== right context scope description variables */
 
-  int right_width;                   /**< Amount of context to show after the match, in units specified by right_type */
+  int64_t right_width;                   /**< Amount of context to show after the match, in units specified by right_type */
   context_type right_type;           /**< Unit in which context is measured;
                                           Set to one of the constants: CHAR_CONTEXT, WORD_CONTEXT, STRUC_CONTEXT, ALIGN_CONTEXT */
   char *right_structure_name;
   Attribute *right_structure;
 
   /** Boolean flag: if true, print corpus position numbers */
-  int print_cpos;
+  int64_t print_cpos;
 
   /* ==================== lists of attributes of different types to print */
 
@@ -107,13 +107,13 @@ typedef struct _context_description_block {
 
 /* TODO not much naming convention stability among these descriptors! */
 
-int verify_context_descriptor(Corpus *corpus,
+int64_t verify_context_descriptor(Corpus *corpus,
                               ContextDescriptor *cd,
-                              int remove_illegal_entries);
+                              int64_t remove_illegal_entries);
 
-int initialize_context_descriptor(ContextDescriptor *cd);
+int64_t initialize_context_descriptor(ContextDescriptor *cd);
 
-int update_context_descriptor(Corpus *corpus, ContextDescriptor *cd);
+int64_t update_context_descriptor(Corpus *corpus, ContextDescriptor *cd);
 
 ContextDescriptor *NewContextDescriptor(void);
 

@@ -50,7 +50,7 @@
 cl_int_list 
 cl_new_int_list(void) {
   cl_int_list l = cl_malloc(sizeof(struct _cl_int_list));
-  l->data = cl_calloc(LUMPSIZE, sizeof(int));
+  l->data = cl_calloc(LUMPSIZE, sizeof(*l->data));
   l->allocated = LUMPSIZE;
   l->size = 0;
   l->lumpsize = LUMPSIZE;
@@ -74,7 +74,7 @@ cl_delete_int_list(cl_int_list l) {
  * @param s  The new lumpsize.
  */
 void
-cl_int_list_lumpsize(cl_int_list l, int s) {
+cl_int_list_lumpsize(cl_int_list l, int64_t s) {
   if (s >= LUMPSIZE) {          /* lumpsize may not be smaller than default */
     l->lumpsize = s;
   }
@@ -83,7 +83,7 @@ cl_int_list_lumpsize(cl_int_list l, int s) {
 /**
  * Gets the current size of a cl_int_list object (number of elements on the list).
  */
-int
+int64_t
 cl_int_list_size(cl_int_list l) {
   return l->size;
 }
@@ -96,8 +96,8 @@ cl_int_list_size(cl_int_list l) {
  * @return   The n'th integer on the list, or 0 if there
  *           is no n'th integer.
  */
-int 
-cl_int_list_get(cl_int_list l, int n) {
+int64_t 
+cl_int_list_get(cl_int_list l, int64_t n) {
   if (n < 0 || n >= l->size) {
     return 0;
   }
@@ -113,8 +113,8 @@ cl_int_list_get(cl_int_list l, int n) {
  * list is auto-extended if necessary.
  */
 void 
-cl_int_list_set(cl_int_list l, int n, int val) {
-  int newalloc, i;
+cl_int_list_set(cl_int_list l, int64_t n, int64_t val) {
+  int64_t newalloc, i;
   
   if (n < 0) {
     return;
@@ -128,7 +128,7 @@ cl_int_list_set(cl_int_list l, int n, int val) {
         if ((newalloc - l->allocated) < l->lumpsize) {
           newalloc = l->allocated + l->lumpsize;
         }
-        l->data = cl_realloc(l->data, newalloc * sizeof(int));
+        l->data = cl_realloc(l->data, newalloc * sizeof(*l->data));
         for (i = l->allocated; i < newalloc; i++) {
           l->data[i] = 0;
         }
@@ -144,14 +144,14 @@ cl_int_list_set(cl_int_list l, int n, int val) {
  * Appends an integer to the end of a cl_int_list object.
  */
 void 
-cl_int_list_append(cl_int_list l, int val) {
+cl_int_list_append(cl_int_list l, int64_t val) {
   cl_int_list_set(l, l->size, val);
 }
 
-/** comparison function for int list sort : non-exported */
+/** comparison function for int64_t list sort : non-exported */
 int
 cl_int_list_intcmp(const void *a, const void *b) {
-  return (*(int *)a - *(int *)b);
+  return (int64_t)(*(int64_t*)a - *(int64_t*)b);
 }
 
 /**
@@ -161,7 +161,7 @@ cl_int_list_intcmp(const void *a, const void *b) {
  */
 void
 cl_int_list_qsort(cl_int_list l) {
-  qsort(l->data, l->size, sizeof(int), cl_int_list_intcmp);
+  qsort(l->data, l->size, sizeof(*l->data), cl_int_list_intcmp);
 }
 
 
@@ -194,7 +194,7 @@ cl_delete_string_list(cl_string_list l) {
  */
 void
 cl_free_string_list(cl_string_list l) {
-  int i;
+  int64_t i;
 
   for (i = 0; i < l->size; i++) {
     cl_free(l->data[i]);        /* cl_free() checks if pointer is NULL */
@@ -209,7 +209,7 @@ cl_free_string_list(cl_string_list l) {
  * @param s  The new lumpsize.
  */
 void
-cl_string_list_lumpsize(cl_string_list l, int s) {
+cl_string_list_lumpsize(cl_string_list l, int64_t s) {
   if (s >= LUMPSIZE) {          /* lumpsize may not be smaller than default */
     l->lumpsize = s;
   }
@@ -218,7 +218,7 @@ cl_string_list_lumpsize(cl_string_list l, int s) {
 /**
  * Gets the current size of a cl_string_list object (number of elements on the list).
  */
-int
+int64_t
 cl_string_list_size(cl_string_list l) {
   return l->size;
 }
@@ -234,7 +234,7 @@ cl_string_list_size(cl_string_list l) {
  *           copy, if you want a copy you must make one yourself.
  */
 char *
-cl_string_list_get(cl_string_list l, int n) {
+cl_string_list_get(cl_string_list l, int64_t n) {
   if (n < 0 || n >= l->size) {
     return NULL;
   }
@@ -250,8 +250,8 @@ cl_string_list_get(cl_string_list l, int n) {
  * list is auto-extended if necessary.
  */
 void 
-cl_string_list_set(cl_string_list l, int n, char *val) {
-  int newalloc, i;
+cl_string_list_set(cl_string_list l, int64_t n, char *val) {
+  int64_t newalloc, i;
   
   if (n < 0) {
     return;

@@ -79,25 +79,25 @@
 char *field_separators = FIELDSEPS;     /**< string containing the characters that can function as field separators */
 char *undef_value = UNDEF_VALUE;        /**< string used as value of P-attributes when a value is missing
                                              ie if a tab-delimited field is empty */
-int debug = 0;                          /**< debug mode on or off? */
-int silent = 0;                         /**< hide messages */
-int verbose = 0;                        /**< show progress (this is _not_ the opposite of silent!) */
-int xml_aware = 0;                      /**< substitute XML entities in p-attributes & ignore <? and <! lines */
-int skip_empty_lines = 0;               /**< skip empty lines when encoding? */
-unsigned line = 0;                      /**< corpus position currently being encoded (ie cpos of _next_ token) */
+int64_t debug = 0;                          /**< debug mode on or off? */
+int64_t silent = 0;                         /**< hide messages */
+int64_t verbose = 0;                        /**< show progress (this is _not_ the opposite of silent!) */
+int64_t xml_aware = 0;                      /**< substitute XML entities in p-attributes & ignore <? and <! lines */
+int64_t skip_empty_lines = 0;               /**< skip empty lines when encoding? */
+uint64_t line = 0;                      /**< corpus position currently being encoded (ie cpos of _next_ token) */
 /* unsigned so it doesn't wrap after first 2^31 tokens and we can abort encoding when corpus size is exceeded */
-int strip_blanks = 0;                   /**< strip leading and trailing blanks from input and token annotations */
+int64_t strip_blanks = 0;                   /**< strip leading and trailing blanks from input and token annotations */
 cl_string_list input_files = NULL;      /**< list of input file(s) (-f option(s)) */
-int nr_input_files = 0;                 /**< number of input files (length of list after option processing) */
-int current_input_file = 0;             /**< index of input file currently being processed */
+int64_t nr_input_files = 0;                 /**< number of input files (length of list after option processing) */
+int64_t current_input_file = 0;             /**< index of input file currently being processed */
 char *current_input_file_name = NULL;   /**< filename of current input file, for error messages */
 FILE *input_fd = NULL;                  /**< file handle for current input file (or pipe) (text mode!) */
-unsigned long input_line = 0;           /**< input line number (reset for each new file) for error messages */
+uint64_t input_line = 0;                /**< input line number (reset for each new file) for error messages */
 char *registry_file = NULL;             /**< if set, auto-generate registry file named {registry_file}, listing declared attributes */
 char *directory = NULL;                 /**< corpus data directory (no longer defaults to current directory) */
 char *corpus_character_set = "latin1";  /**< character set label that is inserted into the registry file */
 CorpusCharset encoding_charset;         /**< a charset object to be generated from corpus_character_set */
-int clean_strings = 0;                  /**< clean up input strings by replacing invalid bytes with '?' */
+int64_t clean_strings = 0;                  /**< clean up input strings by replacing invalid bytes with '?' */
 
 /* ---------------------------------------------------------------------- */
 
@@ -113,44 +113,44 @@ typedef struct _Range {
   char *dir;                    /**< directory where this s-attribute is stored */
   char *name;                   /**< name of the s-attribute (range) */
 
-  int in_registry;              /**< with "-R {reg_file}", this is set to 1 when the attribute is written to the registry
+  int64_t in_registry;              /**< with "-R {reg_file}", this is set to 1 when the attribute is written to the registry
                                      (avoid duplicates) */
 
-  int store_values;             /**< flag indicating whether to store values (does _not_ automatically apply to children, see below) */
-  int feature_set;              /**< stored values are feature sets => validate and normalise format */
-  int null_attribute;           /**< a NULL attribute ignores all corresponding XML tags, without checking structure or annotations */
-  int automatic;                /**< automatic attributes are the 'children' used for recursion and element attributes below  */
+  int64_t store_values;             /**< flag indicating whether to store values (does _not_ automatically apply to children, see below) */
+  int64_t feature_set;              /**< stored values are feature sets => validate and normalise format */
+  int64_t null_attribute;           /**< a NULL attribute ignores all corresponding XML tags, without checking structure or annotations */
+  int64_t automatic;                /**< automatic attributes are the 'children' used for recursion and element attributes below  */
 
   FILE *fd;                     /**< fd of rng component */
   FILE *avx;                    /**< fd of avx component (the attribute value index) */
   FILE *avs;                    /**< fd of avs component (the attribute values) */
-  int offset;                   /**< string offset for next string (in avs component) */
+  int64_t offset;                   /**< string offset for next string (in avs component) */
 
   cl_lexhash lh;                /**< lexicon hash for attribute values */
 
-  int has_children;             /**< whether attribute values of XML elements are stored in s-attribute 'children' */
+  int64_t has_children;             /**< whether attribute values of XML elements are stored in s-attribute 'children' */
   cl_lexhash el_attributes;     /**< maps XML element attribute names to the appropriate s-attribute 'children' (Range *) */
   cl_string_list el_atts_list;  /**< list of declared element attribute names, required by range_close() function */
   cl_lexhash el_undeclared_attributes; /**< remembers undeclared element attributes, so warnings will be issued only once */
 
-  int max_recursion;            /**< maximum auto-recursion level; 0 = no recursion (maximal regions), -1 = assume flat structure */
-  int recursion_level;          /**< keeps track of level of embedding when auto-recursion is activated */
-  int element_drop_count;       /**< count how many recursive subelements were dropped because of the max_recursion limit */
+  int64_t max_recursion;            /**< maximum auto-recursion level; 0 = no recursion (maximal regions), -1 = assume flat structure */
+  int64_t recursion_level;          /**< keeps track of level of embedding when auto-recursion is activated */
+  int64_t element_drop_count;       /**< count how many recursive subelements were dropped because of the max_recursion limit */
   struct _Range **recursion_children;   /**< (usually very short) list of s-attribute 'children' for auto-recursion;
                                              use as array; recursion_children[0] points to self! */
 
-  int is_open;                  /**< boolean: whether there is an open structure at the moment */
-  int start_pos;                /**< if this->is_open, remember start position of current range */
+  int64_t is_open;                  /**< boolean: whether there is an open structure at the moment */
+  int64_t start_pos;                /**< if this->is_open, remember start position of current range */
   char *annot;                  /**< and annotation (if there is one) */
 
-  int num;                      /**< number of current (if this->is_open) or next structure */
+  int64_t num;                      /**< number of current (if this->is_open) or next structure */
 
 } Range;
 
 /** A global array for keeping track of S-attributes being encoded. */
 Range ranges[MAXRANGES];
 /** @see ranges */
-int range_ptr = 0;
+int64_t range_ptr = 0;
 
 /**
  * WAttr object: represents a P-attribute being encoded.
@@ -160,9 +160,9 @@ int range_ptr = 0;
 typedef struct {
   char *name;                   /**< TODO */
   cl_lexhash lh;                /**< String hash object containing the lexicon for the encoded P attrbute */
-  int position;                 /**< Byte index of the lexicon file in progress; contains total number of bytes
+  int64_t position;                 /**< Byte index of the lexicon file in progress; contains total number of bytes
                                      written so far (== the beginning of the -next- string that is written) */
-  int feature_set;              /**< Boolean: is this a feature set attribute? => validate and normalise format */
+  int64_t feature_set;              /**< Boolean: is this a feature set attribute? => validate and normalise format */
   FILE *lex_fd;                 /**< file handle of lexicon component */
   FILE *lexidx_fd;              /**< file handle of lexicon index component */
   FILE *corpus_fd;              /**< file handle of corpus component */
@@ -171,7 +171,7 @@ typedef struct {
 /** A global array for keeping track of P-attributes being encoded. */
 WAttr wattrs[MAXRANGES];
 /** @see wattrs */
-int wattr_ptr = 0;
+int64_t wattr_ptr = 0;
 
 /* ---------------------------------------------------------------------- */
 
@@ -201,7 +201,7 @@ char *
 encode_strtok(register char *s, register const char *delim)
 {
   register char *spanp;
-  register int c, sc;
+  register int64_t c, sc;
   char *tok;
   static char *last;
   
@@ -350,9 +350,9 @@ void
 encode_print_input_lineno(void)
 {
   if (nr_input_files > 0 && current_input_file_name != NULL)
-    fprintf(stderr, "file %s, line #%ld", current_input_file_name, input_line);
+    fprintf(stderr, "file %s, line #%" PRId64 "", current_input_file_name, input_line);
   else
-    fprintf(stderr, "input line #%ld", input_line);
+    fprintf(stderr, "input line #%" PRId64 "", input_line);
 }
 
 /**
@@ -407,8 +407,8 @@ encode_scan_directory(char *dir)
   DIR *dirp;
   struct dirent *dp;
   struct stat statbuf;
-  int n_files = 0;
-  int len_dir = strlen(dir);
+  int64_t n_files = 0;
+  int64_t len_dir = strlen(dir);
   cl_string_list input_files = cl_new_string_list();
   
 
@@ -422,7 +422,7 @@ encode_scan_directory(char *dir)
   for (dp = readdir(dirp); dp != NULL; dp = readdir(dirp)) {
     char *name = dp->d_name;
     if (name != NULL) {
-      int len_name = strlen(name);
+      int64_t len_name = strlen(name);
       if ( (len_name >= 5 && (0 == strcasecmp(name + len_name - 4, DEFAULT_INFILE_EXTENSION)))
            || (len_name >= 8 && (0 == strcasecmp(name + len_name - 7, DEFAULT_INFILE_EXTENSION ".gz")))
            || (len_name >= 9 && (0 == strcasecmp(name + len_name - 8, DEFAULT_INFILE_EXTENSION ".bz2"))) )
@@ -466,10 +466,10 @@ encode_scan_directory(char *dir)
  * @param name  The S-attribute to search for.
  * @return      Index (as integer). -1 if the S-attribute is not found.
  */
-int 
+int64_t 
 range_find(char *name)
 {
-  int i;
+  int64_t i;
 
   for (i = 0; i < range_ptr; i++)
     if (strcmp(ranges[i].name, name) == 0)
@@ -487,10 +487,10 @@ range_find(char *name)
  * @param print_comment  Boolean: if true, a comment on the original XML tags is printed.
  */
 void
-range_print_registry_line(Range *rng, FILE *fd, int print_comment)
+range_print_registry_line(Range *rng, FILE *fd, int64_t print_comment)
 {
   Range *child;
-  int i, n_atts;
+  int64_t i, n_atts;
 
   if (rng->in_registry)
     return;
@@ -515,7 +515,7 @@ range_print_registry_line(Range *rng, FILE *fd, int print_comment)
       }
       else if (rng->max_recursion > 0) {
         n_atts = rng->max_recursion;
-        fprintf(fd, "# (%d levels of embedding: <%s>", n_atts, rng->name);
+        fprintf(fd, "# (%" PRId64 " levels of embedding: <%s>", n_atts, rng->name);
         for (i = 1; i <= n_atts; i++)
           fprintf(fd, ", <%s>", rng->recursion_children[i]->name);
         fprintf(fd, ").\n");
@@ -576,13 +576,13 @@ range_print_registry_line(Range *rng, FILE *fd, int print_comment)
  *                        of the global ranges array).
  */
 Range *
-range_declare(char *name, char *directory, int store_values, int null_attribute)
+range_declare(char *name, char *directory, int64_t store_values, int64_t null_attribute)
 {
   char buf[CL_MAX_LINE_LENGTH];
   Range *rng;
   char *p, *rec, *ea_start, *ea;
   cl_lexhash_entry entry;
-  int i, is_feature_set;
+  int64_t i, is_feature_set;
   char *flag_SV = (store_values) ? "-V" : "-S";
 
   if (debug)
@@ -687,7 +687,7 @@ range_declare(char *name, char *directory, int store_values, int null_attribute)
     rng->recursion_children[0] = rng; /* zeroeth recursion level is stored in the att. itself */
     for (i = 1; i <= rng->max_recursion; i++) {
       /* recursion children have 'flat' structure, because recursion is handled explicitly */
-      sprintf(buf, "%s%d%s", rng->name, i, is_feature_set ? "/" : "");
+      sprintf(buf, "%s%" PRId64 "%s", rng->name, i, is_feature_set ? "/" : "");
       rng->recursion_children[i] = range_declare(buf, rng->dir, rng->store_values, /*null*/ 0);
       rng->recursion_children[i]->automatic = 1; /* mark as automatically handled attribute */
     }
@@ -708,7 +708,7 @@ range_declare(char *name, char *directory, int store_values, int null_attribute)
         *p = '\0';              /* ea now points to NUL-terminated "<ea_i>" */
 
       if (rng->max_recursion >= 0) 
-        sprintf(buf, "%s_%s:%d", rng->name, ea, rng->max_recursion);
+        sprintf(buf, "%s_%s:%" PRId64 "", rng->name, ea, rng->max_recursion);
       else
         sprintf(buf, "%s_%s", rng->name, ea);
       /* potential feature set marker (/) is passed on to the respective child attribute and handled there */
@@ -745,11 +745,11 @@ range_declare(char *name, char *directory, int store_values, int null_attribute)
  * @param end_pos  The corpus position at which this instance closes.
  */
 void
-range_close(Range *rng, int end_pos)
+range_close(Range *rng, int64_t end_pos)
 {
   cl_lexhash_entry entry;
-  int close_this_range = 0;     /* whether we actually have to close this range (may be skipped or delegated in recursion mode) */
-  int i, n_children, l;
+  int64_t close_this_range = 0;     /* whether we actually have to close this range (may be skipped or delegated in recursion mode) */
+  int64_t i, n_children, l;
 
   if (rng->null_attribute)      /* do nothing for NULL attributes */
     return;
@@ -802,7 +802,7 @@ range_close(Range *rng, int end_pos)
         l = strlen(rng->annot);
         if (l >= CL_MAX_LINE_LENGTH) {
           if (!silent) {
-            fprintf(stderr, "Value of <%s> region exceeds maximum string length (%d > %d chars), truncated (", 
+            fprintf(stderr, "Value of <%s> region exceeds maximum string length (%" PRId64 " > %d chars), truncated (", 
                     rng->name, l, CL_MAX_LINE_LENGTH-1);
             encode_print_input_lineno();
             fprintf(stderr, ").\n");
@@ -813,7 +813,7 @@ range_close(Range *rng, int end_pos)
         /* check if annot is already in hash */
         if ((entry = cl_lexhash_find(rng->lh, rng->annot)) != NULL) {
           /* annotation is already in hash (and hence, stored in .avs component */
-          int offset = entry->data.integer;
+          int64_t offset = entry->data.integer;
           /* write (range_num, offset) to .avx component */
           NwriteInt(rng->num, rng->avx); 
           NwriteInt(offset, rng->avx);
@@ -831,7 +831,7 @@ range_close(Range *rng, int end_pos)
           rng->offset += strlen(rng->annot) + 1;
           /* check for integer overflow */
           if (rng->offset < 0)
-            encode_error("Too many annotation values for <%s> regions (lexicon size > %d bytes)", rng->name, INT_MAX);
+            encode_error("Too many annotation values for <%s> regions (lexicon size > %" PRId64 " bytes)", rng->name, INT_MAX);
         }
         rng->num++;
         cl_free(rng->annot);
@@ -873,11 +873,11 @@ range_close(Range *rng, int end_pos)
  * @param annot      The annotation string (the XML element's att-val pairs).
  */
 void
-range_open(Range *rng, int start_pos, char *annot)
+range_open(Range *rng, int64_t start_pos, char *annot)
 {
   cl_lexhash_entry entry;
-  int open_this_range = 0;      /* whether we actually have to open this range (may be skipped or delegated in recursion mode) */
-  int i, mark, point, n_children;
+  int64_t open_this_range = 0;      /* whether we actually have to open this range (may be skipped or delegated in recursion mode) */
+  int64_t i, mark, point, n_children;
   char *el_att_name, *el_att_value;
   char quote_char;              /* quote char used for element attribute value ('"' or '\'') */
 
@@ -1102,10 +1102,10 @@ range_open(Range *rng, int start_pos, char *annot)
  * @param name  The P-attribute to search for.
  * @return      Index (as integer), or -1 if not found.
  */
-int 
+int64_t 
 wattr_find(char *name)
 {
-  int i;
+  int64_t i;
 
   for (i = 0; i < wattr_ptr; i++)
     if (strcmp(wattrs[i].name, name) == 0)
@@ -1128,8 +1128,8 @@ wattr_find(char *name)
  * @param nr_buckets  Number of buckets in the lexhash of the new p-attribute (value passed to cl_new_lexhash() )
  * @return            Always 1.
  */
-int 
-wattr_declare(char *name, char *directory, int nr_buckets)
+int64_t 
+wattr_declare(char *name, char *directory, int64_t nr_buckets)
 {
   char corname[CL_MAX_LINE_LENGTH];
   char lexname[CL_MAX_LINE_LENGTH];
@@ -1190,7 +1190,7 @@ wattr_declare(char *name, char *directory, int nr_buckets)
 void
 wattr_close_all(void)
 {
-  int i;
+  int64_t i;
 
   for (i = 0; i < wattr_ptr; i++) {
     if (EOF == fclose(wattrs[i].lex_fd)) {
@@ -1219,20 +1219,20 @@ wattr_close_all(void)
  *
  */
 void
-encode_parse_options(int argc, char **argv)
+encode_parse_options(int64_t argc, char **argv)
 {
-  int c;
+  int64_t c;
   extern char *optarg;
   extern int optind;
   struct stat dir_status;
 
   char *prefix = DEFAULT_ATT_NAME;
 
-  int number_of_buckets = 0;    /* -> use CL default unless changed with -b <n> */
-  int first_attr_declared = 0;  /* whether we have already declared the default 'word' attribute (useful for "-p -") */
+  int64_t number_of_buckets = 0;    /* -> use CL default unless changed with -b <n> */
+  int64_t first_attr_declared = 0;  /* whether we have already declared the default 'word' attribute (useful for "-p -") */
 
   cl_string_list dir_files;   /* list of input files found in directory (-F option) */
-  int i, l;
+  int64_t i, l;
 
   while((c = getopt(argc, argv, "p:P:S:V:0:f:t:F:d:R:U:Bsb:c:CxvqhD")) != EOF)
     switch(c) {
@@ -1295,9 +1295,9 @@ encode_parse_options(int argc, char **argv)
       if (registry_file != NULL)
         encode_error("Usage error: -R option used twice.");
       else {
-        int size;
-        int registry_is_ok = 1;
-        int registry_is_canonical = 1;
+        int64_t size;
+        int64_t registry_is_ok = 1;
+        int64_t registry_is_canonical = 1;
         registry_file = optarg;
 
         /* Check for path ending in slash and for non-lowercase in last part of the filename;
@@ -1376,7 +1376,7 @@ encode_parse_options(int argc, char **argv)
           encode_error("Usage error: s-attribute <%s> declared twice!", optarg);
       }
       else 
-        encode_error("Too many s-attributes (max. %d).", MAXRANGES);
+        encode_error("Too many s-attributes (max. %" PRId64 ").", MAXRANGES);
       break;
 
       /* -V: declare s-attribute with annotations */
@@ -1389,7 +1389,7 @@ encode_parse_options(int argc, char **argv)
           encode_error("Usage error: s-attribute <%s> declared twice!", optarg);
       }
       else
-        encode_error("Too many s-attributes (max. %d).", MAXRANGES);
+        encode_error("Too many s-attributes (max. %" PRId64 ").", MAXRANGES);
       break;
 
       /* -0: declare NULL s-attribute */
@@ -1402,7 +1402,7 @@ encode_parse_options(int argc, char **argv)
           encode_error("Usage error: s-attribute <%s> declared twice!", optarg);
       }
       else
-        encode_error("Too many s-attributes (max. %d).", MAXRANGES);
+        encode_error("Too many s-attributes (max. %" PRId64 ").", MAXRANGES);
       break;
 
       /* -P: declare additional p-attribute */
@@ -1420,7 +1420,7 @@ encode_parse_options(int argc, char **argv)
           encode_error("Usage error: %s attribute declared twice!", optarg);
       }
       else
-        encode_error("Too many p-attributes (max. %d).", MAXRANGES);
+        encode_error("Too many p-attributes (max. %" PRId64 ").", MAXRANGES);
       break;
 
       /* -U: default value for missing columns */
@@ -1473,9 +1473,9 @@ void
 encode_add_wattr_line(char *str)
 {
   /* fc = field counter (current column number, zero indexed)
-   * id = container for lexicon ID int.
+   * id = container for lexicon ID int64_t.
    * length = temp holder for a strlen return. */
-  int fc, id, length;
+  int64_t fc, id, length;
   /* field = the current column (string).
    * token = token we will store (same as field, except in case of feature sets).
    * Both are pointers to suitable chunks of the parameter string. */
@@ -1530,7 +1530,7 @@ encode_add_wattr_line(char *str)
     length = strlen(token);
     if (length >= CL_MAX_LINE_LENGTH) {
       if (!silent) {
-        fprintf(stderr, "Value of p-attribute '%s' exceeds maximum string length (%d > %d chars), truncated (", 
+        fprintf(stderr, "Value of p-attribute '%s' exceeds maximum string length (%" PRId64 " > %d chars), truncated (", 
                 wattrs[fc].name, length, CL_MAX_LINE_LENGTH-1);
         encode_print_input_lineno();
         fprintf(stderr, ").\n");
@@ -1545,7 +1545,7 @@ encode_add_wattr_line(char *str)
       NwriteInt(wattrs[fc].position, wattrs[fc].lexidx_fd);
       wattrs[fc].position += strlen(token) + 1;
       if (wattrs[fc].position < 0)
-        encode_error("Maximum size of .lexicon file exceeded for %s attribute (> %d bytes)", wattrs[fc].name, INT_MAX);
+        encode_error("Maximum size of .lexicon file exceeded for %s attribute (> %" PRId64 " bytes)", wattrs[fc].name, INT_MAX);
       if (EOF == fputs(token, wattrs[fc].lex_fd)) {
         perror("fputs() write error");
         encode_error("Error writing .lexicon file for %s attribute.", wattrs[fc].name);
@@ -1586,10 +1586,10 @@ encode_add_wattr_line(char *str)
  *
  * @return         boolean: true for all OK, false for a problem.
  */
-int
-encode_get_input_line(char *buffer, int bufsize)
+int64_t
+encode_get_input_line(char *buffer, int64_t bufsize)
 {
-  int ok;
+  int64_t ok;
 
   if (nr_input_files == 0) {
     /* read one line of text from stdin */
@@ -1665,7 +1665,7 @@ encode_generate_registry_file(char *registry_file)
   char *corpus_name = NULL;   /* name of the corpus == uppercase version of registry_id */
   char *info_file = NULL;     /* name of INFO file: <dir>/.info or <dir>/corpus-info.txt under win; see cl/globals.h */
   char *path = NULL;
-  int i;
+  int64_t i;
 
   if (debug)
     fprintf(stderr, "Writing registry file %s ...\n", registry_file);
@@ -1758,13 +1758,13 @@ encode_generate_registry_file(char *registry_file)
 int 
 main(int argc, char **argv)
 {
-  int i, j, k, rng, handled;
+  int64_t i, j, k, rng, handled;
 
   char linebuf[MAX_INPUT_LINE_LENGTH];
   char *buf;                    /* 'virtual' buffer; may be advanced to skip leading blanks */
   char separator;
   
-  int input_length;             /* length of input line */
+  int64_t input_length;             /* length of input line */
 
   /* initialise global variables */
   progname = "cwb-encode";
@@ -1799,14 +1799,14 @@ main(int argc, char **argv)
   /* MAIN LOOP: read one line of input and process it */
   while ( encode_get_input_line(linebuf, MAX_INPUT_LINE_LENGTH) ) {
     if (verbose && (line % 15000 == 0)) {
-      printf("%" COMMA_SEP_THOUSANDS_CONVSPEC "9dk tokens processed\r", line >> 10);
+      printf("%" COMMA_SEP_THOUSANDS_CONVSPEC "9" PRId64 "k tokens processed\r", line >> 10);
       fflush(stdout);
     }
 
     input_line++;
     input_length = strlen(linebuf);
     if (input_length >= (MAX_INPUT_LINE_LENGTH - 1)) { /* buffer filled -> line may have been longer */
-      encode_error("Input line too long (max: %d characters/bytes).", MAX_INPUT_LINE_LENGTH - 2);
+      encode_error("Input line too long (max: %" PRId64 " characters/bytes).", MAX_INPUT_LINE_LENGTH - 2);
     }
 
     /* remove trailing line break (LF or CR-LF) */
@@ -1935,7 +1935,7 @@ main(int argc, char **argv)
         if (line >= CL_MAX_CORPUS_SIZE) {
           /* largest admissible corpus size should be 2^31 - 1 tokens, with maximal cpos = 2^31 - 2 */
           fprintf(stderr, "WARNING: Maximal corpus size has been exceeded.\n");
-          fprintf(stderr, "         Input truncated to the first %d tokens (", CL_MAX_CORPUS_SIZE);
+          fprintf(stderr, "         Input truncated to the first %" PRId64 " tokens (", CL_MAX_CORPUS_SIZE);
           encode_print_input_lineno();
           fprintf(stderr, ").\n");
           break;
@@ -1946,7 +1946,7 @@ main(int argc, char **argv)
 
   if (verbose) {
     printf("%50s\r", "");       /* clear progress line */
-    printf("Total size: %" COMMA_SEP_THOUSANDS_CONVSPEC "d tokens (%.1fM)\n", line, ((float) line) / 1048576);
+    printf("Total size: %" COMMA_SEP_THOUSANDS_CONVSPEC PRId64 " tokens (%.1fM)\n", line, ((float) line) / 1048576);
   }
 
   /* close open regions at end of input; then close file handles for s-attributes */
@@ -1975,7 +1975,7 @@ main(int argc, char **argv)
       else {
         if (rng->is_open) {
           if (rng->recursion_level > 1) 
-            fprintf(stderr, "Warning: %d missing </%s> tags inserted at end of input.\n", 
+            fprintf(stderr, "Warning: %" PRId64 " missing </%s> tags inserted at end of input.\n", 
                     rng->recursion_level, rng->name);
           else
             fprintf(stderr, "Warning: missing </%s> tag inserted at end of input.\n", 
@@ -1989,7 +1989,7 @@ main(int argc, char **argv)
         }
 
         if (!silent && (rng->max_recursion >= 0) && (rng->element_drop_count > 0)) {
-          fprintf(stderr, "%7d <%s> regions dropped because of deep nesting.\n",
+          fprintf(stderr, "%7" PRId64 " <%s> regions dropped because of deep nesting.\n",
                   rng->element_drop_count, rng->name);
         }
       }

@@ -23,8 +23,8 @@
 
 /* external flag and function definitions now in <cl.h> */
 
-unsigned char *cl_string_maptable(CorpusCharset charset, int flags);
+uint8_t *cl_string_maptable(CorpusCharset charset, int64_t flags);
 
-int cl_iso_char_is_alphanumeric(unsigned char c, CorpusCharset charset);
+int64_t cl_iso_char_is_alphanumeric(uint8_t c, CorpusCharset charset);
 
 #endif

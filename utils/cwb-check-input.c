@@ -49,17 +49,17 @@
 
 /* cwb-check-input global variables */
 
-int line_no = 0;                        /**< line number of the line in the input file currently being checked; first == 1 */
-int established_number_of_p_atts = 0;   /**< first p-att line established number of tags; anything that deviates then counts as an error */
-int silent = 0;                         /**< hide messages */
-int verbose = 0;                        /**< show messages about fixable errors in repair mode */
-int print_fixable_errors = 0;           /**< deduced from mode, silent & verbose */
-int print_unfixable_errors = 0;         /**< deduced from mode, silent & verbose */
-int errors_detected = 0;                /**< number of errors found so far */
-int xml_aware = 0;                      /**< ignore <? and <! lines */
-int skip_empty_lines = 0;               /**< check for empty lines */
-int strip_blanks = 0;                   /**< check for leading and trailing blanks in input and token annotations? */
-int check_nesting = 0;                  /**< check perfect nesting of XML? */
+int64_t line_no = 0;                        /**< line number of the line in the input file currently being checked; first == 1 */
+int64_t established_number_of_p_atts = 0;   /**< first p-att line established number of tags; anything that deviates then counts as an error */
+int64_t silent = 0;                         /**< hide messages */
+int64_t verbose = 0;                        /**< show messages about fixable errors in repair mode */
+int64_t print_fixable_errors = 0;           /**< deduced from mode, silent & verbose */
+int64_t print_unfixable_errors = 0;         /**< deduced from mode, silent & verbose */
+int64_t errors_detected = 0;                /**< number of errors found so far */
+int64_t xml_aware = 0;                      /**< ignore <? and <! lines */
+int64_t skip_empty_lines = 0;               /**< check for empty lines */
+int64_t strip_blanks = 0;                   /**< check for leading and trailing blanks in input and token annotations? */
+int64_t check_nesting = 0;                  /**< check perfect nesting of XML? */
 FILE *input_fd = NULL;                  /**< file handle for the input file */
 char *input_file = NULL;                /**< filename of the input file */
 FILE *output_fd = NULL;                 /**< file handle for the output file; also used for boolean tests on whether we are repairing or not */
@@ -99,13 +99,13 @@ cwbci_file_write_abort(void)
  * as a global variable cannot be assumed in all programs.)
  * Returns boolean.
  */
-int
+int64_t
 cwbci_encoding_ok(char *str)
 {
   switch(charset){
   case ascii:
     for ( ; *str != 0 ; str++ )
-      /* something to check: will hex values work here, given string is signed character array variable? */
+      /* something to check: will hex values work here, given string is int8_tacter array variable? */
       if (*str > 0x7f)
         return 0;
     break;
@@ -125,7 +125,7 @@ cwbci_encoding_ok(char *str)
   return 1;
 }
 
-int
+int64_t
 cwbci_is_wordchar(char c)
 {
   if (c >= 'a' && c <= 'z')
@@ -145,7 +145,7 @@ cwbci_is_wordchar(char c)
  * blanks will be deleted from the line, starting with the
  * first character.
  */
-int
+int64_t
 cwbci_begins_with_blank(char *str)
 {
   gunichar uc;
@@ -172,14 +172,14 @@ cwbci_report_error_fixable(char *msg)
 {
   errors_detected++;
   if (print_fixable_errors)
-    fprintf(stderr, "%s (at line %d)\n", msg, line_no);
+    fprintf(stderr, "%s (at line %" PRId64 ")\n", msg, line_no);
 }
 void
 cwbci_report_error_unfixable(char *msg)
 {
   errors_detected++;
   if (print_unfixable_errors)
-    fprintf(stderr, "%s(at line %d)\n", msg, line_no);
+    fprintf(stderr, "%s(at line %" PRId64 ")\n", msg, line_no);
 }
 
 
@@ -188,9 +188,9 @@ void
 cwbci_check_line(char *line)
 {
   void *ptr;
-  int l;
-  int i;
-  int last_idx, p_att_count;
+  int64_t l;
+  int64_t i;
+  int64_t last_idx, p_att_count;
   /* TODO use a proper macro number here, not a 65K macro! */
   char element[MAX_INPUT_LINE_LENGTH];
 
@@ -387,9 +387,9 @@ cwbci_usage(void)
  * Parses commandline options for cwb-check-input and sets global variables accordingly.
  */
 void
-cwbci_parse_options(int argc, char **argv)
+cwbci_parse_options(int64_t argc, char **argv)
 {
-  int c;
+  int64_t c;
   extern char *optarg;
   extern int optind;
 
@@ -539,7 +539,7 @@ main(int argc, char **argv)
     fclose(output_fd);
 
   /* the final report */
-  fprintf(stderr, "%s detected %d errors in %s\n\n", progname, errors_detected, input_file);
+  fprintf(stderr, "%s detected %" PRId64 " errors in %s\n\n", progname, errors_detected, input_file);
 
   cl_free(input_file);
   cl_free(output_file);

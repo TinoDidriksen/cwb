@@ -37,15 +37,15 @@
 
 /* valid attribute types are ATTAT_INT, ATTAT_POS, ATTAT_STRING, ATTAT_NONE (declared in cl.h) */
 
-int f_args[]        = {ATTAT_STRING};                 /**< Argument types for builtin function f */
-int distance_args[] = {ATTAT_POS, ATTAT_POS};         /**< Argument types for builtin function distance (or dist) */
-int distabs_args[]  = {ATTAT_POS, ATTAT_POS};         /**< Argument types for builtin function distabs */
-int bound_args[]    = {ATTAT_INT};                    /**< Argument types for builtin functions lbound and rbound */
-int unify_args[]    = {ATTAT_STRING, ATTAT_STRING};   /**< Argument types for builtin functions unify, prefix, is_prefix, minus, normalize */
-int ambiguity_args[]= {ATTAT_STRING};                 /**< Argument types for builtin function ambiguity */
-int string_arg[]    = {ATTAT_STRING};                 /**< Argument types for builtin functions taking a single string argument */
-int arith_args[]    = {ATTAT_INT, ATTAT_INT};         /**< Argument types for builtin arithemtical functions */
-int ignore_args[]   = {ATTAT_POS};                    /**< Argument types for builtin function ignore */
+int64_t f_args[]        = {ATTAT_STRING};                 /**< Argument types for builtin function f */
+int64_t distance_args[] = {ATTAT_POS, ATTAT_POS};         /**< Argument types for builtin function distance (or dist) */
+int64_t distabs_args[]  = {ATTAT_POS, ATTAT_POS};         /**< Argument types for builtin function distabs */
+int64_t bound_args[]    = {ATTAT_INT};                    /**< Argument types for builtin functions lbound and rbound */
+int64_t unify_args[]    = {ATTAT_STRING, ATTAT_STRING};   /**< Argument types for builtin functions unify, prefix, is_prefix, minus, normalize */
+int64_t ambiguity_args[]= {ATTAT_STRING};                 /**< Argument types for builtin function ambiguity */
+int64_t string_arg[]    = {ATTAT_STRING};                 /**< Argument types for builtin functions taking a single string argument */
+int64_t arith_args[]    = {ATTAT_INT, ATTAT_INT};         /**< Argument types for builtin arithemtical functions */
+int64_t ignore_args[]   = {ATTAT_POS};                    /**< Argument types for builtin function ignore */
 
 /**
  * Global array of built-in functions.
@@ -57,7 +57,7 @@ BuiltinF builtin_function[] = {
   {  2, "dist",     2, distance_args, ATTAT_INT }, /* abbreviates 'distance' */
   {  3, "distabs",  2, distabs_args,  ATTAT_INT }, /* abs(distance) */
 
-  {  4, "int",      1, string_arg,    ATTAT_INT }, /* typecast: interpret string (e.g. an attribute value) as integer */
+  {  4, "int64_t",      1, string_arg,    ATTAT_INT }, /* typecast: interpret string (e.g. an attribute value) as integer */
 
   {  5, "lbound",   1, bound_args,    ATTAT_INT }, /* at left boundary of s-attribute range */
   {  6, "rbound",   1, bound_args,    ATTAT_INT }, /* at right boundary of s-attribute range? */
@@ -70,7 +70,7 @@ BuiltinF builtin_function[] = {
   { 12, "prefix",   2, unify_args,    ATTAT_STRING }, /* prefix(a,b) = (longest) common prefix of strings a and b */
   { 13, "is_prefix",2, unify_args,    ATTAT_INT },    /* is_prefix(a,b) = 1 iff a is prefix of b */
   { 14, "minus",    2, unify_args,    ATTAT_STRING }, /* minus(a,b) = result of removing (longest) common prefix of a and b from a */
-  { 15, "ignore",   1, ignore_args,   ATTAT_INT },    /* takes label as argument, which it ignores; returns True as an int */
+  { 15, "ignore",   1, ignore_args,   ATTAT_INT },    /* takes label as argument, which it ignores; returns True as an int64_t */
   { 16, "normalize",2, unify_args,    ATTAT_STRING},  /* apply case/diacritic folding to string */
 
   { 17, "lbound_of",2, distance_args, ATTAT_INT },    /* cpos of start of s-attribute region containing specified position */
@@ -88,7 +88,7 @@ BuiltinF builtin_function[] = {
  * @return      The name of the argument type. Do not modify or free.
  */
 char *
-attat_name(int type)
+attat_name(int64_t type)
 {
   switch(type) {
   case ATTAT_NONE:
@@ -119,10 +119,10 @@ attat_name(int type)
  * @param name  The name of the function to search for.
  * @return      An index into the builtin_function array (or -1 for not found)
  */
-int 
+int64_t 
 find_predefined(char *name)
 {
-  int i;
+  int64_t i;
   
   for (i = 0; builtin_function[i].name; i++)
     if (strcmp(builtin_function[i].name, name) == 0)
@@ -136,10 +136,10 @@ find_predefined(char *name)
  * @param name  The name of the function to search for.
  * @return      Boolean.
  */
-int 
+int64_t 
 is_predefined_function(char *name)
 {
-  int k;
+  int64_t k;
 
   k = find_predefined(name);
   return (k >= 0 ? 1 : 0);
@@ -156,10 +156,10 @@ is_predefined_function(char *name)
  *           (Or, to put it another way, the index of the first
  *           non-identical character.)
  */
-int
+int64_t
 common_prefix_length(char *s, char *t)
 {
-  int l = 0;
+  int64_t l = 0;
   if ((s == NULL) || (t == NULL))
     return 0;
   while ((s[l] == t[l]) && s[l] && t[l])
@@ -180,21 +180,21 @@ common_prefix_length(char *s, char *t)
  * @param result   Where to put the result of calling the function.
  * @return         boolean: true on success, otherwise false.
  */
-int
-call_predefined_function(int bf_id,
+int64_t
+call_predefined_function(int64_t bf_id,
                          DynCallResult *apl,
-                         int nr_args,
+                         int64_t nr_args,
                          Constrainttree ctptr,
                          DynCallResult *result)
 {
-  int argp, pos, flags, start, end, n_none;
+  int64_t argp, pos, flags, start, end, n_none;
   char *str0, *str1;
   Attribute *attr;
 
   result->type = ATTAT_NONE;
 
   if (nr_args != builtin_function[bf_id].nr_args) {
-    fprintf(stderr, "Predefined function %s got %d args, takes %d (mismatch)\n",
+    fprintf(stderr, "Predefined function %s got %" PRId64 " args, takes %" PRId64 " (mismatch)\n",
             builtin_function[bf_id].name, nr_args, builtin_function[bf_id].nr_args);
     return False;
   }
@@ -224,7 +224,7 @@ call_predefined_function(int bf_id,
         }
         else {
           cqpmessage(Error,
-              "Builtin function %s(): argument type mismatch at arg #%d\n\tExpected %s, got %s.",
+              "Builtin function %s(): argument type mismatch at arg #%" PRId64 "\n\tExpected %s, got %s.",
               builtin_function[bf_id].name,
               argp,
               attat_name(builtin_function[bf_id].argtypes[argp]),
@@ -279,11 +279,11 @@ call_predefined_function(int bf_id,
 
   case 3:                        /* distabs */
     result->type = ATTAT_INT;
-    result->value.intres = abs(apl[1].value.intres - apl[0].value.intres);
+    result->value.intres = llabs(apl[1].value.intres - apl[0].value.intres);
     return True;
     break;
 
-  case 4:                        /* int (typecast) */
+  case 4:                        /* int64_t (typecast) */
     /* convert argument from PAREF to STRING if necessary */
     if (apl[0].type == ATTAT_PAREF) {
       assert(ctptr->func.args[0].param->type == pa_ref);
@@ -296,12 +296,12 @@ call_predefined_function(int bf_id,
 
     result->type = ATTAT_NONE;
     {
-      int value = 0;
+      int64_t value = 0;
       
       errno = 0;                /* might catch some conversion errors */
       value = atoi(str0);
       if (errno != 0) {
-        cqpmessage(Error, "Builtin integer conversion failed for int(%s).", str0);
+        cqpmessage(Error, "Builtin integer conversion failed for int64_t(%s).", str0);
         return False;                /* probably a conversion error */
       }
 
@@ -414,7 +414,7 @@ call_predefined_function(int bf_id,
 
     result->type = ATTAT_NONE;
     {
-      int count = cl_set_size(str0);
+      int64_t count = cl_set_size(str0);
       
       if (count >= 0) {
         result->type = ATTAT_INT;
@@ -486,7 +486,7 @@ call_predefined_function(int bf_id,
     
     result->type = ATTAT_NONE;        /* in case of failure */
     if (bf_id == 12) {                /* prefix */
-      int l = common_prefix_length(str0, str1);
+      int64_t l = common_prefix_length(str0, str1);
       if (l >= CL_DYN_STRING_SIZE - 1) {
         cqpmessage(Error, "DCR string buffer overflow in builtin function prefix().");
         return False;
@@ -498,7 +498,7 @@ call_predefined_function(int bf_id,
       return True;
     }
     else if (bf_id == 13) {        /* is_prefix */
-      int l = common_prefix_length(str0, str1);
+      int64_t l = common_prefix_length(str0, str1);
       result->type = ATTAT_INT;
       if (l == strlen(str0)) {
         result->value.intres = 1;
@@ -509,9 +509,9 @@ call_predefined_function(int bf_id,
       return True;
     }
     else {                        /* minus */
-      int lp = common_prefix_length(str0, str1);
-      int l0 = strlen(str0);
-      int l = l0 - lp;                /* length of resulting suffix */
+      int64_t lp = common_prefix_length(str0, str1);
+      int64_t l0 = strlen(str0);
+      int64_t l = l0 - lp;                /* length of resulting suffix */
       if (l >= CL_DYN_STRING_SIZE - 1) {
         cqpmessage(Error, "DCR string buffer overflow in builtin function minus().");
         return False;

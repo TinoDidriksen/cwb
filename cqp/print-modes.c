@@ -144,7 +144,7 @@ ParsePrintOptions(void)
 
     char *token;
     char s[CL_MAX_LINE_LENGTH];
-    int value;
+    int64_t value;
 
     /* we must not destructively modify the global variable, as strtok would do */
 

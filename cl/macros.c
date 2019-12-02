@@ -63,7 +63,7 @@ cl_malloc(size_t bytes)
   block = malloc(bytes);
   if (block == NULL) {
     fprintf(stderr, "CL: Out of memory. (killed)\n");
-    fprintf(stderr, "CL: [cl_malloc(%ld)]\n", bytes);
+    fprintf(stderr, "CL: [cl_malloc(%zu)]\n", bytes);
     printf("\n");		/* for CQP's child mode */
     exit(1);
   }
@@ -86,7 +86,7 @@ cl_calloc(size_t nr_of_elements, size_t element_size)
   block = calloc(nr_of_elements, element_size);
   if (block == NULL) {
     fprintf(stderr, "CL: Out of memory. (killed)\n");
-    fprintf(stderr, "CL: [cl_calloc(%ld*%ld bytes)]\n", nr_of_elements, element_size);
+    fprintf(stderr, "CL: [cl_calloc(%zu*%zu bytes)]\n", nr_of_elements, element_size);
     printf("\n");		/* for CQP's child mode */
     exit(1);
   }
@@ -119,7 +119,7 @@ cl_realloc(void *block, size_t bytes)
     }
     else {
       fprintf(stderr, "CL: Out of memory. (killed)\n");
-      fprintf(stderr, "CL: [cl_realloc(block at %p to %ld bytes)]\n", block, bytes);
+      fprintf(stderr, "CL: [cl_realloc(block at %p to %zu bytes)]\n", block, bytes);
       printf("\n");		/* for CQP's child mode */
       exit(1);
     }
@@ -142,7 +142,7 @@ cl_strdup(const char *string)
   new_string = strdup(string);
   if (new_string == NULL) {
     fprintf(stderr, "CL: Out of memory. (killed)\n");
-    fprintf(stderr, "CL: [cl_strdup(addr=%p, len=%ld)]\n", string, strlen(string));
+    fprintf(stderr, "CL: [cl_strdup(addr=%p, len=%zu)]\n", string, strlen(string));
     printf("\n");		/* for CQP's child mode */
     exit(1);
   }
@@ -157,7 +157,7 @@ cl_strdup(const char *string)
  * this random number generator is a version of Marsaglia-multicarry which is one of the RNGs used by R
  */
 
-static unsigned int RNG_I1=1234, RNG_I2=5678;
+static int64_t RNG_I1=1234, RNG_I2=5678, RNG_I3=9012, RNG_I4=3456;
 
 /**
  * Restores the state of the CL-internal random number generator.
@@ -166,28 +166,14 @@ static unsigned int RNG_I1=1234, RNG_I2=5678;
  * @param i2  The value to set the second RNG integer to (if zero, resets it to 1)
  */
 void
-cl_set_rng_state(unsigned int i1, unsigned int i2)
+cl_set_rng_state(int64_t i1, int64_t i2)
 {
   RNG_I1 = (i1) ? i1 : 1; 	/* avoid zero values as seeds */
   RNG_I2 = (i2) ? i2 : 1;
+  RNG_I3 = 69069 * ((i1) ? i1 : 1) + 1;
+  RNG_I4 = 69069 * ((i2) ? i2 : 1) + 1;
 }
 
-
-/**
- * Reads current state of CL-internal random number generator.
- *
- * The (unsigned, 32-bit) integers currently held in RNG_I1 and RNG_I2
- * are written to the two memory locations supplied as arguments.
- *
- * @param i1  Target location for the value of RNG_I1
- * @param i2  Target location for the value of RNG_I2
- */
-void
-cl_get_rng_state(unsigned int *i1, unsigned int *i2)
-{
-  *i1 = RNG_I1;
-  *i2 = RNG_I2;
-}
 
 /**
  * Initialises the CL-internal random number generator.
@@ -195,7 +181,7 @@ cl_get_rng_state(unsigned int *i1, unsigned int *i2)
  * @param seed  A single 32bit number to use as the seed
  */
 void
-cl_set_seed(unsigned int seed)
+cl_set_seed(int64_t seed)
 {
   cl_set_rng_state(seed, 69069 * seed + 1); /* this is the way that R does it */
 }
@@ -215,14 +201,16 @@ cl_randomize(void)
  *
  * Part of the CL-internal random number generator.
  *
- * @return  The random number, an unsigned 32-bit integer with uniform distribution
+ * @return  The random number, an unsigned 64-bit integer with uniform distribution
  */
-unsigned int
+int64_t
 cl_random(void)
 {
   RNG_I1 = 36969*(RNG_I1 & 0177777) + (RNG_I1 >> 16);
   RNG_I2 = 18000*(RNG_I2 & 0177777) + (RNG_I2 >> 16);
-  return((RNG_I1 << 16) ^ (RNG_I2 & 0177777));
+  RNG_I3 = 14141*(RNG_I3 & 0177777) + (RNG_I3 >> 16);
+  RNG_I4 = 31313*(RNG_I4 & 0177777) + (RNG_I4 >> 16);
+  return ((RNG_I1 << 16) ^ (RNG_I2 & 0177777)) | (((RNG_I3 << 16) ^ (RNG_I4 & 0177777)) << 32);
 }
 
 /**
@@ -237,7 +225,8 @@ cl_random(void)
 double
 cl_runif(void)
 {
-  return cl_random() * 2.328306437080797e-10; /* = cl_random / (2^32 - 1) */
+  double result = cl_random() * 2.328306437080797e-10; /* = cl_random / (2^32 - 1) */
+  return result - (int64_t)result; // truncate to [0,1]
 }
 
 
@@ -252,9 +241,9 @@ cl_runif(void)
  */
 
 /* non-exported global variables for progress bar */
-int progress_bar_pass = 1;
-int progress_bar_total = 1;
-int progress_bar_simple = 0;
+size_t progress_bar_pass = 1;
+size_t progress_bar_total = 1;
+bool progress_bar_simple = 0;
 
 /**
  * Activates or deactivates child (simple) mode for progress_bar.
@@ -264,7 +253,7 @@ int progress_bar_simple = 0;
  *                0 = pretty-printed messages with carriage returns ON STDERR
  */
 void
-progress_bar_child_mode(int on_off)
+progress_bar_child_mode(bool on_off)
 {
   progress_bar_simple = on_off;
 }
@@ -298,7 +287,7 @@ progress_bar_clear_line(void) {
  *
  */
 void
-progress_bar_message(int pass, int total, char *message)
+progress_bar_message(size_t pass, size_t total, char *message)
 {
   /* [pass <pass> of <total>: <message>]   (uses pass and total values from last call if total == 0)*/
   if (total <= 0) {
@@ -310,12 +299,12 @@ progress_bar_message(int pass, int total, char *message)
     progress_bar_total = total;
   }
   if (progress_bar_simple) {
-    fprintf(stdout, "-::-PROGRESS-::-\t%d\t%d\t%s\n", pass, total, message);
+    fprintf(stdout, "-::-PROGRESS-::-\t%zu\t%zu\t%s\n", pass, total, message);
     fflush(stdout);
   }
   else {
     fprintf(stderr, "[");
-    fprintf(stderr, "pass %d of %d: ", pass, total);
+    fprintf(stderr, "pass %zu of %zu: ", pass, total);
     fprintf(stderr, "%s]     \r", message);
     fflush(stderr);
   }
@@ -334,11 +323,11 @@ progress_bar_message(int pass, int total, char *message)
  * and total values from the last call of this function.
  */
 void
-progress_bar_percentage(int pass, int total, int percentage)
+progress_bar_percentage(size_t pass, size_t total, int64_t percentage)
 {
   /* [pass <pass> of <total>: <percentage>% complete]  (uses progress_bar_message) */
   char message[20];
-  sprintf(message, "%3d%c complete", percentage, '%');
+  sprintf(message, "%3" PRId64 "%c complete", percentage, '%');
   progress_bar_message(pass, total, message);
 }
 
@@ -350,14 +339,14 @@ progress_bar_percentage(int pass, int total, int percentage)
  */
 
 /* status variables (non-exported globals) */
-int ilist_cursor;         /* the 'cursor' (column where next item will be printed) */
-int ilist_linewidth;      /* so start_indented_list() can override default config */
-int ilist_tab;            /* ... */
-int ilist_indent;         /* ... */
+size_t ilist_cursor;         /* the 'cursor' (column where next item will be printed) */
+size_t ilist_linewidth;      /* so start_indented_list() can override default config */
+size_t ilist_tab;            /* ... */
+size_t ilist_indent;         /* ... */
 
 /* internal function: print <n> blanks */
 void
-ilist_print_blanks(int n)
+ilist_print_blanks(size_t n)
 {
   while (n > 0) {
     printf(" ");
@@ -377,7 +366,7 @@ ilist_print_blanks(int n)
  * @param indent     Indentation of the list from left margin (in characters)
  */
 void
-start_indented_list(int linewidth, int tabsize, int indent)
+start_indented_list(size_t linewidth, size_t tabsize, size_t indent)
 {
   /* set status variables */
   ilist_linewidth = (linewidth > 0) ? linewidth : ILIST_LINEWIDTH;
@@ -400,7 +389,7 @@ start_indented_list(int linewidth, int tabsize, int indent)
 void
 print_indented_list_br(char *label)
 {
-  int llen = (label != NULL) ? strlen(label) : 0;
+  size_t llen = (label != NULL) ? strlen(label) : 0;
 
   if (ilist_cursor != 0) {
     printf("\n");
@@ -426,10 +415,8 @@ print_indented_list_br(char *label)
 void
 print_indented_list_item(char *string)
 {
-  int len;
-
   if (string != NULL) {
-    len = strlen(string);
+    size_t len = strlen(string);
     if ((ilist_cursor + len) > ilist_linewidth) {
       print_indented_list_br("");
     }
@@ -478,8 +465,8 @@ end_indented_list(void)
  *
  * @return             cpos + offset (possibly clamped) or CDA_EPOSORNG
  */
-int
-cl_cpos_offset(int cpos, int offset, int corpus_size, int clamp) {
+int64_t
+cl_cpos_offset(int64_t cpos, int64_t offset, int64_t corpus_size, int64_t clamp) {
   if (offset > 0) {
     if ((corpus_size - cpos) <= offset)
       return(clamp ? corpus_size - 1 : CDA_EPOSORNG);

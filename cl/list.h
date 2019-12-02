@@ -28,10 +28,10 @@
  * Underlying structure for the cl_int_list object.
  */
 struct _cl_int_list {
-  int size;         /**< number of elements */
-  int allocated;    /**< number of elements, for which space has been allocated */
-  int lumpsize;     /**< lump size by which list is reallocated */
-  int *data;        /**< pointer to the data */
+  int64_t size;         /**< number of elements */
+  int64_t allocated;    /**< number of elements, for which space has been allocated */
+  int64_t lumpsize;     /**< lump size by which list is reallocated */
+  int64_t *data;        /**< pointer to the data */
 };
 
 /**
@@ -41,9 +41,9 @@ struct _cl_int_list {
  * The strings themselves are stored elsewhere.
  */
 struct _cl_string_list {
-  int size;         /**< number of elements */
-  int allocated;    /**< number of elements, for which space has been allocated */
-  int lumpsize;     /**< lump size by which list is reallocated */
+  int64_t size;         /**< number of elements */
+  int64_t allocated;    /**< number of elements, for which space has been allocated */
+  int64_t lumpsize;     /**< lump size by which list is reallocated */
   char **data;      /**< pointer to the data */
 };
 

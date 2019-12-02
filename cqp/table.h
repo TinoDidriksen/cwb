@@ -35,10 +35,10 @@
  * be allocated to the same size.
  */
 typedef struct _table {
-  int *(field[NoField]);        /**< table made of #NoField columns = individually allocated integer lists */
-  int *sortidx;                 /**< optional sort index (honoured by all access functions) */
-  unsigned size;                /**< all fields have the same size (or are NULL) */
-  unsigned allocated;           /**< number of cells allocated for all non-NULL fields */
+  int64_t *(field[NoField]);    /**< table made of #NoField columns = individually allocated integer lists */
+  int64_t *sortidx;             /**< optional sort index (honoured by all access functions) */
+  uint64_t size;                /**< all fields have the same size (or are NULL) */
+  uint64_t allocated;           /**< number of cells allocated for all non-NULL fields */
 } table;
 
 
@@ -46,10 +46,10 @@ typedef struct _table {
 table new_table(void);
 
 /** initialise new table inserting {list} as match column (sets table.size = table.allocated = size) */
-table new_table_from_list(int *list, unsigned size);
+table new_table_from_list(int64_t *list, uint64_t size);
 
 /** extend allocated space to exactly {size} rows (must be >= table.size) */
-void table_allocate(table t, int size);
+void table_allocate(table t, int64_t size);
 
 /** destroy table object (deallocate all data) */
 void delete_table(table t);
@@ -58,28 +58,28 @@ void delete_table(table t);
 table table_duplicate(table t);
 
 /** current size of table; encapsulates variable table.size */
-unsigned table_size(table t);
+uint64_t table_size(table t);
 
 /** returns True if {fld} column is defined (i.e. != NULL) in table {t} */
-int table_defined_field(table t, FieldType fld);
+int64_t table_defined_field(table t, FieldType fld);
 
 /** get value of {row}th entry in {fld} column; returns -1 if column is NULL or row is out of range */
-int table_get(table t, FieldType fld, unsigned row);
+int64_t table_get(table t, FieldType fld, uint64_t row);
 
 /** Sets {row}th entry in {fld} column to {value}; automatically allocates and extends columns */
-void table_set(table t, FieldType fld, unsigned row, int value);
+void table_set(table t, FieldType fld, uint64_t row, int64_t value);
 
-/** Gets a pointer to int vector representing column {fld} for direct access; note that sortidx is ignored! */
-int *table_get_vector(table t, FieldType fld);
+/** Gets a pointer to int64_t vector representing column {fld} for direct access; note that sortidx is ignored! */
+int64_t *table_get_vector(table t, FieldType fld);
 
-/** Gets a pointer to sort index as int vector; returns NULL if table is unsorted */
-int *table_get_sortidx(table t);
+/** Gets a pointer to sort index as int64_t vector; returns NULL if table is unsorted */
+int64_t *table_get_sortidx(table t);
 
 /* define additional sort functions here, especially those implementing the sort command */
 
 /** delete rows where match=-1 or matchend=-1, as well as duplicates; then sort by corpus position;
  * returns True iff successful; note that both the MatchField and the MatchEndField column must be defined */
-int table_normalise(table t);
+int64_t table_normalise(table t);
 
 /**
  * The TableOp enumeration: specifies an operation to apply to a table.
@@ -106,7 +106,7 @@ typedef enum _table_ops {
 
 
 /** execute unary or binary operation {op}; result is stored in {t1}; returns True iff successful */
-int table_setop(table t1, TableOp op, table t2);
+int64_t table_setop(table t1, TableOp op, table t2);
 
 /* it may turn out useful at some point to have some support for chains of tables, e.g. for
    subsets of matches with incremental query processing; it should be possible to combine the

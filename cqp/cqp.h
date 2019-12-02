@@ -28,6 +28,8 @@
 #define QUERY_BUFFER_SIZE 2048
 
 #include <stdio.h>
+#include <stdbool.h>
+#include <stdint.h>
 
 #ifdef _WIN32
   #ifdef LIBCQP_EXPORTS
@@ -44,13 +46,12 @@
 #endif
 
 /** DEPRACATED means of storing a Boolean value  */
-typedef int Boolean;
+typedef bool Boolean;
 
 /** DEPRACATED macros for Boolean true and false */
-#define True 1
+#define True true
 /** DEPRACATED macros for Boolean true and false */
-#define False 0
-/* TODO In CWB 4 we should change both the above, and the more recent "int/1/0" convention, to C11-style bool/true/false */
+#define False false
 
 /**
  * The "corpus yielding command type" type.
@@ -69,9 +70,9 @@ typedef enum _cyctype {
 /** Global variable indicating type (CYC) of last expression */
 CYCtype LastExpression;
 
-extern int reading_cqprc;
+extern int64_t reading_cqprc;
 
-extern LIBCQP_API int cqp_error_status;
+extern LIBCQP_API int64_t cqp_error_status;
 
 /* ======================================== Query Buffer Interface */
 
@@ -79,23 +80,23 @@ extern LIBCQP_API int cqp_error_status;
 /* ========== initialization done in parse_actions.c:prepare_parse() */
 
 extern char QueryBuffer[QUERY_BUFFER_SIZE];
-extern int QueryBufferP;
-extern int QueryBufferOverflow;
+extern int64_t QueryBufferP;
+extern int64_t QueryBufferOverflow;
 
 /* ======================================== Other global variables */
 
 extern char *searchstr;         /* needs to be global, unfortunately */
-int exit_cqp;                   /**< 1 iff exit-command was issued while parsing */
+int64_t exit_cqp;                   /**< 1 iff exit-command was issued while parsing */
 
 
 extern char *cqp_input_string;
-extern int cqp_input_string_position;
+extern int64_t cqp_input_string_position;
 
-int initialize_cqp(int argc, char **argv);
+int64_t initialize_cqp(int64_t argc, char **argv);
 
-int cqp_parse_file(FILE *fd, int exit_on_parse_errors);
+int64_t cqp_parse_file(FILE *fd, int64_t exit_on_parse_errors);
 
-int cqp_parse_string(char *s);
+int64_t cqp_parse_string(char *s);
 
 /* ====================================================================== */
 
@@ -112,13 +113,13 @@ typedef void (*InterruptCheckProc)(void);
  *
  * @see sigINT_signal_handler
  */
-int EvaluationIsRunning;
+int64_t EvaluationIsRunning;
 
-int setInterruptCallback(InterruptCheckProc f);
+int64_t setInterruptCallback(InterruptCheckProc f);
 
 void CheckForInterrupts(void);
 
-int signal_handler_is_installed;
+int64_t signal_handler_is_installed;
 
 void install_signal_handler(void);
 

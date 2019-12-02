@@ -49,10 +49,10 @@
  *            start and end values to -1).
  * @return    Boolean: true for success, false for failure.
  */
-int
-delete_interval(CorpusList *cp, int nr)
+int64_t
+delete_interval(CorpusList *cp, int64_t nr)
 {
-  int result;
+  int64_t result;
 
   if ((!cp) ||
       (cp->type != SUB) ||
@@ -80,13 +80,13 @@ delete_interval(CorpusList *cp, int nr)
  *                   which lines to delete).
  * @return           Boolean: true for success, false for failure.
  */
-int
-delete_intervals(CorpusList *cp, Bitfield intervals, int mode)
+int64_t
+delete_intervals(CorpusList *cp, Bitfield intervals, int64_t mode)
 {
-  int i;
-  int result;    /* boolean to return at the end */
-  int modified;  /* count of the number of lines deleted */
-  int bit;       /* temp storage for value retrieved from bitfield */
+  int64_t i;
+  int64_t result;    /* boolean to return at the end */
+  int64_t modified;  /* count of the number of lines deleted */
+  int64_t bit;       /* temp storage for value retrieved from bitfield */
 
   if ((!cp) ||
       !((cp->type == SUB) || (cp->type == TEMP)) ||
@@ -177,15 +177,15 @@ delete_intervals(CorpusList *cp, Bitfield intervals, int mode)
  *                     copied.
  * @return             Boolean: true for success, false for failure.
  */
-int
+int64_t
 copy_intervals(CorpusList *cp,
                Bitfield intervals,
-               int mode,
+               int64_t mode,
                char *subcorpname)
 {
   CorpusList *new_sub;
-  int result;
-  int i;
+  int64_t result;
+  int64_t i;
 
   /* cp must be a query-generated subcorpus containing at least 1 hit */
   if ((!cp) || (cp->type != SUB) || (cp->size <= 0))
@@ -223,7 +223,7 @@ copy_intervals(CorpusList *cp,
         break;
       
       default:
-        cqpmessage(Error, "Illegal copy_intervals mode %d\n", mode);
+        cqpmessage(Error, "Illegal copy_intervals mode %" PRId64 "\n", mode);
         dropcorpus(new_sub);
         result = 0;
         break;
@@ -264,11 +264,11 @@ copy_intervals(CorpusList *cp,
 }
 
 
-int
-calculate_ranges(CorpusList *cl, int cpos, Context spc, int *left, int *right)
+int64_t
+calculate_ranges(CorpusList *cl, int64_t cpos, Context spc, int64_t *left, int64_t *right)
 {
-  int corpsize;
-  int rng_s, rng_e, rng_n, nrng_s, nrng_e, r1, r2, nr_rngs, d;
+  int64_t corpsize;
+  int64_t rng_s, rng_e, rng_n, nrng_s, nrng_e, r1, r2, nr_rngs, d;
   
   switch(spc.type) {
 
@@ -342,10 +342,10 @@ calculate_ranges(CorpusList *cl, int cpos, Context spc, int *left, int *right)
 /**
  * Returns -1 if there is no rightboundary found.
  */
-int
-calculate_rightboundary(CorpusList *cl, int cpos, Context spc)
+int64_t
+calculate_rightboundary(CorpusList *cl, int64_t cpos, Context spc)
 {
-  int left, right;
+  int64_t left, right;
   
   return (calculate_ranges(cl, cpos, spc, &left, &right)? right : -1);
 }
@@ -353,10 +353,10 @@ calculate_rightboundary(CorpusList *cl, int cpos, Context spc)
 /**
  * Returns -1 if there is no leftboudnary found.
  */
-int
-calculate_leftboundary(CorpusList *cl, int cpos, Context spc)
+int64_t
+calculate_leftboundary(CorpusList *cl, int64_t cpos, Context spc)
 {
-  int left, right;
+  int64_t left, right;
   
   return (calculate_ranges(cl, cpos, spc, &left, &right)? left : -1);
 }
@@ -364,7 +364,7 @@ calculate_leftboundary(CorpusList *cl, int cpos, Context spc)
 /** this is a rather specialised utility function for the UNION part of RangeSetop()
    (copies range + keyword/target (if defined) in corpus into temporary lists)*/
 void
-rs_cp_range(Range *rng, int *target, int *keyword, int ins, CorpusList *corpus, int j)
+rs_cp_range(Range *rng, int64_t *target, int64_t *keyword, int64_t ins, CorpusList *corpus, int64_t j)
 {
   rng[ins].start = corpus->range[j].start;
   rng[ins].end = corpus->range[j].end;
@@ -390,8 +390,8 @@ Range *_RS_range = NULL;
 int
 _RS_compare_ranges (const void *pa, const void *pb)
 {
-  Range *a = _RS_range + *((int *) pa); /* compare ranges #a and #b */
-  Range *b = _RS_range + *((int *) pb);
+  Range *a = _RS_range + *((int64_t*) pa); /* compare ranges #a and #b */
+  Range *b = _RS_range + *((int64_t*) pb);
   if (a->start < b->start)      /* start(a) < start(b) */
     return -1;
   else if (a->start > b->start) /* start(a) > start(b) */
@@ -417,13 +417,13 @@ _RS_compare_ranges (const void *pa, const void *pb)
  * @param mk_sortidx  Boolean flag: if true a sortidx is created.
  */
 void 
-RangeSort(CorpusList *c, int mk_sortidx)
+RangeSort(CorpusList *c, bool mk_sortidx)
 {
   Range *new_range = NULL;
-  int *new_targets = NULL, *new_keywords = NULL;
-  int *new_sortidx = NULL;
-  int *index = NULL;            /* sort index for qsort() function */
-  int size, i;
+  int64_t *new_targets = NULL, *new_keywords = NULL;
+  int64_t *new_sortidx = NULL;
+  int64_t *index = NULL;            /* sort index for qsort() function */
+  int64_t size, i;
 
   if (c->type != SUB && c->type != TEMP) {
     /* function only works for named queries (= subcorpora) */
@@ -440,17 +440,17 @@ RangeSort(CorpusList *c, int mk_sortidx)
   }
 
   size = c->size;                        /* size of query result */
-  index = cl_malloc(size * sizeof(int)); /* allocate and initialise qsort() index */
+  index = cl_malloc(size * sizeof(*index)); /* allocate and initialise qsort() index */
 
   for (i = 0; i < size; i++) 
     index[i] = i;
 
   _RS_range = c->range;         /* intialise global data for callback and run qsort()  */
-  qsort(index, size, sizeof(int), _RS_compare_ranges);
+  qsort(index, size, sizeof(*index), _RS_compare_ranges);
 
 /*     printf("Resort index is:\n"); */
 /*     for (i = 0; i < size; i++) */
-/*       printf("\t%4d => [%d,%d]\n", index[i], c->range[index[i]].start, c->range[index[i]].end); */
+/*       printf("\t%4" PRId64 " => [%" PRId64 ",%" PRId64 "]\n", index[i], c->range[index[i]].start, c->range[index[i]].end); */
 
   new_range = cl_malloc(size * sizeof(Range)); /* allocate new range vector and fill it with sorted ranges */
   for (i = 0; i < size; i++)
@@ -460,14 +460,14 @@ RangeSort(CorpusList *c, int mk_sortidx)
   c->range = new_range;
 
   if (c->targets) {             /* same for targets (if present) */
-    new_targets = cl_malloc(size * sizeof(int));
+    new_targets = cl_malloc(size * sizeof(*new_targets));
     for (i = 0; i < size; i++)
       new_targets[i] = c->targets[index[i]];
     cl_free(c->targets);
     c->targets = new_targets;
   }
   if (c->keywords) {            /* and keywords (if present) */
-    new_keywords = cl_malloc(size * sizeof(int));
+    new_keywords = cl_malloc(size * sizeof(*new_keywords));
     for (i = 0; i < size; i++)
       new_keywords[i] = c->keywords[index[i]];
     cl_free(c->keywords);
@@ -475,7 +475,7 @@ RangeSort(CorpusList *c, int mk_sortidx)
   }
 
   if (mk_sortidx) { /* create new sortidx so that user still sees previous ordering of the matches (used with "undump") */
-    new_sortidx = cl_malloc(size * sizeof(int));
+    new_sortidx = cl_malloc(size * sizeof(*new_sortidx));
     if (mk_sortidx) {
       for (i = 0; i < size; i++)
         new_sortidx[index[i]] = i;
@@ -511,18 +511,18 @@ RangeSort(CorpusList *c, int mk_sortidx)
  *                    versus ignored. Can be NULL.
  * @return            Boolean, true for all OK, otherwise false.
  */
-int
+int64_t
 RangeSetop(CorpusList *corpus1,
            RangeSetOp operation,
            CorpusList *corpus2,
            Bitfield restrictor)
 {
-  int i, j, ins;
-  int intervals_to_copy;
+  int64_t i, j, ins;
+  int64_t intervals_to_copy;
 
   Range *tmp;
-  int *tmp_target, *tmp_keyword;
-  int tmp_size;
+  int64_t *tmp_target, *tmp_keyword;
+  int64_t tmp_size;
 
   /* switch across the different members of RangeSetOp... */
   switch (operation) {
@@ -555,12 +555,12 @@ RangeSetop(CorpusList *corpus1,
 
       /* allocate targets / keywords if they're present in one of the arguments */
       if ((corpus1->targets != NULL) || (corpus2->targets != NULL))
-        tmp_target = (int *)cl_malloc(sizeof(int) * tmp_size);
+        tmp_target = (int64_t*)cl_malloc(sizeof(*tmp_target) * tmp_size);
       else 
         tmp_target = NULL;
 
       if ((corpus1->keywords != NULL) || (corpus2->keywords != NULL))
-        tmp_keyword = (int *)cl_malloc(sizeof(int) * tmp_size);
+        tmp_keyword = (int64_t*)cl_malloc(sizeof(*tmp_keyword) * tmp_size);
       else 
         tmp_keyword = NULL;
 
@@ -636,9 +636,9 @@ RangeSetop(CorpusList *corpus1,
       if (ins < tmp_size) {
         tmp = (Range *)cl_realloc((char *)tmp, sizeof(Range) * ins);
         if (tmp_target)
-          tmp_target = (int *)cl_realloc((char *)tmp_target, sizeof(int) * ins);
+          tmp_target = (int64_t*)cl_realloc((char *)tmp_target, sizeof(*tmp_target) * ins);
         if (tmp_keyword)
-          tmp_keyword = (int *)cl_realloc((char *)tmp_keyword, sizeof(int) * ins);
+          tmp_keyword = (int64_t*)cl_realloc((char *)tmp_keyword, sizeof(*tmp_keyword) * ins);
       }
 
       /* replace corpus1's fields with temporary vectors */
@@ -779,7 +779,7 @@ RangeSetop(CorpusList *corpus1,
     i = 0;                      /* point */
     for (i = 0; i < corpus1->size; i++) {
       if (corpus1->range[i].start != -1) { /* skip intervals we've already deleted */
-        int start = corpus1->range[i].start;
+        int64_t start = corpus1->range[i].start;
         j = i+1;                /* i becomes mark, j is now point */
         while ((j < corpus1->size) && 
                (corpus1->range[j].start <= corpus1->range[i].end)) 
@@ -815,7 +815,7 @@ RangeSetop(CorpusList *corpus1,
     i = 0;                      /* point */
     for (i = 0; i < corpus1->size; i++) {
       if (corpus1->range[i].start != -1) { /* skip intervals we've already deleted */
-        int start = corpus1->range[i].start;
+        int64_t start = corpus1->range[i].start;
         j = i+1;                /* i becomes mark, j is now point */
         while ((j < corpus1->size) && 
                (corpus1->range[j].start <= corpus1->range[i].end)) 
@@ -983,10 +983,10 @@ RangeSetop(CorpusList *corpus1,
         corpus1->range = (Range *)cl_realloc(corpus1->range, sizeof(Range) * ins);
 
         if (corpus1->targets)
-          corpus1->targets = (int *)cl_realloc(corpus1->targets, sizeof(int) * ins);
+          corpus1->targets = (int64_t*)cl_realloc(corpus1->targets, sizeof(*corpus1->targets) * ins);
 
         if (corpus1->keywords)
-          corpus1->keywords = (int *)cl_realloc(corpus1->keywords, sizeof(int) * ins);
+          corpus1->keywords = (int64_t*)cl_realloc(corpus1->keywords, sizeof(*corpus1->keywords) * ins);
 
         corpus1->size = ins;
 
@@ -1015,27 +1015,27 @@ RangeSetop(CorpusList *corpus1,
  * note much of this replicates the contents of a SortClause object, q.v. */
 static CorpusList *srt_cl;              /**< The CorpusList object representing a query to be sorted. */
 static Attribute *srt_attribute;        /**< The )p-)Attribute on which a query is to be sorted. */
-static int *srt_start;                  /**< When sorting a query, this contains start positions of intervals to be sorted */
-static int *srt_end;                    /**< When sorting a query, this contains end positions of intervals to be sorted */
+static int64_t *srt_start;                  /**< When sorting a query, this contains start positions of intervals to be sorted */
+static int64_t *srt_end;                    /**< When sorting a query, this contains end positions of intervals to be sorted */
 static FieldType srt_anchor1;           /**< In a query sort, indicates the field type of the start of sort region */
-static int srt_offset1;                 /**< In a query sort, indicates the offset of the start of sort region */
+static int64_t srt_offset1;                 /**< In a query sort, indicates the offset of the start of sort region */
 static FieldType srt_anchor2;           /**< In a query sort, indicates the field type of the end of sort region */
-static int srt_offset2;                 /**< In a query sort, indicates the offset of the end of sort region */
-/*static unsigned char *srt_maptable;     / **< character mapping for %c and %d flags TODO deleted in unicode-version. */
-static int srt_flags;                   /**< Whether to use the %c and/or %d flags when sorting a query. */
-static int srt_ascending;               /**< boolean: sort query into ascending order or not */
-static int srt_reverse;                 /**< boolean: sort query on reversed-character-sequence strings
+static int64_t srt_offset2;                 /**< In a query sort, indicates the offset of the end of sort region */
+/*static uint8_t *srt_maptable;     / **< character mapping for %c and %" PRId64 " flags TODO deleted in unicode-version. */
+static int64_t srt_flags;                   /**< Whether to use the %c and/or %" PRId64 " flags when sorting a query. */
+static int64_t srt_ascending;               /**< boolean: sort query into ascending order or not */
+static int64_t srt_reverse;                 /**< boolean: sort query on reversed-character-sequence strings
                                              (and reversed sequences OF strings) or not */
-static int text_size;                   /**< When sorting a query - this represents the size of the corpus the query belongs to */
-static int break_ties;                  /**< whether to break ties (by comparison without %cd flags,
+static int64_t text_size;                   /**< When sorting a query - this represents the size of the corpus the query belongs to */
+static int64_t break_ties;                  /**< whether to break ties (by comparison without %cd flags,
                                              and by line number in the last instance) */
-static unsigned int *random_sort_keys;  /**< random keys for randomized sort order (ties are broken by cpos of matches) */
+static uint64_t *random_sort_keys;  /**< random keys for randomized sort order (ties are broken by cpos of matches) */
 
 
 /* static data for count function callbacks */
-static int *group_first;        /**< first match for each group of identical (or equivalent) sort strings */
-static int *group_size;         /**< number of matches for each group of identical (or equivalent) sort strings */
-static int *current_sortidx;    /**< alias to newly created sortidx, so it can be accessed by the callback function */
+static int64_t *group_first;        /**< first match for each group of identical (or equivalent) sort strings */
+static int64_t *group_size;         /**< number of matches for each group of identical (or equivalent) sort strings */
+static int64_t *current_sortidx;    /**< alias to newly created sortidx, so it can be accessed by the callback function */
 
 /**
  * Use an external program to sort a query.
@@ -1043,7 +1043,7 @@ static int *current_sortidx;    /**< alias to newly created sortidx, so it can b
  * No parameters - the assumption is that everything is set up
  * already by the SortSubCorpus function which calls this one.
  */
-int
+int64_t
 SortExternally(void)
 {
   /* uses settings from static srt_* variables */
@@ -1053,14 +1053,14 @@ SortExternally(void)
   char sort_call[CL_MAX_LINE_LENGTH];
 
   if ((fd = open_temporary_file(temporary_name)) != NULL) {
-    int line, p1start, p1end, plen, step, token, l;
+    int64_t line, p1start, p1end, plen, step, token, l;
 
     line = -1;                  /* will indicate sort failure below if text_size == 0 */
     if (text_size > 0) {
 
       for (line = 0; line < srt_cl->size; line++) {
         
-        fprintf(fd, "%d ", line); 
+        fprintf(fd, "%" PRId64 " ", line); 
         
         /* determine start and end position of sort interval for this match */
         switch (srt_anchor1) {
@@ -1112,7 +1112,7 @@ SortExternally(void)
         
         /* swap start and end of interval for reverse sorting */
         if (srt_reverse) {
-          int temp;
+          int64_t temp;
           temp = p1start; p1start = p1end; p1end = temp;
         }
         
@@ -1120,7 +1120,7 @@ SortExternally(void)
         step = (p1end >= p1start) ? 1 : -1;
         
         /* how many tokens to print */
-        plen = abs(p1end - p1start) + 1;
+        plen = llabs(p1end - p1start) + 1;
 
         
         /* when using flags, print normalised token sequence first (after applying cl_string_canonical) */
@@ -1128,10 +1128,10 @@ SortExternally(void)
           token = p1start;
           for (l=1 ; l <= plen ; l++) {
             char *value = cl_cpos2str(srt_attribute, token);
-            int del_value = 0;
+            int64_t del_value = 0;
 
             if (value) {
-              int i, p = strlen((char *) value);
+              int64_t i, p = strlen((char *) value);
               if (srt_flags) {
                 // DELETE WHEN  NEW FORM OF CL_STRING_CANONICAL CONFIRMED FUNCTIONAL
 //                /* allocate extra mem in case of UTF8 folding */
@@ -1157,7 +1157,7 @@ SortExternally(void)
                   fputc(srt_maptable[value[i]], fd);
               }*/
               for (i = 0; i < p; i++)
-                fputc((unsigned char) value[i], fd);
+                fputc((uint8_t) value[i], fd);
 
               fputc(' ', fd);       
               if (del_value)
@@ -1172,10 +1172,10 @@ SortExternally(void)
         token = p1start;
         for (l = 1 ; l <= plen ; l++) {
           char *value = cl_cpos2str(srt_attribute, token);
-          int del_value = 0;
+          int64_t del_value = 0;
 
           if (value) {
-            int i, p = strlen((char *) value);
+            int64_t i, p = strlen((char *) value);
 
             if (srt_reverse) {
               del_value = 1;
@@ -1187,7 +1187,7 @@ SortExternally(void)
                 fputc(value[i], fd);
             } */
             for (i = 0; i < p; i++)
-              fputc((unsigned char) value[i], fd);
+              fputc((uint8_t) value[i], fd);
             fputc(' ', fd);
             if (del_value)
               cl_free(value);
@@ -1214,16 +1214,16 @@ SortExternally(void)
       }
       else {
         if (! srt_cl->sortidx)
-          srt_cl->sortidx = (int *)cl_malloc(srt_cl->size * sizeof(int));
+          srt_cl->sortidx = (int64_t*)cl_malloc(srt_cl->size * sizeof(*srt_cl->sortidx));
         for (line = 0; line < srt_cl->size; line++)
           srt_cl->sortidx[line] = -1;
         
         line = 0;
         while (fgets(sort_call, CL_MAX_LINE_LENGTH, pipe)) {
           if (line < srt_cl->size) {
-            int num = atoi(sort_call);
+            int64_t num = atoi(sort_call);
             if (num < 0 || num >= srt_cl->size) {
-              fprintf(stderr, "Error in externally sorted file - line number #%d out of range\n", num);
+              fprintf(stderr, "Error in externally sorted file - line number #%" PRId64 " out of range\n", num);
               break;            /* abort */
             }
             srt_cl->sortidx[line] = num;
@@ -1279,7 +1279,7 @@ SortExternally(void)
 
 #ifdef USE_SORT_CACHE
 /** Pointer to the sort cache @see USE_SORT_CACHE */
-static int *sort_id_cache = NULL;
+static int64_t *sort_id_cache = NULL;
 #endif
 
 /**
@@ -1291,11 +1291,11 @@ static int *sort_id_cache = NULL;
  * all calls to it have been replaced with cl_string_qsort_compare
  *
  *
-static int
-srt_strcmp(unsigned char *s1, unsigned char *s2, unsigned char *maptable, int reverse)
+static int64_t
+srt_strcmp(uint8_t *s1, uint8_t *s2, uint8_t *maptable, int64_t reverse)
 {
-  int l1, l2, minl, i, c1, c2, step;
-  unsigned char *p1, *p2;
+  int64_t l1, l2, minl, i, c1, c2, step;
+  uint8_t *p1, *p2;
 
   step = (reverse) ? -1 : +1;
   l1 = strlen((char *) s1);
@@ -1351,17 +1351,17 @@ srt_strcmp(unsigned char *s1, unsigned char *s2, unsigned char *maptable, int re
 static int
 i2compare(const void *vidx1, const void *vidx2)
 {
-  const int *idx1 = vidx1, *idx2 = vidx2;
+  const int64_t *idx1 = vidx1, *idx2 = vidx2;
 
-  int p1start, p1end;           /* boundaries of sort intervals */
-  int p2start, p2end;
-  int step1, step2;             /* direction of comparison (might actually be different for the two matches *ouch*) */
+  int64_t p1start, p1end;           /* boundaries of sort intervals */
+  int64_t p2start, p2end;
+  int64_t step1, step2;             /* direction of comparison (might actually be different for the two matches *ouch*) */
 
-  int pos1, pos2;
-  int len1, len2, minlen;
-  int pass, i;
+  int64_t pos1, pos2;
+  int64_t len1, len2, minlen;
+  int64_t pass, i;
 
-  int comp;                     /* the comparison result */
+  int64_t comp;                     /* the comparison result */
 
   if (! EvaluationIsRunning)
     return 0;                   /* user interrupt (Ctrl-C) => force qsort to finish quickly */
@@ -1386,11 +1386,11 @@ i2compare(const void *vidx1, const void *vidx2)
    * (similar to the standard comparison algorithm in cl_string_qsort_compare() above)
    */
   if (SORT_DEBUG)
-    fprintf(stderr, "Comparing [%d,%d](%+d) with [%d,%d](%+d)\n",
+    fprintf(stderr, "Comparing [%" PRId64 ",%" PRId64 "](%+" PRId64 ") with [%" PRId64 ",%" PRId64 "](%+" PRId64 ")\n",
             p1start, p1end, step1, p2start, p2end, step2);
 
-  len1 = abs(p1end - p1start) + 1;
-  len2 = abs(p2end - p2start) + 1;
+  len1 = llabs(p1end - p1start) + 1;
+  len2 = llabs(p2end - p2start) + 1;
   minlen = MIN(len1, len2);
   comp = 0;
 
@@ -1400,8 +1400,8 @@ i2compare(const void *vidx1, const void *vidx2)
     pos2 = p2start;
 
     for (i = 1; (i <= minlen) && (comp == 0); i++) {
-      int id1, id2;
-      unsigned char *s1, *s2;
+      int64_t id1, id2;
+      uint8_t *s1, *s2;
 
 #ifdef USE_SORT_CACHE
       /* use cache for first comparison only (to avoid repeated overwriting) */
@@ -1423,8 +1423,8 @@ i2compare(const void *vidx1, const void *vidx2)
 #endif
       
       if (id1 != id2) {         /* same lexicon IDs always compare equal */
-        s1 = (unsigned char *) cl_id2str(srt_attribute, id1);
-        s2 = (unsigned char *) cl_id2str(srt_attribute, id2);
+        s1 = (uint8_t *) cl_id2str(srt_attribute, id1);
+        s2 = (uint8_t *) cl_id2str(srt_attribute, id2);
 
         if (pass == 1)
           /* compare normalised strings in first pass (srt_flags are set in this case) */
@@ -1468,8 +1468,8 @@ i2compare(const void *vidx1, const void *vidx2)
 static int
 group2compare(const void *vidx1, const void *vidx2)
 {
-  const int *idx1 = vidx1, *idx2 = vidx2;
-  int s1, s2;
+  const int64_t *idx1 = vidx1, *idx2 = vidx2;
+  int64_t s1, s2;
 
   if (! EvaluationIsRunning) 
     return 0;
@@ -1497,8 +1497,8 @@ group2compare(const void *vidx1, const void *vidx2)
 static int
 random_compare(const void *vidx1, const void *vidx2)
 {
-  int idx1 = *((int *) vidx1), idx2 = *((int *) vidx2);
-  int result = spaceship(random_sort_keys[idx1], random_sort_keys[idx2]);
+  int64_t idx1 = *((int64_t*) vidx1), idx2 = *((int64_t*) vidx2);
+  int64_t result = spaceship(random_sort_keys[idx1], random_sort_keys[idx2]);
   if (result == 0)
     result = spaceship(srt_cl->range[idx1].start, srt_cl->range[idx2].start);
   if (result == 0)
@@ -1519,10 +1519,10 @@ random_compare(const void *vidx1, const void *vidx2)
  *              (2^31 is a particularly bad choice); if it is 0, then
  *              the internal RNG's standard random order is used.
  */
-int
-SortSubcorpusRandomize(CorpusList *cl, int seed)
+int64_t
+SortSubcorpusRandomize(CorpusList *cl, int64_t seed)
 {
-  int n_matches, i, ok;
+  int64_t n_matches, i, ok;
 
   if (cl == NULL) {
     cqpmessage(Error, "No query result specified for sorting.");
@@ -1543,7 +1543,7 @@ SortSubcorpusRandomize(CorpusList *cl, int seed)
   if (random_sort_keys != NULL)
     /* in case it's still allocated from last call... */
     cl_free(random_sort_keys);
-  random_sort_keys = (unsigned int *) cl_malloc(n_matches * sizeof(unsigned int));
+  random_sort_keys = (uint64_t *) cl_malloc(n_matches * sizeof(uint64_t));
   if (seed) {
     /* stable randomized order (calculated from match range by RNG transformation) */
     for (i = 0; i < n_matches; i++) {
@@ -1565,13 +1565,13 @@ SortSubcorpusRandomize(CorpusList *cl, int seed)
 
   /* allocate and initialise sorted index */
   if (cl->sortidx == NULL)
-    cl->sortidx = (int *) cl_malloc(n_matches * sizeof(int));
+    cl->sortidx = (int64_t*) cl_malloc(n_matches * sizeof(*cl->sortidx));
   for (i = 0; i < n_matches; i++)
     cl->sortidx[i] = i;
 
   EvaluationIsRunning = 1;
   ok = 1;
-  qsort(cl->sortidx, cl->size, sizeof(int), random_compare);
+  qsort(cl->sortidx, cl->size, sizeof(*cl->sortidx), random_compare);
   if (! EvaluationIsRunning) {
     cqpmessage(Warning, "Sort/count operation aborted by user (reset to default ordering).");
     if (which_app == cqp)
@@ -1604,10 +1604,10 @@ SortSubcorpusRandomize(CorpusList *cl, int seed)
  *                    displayed.
  * @return            Boolean: true for successful sort, false for unsuccessful.
  */
-int
-SortSubcorpus(CorpusList *cl, SortClause sc, int count_mode, struct Redir *redir)
+bool
+SortSubcorpus(CorpusList *cl, SortClause sc, bool count_mode, struct Redir *redir)
 {
-  int i, k, ok;
+  int64_t i, k, ok;
   char *srt_att_name;
 
   if (cl == NULL) {
@@ -1681,8 +1681,8 @@ SortSubcorpus(CorpusList *cl, SortClause sc, int count_mode, struct Redir *redir
   }
   else {
     /* precompute tables for start and end position of sort interval */
-    srt_start = cl_malloc(cl->size * sizeof(int));
-    srt_end = cl_malloc(cl->size * sizeof(int));
+    srt_start = cl_malloc(cl->size * sizeof(*srt_start));
+    srt_end = cl_malloc(cl->size * sizeof(*srt_end));
 
     switch (srt_anchor1) {
     case MatchField:
@@ -1744,24 +1744,24 @@ SortSubcorpus(CorpusList *cl, SortClause sc, int count_mode, struct Redir *redir
 
     /* swap start and end positions in reverse sort */
     if (srt_reverse) {
-      int *temp;
+      int64_t *temp;
       temp = srt_start; srt_start = srt_end; srt_end = temp;
     }
 
     /* allocate and initialise sorted index */
     if (cl->sortidx == NULL)
-      cl->sortidx = (int *)cl_malloc(cl->size * sizeof(int));
+      cl->sortidx = (int64_t*)cl_malloc(cl->size * sizeof(*cl->sortidx));
     for (i = 0; i < cl->size; i++)
       cl->sortidx[i] = i;
     
 #ifdef USE_SORT_CACHE
     /* load up the sort cache.... */
-    sort_id_cache = (int *)cl_malloc(cl->size * 2 * sizeof(int));
+    sort_id_cache = (int64_t*)cl_malloc(cl->size * 2 * sizeof(*sort_id_cache));
     for (i = 0; i < cl->size; i++) {
-      int cpos1 = srt_start[i];
-      int cpos2 = srt_end[i];
-      int len = abs(cpos2 - cpos1) + 1;
-      int step = (cpos2 >= cpos1) ? 1 : -1;
+      int64_t cpos1 = srt_start[i];
+      int64_t cpos2 = srt_end[i];
+      int64_t len = llabs(cpos2 - cpos1) + 1;
+      int64_t step = (cpos2 >= cpos1) ? 1 : -1;
       sort_id_cache[2*i] = cl_cpos2id(srt_attribute, cpos1);
       if (len > 1)
         sort_id_cache[2*i+1] = cl_cpos2id(srt_attribute, cpos1 + step);
@@ -1772,7 +1772,7 @@ SortSubcorpus(CorpusList *cl, SortClause sc, int count_mode, struct Redir *redir
 
     /* the business end... the sorting happens here! */
     EvaluationIsRunning = 1;
-    qsort(cl->sortidx, cl->size, sizeof(int), i2compare);
+    qsort(cl->sortidx, cl->size, sizeof(*cl->sortidx), i2compare);
     if (! EvaluationIsRunning) {
       cqpmessage(Warning, "Sort/count operation aborted by user (reset to default ordering).");
       if (which_app == cqp) install_signal_handler();
@@ -1784,12 +1784,12 @@ SortSubcorpus(CorpusList *cl, SortClause sc, int count_mode, struct Redir *redir
 
     /* in count mode, group identical (or equivalent) sort strings, then sort by group sizes */
     if (ok && count_mode) {
-      int *groupidx = NULL;
-      int n_groups, first;
+      int64_t *groupidx = NULL;
+      int64_t n_groups, first;
       current_sortidx = cl->sortidx;
 
-      group_first = cl_malloc(cl->size * sizeof(int)); /* worst case: cl->size groups with f = 1 */
-      group_size = cl_malloc(cl->size * sizeof(int));
+      group_first = cl_malloc(cl->size * sizeof(*group_first)); /* worst case: cl->size groups with f = 1 */
+      group_size = cl_malloc(cl->size * sizeof(*group_size));
 
       break_ties = 0;           /* don't break ties for grouping */
       n_groups = 0;
@@ -1808,9 +1808,9 @@ SortSubcorpus(CorpusList *cl, SortClause sc, int count_mode, struct Redir *redir
       group_size[n_groups++] = i - first;
       /* sort groups by their size (= frequency of sort string) in descending order */
       if (EvaluationIsRunning) {
-        groupidx = cl_malloc(n_groups * sizeof(int));
+        groupidx = cl_malloc(n_groups * sizeof(*groupidx));
         for (i = 0; i < n_groups; i++) groupidx[i] = i;
-        qsort(groupidx, n_groups, sizeof(int), group2compare);
+        qsort(groupidx, n_groups, sizeof(*groupidx), group2compare);
       }
       if (! EvaluationIsRunning) {
         cqpmessage(Warning, "Count operation aborted by user.");
@@ -1822,19 +1822,19 @@ SortSubcorpus(CorpusList *cl, SortClause sc, int count_mode, struct Redir *redir
       /* if successful, display groups with their frequencies */
       if (open_stream(redir, cl->corpus->charset)) {
         for (i = 0; (i < n_groups) && !cl_broken_pipe; i++) {
-          int first = group_first[groupidx[i]];
-          int size = group_size[groupidx[i]];
+          int64_t first = group_first[groupidx[i]];
+          int64_t size = group_size[groupidx[i]];
           if (size >= count_mode) {
-            int start = srt_start[current_sortidx[first]]; /* cpos range of sort string */
-            int end = srt_end[current_sortidx[first]];
-            int len = abs(end - start) + 1;
-            int step = (end >= start) ? 1 : -1;
+            int64_t start = srt_start[current_sortidx[first]]; /* cpos range of sort string */
+            int64_t end = srt_end[current_sortidx[first]];
+            int64_t len = llabs(end - start) + 1;
+            int64_t step = (end >= start) ? 1 : -1;
 
-            fprintf(redir->stream, "%d\t", size);
+            fprintf(redir->stream, "%" PRId64 "\t", size);
             if (! pretty_print) /* without pretty-printing: show first match in second column, for automatic processing */
-              fprintf(redir->stream, "%d\t", first);
+              fprintf(redir->stream, "%" PRId64 "\t", first);
             for (k = 0; k < len; k++) {
-              int cpos = start + step * k;
+              int64_t cpos = start + step * k;
               char *token_readonly = cl_cpos2str(srt_attribute, cpos);
               /* normalise token if %cd was given */
               char *token = cl_string_canonical(token_readonly, cl->corpus->charset, sc->flags, CL_STRING_CANONICAL_STRDUP);
@@ -1851,9 +1851,9 @@ SortSubcorpus(CorpusList *cl, SortClause sc, int count_mode, struct Redir *redir
             }
             if (pretty_print) { /* with pretty-printing: append range of matches belonging to group (in sorted corpus) */
               if (size > 1) 
-                fprintf(redir->stream, "  [#%d-#%d]",  first, first + size - 1);
+                fprintf(redir->stream, "  [#%" PRId64 "-#%" PRId64 "]",  first, first + size - 1);
               else
-                fprintf(redir->stream, "  [#%d]",  first);
+                fprintf(redir->stream, "  [#%" PRId64 "]",  first);
             }
             fprintf(redir->stream, "\n");
             fflush(redir->stream);

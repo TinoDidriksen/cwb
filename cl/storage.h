@@ -43,13 +43,6 @@
 #define MEMBLOB_MALLOCED 2    /**< Flag: indicates use of malloc() to allocate memory in a MemBlob  */
 
 
-#define SIZE_BIT   0
-#define SIZE_BYTE  sizeof(char)
-#define SIZE_SHINT sizeof(short)
-#define SIZE_INT   sizeof(int)
-#define SIZE_LONG  sizeof(long)
-
-
 /**
  * The MemBlob object.
  *
@@ -58,14 +51,14 @@
 typedef struct TMblob {
   size_t size;                  /**< the number of allocated bytes */
 
-  int item_size;                /**< the size of one item */
-  unsigned int nr_items;        /**< the number of items represented */
+  int64_t item_size;            /**< the size of one item */
+  int64_t nr_items;             /**< the number of items represented */
 
-  int *data;                    /**< pointer to the data */
-  int allocation_method;        /**< the allocation method */
+  int64_t *data;                /**< pointer to the data */
+  int64_t allocation_method;        /**< the allocation method */
 
-  int writeable;                /**< can we write to the data? */
-  int changed;                  /**< needs update? (not yet in use) */
+  bool writeable;               /**< can we write to the data? */
+  bool changed;                 /**< needs update? (not yet in use) */
 
   /* fields for paged memory -- not yet used */
   char *fname;
@@ -78,13 +71,13 @@ typedef struct TMblob {
 
 
 
-void NwriteInt(int val, FILE *fd);
-void NreadInt(int *val, FILE *fd);
+void NwriteInt(int64_t val, FILE *fd);
+void NreadInt(int64_t *val, FILE *fd);
 
 
 
-void NwriteInts(int *vals, int nr_vals, FILE *fd);
-void NreadInts(int *vals, int nr_vals, FILE *fd);
+void NwriteInts(int64_t *vals, size_t nr_vals, FILE *fd);
+void NreadInts(int64_t *vals, size_t nr_vals, FILE *fd);
 
 
 /* ---------------------------------------------------------------------- */
@@ -95,7 +88,7 @@ void mfree(MemBlob *blob);
 
 void init_mblob(MemBlob *blob);
 
-int alloc_mblob(MemBlob *blob, int nr_items, int item_size, int clear_blob);
+int64_t alloc_mblob(MemBlob *blob, int64_t nr_items, int64_t item_size, int64_t clear_blob);
 
 
 
@@ -104,17 +97,17 @@ int alloc_mblob(MemBlob *blob, int nr_items, int item_size, int clear_blob);
 
 
 
-int read_file_into_blob(char *filename, 
-                        int allocation_method,
-                        int item_size,
+int64_t read_file_into_blob(char *filename, 
+                        int64_t allocation_method,
+                        int64_t item_size,
                         MemBlob *blob);
 
 
 
 
-int write_file_from_blob(char *filename, 
+int64_t write_file_from_blob(char *filename, 
                          MemBlob *blob,
-                         int convert_to_nbo);
+                         int64_t convert_to_nbo);
 
 /* ======================================================= ACCESS FUNCTIONS */
 

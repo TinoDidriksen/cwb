@@ -43,7 +43,7 @@
  */
 /* #else /\* not __svr4__ *\/ */
 /* #define memmove(dest,src,bytes) bcopy((char *)src, (char *)dest, (size_t) bytes) */
-/* #extern void bcopy(char *b1, char *b2, int length); */
+/* #extern void bcopy(char *b1, char *b2, int64_t length); */
 /* #endif /\* ifdef __svr4__ *\/ */
 
 
@@ -63,14 +63,14 @@
  *  (void) binsert_g(&nr,
  *                   (void **)&Table,
  *                   &Nr_Elements,
- *                   sizeof(int),
+ *                   sizeof(int64_t),
  *                   intcompare);
  *
  * @param key     Pointer to the element to add
  * @param base    Location of pointer to the table
  * @param nel     Number of elements (will be incremented by this function)
  * @param size    The size of each element in the table.
- * @param compar  Comparison function (returns int, takes two pointers as arguments)
+ * @param compar  Comparison function (returns int64_t, takes two pointers as arguments)
  * @return        Address of the (new) element
  */
 void *
@@ -78,11 +78,8 @@ binsert_g(const void *key,
           void **base,
           size_t *nel,
           size_t size,
-          int (*compar)(const  void  *,  const  void *))
+          int64_t (*compar)(const  void  *,  const  void *))
 {
-  int low, high, found, mid, comp;
-  
-
   if (*base == NULL) {
 
     *base = (void *)cl_malloc(size * REALLOC_THRESHOLD);
@@ -95,11 +92,11 @@ binsert_g(const void *key,
   }
   else {
 
-    low = 0;
-    high = *nel - 1;
-    found = 0;
-    mid = 0;
-    comp = 0;
+    size_t low = 0;
+    size_t high = *nel - 1;
+    size_t found = 0;
+    size_t mid = 0;
+    size_t comp = 0;
     
     while (low <= high && !found) {
       
@@ -119,7 +116,7 @@ binsert_g(const void *key,
       return (char*)(*base) + (mid * size); /* address of element */
     else {
       
-      int ins_pos;
+      size_t ins_pos;
 
       if (comp < 0)
         ins_pos = mid + 1;

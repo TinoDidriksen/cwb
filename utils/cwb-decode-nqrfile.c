@@ -31,6 +31,10 @@
 #include <fcntl.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
+#include <stdbool.h>
+
+#include "../cl/globals.h"
 
 /** magic number of the subcorpus file format; defined in the CQP code, corpmanag.c ;
  * TODO should probably be defined centrally (cl/globals.h?) */
@@ -43,7 +47,7 @@
  * @param fd  File handle.
  * @return    The size of the file, from stat().
  */
-int
+int64_t
 file_length(FILE *fd)
 {
   struct stat stat_buf;
@@ -70,22 +74,22 @@ file_length(FILE *fd)
  *                      in the subcorpus file gets printed or not
  * @return              Boolean: true for all OK, false for problem.
  */
-int
-nqrfile_print_info(FILE *fd, int print_header)
+bool
+nqrfile_print_info(FILE *fd, bool print_header)
 {
   char        *field;
   char        *p;
 
   struct range_t {
-    int start;
-    int end;
+    int64_t start;
+    int64_t end;
   };
   struct range_t *range;
 
   char *registry, *o_name;
-  int size;
+  int64_t size;
 
-  int len, j;
+  int64_t len, j;
 
   len = file_length(fd);
 
@@ -104,13 +108,13 @@ nqrfile_print_info(FILE *fd, int print_header)
       fprintf(stderr, "Read error while reading in data from subcorpus file\n");
       return 0;
     }
-    else if (*((int *)field) == SUBCORPMAGIC || *((int *)field) == SUBCORPMAGIC+1) {
+    else if (*((int64_t*)field) == SUBCORPMAGIC || *((int64_t*)field) == SUBCORPMAGIC+1) {
       
-      int magic;
+      int64_t magic;
 
-      magic = *((int *)field);
+      magic = *((int64_t*)field);
 
-      p = ((char *)field) + sizeof(int);
+      p = ((char *)field) + sizeof(int64_t);
       
       registry = (char *)p;
       
@@ -133,24 +137,24 @@ nqrfile_print_info(FILE *fd, int print_header)
         p++;
 
       if (magic == SUBCORPMAGIC) {
-        size = (len - (p - field)) / (2 * sizeof(int));
+        size = (len - (p - field)) / (2 * sizeof(int64_t));
       }
       else {
-        memcpy(&size, p, sizeof(int));
-        p += sizeof(int);
+        memcpy(&size, p, sizeof(int64_t));
+        p += sizeof(int64_t);
         fprintf(stderr, "Note: new subcorpus format\n");
       }
 
       if (print_header) {
         printf("REGISTRY %s\n", registry);
         printf("O_NAME   %s\n", o_name);
-        printf("SIZE     %d\n", size);
+        printf("SIZE     %" PRId64 "\n", size);
       }
 
       range = (struct range_t *) p;
 
       for (j = 0; j < size; j++)
-        printf("%d\t%d\n",
+        printf("%" PRId64 "\t%" PRId64 "\n",
                range[j].start, range[j].end);
     }
     else {
@@ -180,9 +184,9 @@ nqrfile_print_info(FILE *fd, int print_header)
 int
 main(int argc, char **argv)
 {
-  int i;
+  int64_t i;
   FILE *fd;
-  int header_required = 1;
+  int64_t header_required = 1;
 
   for (i = 1; i < argc; i++) {
     /* TODO would be useful to change this to +/-H (in v4.0), so that -h is "available" for

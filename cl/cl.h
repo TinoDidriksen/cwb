@@ -126,6 +126,9 @@
 
 #include <stdlib.h>                 /* for size_t */
 #include <stdio.h>                  /* for FILE * */
+#include <stdint.h>
+#include <stdbool.h>
+#include <inttypes.h>
 
 #ifdef _MSC_VER
 #include <msvc.h>
@@ -143,6 +146,17 @@
   #else
     #define LIBCQPCL_API
   #endif
+
+  #if defined(__linux__)
+    #include <endian.h>
+  #elif defined(__FreeBSD__) || defined(__NetBSD__)
+    #include <sys/endian.h>
+  #elif defined(__OpenBSD__)
+    #include <sys/types.h>
+    #define be64toh(x) betoh64(x)
+  #endif
+#define ntohll(x) be64toh(x)
+#define htonll(x) htobe64(x)
 #endif
 
 /*
@@ -182,14 +196,14 @@
 #define CDA_EINTERNAL   -19       /**< Error code: internal data consistency error (really bad) */
 #define CDA_EACCESS     -20       /**< Error code: insufficient access permissions */
 #define CDA_EPOSIX      -21       /**< Error code: POSIX-level error: check errno or perror() */
-#define CDA_CPOSUNDEF   INT_MIN   /**< Error code: undefined corpus position (use this code to avoid ambiguity with negative cpos) */
+#define CDA_CPOSUNDEF   INT64_MIN   /**< Error code: undefined corpus position (use this code to avoid ambiguity with negative cpos) */
 
 /* a global variable which will always be set to one of the above constants! */
-extern LIBCQPCL_API int cl_errno;
+extern LIBCQPCL_API int64_t cl_errno;
 
 /* error handling functions */
 void cl_error(char *message);
-char *cl_error_string(int error_num);
+char *cl_error_string(int64_t error_num);
 
 
 
@@ -233,13 +247,13 @@ char *cl_strdup(const char *string);
  */
 typedef struct _cl_int_list    *cl_int_list;
 /* the cl_int_list object API ...*/
-cl_int_list cl_new_int_list(void);                           /* create int list object */
-void cl_delete_int_list(cl_int_list l);                      /* delete int list object */
-void cl_int_list_lumpsize(cl_int_list l, int s);             /* memory for the list is allocated in "lumps", default size is 64 entries */
-int cl_int_list_size(cl_int_list l);                         /* current size of list */
-int cl_int_list_get(cl_int_list l, int n);                   /* get value of n-th element in list (0 if out of range) */
-void cl_int_list_set(cl_int_list l, int n, int val);         /* set n-th element (automatically extends list) */
-void cl_int_list_append(cl_int_list l, int val);             /* append element to list */
+cl_int_list cl_new_int_list(void);                           /* create int64_t list object */
+void cl_delete_int_list(cl_int_list l);                      /* delete int64_t list object */
+void cl_int_list_lumpsize(cl_int_list l, int64_t s);             /* memory for the list is allocated in "lumps", default size is 64 entries */
+int64_t cl_int_list_size(cl_int_list l);                         /* current size of list */
+int64_t cl_int_list_get(cl_int_list l, int64_t n);                   /* get value of n-th element in list (0 if out of range) */
+void cl_int_list_set(cl_int_list l, int64_t n, int64_t val);         /* set n-th element (automatically extends list) */
+void cl_int_list_append(cl_int_list l, int64_t val);             /* append element to list */
 void cl_int_list_qsort(cl_int_list l);                       /* sort list (ascending order) */
 
 /**
@@ -250,10 +264,10 @@ typedef struct _cl_string_list *cl_string_list;
 cl_string_list cl_new_string_list(void);                     /* create string list object */
 void cl_delete_string_list(cl_string_list l);                /* delete string list object */
 void cl_free_string_list(cl_string_list l);                  /* free() all strings in list (use with care!) */
-void cl_string_list_lumpsize(cl_string_list l, int s);       /* memory for the list is allocated in "lumps", default size is 64 entries */
-int cl_string_list_size(cl_string_list l);                   /* current size of list */
-char *cl_string_list_get(cl_string_list l, int n);           /* get value of n-th element in list (NULL if out of range) */
-void cl_string_list_set(cl_string_list l, int n, char *val); /* set n-th element (does NOT make copy of string!) */
+void cl_string_list_lumpsize(cl_string_list l, int64_t s);       /* memory for the list is allocated in "lumps", default size is 64 entries */
+int64_t cl_string_list_size(cl_string_list l);                   /* current size of list */
+char *cl_string_list_get(cl_string_list l, int64_t n);           /* get value of n-th element in list (NULL if out of range) */
+void cl_string_list_set(cl_string_list l, int64_t n, char *val); /* set n-th element (does NOT make copy of string!) */
 void cl_string_list_append(cl_string_list l, char *val);     /* append element to list */
 void cl_string_list_qsort(cl_string_list l);                 /* sort list (using cl_strcmp()) */
 
@@ -266,11 +280,10 @@ void cl_string_list_qsort(cl_string_list l);                 /* sort list (using
  */
 
 /* built-in random number generator (RNG) */
-void cl_set_seed(unsigned int seed);
+void cl_set_seed(int64_t seed);
 void cl_randomize(void);
-void cl_get_rng_state(unsigned int *i1, unsigned int *i2);
-void cl_set_rng_state(unsigned int i1, unsigned int i2);
-unsigned int cl_random(void);
+void cl_set_rng_state(int64_t i1, int64_t i2);
+int64_t cl_random(void);
 double cl_runif(void);
 
 
@@ -285,9 +298,9 @@ double cl_runif(void);
 /*
  *  Functions for setting global CL configuration options
  */
-void cl_set_debug_level(int level);       /* 0 = none (default), 1 = some, 2 = all */
-void cl_set_optimize(int state);          /* 0 = off, 1 = on */
-void cl_set_memory_limit(int megabytes);  /* 0 or less turns limit off */
+void cl_set_debug_level(int64_t level);       /* 0 = none (default), 1 = some, 2 = all */
+void cl_set_optimize(int64_t state);          /* 0 = off, 1 = on */
+void cl_set_memory_limit(int64_t megabytes);  /* 0 or less turns limit off */
 
 
 
@@ -305,16 +318,9 @@ void cl_set_memory_limit(int megabytes);  /* 0 or less turns limit off */
 /**
  * Maximum size of a CWB corpus.
  *
- * This is the upper limit on the size of a CWB corpus on 64-bit platforms;
- * for 32-bit versions of CWB, much tighter limits apply.
- * cwb-encode will abort once this limit has been reaching, discarding any
- * further input data. The precise value of the limit is 2^32 - 1 tokens,
- * i.e. hex 0x7FFFFFFF and decimal 2147483647.
- * Note that the largest valid cpos 2^32 - 1 would allow a theoretical corpus
- * size of 2^32 tokens. But in some places, the corpus size itself is stored
- * in a signed 32-bit integer variable, hence the lower limit.
+ * This is the upper limit on the size of a CWB corpus.
  */
-#define CL_MAX_CORPUS_SIZE 2147483647
+#define CL_MAX_CORPUS_SIZE INT64_MAX
 
 /**
  * General string buffer size constant.
@@ -378,7 +384,7 @@ size_t cl_autostring_len(ClAutoString string);
 void cl_autostring_reclaim_mem(ClAutoString string);
 void cl_autostring_copy(ClAutoString dst, const char *src);
 void cl_autostring_concat(ClAutoString dst, const char *src);
-void cl_autostring_truncate(ClAutoString string, int new_length);
+void cl_autostring_truncate(ClAutoString string, int64_t new_length);
 void cl_autostring_dump(ClAutoString string);
 
 
@@ -434,7 +440,7 @@ void cl_autostring_dump(ClAutoString string);
  * It is reset to False whenever a stream is opened or closed, so it is safe to check while writing to a plain file stream.
  * If multiple pipes are active, there is no way to indicate which one caused the SIGPIPE.
  */
-extern LIBCQPCL_API int cl_broken_pipe;
+extern LIBCQPCL_API int64_t cl_broken_pipe;
 
 /**
  * Open stream of specified (or guessed) type for reading or writing
@@ -447,7 +453,7 @@ extern LIBCQPCL_API int cl_broken_pipe;
  *
  * @return          Standard C stream, or NULL on error (with details from <cl_errno> or cl_error())
  */
-FILE *cl_open_stream(const char *filename, int mode, int type);
+FILE *cl_open_stream(const char *filename, int64_t mode, int64_t type);
 
 /**
  * Close I/O stream
@@ -458,18 +464,18 @@ FILE *cl_open_stream(const char *filename, int mode, int type);
  *
  * @return          0 on success, otherwise the error code returned by fclose() or pclose(); <cl_errno> is set accordingly
  */
-int cl_close_stream(FILE *stream);
+int64_t cl_close_stream(FILE *stream);
 
 
 /* CL-specific version of strcpy. Don't use unless you know what you're doing. */
 char *cl_strcpy(char *buf, const char *src);
 
-int cl_strcmp(char *s1, char *s2);
+int64_t cl_strcmp(char *s1, char *s2);
 
-char *cl_string_latex2iso(char *str, char *result, int target_len);
+char *cl_string_latex2iso(char *str, char *result, size_t target_len);
 /* <result> points to buffer of appropriate size; auto-allocated if NULL;
    str == result is explicitly allowed; conveniently returns <result> */
-extern int cl_allow_latex2iso; /* cl_string_latex2iso will only change a string if this is true, it is false by default*/
+extern int64_t cl_allow_latex2iso; /* cl_string_latex2iso will only change a string if this is true, it is false by default*/
 
 char *cl_xml_entity_decode(char *s); /* removes the four default XML entities from the string, in situ */
 /**
@@ -481,14 +487,14 @@ char *cl_xml_entity_decode(char *s); /* removes the four default XML entities fr
  * is almost certainly too lax.
  *
  * @param c  Character to check. (It is expected to be a char,
- *           so is typecast to unsigned char for comparison with
+ *           so is typecast to uint8_t for comparison with
  *           upper-128 hex values.)
  */
 #define cl_xml_is_name_char(c)  ( ( c >= 'A'  && c <= 'Z')  ||       \
                                   ( c >= 'a'  && c <= 'z')  ||       \
                                   ( c >= '0'  && c <= '9')  ||       \
-                                  (    (unsigned char) c >= 0x80     \
-                                  /* && (unsigned char) c <= 0xff */ \
+                                  (    (uint8_t) c >= 0x80     \
+                                  /* && (uint8_t) c <= 0xff */ \
                                   ) ||                               \
                                   ( c == '-') ||                     \
                                   ( c == '_')                        \
@@ -505,17 +511,17 @@ char *cl_path_registry_quote(char *path); /* adds registry-format quotes and sla
 char *cl_path_get_component(char *s); /* tokeniser for string containing many paths separated by : or ; */
 
 /* validate and manipulate strings that are (sub)corpus identifiers */
-int cl_id_validate(char *s);
+int64_t cl_id_validate(char *s);
 void cl_id_toupper(char *s);
 void cl_id_tolower(char *s);
 
 /* built-in support for handling feature set attributes */
-char *cl_make_set(char *s, int split);
-int cl_set_size(char *s);
-int cl_set_intersection(char *result, const char *s1, const char *s2);
+char *cl_make_set(char *s, int64_t split);
+int64_t cl_set_size(char *s);
+int64_t cl_set_intersection(char *result, const char *s1, const char *s2);
 
 /* safely add offset to corpus position (either clamped to corpus, or returns CDA_EPOSORNG if outside) */
-int cl_cpos_offset(int cpos, int offset, int corpus_size, int clamp);
+int64_t cl_cpos_offset(int64_t cpos, int64_t offset, int64_t corpus_size, int64_t clamp);
 
 
 
@@ -541,9 +547,9 @@ typedef struct TCorpus Corpus;
 
 /* corpus access functions */
 Corpus *cl_new_corpus(char *registry_dir, char *registry_name);
-int cl_delete_corpus(Corpus *corpus);
+int64_t cl_delete_corpus(Corpus *corpus);
 char *cl_standard_registry();
-cl_string_list cl_corpus_list_attributes(Corpus *corpus, int attribute_type);
+cl_string_list cl_corpus_list_attributes(Corpus *corpus, int64_t attribute_type);
 
 
 
@@ -554,8 +560,8 @@ cl_string_list cl_corpus_list_attributes(Corpus *corpus, int attribute_type);
  *
  */
 
-/* TODO ... wouldn't it be nice if the Attribute methods returned int/string list objects instead of
- * char ** and int *?  But that would involve re-engineering EVERYTHING.  */
+/* TODO ... wouldn't it be nice if the Attribute methods returned int64_t/string list objects instead of
+ * char ** and int64_t *?  But that would involve re-engineering EVERYTHING.  */
 /**
  * The Attribute object: an entire segment of a corpus, such as an
  * annotation field, an XML structure, or a set
@@ -620,28 +626,28 @@ typedef union _Attribute Attribute;
 /* depracated */
 Attribute *cl_new_attribute_oldstyle(Corpus *corpus,
                                      char *attribute_name,
-                                     int type,
+                                     int64_t type,
                                      char *data);        /* *** UNUSED *** */
-int cl_delete_attribute(Attribute *attribute);
-int cl_sequence_compressed(Attribute *attribute);
-int cl_index_compressed(Attribute *attribute);
+int64_t cl_delete_attribute(Attribute *attribute);
+bool cl_sequence_compressed(Attribute *attribute);
+bool cl_index_compressed(Attribute *attribute);
 
 /* get the Corpus object of which the Attribute is a daughter */
 Corpus *cl_attribute_mother_corpus(Attribute *attribute);
 
 /* attribute access functions: lexicon access (positional attributes) */
-char *cl_id2str(Attribute *attribute, int id);
-int cl_str2id(Attribute *attribute, char *id_string);
-int cl_id2strlen(Attribute *attribute, int id);
-int cl_sort2id(Attribute *attribute, int sort_index_position);
-int cl_id2sort(Attribute *attribute, int id);
+char *cl_id2str(Attribute *attribute, int64_t id);
+int64_t cl_str2id(Attribute *attribute, char *id_string);
+int64_t cl_id2strlen(Attribute *attribute, int64_t id);
+int64_t cl_sort2id(Attribute *attribute, int64_t sort_index_position);
+int64_t cl_id2sort(Attribute *attribute, int64_t id);
 
 /* attribute access functions: size (positional attributes) */
-int cl_max_cpos(Attribute *attribute);
-int cl_max_id(Attribute *attribute);
+int64_t cl_max_cpos(Attribute *attribute);
+int64_t cl_max_id(Attribute *attribute);
 
 /* attribute access functions: token sequence & index (positional attributes) */
-int cl_id2freq(Attribute *attribute, int id);
+int64_t cl_id2freq(Attribute *attribute, int64_t id);
 
 /**
  * Gets all the corpus positions where the specified item is found on the given P-attribute.
@@ -654,26 +660,26 @@ int cl_id2freq(Attribute *attribute, int id);
 #define cl_id2cpos(a, id, freq) cl_id2cpos_oldstyle(a, id, freq, NULL, 0)
 
 /* depracated */
-int *cl_id2cpos_oldstyle(Attribute *attribute,
-                         int id,
-                         int *freq,
-                         int *restrictor_list,
-                         int restrictor_list_size);
-int cl_cpos2id(Attribute *attribute, int position);
-char *cl_cpos2str(Attribute *attribute, int position);
+int64_t *cl_id2cpos_oldstyle(Attribute *attribute,
+                         int64_t id,
+                         int64_t *freq,
+                         int64_t *restrictor_list,
+                         int64_t restrictor_list_size);
+int64_t cl_cpos2id(Attribute *attribute, int64_t position);
+char *cl_cpos2str(Attribute *attribute, int64_t position);
 
 /* ========== some high-level constructs */
 
-char *cl_id2all(Attribute *attribute, int index, int *freq, int *slen);
+char *cl_id2all(Attribute *attribute, int64_t index, int64_t *freq, int64_t *slen);
 
-int *cl_regex2id(Attribute *attribute,
+int64_t *cl_regex2id(Attribute *attribute,
                  char *pattern,
-                 int flags,
-                 int *number_of_matches);
+                 int64_t flags,
+                 int64_t *number_of_matches);
 
-int cl_idlist2freq(Attribute *attribute,
-                   int *ids,
-                   int number_of_ids);
+int64_t cl_idlist2freq(Attribute *attribute,
+                   int64_t *ids,
+                   int64_t number_of_ids);
 
 /**
  * Gets a list of corpus positions matching a list of ids.
@@ -687,60 +693,52 @@ int cl_idlist2freq(Attribute *attribute,
 #define cl_idlist2cpos(a, idlist, idlist_size, sort, size) cl_idlist2cpos_oldstyle(a, idlist, idlist_size, sort, size, NULL, 0)
 
 /* depracated */
-int *cl_idlist2cpos_oldstyle(Attribute *attribute,
-                             int *ids,
-                             int number_of_ids,
-                             int sort,
-                             int *size_of_table,
-                             int *restrictor_list,
-                             int restrictor_list_size);
+int64_t *cl_idlist2cpos_oldstyle(Attribute *attribute,
+                             int64_t *ids,
+                             int64_t number_of_ids,
+                             bool sort,
+                             int64_t *size_of_table,
+                             int64_t *restrictor_list,
+                             int64_t restrictor_list_size);
 
 /* attribute access functions: structural attributes */
 /* note that "struc", in these function names, abbreviates "number identifiying
  * one structure instance on this s-attribute" */
 
-int cl_cpos2struc2cpos(Attribute *attribute,
-                       int position,
-                       int *struc_start,
-                       int *struc_end);
-int cl_cpos2struc(Attribute *a, int cpos);
+int64_t cl_cpos2struc2cpos(Attribute *attribute,
+                       int64_t position,
+                       int64_t *struc_start,
+                       int64_t *struc_end);
+int64_t cl_cpos2struc(Attribute *a, int64_t cpos);
 
 /* depracated */
-int cl_cpos2struc_oldstyle(Attribute *attribute,
-                           int position,
-                           int *struc_num);
+int64_t cl_cpos2struc_oldstyle(Attribute *attribute,
+                           int64_t position,
+                           int64_t *struc_num);
 
 /* flags set in return values of cl_cpos2boundary() function */
 #define STRUC_INSIDE 1  /**< cl_cpos2boundary() return flag: specified position is WITHIN a region of this s-attribute */
 #define STRUC_LBOUND 2  /**< cl_cpos2boundary() return flag: specified position is AT THE START BOUNDARY OF a region of this s-attribute */
 #define STRUC_RBOUND 4  /**< cl_cpos2boundary() return flag: specified position is AT THE END BOUNDARY OF a region of this s-attribute */
-int cl_cpos2boundary(Attribute *a, int cpos);  /* convenience function: within region or at boundary? */
+int64_t cl_cpos2boundary(Attribute *a, int64_t cpos);  /* convenience function: within region or at boundary? */
 
-int cl_struc2cpos(Attribute *attribute,
-                  int struc_num,
-                  int *struc_start,
-                  int *struc_end);
-int cl_max_struc(Attribute *a);
-int cl_max_struc_oldstyle(Attribute *attribute, int *nr_strucs);         /* depracated */
-int cl_struc_values(Attribute *attribute);
-char *cl_struc2str(Attribute *attribute, int struc_num);
-char *cl_cpos2struc2str(Attribute *attribute, int position);
+int64_t cl_struc2cpos(Attribute *attribute,
+                  int64_t struc_num,
+                  int64_t *struc_start,
+                  int64_t *struc_end);
+int64_t cl_max_struc(Attribute *a);
+int64_t cl_max_struc_oldstyle(Attribute *attribute, int64_t *nr_strucs);         /* depracated */
+bool cl_struc_values(Attribute *attribute);
+char *cl_struc2str(Attribute *attribute, int64_t struc_num);
+char *cl_cpos2struc2str(Attribute *attribute, int64_t position);
 
 /* attribute access functions: extended alignment attributes (with fallback to old alignment) */
-int cl_has_extended_alignment(Attribute *attribute);
-int cl_max_alg(Attribute *attribute);
-int cl_cpos2alg(Attribute *attribute, int cpos);
-int cl_alg2cpos(Attribute *attribute, int alg,
-                int *source_region_start, int *source_region_end,
-                int *target_region_start, int *target_region_end);
-
-/* attribute access functions: alignment attributes (old style) -- DEPRACATED */
-int cl_cpos2alg2cpos_oldstyle(Attribute *attribute,
-                              int position,
-                              int *aligned_start,
-                              int *aligned_end,
-                              int *aligned_start2,
-                              int *aligned_end2);
+bool cl_has_extended_alignment(Attribute *attribute);
+int64_t cl_max_alg(Attribute *attribute);
+int64_t cl_cpos2alg(Attribute *attribute, int64_t cpos);
+bool cl_alg2cpos(Attribute *attribute, int64_t alg,
+                int64_t *source_region_start, int64_t *source_region_end,
+                int64_t *target_region_start, int64_t *target_region_end);
 
 /* attribute access functions: dynamic attributes (N/A)
  *
@@ -760,16 +758,16 @@ int cl_cpos2alg2cpos_oldstyle(Attribute *attribute,
  *  The DynCallResult object (needed to allocate space for dynamic function arguments)
  */
 typedef struct _DCR {
-  int type;              /**< Type of DynCallResult, indicated by one of the ATTAT_x macro constants*/
+  int64_t type;              /**< Type of DynCallResult, indicated by one of the ATTAT_x macro constants*/
   union {
-    int intres;
+    int64_t intres;
     char *charres;
     double floatres;
     struct {
       Attribute *attr;
-      int token_id;
+      int64_t token_id;
     } parefres;
-  } value;               /**< value of the result: can be int, string, float, or p-attribute reference */
+  } value;               /**< value of the result: can be int64_t, string, float, or p-attribute reference */
   /**
    * buffer for dynamic strings returned by function calls
    * NB: this imposes a hard limit on the size of dynamic strings !!
@@ -790,14 +788,14 @@ typedef struct _DCR {
 
 /* and now the functions:
  *
- * ...: parameters (of *int or *char) and structure
- * which gets the result (*int or *char)
+ * ...: parameters (of *int64_t or *char) and structure
+ * which gets the result (*int64_t or *char)
  */
-int cl_dynamic_call(Attribute *attribute,
+bool cl_dynamic_call(Attribute *attribute,
                     DynCallResult *dcr,
                     DynCallResult *args,
-                    int nr_args);
-int cl_dynamic_numargs(Attribute *attribute);
+                    int64_t nr_args);
+int64_t cl_dynamic_numargs(Attribute *attribute);
 
 
 
@@ -814,11 +812,11 @@ int cl_dynamic_numargs(Attribute *attribute);
 typedef struct _position_stream_rec_ *PositionStream;
 
 /* Functions for attribute access using a position stream */
-PositionStream cl_new_stream(Attribute *attribute, int id);
-int cl_delete_stream(PositionStream *ps);
-int cl_read_stream(PositionStream ps,
-                   int *buffer,
-                   int buffer_size);
+PositionStream cl_new_stream(Attribute *attribute, int64_t id);
+bool cl_delete_stream(PositionStream *ps);
+int64_t cl_read_stream(PositionStream ps,
+                   int64_t *buffer,
+                   int64_t buffer_size);
 
 
 
@@ -903,30 +901,30 @@ size_t cl_charset_strlen(CorpusCharset charset, char *s);
 /* the main functions for which CorpusCharset "matters" are the following... */
 
 /* the case/diacritic string normalization features used by CL regexes and CQP (modify input string, unless final arg < 1) */
-char *cl_string_canonical(char *s, CorpusCharset charset, int flags, int inplace_bufsize);
+char *cl_string_canonical(char *s, CorpusCharset charset, int64_t flags, int64_t inplace_bufsize);
 /* modifies string <s> in place if a buffersize given, otherwise returns a new string;
  * flags are IGNORE_CASE, IGNORE_DIAC, REQUIRE_NFC (i.e. same flags as for regex) */
 /** Convenience calling-constant that forces cl_string_canonical to return a newly-allocated buffer. @see cl_string_canonical */
 #define CL_STRING_CANONICAL_STRDUP -1
 
 /* remove or overwrite C0 control characters in a string (modify input string!) */
-int cl_string_zap_controls(char *s, CorpusCharset charset, char replace, int zap_tabs, int zap_newlines);
+int64_t cl_string_zap_controls(char *s, CorpusCharset charset, char replace, int64_t zap_tabs, int64_t zap_newlines);
 
 /* boolean function, is a given byte a UTF-8 continuation byte? */
-int cl_string_utf8_continuation_byte(unsigned char byte);
+int64_t cl_string_utf8_continuation_byte(uint8_t byte);
 
 /* boolean function, returns is string valid?; can repair (in-place edit) 8-bit encoding by replacing invalid chars with '?' */
-int cl_string_validate_encoding(char *s, CorpusCharset charset, int repair);
+int64_t cl_string_validate_encoding(char *s, CorpusCharset charset, int64_t repair);
 
 /* reverse string (for reverse sorting) */
 char *cl_string_reverse(const char *s, CorpusCharset charset); /* creates a new string */
 
 /* string comparison suitable as qsort() callback */
-int cl_string_qsort_compare(const char *s1,
+int64_t cl_string_qsort_compare(const char *s1,
                             const char *s2,
                             CorpusCharset charset,
-                            int flags,
-                            int reverse);
+                            int64_t flags,
+                            int64_t reverse);
 
 /* remove any trailing LF (\n) and CR (\r) characters from string (modified in-place, similar to Perl's chomp operator); */
 /* the main purpose of this function is to help CWB read text files in Windows (CR-LF) format correctly; */
@@ -989,15 +987,15 @@ typedef struct _CL_Regex *CL_Regex;
 
 
 /* ... and the regex API ... */
-CL_Regex cl_new_regex(char *regex, int flags, CorpusCharset charset);
-int cl_regex_optimised(CL_Regex rx); /* 0 = not optimised; otherwise, value indicates level of optimisation */
-int cl_regex_match(CL_Regex rx, char *str, int normalize_utf8);
+CL_Regex cl_new_regex(char *regex, int64_t flags, CorpusCharset charset);
+int64_t cl_regex_optimised(CL_Regex rx); /* 0 = not optimised; otherwise, value indicates level of optimisation */
+bool cl_regex_match(CL_Regex rx, char *str, bool normalize_utf8);
 void cl_delete_regex(CL_Regex rx);
 extern char cl_regex_error[];
 
 /* two functions interface the optimiser system's reporting capabilities */
 void cl_regopt_count_reset(void);
-int cl_regopt_count_get(void);
+int64_t cl_regopt_count_get(void);
 
 
 
@@ -1012,7 +1010,7 @@ int cl_regopt_count_get(void);
  *  The cl_lexhash class (lexicon hashes, with IDs and frequency counts).
  *
  *  A "lexicon hash" links strings to integers. Each cl_lexhash object
- *  represents an entire table of such things; individual string-to-int
+ *  represents an entire table of such things; individual string-to-int64_t
  *  links are represented by cl_lexhash_entry objects.
  *
  *  Within the cl_lexhash, the entries are grouped into buckets. A
@@ -1052,8 +1050,8 @@ typedef struct _cl_lexhash_entry {
    * ensure proper alignment without any padding.
    */
   struct _cl_lexhash_entry *next;   /**< next entry on the linked-list (ie in the bucket) */
-  unsigned int freq;                /**< frequency of this type */
-  int id;                           /**< the id code of this type */
+  int64_t freq;                    /**< frequency of this type */
+  int64_t id;                      /**< the id code of this type */
   /**
    * This entry's data fields, i.e. its payload.
    * Use as entry->data.integer, entry->data.numeric, ...
@@ -1065,7 +1063,7 @@ typedef struct _cl_lexhash_entry {
   struct _cl_lexhash_entry_data {
     void *pointer;
     double numeric;
-    int integer;
+    int64_t integer;
   } data;
   char key[1];                       /**< hash key == type (embedded in struct) */
 } *cl_lexhash_entry;
@@ -1073,17 +1071,17 @@ typedef struct _cl_lexhash_entry {
 /*
  * ... and ... its API!!
  */
-cl_lexhash cl_new_lexhash(int buckets);
+cl_lexhash cl_new_lexhash(int64_t buckets);
 void cl_delete_lexhash(cl_lexhash lh);
 void cl_lexhash_set_cleanup_function(cl_lexhash lh, void (*func)(cl_lexhash_entry));
-void cl_lexhash_auto_grow(cl_lexhash lh, int flag);
+void cl_lexhash_auto_grow(cl_lexhash lh, int64_t flag);
 void cl_lexhash_auto_grow_fillrate(cl_lexhash lh, double limit, double target);
 cl_lexhash_entry cl_lexhash_add(cl_lexhash lh, char *token);
 cl_lexhash_entry cl_lexhash_find(cl_lexhash lh, char *token);
-int cl_lexhash_id(cl_lexhash lh, char *token);
-int cl_lexhash_freq(cl_lexhash lh, char *token);
-int cl_lexhash_del(cl_lexhash lh, char *token);
-int cl_lexhash_size(cl_lexhash lh);
+int64_t cl_lexhash_id(cl_lexhash lh, char *token);
+int64_t cl_lexhash_freq(cl_lexhash lh, char *token);
+int64_t cl_lexhash_del(cl_lexhash lh, char *token);
+int64_t cl_lexhash_size(cl_lexhash lh);
 
 /*
  * Simple iterator for the entries of a lexhash. There is only a single
@@ -1120,7 +1118,7 @@ cl_lexhash_entry cl_lexhash_iterator_next(cl_lexhash hash);
  *  The sole purpose of the implementation is to enable fast and
  *  memory-efficient frequency counts for very large sets of n-grams.
  *
- *  WARNING: cl_ngram_hash objects cannot store more than 2^32 - 1
+ *  WARNING: cl_ngram_hash objects cannot store more than 2^64 - 1
  *  entries. Bad things will happen if you try to do so!
  *
  */
@@ -1139,28 +1137,28 @@ typedef struct _cl_ngram_hash *cl_ngram_hash;
  */
 typedef struct _cl_ngram_hash_entry {
   struct _cl_ngram_hash_entry *next; /**< next entry on the linked-list (i.e. in the bucket) */
-  unsigned int freq;                 /**< frequency of this type */
-  int ngram[1];                      /**< ngram data embedded in struct */
+  int64_t freq;                      /**< frequency of this type */
+  int64_t ngram[1];                  /**< ngram data embedded in struct */
 } *cl_ngram_hash_entry;
 
 /*
  * ... and its API ...
  */
-cl_ngram_hash cl_new_ngram_hash(int N, int buckets);
+cl_ngram_hash cl_new_ngram_hash(int64_t N, int64_t buckets);
 void cl_delete_ngram_hash(cl_ngram_hash hash);
-void cl_ngram_hash_auto_grow(cl_ngram_hash hash, int flag);
+void cl_ngram_hash_auto_grow(cl_ngram_hash hash, bool flag);
 void cl_ngram_hash_auto_grow_fillrate(cl_ngram_hash hash, double limit, double target);
-cl_ngram_hash_entry cl_ngram_hash_add(cl_ngram_hash hash, int *ngram, unsigned int f);
-cl_ngram_hash_entry cl_ngram_hash_find(cl_ngram_hash hash, int *ngram);
-int cl_ngram_hash_del(cl_ngram_hash hash, int *ngram);
-int cl_ngram_hash_freq(cl_ngram_hash hash, int *ngram);
-int cl_ngram_hash_size(cl_ngram_hash hash);
+cl_ngram_hash_entry cl_ngram_hash_add(cl_ngram_hash hash, int64_t *ngram, uint64_t f);
+cl_ngram_hash_entry cl_ngram_hash_find(cl_ngram_hash hash, int64_t *ngram);
+int64_t cl_ngram_hash_del(cl_ngram_hash hash, int64_t *ngram);
+int64_t cl_ngram_hash_freq(cl_ngram_hash hash, int64_t *ngram);
+int64_t cl_ngram_hash_size(cl_ngram_hash hash);
 /**
  * Returns allocated vector of pointers to all entries of the n-gram hash.
  * Must be freed by the application and can be modified, e.g. for sorting.
  * Use cl_ngram_hash_size() to find out how many entries there are.
  */
-cl_ngram_hash_entry *cl_ngram_hash_get_entries(cl_ngram_hash hash, int *ret_size);
+cl_ngram_hash_entry *cl_ngram_hash_get_entries(cl_ngram_hash hash, int64_t *ret_size);
 /**
  * Simple iterator for the entries of an n-gram hash. There is only a single
  * iterator for each cl_ngram_hash object. The iterator is invalidated by all
@@ -1171,8 +1169,8 @@ cl_ngram_hash_entry cl_ngram_hash_iterator_next(cl_ngram_hash hash);
 /**
  * Statistics on bucket fill rates for debugging purposes
  */
-int *cl_ngram_hash_stats(cl_ngram_hash hash, int max_n);
-void cl_ngram_hash_print_stats(cl_ngram_hash hash, int max_n);
+int64_t *cl_ngram_hash_stats(cl_ngram_hash hash, int64_t max_n);
+void cl_ngram_hash_print_stats(cl_ngram_hash hash, int64_t max_n);
 
 
 /*
@@ -1206,7 +1204,6 @@ void cl_ngram_hash_print_stats(cl_ngram_hash hash, int max_n);
 #define cumulative_id_frequency(a, list, size) cl_idlist2freq(a, list, size)
 #define drop_corpus(c) cl_delete_corpus(c)
 #define find_attribute(c, name, type, data) cl_new_attribute_oldstyle(c, name, type, data)
-#define get_alg_attribute(a, p, start1, end1, start2, end2) cl_cpos2alg2cpos_oldstyle(a, p, start1, end1, start2, end2)
 #define get_attribute_size(a) cl_max_cpos(a)
 #define get_bounds_of_nth_struc(a, struc, start, end) cl_struc2cpos(a, struc, start, end)
 #define get_id_at_position(a, cpos) cl_cpos2id(a, cpos)
@@ -1233,65 +1230,5 @@ void cl_ngram_hash_print_stats(cl_ngram_hash hash, int max_n);
 
 /* formerly a CQP function, now in CL */
 #define get_path_component cl_path_get_component
-
-/*
- * Some "old" functions have gone altogether; they are not just depracated, but vanished!
- *
- * (So some compatibility with the pre-3.2.0 CL has been broken in a minor way. If you
- * REALLY need these functions, you can get them back by #including other headers from
- * the CL module - but as these are now "private methods" they are not guaranteed to
- * stay the same, or even to exist at all, in future revisions of the CL.)
- *
- *    cl_string_maptable()
- *
- * This is because it didn't make sense for v3.2.0 or higher, where UTF8 strings are not
- * only possible but likely and we need to be a bit more sophisticated all around about
- * how we deal with inter-character mappings.
- *
- *    describe_corpus()
- *
- * This was not really "at home" in a low-level API; it's been hidden away, and may later
- * move out of the CL altogether and into the CWB utilities, where it fits better.
- *
- *    find_corpus()
- *
- * This should never have been a public function in the first place - it's an internal
- * function called by cl_new_corpus().
- *
- */
-
-/* new style function names implemented as macros mapping to the old names : retained as a record of how it was done pre-v3.2.0
-
-#define cl_new_corpus(reg, name) setup_corpus(reg, name)
-#define cl_delete_corpus(c) drop_corpus(c)
-#define cl_standard_registry() central_corpus_directory()
-#define cl_new_attribute(c, name, type) find_attribute(c, name, type, NULL)
-#define cl_delete_attribute(a) attr_drop_attribute(a)
-#define cl_sequence_compressed(a) item_sequence_is_compressed(a)
-#define cl_index_compressed(a) inverted_file_is_compressed(a)
-#define cl_new_stream(a, id) OpenPositionStream(a, id)
-#define cl_delete_stream(ps) ClosePositionStream(ps)
-#define cl_read_stream(ps, buf, size) ReadPositionStream(ps, buf, size)
-#define cl_id2str(a, id) get_string_of_id(a, id)
-#define cl_str2id(a, str) get_id_of_string(a, str)
-#define cl_id2strlen(a, id) get_id_string_len(a, id)
-#define cl_sort2id(a, sid) get_id_from_sortidx(a, sid)
-#define cl_id2sort(a, id) get_sortidxpos_of_id(a, id)
-#define cl_max_cpos(a) get_attribute_size(a)
-#define cl_max_id(a) get_id_range(a)
-#define cl_id2freq(a, id) get_id_frequency(a, id)
-#define cl_id2cpos(a, id, freq) get_positions(a, id, freq, NULL, 0)
-#define cl_cpos2id(a, cpos) get_id_at_position(a, cpos)
-#define cl_cpos2str(a, cpos) get_string_at_position(a, cpos)
-#define cl_id2all(a, sid, freq, len) get_id_info(a, sid, freq, len)
-#define cl_regex2id(a, re, flags, size) collect_matching_ids(a, re, flags, size)
-#define cl_idlist2freq(a, list, size) cumulative_id_frequency(a, list, size)
-#define cl_idlist2cpos(a, idlist, idlist_size, sort, size) collect_matches(a, idlist, idlist_size, sort, size, NULL, 0)
-#define cl_cpos2struc2cpos(a, cpos, start, end) get_struc_attribute(a, cpos, start, end)
-#define cl_struc2cpos(a, struc, start, end) get_bounds_of_nth_struc(a, struc, start, end)
-#define cl_struc_values(a) structure_has_values(a)
-#define cl_struc2str(a, struc) structure_value(a, struc)
-#define cl_cpos2struc2str(a, cpos) structure_value_at_position(a, cpos)
-*/
 
 #endif /* ifndef _cwb_cl_h_ */

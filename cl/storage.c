@@ -61,17 +61,17 @@
  * the program upon error (so the user of this function can assume
  * success), this is the same as
  *
- * fwrite(&val, sizeof(int), 1, fd) .
+ * fwrite(&val, sizeof(val), 1, fd) .
  *
  * @param val  The integer to write.
  * @param fd   File handle to write to.
  */
 void
-NwriteInt(int val, FILE *fd)
+NwriteInt(int64_t val, FILE *fd)
 {
-  int word;
-  word = htonl(val);
-  if (1 != fwrite(&word, sizeof(int), 1, fd)) {
+  int64_t word;
+  word = htonll(val);
+  if (1 != fwrite(&word, sizeof(word), 1, fd)) {
     perror("File write error");
     exit(1);
   }
@@ -81,20 +81,20 @@ NwriteInt(int val, FILE *fd)
  * Reads a 32-bit integer from file, converting from network byte order.
  *
  * This function does all the error checking for you, and will abort
- * the program if the int cannot be read.
+ * the program if the int64_t cannot be read.
  *
- * @param val  Location to put the resulting int.
+ * @param val  Location to put the resulting int64_t.
  * @param fd   File handle to read from
  */
 void
-NreadInt(int *val, FILE *fd)
+NreadInt(int64_t *val, FILE *fd)
 {
-  int word;
-  if (1 != fread(&word, sizeof(int), 1, fd)) {
+  int64_t word;
+  if (1 != fread(&word, sizeof(word), 1, fd)) {
     perror("File read error");
     exit(1);
   }
-  *val = ntohl(word);
+  *val = ntohll(word);
 }
 
 
@@ -102,21 +102,19 @@ NreadInt(int *val, FILE *fd)
  * Writes an array of 32-bit integers to file, converting to network byte order.
  *
  * Other than the byte order conversion, this is the same as
- * fwrite(vals, sizeof(int), nr_vals, fd) .
+ * fwrite(vals, sizeof(*vals), nr_vals, fd) .
  *
  * @param vals     Pointer to the location of the block of integers to write.
  * @param nr_vals  Number of integers to write.
  * @param fd       File handle to write to.
  */
 void
-NwriteInts(int *vals, int nr_vals, FILE *fd)
+NwriteInts(int64_t *vals, size_t nr_vals, FILE *fd)
 {
-  int word, k;
-
   /* I strongly believe in buffered IO (;-) */
-  for (k = 0; k < nr_vals; k++) {
-    word = htonl(vals[k]);
-    if (1 != fwrite(&word, sizeof(int), 1, fd)) {
+  for (size_t k = 0; k < nr_vals; k++) {
+    int64_t word = htonll(vals[k]);
+    if (1 != fwrite(&word, sizeof(word), 1, fd)) {
       perror("File write error");
       exit(1);
     }
@@ -135,17 +133,17 @@ NwriteInts(int *vals, int nr_vals, FILE *fd)
  * @param fd       File handle to read from
  */
 void
-NreadInts(int *vals, int nr_vals, FILE *fd)
+NreadInts(int64_t *vals, size_t nr_vals, FILE *fd)
 {
-  int word, k;
+  int64_t word;
 
   /* I strongly believe in buffered IO (;-) */
-  for (k = 0; k < nr_vals; k++) {
-    if (1 != fread(&word, sizeof(int), 1, fd)) {
+  for (size_t k = 0; k < nr_vals; k++) {
+    if (1 != fread(&word, sizeof(word), 1, fd)) {
       perror("File read error");
       exit(1);
     }
-    vals[k] = ntohl(word);
+    vals[k] = ntohll(word);
   }
 }
 
@@ -188,10 +186,10 @@ init_mblob(MemBlob *blob)
  * @param clear_blob  boolean: if true, all bytes in the data space will be initialised to 0
  * @return            boolean: true 1 if OK, false on error
  */
-int
-alloc_mblob(MemBlob *blob, int nr_items, int item_size, int clear_blob)
+int64_t
+alloc_mblob(MemBlob *blob, int64_t nr_items, int64_t item_size, int64_t clear_blob)
 {
-  int size;
+  int64_t size;
   
   assert( (blob != NULL)   &&  "CL MemBlob: alloc_mblob(): You can't pass a NULL blob!");
   assert( (item_size >= 0) &&  "CL MemBlob: alloc_mblob(): item_size must be >= 0!");
@@ -199,7 +197,7 @@ alloc_mblob(MemBlob *blob, int nr_items, int item_size, int clear_blob)
 
   blob->item_size = item_size;
   blob->nr_items = nr_items;
-  if (item_size == SIZE_BIT) {
+  if (item_size == 0) {
     size = nr_items / 8;
     if (size * 8 < nr_items) {
       size++;                        /* make room for 'extra' bits */
@@ -210,10 +208,10 @@ alloc_mblob(MemBlob *blob, int nr_items, int item_size, int clear_blob)
   }
   blob->size = size;
   if (clear_blob) {
-    blob->data = (int *) cl_calloc(size, 1);
+    blob->data = cl_calloc(size, 1);
   }
   else {
-    blob->data = (int *) cl_malloc(size);
+    blob->data = cl_malloc(size);
   }
   blob->allocation_method = MALLOCED;
   blob->writeable = 1;
@@ -234,7 +232,7 @@ alloc_mblob(MemBlob *blob, int nr_items, int item_size, int clear_blob)
 void 
 mfree(MemBlob *blob)
 {
-  unsigned int map_len;
+  size_t map_len;
 
   assert((blob != NULL) && "You can't pass a NULL blob to mfree");
 
@@ -284,8 +282,8 @@ void *
 mmapfile(char *filename, size_t *len_ptr, char *mode)
 {
   struct stat stat_buf;
-  int fd;
-  int binflag = 0; /* set to O_BINARY if we want to use the binary flag with open() */
+  int64_t fd;
+  int64_t binflag = 0; /* set to O_BINARY if we want to use the binary flag with open() */
   void *space;
   size_t map_len; /* should probably be off_t (for file sizes) rather than size_t (for size of objects), according to SUS */
 
@@ -331,8 +329,8 @@ mmapfile(char *filename, size_t *len_ptr, char *mode)
     else {
       /* scroll to the len_ptr'th byte, then overwrite the last integer with a random integer (why? not sure  -- AH),
        * then rewind file */
-      lseek(fd, *len_ptr - sizeof(int), SEEK_SET);
-      write(fd, &fd, sizeof(int));
+      lseek(fd, *len_ptr - sizeof(int64_t), SEEK_SET);
+      write(fd, &fd, sizeof(int64_t));
       lseek(fd, 0, SEEK_SET);
       
       space = mmap(NULL, *len_ptr, PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0);
@@ -372,8 +370,8 @@ void *
 mallocfile(char *filename, size_t *len_ptr, char *mode)
 {
   struct stat stat_buf;
-  int fd;
-  int binflag = 0; /* set to O_BINARY if we want to use the binary flag with open() */
+  int64_t fd;
+  int64_t binflag = 0; /* set to O_BINARY if we want to use the binary flag with open() */
   void *space;
 
   /* allow for: r+b, w+b, rb+, wb+, rb, wb */
@@ -462,13 +460,13 @@ mallocfile(char *filename, size_t *len_ptr, char *mode)
  *                           be in use -- the fields are overwritten.
  * @return                   0 on failure, 1 if everything went fine.
  */
-int
+int64_t
 read_file_into_blob(char *filename,
-                    int allocation_method,
-                    int item_size,
+                    int64_t allocation_method,
+                    int64_t item_size,
                     MemBlob *blob)
 {
-  int result;
+  int64_t result;
 
   assert("CL MemBlob:read_file_into_blob(): You must not pass a NULL blob!" && (blob != NULL));
 
@@ -478,11 +476,11 @@ read_file_into_blob(char *filename,
   blob->changed = 0;
 
   if (allocation_method == MMAPPED)
-    blob->data = (int *)mmapfile(filename, &(blob->size), "rb");
+    blob->data = mmapfile(filename, &(blob->size), "rb");
   else if (allocation_method == MALLOCED)
-    blob->data = (int *)mallocfile(filename, &(blob->size), "rb");
+    blob->data = mallocfile(filename, &(blob->size), "rb");
   else {
-    fprintf(stderr, "CL MemBlob:read_file_into_blob(): allocation method %d is not supported\n", allocation_method);
+    fprintf(stderr, "CL MemBlob:read_file_into_blob(): allocation method %" PRId64 " is not supported\n", allocation_method);
     return 0;
   }
 
@@ -493,7 +491,7 @@ read_file_into_blob(char *filename,
   }
   else {
     result = 1;
-    blob->nr_items = (item_size == SIZE_BIT) ? blob->size * 8 
+    blob->nr_items = (item_size == 0) ? blob->size * 8 
                                              : blob->size / item_size;
   }
   return result;
@@ -515,12 +513,12 @@ read_file_into_blob(char *filename,
  *                           network byte order before it's written.
  * @return                   0 on failure, 1 if everything went fine.
  */
-int
+int64_t
 write_file_from_blob(char *filename,
                      MemBlob *blob,
-                     int convert_to_nbo)
+                     int64_t convert_to_nbo)
 {
-  int result = 0;
+  int64_t result = 0;
   FILE *fd;
 
   assert("CL MemBlob:write_file_from_blob(): You must not pass a NULL blob!" && (blob != NULL));
@@ -545,7 +543,7 @@ write_file_from_blob(char *filename,
       }
       else {
         if (convert_to_nbo)
-          NwriteInts((int *)blob->data, blob->size/4, fd);
+          NwriteInts((int64_t*)blob->data, blob->size/sizeof(*blob->data), fd);
         else
           fwrite(blob->data, 1, blob->size, fd);
         fclose(fd);
@@ -553,7 +551,7 @@ write_file_from_blob(char *filename,
       }
       break;
     default:
-      fprintf(stderr, "CL MemBlob:write_file_from_blob(): unsupported allocation method # %d...\n", blob->allocation_method);
+      fprintf(stderr, "CL MemBlob:write_file_from_blob(): unsupported allocation method # %" PRId64 "...\n", blob->allocation_method);
       result = 0;
       break;
     }

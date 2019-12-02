@@ -15,38 +15,38 @@
  *  WWW at http://www.gnu.org/copyleft/gpl.html).
  */
 
+#include <xxhash.h>
+#include <stdint.h>
+#include <string.h>
+#include <stdlib.h>
 
-int 
-is_prime(int n) {
-  int i;
+int64_t 
+is_prime(int64_t n) {
+  int64_t i;
   for(i = 2; i*i <= n; i++)
     if ((n % i) == 0) 
       return 0;
   return 1;
 }
 
-int 
-find_prime(int n) {
-  for( ; n > 0 ; n++)		/* will exit on int overflow */
+int64_t 
+find_prime(int64_t n) {
+  for( ; n > 0 ; n++)
     if (is_prime(n)) 
       return n;
   return 0;
 }
 
-unsigned int 
+int64_t
 hash_string(char *string) {
-  unsigned char *s = (unsigned char *)string;
-  unsigned int result = 0;
-  for( ; *s; s++)
-    result = (result * 33 ) ^ (result >> 27) ^ *s;
+  size_t len = strlen(string);
+  int64_t result = llabs(XXH64(string, len, 0));
   return result;
 }
 
-unsigned int 
-hash_macro(char *macro_name, unsigned int args) {
-  unsigned char *name = (unsigned char *)macro_name;
-  unsigned int result = args;
-  for( ; *name; name++)
-    result = (result * 33 ) ^ (result >> 27) ^ *name;
+int64_t
+hash_macro(char *macro_name, int64_t args) {
+  size_t len = strlen(macro_name);
+  int64_t result = llabs(XXH64(macro_name, len, args));
   return result;
 }

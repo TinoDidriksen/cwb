@@ -38,31 +38,31 @@ typedef enum _conclinelayout {
  * "anchor" within a concordance line.
  */
 typedef struct _ConcLineField {
-  int start_position;
-  int end_position;
-  int type;
+  int64_t start_position;
+  int64_t end_position;
+  int64_t type;
 } ConcLineField;
 
 
 
 
 char *compose_kwic_line(Corpus *corpus,
-                        int match_start,
-                        int match_end,
+                        int64_t match_start,
+                        int64_t match_end,
                         ContextDescriptor *context,
-                        int *length,
-                        int *string_match_begin,
-                        int *string_match_end,
+                        int64_t *length,
+                        int64_t *string_match_begin,
+                        int64_t *string_match_end,
                         char *left_marker,
                         char *right_marker,
-                        int *position_list,
-                        int nr_positions,
-                        int *returned_positions,
+                        int64_t *position_list,
+                        int64_t nr_positions,
+                        int64_t *returned_positions,
                         ConcLineField *fields,
-                        int nr_fields,
+                        int64_t nr_fields,
                         ConcLineLayout orientation,
                         PrintDescriptionRecord *pdr,
-                        int nr_mappings,
+                        int64_t nr_mappings,
                         Mapping *mappings);
 
 

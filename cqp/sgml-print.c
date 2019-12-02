@@ -59,12 +59,12 @@ static char *field_names[] = { "collocate",
 /* ---------------------------------------------------------------------- */
 
 char *sgml_convert_string(char *s);
-char *sgml_print_field(FieldType field, int start);
+char *sgml_print_field(FieldType field, int64_t start);
 
 
 PrintDescriptionRecord
 SGMLPrintDescriptionRecord = {
-  "<MATCHNUM>%d</MATCHNUM>",    /* CPOSPrintFormat */
+  "<MATCHNUM>%" PRId64 "</MATCHNUM>",    /* CPOSPrintFormat */
 
   "<STRUCS>",                   /* BeforePrintStructures */
   " ",                          /* PrintStructureSeparator */
@@ -107,7 +107,7 @@ SGMLPrintDescriptionRecord = {
 #define SUBST_ALL  (SUBST_LT | SUBST_GT | SUBST_AMP | SUBST_QUOT)
 
 char *
-sgml_print_field(FieldType field, int at_end)
+sgml_print_field(FieldType field, int64_t at_end)
 {
   switch (field) {
 
@@ -149,7 +149,7 @@ char *
 sgml_convert_string(char *s)
 {
   static char sgml_s[CL_MAX_LINE_LENGTH*2];
-  int p;
+  int64_t p;
 
   if (!s || strlen(s) >(CL_MAX_LINE_LENGTH))
     return NULL;
@@ -190,7 +190,7 @@ sgml_convert_string(char *s)
 }
 
 void 
-sgml_puts(FILE *fd, char *s, int flags)
+sgml_puts(FILE *fd, char *s, int64_t flags)
 {
   if (flags) {
     while (*s) {
@@ -251,7 +251,7 @@ void sgml_print_context(ContextDescriptor *cd, FILE *stream)
     s = "error";
     break;
   }
-  fprintf(stream, "<leftContext size=%d base=\"%s\">\n",
+  fprintf(stream, "<leftContext size=%" PRId64 " base=\"%s\">\n",
           cd->left_width, s);
 
 
@@ -269,7 +269,7 @@ void sgml_print_context(ContextDescriptor *cd, FILE *stream)
     s = "error";
     break;
   }
-  fprintf(stream, "<rightContext size=%d base=\"%s\">\n",
+  fprintf(stream, "<rightContext size=%" PRId64 " base=\"%s\">\n",
           cd->right_width, s);
 
 }
@@ -293,7 +293,7 @@ sgml_print_corpus_header(CorpusList *cl, FILE *stream)
           "<user><userID>%s</userID><userName>%s</userName></user>\n"
           "<date>%s</date>\n"
           "<corpusInfo><corpusID>%s</corpusID><corpusName>%s</corpusName></corpusInfo>\n"
-          "<subcorpusInfo size=%d>\n"
+          "<subcorpusInfo size=%" PRId64 ">\n"
           "<name>%s:%s</name>\n"
           "</subcorpusInfo>\n",
 #ifndef __MINGW__
@@ -317,11 +317,11 @@ sgml_print_corpus_header(CorpusList *cl, FILE *stream)
 void
 sgml_print_output(CorpusList *cl,
                   FILE *stream,
-                  int interactive,
+                  int64_t interactive,
                   ContextDescriptor *cd,
-                  int first, int last)
+                  int64_t first, int64_t last)
 {
-  int line, real_line;
+  int64_t line, real_line;
   ConcLineField clf[NoField];   /* NoField is largest field code (not used by us) */
   AttributeList *strucs;
   PrintDescriptionRecord *pdr = &SGMLPrintDescriptionRecord;
@@ -332,13 +332,13 @@ sgml_print_output(CorpusList *cl,
 
   {
     AttributeInfo *ai;
-    int anr;
+    int64_t anr;
 
     anr = 0;
     
     for (ai = cd->attributes->list; ai; ai = ai->next) {
       if (ai->attribute && ai->status > 0) {
-        fprintf(stream, "<attribute type=positional name=\"%s\" anr=%d>\n",
+        fprintf(stream, "<attribute type=positional name=\"%s\" anr=%" PRId64 ">\n",
                 ai->attribute->any.name, anr);
         anr++;
       }
@@ -392,7 +392,7 @@ sgml_print_output(CorpusList *cl,
     
     {
       char *outstr;
-      int dummy;
+      int64_t dummy;
         
       outstr = compose_kwic_line(cl->corpus, 
                                  cl->range[real_line].start, 
@@ -428,14 +428,14 @@ sgml_print_output(CorpusList *cl,
 }
 
 void 
-sgml_print_group(Group *group, int expand, FILE *fd)
+sgml_print_group(Group *group, int64_t expand, FILE *fd)
 {
-  int source_id, target_id, count;
+  int64_t source_id, target_id, count;
 
   char *target_s = "(null)";
 
-  int cell, last_source_id;
-  int nr_targets;
+  int64_t cell, last_source_id;
+  int64_t nr_targets;
 
   /* na ja... */
   last_source_id = -999;
@@ -465,7 +465,7 @@ sgml_print_group(Group *group, int expand, FILE *fd)
     fprintf(fd, "<TD>");
     sgml_puts(fd, target_s, SUBST_ALL);
 
-    fprintf(fd, "<TD>%d</TR>\n", count);
+    fprintf(fd, "<TD>%" PRId64 "</TR>\n", count);
     
     nr_targets++;
   }

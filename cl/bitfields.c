@@ -26,11 +26,11 @@
 /**
  * Size of the actual field of a Bitfield (in bytes).
  */
-static int BaseTypeSize = sizeof(BFBaseType);
+static int64_t BaseTypeSize = sizeof(BFBaseType);
 /**
  * Size of the actual field of a Bitfield (in bits).
  */
-static int BaseTypeBits = sizeof(BFBaseType) * CHAR_BIT;
+static int64_t BaseTypeBits = sizeof(BFBaseType) * CHAR_BIT;
 
 
 /**
@@ -40,9 +40,9 @@ static int BaseTypeBits = sizeof(BFBaseType) * CHAR_BIT;
  * @return                The new Bitfield object.
  */
 Bitfield
-create_bitfield(int nr_of_elements)
+create_bitfield(int64_t nr_of_elements)
 {
-  int full_cells;
+  int64_t full_cells;
 
   Bitfield bf = (Bitfield)cl_malloc(sizeof(BFBuf));
 
@@ -93,7 +93,7 @@ copy_bitfield(Bitfield source)
  *
  * @return  Always 1.
  */
-int
+int64_t
 destroy_bitfield(Bitfield *bptr)
 {
   assert(bptr);
@@ -124,7 +124,7 @@ destroy_bitfield(Bitfield *bptr)
  * @param element   The offset of the bit to set.
  * @return          Boolean (see description).
  */
-int set_bit(Bitfield bitfield, int element)
+int64_t set_bit(Bitfield bitfield, int64_t element)
 {
   if ((bitfield != NULL) && (element < bitfield->elements)) {
 
@@ -138,7 +138,7 @@ int set_bit(Bitfield bitfield, int element)
     return 1;
   }
   else {
-    fprintf(stderr, "Illegal offset %d in set_bit\n", element);
+    fprintf(stderr, "Illegal offset %" PRId64 " in set_bit\n", element);
     return 0;
   }
 }
@@ -158,8 +158,8 @@ int set_bit(Bitfield bitfield, int element)
  * @param element   The offset of the bit to set.
  * @return          Boolean (see description).
  */
-int
-clear_bit(Bitfield bitfield, int element)
+int64_t
+clear_bit(Bitfield bitfield, int64_t element)
 {
   if ((bitfield != NULL) && (element < bitfield->elements)) {
 
@@ -173,7 +173,7 @@ clear_bit(Bitfield bitfield, int element)
     return 1;
   }
   else {
-    fprintf(stderr, "Illegal offset %d in clear_bit\n", element);
+    fprintf(stderr, "Illegal offset %" PRId64 " in clear_bit\n", element);
     return 0;
   }
 }
@@ -183,7 +183,7 @@ clear_bit(Bitfield bitfield, int element)
  *
  * @return  False if passed a NULL pointer; otherwise true.
  */
-int clear_all_bits(Bitfield bitfield)
+int64_t clear_all_bits(Bitfield bitfield)
 {
   if ((bitfield != NULL)) {
     memset((char *)bitfield->field, '\0', bitfield->bytes);
@@ -199,7 +199,7 @@ int clear_all_bits(Bitfield bitfield)
  *
  * @return  False if passed a NULL pointer; otherwise true.
  */
-int
+int64_t
 set_all_bits(Bitfield bitfield)
 {
   if ((bitfield != NULL)) {
@@ -220,8 +220,8 @@ set_all_bits(Bitfield bitfield)
  *                  element is not a legal offset (ie if it's
  *                  outside the bounds of the bitfield).
  */
-int
-get_bit(Bitfield bitfield, int element)
+int64_t
+get_bit(Bitfield bitfield, int64_t element)
 {
   if ((bitfield != NULL) && (element < bitfield->elements))
     return 
@@ -230,7 +230,7 @@ get_bit(Bitfield bitfield, int element)
          (1<<(element % BaseTypeBits))) == 0)
        ? 0 : 1);
   else {
-    fprintf(stderr, "Illegal offset %d in get_bit\n", element);
+    fprintf(stderr, "Illegal offset %" PRId64 " in get_bit\n", element);
     return -1;
   }
 }
@@ -249,8 +249,8 @@ get_bit(Bitfield bitfield, int element)
  * @param element   Offset of the bit to flip.
  * @return          Boolean (see description).
  */
-int
-toggle_bit(Bitfield bitfield, int element)
+int64_t
+toggle_bit(Bitfield bitfield, int64_t element)
 {
   if ((bitfield != NULL) && (element < bitfield->elements)) {
 
@@ -264,7 +264,7 @@ toggle_bit(Bitfield bitfield, int element)
     return 1;
   }
   else {
-    fprintf(stderr, "Illegal offset %d in toggle_bit\n", element);
+    fprintf(stderr, "Illegal offset %" PRId64 " in toggle_bit\n", element);
     return 0;
   }
 }
@@ -277,10 +277,10 @@ toggle_bit(Bitfield bitfield, int element)
  *
  * @return Boolean: false if the two bitfields are different, true if they are the same.
  */
-int
+int64_t
 bf_equal(Bitfield bf1, Bitfield bf2)
 {
-  int i, items, last_item_bits_used, mask;
+  int64_t i, items, last_item_bits_used, mask;
 
   assert(bf1->elements == bf2->elements);
   assert(bf1->bytes == bf2->bytes);
@@ -310,11 +310,11 @@ bf_equal(Bitfield bf1, Bitfield bf2)
  *
  * @return  0 if the two are the same; 1 if bf1 is less; -1 if bf2 is less.
  */
-int
+int64_t
 bf_compare(Bitfield bf1, Bitfield bf2)
 {
-  int i, items, last_item_bits_used, mask;
-  signed long diff;
+  int64_t i, items, last_item_bits_used, mask;
+  int64_t diff;
 
   assert(bf1->elements == bf2->elements);
   assert(bf1->bytes == bf2->bytes);
@@ -326,7 +326,7 @@ bf_compare(Bitfield bf1, Bitfield bf2)
     items--; /* check last, partially used item (i.e. field[items-1]) separately (below) */
 
   for (i = 0; i < items; i++) {
-    diff = ((signed long) bf1->field[i]) - ((signed long) bf2->field[i]);
+    diff = ((int64_t) bf1->field[i]) - ((int64_t) bf2->field[i]);
     if (diff < 0)
       return -1;
     else if (diff > 0)
@@ -335,7 +335,7 @@ bf_compare(Bitfield bf1, Bitfield bf2)
 
   if (last_item_bits_used != 0) {
     mask = (1 << last_item_bits_used) - 1; /* should set first <last_item_bits_used> bits in mask */
-    diff = ((signed long) (bf1->field[i] & mask)) - ((signed long) (bf2->field[i] & mask));
+    diff = ((int64_t) (bf1->field[i] & mask)) - ((int64_t) (bf2->field[i] & mask));
     if (diff < 0)
       return -1;
     else if (diff > 0)
@@ -349,7 +349,7 @@ bf_compare(Bitfield bf1, Bitfield bf2)
 /**
  * Gets the number of bits set to 1 in the given Bitfield.
  */
-int nr_bits_set(Bitfield bitfield)
+int64_t nr_bits_set(Bitfield bitfield)
 {
   return bitfield->nr_bits_set;
 }

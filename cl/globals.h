@@ -35,8 +35,8 @@
 
 /* global configuration variables */
 
-extern int cl_debug;
-extern int cl_optimize;
+extern int64_t cl_debug;
+extern int64_t cl_optimize;
 extern size_t cl_memory_limit;
 
 
@@ -146,7 +146,7 @@ extern size_t cl_memory_limit;
 /**
  * Macro which exits the program when a "to do" point is hit.
  */
-#define TODO {(void)fprintf(stderr,"TODO point reached: file \"%s\", line %d\n", \
+#define TODO {(void)fprintf(stderr,"TODO point reached: file \"%s\", line %" PRId64 "\n", \
 			    __FILE__,  \
 			    __LINE__); \
 			    exit(1);}

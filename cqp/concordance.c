@@ -50,7 +50,7 @@ static char *
 srev(char *s)
 {
   register char buf;
-  register int i, l;
+  register int64_t i, l;
 
   l = strlen(s);
 
@@ -86,11 +86,11 @@ srev(char *s)
  */
 void
 get_print_attribute_values(ContextDescriptor *cd,
-                           int position,
+                           int64_t position,
                            ClAutoString s,
-                           int *sp,  /* not used TODO remove */
-                           int max_sp, /* not used TODO remove */
-                           int add_position_number,
+                           int64_t *sp,  /* not used TODO remove */
+                           int64_t max_sp, /* not used TODO remove */
+                           int64_t add_position_number,
                            PrintDescriptionRecord *pdr)
 {
   if (add_position_number && pdr->CPOSPrintFormat) {
@@ -102,7 +102,7 @@ get_print_attribute_values(ContextDescriptor *cd,
 
   if (cd->printStructureTags) {
     AttributeInfo *ai;
-    int pref_printed = 0; /* boolean: has the prefix been printed? */
+    int64_t pref_printed = 0; /* boolean: has the prefix been printed? */
 
     for (ai = cd->printStructureTags->list; ai; ai = ai->next) {
       char *v;
@@ -146,17 +146,17 @@ get_print_attribute_values(ContextDescriptor *cd,
 #define MAX_S_ATTRS 1024        /* max. number of s-attribute; same as MAX_ATTRS in <utils/decode.c> and MAXRANGES in <utils/encode.c>  */
 typedef struct {                
   char *name;                   /* name of the s-attribute */
-  int start;
-  int end;
+  int64_t start;
+  int64_t end;
   char *annot;                  /* NULL if there is no annotation */
 } SAttRegion;
 SAttRegion s_att_regions[MAX_S_ATTRS];
-int sar_sort_index[MAX_S_ATTRS]; /* index used for bubble-sorting list of regions */
-int N_sar = 0;                   /* number of regions currently in list (may change for each token printed) */
+int64_t sar_sort_index[MAX_S_ATTRS]; /* index used for bubble-sorting list of regions */
+int64_t N_sar = 0;                   /* number of regions currently in list (may change for each token printed) */
 
 void
 sort_s_att_regions(void) {
-  int i, temp, modified;
+  int64_t i, temp, modified;
   
   for (i = 0; i < N_sar; i++)   /* initialise sort index */
     sar_sort_index[i] = i;
@@ -187,19 +187,19 @@ sort_s_att_regions(void) {
  */
 void
 get_position_values(ContextDescriptor *cd,
-                    int position,
+                    int64_t position,
                     ClAutoString s,
-                    int *sp,
-                    int max_sp,
-                    int add_position_number, 
+                    int64_t *sp,
+                    int64_t max_sp,
+                    int64_t add_position_number, 
                     ConcLineLayout orientation,
                     PrintDescriptionRecord *pdr,
-                    int nr_mappings, 
+                    int64_t nr_mappings, 
                     Mapping *mappings)
 {
   AttributeInfo *ai;
-  int id, i;
-  int nr_attrs = 0;
+  int64_t id, i;
+  int64_t nr_attrs = 0;
   char *word;
 
   cl_autostring_truncate(s, 0);
@@ -210,7 +210,7 @@ get_position_values(ContextDescriptor *cd,
   if (cd->strucAttributes) {
     for (ai = cd->strucAttributes->list; ai; ai = ai->next)
       if (ai->status) {
-        int s_start, s_end, snum;
+        int64_t s_start, s_end, snum;
         
         if ( ((snum = cl_cpos2struc(ai->attribute, position)) >= 0) &&
              (cl_struc2cpos(ai->attribute, snum, &s_start, &s_end)) &&
@@ -244,7 +244,7 @@ get_position_values(ContextDescriptor *cd,
   /* print open tags from s_att_regions[] (ascending) */
   if (cd->strucAttributes) {
     SAttRegion *region;
-    int do_lb = 0;
+    int64_t do_lb = 0;
 
     for (i = 0; i < N_sar; i++) {
       region = &(s_att_regions[sar_sort_index[i]]);
@@ -290,8 +290,8 @@ get_position_values(ContextDescriptor *cd,
       
       if (nr_mappings > 0) {
         /* unused */
-        int mp = 0;
-        int class = 0;
+        int64_t mp = 0;
+        int64_t class = 0;
 
         for (mp = 0; 
              mp < nr_mappings && mappings[mp]->attribute != ai->attribute;
@@ -327,7 +327,7 @@ get_position_values(ContextDescriptor *cd,
   /* print close tags from s_att_regions[] (descending) */
   if (cd->strucAttributes) {
     SAttRegion *region;
-    int lb = 0;                 /* line break done? */
+    int64_t lb = 0;                 /* line break done? */
 
     for (i = N_sar - 1; i >= 0; i--) {
       region = &(s_att_regions[sar_sort_index[i]]);
@@ -349,7 +349,7 @@ get_position_values(ContextDescriptor *cd,
 
 
 #if 0
-  fprintf(stderr, "get_position_values() at pos %d: ``%s''\n", position, s->data);
+  fprintf(stderr, "get_position_values() at pos %" PRId64 ": ``%s''\n", position, s->data);
 #endif
 }
 
@@ -358,13 +358,13 @@ get_position_values(ContextDescriptor *cd,
  * to an array of integers in returned_positions
  */
 void
-remember_this_position(int position,
-                       int this_token_start, int this_token_end,
-                       int *position_list,
-                       int nr_positions,
-                       int *returned_positions)
+remember_this_position(int64_t position,
+                       int64_t this_token_start, int64_t this_token_end,
+                       int64_t *position_list,
+                       int64_t nr_positions,
+                       int64_t *returned_positions)
 {
-  int p;
+  int64_t p;
 
   if (nr_positions > 0) {
     assert(position_list);
@@ -402,13 +402,13 @@ static ClAutoString scratch = NULL;
  *                   been zero-length.
  */
 char *
-get_field_separators(int position, 
+get_field_separators(int64_t position, 
                      ConcLineField *fields,
-                     int nr_fields,
-                     int at_end,
+                     int64_t nr_fields,
+                     int64_t at_end,
                      PrintDescriptionRecord *pdr)
 {
-  int i;
+  int64_t i;
 
   /* start with an empty string ... */
   if (NULL == scratch)
@@ -508,59 +508,59 @@ cleanup_kwic_line_memory(void)
  */
 char *
 compose_kwic_line(Corpus *corpus,
-                  int match_start,
-                  int match_end,
+                  int64_t match_start,
+                  int64_t match_end,
                   ContextDescriptor *cd,
-                  int *length,
-                  int *s_mb,
-                  int *s_me,
+                  int64_t *length,
+                  int64_t *s_mb,
+                  int64_t *s_me,
                   char *left_marker,
                   char *right_marker,
-                  int *position_list,
-                  int nr_positions,
-                  int *returned_positions,
+                  int64_t *position_list,
+                  int64_t nr_positions,
+                  int64_t *returned_positions,
                   ConcLineField *fields,
-                  int nr_fields,
+                  int64_t nr_fields,
                   ConcLineLayout orientation,
                   PrintDescriptionRecord *pdr,
-                  int nr_mappings,
+                  int64_t nr_mappings,
                   Mapping *mappings)
 {
-  // int acc_len;  /* Accurate length - for counting context in characters */
+  // int64_t acc_len;  /* Accurate length - for counting context in characters */
   /* TODO replace the single variable above with the following pair of variables */
 
   /* length of the string assembled, in bytes */
-  unsigned length_bytes;
+  size_t length_bytes;
   /* length of the string assembled, in characters; == length_bytes in all cases other than charset==utf8 */
-  unsigned length_characters;
+  size_t length_characters;
 
-  int old_len;  /* Old length - for tracking the n bytes added by a concatenate operation */
+  int64_t old_len;  /* Old length - for tracking the n bytes added by a concatenate operation */
 
   /* total N of tokens on the attribute (first on the list of attributes-to-print);
    * used as a maximum for sanity-check */
-  int text_size;
+  int64_t text_size;
 
-  int start, end, index;
+  int64_t start, end, index;
 
-  /* dummies: because the arguments of some other functions require an int to be passed... */
-  int line_p;
-  int token_p;
+  /* dummies: because the arguments of some other functions require an int64_t to be passed... */
+  int64_t line_p;
+  int64_t token_p;
 
   char *word;
   char *separator;
 
-  int number_lines;
+  int64_t number_lines;
 
-  int rng_s, rng_e, rng_n, nr_ranges;
+  int64_t rng_s, rng_e, rng_n, nr_ranges;
 
-  int this_token_start, this_token_end;
-  int token_length_characters;
+  int64_t this_token_start, this_token_end;
+  int64_t token_length_characters;
 
-  int el_c = 0;
+  int64_t el_c = 0;
 
-  int enough_context = 0;       /* Boolean: should we keep adding or not? */
+  int64_t enough_context = 0;       /* Boolean: should we keep adding or not? */
 
-  int nr_selected_attributes = 0;
+  int64_t nr_selected_attributes = 0;
 
   AttributeList *default_list = NULL;
   AttributeInfo *ai;
@@ -773,7 +773,7 @@ compose_kwic_line(Corpus *corpus,
 
     if (position_list && (nr_positions > 0)) {
 
-      int old_start, new_start, old_end, new_end;
+      int64_t old_start, new_start, old_end, new_end;
 
       for (el_c = 0; el_c < nr_positions; el_c++) {
         if (returned_positions[el_c * 2] >= 0) {
@@ -784,7 +784,7 @@ compose_kwic_line(Corpus *corpus,
           new_end   = line->len - 1 - old_start;
 
 #if 0
-          fprintf(stderr, "Patching [%d,%d] to [%d,%d]\n", old_start, old_end, new_start, new_end);
+          fprintf(stderr, "Patching [%" PRId64 ",%" PRId64 "] to [%" PRId64 ",%" PRId64 "]\n", old_start, old_end, new_start, new_end);
 #endif
 
           returned_positions[el_c * 2]     = new_start + 1;

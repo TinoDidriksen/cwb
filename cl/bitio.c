@@ -33,7 +33,7 @@
  * @param bf        Buffer in which to set up the opened BF
  * @return          1 on success, 0 on failure (not like fopen/fclose)
  */
-int
+bool
 BFopen(char *filename, char *type, BFile *bf)
 {
   /* force binary-mode open */
@@ -63,8 +63,8 @@ BFopen(char *filename, char *type, BFile *bf)
  * @param bf    Buffer in which to set up the opened BS
  * @return      boolean: 1 on success, 0 on failure (not like fopen/fclose)
  */
-int
-BSopen(unsigned char *base, char *type, BStream *bf)
+bool
+BSopen(uint8_t *base, char *type, BStream *bf)
 {
   bf->base = base;
   bf->buf = '\0';
@@ -85,7 +85,7 @@ BSopen(unsigned char *base, char *type, BStream *bf)
  * @param stream  The file buffer to close.
  * @return        Returns true iff the file was closed successfully.
  */
-int
+bool
 BFclose(BFile *stream)
 {
   if (stream->mode == 'w') 
@@ -102,14 +102,12 @@ BFclose(BFile *stream)
  * @param stream  The stream buffer to close.
  * @return        Always returns true.
  */
-int
+void
 BSclose(BStream *stream)
 {
   if (stream->mode == 'w') 
     BSflush(stream);
   stream->base = NULL;
-
-  return 1;
 }
 
 /**
@@ -123,19 +121,17 @@ BSclose(BStream *stream)
  * @param stream  The file buffer to flush.
  * @return        Boolean: 1 for all OK, 0 for a problem.
  */
-int
+bool
 BFflush(BFile *stream)
 {
-  int retval;
-
-  retval = 0;
+  bool retval = 0;
 
   if (stream->mode == 'w') {
     if ((stream->bits_in_buf > 0) && 
         (stream->bits_in_buf < 8)) {
       
       stream->buf <<= (8 - stream->bits_in_buf);
-      fwrite(&stream->buf, sizeof(unsigned char), 1, stream->fd);
+      fwrite(&stream->buf, sizeof(uint8_t), 1, stream->fd);
       stream->position++;
       
       if (fflush(stream->fd) == 0)
@@ -149,7 +145,7 @@ BFflush(BFile *stream)
       assert(stream->bits_in_buf == 0);
   }
   else if (stream->mode == 'r') {
-    if (fread(&stream->buf, sizeof(unsigned char), 1, stream->fd) == 1)
+    if (fread(&stream->buf, sizeof(uint8_t), 1, stream->fd) == 1)
       retval = 1;
     stream->bits_in_buf = 8;
     stream->position++;
@@ -171,12 +167,10 @@ BFflush(BFile *stream)
  * @param stream  The stream to flush.
  * @return        Boolean: 1 for all OK, 0 for a problem.
  */
-int
+bool
 BSflush(BStream *stream)
 {
-  int retval;
-
-  retval = 0;
+  bool retval = 0;
 
   if (stream->mode == 'w') {
     if ((stream->bits_in_buf > 0) && 
@@ -211,7 +205,7 @@ BSflush(BStream *stream)
  * Writes bit data to file via a BFile buffer.
  *
  * Bits accumulate in the buffer till there are 8 of them.
- * Then a byte is written to file (as an unsigned char).
+ * Then a byte is written to file (as an uint8_t).
  *
  *
  * @param data    The data to write.
@@ -219,11 +213,11 @@ BSflush(BStream *stream)
  * @param stream  The buffer to write via.
  * @return        Boolean: 1 for all OK, 0 for a problem.
  */
-int
-BFwrite(unsigned char data, int nbits, BFile *stream)
+bool
+BFwrite(uint8_t data, int64_t nbits, BFile *stream)
 {
 
-  unsigned char mask;
+  uint8_t mask;
 
   mask = 1 << (nbits - 1);
 
@@ -239,7 +233,7 @@ BFwrite(unsigned char data, int nbits, BFile *stream)
       stream->buf |= 1;
     
     if (stream->bits_in_buf == 8) {
-      if (fwrite(&stream->buf, sizeof(unsigned char), 1, stream->fd) != 1)
+      if (fwrite(&stream->buf, sizeof(uint8_t), 1, stream->fd) != 1)
         return 0;
       stream->position++;
       stream->buf = 0;
@@ -256,7 +250,7 @@ BFwrite(unsigned char data, int nbits, BFile *stream)
  * Writes bit data to a character stream via a BStream buffer.
  *
  * Bits accumulate in the buffer till there are 8 of them.
- * Then a byte is written to the stream (as an unsigned char).
+ * Then a byte is written to the stream (as an uint8_t).
  *
  *
  * @param data    The data to write.
@@ -264,10 +258,10 @@ BFwrite(unsigned char data, int nbits, BFile *stream)
  * @param stream  The buffer to write via.
  * @return        Boolean: 1 for all OK, 0 for a problem.
  */
-int
-BSwrite(unsigned char data, int nbits, BStream *stream)
+bool
+BSwrite(uint8_t data, int64_t nbits, BStream *stream)
 {
-  unsigned char mask;
+  uint8_t mask;
 
   mask = 1 << (nbits - 1);
 
@@ -300,22 +294,22 @@ BSwrite(unsigned char data, int nbits, BStream *stream)
 /**
  * Read bit data from a file via a BFile buffer.
  *
- * NOTE: be sure that you read the data into an unsigned char!
+ * NOTE: be sure that you read the data into an uint8_t!
  *
  * @param data    Pointer to the location for the read bit data.
  * @param nbits   Number of bits to read.
  * @param stream  The BFile buffer to use.
  * @return        Boolean: 1 for all OK, 0 for a problem.
  */
-int
-BFread(unsigned char *data, int nbits, BFile *stream)
+bool
+BFread(uint8_t *data, int64_t nbits, BFile *stream)
 {
   *data = '\0';
 
   while (nbits > 0) {
   
     if (stream->bits_in_buf == 0) {
-      if (fread(&stream->buf, sizeof(unsigned char), 1, stream->fd) != 1)
+      if (fread(&stream->buf, sizeof(uint8_t), 1, stream->fd) != 1)
         return 0;
       stream->position++;
       stream->bits_in_buf = 8;
@@ -336,15 +330,15 @@ BFread(unsigned char *data, int nbits, BFile *stream)
 /**
  * Read bit data from a stream via a BStream buffer.
  *
- * NOTE: be sure that you read the data into an unsigned char!
+ * NOTE: be sure that you read the data into an uint8_t!
  *
  * @param data    Pointer to the location for the read bit data.
  * @param nbits   Number of bits to read.
  * @param stream  The BStream buffer to use.
  * @return        Boolean: 1 for all OK, 0 for a problem.
  */
-int
-BSread(unsigned char *data, int nbits, BStream *stream)
+bool
+BSread(uint8_t *data, int64_t nbits, BStream *stream)
 {
   *data = '\0';
 
@@ -369,44 +363,44 @@ BSread(unsigned char *data, int nbits, BStream *stream)
 }
 
 
-/* the next two read nbits into an unsigned int, padded to the right */
+/* the next two read nbits into an uint64_t, padded to the right */
 
 /**
- * Writes bit data to a file from an unsigned int.
+ * Writes bit data to a file from an uint64_t.
  *
- * This function writes nbits from an unsigned int, padded to the right.
+ * This function writes nbits from an uint64_t, padded to the right.
  *
  * @param data    The data to write.
  * @param nbits   Number of bits to write.
  * @param stream  The BFile buffer to use.
  * @return        Boolean: 1 for all OK, 0 for a problem.
  */
-int
-BFwriteWord(unsigned int data, int nbits, BFile *stream)
+bool
+BFwriteWord(uint64_t data, int64_t nbits, BFile *stream)
 {
-  int bytes, rest, i;
-  unsigned char *cdata;
+  int64_t bytes, rest, i;
+  uint8_t *cdata;
 
-  if ((nbits > 32) || (nbits < 0)) {
-    fprintf(stderr, "bitio.o/BFwriteWord: nbits (%d) not in legal bounds\n", nbits);
+  if ((nbits > 64) || (nbits < 0)) {
+    fprintf(stderr, "bitio.o/BFwriteWord: nbits (%" PRId64 ") not in legal bounds\n", nbits);
     return 0;
   }
 
-  cdata = (unsigned char *)&data;
+  cdata = (uint8_t *)&data;
 
   /* We need to normalise this to Network format in order to create
      the same bitstream on all machines!!
      This code is extremely ugly. */
-  data = htonl(data);
+  data = htonll(data);
 
   bytes = nbits / 8;
   rest  = nbits % 8;
 
   if (rest)
-    if (!BFwrite(cdata[3-bytes], rest, stream))
+    if (!BFwrite(cdata[(sizeof(data)-1)-bytes], rest, stream))
       return 0;
 
-  for (i = 4 - bytes; i < 4; i++)
+  for (i = sizeof(data) - bytes; i < sizeof(data); i++)
     if (!BFwrite(cdata[i], 8, stream))
       return 0;
 
@@ -414,45 +408,45 @@ BFwriteWord(unsigned int data, int nbits, BFile *stream)
 }
 
 /**
- * Reads bit data from a file into an unsigned int.
+ * Reads bit data from a file into an uint64_t.
  *
- * This function reads nbits into an unsigned int, padded to the right.
+ * This function reads nbits into an uint64_t, padded to the right.
  *
  * @param data    Pointer to the location for the read bit data.
  * @param nbits   Number of bits to read.
  * @param stream  The BFile buffer to use.
  * @return        Boolean: 1 for all OK, 0 for a problem.
  */
-int
-BFreadWord(unsigned int *data, int nbits, BFile *stream)
+bool
+BFreadWord(uint64_t *data, int64_t nbits, BFile *stream)
 {
-  int bytes, rest, i;
-  unsigned char *cdata;
+  int64_t bytes, rest, i;
+  uint8_t *cdata;
 
-  if ((nbits > 32) || (nbits < 0)) {
-    fprintf(stderr, "bitio.o/BFreadWord: nbits (%d) not in legal bounds\n", nbits);
+  if ((nbits > 64) || (nbits < 0)) {
+    fprintf(stderr, "bitio.o/BFreadWord: nbits (%" PRId64 ") not in legal bounds\n", nbits);
     return 0;
   }
 
-  cdata = (unsigned char *)data;
+  cdata = (uint8_t *)data;
 
   bytes = nbits / 8;
   rest  = nbits % 8;
 
   if (rest)
-    if (!BFread(cdata + 3 - bytes, rest, stream))
+    if (!BFread(cdata + (sizeof(data)-1) - bytes, rest, stream))
       return 0;
 
-  for (i = 4 - bytes; i < 4; i++)
+  for (i = sizeof(data) - bytes; i < sizeof(data); i++)
     if (!BFread(cdata + i, 8, stream))
       return 0;
 
-  /* As in BFwriteWord, the above code assumes that integers are 4 bytes long
+  /* As in BFwriteWord, the above code assumes that integers are 8 bytes long
      and stored in LSB first fashion. To avoid rewriting the whole code, we just
      convert from this Network byte-order to the platform's native byte-order
-     in the end (which assumes that ints are 4 bytes ... but hey, we've got to 
+     in the end (which assumes that ints are 8 bytes ... but hey, we've got to 
      live with that in the CWB! */
-  *data = ntohl(*data);
+  *data = ntohll(*data);
 
   return 1;
 }
@@ -462,7 +456,7 @@ BFreadWord(unsigned int *data, int nbits, BFile *stream)
 /**
  * Gets the stream position of a BFile.
  */
-int
+int64_t
 BFposition(BFile *stream)
 {
   assert(stream);
@@ -472,7 +466,7 @@ BFposition(BFile *stream)
 /**
  * Gets the stream position of a BStream.
  */
-int
+int64_t
 BSposition(BStream *stream)
 {
   assert(stream);
@@ -486,11 +480,10 @@ BSposition(BStream *stream)
  * @param offset  The desired new offset.
  * @return        Always true.
  */
-int
+void
 BSseek(BStream *stream, off_t offset)
 {
   stream->buf = '\0';
   stream->bits_in_buf = 0;
   stream->position = offset;
-  return 1;
 }

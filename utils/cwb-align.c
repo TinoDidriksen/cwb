@@ -63,7 +63,7 @@ char **config = default_config;
 /**
  * Number of lines in the configuration strings array.
  */
-int config_lines = DEFAULT_CONFIG_LINES;
+int64_t config_lines = DEFAULT_CONFIG_LINES;
 
 char *corpus1_name;             /**< name of the source corpus */
 char *corpus2_name;             /**< name of the target corpus */
@@ -76,12 +76,12 @@ Attribute *word2;               /**< word attribute handle: target */
 Attribute *s2;                  /**< sentence attribute handle: target */
 Attribute *prealign1 = NULL;    /**< pre-alignment attribute (source) if given */
 Attribute *prealign2 = NULL;    /**< pre-alignment attribute (target) */
-int size1;                      /**< size of source corpus in sentences */
-int size2;                      /**< size of target corpus in sentences */
-int ws1;                        /**< size of source corpus in word tokens (i.e. corpus positions) */
-int ws2;                        /**< size of target corpus in word tokens (i.e. corpus positions) */
-int pre1 = 0;                   /**< number of pre-alignment regions (source corpus) */
-int pre2 = 0;                   /**< number of pre-alignment regions (target corpus) */
+int64_t size1;                      /**< size of source corpus in sentences */
+int64_t size2;                      /**< size of target corpus in sentences */
+int64_t ws1;                        /**< size of source corpus in word tokens (i.e. corpus positions) */
+int64_t ws2;                        /**< size of target corpus in word tokens (i.e. corpus positions) */
+int64_t pre1 = 0;                   /**< number of pre-alignment regions (source corpus) */
+int64_t pre2 = 0;                   /**< number of pre-alignment regions (target corpus) */
 
 
 /* global options */
@@ -90,12 +90,12 @@ char word_name[CL_MAX_FILENAME_LENGTH] = DEFAULT_ATT_NAME;  /**< name of the wor
 char outfile_name[CL_MAX_FILENAME_LENGTH] = "out.align";    /**< name of the output file */
 
 double split_factor = 1.2;      /**< 2:2 alignment split factor */
-int beam_width = 50;            /**< best path search beam width */
+int64_t beam_width = 50;            /**< best path search beam width */
 
 char prealign_name[CL_MAX_FILENAME_LENGTH] = "";  /**< pre-alignment given by structural attribute */
-int prealign_has_values = 0;    /**< boolean: if 1, regions with same ID values are pre-aligned */
-int verbose = 0;                /**< controls printing of some extra progress info */
-int quiet = 0;                  /**< boolean: if 1, turns off progress messages about the alignment. */
+int64_t prealign_has_values = 0;    /**< boolean: if 1, regions with same ID values are pre-aligned */
+int64_t verbose = 0;                /**< controls printing of some extra progress info */
+int64_t quiet = 0;                  /**< boolean: if 1, turns off progress messages about the alignment. */
 
 char *registry_directory = NULL; /** string containing location of the registry directory. */
 
@@ -106,7 +106,7 @@ char *registry_directory = NULL; /** string containing location of the registry 
 void
 align_usage(void)
 {
-  int i;
+  int64_t i;
 
   fprintf(stderr, "\n");
   fprintf(stderr, "Aligns two CWB-encoded corpora.\n");
@@ -162,12 +162,12 @@ align_usage(void)
  * @return          The value of optind after parsing,
  *                  ie the index of the first argument in argv[]
  */
-int
-align_parse_args(int ac, char *av[], int min_args)
+int64_t
+align_parse_args(int64_t ac, char *av[], int64_t min_args)
 {
   extern int optind;            /* getopt() interface */
   extern char *optarg;          /* getopt() interface */
-  int c;
+  int64_t c;
 
   progname = av[0];
   while ((c = getopt(ac, av, "+hvqo:P:S:V:s:w:r:")) != EOF)
@@ -207,8 +207,8 @@ align_parse_args(int ac, char *av[], int min_args)
       /* -w: beam width */
     case 'w':
       {
-        int width;
-        if ((1 == sscanf(optarg, "%d", &width))
+        int64_t width;
+        if ((1 == sscanf(optarg, "%" PRId64 "", &width))
             && (width > 10))
           beam_width = width;
         else
@@ -267,10 +267,10 @@ align_parse_args(int ac, char *av[], int min_args)
  *
  */
 void
-align_print_line(FILE *fd, int f1, int l1, int f2, int l2, int quality)
+align_print_line(FILE *fd, int64_t f1, int64_t l1, int64_t f2, int64_t l2, int64_t quality)
 {
-  int step1 = l1 - f1, step2 = l2 - f2;
-  int wf1, wl1, wf2, wl2, dummy;
+  int64_t step1 = l1 - f1, step2 = l2 - f2;
+  int64_t wf1, wl1, wf2, wl2, dummy;
 
   l1--; l2--;
   cl_struc2cpos(s1, f1, &wf1, &dummy);
@@ -283,7 +283,7 @@ align_print_line(FILE *fd, int f1, int l1, int f2, int l2, int quality)
   else wl2 = wf2 - 1;
 
 
-  fprintf(fd, "%d\t%d\t%d\t%d\t%d:%d\t%d\n",
+  fprintf(fd, "%" PRId64 "\t%" PRId64 "\t%" PRId64 "\t%" PRId64 "\t%" PRId64 ":%" PRId64 "\t%" PRId64 "\n",
           wf1, wl1, wf2, wl2, step1, step2, quality);
 }
 
@@ -307,12 +307,12 @@ align_print_line(FILE *fd, int f1, int l1, int f2, int l2, int quality)
  * @param outfile  File handle to print the alignment lines to.
  * @return         The number of alignment steps created (= number of lines written to outfile).
  */
-int
-align_do_alignment(FMS fms, int if1, int il1, int if2, int il2, FILE *outfile) {
-  int steps, *out1, *out2, *quality;    /* out-arguments for best_path() */
-  int f1 = 0, l1 = 0, f2 = 0, l2 = 0;
-  int q1 = 0, q2 = 0;
-  int i, steps_created;
+int64_t
+align_do_alignment(FMS fms, int64_t if1, int64_t il1, int64_t if2, int64_t il2, FILE *outfile) {
+  int64_t steps, *out1, *out2, *quality;    /* out-arguments for best_path() */
+  int64_t f1 = 0, l1 = 0, f2 = 0, l2 = 0;
+  int64_t q1 = 0, q2 = 0;
+  int64_t i, steps_created;
 
   best_path(fms, if1, il1, if2, il2, beam_width, verbose,
             &steps, &out1, &out2, &quality);
@@ -356,10 +356,10 @@ align_do_alignment(FMS fms, int if1, int il1, int if2, int il2, FILE *outfile) {
  */
 int
 main(int argc, char *argv[]) {
-  int argindex;                 /* index of first argument in argv[] */
+  int64_t argindex;                 /* index of first argument in argv[] */
   FMS fms;
   FILE *of;                     /* output file */
-  int steps = 0;
+  int64_t steps = 0;
 
   /* parse command line and read arguments */
   argindex = align_parse_args(argc, argv, 3);
@@ -435,8 +435,8 @@ main(int argc, char *argv[]) {
     exit(1);
   }
   if (!quiet) {
-    printf("OPENING %s [%d tokens, %d <%s> regions]\n", corpus1_name, ws1, size1, s_name);
-    printf("OPENING %s [%d tokens, %d <%s> regions]\n", corpus2_name, ws2, size2, s_name);
+    printf("OPENING %s [%" PRId64 " tokens, %" PRId64 " <%s> regions]\n", corpus1_name, ws1, size1, s_name);
+    printf("OPENING %s [%" PRId64 " tokens, %" PRId64 " <%s> regions]\n", corpus2_name, ws2, size2, s_name);
   }
 
   /* open pre-alignment attributes if requested */
@@ -461,7 +461,7 @@ main(int argc, char *argv[]) {
       exit(1);
     }
     if (!quiet)
-      printf("OPENING prealignment [%s.%s: %d regions, %s.%s: %d regions]\n",
+      printf("OPENING prealignment [%s.%s: %" PRId64 " regions, %s.%s: %" PRId64 " regions]\n",
               corpus1_name, prealign_name, pre1, corpus2_name, prealign_name, pre2);
     if (prealign_has_values) {
       /* -V: check if pre-alignment attributes really have annotations */
@@ -475,7 +475,7 @@ main(int argc, char *argv[]) {
       /* -S: consistency check. there must be as many source regions as target regions */
       if (pre1 != pre2) {
         fprintf(stderr, "%s: -S switch used with inconsistent prealignment\n", progname);
-        fprintf(stderr, "%s: (%d <%s> regions in %s vs. %d <%s> regions in %s)\n",
+        fprintf(stderr, "%s: (%" PRId64 " <%s> regions in %s vs. %" PRId64 " <%s> regions in %s)\n",
                 progname, pre1, prealign_name, corpus1_name, pre2, prealign_name, corpus2_name);
         exit(1);
       }
@@ -509,9 +509,9 @@ main(int argc, char *argv[]) {
   else if (!prealign_has_values) {
 
     /* -S switch: use pre-aligned regions in given order */
-    int i = 0;
-    int start, end, start1, end1, start2, end2;
-    int f1, l1, f2, l2;
+    int64_t i = 0;
+    int64_t start, end, start1, end1, start2, end2;
+    int64_t f1, l1, f2, l2;
 
     for (i = 0; i < pre1; i++) {
       /* find first and last <s> structure in prealignment region (must be aligned with pre-alignment) */
@@ -546,7 +546,7 @@ main(int argc, char *argv[]) {
 
 
       if (!quiet)
-        printf("Aligning <%s> region #%d = [%d, %d] x [%d, %d]\n", prealign_name, i, f1, l1, f2, l2);
+        printf("Aligning <%s> region #%" PRId64 " = [%" PRId64 ", %" PRId64 "] x [%" PRId64 ", %" PRId64 "]\n", prealign_name, i, f1, l1, f2, l2);
       steps += align_do_alignment(fms, f1, l1, f2, l2, of);
     }
 
@@ -557,10 +557,10 @@ main(int argc, char *argv[]) {
     /* -V switch: this is the tricky bit -- need to find matching annotation strings */
     cl_lexhash lh = cl_new_lexhash(2 * pre2); /* use lexhash to identify target regions; make number of buckets large enough for fast access */
     cl_lexhash_entry entry;
-    int start, end;
-    int f1, l1, f2, l2;   /* holders for cpos values */
+    int64_t start, end;
+    int64_t f1, l1, f2, l2;   /* holders for cpos values */
     char *value;
-    int i;
+    int64_t i;
 
     /* read pre-alignment annotations into lexhash */
     if (!quiet)
@@ -582,7 +582,7 @@ main(int argc, char *argv[]) {
           printf("[Skipping source region <%s %s>]\n", prealign_name, value);
       }
       else {
-        int j = entry->data.integer;    /* number of target region */
+        int64_t j = entry->data.integer;    /* number of target region */
         if (
             (0 > cl_struc2cpos(prealign1, i, &start, &end)) ||
             (0 > (f1 = cl_cpos2struc(s1, start))) ||
@@ -597,7 +597,7 @@ main(int argc, char *argv[]) {
         }
 
         if (!quiet)
-          printf("Aligning <%s %s> regions = [%d, %d] x [%d, %d]\n", prealign_name, value, f1, l1, f2, l2);
+          printf("Aligning <%s %s> regions = [%" PRId64 ", %" PRId64 "] x [%" PRId64 ", %" PRId64 "]\n", prealign_name, value, f1, l1, f2, l2);
         steps += align_do_alignment(fms, f1, l1, f2, l2, of);
         j++;                    /* go to next target region */
       }
@@ -608,7 +608,7 @@ main(int argc, char *argv[]) {
   } /* end of -V type alignment */
 
   if (!quiet)
-    printf("Alignment complete. [created %d alignment regions]\n", steps);
+    printf("Alignment complete. [created %" PRId64 " alignment regions]\n", steps);
 
 
   /* close output file */

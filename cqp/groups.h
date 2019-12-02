@@ -32,7 +32,7 @@
 
 
 typedef struct _id_cnt_mapping {
-  int s, t, freq, s_freq;
+  int64_t s, t, freq, s_freq;
 } ID_Count_Mapping;
 
 typedef struct _grouptable {
@@ -40,40 +40,40 @@ typedef struct _grouptable {
   CorpusList *my_corpus;
 
   Attribute *source_attribute;
-  int source_is_struc;
+  int64_t source_is_struc;
   char *source_base;
   FieldType source_field;
-  int source_offset;
+  int64_t source_offset;
 
   Attribute *target_attribute;
-  int target_is_struc;
+  int64_t target_is_struc;
   char *target_base;
   FieldType target_field;
-  int target_offset;
+  int64_t target_offset;
 
-  int cutoff_frequency;
-  int is_grouped;
+  int64_t cutoff_frequency;
+  int64_t is_grouped;
 
-  int nr_cells;
+  int64_t nr_cells;
   ID_Count_Mapping *count_cells;
 
 } Group;
 
 Group *compute_grouping(CorpusList *cl,
 			FieldType source_field,
-			int source_offset,
+			int64_t source_offset,
 			char *source_attr_name,
 			FieldType target_field,
-			int target_offset,
+			int64_t target_offset,
 			char *target_attr_name,
-			int cutoff_freq,
-      int is_grouped);
+			int64_t cutoff_freq,
+      int64_t is_grouped);
 
 void free_group(Group **group);
 
-void print_group(Group *group, int expand, struct Redir *rd);
+void print_group(Group *group, int64_t expand, struct Redir *rd);
 
-char *Group_id2str(Group *group, int i, int target);
+char *Group_id2str(Group *group, int64_t i, int64_t target);
 
 
 #endif

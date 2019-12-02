@@ -23,19 +23,19 @@
 
 #define MAKE_IDLIST_BOUND 1000
 
-char *evaltree2searchstr(Evaltree etptr, int *length);
+char *evaltree2searchstr(Evaltree etptr, int64_t *length);
 
-void print_evaltree(int envidx, Evaltree, int);
+void print_evaltree(int64_t envidx, Evaltree, int64_t);
 
 void free_evaltree(Evaltree *);
 
 void init_booltree(Constrainttree *);
 
-void print_booltree(Constrainttree, int);
+void print_booltree(Constrainttree, int64_t);
 
 void free_booltree(Constrainttree);
 
-void show_patternlist(int eidx);
+void show_patternlist(int64_t eidx);
 
 Constraint *try_optimization(Constraint *tree);
 

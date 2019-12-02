@@ -29,23 +29,23 @@ typedef enum _search_strategy {
 /* will usually be provided as SEARCH_STRATEGY token by flex */
 SearchStrategy string_to_strategy(char *s);
 
-int set_target(CorpusList *corp, FieldType goal, FieldType source);
+int64_t set_target(CorpusList *corp, FieldType goal, FieldType source);
 
-int evaluate_target(CorpusList *corp,          /* the corpus */
+int64_t evaluate_target(CorpusList *corp,          /* the corpus */
                     FieldType goal,            /* the field to set */
                     FieldType base,            /* where to start the search */
-                    int inclusive,             /* including or excluding the base */
+                    int64_t inclusive,             /* including or excluding the base */
                     SearchStrategy strategy,   /* disambiguation rule: which item */
                     Constrainttree constr,     /* the constraint */
                     enum ctxtdir direction,    /* context direction */
-                    int units,                 /* number of units */
+                    int64_t units,                 /* number of units */
                     char *attr_name);          /* name of unit */
 
 
 
 /* destructively modifies corp */
 
-int evaluate_subset(CorpusList *corp,          /* the corpus */
+int64_t evaluate_subset(CorpusList *corp,          /* the corpus */
                     FieldType the_field,       /* the field to scan */
                     Constrainttree constr);    /* the constraint proper */
 

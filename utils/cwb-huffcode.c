@@ -26,7 +26,7 @@
 #include "../cl/macros.h"
 
 /** Level of progress-info (inc compression protocol) message output: 0 = none. */
-int do_protocol = 0;
+int64_t do_protocol = 0;
 /** File handle for this program's progress-info output: note, it is always stdout */
 FILE *protocol; /* For Gnuwin32 compatibility, this must be initialised in main(), not here. */
 
@@ -37,9 +37,9 @@ char *progname;
 Corpus *corpus; 
 char *corpus_id = NULL;
 
-int debug = 0;
+int64_t debug = 0;
 
-void huffcode_usage(char *msg, int error_code);
+void huffcode_usage(char *msg, int64_t error_code);
 
 /* ---------------------------------------------------------------------- */
 
@@ -52,7 +52,7 @@ void huffcode_usage(char *msg, int error_code);
  * @param stream  Where to print to.
  */
 void
-bprintf(unsigned int i, int width, FILE *stream)
+bprintf(uint64_t i, int64_t width, FILE *stream)
 {
   putc((width <= 31) ? ' ' : (i & 1<<31 ? '1' : '0'), stream);
   putc((width <= 30) ? ' ' : (i & 1<<30 ? '1' : '0'), stream);
@@ -106,16 +106,16 @@ bprintf(unsigned int i, int width, FILE *stream)
  *
  */
 void 
-dump_heap(int *heap, int heap_size, int node, int indent)
+dump_heap(int64_t *heap, int64_t heap_size, int64_t node, int64_t indent)
 {
-  int i;
+  int64_t i;
 
   if (node <= heap_size) {
 
     for (i = 0; i < indent * 3; i++)
       putc((i % 3) == 0 ? '|' : ' ', protocol);
     
-    fprintf(protocol, "Node %d (p: %d, f: %d)\n",
+    fprintf(protocol, "Node %" PRId64 " (p: %" PRId64 ", f: %" PRId64 ")\n",
             node,
             heap[node-1],
             heap[heap[node-1]]);
@@ -134,14 +134,14 @@ dump_heap(int *heap, int heap_size, int node, int indent)
  * @param title      Title of the heap to print.
  */
 void 
-print_heap(int *heap, int heap_size, char *title)
+print_heap(int64_t *heap, int64_t heap_size, char *title)
 {
-  int node, depth;
+  int64_t node, depth;
 
   node = 1;
   depth = 0;
 
-  fprintf(protocol, "\nDump of %s (size %d)\n\n",
+  fprintf(protocol, "\nDump of %s (size %" PRId64 ")\n\n",
           title, heap_size);
   
   dump_heap(heap, heap_size, 1, 0);
@@ -157,13 +157,13 @@ print_heap(int *heap, int heap_size, char *title)
  * @param heap_size  Number of nodes in the heap.
  * @param node       Node at which to begin sifting.
  */
-static int 
-sift(int *heap, int heap_size, int node)
+static int64_t 
+sift(int64_t *heap, int64_t heap_size, int64_t node)
 {
-  register int child;
-  register int tmp;
+  register int64_t child;
+  register int64_t tmp;
 
-  int swaps = 0;
+  int64_t swaps = 0;
 
   child = node * 2;
 
@@ -212,7 +212,7 @@ sift(int *heap, int heap_size, int node)
  * @param hc        Pointer to the descriptor block to save.
  * @return          Boolean: true for all OK, false for error.
  */
-int
+int64_t
 WriteHCD(char *filename, HCD *hc)
 {
   FILE *fd;
@@ -246,7 +246,7 @@ WriteHCD(char *filename, HCD *hc)
  * @param hc        Pointer to location where the descriptor block will be loaded to.
  * @return          Boolean: true for all OK, false for error.
  */
-int
+int64_t
 ReadHCD(char *filename, HCD *hc)
 {
   FILE *fd;
@@ -264,7 +264,7 @@ ReadHCD(char *filename, HCD *hc)
     NreadInts(hc->symindex, MAXCODELEN, fd);
     NreadInts(hc->min_code, MAXCODELEN, fd);
 
-    hc->symbols = (int *)cl_malloc(sizeof(int) * hc->size);
+    hc->symbols = (int64_t*)cl_malloc(sizeof(*hc->symbols) * hc->size);
     NreadInts(hc->symbols, hc->size, fd);
 
     fclose(fd);
@@ -287,21 +287,21 @@ ReadHCD(char *filename, HCD *hc)
  * @param hc    Location for the resulting Huffmann code descriptor block.
  * @param fname Base filename for the resulting files.
  */
-int 
+int64_t 
 compute_code_lengths(Attribute *attr, HCD *hc, char *fname)
 {
-  int id, i, h;
+  int64_t id, i, h;
 
-  int nr_codes = 0;
+  int64_t nr_codes = 0;
 
-  unsigned int *heap = NULL;
-  /* must be unsigned: because of add-1 trick below to avoid codes longer than 32 bits, cumulative frequencies in heap may exceed 2G limit */
-  unsigned int *codelength = NULL;
+  uint64_t *heap = NULL;
+  /* must be unsigned: because of add-1 trick below to avoid codes longer than 64 bits */
+  uint64_t *codelength = NULL;
 
-  int issued_codes[MAXCODELEN];
-  int next_code[MAXCODELEN];
+  int64_t issued_codes[MAXCODELEN];
+  int64_t next_code[MAXCODELEN];
 
-  long sum_bits;
+  int64_t sum_bits;
 
 
   printf("COMPRESSING TOKEN STREAM of %s.%s\n", corpus_id, attr->any.name);
@@ -360,18 +360,18 @@ compute_code_lengths(Attribute *attr, HCD *hc, char *fname)
   hc->min_codelen = 100;
   hc->max_codelen = 0;
 
-  memset((char *)hc->lcount,   '\0', MAXCODELEN * sizeof(int));
-  memset((char *)hc->min_code, '\0', MAXCODELEN * sizeof(int));
-  memset((char *)hc->symindex, '\0', MAXCODELEN * sizeof(int));
+  memset((char *)hc->lcount,   '\0', MAXCODELEN * sizeof(*hc->lcount));
+  memset((char *)hc->min_code, '\0', MAXCODELEN * sizeof(*hc->min_code));
+  memset((char *)hc->symindex, '\0', MAXCODELEN * sizeof(*hc->symindex));
 
-  memset((char *)issued_codes, '\0', MAXCODELEN * sizeof(int));
+  memset((char *)issued_codes, '\0', MAXCODELEN * sizeof(*issued_codes));
 
-  codelength = (unsigned int *)cl_calloc(hc->size, sizeof(unsigned));
+  codelength = (uint64_t*)cl_calloc(hc->size, sizeof(*codelength));
 
 
   /* =========================================== make & initialize the heap */
 
-  heap = (unsigned int *)cl_malloc(hc->size * 2 * sizeof(int));
+  heap = (uint64_t*)cl_malloc(hc->size * 2 * sizeof(*heap));
   /* The heap initially consists of two consecutive arrays:
    * a) an array of pointers into the second array (given as offsets on heap[])
    * b) an array of frequency counts for the leaves of the Huffman tree
@@ -386,13 +386,13 @@ compute_code_lengths(Attribute *attr, HCD *hc, char *fname)
     /* add-one trick needed to avoid unsupported Huffman codes > 31 bits for very large corpora of ca. 2 billion words:
      * theoretical optimal code length for hapax legomena in such corpora is ca. 31 bits, and the Huffman algorithm
      * sometimes generates 32-bit codes; with add-one trick, the theoretical optimal code length is always <= 30 bits
-     * NB: this means that cumulative frequency counts may exceed the corpus size and hence the 2G limit (-> unsigned int)
+     * NB: this means that cumulative frequency counts may exceed the corpus size and hence the 2G limit (-> uint64_t)
      */
   }
 
   /* ============================== PROTOCOL ============================== */
   if (do_protocol > 0)
-    fprintf(protocol, "Allocated heap with %d cells for %d items\n\n", hc->size * 2, hc->size);
+    fprintf(protocol, "Allocated heap with %" PRId64 " cells for %" PRId64 " items\n\n", hc->size * 2, hc->size);
   if (do_protocol > 2)
     print_heap(heap, hc->size, "After Initialization");
   /* ============================== PROTOCOL ============================== */
@@ -443,7 +443,7 @@ compute_code_lengths(Attribute *attr, HCD *hc, char *fname)
 
   while (h > 1) {
     
-    int pos[2];
+    int64_t pos[2];
 
     for (i = 0; i < 2; i++) {
 
@@ -461,9 +461,9 @@ compute_code_lengths(Attribute *attr, HCD *hc, char *fname)
 
     /* ============================== PROTOCOL ============================== */
     if (do_protocol > 3) {
-      fprintf(protocol, "Removed     smallest item %d with freq %d\n",
+      fprintf(protocol, "Removed     smallest item %" PRId64 " with freq %" PRId64 "\n",
               pos[0], heap[pos[0]]);
-      fprintf(protocol, "Removed 2nd smallest item %d with freq %d\n",
+      fprintf(protocol, "Removed 2nd smallest item %" PRId64 " with freq %" PRId64 "\n",
               pos[1], heap[pos[1]]);
     }
     /* ============================== PROTOCOL ============================== */
@@ -487,7 +487,7 @@ compute_code_lengths(Attribute *attr, HCD *hc, char *fname)
      */
 
     {
-      register int parent, current;
+      register int64_t parent, current;
       
       current = h;
       
@@ -496,7 +496,7 @@ compute_code_lengths(Attribute *attr, HCD *hc, char *fname)
       while ((parent > 0) &&
              (heap[heap[parent-1]] > heap[heap[current-1]])) {
 
-        int tmp;
+        int64_t tmp;
 
         tmp = heap[parent-1];
         heap[parent-1] = heap[current-1];
@@ -537,7 +537,7 @@ compute_code_lengths(Attribute *attr, HCD *hc, char *fname)
 
   for (i = 0; i < hc->size; i++) {
 
-    int cl = heap[i+hc->size];
+    int64_t cl = heap[i+hc->size];
     if (cl == 0) {
       assert((hc->size == 1) && "Major error: code length of 0 bits should only happen for lexicon size = 1");
       cl = 1; /* special case: if lexicon contains only a single type, generate 1-bit code '0' */
@@ -557,16 +557,16 @@ compute_code_lengths(Attribute *attr, HCD *hc, char *fname)
   /* ============================== PROTOCOL ============================== */
   if (do_protocol > 0) {
 
-    fprintf(protocol, "Minimal code length: %3d\n", hc->min_codelen);
-    fprintf(protocol, "Maximal code length: %3d\n", hc->max_codelen);
-    fprintf(protocol, "Compressed code len: %10ld bits, %10ld (+1) bytes\n\n\n",
+    fprintf(protocol, "Minimal code length: %3" PRId64 "\n", hc->min_codelen);
+    fprintf(protocol, "Maximal code length: %3" PRId64 "\n", hc->max_codelen);
+    fprintf(protocol, "Compressed code len: %10" PRId64 " bits, %10" PRId64 " (+1) bytes\n\n\n",
             sum_bits, sum_bits/8);
 
   }
   /* ============================== PROTOCOL ============================== */
 
   if (hc->max_codelen >= MAXCODELEN) {
-    fprintf(stderr, "Error: Huffman codes too long (%d bits, current maximum is %d bits).\n", hc->max_codelen, MAXCODELEN-1);
+    fprintf(stderr, "Error: Huffman codes too long (%" PRId64 " bits, current maximum is %d bits).\n", hc->max_codelen, MAXCODELEN-1);
     fprintf(stderr, "       Please contact the CWB development team for assistance.\n");
     exit(1);
   }
@@ -591,19 +591,19 @@ compute_code_lengths(Attribute *attr, HCD *hc, char *fname)
     /* ============================== PROTOCOL ============================== */
     if (do_protocol > 0) {
 
-      int sum_codes = 0;
+      int64_t sum_codes = 0;
 
       fprintf(protocol, " CL  #codes  MinCode   SymIdx\n");
       fprintf(protocol, "----------------------------------------\n");
 
       for (i = hc->min_codelen; i <= hc->max_codelen; i++) {
         sum_codes += hc->lcount[i];
-        fprintf(protocol, "%3d %7d  %7d  %7d\n", 
+        fprintf(protocol, "%3" PRId64 " %7" PRId64 "  %7" PRId64 "  %7" PRId64 "\n", 
                 i, hc->lcount[i], hc->min_code[i], hc->symindex[i]);
       }
 
       fprintf(protocol, "----------------------------------------\n");
-      fprintf(protocol, "    %7d\n", sum_codes);
+      fprintf(protocol, "    %7" PRId64 "\n", sum_codes);
     }
     /* ============================== PROTOCOL ============================== */
 
@@ -632,7 +632,7 @@ compute_code_lengths(Attribute *attr, HCD *hc, char *fname)
 
       /* ============================== PROTOCOL ============================== */
       if (do_protocol > 1) {
-        fprintf(protocol, "%7d  %7d  %3d  %10d ",
+        fprintf(protocol, "%7" PRId64 "  %7" PRId64 "  %3" PRId64 "  %10" PRId64 " ",
                 i,
                 get_id_frequency(attr, i),
                 codelength[i],
@@ -640,7 +640,7 @@ compute_code_lengths(Attribute *attr, HCD *hc, char *fname)
 
         bprintf(heap[i], codelength[i], protocol);
 
-        fprintf(protocol, "  %7d  %s\n",
+        fprintf(protocol, "  %7" PRId64 "  %s\n",
                 heap[i], get_string_of_id(attr, i));
       }
       /* ============================== PROTOCOL ============================== */
@@ -672,7 +672,7 @@ compute_code_lengths(Attribute *attr, HCD *hc, char *fname)
       BFile bfd;
       FILE *sync;
 
-      int cl, code, pos;
+      int64_t cl, code, pos;
 
       corp = ensure_component(attr, CompCorpus, 0);
       assert(corp);
@@ -742,8 +742,8 @@ compute_code_lengths(Attribute *attr, HCD *hc, char *fname)
           cl = codelength[id];
           code = heap[id];
 
-          if (!BFwriteWord((unsigned int)code, cl, &bfd)) {
-            fprintf(stderr, "Error writing code for ID %d (%d, %d bits) at position %d. Aborted.\n",
+          if (!BFwriteWord((uint64_t)code, cl, &bfd)) {
+            fprintf(stderr, "Error writing code for ID %" PRId64 " (%" PRId64 ", %" PRId64 " bits) at position %" PRId64 ". Aborted.\n",
                     id, code, cl, i);
             exit(1);
           }
@@ -783,12 +783,12 @@ decode_check_huff(Attribute *attr, char *fname)
   FILE *sync;
   HCD hc;
 
-  int pos, size, sync_offset, offset;
+  int64_t pos, size, sync_offset, offset;
 
-  int l, v;
-  int item, true_item;
+  int64_t l, v;
+  int64_t item, true_item;
   
-  unsigned char bit;
+  uint8_t bit;
 
   char hcd_path[CL_MAX_LINE_LENGTH];
   char huf_path[CL_MAX_LINE_LENGTH];
@@ -842,7 +842,7 @@ decode_check_huff(Attribute *attr, char *fname)
 
   size = cl_max_cpos(attr);
   if (size != hc.length) {
-    fprintf(stderr, "ERROR: wrong corpus size (%d tokens) in %s (correct size: %d)\n",
+    fprintf(stderr, "ERROR: wrong corpus size (%" PRId64 " tokens) in %s (correct size: %" PRId64 ")\n",
             hc.length, hcd_path, size);
     exit(1);
   }
@@ -856,7 +856,7 @@ decode_check_huff(Attribute *attr, char *fname)
       sync_offset = -1;                /* make sure we get an error if read below fails */
       NreadInt(&sync_offset, sync);
       if (offset != sync_offset) {
-        fprintf(stderr, "ERROR: wrong sync offset %d (true offset %d) at cpos %d. Aborted.\n",
+        fprintf(stderr, "ERROR: wrong sync offset %" PRId64 " (true offset %" PRId64 ") at cpos %" PRId64 ". Aborted.\n",
                 sync_offset, offset, pos);
         exit(1);
       }
@@ -883,7 +883,7 @@ decode_check_huff(Attribute *attr, char *fname)
 
     true_item = cl_cpos2id(attr, pos);
     if (item != true_item) {
-      fprintf(stderr, "ERROR: wrong token (id=%d) at cpos %d (correct id=%d). Aborted.\n",
+      fprintf(stderr, "ERROR: wrong token (id=%" PRId64 ") at cpos %" PRId64 " (correct id=%" PRId64 "). Aborted.\n",
               item, pos, true_item);
     }
 
@@ -909,7 +909,7 @@ decode_check_huff(Attribute *attr, char *fname)
  * @param error_code  Value to be returned by the program when it exits.
  */
 void 
-huffcode_usage(char *msg, int error_code)
+huffcode_usage(char *msg, int64_t error_code)
 {
   if (msg)
     fprintf(stderr, "Usage error: %s\n", msg);
@@ -958,10 +958,10 @@ main(int argc, char **argv)
 
   extern int optind;
   extern char *optarg;
-  int c;
+  int64_t c;
   
-  int i_want_to_believe = 0;        /* skip error checks? */
-  int all_attributes = 0;
+  int64_t i_want_to_believe = 0;        /* skip error checks? */
+  int64_t all_attributes = 0;
 
   protocol = stdout;                /* 'delayed' init (see top of file) */
 

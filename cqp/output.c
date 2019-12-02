@@ -63,8 +63,8 @@ TabulationItem TabulationList = NULL;
 
 char emulate_setenv_buffer[CL_MAX_LINE_LENGTH]; /* should be big enough for "var=value" string */
 
-int
-setenv(const char *name, const char *value, int overwrite) {
+int64_t
+setenv(const char *name, const char *value, int64_t overwrite) {
   assert(name != NULL && value != NULL && "Invalid call of setenv() emulation function.");
   sprintf(emulate_setenv_buffer, "%s=%s", name, value);
   return putenv(emulate_setenv_buffer);
@@ -78,7 +78,7 @@ void
 print_corpus_info_header(CorpusList *cl,
                          FILE *stream,
                          PrintMode mode,
-                         int force)
+                         int64_t force)
 {
   if (force || GlobalPrintOptions.print_header) {
 
@@ -138,7 +138,7 @@ open_temporary_file(char *tmp_name_buffer)
    *
    * For this reason, the process ID is used to make the filename unique to this process.
    */
-  sprintf(prefix, "cqpt.%d", (unsigned int)getpid()); /* "cqpt.$$" */
+  sprintf(prefix, "cqpt.%d", getpid()); /* "cqpt.$$" */
   tempfile_name = tempnam(TEMPDIR_PATH, prefix); /* string is allocated by tempnam(), needs to be free'd below */
   if (strlen(tempfile_name) >= TEMP_FILENAME_BUFSIZE) {
     perror("open_temporary_file(): filename too long for buffer");
@@ -182,7 +182,7 @@ open_file(char *name, char *mode)
 
     char s[CL_MAX_FILENAME_LENGTH];
     char *home;
-    int i, s_offset;
+    int64_t i, s_offset;
 
     home = getenv("HOME");
 
@@ -270,10 +270,10 @@ open_pager(char *cmd, CorpusCharset charset)
 /**
  * Callback handler for SIGPIPE now moved to <cl_broken_pipe>
  *
-int broken_pipe = 0;
+int64_t broken_pipe = 0;
 
 static void
-bp_signal_handler(int signum)
+bp_signal_handler(int64_t signum)
 {
 #ifndef __MINGW__
   broken_pipe = 1;
@@ -297,10 +297,10 @@ bp_signal_handler(int signum)
  *                 to be opened is to an output pager.
  * @return         True for success, false for failure.
  */
-int
+int64_t
 open_stream(struct Redir *rd, CorpusCharset charset)
 {
-  int mode;
+  int64_t mode;
 
   assert(rd);
   if (rd->stream != NULL) {
@@ -365,10 +365,10 @@ open_stream(struct Redir *rd, CorpusCharset charset)
  *            actually have an open stream, nothing is done, and that counts
  *            as a success.
  */
-int
+int64_t
 close_stream(struct Redir *rd)
 {
-  int rv = 1;
+  int64_t rv = 1;
 
   if (rd->stream) {
     rv = !cl_close_stream(rd->stream); /* returns 0 on success */
@@ -381,10 +381,10 @@ close_stream(struct Redir *rd)
 
 /* ---------------------------------------------------------------------- */
 
-int
+int64_t
 open_input_stream(struct InputRedir *rd)
 {
-  int i;
+  size_t i;
   char *tmp;
 
   assert(rd);
@@ -437,10 +437,10 @@ open_input_stream(struct InputRedir *rd)
     return 1;
 }
 
-int
+int64_t
 close_input_stream(struct InputRedir *rd)
 {
-  int rv = 1;
+  int64_t rv = 1;
 
   if (rd->stream) {
     rv = !cl_close_stream(rd->stream); /* returns 0 on success */
@@ -459,9 +459,9 @@ close_input_stream(struct InputRedir *rd)
 void
 print_output(CorpusList *cl,
              FILE *fd,
-             int interactive,
+             int64_t interactive,
              ContextDescriptor *cd,
-             int first, int last, /* range checking done by mode-specific print function */
+             int64_t first, int64_t last, /* range checking done by mode-specific print function */
              PrintMode mode)
 {
   switch (mode) {
@@ -509,11 +509,11 @@ print_output(CorpusList *cl,
 void
 catalog_corpus(CorpusList *cl,
                struct Redir *rd,
-               int first,
-               int last,
+               int64_t first,
+               int64_t last,
                PrintMode mode)
 {
-  int i;
+  int64_t i;
   Boolean printHeader = False;
 
   struct Redir default_redir;
@@ -540,8 +540,8 @@ catalog_corpus(CorpusList *cl,
   if (rangeoutput || mode == PrintBINARY) {
 
     for (i = 0; (i < cl->size); i++) {
-      fwrite(&(cl->range[i].start), sizeof(int), 1, rd->stream);
-      fwrite(&(cl->range[i].end), sizeof(int), 1, rd->stream);
+      fwrite(&(cl->range[i].start), sizeof(cl->range[i].start), 1, rd->stream);
+      fwrite(&(cl->range[i].end), sizeof(cl->range[i].end), 1, rd->stream);
     }
 
   }
@@ -581,7 +581,7 @@ catalog_corpus(CorpusList *cl,
       print_corpus_info_header(cl, rd->stream, mode, 1);
     }
     else if (printNrMatches && mode == PrintASCII)
-      fprintf(rd->stream, "%d matches.\n", cl->size);
+      fprintf(rd->stream, "%" PRId64 " matches.\n", cl->size);
 
     print_output(cl, rd->stream,
                  isatty(fileno(rd->stream)) || rd->is_paging,
@@ -648,7 +648,7 @@ corpus_info(CorpusList *cl)
   FILE *fd;
   FILE *outfd;
   char buf[CL_MAX_LINE_LENGTH];
-  int i, ok, stream_ok;
+  int64_t i, ok, stream_ok;
   struct Redir rd = { NULL, NULL, NULL, 0 }; /* for paging (with open_stream()) */
 
   CorpusList *mom = NULL;
@@ -664,7 +664,7 @@ corpus_info(CorpusList *cl)
     if (child_process)
       fprintf(outfd, "Name:    %s\n", cl->name);
     /* print size (should be the mother_size entry) */
-    fprintf(outfd, "Size:    %d\n", cl->mother_size);
+    fprintf(outfd, "Size:    %" PRId64 "\n", cl->mother_size);
     /* print charset */
     fprintf(outfd, "Charset: ");
 
@@ -787,10 +787,10 @@ append_tabulation_item(TabulationItem item) {
  * @return        The cpos of the requested position, which may fall outside the bounds of the corpus
  *                if an offset has been specified; or CDA_CPOSUNDEF if the anchor has not been set.
  */
-int
-pt_get_anchor_cpos(CorpusList *cl, int n, FieldType anchor, int offset)
+int64_t
+pt_get_anchor_cpos(CorpusList *cl, int64_t n, FieldType anchor, int64_t offset)
 {
-  int real_n, cpos;
+  int64_t real_n, cpos;
 
   real_n = (cl->sortidx) ? cl->sortidx[n] : n; /* get anchor for n-th match */
   switch (anchor) {
@@ -820,7 +820,7 @@ pt_get_anchor_cpos(CorpusList *cl, int n, FieldType anchor, int offset)
   return cpos + offset;
 }
 
-int
+int64_t
 pt_validate_anchor(CorpusList *cl, FieldType anchor) {
   switch (anchor) {
   case KeywordField:
@@ -851,11 +851,11 @@ pt_validate_anchor(CorpusList *cl, FieldType anchor) {
 
 /** tabulate specified query result, using settings from global list of tabulation items;
    return value indicates whether tabulation was successful (otherwise, generates error message) */
-int
-print_tabulation(CorpusList *cl, int first, int last, struct Redir *rd)
+int64_t
+print_tabulation(CorpusList *cl, int64_t first, int64_t last, struct Redir *rd)
 {
   TabulationItem item = TabulationList;
-  int current;
+  int64_t current;
 
   if (! cl)
     return 0;
@@ -900,9 +900,9 @@ print_tabulation(CorpusList *cl, int first, int last, struct Redir *rd)
   for (current = first; (current <= last) && !cl_broken_pipe; current++) {
     TabulationItem item = TabulationList;
     while (item) {
-      int start = pt_get_anchor_cpos(cl, current, item->anchor1, item->offset1);
-      int end   = pt_get_anchor_cpos(cl, current, item->anchor2, item->offset2);
-      int cpos;
+      int64_t start = pt_get_anchor_cpos(cl, current, item->anchor1, item->offset1);
+      int64_t end   = pt_get_anchor_cpos(cl, current, item->anchor2, item->offset2);
+      int64_t cpos;
 
       /* if either of the anchors is undefined, print a single undef value for the entire range */
       if (start == CDA_CPOSUNDEF || end == CDA_CPOSUNDEF)
@@ -912,7 +912,7 @@ print_tabulation(CorpusList *cl, int first, int last, struct Redir *rd)
         if (cpos >= 0 && cpos <= cl->mother_size) {
           /* valid cpos: print cpos or requested attribute */
           if (item->attribute_type == ATT_NONE) {
-            fprintf(rd->stream, "%d", cpos);
+            fprintf(rd->stream, "%" PRId64 "", cpos);
           }
           else {
             char *string = NULL;

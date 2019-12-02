@@ -15,7 +15,7 @@
  *  WWW at http://www.gnu.org/copyleft/gpl.html).
  */
 
-int is_prime(int n);
-int find_prime(int n);		/* find next prime above <n> */
-unsigned int hash_string(char *s);	/* get 32bit hash value for string */
-unsigned int hash_macro(char *name, unsigned int args); /* hash value for macro */
+int64_t is_prime(int64_t n);
+int64_t find_prime(int64_t n);		/* find next prime above <n> */
+int64_t hash_string(char *s);	/* get 64bit hash value for string */
+int64_t hash_macro(char *name, uint64_t args); /* hash value for macro */

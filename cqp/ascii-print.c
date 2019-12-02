@@ -76,7 +76,7 @@ ascii_convert_string(char *s)
   return s;
 }
 
-char *ascii_print_field(FieldType field, int at_end);
+char *ascii_print_field(FieldType field, int64_t at_end);
 
 /* ---------------------------------------------------------------------- */
 
@@ -84,7 +84,7 @@ char *ascii_print_field(FieldType field, int at_end);
  * Print description record for ASCII print mode.
  */
 PrintDescriptionRecord ASCIIPrintDescriptionRecord = {
-  "%9d: ",                            /* CPOSPrintFormat */
+  "%9" PRId64 ": ",                            /* CPOSPrintFormat */
 
   NULL,                               /* BeforePrintStructures */
   " ",                                /* PrintStructureSeparator */
@@ -118,7 +118,7 @@ PrintDescriptionRecord ASCIIPrintDescriptionRecord = {
  * Print description record for Highlighted-ASCII print mode.
  */
 PrintDescriptionRecord ASCIIHighlightedPrintDescriptionRecord = {
-  "%9d: ",                            /* CPOSPrintFormat */
+  "%9" PRId64 ": ",                            /* CPOSPrintFormat */
 
   NULL,                               /* BeforePrintStructures */
   " ",                                /* PrintStructureSeparator */
@@ -153,7 +153,7 @@ PrintDescriptionRecord ASCIIHighlightedPrintDescriptionRecord = {
 /**
  * Boolean: have escapes been initialised?
  */
-static int escapes_initialized = 0;
+static int64_t escapes_initialized = 0;
 
 static char
   *sc_s_in,                           /**< Enter standout (highlighted) mode */
@@ -167,9 +167,9 @@ static char
   *sc_all_out;                        /**< Turn off all display attributes */
 
 /* flags for current display attributes */
-int sc_s_mode = 0;                    /**< Boolean: following tokens will be shown in standout mode */
-int sc_u_mode = 0;                    /**< Boolean: following tokens will be shown in underline mode */
-int sc_b_mode = 0;                    /**< Boolean: following tokens will be shown in bold mode */
+int64_t sc_s_mode = 0;                    /**< Boolean: following tokens will be shown in standout mode */
+int64_t sc_u_mode = 0;                    /**< Boolean: following tokens will be shown in underline mode */
+int64_t sc_b_mode = 0;                    /**< Boolean: following tokens will be shown in bold mode */
 
 
 #ifndef USE_TERMCAP
@@ -178,7 +178,7 @@ int sc_b_mode = 0;                    /**< Boolean: following tokens will be sho
  * Dummy function
  */
 char *
-get_colour_escape(char colour, int foreground)
+get_colour_escape(char colour, int64_t foreground)
 {
   return "";
 }
@@ -216,7 +216,7 @@ void get_screen_escapes(void)
 void
 get_screen_escapes(void)
 {
-  int status, l;
+  int64_t status, l;
   char *term;
 
   sc_s_in = "";
@@ -331,7 +331,7 @@ get_typeface_escape(char typeface)
 /* interface to the terminal formatting escape sequences (with dummy replacements if USE_TERMCAP is not set) */
 /* colour: r=red g=green b=blue, p=pink, y=yellow, c=cyan */
 char *
-get_colour_escape(char colour, int foreground) {
+get_colour_escape(char colour, int64_t foreground) {
   if (use_colour) {
     if (*(get_typeface_escape('n')) == 0)
       return "";                /* don't try colour if terminal doesn't support typefaces */
@@ -387,7 +387,7 @@ char sc_before_token[256];
  * at one of the anchor points (match, matchend, target, keyword).
  */
 char *
-ascii_print_field(FieldType field, int at_end)
+ascii_print_field(FieldType field, int64_t at_end)
 {
 
   sc_before_token[0] = '\0';                /* sets sc_before_token to "" */
@@ -466,7 +466,7 @@ ascii_print_field(FieldType field, int at_end)
  */
 void
 ascii_print_aligned_line(FILE *stream,
-                         int highlighting,
+                         int64_t highlighting,
                          char *attribute_name,
                          char *line)
 {
@@ -495,12 +495,12 @@ ascii_print_aligned_line(FILE *stream,
 void
 print_concordance_line(FILE *outfd,
                        CorpusList *cl,
-                       int element,
-                       int apply_highlighting,
+                       int64_t element,
+                       int64_t apply_highlighting,
                        AttributeList *strucs)
 {
   char *outstr;
-  int length, string_match_begin_pos, string_match_end_pos;
+  int64_t length, string_match_begin_pos, string_match_end_pos;
   ConcLineField clf[NoField];        /* NoField is largest field code (not used by us) */
   PrintDescriptionRecord *pdr;
 
@@ -597,7 +597,7 @@ ascii_print_corpus_header(CorpusList *cl, FILE *stream)
   struct passwd *pwd = NULL;
 #endif
 
-  int i;
+  int64_t i;
 
   time(&now);
   /*   pwd = getpwuid(geteuid()); */
@@ -614,7 +614,7 @@ ascii_print_corpus_header(CorpusList *cl, FILE *stream)
           "# Date:    %s"
           "# Corpus:  %s (%s)\n"
           "# Name:    %s:%s\n"
-          "# Size:    %d intervals/matches\n",
+          "# Size:    %" PRId64 " intervals/matches\n",
 #ifndef __MINGW__
           (pwd ? pwd->pw_name : "<unknown>"),
           (pwd ? pwd->pw_gecos  : "<unknown>"),
@@ -628,7 +628,7 @@ ascii_print_corpus_header(CorpusList *cl, FILE *stream)
           cl->mother_name, cl->name,
           cl->size);
   fprintf(stream,
-          "# Context: %d %s left, %d %s right\n"
+          "# Context: %" PRId64 " %s left, %" PRId64 " %s right\n"
           "#\n",
           CD.left_width,
           (CD.left_type == CHAR_CONTEXT) ? "characters" :
@@ -653,12 +653,12 @@ ascii_print_corpus_header(CorpusList *cl, FILE *stream)
 void
 ascii_print_output(CorpusList *cl,
                    FILE *outfd,
-                   int interactive,
+                   int64_t interactive,
                    ContextDescriptor *cd,
-                   int first, int last)
+                   int64_t first, int64_t last)
 {
-  int real_line, i;
-  int output_line = 1;
+  int64_t real_line, i;
+  int64_t output_line = 1;
 
   if (first < 0)
     first = 0;
@@ -673,7 +673,7 @@ ascii_print_output(CorpusList *cl,
       real_line = i;
 
     if (GlobalPrintOptions.number_lines) {
-      fprintf(outfd, "%6d.\t", output_line);
+      fprintf(outfd, "%6" PRId64 ".\t", output_line);
       output_line++;
     }
 
@@ -684,16 +684,16 @@ ascii_print_output(CorpusList *cl,
 }
 
 void
-ascii_print_group(Group *group, int expand, FILE *fd)
+ascii_print_group(Group *group, int64_t expand, FILE *fd)
 {
-  int source_id, target_id, count;
-  int has_source = (group->source_attribute != NULL);
+  int64_t source_id, target_id, count;
+  int64_t has_source = (group->source_attribute != NULL);
 
   char *source_s = "(null)";
   char *target_s = "(null)";
 
-  int cell, last_source_id;
-  int nr_targets;
+  int64_t cell, last_source_id;
+  int64_t nr_targets;
 
   /* some pretty printing stuff left over from Oli */
   last_source_id = -666;
@@ -718,16 +718,16 @@ ascii_print_group(Group *group, int expand, FILE *fd)
       if (cell == 0 || (group->is_grouped && nr_targets == 0))
         fprintf(fd, SEPARATOR);
 
-      fprintf(fd, "%-28s  %-28s\t%6d\n",
+      fprintf(fd, "%-28s  %-28s\t%6" PRId64 "\n",
               (nr_targets == 0) ? source_s : " ", target_s, count);
     }
     else {
       if (source_id < 0) source_s = "";        /* don't print "(none)" or "(all)" in plain mode (just empty string) */
       if (target_id < 0) target_s = "";
       if (has_source)
-        fprintf(fd, "%s\t%s\t%d\n", source_s, target_s, count);
+        fprintf(fd, "%s\t%s\t%" PRId64 "\n", source_s, target_s, count);
       else
-        fprintf(fd, "%s\t%d\n", target_s, count);
+        fprintf(fd, "%s\t%" PRId64 "\n", target_s, count);
     }
 
     if (expand) {

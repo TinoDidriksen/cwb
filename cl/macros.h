@@ -76,13 +76,13 @@
  * display progress bar in terminal window (STDERR, child mode: STDOUT)
  */
 
-void progress_bar_child_mode(int on_off);
+void progress_bar_child_mode(bool on_off);
 
 void progress_bar_clear_line(void);
 
-void progress_bar_message(int pass, int total, char *message);
+void progress_bar_message(size_t pass, size_t total, char *message);
 
-void progress_bar_percentage(int pass, int total, int percentage);
+void progress_bar_percentage(size_t pass, size_t total, int64_t percentage);
 
 
 
@@ -97,7 +97,7 @@ void progress_bar_percentage(int pass, int total, int percentage);
 #define ilist_print_item(s) print_indented_list_item(s)
 #define ilist_end end_indented_list
 
-void start_indented_list(int linewidth, int tabsize, int indent);
+void start_indented_list(size_t linewidth, size_t tabsize, size_t indent);
 
 void print_indented_list_br(char *label);
 

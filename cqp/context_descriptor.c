@@ -80,12 +80,12 @@ context_descriptor_reset_right_context(ContextDescriptor *cd)
  * defaults if not. returns 1 if all keeps the same, 0 otherwise. The
  * string fields in CD are supposed to be malloced and freed.
  */
-int
+int64_t
 verify_context_descriptor(Corpus *corpus,
                           ContextDescriptor *cd,
-                          int remove_illegal_entries)
+                          int64_t remove_illegal_entries)
 {
-  int result = 1;
+  int64_t result = 1;
 
   if (cd == NULL) {
     fprintf(stderr, "verify_context_descriptor(): WARNING: Context Descriptor empty!\n");
@@ -126,7 +126,7 @@ verify_context_descriptor(Corpus *corpus,
             cd->left_type = ALIGN_CONTEXT;
             if (cd->left_width != 1) {
               cqpmessage(Warning,
-                         "Left Context '%d %s' changed to '1 %s' (alignment attribute).",
+                         "Left Context '%" PRId64 " %s' changed to '1 %s' (alignment attribute).",
                          cd->left_width,
                          cd->left_structure_name,
                          cd->left_structure_name);
@@ -168,7 +168,7 @@ verify_context_descriptor(Corpus *corpus,
             cd->right_type = ALIGN_CONTEXT;
             if (cd->right_width != 1) {
               cqpmessage(Warning,
-                         "Right Context '%d %s' changed to '1 %s' (alignment attribute).",
+                         "Right Context '%" PRId64 " %s' changed to '1 %s' (alignment attribute).",
                          cd->right_width,
                          cd->right_structure_name,
                          cd->right_structure_name);
@@ -235,7 +235,7 @@ NewContextDescriptor(void)
  *
  * @see ContextDescriptor
  */
-int
+int64_t
 initialize_context_descriptor(ContextDescriptor *cd)
 {
   cd->left_width = 0;
@@ -267,7 +267,7 @@ initialize_context_descriptor(ContextDescriptor *cd)
  * @param  cd      The destination of the settings.
  * @return         Always 1.
  */
-int
+int64_t
 update_context_descriptor(Corpus *corpus, ContextDescriptor *cd)
 {
   AttributeInfo *ai;
@@ -312,9 +312,9 @@ update_context_descriptor(Corpus *corpus, ContextDescriptor *cd)
 
 /** attribute (selected/unselected) print helper routine  */
 void
-PrintAttributes(FILE *fd, char *header, AttributeList *al, int show_if_annot)
+PrintAttributes(FILE *fd, char *header, AttributeList *al, int64_t show_if_annot)
 {
-  int line = 0, i;
+  int64_t line = 0, i;
   AttributeInfo *current;
 
   if (al && al->list) {
@@ -344,7 +344,7 @@ PrintAttributes(FILE *fd, char *header, AttributeList *al, int show_if_annot)
 /** attribute print helper routine (non pretty-printing mode)
  *  ( TODO desperately needs a better name ) */
 void
-PrintAttributesSimple(FILE *fd, char *type, AttributeList *al, int show_if_annot)
+PrintAttributesSimple(FILE *fd, char *type, AttributeList *al, int64_t show_if_annot)
 {
   AttributeInfo *ai;
 
@@ -370,7 +370,7 @@ PrintContextDescriptor(ContextDescriptor *cdp)
 {
   FILE *fd;
   struct Redir rd = { NULL, NULL, NULL, 0 };        /* for paging (with open_stream()) */
-  int stream_ok;
+  int64_t stream_ok;
 
   if (cdp) {
     stream_ok = open_stream(&rd, ascii);
@@ -379,7 +379,7 @@ PrintContextDescriptor(ContextDescriptor *cdp)
     if (pretty_print) {
       fprintf(fd, "===Context Descriptor=======================================\n");
       fprintf(fd, "\n");
-      fprintf(fd, "left context:     %d ", cdp->left_width);
+      fprintf(fd, "left context:     %" PRId64 " ", cdp->left_width);
 
       switch (cdp->left_type) {
       case char_context:
@@ -394,7 +394,7 @@ PrintContextDescriptor(ContextDescriptor *cdp)
         break;
       }
 
-      fprintf(fd, "right context:    %d ", cdp->right_width);
+      fprintf(fd, "right context:    %" PRId64 " ", cdp->right_width);
 
       switch (cdp->right_type) {
       case char_context:

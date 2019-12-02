@@ -26,24 +26,24 @@
  * The BuiltinF object represents a built-in function.
  */
 typedef struct _builtinf {
-  int id;                 /**< The id code of this function @see call_predefined_function */
+  int64_t id;                 /**< The id code of this function @see call_predefined_function */
   char *name;             /**< The name of this function */
-  int nr_args;            /**< How many arguments the function has */
-  int *argtypes;          /**< Address of an ordered array of argument types ("types" are ATTAT_x constants) */
-  int result_type;        /**< Type of the function's result ("types" are ATTAT_x constants) */
+  int64_t nr_args;            /**< How many arguments the function has */
+  int64_t *argtypes;          /**< Address of an ordered array of argument types ("types" are ATTAT_x constants) */
+  int64_t result_type;        /**< Type of the function's result ("types" are ATTAT_x constants) */
 } BuiltinF;
 
 
 extern BuiltinF builtin_function[];
 
 
-int find_predefined(char *name);
+int64_t find_predefined(char *name);
 
-int is_predefined_function(char *name);
+int64_t is_predefined_function(char *name);
 
-int call_predefined_function(int bf_id,
+int64_t call_predefined_function(int64_t bf_id,
                              DynCallResult *apl,
-                             int nr_args,
+                             int64_t nr_args,
                              Constrainttree ctptr,
                              DynCallResult *result);
 

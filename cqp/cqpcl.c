@@ -38,7 +38,7 @@
 int
 main(int argc, char *argv[])
 {
-  int i;
+  int64_t i;
   extern int optind;
 
   which_app = cqpcl;

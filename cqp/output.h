@@ -36,7 +36,7 @@ struct Redir {
   char *name;     /**< file name for redirection; if NULL, stdout is used */
   char *mode;     /**< mode for redirection ("w" or "a") */
   FILE *stream;   /**< the actual FILE object to write to. */
-  int is_paging;  /**< true iff piping into default pager */
+  int64_t is_paging;  /**< true iff piping into default pager */
 };
 
 /**
@@ -63,12 +63,12 @@ struct InputRedir {
 typedef struct _TabulationItem {
   char *attribute_name;                 /**< attribute (name) */
   Attribute *attribute;                 /**< handle of said named attribute */
-  int attribute_type;                   /**< ATT_NONE = cpos, ATT_POS, ATT_STRUC */
-  int flags;                            /**< normalization flags (%c and %d) */
+  int64_t attribute_type;                   /**< ATT_NONE = cpos, ATT_POS, ATT_STRUC */
+  int64_t flags;                            /**< normalization flags (%c and %" PRId64 ") */
   FieldType anchor1;                    /**< start of token sequence to be tabulated */
-  int offset1;                          /**< first cpos offset (from the anchor: e.g. match[-1], etc.  */
+  int64_t offset1;                          /**< first cpos offset (from the anchor: e.g. match[-1], etc.  */
   FieldType anchor2;                    /**< end of token sequence (may be identical to start) */
-  int offset2;                          /**< second cpos offset (from the anchor: e.g. match[5], etc.  */
+  int64_t offset2;                          /**< second cpos offset (from the anchor: e.g. match[5], etc.  */
   struct _TabulationItem *next;         /**< next tabulation item */
 } *TabulationItem;
 
@@ -80,25 +80,25 @@ FILE *open_temporary_file(char *tmp_name_buffer);
 
 FILE *open_file(char *name, char *mode);
 
-int open_stream(struct Redir *rd, CorpusCharset charset);
+int64_t open_stream(struct Redir *rd, CorpusCharset charset);
 
-int close_stream(struct Redir *rd);
+int64_t close_stream(struct Redir *rd);
 
-int open_input_stream(struct InputRedir *rd);
+int64_t open_input_stream(struct InputRedir *rd);
 
-int close_input_stream(struct InputRedir *rd);
+int64_t close_input_stream(struct InputRedir *rd);
 
 void catalog_corpus(CorpusList *cl,
                     struct Redir *rd,
-                    int first,
-                    int last,
+                    int64_t first,
+                    int64_t last,
                     PrintMode mode);
 
 void print_output(CorpusList *cl,
                   FILE *fd,
-                  int interactive,
+                  int64_t interactive,
                   ContextDescriptor *cd,
-                  int first, int last,
+                  int64_t first, int64_t last,
                   PrintMode mode);
 
 void corpus_info(CorpusList *cl);
@@ -117,7 +117,7 @@ void cqpmessage(MessageType type, char *format, ...);
 void print_corpus_info_header(CorpusList *cl,
                               FILE *stream,
                               PrintMode mode,
-                              int force);
+                              int64_t force);
 
 /* ---------------------------------------------------------------------- */
 
@@ -127,6 +127,6 @@ TabulationItem new_tabulation_item(void);
 
 void append_tabulation_item(TabulationItem item);
 
-int print_tabulation(CorpusList *cl, int first, int last, struct Redir *rd);
+int64_t print_tabulation(CorpusList *cl, int64_t first, int64_t last, struct Redir *rd);
 
 #endif

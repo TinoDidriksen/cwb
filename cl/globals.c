@@ -24,13 +24,13 @@
  *
  *  0 = none (default), 1 = some, 2 = heavy
  */
-int cl_debug = 0;
+int64_t cl_debug = 0;
 /**
  *  global configuration variable: optimisation.
  *
  *  0 = off, 1 = on  (untested / expensive optimisations)
  */
-int cl_optimize = 0;
+int64_t cl_optimize = 0;
 /**
  *  global configuration variable: memory limit.
  *
@@ -53,9 +53,9 @@ size_t cl_memory_limit = 0;
  * @see cl_debug
  */
 void
-cl_set_debug_level(int level) {
+cl_set_debug_level(int64_t level) {
   if ((level < 0) || (level > 2)) {
-    fprintf(stderr, "cl_set_debug_level(): non-existent level #%d (ignored)\n", level);
+    fprintf(stderr, "cl_set_debug_level(): non-existent level #%" PRId64 " (ignored)\n", level);
   }
   else {
     cl_debug = level;
@@ -69,7 +69,7 @@ cl_set_debug_level(int level) {
  * @param state  Boolean (true turns it on, false turns it off).
  */
 void
-cl_set_optimize(int state) {
+cl_set_optimize(int64_t state) {
   cl_optimize = (state) ? 1 : 0;
 }
 
@@ -79,7 +79,7 @@ cl_set_optimize(int state) {
  * @see cl_memory_limit
  */
 void 
-cl_set_memory_limit(int megabytes) {
+cl_set_memory_limit(int64_t megabytes) {
   if (megabytes <= 0) {
     cl_memory_limit = 0;
   }

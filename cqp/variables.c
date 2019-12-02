@@ -43,7 +43,7 @@
 #define VARIABLE_REALLOC 16
 
 /** Number of variables in VariableArray (exported)*/
-int nr_variables = 0;
+int64_t nr_variables = 0;
 
 /** Global array of Variables  (exported) */
 Variable *VariableSpace = NULL;
@@ -62,7 +62,7 @@ Variable *VariableSpace = NULL;
 Variable
 FindVariable(char *varname)
 {
-  int i;
+  int64_t i;
   
   for (i = 0; i < nr_variables; i++)
     if (VariableSpace[i] && strcmp(VariableSpace[i]->my_name, varname) == 0)
@@ -76,10 +76,10 @@ FindVariable(char *varname)
  *
  * @return  Boolean: true if the variable contains the string.
  */
-int
+bool
 VariableItemMember(Variable v, char *item)
 {
-  int i;
+  int64_t i;
 
   for (i = 0; i < v->nr_items; i++)
     if (!v->items[i].free && strcmp(v->items[i].sval, item) == 0)
@@ -93,10 +93,10 @@ VariableItemMember(Variable v, char *item)
  *
  * @return  Always 1.
  */
-int
+void
 VariableAddItem(Variable v, char *item)
 {
-  int i;
+  int64_t i;
 
   if (!VariableItemMember(v, item)) {
     
@@ -143,7 +143,6 @@ VariableAddItem(Variable v, char *item)
       }
     }
   }
-  return 1;
 }
 
 /**
@@ -155,10 +154,10 @@ VariableAddItem(Variable v, char *item)
  * @param item  The string to take out of the variable.
  * @return     Always 1
  */
-int
+void
 VariableSubtractItem(Variable v, const char *item)
 {
-  int i;
+  int64_t i;
 
   /* by altering the list, it is automatically no longer valid:
    * it will need to be rechecked if it has already been checked. */
@@ -173,8 +172,6 @@ VariableSubtractItem(Variable v, const char *item)
       v->items[i].free++;
     }
   }
-  
-  return 1;
 }
 
 /**
@@ -182,10 +179,10 @@ VariableSubtractItem(Variable v, const char *item)
  *
  * The variable continues to exist, but is now empty.
  */
-int
+void
 VariableDeleteItems(Variable v)
 {
-  int i;
+  int64_t i;
 
   /* first, free the strings. */
   for (i = 0; i < v->nr_items; i++)
@@ -196,7 +193,6 @@ VariableDeleteItems(Variable v)
   v->nr_valid_items = 0;
   v->nr_invalid_items = 0;
   cl_free(v->items);
-  return 1;
 }
 
 /**
@@ -209,10 +205,10 @@ VariableDeleteItems(Variable v)
  *            to NULL once emptied out.
  * @return    Always 1.
  */
-int
+void
 DropVariable(Variable *vp)
 {
-  int i;
+  int64_t i;
 
   Variable v = *vp;
 
@@ -235,8 +231,6 @@ DropVariable(Variable *vp)
   
   *vp = NULL;
   vp = NULL;
-  
-  return 1;
 }
 
 /**
@@ -248,7 +242,7 @@ Variable
 NewVariable(char *varname)
 {
   Variable v;
-  int i;
+  int64_t i;
 
   /* the caller may or may not have checked this. */
   if (varname == NULL)
@@ -298,7 +292,7 @@ NewVariable(char *varname)
 /**
  * Sets the value of a variable; returns true for success, false for failure.
  */
-int
+bool
 SetVariableValue(char *varName, 
                  char operator,
                  char *varValues)
@@ -356,7 +350,7 @@ SetVariableValue(char *varName,
 
     fd = cl_open_stream(varValues, CL_STREAM_READ, (insecure) ? CL_STREAM_MAGIC_NOPIPE : CL_STREAM_MAGIC);
     if (fd) {
-      int l;
+      int64_t l;
       char s[CL_MAX_LINE_LENGTH];
 
       while (fgets(s, CL_MAX_LINE_LENGTH, fd) != NULL) {
@@ -388,7 +382,7 @@ SetVariableValue(char *varName,
 /* 
  *  variables iterator: one non-exported integer and two functions.
  */
-int variables_iterator_idx;
+int64_t variables_iterator_idx;
 
 /**
  * Resets the global variables iterator to the beginning of the global VariableSpace array.
@@ -428,14 +422,14 @@ variables_iterator_next(void)
  *          lexicon). Same as the value of the Variable's "valid" flag after this
  *          function has run.
  */
-int
+bool
 VerifyVariable(Variable v, Corpus *corpus, Attribute *attribute)
 {
-  int i;
+  int64_t i;
   char *str;
 
   /* nr valid = n of strings in the var that are also in the corpus lexicon. */
-  int nr_valid, nr_invalid;
+  int64_t nr_valid, nr_invalid;
 
   /* only verify the variable if (a) it is not already verified,
    * or (b) it is verified, but for another corpus. */
@@ -505,7 +499,7 @@ VerifyVariable(Variable v, Corpus *corpus, Attribute *attribute)
 static
 int intcompare(const void *i, const void *j)
 {
-  return(*(int *)i - *(int *)j);
+  return(*(int64_t*)i - *(int64_t*)j);
 }
 
 /**
@@ -519,19 +513,19 @@ int intcompare(const void *i, const void *j)
  *                  NULL if there were no valid items (i.e. items found in the
  *                  attribute's lexicon).
  */
-int *
+int64_t *
 GetVariableItems(Variable v, 
                  Corpus *corpus,
                  Attribute *attribute,
                  /* returned: */
-                 int *nr_items)
+                 int64_t *nr_items)
 {
-  int *items;
-  int i, ip; /* ip = index into the new "items" array, whereas i indexes the v->items array */
+  int64_t *items;
+  int64_t i, ip; /* ip = index into the new "items" array, whereas i indexes the v->items array */
 
   if (VerifyVariable(v, corpus, attribute)) {
     if (v->nr_valid_items > 0) {
-      items = (int *)cl_malloc(v->nr_valid_items * sizeof(int));
+      items = (int64_t*)cl_malloc(v->nr_valid_items * sizeof(*items));
       *nr_items = v->nr_valid_items;
 
       ip = 0;
@@ -549,7 +543,7 @@ GetVariableItems(Variable v,
         fprintf(stderr, "Error #3 in variable logic. Please contact developer.\n");
 
       /* eval_bool() expects a sorted list of IDs (for binary search) */
-      qsort(items, *nr_items, sizeof(int), intcompare);
+      qsort(items, *nr_items, sizeof(*items), intcompare);
       return items;
     }
     else {
@@ -576,10 +570,10 @@ GetVariableItems(Variable v,
  * @return          Table of pointers to the Variable's strings.
  */
 char **
-GetVariableStrings(Variable v, int *nr_items)
+GetVariableStrings(Variable v, int64_t *nr_items)
 {
   char **result;
-  int i, j, N;
+  int64_t i, j, N;
   
   /* count number of items (strings) stored in variable */
   N = 0;

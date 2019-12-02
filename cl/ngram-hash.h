@@ -24,7 +24,7 @@
 #include "cl.h"
 
 /* some utility functions which might be re-used for other hash tables */
-unsigned int hash_ngram(int N, int *tuple);
+int64_t hash_ngram(int64_t N, int64_t *tuple);
 
 
 #endif

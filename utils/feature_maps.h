@@ -23,7 +23,7 @@
 
 /** Data structure for the vstack member of the FMS object. @see FMS */
 typedef struct vstack_t {
-  int *fcount;
+  int64_t *fcount;
   struct vstack_t *next;
 } vstack_t;
 
@@ -34,10 +34,10 @@ typedef struct feature_maps_t {
   Attribute *att2;              /**< word attribute of target corpus */
   Attribute *s1;                /**< sentence regions of source corpus */
   Attribute *s2;                /**< sentence regions of target corpus */
-  int n_features;               /**< number of allocated features */
-  int **w2f1;                   /**< feature map 1 */
-  int **w2f2;                   /**< feature map 2 */
-  int *fweight;                 /**< array of feature weights */
+  int64_t n_features;           /**< number of allocated features */
+  int64_t **w2f1;               /**< feature map 1 */
+  int64_t **w2f2;               /**< feature map 2 */
+  int64_t *fweight;             /**< array of feature weights */
 
   vstack_t *vstack;             /**< a stack (implemented as linked list) of integer vectors,
                                      each containing <n_features> integers. */
@@ -58,37 +58,34 @@ typedef struct feature_maps_t {
 typedef feature_maps_t *FMS;
 
 
-FMS create_feature_maps(char **config, int config_lines,
+FMS create_feature_maps(char **config, int64_t config_lines,
                         Attribute *w_attr1, Attribute *w_attr2,
                         Attribute *s_attr1, Attribute *s_attr2
                         );
 
 
-int *get_fvector(FMS fms);
+int64_t *get_fvector(FMS fms);
 
-void release_fvector(int *fvector, FMS fms);
+void release_fvector(int64_t *fvector, FMS fms);
 
 void check_fvectors(FMS fms);
 
 
 
-int feature_match(FMS fms, int f1, int l1, int f2, int l2);
+int64_t feature_match(FMS fms, int64_t f1, int64_t l1, int64_t f2, int64_t l2);
 
 
-void show_features(FMS fms, int which, char *word);
+void show_features(FMS fms, int64_t which, char *word);
 
 
 
 void best_path(FMS fms,
-               int f1, int l1,
-               int f2, int l2,
-               int beam_width,       /* beam search */
-               int verbose,          /* echo progress info on stdout ? */
+               int64_t f1, int64_t l1,
+               int64_t f2, int64_t l2,
+               int64_t beam_width,       /* beam search */
+               int64_t verbose,          /* echo progress info on stdout ? */
                /* output */
-               int *steps,
-               int **out1,
-               int **out2,
-               int **out_quality);
-
-
-
+               int64_t *steps,
+               int64_t **out1,
+               int64_t **out2,
+               int64_t **out_quality);

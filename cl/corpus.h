@@ -44,7 +44,7 @@ typedef struct _idbuf {
 
 
 void FreeIDList(IDList *list);
-int memberIDList(char *s, IDList l);
+int64_t memberIDList(char *s, IDList l);
 
 /* a new-style API for idlists */
 #define IDList_delete(l) FreeIDList(l)
@@ -77,7 +77,7 @@ struct TCorpus {
   char *registry_dir;              /**< Directory where this corpus's registry file is located */
   char *registry_name;             /**< the cwb-name of this corpus */
 
-  int nr_of_loads;                 /**< the number of setup_corpus ops */
+  int64_t nr_of_loads;                 /**< the number of setup_corpus ops */
 
   union _Attribute *attributes;    /**< the list of attributes */
   

@@ -33,7 +33,7 @@
  * @return              Pointer to the new AttributeList object.
  */
 AttributeList *
-NewAttributeList(int element_type)
+NewAttributeList(int64_t element_type)
 {
   AttributeList *l;
 
@@ -51,7 +51,7 @@ NewAttributeList(int element_type)
  *
  * @param list  Address of the pointer to the list to delete.
  */
-int
+int64_t
 DestroyAttributeList(AttributeList **list)
 {
   AttributeInfo *ai;
@@ -102,8 +102,8 @@ DestroyAttributeList(AttributeList **list)
 AttributeInfo
 *AddNameToAL(AttributeList *list,
              char *name,
-             int initial_status,
-             int position)
+             int64_t initial_status,
+             int64_t position)
 {
   if (MemberAL(list, name))
     return NULL;
@@ -182,7 +182,7 @@ AttributeInfo
  * @return       True if the attribute info was found and deleted;
  *               otherwise false.
  */
-int 
+int64_t 
 RemoveNameFromAL(AttributeList *list, char *name)
 {
   AttributeInfo *this, *prev;
@@ -247,7 +247,7 @@ RemoveNameFromAL(AttributeList *list, char *name)
  * @return       True if the attribute info was found and deleted;
  *               otherwise false.
  */
-int 
+int64_t 
 Unchain(AttributeList *list, AttributeInfo *this)
 {
   AttributeInfo *prev;
@@ -297,10 +297,10 @@ Unchain(AttributeList *list, AttributeInfo *this)
  * @param list  The list to size up.
  * @return      The number of elements in the list.
  */
-int
+int64_t
 NrOfElementsAL(AttributeList *list)
 {
-  int nr;
+  int64_t nr;
   AttributeInfo *l;
 
   nr = 0;
@@ -322,7 +322,7 @@ NrOfElementsAL(AttributeList *list)
  * @param name  The name of the element to search for.
  * @return      Boolean: true if the element is found as a member of the list.
  */
-int
+int64_t
 MemberAL(AttributeList *list, char *name)
 {
   return (FindInAL(list, name) ? 1 : 0);
@@ -367,8 +367,8 @@ AttributeInfo *FindInAL(AttributeList *list, char *name)
  * @param init_status  Not currently used.
  * @return             Always 1.
  */
-int
-RecomputeAL(AttributeList *list, Corpus *corpus, int init_status)
+int64_t
+RecomputeAL(AttributeList *list, Corpus *corpus, int64_t init_status)
 {
   /* silly implementation, but usually short lists. so what... */
 
@@ -442,12 +442,12 @@ RecomputeAL(AttributeList *list, Corpus *corpus, int init_status)
  * @param remove_illegal_entries  Boolean: see function description.
  * @return                        Boolean: true for all OK, false for error.
  */
-int
+int64_t
 VerifyList(AttributeList *list,
            Corpus *corpus,
-           int remove_illegal_entries)
+           int64_t remove_illegal_entries)
 {
-  int result;
+  int64_t result;
   AttributeInfo *ai, *prev, *this;
   
   result = 1;

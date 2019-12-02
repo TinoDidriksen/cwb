@@ -68,14 +68,14 @@ void cregerror_cleanup(char *message)
 
 %union {
   char    *strval;
-  int      ival;
+  int64_t      ival;
   void    *args;
   void    *attr;
 
   IDList   idlist;
 
   struct {
-    int status;
+    int64_t status;
     char *path;
   } storage;
 }
@@ -361,7 +361,7 @@ path            : id                { $$ = $1; }
 id              : IDENTIFIER        { $$ = $1; }
                 | NUMBER            { char *nr;
                                       nr = (char *)cl_malloc(16);
-                                      sprintf(nr, "%d", $1);
+                                      sprintf(nr, "%" PRId64 "", $1);
                                       $$ = nr;
                                     }
                 ;

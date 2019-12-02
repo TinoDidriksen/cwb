@@ -40,11 +40,11 @@ typedef enum outputmode {
  * print_XX --> "XX is to be printed"
  */
 typedef struct _print_option_rec_ {
-  int print_header;                /**< Can be: header/hdr,noheader */
-  int print_tabular;               /**< Can be: table/tbl,notable */
-  int print_wrap;                  /**< Can be: wrap, nowrap */
-  int print_border;                /**< Can be: border/bdr,noborder */
-  int number_lines;                /**< number of lines */
+  int64_t print_header;                /**< Can be: header/hdr,noheader */
+  int64_t print_tabular;               /**< Can be: table/tbl,notable */
+  int64_t print_wrap;                  /**< Can be: wrap, nowrap */
+  int64_t print_border;                /**< Can be: border/bdr,noborder */
+  int64_t number_lines;                /**< number of lines */
 } PrintOptions;
 
 /**
@@ -59,7 +59,7 @@ typedef struct _print_option_rec_ {
 typedef struct _print_descr_rec_ {
 
   char *CPOSPrintFormat;              /**< printf()-Formatting String for display of a corpus position
-                                           (needs a %d or %x or similar in it somewhere)               */
+                                           (needs a %" PRId64 " or %x or similar in it somewhere)               */
 
   char *BeforePrintStructures;        /**< to print before PS */
   char *PrintStructureSeparator;      /**< to print as separator */
@@ -89,7 +89,7 @@ typedef struct _print_descr_rec_ {
   char *AfterConcordance;             /**< what to print after the concordance */
 
   char *(*printToken)(char *);        /**< function pointer for printing a token */
-  char *(*printField)(FieldType, int); /**< function pointer for printing a field
+  char *(*printField)(FieldType, int64_t); /**< function pointer for printing a field
                                         *   i.e. for highlighting a token that is one of the 4 anchor points;
                                         *   if NULL, these aren't printed. */
   

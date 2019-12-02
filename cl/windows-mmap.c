@@ -45,13 +45,13 @@
  * documented much more thoroughly than we could hope to do here.
  */
 void *
-mmap(void *start, size_t length, int prot, int flags, int fd, off_t offset)
+mmap(void *start, size_t length, int64_t prot, int64_t flags, int64_t fd, off_t offset)
 {
   HANDLE hmap;
   void *temp;
-  size_t len;
+  size_t len = 0;
   struct stat st;
-  uint64_t o = offset;
+  int64_t o = offset;
   uint32_t l = o & 0xFFFFFFFF;
   uint32_t h = (o >> 32) & 0xFFFFFFFF;
 
@@ -91,7 +91,7 @@ mmap(void *start, size_t length, int prot, int flags, int fd, off_t offset)
  *
  * @see mmap
  */
-int
+int64_t
 munmap(void *start, size_t length)
 {
   return !UnmapViewOfFile(start);

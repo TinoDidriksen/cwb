@@ -44,7 +44,7 @@
 /** File handle used by the CQP-query-language parser. */
 extern FILE *yyin;
 /** Activates the CQP-query-language parser. Returns a boolean. */
-extern int yyparse (void);
+extern int yyparse(void);
 /** restarts the CQP-query-language parser. */
 extern void yyrestart(FILE *input_file);
 
@@ -52,12 +52,12 @@ extern void yyrestart(FILE *input_file);
 /** Pointer that stores the address of strings read form the CLI by CQP. */
 char *cqp_input_string;
 /** index into the CQP input string; used for character-by-character read. */
-int cqp_input_string_position;
+int64_t cqp_input_string_position;
 
 /** Array of file handles. Allows nested execution of "included" text files full of commands. */
 FILE *cqp_files[MAXCQPFILES];
 /** index into cqp_files. @see cqp_files */
-int cqp_file_p;
+int64_t cqp_file_p;
 
 /**
  * Boolean: true iff cqp_parse_file() - the main query syntax parsing function -
@@ -66,7 +66,7 @@ int cqp_file_p;
  * @see cqprc
  * @see cqp_parse_file
  */
-int reading_cqprc = 0;
+int64_t reading_cqprc = 0;
 
 /**
  * Global error status for CQP (will be returned to the caller when CQP exits).
@@ -79,13 +79,13 @@ int reading_cqprc = 0;
  * TODO actually get this variable set in various error conditions.
  * TODO work out whether cqpserver should exit with this error.
  */
-LIBCQP_API int cqp_error_status = 0;
+LIBCQP_API int64_t cqp_error_status = 0;
 
 /* ======================================== Query Buffer Interface */
 
 char QueryBuffer[QUERY_BUFFER_SIZE];        /**< buffer for queries */
-int QueryBufferP = 0;                       /**< index into this buffer, for appending */
-int QueryBufferOverflow = 0;                /**< flag which signals buffer overflows */
+int64_t QueryBufferP = 0;                       /**< index into this buffer, for appending */
+int64_t QueryBufferOverflow = 0;                /**< flag which signals buffer overflows */
 
 
 
@@ -146,8 +146,8 @@ install_signal_handler(void)
  * @param argv  The argv from main()
  * @return      Always 1.
  */
-int
-initialize_cqp(int argc, char **argv)
+int64_t
+initialize_cqp(int64_t argc, char **argv)
 {
   char *home = NULL;
   char init_file_fullname[CL_MAX_FILENAME_LENGTH];
@@ -159,7 +159,7 @@ initialize_cqp(int argc, char **argv)
   /* file handle for initialisation files, if any */
   FILE *cqprc;
 
-  extern int yydebug;
+  extern int64_t yydebug;
 
   /* initialize global variables */
 
@@ -326,11 +326,11 @@ initialize_cqp(int argc, char **argv)
  * @param exit_on_parse_errors  Boolean: should CQP exit on parse errors?
  * @return                      Boolean: true = all ok, false = a problem.
  */
-int
-cqp_parse_file(FILE *fd, int exit_on_parse_errors)
+int64_t
+cqp_parse_file(FILE *fd, int64_t exit_on_parse_errors)
 {
-  int ok, quiet;
-  int cqp_status;
+  int64_t ok, quiet;
+  int64_t cqp_status;
 
   ok = 1;
   quiet = silent || (fd != stdin);
@@ -360,7 +360,7 @@ cqp_parse_file(FILE *fd, int exit_on_parse_errors)
           if (STREQ(current_corpus->name, current_corpus->mother_name))
             printf("%s> ", current_corpus->name);
           else
-            printf("%s:%s[%d]> ",
+            printf("%s:%s[%" PRId64 "]> ",
                    current_corpus->mother_name,
                    current_corpus->name,
                    current_corpus->size);
@@ -396,7 +396,7 @@ cqp_parse_file(FILE *fd, int exit_on_parse_errors)
     return ok;
   } /* endif (cqp_file_p < MAXCQPFILES) */
   else {
-    fprintf(stderr, "CQP: too many nested files (%d)\n", cqp_file_p);
+    fprintf(stderr, "CQP: too many nested files (%" PRId64 ")\n", cqp_file_p);
     return 0;
   }
 }
@@ -411,11 +411,11 @@ cqp_parse_file(FILE *fd, int exit_on_parse_errors)
  * @param  s  The string to parse.
  * @return    Boolean: true = all ok, false = a problem.
  */
-int
+int64_t
 cqp_parse_string(char *s)
 {
-  int ok, len, abort;
-  int cqp_status;
+  int64_t ok, len, abort;
+  int64_t cqp_status;
 
   ok = 1;
   abort = 0;
@@ -463,7 +463,7 @@ InterruptCheckProc interruptCallbackHook = NULL;
  * @param f  Pointer to the function to set as interrupt callback.
  * @return   Always 1.
  */
-int
+int64_t
 setInterruptCallback(InterruptCheckProc f)
 {
   interruptCallbackHook = f;

@@ -68,11 +68,11 @@ main(int argc, char **argv)
   Corpus *corpus = NULL;
   Attribute *att = NULL;
 
-  int start1, end1, start2, end2, n, att_size;
+  int64_t start1, end1, start2, end2, n, att_size;
 
   extern int optind;
   extern char *optarg;
-  int c;
+  int64_t c;
 
   /* ------------------------------------------------- PARSE ARGUMENTS */
 
@@ -144,7 +144,7 @@ main(int argc, char **argv)
       cl_error("Can't find region boundaries for alignment bead");
       exit(1);
     }
-    printf("%d\t%d\t%d\t%d\n", start1, end1, start2, end2);
+    printf("%" PRId64 "\t%" PRId64 "\t%" PRId64 "\t%" PRId64 "\n", start1, end1, start2, end2);
   }
 
   /* that was all ...  */

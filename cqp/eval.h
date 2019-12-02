@@ -107,16 +107,16 @@ typedef union c_tree {
   /** "constant" node in the evaluation tree */
   struct {
     enum bnodetype type;                  /**< must be cnode                     */
-    int            val;                   /**< Value of the constant: 1 or 0 for true or false */
+    int64_t            val;                   /**< Value of the constant: 1 or 0 for true or false */
   }                constnode;
 
   /** function call (dynamic attribute), type is "func" */
   struct {
     enum bnodetype type;                  /**< must be func                  */
-    int            predef;
+    int64_t            predef;
     Attribute     *dynattr;
     struct _ActualParamList *args;        /**< arguments of the function     */
-    int            nr_args;               /**< nr of arguments for this call */
+    int64_t            nr_args;               /**< nr of arguments for this call */
   }                func;
 
   /** structure boundary */
@@ -131,7 +131,7 @@ typedef union c_tree {
     enum bnodetype type;                  /**< must be pa_ref */
     LabelEntry     label;                 /**< may be empty (NULL) */
     Attribute     *attr;                  /**< the P-attribute we are referring to */
-    int            delete;                /**< delete label after using it ? */
+    int64_t            delete;                /**< delete label after using it ? */
   }                pa_ref;
 
   /**
@@ -150,7 +150,7 @@ typedef union c_tree {
     enum bnodetype type;                  /**< must be sa_ref */
     LabelEntry     label;                 /**< may be empty (NULL) */
     Attribute     *attr;                  /**< the s-attribute we are referring to */
-    int            delete;                /**< delete label after using it ? */
+    int64_t            delete;                /**< delete label after using it ? */
   }                sa_ref;
 
   struct {
@@ -162,25 +162,25 @@ typedef union c_tree {
     enum bnodetype type;                  /**< must be id_list */
     Attribute     *attr;
     LabelEntry     label;                 /**< may be empty (NULL) */
-    int            negated;
-    int            nr_items;
-    int           *items;                 /**< an array of item IDs of size nr_items */
-    int            delete;                /**< delete label after using it ? */
+    int64_t            negated;
+    int64_t            nr_items;
+    int64_t           *items;                 /**< an array of item IDs of size nr_items */
+    int64_t            delete;                /**< delete label after using it ? */
   }                idlist;
 
-  /** constant (string, int, float, ...) */
+  /** constant (string, int64_t, float, ...) */
   struct {
     enum bnodetype type;                  /**< string_leaf, int_leaf, or float_leaf */
 
-    int            canon;                 /**< canonicalization mode (i.e. flags)         */
+    int64_t            canon;                 /**< canonicalization mode (i.e. flags)         */
     enum wf_type   pat_type;              /**< pattern type: normal wordform or reg. exp. */
     CL_Regex       rx;                    /**< compiled regular expression (using CL frontend) */
 
     /** Union containing the constant type. */
     union {
       char        *sconst;               /**< operand is a string constant.           */
-      int          iconst;               /**< operand is a integer constant.          */
-      int          cidconst;             /**< operand is {?? corpus position?? corpus lexicon id??} constant */
+      int64_t          iconst;               /**< operand is a integer constant.          */
+      int64_t          cidconst;             /**< operand is {?? corpus position?? corpus lexicon id??} constant */
       double       fconst;               /**< operand is a float (well, double) constant */
     }              ctype;
   }                leaf;
@@ -248,21 +248,21 @@ union e_tree {
     enum re_ops    op_id;      /**< id_number of the RE operator */
     Evaltree       left,       /**< points to the first argument */
                    right;      /**< points to the second argument -- if it exists. */
-    int            min,        /**< minimum number of repetitions.  */
+    int64_t            min,        /**< minimum number of repetitions.  */
                    max;        /**< maximum number of repetitions.  */
   }                node;
 
   /** node type: leaf */
   struct {
     enum tnodetype type;
-    int            patindex;   /**< index to the patternlist */
+    int64_t            patindex;   /**< index to the patternlist */
   }                leaf;
 
   /** node type: meet_union */
   struct {
     enum tnodetype type;
     enum cooc_op   op_id;
-    int            lw, rw;
+    int64_t            lw, rw;
     Attribute     *struc;
     Evaltree       left, right;
 
@@ -271,9 +271,9 @@ union e_tree {
   /** node type: tabular */
   struct {
     enum tnodetype type;
-    int patindex;              /**< index into pattern list */
-    int min_dist;              /**< minimal distance to next pattern */
-    int max_dist;              /**< maximal distance to next pattern */
+    int64_t patindex;              /**< index into pattern list */
+    int64_t min_dist;              /**< minimal distance to next pattern */
+    int64_t max_dist;              /**< maximal distance to next pattern */
     Evaltree       next;       /**< next pattern */
   }                tab_el;
 
@@ -321,19 +321,19 @@ typedef union _avs {
   /** a structure describing an XML tag */
   struct {
     AVSType type;                /* set to Tag */
-    int is_closing;
+    int64_t is_closing;
     Attribute *attr;
     char *constraint;            /**< constraint for annotated value of region (string or regexp); NULL = no constraint */
-    int flags;                   /**< flags passed to regexp or string constraint (information purposes only) */
+    int64_t flags;                   /**< flags passed to regexp or string constraint (information purposes only) */
     CL_Regex rx;                 /**< if constraint is a regexp, this holds the compiled regexp; otherwise NULL */
-    int negated;                 /**< whether constraint is negated (!=, not matches, not contains) */
+    int64_t negated;                 /**< whether constraint is negated (!=, not matches, not contains) */
     LabelEntry right_boundary;   /**< label in RDAT namespace: contains right boundary of constraining region (in StrictRegions mode) */
   } tag;
 
   /* an anchor point tag (used in subqueries) */
   struct {
     AVSType type;                /* set to Anchor */
-    int is_closing;
+    int64_t is_closing;
     FieldType field;
   } anchor;
 } AVStructure;
@@ -362,8 +362,8 @@ typedef struct ctxtsp {
                                      Might be left, right, or leftright*/
   enum spacet    type;          /**< kind of space (word or structure)         */
   Attribute     *attrib;        /**< attribute representing the structure.     */
-  int            size;          /**< size of space in number of structures.    */
-  int            size2;         /**< only for meet-context                     */
+  int64_t            size;          /**< size of space in number of structures.    */
+  int64_t            size2;         /**< only for meet-context                     */
 } Context;
 
 
@@ -375,7 +375,7 @@ typedef struct ctxtsp {
  * eep contains the index of the highest currently-occupied slot within Environment.
  * @see Environment
  */
-int eep;
+int64_t eep;
 
 /**
  * The EvalEnvironment object: environment variables for the evaluation of
@@ -385,11 +385,11 @@ typedef struct evalenv {
 
   CorpusList *query_corpus;         /**< the search corpus for this query part */
 
-  int rp;                           /**< index of current range (in subqueries) */
+  int64_t rp;                           /**< index of current range (in subqueries) */
 
   SymbolTable labels;               /**< symbol table for labels */
 
-  int MaxPatIndex;                  /**< the current number of patterns */
+  int64_t MaxPatIndex;                  /**< the current number of patterns */
   Patternlist patternlist;          /**< global variable which holds the pattern list */
 
   Constrainttree gconstraint;       /**< the "global constraint" */
@@ -398,9 +398,9 @@ typedef struct evalenv {
 
   DFA  dfa;                         /**< the regex DFA for the current query */
 
-  int has_target_indicator;         /**< is there a target mark ('@') in the query? */
+  int64_t has_target_indicator;         /**< is there a target mark ('@') in the query? */
   LabelEntry target_label;          /**< targets are implemented as a special label "target" now */
-  int has_keyword_indicator;        /**< is there a keyword mark (default '@9') in the query? */
+  int64_t has_keyword_indicator;        /**< is there a keyword mark (default '@9') in the query? */
   LabelEntry keyword_label;         /**< keywords are implemented as a special label "keyword" */
 
   LabelEntry match_label;           /**< special "match" and "matchend"-Labels for access to start & end of match within query */
@@ -410,7 +410,7 @@ typedef struct evalenv {
 
   Attribute *aligned;               /**< the attribute holding the alignment info */
 
-  int negated;                      /**< 1 iff we should negate alignment constr */
+  int64_t negated;                      /**< 1 iff we should negate alignment constr */
 
   enum _matching_strategy matching_strategy; /**< copied from global option unless overwritten by (?...) directive */
 
@@ -428,23 +428,23 @@ EEP CurEnv, evalenv;
 
 /* ---------------------------------------------------------------------- */
 
-Boolean eval_bool(Constrainttree ctptr, RefTab rt, int corppos);
+Boolean eval_bool(Constrainttree ctptr, RefTab rt, int64_t corppos);
 
 /* ==================== the three query types */
 
-void cqp_run_query(int cut, int keep_old_ranges);
+void cqp_run_query(int64_t cut, int64_t keep_old_ranges);
 
-void cqp_run_mu_query(int keep_old_ranges, int cut_value);
+void cqp_run_mu_query(int64_t keep_old_ranges, int64_t cut_value);
 
 void cqp_run_tab_query();
 
 /* ======================================== */
 
-int next_environment();
+int64_t next_environment();
 
-int free_environment(int thisenv);
+int64_t free_environment(int64_t thisenv);
 
-void show_environment(int thisenv);
+void show_environment(int64_t thisenv);
 
 void free_environments();
 

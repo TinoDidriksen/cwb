@@ -35,7 +35,7 @@ Corpus *corpus = NULL;
 
 /* typedef Attribute * ATPtr;    // No real need for a type used three times! */
 Attribute *print_list[MAX_ATTRS];    /**< array of attributes selected by user for printing */
-int print_list_index = 0;            /**< Number of atts added to print_list (so far);
+int64_t print_list_index = 0;            /**< Number of atts added to print_list (so far);
                                       *   used with less-than, = top limit for scrolling that array */
 
 /**
@@ -48,13 +48,13 @@ int print_list_index = 0;            /**< Number of atts added to print_list (so
  */
 typedef struct {
   char *name;                   /**< name of the s-attribute */
-  int start;
-  int end;
+  int64_t start;
+  int64_t end;
   char *annot;                  /**< NULL if there is no annotation; otherwise the content of the annotation */
 } SAttRegion;
 SAttRegion s_att_regions[MAX_ATTRS];
-int sar_sort_index[MAX_ATTRS];  /**< index used for bubble-sorting list of regions */
-int N_sar = 0;                  /**< number of regions currently in list (may change for each token printed) */
+int64_t sar_sort_index[MAX_ATTRS];  /**< index used for bubble-sorting list of regions */
+int64_t N_sar = 0;                  /**< number of regions currently in list (may change for each token printed) */
 
 /* ---------------------------------------- */
 
@@ -64,15 +64,15 @@ int N_sar = 0;                  /**< number of regions currently in list (may ch
 #define MAX_PRINT_VALUES 1024
 
 Attribute *printValues[MAX_PRINT_VALUES];   /**< List of s-attributes whose values are to be printed */
-int printValuesIndex = 0;                   /**< Number of atts added to printValues (so far);
+int64_t printValuesIndex = 0;                   /**< Number of atts added to printValues (so far);
                                              *   used with less-than, = top limit for scrolling that array */
 
 /* ---------------------------------------- */
 
-int first_token;            /**< cpos of token to begin output at */
-int last;                   /**< cpos of token to end output at (inclusive; ie this one gets printed!) */
-int maxlast;                /**< maximum ending cpos + 1 (deduced from size of p-attribute);  */
-int printnum = 0;           /**< whether or not token numbers are to be printed (-n option) */
+int64_t first_token;            /**< cpos of token to begin output at */
+int64_t last;                   /**< cpos of token to end output at (inclusive; ie this one gets printed!) */
+int64_t maxlast;                /**< maximum ending cpos + 1 (deduced from size of p-attribute);  */
+int64_t printnum = 0;           /**< whether or not token numbers are to be printed (-n option) */
 
 
 typedef enum _output_modes {
@@ -80,7 +80,7 @@ typedef enum _output_modes {
 } OutputMode;
 
 OutputMode mode = StandardMode;  /**< global variable for overall output mode */
-int xml_compatible = 0;          /**< xml-style, for (cwb-encode -x ...); EncodeMode only, selected by -Cx */
+int64_t xml_compatible = 0;          /**< xml-style, for (cwb-encode -x ...); EncodeMode only, selected by -Cx */
 
 
 /* not really necessary, but we'll keep it for now -- it's cleaner anyway :o) */
@@ -90,7 +90,7 @@ int xml_compatible = 0;          /**< xml-style, for (cwb-encode -x ...); Encode
  * @param error_code  Value to be returned by the program when it exits.
  */
 void
-decode_cleanup(int error_code)
+decode_cleanup(int64_t error_code)
 {
   if (corpus != NULL)
     cl_delete_corpus(corpus);
@@ -103,7 +103,7 @@ decode_cleanup(int error_code)
  * @param exit_code  Value to be returned by the program when it exits.
  */
 void
-decode_usage(int exit_code)
+decode_usage(int64_t exit_code)
 {
   fprintf(stderr, "\n");
   fprintf(stderr, "Usage:  %s [options] <corpus> [declarations]\n\n", progname);
@@ -147,13 +147,13 @@ decode_usage(int exit_code)
  * @param s  The string to check.
  * @return   Boolean: true iff s contains only digits.
  */
-int
+int64_t
 is_num(char *s)
 {
-  int i;
+  int64_t i;
 
   for (i = 0; s[i]; i++)
-    if (!isdigit((unsigned char) s[i]))
+    if (!isdigit((uint8_t) s[i]))
       return 0;
 
   return 1;
@@ -189,7 +189,7 @@ is_num(char *s)
 const char *
 decode_string_escape(const char *s)
 {
-  int i, t = 0;
+  int64_t i, t = 0;
   static char coded_s[CL_MAX_LINE_LENGTH];
 
   if (s == NULL)
@@ -330,7 +330,7 @@ decode_print_xml_declaration(void)
 void
 decode_sort_s_att_regions(void)
 {
-  int i, temp, modified;
+  int64_t i, temp, modified;
 
   for (i = 0; i < N_sar; i++)   /* initialise sort index */
     sar_sort_index[i] = i;
@@ -363,10 +363,10 @@ decode_sort_s_att_regions(void)
  * @param att_list_size  Upper bound of the array (the last member the function checks is attlist[attlist_size-1]).
  * @return               Boolean.
  */
-int
-decode_attribute_is_in_list(Attribute *attr, Attribute **att_list, int att_list_size)
+int64_t
+decode_attribute_is_in_list(Attribute *attr, Attribute **att_list, int64_t att_list_size)
 {
-  int i;
+  int64_t i;
   for (i = 0; i < att_list_size; i++)
     if (att_list[i] == attr)
       return 1;
@@ -379,7 +379,7 @@ decode_attribute_is_in_list(Attribute *attr, Attribute **att_list, int att_list_
  *
  * @return Boolean.
  */
-int
+int64_t
 decode_add_attribute(Attribute *attr)
 {
   if (print_list_index < MAX_ATTRS) {
@@ -408,7 +408,7 @@ decode_add_attribute(Attribute *attr)
 void
 decode_verify_print_value_list(void)
 {
-  int i;
+  int64_t i;
 
   for (i = 0; i < printValuesIndex; i++) {
     if (decode_attribute_is_in_list(printValues[i], print_list, print_list_index)) {
@@ -422,9 +422,9 @@ decode_verify_print_value_list(void)
  * Prints a starting tag for each s-attribute.
  */
 void
-decode_print_surrounding_s_att_values(int position)
+decode_print_surrounding_s_att_values(int64_t position)
 {
-  int i;
+  int64_t i;
   char *tagname;
 
   for (i = 0; i < printValuesIndex; i++) {
@@ -432,7 +432,7 @@ decode_print_surrounding_s_att_values(int position)
     if (printValues[i]) {
 
       const char *sval;
-      int snum;
+      int64_t snum;
 
       snum = cl_cpos2struc(printValues[i], position);
       if (snum >= 0) {
@@ -478,9 +478,9 @@ decode_print_surrounding_s_att_values(int position)
  * Function arguments are overwritten with the new values.
  */
 void
-decode_expand_context(int *start, int *end, Attribute *context) {
-  int sp = *start, ep = *end;
-  int dummy;
+decode_expand_context(int64_t *start, int64_t *end, Attribute *context) {
+  int64_t sp = *start, ep = *end;
+  int64_t dummy;
 
   assert(ep >= sp);
   if (!cl_cpos2struc2cpos(context, sp, start, &dummy))
@@ -489,7 +489,7 @@ decode_expand_context(int *start, int *end, Attribute *context) {
     *end = ep;
 }
 
-/* TODO should the parameters be const int ? */
+/* TODO should the parameters be const int64_t ? */
 /**
  * Prints out the requested attributes for a sequence of tokens
  * (or a single token if end_position == -1, which also indicates that we're not in matchlist mode).
@@ -501,12 +501,12 @@ decode_expand_context(int *start, int *end, Attribute *context) {
  * but not the tokens themselves (for subcorpus mode).
  */
 void
-decode_print_token_sequence(int start_position, int end_position, Attribute *context, int skip_token)
+decode_print_token_sequence(int64_t start_position, int64_t end_position, Attribute *context, int64_t skip_token)
 {
-  int alg, aligned_start, aligned_end, aligned_start2, aligned_end2,
+  int64_t alg, aligned_start, aligned_end, aligned_start2, aligned_end2,
     rng_start, rng_end, snum;
-  int start_context, end_context, dummy;
-  int lastposa, i, w;
+  int64_t start_context, end_context, dummy;
+  int64_t lastposa, i, w;
 
   /* pointer used for values of p-attributes */
   const char *wrd;
@@ -524,24 +524,24 @@ decode_print_token_sequence(int start_position, int end_position, Attribute *con
     /* indicate that we're showing context */
     switch (mode) {
     case LispMode:
-      printf("(TARGET %d\n", start_position);
+      printf("(TARGET %" PRId64 "\n", start_position);
       if (end_position >= 0)
-        printf("(INTERVAL %d %d)\n", start_position, end_position);
+        printf("(INTERVAL %" PRId64 " %" PRId64 ")\n", start_position, end_position);
       break;
     case EncodeMode:
     case ConclineMode:
       /* nothing here */
       break;
     case XMLMode:
-      printf("<context start=\"%d\" end=\"%d\"/>\n", start_context, end_context);
+      printf("<context start=\"%" PRId64 "\" end=\"%" PRId64 "\"/>\n", start_context, end_context);
       break;
     case StandardMode:
     default:
       if (end_position >= 0) {
-        printf("INTERVAL %d %d\n", start_position, end_position);
+        printf("INTERVAL %" PRId64 " %" PRId64 "\n", start_position, end_position);
       }
       else {
-        printf("TARGET %d\n", start_position);
+        printf("TARGET %" PRId64 "\n", start_position);
       }
       break;
     }
@@ -550,15 +550,15 @@ decode_print_token_sequence(int start_position, int end_position, Attribute *con
 
   /* some extra information in -L and -H modes */
   if (mode == LispMode && end_position != -1)
-    printf("(CONTEXT %d %d)\n", start_context, end_context);
+    printf("(CONTEXT %" PRId64 " %" PRId64 ")\n", start_context, end_context);
   else if (mode == ConclineMode) {
     if (printnum)
-      printf("%8d: ", start_position);
+      printf("%8" PRId64 ": ", start_position);
   }
 
   /* now print the token sequence (including context) with all requested attributes */
   for (w = start_context; w <= end_context; w++) {
-    int beg_of_line;
+    int64_t beg_of_line;
 
     /* extract s-attribute regions for start and end tags into s_att_regions[] */
     N_sar = 0;                  /* counter and index */
@@ -584,10 +584,10 @@ decode_print_token_sequence(int start_position, int end_position, Attribute *con
     if (printnum)
       switch (mode) {
       case LispMode:
-        printf("(%d ", w);
+        printf("(%" PRId64 " ", w);
         break;
       case EncodeMode:
-        printf("%8d\t", w);
+        printf("%8" PRId64 "\t", w);
         break;
       case ConclineMode:
         /* nothing here (shown at start of line in -H mode) */
@@ -597,7 +597,7 @@ decode_print_token_sequence(int start_position, int end_position, Attribute *con
         break;
       case StandardMode:
       default:
-        printf("%8d: ", w);
+        printf("%8" PRId64 ": ", w);
         break;
       }
     else {
@@ -624,13 +624,13 @@ decode_print_token_sequence(int start_position, int end_position, Attribute *con
             if (mode == XMLMode) {
               printf("<align type=\"start\" target=\"%s\"", print_list[i]->any.name);
               if (printnum)
-                printf(" start=\"%d\" end=\"%d\"", aligned_start2, aligned_end2);
+                printf(" start=\"%" PRId64 "\" end=\"%" PRId64 "\"", aligned_start2, aligned_end2);
               printf("/>\n");
             }
             else {
               printf("<%s", print_list[i]->any.name);
               if (printnum)
-                printf(" %d %d", aligned_start2, aligned_end2);
+                printf(" %" PRId64 " %" PRId64 "", aligned_start2, aligned_end2);
               printf(">%c", (mode == EncodeMode) ? '\n' : ' ');
             }
           }
@@ -649,7 +649,7 @@ decode_print_token_sequence(int start_position, int end_position, Attribute *con
           if (mode == XMLMode) {
             printf("<tag type=\"start\" name=\"%s\"", region->name);
             if (printnum)
-              printf(" cpos=\"%d\"", w);
+              printf(" cpos=\"%" PRId64 "\"", w);
             if (region->annot)
               printf(" value=\"%s\"", decode_string_escape(region->annot));
             printf("/>\n");
@@ -671,7 +671,7 @@ decode_print_token_sequence(int start_position, int end_position, Attribute *con
       if (mode == XMLMode) {
         printf("<token");
         if (printnum)
-          printf(" cpos=\"%d\"", w);
+          printf(" cpos=\"%" PRId64 "\"", w);
         printf(">");
       }
 
@@ -732,11 +732,11 @@ decode_print_token_sequence(int start_position, int end_position, Attribute *con
                     &aligned_start2, &aligned_end2))
             ) {
               if (mode == LispMode) {
-                printf("(ALG %d %d %d %d)",
+                printf("(ALG %" PRId64 " %" PRId64 " %" PRId64 " %" PRId64 ")",
                     aligned_start, aligned_end, aligned_start2, aligned_end2);
               }
               else {
-                printf("%d-%d==>%s:%d-%d\t",
+                printf("%" PRId64 "-%" PRId64 "==>%s:%" PRId64 "-%" PRId64 "\t",
                     aligned_start, aligned_end, print_list[i]->any.name, aligned_start2, aligned_end2);
               }
             }
@@ -752,7 +752,7 @@ decode_print_token_sequence(int start_position, int end_position, Attribute *con
           if ((mode != EncodeMode) && (mode != ConclineMode) && (mode != XMLMode)) {
             if (cl_cpos2struc2cpos(print_list[i], w, &rng_start, &rng_end)) {
               /* standard and -L mode don't show tag annotations */
-              printf(mode == LispMode ? "(STRUC %s %d %d)" : "<%s>:%d-%d\t",
+              printf(mode == LispMode ? "(STRUC %s %" PRId64 " %" PRId64 ")" : "<%s>:%" PRId64 "-%" PRId64 "\t",
                   print_list[i]->any.name,
                   rng_start, rng_end);
             }
@@ -798,7 +798,7 @@ decode_print_token_sequence(int start_position, int end_position, Attribute *con
           if (mode == XMLMode) {
             printf("<tag type=\"end\" name=\"%s\"", region->name);
             if (printnum)
-              printf(" cpos=\"%d\"", w);
+              printf(" cpos=\"%" PRId64 "\"", w);
             printf("/>\n");
           }
           else {
@@ -821,13 +821,13 @@ decode_print_token_sequence(int start_position, int end_position, Attribute *con
             if (mode == XMLMode) {
               printf("<align type=\"end\" target=\"%s\"", print_list[i]->any.name);
               if (printnum)
-                printf(" start=\"%d\" end=\"%d\"", aligned_start2, aligned_end2);
+                printf(" start=\"%" PRId64 "\" end=\"%" PRId64 "\"", aligned_start2, aligned_end2);
               printf("/>\n");
             }
             else {
               printf("</%s", print_list[i]->any.name);
               if (printnum)
-                printf(" %d %d", aligned_start2, aligned_end2);
+                printf(" %" PRId64 " %" PRId64 "", aligned_start2, aligned_end2);
               printf(">%c", (mode == EncodeMode) ? '\n' : ' ');
             }
           }
@@ -869,22 +869,22 @@ main(int argc, char **argv)
   Attribute *attr;
   Attribute *context = NULL;
 
-  int sp;  /* start position of a match */
-  int ep;  /* end position of a match */
+  int64_t sp;  /* start position of a match */
+  int64_t ep;  /* end position of a match */
 
-  int w, cnt, next_cpos;
+  int64_t w, cnt, next_cpos;
 
   char s[CL_MAX_LINE_LENGTH];      /* buffer for strings read from file */
   char *token;
 
   char *input_filename = NULL;
   FILE *input_file = stdin;
-  int read_pos_from_file = 0;
-  int subcorpus_mode = 0;
+  int64_t read_pos_from_file = 0;
+  int64_t subcorpus_mode = 0;
 
   /* ------------------------------------------------- PARSE ARGUMENTS */
 
-  int c;
+  int64_t c;
   extern char *optarg;
   extern int optind;
 
@@ -1113,13 +1113,13 @@ main(int argc, char **argv)
       last = maxlast - 1;
 
     if (last < first_token) {
-      fprintf(stderr, "Warning: output range #%d..#%d is empty. No output.\n", first_token, last);
+      fprintf(stderr, "Warning: output range #%" PRId64 "..#%" PRId64 " is empty. No output.\n", first_token, last);
       decode_cleanup(2);
     }
 
     if ( (mode == XMLMode) ||  ((mode == EncodeMode) && xml_compatible) ) {
       decode_print_xml_declaration();
-      printf("<corpus name=\"%s\" start=\"%d\" end=\"%d\">\n",
+      printf("<corpus name=\"%s\" start=\"%" PRId64 "\" end=\"%" PRId64 "\">\n",
              corpus_id, first_token, last);
     }
 
@@ -1151,7 +1151,7 @@ main(int argc, char **argv)
       if ((token != NULL) && is_num(token)) {
         sp = atoi(token);
         if (sp < 0 || sp >= maxlast) {
-          fprintf(stderr, "Corpus position #%d out of range. Aborted.\n", sp);
+          fprintf(stderr, "Corpus position #%" PRId64 " out of range. Aborted.\n", sp);
           decode_cleanup(1);
         }
 
@@ -1164,11 +1164,11 @@ main(int argc, char **argv)
           else
             ep = atoi(token);
           if (ep < 0 || ep >= maxlast) {
-            fprintf(stderr, "Corpus position #%d out of range. Aborted.\n", sp);
+            fprintf(stderr, "Corpus position #%" PRId64 " out of range. Aborted.\n", sp);
             decode_cleanup(1);
           }
           if (ep < sp) {
-            fprintf(stderr, "Invalid range #%d .. #%d. Aborted.\n", sp, ep);
+            fprintf(stderr, "Invalid range #%" PRId64 " .. #%" PRId64 ". Aborted.\n", sp, ep);
             decode_cleanup(1);
           }
         }
@@ -1181,7 +1181,7 @@ main(int argc, char **argv)
             decode_expand_context(&sp, &ep, context);
 
           if (sp < next_cpos) {
-            fprintf(stderr, "Error: matches must be non-overlapping and sorted in corpus order in -Sf/-Sp mode (input line #%d)\n", cnt);
+            fprintf(stderr, "Error: matches must be non-overlapping and sorted in corpus order in -Sf/-Sp mode (input line #%" PRId64 ")\n", cnt);
             decode_cleanup(1);
           }
 
@@ -1196,9 +1196,9 @@ main(int argc, char **argv)
           /* matchlist mode */
 
           if (mode == XMLMode) {
-            printf("<match nr=\"%d\"", cnt);
+            printf("<match nr=\"%" PRId64 "\"", cnt);
             if (printnum)
-              printf(" start=\"%d\" end=\"%d\"", sp, (ep >= 0) ? ep : sp);
+              printf(" start=\"%" PRId64 "\" end=\"%" PRId64 "\"", sp, (ep >= 0) ? ep : sp);
             printf(">\n");
           }
           else {

@@ -56,13 +56,13 @@
 /* optimiser variables */
 
 char *cl_regopt_grain[MAX_GRAINS]; /**< list of 'grains' (any matching string must contain one of these) */
-int cl_regopt_grain_len;           /**< length of shortest grain (in characters) */
-int cl_regopt_grains;              /**< number of grains */
-int cl_regopt_anchor_start;        /**< Boolean: whether grains are anchored at beginning of string */
-int cl_regopt_anchor_end;          /**< Boolean: whether grains are anchored at end of string */
+int64_t cl_regopt_grain_len;           /**< length of shortest grain (in characters) */
+uint8_t cl_regopt_grains;              /**< number of grains */
+bool cl_regopt_anchor_start;        /**< Boolean: whether grains are anchored at beginning of string */
+bool cl_regopt_anchor_end;          /**< Boolean: whether grains are anchored at end of string */
 
 /** whether the regular expression is in UTF-8 encoding (set before calling cl_regopt_analyse()) */
-int cl_regopt_utf8;
+bool cl_regopt_utf8;
 
 
 /**
@@ -72,9 +72,9 @@ int cl_regopt_utf8;
  * if the new set of grains is better than the current one, it is copied to the cl_regopt_ variables.
  */
 char *grain_buffer[MAX_GRAINS];   /**< grains in the local buffer may have different lengths */
-int grain_buffer_len[MAX_GRAINS]; /**< the length of each grain (in characters) */
+int64_t grain_buffer_len[MAX_GRAINS]; /**< the length of each grain (in characters) */
 /** The number of grains currently in the intermediate buffer. @see grain_buffer */
-int grain_buffer_grains = 0;
+uint8_t grain_buffer_grains = 0;
 
 /** A buffer for grain strings. @see local_grain_data */
 char public_grain_data[CL_MAX_LINE_LENGTH]; /* input regexp shouldn't be longer than CL_MAX_LINE_LENGTH, so all grains must fit */
@@ -83,7 +83,7 @@ char public_grain_data[CL_MAX_LINE_LENGTH]; /* input regexp shouldn't be longer 
 /** A buffer for grain strings. @see public_grain_data */
 char local_grain_data[CL_MAX_LINE_LENGTH];
 
-int cl_regopt_analyse(char *regex);
+bool cl_regopt_analyse(char *regex);
 
 /**
  * A counter of how many times the "grain" system has allwoed us to avoid
@@ -91,7 +91,7 @@ int cl_regopt_analyse(char *regex);
  *
  * @see cl_regopt_count_get
  */
-int cl_regopt_successes = 0;
+int64_t cl_regopt_successes = 0;
 
 
 /*
@@ -146,7 +146,7 @@ char cl_regex_error[CL_MAX_LINE_LENGTH];
  * @return         The new CL_Regex object, or NULL in case of error.
  */
 CL_Regex
-cl_new_regex(char *regex, int flags, CorpusCharset charset)
+cl_new_regex(char *regex, int64_t flags, CorpusCharset charset)
 {
   /* allocate buffers dynamically to support very long regexps (from RE() operator) */
   char *delatexed_regex;
@@ -154,16 +154,16 @@ cl_new_regex(char *regex, int flags, CorpusCharset charset)
   char *anchored_regex;
 
   CL_Regex rx;
-  int optimised, l;
+  bool optimised;
 
-  int options_for_pcre = 0;
+  int64_t options_for_pcre = 0;
   const char *errstring_for_pcre = NULL;
   int erroffset_for_pcre = 0;
-  int is_pcre_jit_available; /* in some cases, PCRE + JIT may be faster without the optimizer */
+  int64_t is_pcre_jit_available; /* in some cases, PCRE + JIT may be faster without the optimizer */
 
 
   /* allocate temporary strings */
-  l = strlen(regex);
+  size_t l = strlen(regex);
   delatexed_regex = (char *) cl_malloc(l + 1);
 
   /* allocate and initialise CL_Regex object */
@@ -241,12 +241,12 @@ cl_new_regex(char *regex, int flags, CorpusCharset charset)
    *    casefold each input string for a Boyer-Moore search
    *  - this is always the case if PCRE has JIT capability
    *  - without JIT, it is still usually better to avoid expensive UTF-8 case-folding
-   * NB: accent-folding for %d cannot be avoided, so it makes no sense to disable the optimizer there
+   * NB: accent-folding for %" PRId64 " cannot be avoided, so it makes no sense to disable the optimizer there
    * NB: cannot debug the optimizer with %c any more (because regopt_data_copy_to_regex_object will not be called)
    */
   if (rx->icase && (charset == utf8 || is_pcre_jit_available)) {
     if (optimised && cl_debug) {
-      int i;
+      int64_t i;
       fprintf(stderr, "CL: Found grain set with %d items(s)", cl_regopt_grains);
       for (i = 0; i < cl_regopt_grains; i++) {
         fprintf(stderr, " [%s]", cl_regopt_grain[i]);
@@ -285,13 +285,13 @@ cl_new_regex(char *regex, int flags, CorpusCharset charset)
  * @return    0 if rx is not optimised; otherwise an integer
  *            indicating optimisation level.
  */
-int
+int64_t
 cl_regex_optimised(CL_Regex rx)
 {
   if (rx->grains == 0)
     return 0; /* not optimised */
   else {
-    int level = (3 * rx->grain_len) / rx->grains;
+    int64_t level = (3 * rx->grain_len) / rx->grains;
     return ((level >= 1) ? level + 1 : 1);
   }
 }
@@ -316,15 +316,16 @@ cl_regex_optimised(CL_Regex rx)
  *                        this parameter is ignored.
  * @return                Boolean: true if the regex matched, otherwise false.
  */
-int
-cl_regex_match(CL_Regex rx, char *str, int normalize_utf8)
+bool
+cl_regex_match(CL_Regex rx, char *str, bool normalize_utf8)
 {
   char *haystack_pcre, *haystack; /* possibly case/accent folded versions of str for PCRE regexp and optimizer, respectively */
-  int optimised = (rx->grains > 0);
-  int i, di, k, max_i, len, jump;
-  int grain_match, result;
+  bool optimised = (rx->grains > 0);
+  int64_t i, di, k, max_i, jump;
+  bool grain_match;
+  int64_t result;
   int ovector[30]; /* memory for pcre to use for back-references in pattern matches */
-  int do_nfc = (normalize_utf8 && (rx->charset == utf8)) ? REQUIRE_NFC : 0; /* whether we need to normalize the input to NFC */
+  bool do_nfc = (normalize_utf8 && (rx->charset == utf8)) ? REQUIRE_NFC : 0; /* whether we need to normalize the input to NFC */
 
   if (rx->idiac || do_nfc) { /* perform accent folding on input string if necessary */
     haystack_pcre = rx->haystack_buf;
@@ -333,7 +334,7 @@ cl_regex_match(CL_Regex rx, char *str, int normalize_utf8)
   }
   else
     haystack_pcre = str;
-  len = strlen(haystack_pcre);
+  int64_t len = (int64_t)strlen(haystack_pcre);
 
   /* Beta versions 3.4.10+ leading up to 3.5:
    *  - use regexp optimizer only if cl_optimize is set
@@ -359,7 +360,7 @@ cl_regex_match(CL_Regex rx, char *str, int normalize_utf8)
       i = 0;
 
     while (i <= max_i) {
-      jump = rx->jumptable[(unsigned char) haystack[i + rx->grain_len - 1]];
+      jump = rx->jumptable[(uint8_t) haystack[i + rx->grain_len - 1]];
       if (jump > 0) {
         i += jump; /* Boyer-Moore search */
       }
@@ -403,7 +404,7 @@ cl_regex_match(CL_Regex rx, char *str, int normalize_utf8)
                        ovector, 30);
     if (result < PCRE_ERROR_NOMATCH && cl_debug)
       /* note, "no match" is a PCRE "error", but all actual errors are lower numbers */
-      fprintf(stderr, "CL: Regex Execute Error no. %d (see `man pcreapi` for error codes)\n", result);
+      fprintf(stderr, "CL: Regex Execute Error no. %" PRId64 " (see `man pcreapi` for error codes)\n", result);
   }
 
 
@@ -433,7 +434,7 @@ cl_delete_regex(CL_Regex rx)
    * pointers to NULL after freeing the target. However, in this case, we know the
    * structure they belong to will be freed by the end of the function, so no worries.
    */
-  int i;
+  int64_t i;
 
   /* sanity check for NULL pointer */
   if (!rx)
@@ -479,8 +480,8 @@ cl_delete_regex(CL_Regex rx)
  * @param c  The character (cast to unsigned for the comparison).
  * @return   True for non-special characters; false for special characters.
  */
-int
-is_safe_char(unsigned char c)
+int64_t
+is_safe_char(uint8_t c)
 {
   /* note: this function is UTF8-safe because byte values above 0x7f 
    * (forming UTF-8 multi-byte sequences) are always allowed */
@@ -528,8 +529,8 @@ is_safe_char(unsigned char c)
  * @param c  The character (cast to unsigned for the comparison).
  * @return   True if ASCII alphanumeric; false otherwise.
  */
-int
-is_ascii_alnum(unsigned char c) {
+int64_t
+is_ascii_alnum(uint8_t c) {
   if ((c >= 'A' && c <= 'Z') ||
       (c >= 'a' && c <= 'z') ||
       (c >= '0' && c <= '9')) {
@@ -549,8 +550,8 @@ is_ascii_alnum(unsigned char c) {
  * @param c  The character (cast to unsigned for the comparison).
  * @return   True if ASCII alphanumeric; false otherwise.
  */
-int
-is_ascii_punct(unsigned char c) {
+int64_t
+is_ascii_punct(uint8_t c) {
   switch (c) {
   case '!':
   case '"':
@@ -596,8 +597,8 @@ is_ascii_punct(unsigned char c) {
  * @param c  The character (cast to unsigned for the comparison).
  * @return   True if valid hexidecimal digit; false otherwise.
  */
-int
-is_hexadecimal(unsigned char c) {
+int64_t
+is_hexadecimal(uint8_t c) {
   if ((c >= 'A' && c <= 'F') ||
       (c >= 'a' && c <= 'f') ||
       (c >= '0' && c <= '9')) {
@@ -764,10 +765,10 @@ read_matchall(char *mark)
  *              read).
  */
 char *
-read_kleene(char *mark, int *one_or_more)
+read_kleene(char *mark, int64_t *one_or_more)
 {
-  int plus = 0; /* repetition is non-optional, i.e. 1 or more */
-  int ok = 1;   /* whether a valid quantifier has been recognized */
+  int64_t plus = 0; /* repetition is non-optional, i.e. 1 or more */
+  int64_t ok = 1;   /* whether a valid quantifier has been recognized */
   char *point = mark;
   if (*point == '?' || *point == '*') {
     plus = 0;
@@ -877,14 +878,14 @@ read_wildcard(char *mark)
  *              if no grain is found).
  */
 char *
-read_grain(char *mark, char *grain, int *len)
+read_grain(char *mark, char *grain, int64_t *len)
 {
   char *point = mark;
   char *grain_point = grain;
   char *grain_last_char = grain; /* pointer to start of last symbol in grain buffer */
   char *end, *q;
-  int glen = 0; /* length of grain in characters */
-  int one_or_more;
+  int64_t glen = 0; /* length of grain in characters */
+  int64_t one_or_more;
 
   /* read sequence of safe literal characters */
   while (
@@ -973,10 +974,10 @@ read_grain(char *mark, char *grain, int *len)
  *
  */
 char *
-read_disjunction(char *mark, int *align_start, int *align_end, int no_paren)
+read_disjunction(char *mark, int64_t *align_start, int64_t *align_end, int64_t no_paren)
 {
   char *point, *p2, *buf;
-  int grain;
+  uint8_t grain;
 
   point = mark;
   if (no_paren) {
@@ -1066,15 +1067,14 @@ read_disjunction(char *mark, int *align_start, int *align_end, int no_paren)
  *
  */
 void
-update_grain_buffer(int at_start, int at_end)
+update_grain_buffer(bool at_start, bool at_end)
 {
   char *buf = public_grain_data;
-  int i, len, N;
 
-  N = grain_buffer_grains;
+  uint8_t N = grain_buffer_grains;
   if (N > 0) {
-    len = grain_buffer_len[0];
-    for (i = 1; i < N; i++) {
+    int64_t len = grain_buffer_len[0];
+    for (size_t i = 1; i < N; i++) {
       if (grain_buffer_len[i] < len)
         len = grain_buffer_len[i];
     }
@@ -1088,7 +1088,7 @@ update_grain_buffer(int at_start, int at_end)
           || ((len == (cl_regopt_grain_len - 1)) && ((3 * N) < cl_regopt_grains))
       ) {
         /* the new set of grains is better, copy them to the output buffer */
-        for (i = 0; i < N; i++) {
+        for (size_t i = 0; i < N; i++) {
           strcpy(buf, grain_buffer[i]);
           cl_regopt_grain[i] = buf;
           buf += strlen(buf) + 1;
@@ -1113,9 +1113,9 @@ update_grain_buffer(int at_start, int at_end)
 void
 make_jump_table(CL_Regex rx)
 {
-  int j, k, jump;
-  unsigned int ch;
-  unsigned char *grain; /* want unsigned char to compare with unsigned int ch */
+  int64_t j, k, jump;
+  int ch;
+  uint8_t *grain; /* want uint8_t to compare with uint64_t ch */
 
   /* clear the jump table */
   for (ch = 0; ch < 256; ch++)
@@ -1127,7 +1127,7 @@ make_jump_table(CL_Regex rx)
       jump = rx->grain_len; /* if character isn't contained in any of the grains, jump by grain length */
 
       for (k = 0; k < rx->grains; k++) { /* for each grain... */
-        grain = (unsigned char *) rx->grain[k] + rx->grain_len - 1; /* pointer to last byte in grain */
+        grain = (uint8_t *) rx->grain[k] + rx->grain_len - 1; /* pointer to last byte in grain */
         for (j = 0; j < rx->grain_len; j++, grain--) {
           if (*grain == ch) {
             if (j < jump)
@@ -1145,10 +1145,10 @@ make_jump_table(CL_Regex rx)
         fprintf(stderr, "CL: ");
         for (j = 0; j < 15; j++) {
           ch = k + j;
-          if (ch >= 32 & ch < 127)
-            fprintf(stderr, "|%2d %c  ", rx->jumptable[ch], ch);
+          if (ch >= 32 && ch < 127)
+            fprintf(stderr, "|%2" PRId64 " %c  ", rx->jumptable[ch], ch);
           else
-            fprintf(stderr, "|%2d %02X ", rx->jumptable[ch], ch);
+            fprintf(stderr, "|%2" PRId64 " %02X ", rx->jumptable[ch], ch);
         }
         fprintf(stderr, "\n");
       }
@@ -1177,14 +1177,14 @@ void
 regopt_data_copy_to_regex_object(CL_Regex rx)
 {
   char *grain;
-  int i, l, len, cut_prefix;
+  int64_t len, cut_prefix;
 
   rx->grains = cl_regopt_grains;
 
   if (rx->icase) {
     /* casefold strings if required (in case this reduces byte length) */
     grain = local_grain_data; /* we can use this static buffer for the casefolded grains */
-    for (i = 0; i < rx->grains; i++) {
+    for (size_t i = 0; i < rx->grains; i++) {
       strcpy(grain, cl_regopt_grain[i]);
       cl_string_canonical(grain, rx->charset, IGNORE_CASE, CL_MAX_LINE_LENGTH);
       cl_regopt_grain[i] = grain; /* pointers into static buffer, so we can just move them */
@@ -1194,8 +1194,8 @@ regopt_data_copy_to_regex_object(CL_Regex rx)
 
   /* determine common byte length of grains */
   len = CL_MAX_LINE_LENGTH;
-  for (i = 0; i < rx->grains; i++) {
-    l = strlen(cl_regopt_grain[i]);
+  for (size_t i = 0; i < rx->grains; i++) {
+    size_t l = strlen(cl_regopt_grain[i]);
     if (l < len)
       len = l;
   }
@@ -1204,9 +1204,9 @@ regopt_data_copy_to_regex_object(CL_Regex rx)
   cut_prefix = (cl_regopt_anchor_end && !cl_regopt_anchor_start);
 
   /* now allocate copy of each grain (reduced to specified number of bytes) */
-  for (i = 0; i < rx->grains; i++) {
+  for (size_t i = 0; i < rx->grains; i++) {
     grain = cl_regopt_grain[i];
-    l = strlen(grain);
+    size_t l = strlen(grain);
     if (l > len) {
       /* need to shorten */
       if (cut_prefix) {
@@ -1230,10 +1230,10 @@ regopt_data_copy_to_regex_object(CL_Regex rx)
   rx->anchor_end = cl_regopt_anchor_end;
 
   if (cl_debug) {
-    fprintf(stderr, "CL: Regex optimised, %d grain(s) of length %d\n",
+    fprintf(stderr, "CL: Regex optimised, %d grain(s) of length %" PRId64 "\n",
         rx->grains, rx->grain_len);
     fprintf(stderr, "CL: grain set is");
-    for (i = 0; i < rx->grains; i++) {
+    for (size_t i = 0; i < rx->grains; i++) {
       fprintf(stderr, " [%s]", rx->grain[i]);
     }
     if (rx->anchor_start)
@@ -1279,11 +1279,11 @@ regopt_data_copy_to_regex_object(CL_Regex rx)
  * @param regex  String containing the regex to optimise.
  * @return       Boolean: true = ok, false = couldn't optimise regex.
  */
-int
+bool
 cl_regopt_analyse(char *regex)
 {
   char *point, *mark;
-  int ok, at_start, at_end, one_or_more, align_start, align_end;
+  int64_t ok, at_start, at_end, one_or_more, align_start, align_end;
 
   mark = regex;
   if (cl_debug) {
@@ -1407,7 +1407,7 @@ cl_regopt_count_reset(void)
  *     hits++;
  *
  * fprintf(stderr,
- *         "Found %d matches; avoided regex matching %d times out of %d trials",
+ *         "Found %" PRId64 " matches; avoided regex matching %" PRId64 " times out of %" PRId64 " trials",
  *         hits, cl_regopt_count_get(), n );
  *
  * @see cl_regopt_count_reset
@@ -1415,7 +1415,7 @@ cl_regopt_count_reset(void)
  *         has been matched using the regopt system of "grains", rather
  *         than by calling an external regex library.
  */
-int
+int64_t
 cl_regopt_count_get(void)
 {
   return cl_regopt_successes;

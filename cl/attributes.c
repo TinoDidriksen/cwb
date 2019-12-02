@@ -80,7 +80,7 @@ typedef struct component_field_spec {
                               as the index for this component in its Attribute's component array. */
   char *name;            /**< String used as the label for this component  (abbreviation of the
                               relevant label from in the ComponentID enumeration). */
-  int using_atts;        /**< The attribute type of the Attributes that use this component */
+  int8_t using_atts;        /**< The attribute type of the Attributes that use this component */
   char *default_path;    /**< The default location of the file corresponding to this component;
                               can contain variables ($DIR=directory, $ANAME=attribute name) */
 } component_field_spec;
@@ -143,7 +143,7 @@ ComponentState comp_component_state(Component *component);
 struct component_field_spec *
 find_cid_name(char *name)
 {
-  int i;
+  int64_t i;
 
   for (i = 0; i < CompLast; i++) {
     if (strcmp(Component_Field_Specs[i].name, name) == 0)
@@ -200,8 +200,8 @@ component_id(char *name)
  *
  * @return  True or false.
  */
-int
-MayHaveComponent(int attr_type, ComponentID cid)
+int64_t
+MayHaveComponent(int64_t attr_type, ComponentID cid)
 {
   struct component_field_spec *spec;
 
@@ -225,7 +225,7 @@ MayHaveComponent(int attr_type, ComponentID cid)
  *           do not change or free).
  */
 char *
-aid_name(int i)
+aid_name(int64_t i)
 {
   switch (i) {
   case ATT_NONE:  return "NONE (ILLEGAL)"; break;
@@ -251,7 +251,7 @@ aid_name(int i)
  *           do not change or free).
  */
 char *
-argid_name(int i)
+argid_name(int64_t i)
 {
   switch (i) {
   case ATTAT_NONE:   return "NONE(ILLEGAL)"; break;
@@ -337,7 +337,7 @@ makearg(char *type_id)
 Attribute *
 setup_attribute(Corpus *corpus,
                 char *attribute_name,
-                int type,
+                int64_t type,
                 char *data)
 {
   Attribute *attr;
@@ -345,7 +345,7 @@ setup_attribute(Corpus *corpus,
 
   /* count of attributes that the corpus possesses already, including the default
    * used to calculate this attribute's attr_number value. */
-  int a_num;
+  int64_t a_num;
 
   attr = NULL;
 
@@ -433,7 +433,7 @@ setup_attribute(Corpus *corpus,
 Attribute *
 cl_new_attribute_oldstyle(Corpus *corpus,
                           char *attribute_name,
-                          int type,
+                          int64_t type,
                           char *data)
 {
   Attribute *attr;
@@ -471,10 +471,10 @@ cl_new_attribute_oldstyle(Corpus *corpus,
  * @see      cl_delete_attribute
  * @return   Boolean: true for all OK, false for a problem
  */
-int
+int64_t
 drop_attribute(Corpus *corpus,
                char *attribute_name,
-               int type,
+               int64_t type,
                char *data)
 {
   if (corpus == NULL) {
@@ -495,7 +495,7 @@ drop_attribute(Corpus *corpus,
  *
  * @return   Boolean: true for all OK, false for a problem.
  */
-int
+int64_t
 cl_delete_attribute(Attribute *attribute)
 {
   Attribute *prev = NULL;
@@ -653,7 +653,7 @@ declare_component(Attribute *attribute, ComponentID cid, char *path)
 void
 declare_default_components(Attribute *attribute)
 {
-  int i;
+  int64_t i;
 
   if (attribute == NULL)
     fprintf(stderr, "attributes:declare_default_components(): \n"
@@ -752,7 +752,7 @@ component_full_name(Attribute *attribute, ComponentID cid, char *path)
   char *reference;
   char c;
 
-  int ppos, bpos, dollar, rpos;
+  int64_t ppos, bpos, dollar, rpos;
 
 
   /*  did we do the job before? */
@@ -889,7 +889,7 @@ load_component(Attribute *attribute, ComponentID cid)
 
       if (cl_sequence_compressed(attribute)) {
 
-        if (read_file_into_blob(comp->path, MMAPPED, sizeof(int), &(comp->data)) == 0)
+        if (read_file_into_blob(comp->path, MMAPPED, sizeof(*comp->data.data), &(comp->data)) == 0)
           fprintf(stderr, "attributes:load_component(): Warning:\n"
                   "  Data of %s component of attribute %s can't be loaded\n",
                   cid_name(cid), attribute->any.name);
@@ -904,15 +904,15 @@ load_component(Attribute *attribute, ComponentID cid)
           memcpy(attribute->pos.hc, comp->data.data, sizeof(HCD));
 
           { /* convert network byte order to native integers */
-            int i;
-            attribute->pos.hc->size = ntohl(attribute->pos.hc->size);
-            attribute->pos.hc->length = ntohl(attribute->pos.hc->length);
-            attribute->pos.hc->min_codelen = ntohl(attribute->pos.hc->min_codelen);
-            attribute->pos.hc->max_codelen = ntohl(attribute->pos.hc->max_codelen);
+            int64_t i;
+            attribute->pos.hc->size = ntohll(attribute->pos.hc->size);
+            attribute->pos.hc->length = ntohll(attribute->pos.hc->length);
+            attribute->pos.hc->min_codelen = ntohll(attribute->pos.hc->min_codelen);
+            attribute->pos.hc->max_codelen = ntohll(attribute->pos.hc->max_codelen);
             for (i = 0; i < MAXCODELEN; i++) {
-              attribute->pos.hc->lcount[i] = ntohl(attribute->pos.hc->lcount[i]);
-              attribute->pos.hc->symindex[i] = ntohl(attribute->pos.hc->symindex[i]);
-              attribute->pos.hc->min_code[i] = ntohl(attribute->pos.hc->min_code[i]);
+              attribute->pos.hc->lcount[i] = ntohll(attribute->pos.hc->lcount[i]);
+              attribute->pos.hc->symindex[i] = ntohll(attribute->pos.hc->symindex[i]);
+              attribute->pos.hc->min_code[i] = ntohll(attribute->pos.hc->min_code[i]);
             }
           }
           attribute->pos.hc->symbols = comp->data.data + (4+3*MAXCODELEN);
@@ -930,7 +930,7 @@ load_component(Attribute *attribute, ComponentID cid)
     else if ((cid > CompDirectory) && (cid < CompLast)) {
       /* i.e. any ComponentID value except CompDirectory / CompLast and CompHuffCodes */
 
-      if (read_file_into_blob(comp->path, MMAPPED, sizeof(int), &(comp->data)) == 0)
+      if (read_file_into_blob(comp->path, MMAPPED, sizeof(*comp->data.data), &(comp->data)) == 0)
         fprintf(stderr, "attributes:load_component(): Warning:\n"
                 "  Data of %s component of attribute %s can't be loaded\n",
                 cid_name(cid), attribute->any.name);
@@ -1095,7 +1095,7 @@ create_component(Attribute *attribute, ComponentID cid)
  *                      if the component cannot be "ensured").
  */
 Component *
-ensure_component(Attribute *attribute, ComponentID cid, int try_creation)
+ensure_component(Attribute *attribute, ComponentID cid, int64_t try_creation)
 {
   Component *comp = NULL;
   
@@ -1214,7 +1214,7 @@ find_component(Attribute *attribute, ComponentID cid)
  *
  * @return Always 1.
  */
-int
+int64_t
 comp_drop_component(Component *comp)
 {
   assert((comp != NULL) && "NULL component passed to attributes:comp_drop_component");
@@ -1252,7 +1252,7 @@ comp_drop_component(Component *comp)
  * @param cid           The identifier of the Component to drop.
  * @return              Always 1.
  */
-int
+int64_t
 drop_component(Attribute *attribute, ComponentID cid)
 {
   Component *comp;
@@ -1384,13 +1384,13 @@ describe_component(Component *component)
  *               If there is any syntax error, cl_make_set() returns NULL.
  */
 char *
-cl_make_set(char *s, int split)
+cl_make_set(char *s, int64_t split)
 {
   char *copy = cl_strdup(s);               /* work on copy of <s> */
   cl_string_list l = cl_new_string_list(); /* list of set elements */
-  int ok = 0;                   /* for split and element check */
+  int64_t ok = 0;                   /* for split and element check */
   char *p, *mark, *set;
-  int i, sl, length;
+  int64_t i, length;
 
   cl_errno = CDA_OK;
 
@@ -1459,7 +1459,7 @@ cl_make_set(char *s, int split)
   cl_string_list_qsort(l);
 
   /* (5) combine elements into set attribute string */
-  sl = 2;                       /* compute length of string */
+  size_t sl = 2;                       /* compute length of string */
   for (i = 0; i < length; i++) {
     sl += strlen(cl_string_list_get(l, i)) + 1;
   }
@@ -1489,10 +1489,10 @@ cl_make_set(char *s, int split)
  *
  * @return -1 on error (in particular, if set is malformed)
  */
-int
+int64_t
 cl_set_size(char *s)
 {
-  int count = 0;
+  int64_t count = 0;
 
   cl_errno = CDA_OK;
   if (*s++ != '|') {
@@ -1522,12 +1522,12 @@ cl_set_size(char *s)
  * @return         0 on error, 1 otherwise
 */
 
-int 
+int64_t 
 cl_set_intersection(char *result, const char *s1, const char *s2)
 {
   static char f1[CL_DYN_STRING_SIZE], f2[CL_DYN_STRING_SIZE];   /* static feature buffers (hold current feature) */
   char *p;
-  int comparison;
+  int64_t comparison;
 
   cl_errno = CDA_OK;
 

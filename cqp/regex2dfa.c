@@ -55,7 +55,7 @@
 char *searchstr;
 
 /* DATA STRUCTURES: internal to the regex2dfa module */
-typedef unsigned char byte;
+typedef uint8_t byte;
 
 typedef struct symbol *Symbol;
 
@@ -73,20 +73,20 @@ typedef enum {
 
 typedef struct {
   StackTag Tag; 
-  int Q; 
+  int32_t Q; 
 } StackCard;
 
 typedef struct state {
-  int Class, States, *SList;
-  int Empty, Shifts;
+  int32_t Class, States, *SList;
+  int32_t Empty, Shifts;
   struct 
     { 
       Symbol LHS; 
-      int RHS; 
+      int32_t RHS;
     } *ShList;
 } *State;
 State STab = (State)NULL; 
-int Ss;
+int32_t Ss;
 
 /* THE SCANNER */
 typedef enum {
@@ -96,25 +96,25 @@ typedef enum {
 
 typedef struct item {
   Symbol LHS; 
-  int Size, *RHS;
+  int32_t Size, *RHS;
 } *Item;
 Item IBuf = (Item)NULL; 
-int Is, IMax;
+int32_t Is, IMax;
 
 struct exp {
   ExpTag Tag; 
-  int Hash, Class; 
+  int32_t Hash, Class;
   Exp Tail;
   union 
     {
       Symbol Leaf; 
-      int *Arg;
+      int32_t *Arg;
     } Body;
 };
 
 struct symbol {
   char *Name; 
-  int Hash; 
+  int32_t Hash;
   Symbol Next, Tail; 
 };
 
@@ -139,10 +139,10 @@ char *LastW;
 static char ChArr[MAX_CHAR];
 char *ChP;
 
-int LINE;
+int32_t LINE;
 
 /** The number of errors enocuntered while parsing a regex to a DFA */
-int ERRORS;
+int32_t ERRORS;
 
 /** The maximum number of errors that the regex2dfa module will allow before killing the program */
 #define MAX_ERRORS 25
@@ -162,18 +162,18 @@ Exp ExpHash[NN];
 struct equation 
 {
   Exp Value; 
-  int Hash;
+  int32_t Hash;
   unsigned Stack:1;
 };
 
 Equation EquTab = (Equation)NULL;
 
-int Equs, EquMax;
+int32_t Equs, EquMax;
 
 #define STACK_MAX 200
 StackCard Stack[STACK_MAX], *SP;
 
-int *XStack = NULL, Xs, XMax;
+int32_t *XStack = NULL, Xs, XMax;
 
 #define X_EXTEND 4
 
@@ -182,10 +182,10 @@ struct Equiv
   State L, R; 
 } *ETab = NULL; 
 
-int Es, EMax;
+int32_t Es, EMax;
 
 /** Index into searchstr showing the next character that will be read. */
-int currpos;
+int32_t currpos;
 
 /**
  * Gets the next character from the searchstr, and
@@ -195,10 +195,10 @@ int currpos;
  * @see searchstr
  * @see currpos
  */
-static int
+static int32_t
 GET(void)
 {
-  unsigned char ch;
+  uint8_t ch;
 
   ch = searchstr[currpos];
 
@@ -217,7 +217,7 @@ GET(void)
  * @param Ch  Ignored.
  */
 static void
-UNGET(int Ch)
+UNGET(int32_t Ch)
 {
   if (currpos != 0)
     --currpos;
@@ -245,7 +245,7 @@ REGEX2DFA_ERROR(char *Format, ...)
 Lexical
 LEX(void)
 {
-  int Ch;
+  int32_t Ch;
 
   do {
     Ch = GET(); 
@@ -328,7 +328,7 @@ LEX(void)
 byte
 Hash(char *S)
 {
-  int H; 
+  int32_t H;
   char *T;
   
   for (H = 0, T = S; *T != '\0'; T++) 
@@ -359,11 +359,11 @@ LookUp(char *S)
   return LastB = Sym;
 }
 
-int
-DUP(int A, int B)
+int32_t
+DUP(int32_t A, int32_t B)
 {
 
-  long L, S;
+  int64_t L, S;
   
   S = A + B;
   if (S < NN) 
@@ -374,14 +374,14 @@ DUP(int A, int B)
     L = S*(S + 1)/2 + A;
     L = NN*NN - 1 - L;
   }
-  return (int)(L/NN);
+  return (int32_t)(L/NN);
 }
 
 void
-Store(Symbol S, int Q)
+Store(Symbol S, int32_t Q)
 {
 
-  int H = 0x100 + S->Hash; 
+  int32_t H = 0x100 + S->Hash;
   Exp E;
 
   for (E = ExpHash[H]; E != 0; E = E->Tail)
@@ -399,17 +399,17 @@ Store(Symbol S, int Q)
   E->Class = Q;
 }
 
-int
-MakeExp(int Q, ExpTag Tag, ...)
+int32_t
+MakeExp(int32_t Q, ExpTag Tag, ...)
 {
 
   va_list AP; 
   Symbol Sym = NULL; 
 
-  int H = 0; 
+  int32_t H = 0;
   byte Args = 0; 
   Exp HP, E; 
-  int Q0 = 0, Q1 = 0;
+  int32_t Q0 = 0, Q1 = 0;
 
   va_start(AP, Tag);
 
@@ -444,15 +444,15 @@ MakeExp(int Q, ExpTag Tag, ...)
         }
       break;
     case PlusX:
-      Q0 = va_arg(AP, int); 
+      Q0 = va_arg(AP, int32_t); 
       H = 0x02 + EquTab[Q0].Hash*0x0a/0x200;
       goto MakeUnary;
     case StarX:
-      Q0 = va_arg(AP, int); 
+      Q0 = va_arg(AP, int32_t); 
       H = 0x0c + EquTab[Q0].Hash*0x14/0x200;
       goto MakeUnary;
     case OptX:
-      Q0 = va_arg(AP, int); 
+      Q0 = va_arg(AP, int32_t); 
       H = 0x20 + EquTab[Q0].Hash/0x10;
     MakeUnary:
       Args = 1;
@@ -465,13 +465,13 @@ MakeExp(int Q, ExpTag Tag, ...)
           }
       break;
     case OrX:
-      Q0 = va_arg(AP, int);
-      Q1 = va_arg(AP, int);
+      Q0 = va_arg(AP, int32_t);
+      Q1 = va_arg(AP, int32_t);
       H = 0x40 + DUP(EquTab[Q0].Hash, EquTab[Q1].Hash)/8;
       goto MakeBinary;
     case AndX:
-      Q0 = va_arg(AP, int);
-      Q1 = va_arg(AP, int);
+      Q0 = va_arg(AP, int32_t);
+      Q1 = va_arg(AP, int32_t);
       H = 0x80 + DUP(EquTab[Q0].Hash, EquTab[Q1].Hash)/4;
     MakeBinary:
       Args = 2;
@@ -491,7 +491,7 @@ MakeExp(int Q, ExpTag Tag, ...)
     E->Body.Leaf = Sym;
   else 
     {
-      E->Body.Arg = (int *) ((Args > 0) ? cl_malloc(Args*sizeof(int)) : NULL);
+      E->Body.Arg = (int32_t*) ((Args > 0) ? cl_malloc(Args*sizeof(*E->Body.Arg)) : NULL);
       if (Args > 0) 
         E->Body.Arg[0] = Q0;
       if (Args > 1) 
@@ -517,7 +517,7 @@ MakeExp(int Q, ExpTag Tag, ...)
 }
 
 void
-PUSH(StackTag Tag, int Q)
+PUSH(StackTag Tag, int32_t Q)
 {
   if (SP >= Stack + STACK_MAX) 
     {
@@ -534,14 +534,14 @@ PUSH(StackTag Tag, int Q)
 #define POP() ((--SP)->Q)
 
 /** the regex parser proper: private function */
-int
+int32_t
 Parse(void)
 {
   Lexical L; 
   Symbol ID = NULL; 
-  int RHS; 
+  int32_t RHS; 
   
-  int ignore_value;             /* ignore value of POP() macro */
+  int32_t ignore_value;             /* ignore value of POP() macro */
 
   SP = Stack;
  LHS:
@@ -670,7 +670,7 @@ Parse(void)
   return 0;
 }
 
-void PushQ(int Q) 
+void PushQ(int32_t Q) 
 {
 
   if (EquTab[Q].Stack) 
@@ -688,17 +688,17 @@ void
 PopQ(void)
 {
 
-  int Q = XStack[--Xs];
+  int32_t Q = XStack[--Xs];
 
   EquTab[Q].Stack = 0;
 }
 
 
-int
-AddState(int States, int *SList)
+int32_t
+AddState(int32_t States, int32_t *SList)
 {
 
-  int D, I; 
+  int32_t D, I; 
   State DP;
 
   for (D = 0; D < Ss; D++) 
@@ -734,10 +734,10 @@ AddState(int States, int *SList)
 
 
 void
-AddBuf(Symbol LHS, int Q)
+AddBuf(Symbol LHS, int32_t Q)
 {
 
-  int Diff, I, J, S, T; 
+  int32_t Diff, I, J, S, T; 
   Item IP; 
   char *Name = LHS->Name;
 
@@ -774,12 +774,12 @@ AddBuf(Symbol LHS, int Q)
 }
 
 void
-FormState(int Q)
+FormState(int32_t Q)
 {
 
-  int I, S, S1, X; 
-  int qX, Q1, Q2;
-  int A, B;
+  int32_t I, S, S1, X; 
+  int32_t qX, Q1, Q2;
+  int32_t A, B;
   State SP;
   Exp E, E1;
 
@@ -867,7 +867,7 @@ FormState(int Q)
       SP->Shifts = Is;
       SP->ShList = cl_malloc(sizeof *SP->ShList * Is);
       for (I = 0; I < Is; I++)  {
-        int rhs_state = -1;
+        int32_t rhs_state = -1;
         SP->ShList[I].LHS = IBuf[I].LHS;
         rhs_state = AddState(IBuf[I].Size, IBuf[I].RHS);
         SP = &STab[S];        /* AddState() might have reallocated state table -> update pointer */
@@ -880,9 +880,9 @@ FormState(int Q)
 }
 
 void
-AddEquiv(int L, int R)
+AddEquiv(int32_t L, int32_t R)
 {
-  int E; 
+  int32_t E; 
   State SL, SR;
 
   L = STab[L].Class;
@@ -914,7 +914,7 @@ AddEquiv(int L, int R)
 void
 MergeStates(void)
 {
-  int Classes, S, S1, E, Sh; 
+  int32_t Classes, S, S1, E, Sh; 
   State SP, SP1, QL, QR;
 
   ETab = 0;
@@ -966,7 +966,7 @@ void
 WriteStates(void)
 {
 
-  int S, Sh, Classes, C; 
+  int32_t S, Sh, Classes, C; 
   State SP;
 
   for (S = Classes = 0; S < Ss; S++) 
@@ -997,7 +997,7 @@ init_dfa(DFA *dfa)
 {
   assert(dfa);
 
-  dfa->TransTable = (int **)NULL;
+  dfa->TransTable = (int32_t**)NULL;
   dfa->Final = (Boolean *)NULL;
   dfa->Max_States = dfa->Max_Input = 0;
 }
@@ -1007,17 +1007,17 @@ void
 free_dfa(DFA *dfa)
 {
   
-  int i;
+  int32_t i;
 
   assert(dfa);
 
   for(i = 0; i < dfa->Max_States; i++) {
     free(dfa->TransTable[i]);
-    dfa->TransTable[i] = (int *)NULL;
+    dfa->TransTable[i] = (int32_t*)NULL;
   }
 
   free(dfa->TransTable);
-  dfa->TransTable = (int **)NULL;
+  dfa->TransTable = (int32_t**)NULL;
 
   free(dfa->Final);
   dfa->Final = (Boolean *)NULL;
@@ -1030,7 +1030,7 @@ free_dfa(DFA *dfa)
 void
 show_complete_dfa(DFA dfa)
 {
-  int i, j;
+  int32_t i, j;
 
   for (i = 0; i < dfa.Max_States; i++) {
     printf("s%d", i);
@@ -1055,7 +1055,7 @@ show_complete_dfa(DFA dfa)
 void
 init(void)
 {
-  int i;
+  int32_t i;
 
   if (STab)
     free(STab);
@@ -1106,8 +1106,8 @@ init(void)
 void
 regex2dfa(char *rxs, DFA *automaton)
 {
-  int Q, i, j;
-  int S, Sh, Classes, C; 
+  int32_t Q, i, j;
+  int32_t S, Sh, Classes, C; 
   State SP;
 
   searchstr = rxs;
@@ -1131,9 +1131,9 @@ regex2dfa(char *rxs, DFA *automaton)
     WriteStates();
 
   /* allocate memory for the transition table and initialize it. */
-  automaton->TransTable = (int **)cl_malloc(sizeof(int *) * automaton->Max_States);
+  automaton->TransTable = (int32_t**)cl_malloc(sizeof(*automaton->TransTable) * automaton->Max_States);
   for (i = 0; i < Ss; i++)  {
-    automaton->TransTable[i] = (int *)cl_malloc(sizeof(int) * automaton->Max_Input);
+    automaton->TransTable[i] = (int32_t*)cl_malloc(sizeof(*automaton->TransTable[i]) * automaton->Max_Input);
     for (j = 0; j < automaton->Max_Input; j++)
       automaton->TransTable[i][j] = automaton->E_State;
   }

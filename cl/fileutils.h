@@ -24,20 +24,20 @@
 
 off_t file_length(char *filename);
 off_t fd_file_length(FILE *fd);
-off_t fi_file_length(int fileno);
+off_t fi_file_length(int64_t fileno);
 
-long fprobe(char *fname);
+int64_t fprobe(char *fname);
 
-int is_directory(char *path);
-int is_file(char *path);
-int is_link(char *path);
+int64_t is_directory(char *path);
+int64_t is_file(char *path);
+int64_t is_link(char *path);
 
 /* data structure for managing I/O streams */
 typedef struct _CLStream *CLStream;
 struct _CLStream {
   FILE *handle;
-  int mode; /* not really needed */
-  int type; /* the specified or guessed stream type */
+  int64_t mode; /* not really needed */
+  int64_t type; /* the specified or guessed stream type */
   CLStream next;
 };
 

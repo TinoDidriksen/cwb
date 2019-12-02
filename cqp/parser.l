@@ -48,13 +48,13 @@
    macro expansion  --  this version suffers from the 0xff2k-Bug anyway */
 /*
 #define YY_INPUT(buf,result,max_size) { \
-     int c = (cqp_input_string ? cqp_input_string[cqp_input_string_position++] \
+     int64_t c = (cqp_input_string ? cqp_input_string[cqp_input_string_position++] \
                                : getc(yyin)); \
      result = ((c == EOF) || (c == 0)) ? 0 : (buf[0] = c, 1); } 
 */
 
 #define YY_INPUT(buf, result, max_size) { \
-     int c = yy_input_char(); \
+     int64_t c = yy_input_char(); \
      result = ((c == EOF) || (c == 0)) ? 0 : (buf[0] = c, 1); \
    }
 
@@ -64,7 +64,7 @@
 char *
 strip_quotes(char *s) {
   char *t;
-  int i, k, len;
+  int64_t i, k, len;
   char delim = s[0];
   len = strlen(s);
   assert(len >= 2 && (delim == '"' || delim == '\'') && s[len-1] == delim); /* should be guaranteed by grammar rule */

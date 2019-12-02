@@ -40,11 +40,11 @@
  * @return     The new BARdesc object.
  */
 BARdesc
-BAR_new(int N, int M, int W)
+BAR_new(int64_t N, int64_t M, int64_t W)
 {
   BARdesc BAR;
-  int i;
-  int size, vsize;
+  int64_t i;
+  int64_t size, vsize;
 
   BAR = (BARdesc) malloc(sizeof(struct _BARdesc));
   assert(BAR);
@@ -56,17 +56,17 @@ BAR_new(int N, int M, int W)
   size = vsize * W;
 
   /* allocate data space */
-  BAR->data = (int *) malloc(size * sizeof(int));
+  BAR->data = (int64_t*) malloc(size * sizeof(*BAR->data));
   assert(BAR->data);
   BAR->data_size = size;
 
   /* allocate and init access vectors */
-  BAR->d_block_start_x = (int *) malloc(vsize * sizeof(int));
+  BAR->d_block_start_x = (int64_t*) malloc(vsize * sizeof(*BAR->d_block_start_x));
   assert(BAR->d_block_start_x);
   for (i = 0; i < BAR->d_size; i++) {
     BAR->d_block_start_x[i] = -1;
   }
-  BAR->d_block_data = (int **) malloc(vsize * sizeof(int *));
+  BAR->d_block_data = (int64_t**) malloc(vsize * sizeof(int64_t*));
   assert(BAR->d_block_data);
   for (i = 0; i < BAR->d_size; i++) {
     BAR->d_block_data[i] = BAR->data + (i * W);
@@ -88,10 +88,10 @@ BAR_new(int N, int M, int W)
  * @param W    Beam width of the new size of matrix (see BARdesc).
    */
 void
-BAR_reinit(BARdesc BAR, int N, int M, int W)
+BAR_reinit(BARdesc BAR, int64_t N, int64_t M, int64_t W)
 {
-  int i;
-  int size, vsize;
+  int64_t i;
+  int64_t size, vsize;
 
   assert(BAR);
 
@@ -104,13 +104,13 @@ BAR_reinit(BARdesc BAR, int N, int M, int W)
 
   /* reallocate data space if necessary */
   if (size > BAR->data_size) {
-    assert(BAR->data = (int *) realloc(BAR->data, size * sizeof(int)));
+    assert(BAR->data = (int64_t*) realloc(BAR->data, size * sizeof(*BAR->data)));
     BAR->data_size = size;
   }
   /* reallocate access vectors if necessary */
   if (vsize > BAR->vector_size) {
-    assert(BAR->d_block_start_x = (int *) realloc(BAR->d_block_start_x, vsize * sizeof(int)));
-    assert(BAR->d_block_data = (int **) realloc(BAR->d_block_data, vsize * sizeof(int *)));
+    assert(BAR->d_block_start_x = (int64_t*) realloc(BAR->d_block_start_x, vsize * sizeof(*BAR->d_block_start_x)));
+    assert(BAR->d_block_data = (int64_t**) realloc(BAR->d_block_data, vsize * sizeof(*BAR->d_block_data)));
     BAR -> vector_size = vsize;
   }
   /* init access vectors */
@@ -157,11 +157,11 @@ BAR_delete(BARdesc BAR)
  *
  */
 void
-BAR_write(BARdesc BAR, int x, int y, int i)
+BAR_write(BARdesc BAR, int64_t x, int64_t y, int64_t i)
 {
-  int *p, *p1;
-  if (((unsigned)x < BAR->x_size) && ((unsigned)y < BAR->y_size)) { /* fast bounds check */
-    int d = x + y;
+  int64_t *p, *p1;
+  if ((x < BAR->x_size) && (y < BAR->y_size)) { /* fast bounds check */
+    int64_t d = x + y;
     if (BAR->d_block_start_x[d] < 0) { 
       /* uninitialised diagonal */
       BAR->d_block_start_x[d] = x;
@@ -172,8 +172,8 @@ BAR_write(BARdesc BAR, int x, int y, int i)
     } 
     else {
       /* set value if within beam range */
-      int dx = x - BAR->d_block_start_x[d];
-      if ((unsigned)dx < BAR->beam_width) {
+      int64_t dx = x - BAR->d_block_start_x[d];
+      if (dx < BAR->beam_width) {
         BAR->d_block_data[d][dx] = i;
       }
     }
@@ -197,13 +197,13 @@ BAR_write(BARdesc BAR, int x, int y, int i)
  * @return        the value of A(x,y);  if (x,y) is
  *                outside the matrix or beam range, the function returns 0.
  */
-int
-BAR_read(BARdesc BAR, int x, int y)
+int64_t
+BAR_read(BARdesc BAR, int64_t x, int64_t y)
 {
-  if (((unsigned)x < BAR->x_size) && ((unsigned)y < BAR->y_size)) {
-    int d = x + y;
-    int x_start = BAR->d_block_start_x[d];
-    if ((x_start >= 0) && ((unsigned)(x - x_start) < BAR->beam_width)) {
+  if ((x < BAR->x_size) && (y < BAR->y_size)) {
+    int64_t d = x + y;
+    int64_t x_start = BAR->d_block_start_x[d];
+    if ((x_start >= 0) && ((x - x_start) < BAR->beam_width)) {
       return BAR->d_block_data[d][x - x_start];
     }
     else {

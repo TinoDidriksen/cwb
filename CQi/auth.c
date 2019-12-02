@@ -44,7 +44,7 @@ typedef struct _UserEntry {
 
 /** Internal data structure: member of list of IP addresses from which messages are accepted */
 typedef struct _HostEntry {
-  int    accept_any;                /**< this implements the "host *;" command */
+  int64_t    accept_any;                /**< this implements the "host *;" command */
   struct in_addr address;
   struct _HostEntry *next;
 } HostEntry;
@@ -141,17 +141,17 @@ void
 add_hosts_in_subnet_to_list(char *ipsubnet)
 {
   char *ipaddr = cl_malloc(strlen(ipsubnet) + 4);        /* 3 digits, NUL */
-  int i;
+  int64_t i;
 
   for (i = 1; i <= 255; i++) {
-    sprintf(ipaddr, "%s%d", ipsubnet, i);
+    sprintf(ipaddr, "%s%" PRId64 "", ipsubnet, i);
     add_host_to_list(ipaddr);
   }
   cl_free(ipaddr);
 }
 
 /* returns true if host is in list of allowed hosts */
-int 
+int64_t 
 check_host(struct in_addr host_addr)
 {
   HostEntry *host;
@@ -162,7 +162,7 @@ check_host(struct in_addr host_addr)
 }
 
 /* returns true if (user, passwd) pair is in list */
-int 
+int64_t 
 authenticate_user(char *username, char *passwd)
 {
   UserEntry *user = find_user(username);
@@ -174,7 +174,7 @@ authenticate_user(char *username, char *passwd)
 }
 
 /* returns true if user may access corpus */
-int 
+int64_t 
 check_grant(char *username, char *corpus)
 {
   UserEntry *user;

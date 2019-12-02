@@ -52,7 +52,7 @@ describecorpus_usage(void)
  *                one of the constants in cl.h (ATT_POS etc.)
  */
 void
-describecorpus_show_attribute_names (Corpus *corpus, int type)
+describecorpus_show_attribute_names (Corpus *corpus, int64_t type)
 {
   Attribute *a;
 
@@ -75,11 +75,11 @@ describecorpus_show_attribute_names (Corpus *corpus, int type)
  *
  */
 void
-describecorpus_show_basic_info (Corpus *corpus, int with_attribute_names)
+describecorpus_show_basic_info (Corpus *corpus, int64_t with_attribute_names)
 {
   Attribute *word, *a;
-  int p_atts = 0, s_atts = 0, a_atts = 0;
-  int size;
+  int64_t p_atts = 0, s_atts = 0, a_atts = 0;
+  int64_t size;
   char *colon = (with_attribute_names) ? ":" : "";
 
   printf("description:    %s\n", corpus->name);
@@ -94,7 +94,7 @@ describecorpus_show_basic_info (Corpus *corpus, int with_attribute_names)
   size = cl_max_cpos(word);
   printf("size (tokens):  ");
   if (size >= 0) 
-    printf("%d\n", size);
+    printf("%" PRId64 "\n", size);
   else
     printf("ERROR\n");
   printf("\n");
@@ -107,13 +107,13 @@ describecorpus_show_basic_info (Corpus *corpus, int with_attribute_names)
     default: break;
     }
   }
-  printf("%3d positional attributes%s\n", p_atts, colon);
+  printf("%3" PRId64 " positional attributes%s\n", p_atts, colon);
   if (with_attribute_names)
     describecorpus_show_attribute_names(corpus, ATT_POS);
-  printf("%3d structural attributes%s\n", s_atts, colon);
+  printf("%3" PRId64 " structural attributes%s\n", s_atts, colon);
   if (with_attribute_names)
     describecorpus_show_attribute_names(corpus, ATT_STRUC);
-  printf("%3d alignment  attributes%s\n", a_atts, colon);
+  printf("%3" PRId64 " alignment  attributes%s\n", a_atts, colon);
   if (with_attribute_names)
     describecorpus_show_attribute_names(corpus, ATT_ALIGN);
   printf("\n");
@@ -133,7 +133,7 @@ void
 describecorpus_show_statistics (Corpus *corpus)
 {
   Attribute *a;
-  int tokens, types, regions, blocks;
+  int64_t tokens, types, regions, blocks;
 
   for (a = corpus->attributes; a; a = a->any.next) {
     switch(a->any.type) {
@@ -142,7 +142,7 @@ describecorpus_show_statistics (Corpus *corpus)
       tokens = cl_max_cpos(a);
       types = cl_max_id(a);
       if ((tokens > 0) && (types > 0))
-        printf("%10d tokens, %8d types", tokens, types);
+        printf("%10" PRId64 " tokens, %8" PRId64 " types", tokens, types);
       else 
         printf("           NO DATA");
       break;
@@ -150,7 +150,7 @@ describecorpus_show_statistics (Corpus *corpus)
       printf("s-ATT %-16s ", a->any.name); 
       regions = cl_max_struc(a);
       if (regions >= 0) {
-        printf("%10d regions", regions);
+        printf("%10" PRId64 " regions", regions);
         if (cl_struc_values(a))
           printf(" (with annotations)");
       }
@@ -161,7 +161,7 @@ describecorpus_show_statistics (Corpus *corpus)
       printf("a-ATT %-16s ", a->any.name); 
       blocks = cl_max_alg(a);
       if (blocks >= 0) {
-        printf("%10d alignment blocks", blocks);
+        printf("%10" PRId64 " alignment blocks", blocks);
         if (cl_has_extended_alignment(a))
           printf(" (extended)");
       }
@@ -193,15 +193,15 @@ describecorpus_show_statistics (Corpus *corpus)
 int
 main(int argc, char **argv)
 {
-  int i;
+  int64_t i;
   Corpus *corpus;
 
-  int c;
+  int64_t c;
   extern char *optarg;
   extern int optind;
 
-  int show_stats = 0;
-  int show_details = 0;
+  int64_t show_stats = 0;
+  int64_t show_details = 0;
 
   char *registry = NULL;
 

@@ -15,7 +15,7 @@
  *  WWW at http://www.gnu.org/copyleft/gpl.html).
  */
 
-
+#include <stdint.h>
 
 /**
  * The BARdesc object: a BAR (Beamed Array) descriptor.
@@ -39,22 +39,21 @@
  * Well done if you understand that......
  */
 typedef struct _BARdesc {
-  unsigned int x_size, y_size, d_size; /**< matrix dimensions: N, M, N+M */
-  unsigned int beam_width;             /**< beam width W */
-  int *d_block_start_x;                /**< vector of diagonal block start points (x coordinate) */
-  int **d_block_data;                  /**< list of vectors containing diagonal block data */
-  int *data;                           /**< pointer to data space */
-  int vector_size;                     /**< size of allocated arrays */
-  int data_size;                       /**< used by BAR_reinit() to know if it needs to reallocate memory */
+  uint64_t x_size, y_size, d_size; /**< matrix dimensions: N, M, N+M */
+  uint64_t beam_width;             /**< beam width W */
+  int64_t *d_block_start_x;        /**< vector of diagonal block start points (x coordinate) */
+  int64_t **d_block_data;          /**< list of vectors containing diagonal block data */
+  int64_t *data;                   /**< pointer to data space */
+  int64_t vector_size;             /**< size of allocated arrays */
+  int64_t data_size;               /**< used by BAR_reinit() to know if it needs to reallocate memory */
 } *BARdesc;
 
-BARdesc BAR_new(int N, int M, int W);
+BARdesc BAR_new(int64_t N, int64_t M, int64_t W);
 
-void BAR_reinit(BARdesc BAR, int N, int M, int W);
+void BAR_reinit(BARdesc BAR, int64_t N, int64_t M, int64_t W);
 
 void BAR_delete(BARdesc BAR);
 
-void BAR_write(BARdesc BAR, int x, int y, int i);
+void BAR_write(BARdesc BAR, int64_t x, int64_t y, int64_t i);
 
-int BAR_read(BARdesc BAR, int x, int y);
-
+int64_t BAR_read(BARdesc BAR, int64_t x, int64_t y);

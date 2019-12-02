@@ -39,7 +39,7 @@ extern char *yytext;
 
 typedef struct _InputBuffer {
   char *data;                      /**< the actual buffered input string */
-  int position;                    /**< current read position */
+  int64_t position;                    /**< current read position */
   struct _MacroEntry *macro;       /**< pointer to the macro which created this buffer */
   struct _InputBuffer *next;       /**< next buffer (will be read when current buffer has been completed) */
 } *InputBuffer;
@@ -60,17 +60,17 @@ InputBuffer InputBufferList = NULL;                /**< list of active input buf
  */
 typedef struct _MacroSegment {
   char *string;
-  int arg;
+  int64_t arg;
   struct _MacroSegment *next;
 } *MacroSegment;
 
 /** an entry in the macro database */
 typedef struct _MacroEntry {
   char *name;                      /* hash key is (name, #args) to allow overloading */
-  int args;                        /* number of arguments */
+  int64_t args;                        /* number of arguments */
   char *argnames[10];              /* optional argument names (for information only) */
   MacroSegment replacement;        /* macro replacement -> list of segments */
-  int active;                      /* used to detect recursive macros */
+  int64_t active;                      /* used to detect recursive macros */
   struct _MacroEntry *next;
 } *MacroEntry;
 
@@ -82,7 +82,7 @@ typedef struct _MacroEntry {
  */
 typedef struct _MacroHashTable {
   MacroEntry *hash;
-  int size;
+  int64_t size;
 } *MacroHashTable;
 
 MacroHashTable MacroHash = NULL;        /* our macro database */
@@ -103,7 +103,7 @@ macro_debug_newline_indent(void)
 
 /** push new input buffer (which can hold string of lenght <size>) on top of buffer list */
 InputBuffer
-PushInputBuffer(int size)
+PushInputBuffer(int64_t size)
 {
   InputBuffer new_buffer;
 
@@ -137,9 +137,9 @@ PopInputBuffer(void)
 
 /** has to be called once to initialise the hash */
 void
-MakeMacroHash(int size)
+MakeMacroHash(int64_t size)
 {
-  int bytes;
+  int64_t bytes;
 
   MacroHash = (MacroHashTable) cl_malloc(sizeof(struct _MacroHashTable));
 
@@ -151,10 +151,10 @@ MakeMacroHash(int size)
 
 /* find hash entry .. returns MacroEntry or NULL if not in hash */
 MacroEntry
-MacroHashLookup(char *str, int args)
+MacroHashLookup(char *str, int64_t args)
 {
   MacroEntry p;
-  int offset;
+  int64_t offset;
 
   if (MacroHash == NULL) {
     cqpmessage(Error, "Macro hash not initialised.");
@@ -177,10 +177,10 @@ MacroHashLookup(char *str, int args)
  *    hide the old one, in accordance with the macro redefinition strategy
  */
 MacroEntry
-MacroHashAdd(char *str, int args)
+MacroHashAdd(char *str, int64_t args)
 {
   MacroEntry new_macro;
-  int offset, i;
+  int64_t offset, i;
 
   if (MacroHash == NULL) {
     cqpmessage(Error, "Macro hash not initialised.");
@@ -209,7 +209,7 @@ MacroHashDelete(MacroEntry macro)
 {
   MacroEntry p;
   MacroSegment seg;
-  int offset, i;
+  int64_t offset, i;
 
   offset = hash_macro(macro->name, macro->args) % MacroHash->size; /* find the macro's bucket */
   p = MacroHash->hash[offset];
@@ -291,7 +291,7 @@ MacroAddSegment(MacroEntry macro)
  * ( TODO Not clear why it's in macro.c when it is not specific to just macros.
  * (      Why not put this in cqp.c?
  */
-int
+int64_t
 yy_input_char(void)
 {
   InputBuffer buf;
@@ -307,12 +307,12 @@ yy_input_char(void)
       return yy_input_char();        /* will be added to query buffer in embedded call */
     }
     else {
-      character = (unsigned char) buf->data[buf->position++];
+      character = (uint8_t) buf->data[buf->position++];
     }
   }
   else {
     if (cqp_input_string != NULL) {
-      character = (unsigned char) cqp_input_string[cqp_input_string_position++];
+      character = (uint8_t) cqp_input_string[cqp_input_string_position++];
     }
     else {
       character = getc(yyin);
@@ -343,7 +343,7 @@ yy_input_char(void)
 }
 
 /** checks if input is being read from macro expansion */
-int
+int64_t
 yy_input_from_macro(void)
 {
   return (InputBufferList != NULL);
@@ -423,7 +423,7 @@ init_macros(void)
 
 /** macro args are stored in a global array so we can always free() the memory */
 char *(macro_arg[10]) = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
-unsigned int pseudo_arg_counter = 0; /**< unique number for pseudo argument in each macro call */
+uint64_t pseudo_arg_counter = 0; /**< unique number for pseudo argument in each macro call */
 
 /**
  * expand macro <name>:
@@ -431,14 +431,14 @@ unsigned int pseudo_arg_counter = 0; /**< unique number for pseudo argument in e
  *   - lookup macro as by <name> and <args>
  *   - push subsituted string on top of input buffer list
  */
-int
+int64_t
 expand_macro(char *name)
 {
   MacroEntry macro;
   MacroSegment seg;
-  int args = 0;
-  int token = 0;
-  int i, len;
+  int64_t args = 0;
+  int64_t token = 0;
+  int64_t i, len;
   char *buf, *part;
   InputBuffer buffer;
   char pseudo_arg[20];
@@ -449,7 +449,7 @@ expand_macro(char *name)
     cl_free(macro_arg[i]);
 
   /* set pseudo argument */
-  sprintf(pseudo_arg, "_pseudo_%u", pseudo_arg_counter++);
+  sprintf(pseudo_arg, "_pseudo_%" PRIu64 "", pseudo_arg_counter++);
 
   /* some rather daring circular usage of the lexical analyzer ... but it _should_ work */
   /* the '(' is part of the macro token recognised by the lexical analyzer now */
@@ -463,7 +463,7 @@ expand_macro(char *name)
       macro_arg[args++] = yylval.strval; /* already strdup()ed by lexical analyzer */
       break;
     default:
-      cqpmessage(Error, "Invalid macro argument type (%d).", token);
+      cqpmessage(Error, "Invalid macro argument type (%" PRId64 ").", token);
       return 0;
     }
     if (args > 10) {
@@ -482,7 +482,7 @@ expand_macro(char *name)
   macro = MacroHashLookup(name, args);
   if (macro != NULL) {
     if (macro->active) {
-      cqpmessage(Error, "Recursion in definition of macro %s(%d).", name, args);
+      cqpmessage(Error, "Recursion in definition of macro %s(%" PRId64 ").", name, args);
       return 0;
     }
 
@@ -527,7 +527,7 @@ expand_macro(char *name)
 
   }
   else {
-    cqpmessage(Error, "Macro %s(%d) is not defined.", name, args);
+    cqpmessage(Error, "Macro %s(%" PRId64 ") is not defined.", name, args);
     return 0;
   }
 
@@ -545,14 +545,14 @@ expand_macro(char *name)
  *          $0 .. $9 refer to the macro's arguments and CAN NOT be escaped
  * returns 1 if macro definition was successful, 0 on syntax error
  */
-int
-define_macro(char *name, int args, char *argstr, char *definition)
+int64_t
+define_macro(char *name, int64_t args, char *argstr, char *definition)
 {
   MacroEntry macro;
   MacroSegment seg;
   char *point, *mark;                /* remember emacs? ;-) */
   char *s;
-  int argument, len;
+  int64_t argument, len;
 
   if (argstr != NULL) {                /* <argstr> overrides <args> */
     args = 0; /* -> count number of args specified in argstr */
@@ -561,7 +561,7 @@ define_macro(char *name, int args, char *argstr, char *definition)
       if (*point == '$') {
         point++;
         if ((*point >= '0') && (*point <= '9')) {
-          int n = (*point - '0') + 1;
+          int64_t n = (*point - '0') + 1;
           if (n > args)
             args = n;
         }
@@ -571,12 +571,12 @@ define_macro(char *name, int args, char *argstr, char *definition)
   }
 
   if ((args < 0) || (args > 10)) {
-    cqpmessage(Error, "Invalid number of arguments in macro definition: %s(%d)\n", name, args);
+    cqpmessage(Error, "Invalid number of arguments in macro definition: %s(%" PRId64 ")\n", name, args);
     return 0;
   }
   if ((macro = MacroHashLookup(name, args)) != NULL) {
     if (!silent)
-      fprintf(stderr, "WARNING Macro %s(%d) redefined\n", name, args);
+      fprintf(stderr, "WARNING Macro %s(%" PRId64 ") redefined\n", name, args);
     MacroHashDelete(macro);
   }
 
@@ -600,7 +600,7 @@ define_macro(char *name, int args, char *argstr, char *definition)
             }
             len = (point - mark); /* string length of argument name */
             if (macro->argnames[argument] != NULL) {
-              cqpmessage(Error, "Argument $%d defined twice in prototype %s(%s)", argument, name, argstr);
+              cqpmessage(Error, "Argument $%" PRId64 " defined twice in prototype %s(%s)", argument, name, argstr);
               MacroHashDelete(macro);
               return 0;
             }
@@ -662,7 +662,7 @@ define_macro(char *name, int args, char *argstr, char *definition)
       else {
         argument = *(point+1) - '0';
         if (argument >= args) {
-          cqpmessage(Error, "Invalid argument $%d in macro %s(%d).", argument, name, args);
+          cqpmessage(Error, "Invalid argument $%" PRId64 " in macro %s(%" PRId64 ").", argument, name, args);
           MacroHashDelete(macro);
           return 0;
         }
@@ -725,10 +725,10 @@ preprocess_input_line(char *line)
  *              or: <whitespace> <identfifier> '(' <prototype> ')'  -> nr_of_args = 0,  prototype = copy of <prototype>
  * returns pointer to copy of <identifier> or NULL on parse error */
 char *
-parse_macro_name(char *text, int *nr_of_args, char **prototype)
+parse_macro_name(char *text, int64_t *nr_of_args, char **prototype)
 {
   char *p, *mark;
-  int len, len_p;
+  int64_t len, len_p;
 
   /* init return variables */
   *nr_of_args = 0;
@@ -792,10 +792,10 @@ load_macro_file(char *filename)
   char input_line[MACRO_FILE_MAX_LINE_LENGTH + 3]; /* line input buffer */
   char *line;                    /* pointer to input line after preprocessing */
   char *macro_name;              /* name of macro currently being processed, NULL if not in definition body */
-  int macro_args;                /* number of arguments for current macro */
+  int64_t macro_args;                /* number of arguments for current macro */
   char *macro_prototype;         /* alternatively, a prototype might be given for the arguments */
   char *body;                    /* macro definition (re-allocated for multi-line definitions) */
-  int line_number;               /* current line in macro file (for error messages) */
+  int64_t line_number;               /* current line in macro file (for error messages) */
   FILE *fd;                      /* macro file handle */
   char *import_file;             /* filename of import file */
 
@@ -812,21 +812,21 @@ load_macro_file(char *filename)
   while (!feof(fd) && fgets(input_line, MACRO_FILE_MAX_LINE_LENGTH + 3, fd)) {
     line_number++;
     if (strlen(input_line) > MACRO_FILE_MAX_LINE_LENGTH + 1) {
-      cqpmessage(Error, "Line exceeds maximum length of %d characters (file '%s', line %d)\n",
+      cqpmessage(Error, "Line exceeds maximum length of %" PRId64 " characters (file '%s', line %" PRId64 ")\n",
                  MACRO_FILE_MAX_LINE_LENGTH, filename, line_number);
       break;                        /* stop processing file */
     }
 
     line = preprocess_input_line(input_line);
     if (!line) {
-      cqpmessage(Error, "Unbalanced quotation marks (file '%s', line %d)\n", filename, line_number);
+      cqpmessage(Error, "Unbalanced quotation marks (file '%s', line %" PRId64 ")\n", filename, line_number);
       break;                        /* stop processing file */
     }
 
     if (strncmp(line, "IMPORT", 6) == 0) {
       /* import another macro definition file */
       if (macro_name != NULL) {
-        cqpmessage(Error, "IMPORT directive in MACRO %s(%d) block (file '%s', line %d)\n",
+        cqpmessage(Error, "IMPORT directive in MACRO %s(%" PRId64 ") block (file '%s', line %" PRId64 ")\n",
                    macro_name, macro_args, filename, line_number);
         break;                        /* stop processing file */
       }
@@ -835,7 +835,7 @@ load_macro_file(char *filename)
       while ((*import_file == ' ') || (*import_file == '\t'))
         import_file++;
       if (strlen(import_file) == 0) {
-        cqpmessage(Error, "No filename specified in IMPORT directive (file '%s', line %d)\n",
+        cqpmessage(Error, "No filename specified in IMPORT directive (file '%s', line %" PRId64 ")\n",
                    filename, line_number);
         break;
       }
@@ -845,29 +845,29 @@ load_macro_file(char *filename)
     else if (strncmp(line, "MACRO", 5) == 0) {
       /* start of macro definition block */
       if (macro_name != NULL) {
-        cqpmessage(Error, "New MACRO block before definition of MACRO %s(%d) ends (file '%s', line %d)\n",
+        cqpmessage(Error, "New MACRO block before definition of MACRO %s(%" PRId64 ") ends (file '%s', line %" PRId64 ")\n",
                    macro_name, macro_args, filename, line_number);
         break;                        /* stop processing file */
       }
       macro_name = parse_macro_name(line+5, &macro_args, &macro_prototype);
       if (macro_name == NULL) {
-        cqpmessage(Error, "MACRO syntax error (file '%s', line %d)\n", filename, line_number);
+        cqpmessage(Error, "MACRO syntax error (file '%s', line %" PRId64 ")\n", filename, line_number);
         break;                        /* stop processing file */
       }
     }
     else if (strcmp(line, ";") == 0) {
       /* end of macro definition block */
       if (macro_name == NULL) {
-        cqpmessage(Error, "No MACRO block to end here (file '%s', line %d)\n", filename, line_number);
+        cqpmessage(Error, "No MACRO block to end here (file '%s', line %" PRId64 ")\n", filename, line_number);
         break;                        /* stop processing file */
       }
       if (body == NULL) {
-        cqpmessage(Error, "Definition of MACRO %s(%d) is empty (file '%s', line %d)\n",
+        cqpmessage(Error, "Definition of MACRO %s(%" PRId64 ") is empty (file '%s', line %" PRId64 ")\n",
                    macro_name, macro_args, filename, line_number);
         break;                        /* stop processing file */
       }
       if (!define_macro(macro_name, macro_args, macro_prototype, body)) {
-        cqpmessage(Error, "Syntax error in definition of MACRO %s(%d) (file '%s', definition ending on line %d)\n",
+        cqpmessage(Error, "Syntax error in definition of MACRO %s(%" PRId64 ") (file '%s', definition ending on line %" PRId64 ")\n",
                    macro_name, macro_args, filename, line_number);
         break;                        /* stop processing file */
       }
@@ -878,7 +878,7 @@ load_macro_file(char *filename)
     else if (strlen(line) > 0) { /* skip empty lines */
       /* check that we're within macro definition & add this line to body */
       if (macro_name == NULL) {
-        cqpmessage(Error, "Missing MACRO block start (file '%s', line %d)\n", filename, line_number);
+        cqpmessage(Error, "Missing MACRO block start (file '%s', line %" PRId64 ")\n", filename, line_number);
         break;                        /* stop processing file */
       }
       if (body == NULL) {
@@ -893,7 +893,7 @@ load_macro_file(char *filename)
   }
 
   if (feof(fd) && (macro_name != NULL)) {
-    cqpmessage(Error, "End of file while defining MACRO %s(%d) (file '%s')\n",
+    cqpmessage(Error, "End of file while defining MACRO %s(%" PRId64 ") (file '%s')\n",
                macro_name, macro_args, filename);
   }
   cl_free(macro_prototype);        /* may have been allocated by parse_macro_name */
@@ -904,16 +904,16 @@ load_macro_file(char *filename)
 
 
 /** delete active input buffers */
-int
-delete_macro_buffers(int trace) {
-  int n = 0, i;
+int64_t
+delete_macro_buffers(int64_t trace) {
+  int64_t n = 0, i;
 
   if (trace && (InputBufferList != NULL)) {
     fprintf(stderr, "MACRO STACK TRACE:\n");
   }
   while (InputBufferList != NULL) {
     if (trace) {
-      fprintf(stderr, "%s(%d): ", InputBufferList->macro->name, InputBufferList->macro->args);
+      fprintf(stderr, "%s(%" PRId64 "): ", InputBufferList->macro->name, InputBufferList->macro->args);
       for (i = 0; i < InputBufferList->position; i++)
         fprintf(stderr, "%c", InputBufferList->data[i]);
       fprintf(stderr, " <--\n");
@@ -925,7 +925,7 @@ delete_macro_buffers(int trace) {
 }
 
 /* macro iterator */
-int iterator_bucket = -1;           /**< current bucket in macro iterator */
+int64_t iterator_bucket = -1;           /**< current bucket in macro iterator */
 MacroEntry iterator_entry = NULL;   /**< current entry in bucket (if NULL, go to next bucket) @see iterator_bucket */
 
 /**
@@ -942,7 +942,7 @@ macro_iterator_new(void)
 MacroEntry
 macro_iterator_next_macro(char *prefix)
 {
-  int prefix_length;
+  int64_t prefix_length;
 
   if (enable_macros && (MacroHash != NULL)) {
     prefix_length = (prefix != NULL) ? strlen(prefix) : 0;
@@ -977,7 +977,7 @@ macro_iterator_next_macro(char *prefix)
 }
 
 char *
-macro_iterator_next(char *prefix, int *nargs)
+macro_iterator_next(char *prefix, int64_t *nargs)
 {
   MacroEntry macro;
 
@@ -997,7 +997,7 @@ macro_iterator_next_prototype(char *prefix)
 {
   MacroEntry macro;
   char *pt;
-  int i, len;
+  int64_t i, len;
 
   macro = macro_iterator_next_macro(prefix);
   if (macro == NULL)
@@ -1033,7 +1033,7 @@ list_macros_sort(const void *p1, const void *p2)
 {
   char *name1 = *((char **) p1);
   char *name2 = *((char **) p2);
-  int result = strcmp(name1, name2);
+  int64_t result = strcmp(name1, name2);
   return result;
 }
 
@@ -1042,7 +1042,7 @@ list_macros_sort(const void *p1, const void *p2)
 void
 list_macros(char *prefix)
 {
-  int i, len, k, N, l;
+  int64_t i, len, k, N, l;
   MacroEntry p;
   char *macro_name, initial = ' ', label[4];
   char **list;                /* list of macro names matching prefix (will be sorted alphabetically) */
@@ -1067,7 +1067,7 @@ list_macros(char *prefix)
         if ((prefix == NULL) || (strncasecmp(p->name, prefix, len) == 0)) {
           l = strlen(p->name) + 8;
           macro_name = (char *) cl_malloc(l);
-          sprintf(macro_name, "/%s(%d)", p->name, p->args);
+          sprintf(macro_name, "/%s(%" PRId64 ")", p->name, p->args);
           list[k++] = macro_name;
         }
         p = p->next;
@@ -1101,11 +1101,11 @@ list_macros(char *prefix)
 
 /** print definition of macro on stdout */
 void
-print_macro_definition(char *name, int args)
+print_macro_definition(char *name, int64_t args)
 {
   MacroEntry macro;
   MacroSegment seg;
-  int i;
+  int64_t i;
 
   if (!enable_macros) {
     cqpmessage(Error, "Macros not enabled.\n");
@@ -1113,7 +1113,7 @@ print_macro_definition(char *name, int args)
   else {
     macro = MacroHashLookup(name, args);
     if (macro == NULL) {
-      printf("Macro %s(%d) not defined.\n", name, args);
+      printf("Macro %s(%" PRId64 ") not defined.\n", name, args);
     }
     else {
       printf("/%s[", name);
@@ -1122,7 +1122,7 @@ print_macro_definition(char *name, int args)
           printf("<%s>", macro->argnames[i]);
         }
         else {
-          printf("<%d>", i);
+          printf("<%" PRId64 ">", i);
         }
         if (i < (args-1)) printf(", ");
       }
@@ -1134,7 +1134,7 @@ print_macro_definition(char *name, int args)
             printf("<%s>", macro->argnames[i]);
           }
           else {
-            printf("<%d>", i);
+            printf("<%" PRId64 ">", i);
           }
         }
         else if (seg->string != NULL)
@@ -1153,9 +1153,9 @@ print_macro_definition(char *name, int args)
 void
 macro_statistics(void)
 {
-  int stat[4] = {0, 0, 0, 0};        /* count buckets: empty / one macro / two macros / more than two */
+  int64_t stat[4] = {0, 0, 0, 0};        /* count buckets: empty / one macro / two macros / more than two */
   MacroEntry m;
-  int i, count;
+  int64_t i, count;
 
   if (MacroHash == NULL)
     fprintf(stderr, "Macro hash was not initialised.\n");
@@ -1167,9 +1167,9 @@ macro_statistics(void)
       stat[count]++;
     }
     fprintf(stderr, "Macro hash statistics:\n");
-    fprintf(stderr, "\t%-6d empty buckets\n", stat[0]);
-    fprintf(stderr, "\t%-6d buckets hold 1 macro\n", stat[1]);
-    fprintf(stderr, "\t%-6d buckets hold 2 macros\n", stat[2]);
-    fprintf(stderr, "\t%-6d buckets hold 3 or more macros\n", stat[3]);
+    fprintf(stderr, "\t%-6" PRId64 " empty buckets\n", stat[0]);
+    fprintf(stderr, "\t%-6" PRId64 " buckets hold 1 macro\n", stat[1]);
+    fprintf(stderr, "\t%-6" PRId64 " buckets hold 2 macros\n", stat[2]);
+    fprintf(stderr, "\t%-6" PRId64 " buckets hold 3 or more macros\n", stat[3]);
   }
 }

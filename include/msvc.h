@@ -1,6 +1,13 @@
 #ifndef __ms_vc_h
 #define __ms_vc_h
 
+// warning C4005: macro definition
+#pragma warning (disable: 4005)
+// warning C4100: unreferenced formal parameter
+#pragma warning (disable: 4100)
+// warning C4996: POSIX function names
+#pragma warning (disable: 4996)
+
 #include <winsock2.h>
 
 #define popen _popen

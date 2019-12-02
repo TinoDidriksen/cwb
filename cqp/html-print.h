@@ -38,7 +38,7 @@ char *
 html_convert_string(char *s);
 
 void 
-html_puts(FILE *fd, char *s, int flags);
+html_puts(FILE *fd, char *s, int64_t flags);
 
 void
 html_print_aligned_line(FILE *stream, char *attribute_name, char *line);
@@ -50,12 +50,12 @@ html_print_corpus_header(CorpusList *cl,
 void 
 html_print_output(CorpusList *cl, 
 		  FILE *outfd,
-		  int interactive,
+		  int64_t interactive,
 		  ContextDescriptor *cd,
-		  int first, int last);
+		  int64_t first, int64_t last);
 
 void 
-html_print_group(Group *group, int expand, FILE *fd);
+html_print_group(Group *group, int64_t expand, FILE *fd);
 
 #endif
 

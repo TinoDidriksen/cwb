@@ -29,8 +29,8 @@
 typedef struct _bfilebuf {
   FILE *fd;
   char mode;
-  unsigned char buf;
-  int bits_in_buf;
+  uint8_t buf;
+  int64_t bits_in_buf;
   off_t position;
 } BFile;
 
@@ -38,37 +38,37 @@ typedef struct _bfilebuf {
  * Stream buffer for bit input / output.
  */
 typedef struct _bstreambuf {
-  unsigned char *base;
+  uint8_t *base;
   char mode;
-  unsigned char buf;
-  int bits_in_buf;
+  uint8_t buf;
+  int64_t bits_in_buf;
   off_t position;
 } BStream;
 
 
 
-int BFopen(char *filename, char *type, BFile *bf);
-int BFclose(BFile *stream);
+bool BFopen(char *filename, char *type, BFile *bf);
+bool BFclose(BFile *stream);
 
-int BSopen(unsigned char *base, char *type, BStream *bf);
-int BSclose(BStream *stream);
+bool BSopen(uint8_t *base, char *type, BStream *bf);
+void BSclose(BStream *stream);
 
-int BFflush(BFile *stream);
-int BSflush(BStream *stream);
+bool BFflush(BFile *stream);
+bool BSflush(BStream *stream);
 
-int BFwrite(unsigned char data, int nbits, BFile *stream);
-int BSwrite(unsigned char data, int nbits, BStream *stream);
+bool BFwrite(uint8_t data, int64_t nbits, BFile *stream);
+bool BSwrite(uint8_t data, int64_t nbits, BStream *stream);
 
-int BFread(unsigned char *data, int nbits, BFile *stream);
-int BSread(unsigned char *data, int nbits, BStream *stream);
+bool BFread(uint8_t *data, int64_t nbits, BFile *stream);
+bool BSread(uint8_t *data, int64_t nbits, BStream *stream);
 
-int BFwriteWord(unsigned int data, int nbits, BFile *stream);
+bool BFwriteWord(uint64_t data, int64_t nbits, BFile *stream);
 
-int BFreadWord(unsigned int *data, int nbits, BFile *stream);
+bool BFreadWord(uint64_t *data, int64_t nbits, BFile *stream);
 
-int BFposition(BFile *stream);
-int BSposition(BStream *stream);
+int64_t BFposition(BFile *stream);
+int64_t BSposition(BStream *stream);
 
-int BSseek(BStream *stream, off_t offset);
+void BSseek(BStream *stream, off_t offset);
 
 #endif

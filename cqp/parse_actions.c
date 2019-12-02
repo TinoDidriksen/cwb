@@ -69,8 +69,8 @@
  *
  * In some cases, setting this to  0 is linked with "YYABORT" in comments.
  */
-int generate_code;
-int within_gc;                   /**< TODO would be very useful to have a desc for this ;
+int64_t generate_code;
+int64_t within_gc;                   /**< TODO would be very useful to have a desc for this ;
                                       seems to be about whether or not we are within a global constraint */
 
 CYCtype last_cyc;                /**< type of last corpus yielding command */
@@ -80,7 +80,7 @@ CorpusList *query_corpus = NULL;
 /** Used for preserving former values of query_corpus (@see query_corpus), so it can be reset to a former value). */
 CorpusList *old_query_corpus = NULL;
 
-int catch_unknown_ids = 0;
+int64_t catch_unknown_ids = 0;
 
 
 /**
@@ -96,9 +96,9 @@ Context expansion;
  */
 char regex_string[CL_MAX_LINE_LENGTH];
 /** index into the regex string buffer, storing a current position. @ see regex_string_pos */
-int regex_string_pos;
+int64_t regex_string_pos;
 /** length of search string: is written to by evaltree2searchstr() but then seems never to be read.  TODO . */
-int sslen;
+int64_t sslen;
 
 /* ======================================== predeclared functions */
 
@@ -229,7 +229,7 @@ after_CorpusCommand(CorpusList *cl)
         catalog_corpus(cl, NULL, 0, -1, GlobalPrintMode);
       }
       else if (!silent)
-        printf("%d matches.%s\n",
+        printf("%" PRId64 " matches.%s\n",
                cl->size,
                (cl->size > 0 ? " Use 'cat' to show." : ""));
     }
@@ -249,7 +249,7 @@ after_CorpusCommand(CorpusList *cl)
       if (autoshow && (cl->size > 0))
         catalog_corpus(cl, NULL, 0, -1, GlobalPrintMode);
       else if (!silent)
-        printf("%d matches.%s\n",
+        printf("%" PRId64 " matches.%s\n",
                cl->size,
                (cl->size > 0 ? " Use 'cat' to show."
                 : ""));
@@ -344,7 +344,7 @@ in_UnnamedCorpusCommand(CorpusList *cl)
       break;
 
     default:
-      cqpmessage(Warning, "Unknown CYC type: %d\n", last_cyc);
+      cqpmessage(Warning, "Unknown CYC type: %" PRId64 "\n", last_cyc);
       res = NULL;
       break;
     }
@@ -446,7 +446,7 @@ prepare_Query()
       query_corpus = NULL;
     }
     else {
-      int before, after;
+      int64_t before, after;
 
       assert(eep == 0);
       assert(CurEnv == &(Environment[0]));
@@ -499,7 +499,7 @@ after_Query(CorpusList *cl)
 /* ======================================== ``interactive'' commands */
 
 void
-do_cat(CorpusList *cl, struct Redir *r, int first, int last)
+do_cat(CorpusList *cl, struct Redir *r, int64_t first, int64_t last)
 {
   if (cl) {
     cqpmessage(Message, "cat command: (%s)", cl->name);
@@ -567,7 +567,7 @@ do_save(CorpusList *cl, struct Redir *r)
 /* ======================================== show attribute */
 
 void
-do_attribute_show(char *name, int status)
+do_attribute_show(char *name, int64_t status)
 {
   AttributeInfo *ai;
 
@@ -611,8 +611,8 @@ CorpusList *
 do_translate(CorpusList *source, char *target_name) {
   CorpusList *res, *target;
   Attribute *alignment;
-  int i, n, bead;
-  int s1, s2, t1, t2;
+  int64_t i, n, bead;
+  int64_t s1, s2, t1, t2;
 
   if (generate_code) {
     assert(source != NULL);
@@ -691,7 +691,7 @@ do_setop(RangeSetOp op, CorpusList *c1, CorpusList *c2)
 void
 prepare_do_subset(CorpusList *cl, FieldType field)
 {
-  int field_exists = 0;
+  int64_t field_exists = 0;
 
   if (cl == NULL || cl->type != SUB) {
     cqpmessage(Error, "The subset operator can only be applied to subcorpora.");
@@ -770,10 +770,10 @@ do_set_complex_target(CorpusList *cl,
                       SearchStrategy strategy,
                       Constrainttree boolt,
                       enum ctxtdir direction,
-                      int number,
+                      int64_t number,
                       char *id,
                       FieldType field,
-                      int inclusive)
+                      int64_t inclusive)
 {
   if (generate_code && cl != NULL) {
     /* query_corpus has been saved in old_query_corpus and set to cl by parser */
@@ -801,7 +801,7 @@ do_set_complex_target(CorpusList *cl,
  * @param duration  How many seconds to sleep for.
  */
 void
-do_sleep(int duration)
+do_sleep(int64_t duration)
 {
   if (duration > 0) {
 #ifndef __MINGW__
@@ -841,7 +841,7 @@ do_exec(char *fname)
 }
 
 void
-do_delete_lines_num(CorpusList *cl, int start, int end)
+do_delete_lines_num(CorpusList *cl, int64_t start, int64_t end)
 {
   if (cl == NULL || cl->type != SUB) {
     cqpmessage(Error, "The delete operator can only be applied to subcorpora.");
@@ -865,7 +865,7 @@ do_delete_lines_num(CorpusList *cl, int start, int end)
 }
 
 void
-do_delete_lines(CorpusList *cl, FieldType f, int mode)
+do_delete_lines(CorpusList *cl, FieldType f, int64_t mode)
 {
   if (cl == NULL || cl->type != SUB) {
     cqpmessage(Error, "The delete operator can only be applied to subcorpora.");
@@ -874,7 +874,7 @@ do_delete_lines(CorpusList *cl, FieldType f, int mode)
   }
   else if (f != NoField) {
 
-    int *positions = NULL;
+    int64_t *positions = NULL;
 
     switch (f) {
     case MatchField:
@@ -898,7 +898,7 @@ do_delete_lines(CorpusList *cl, FieldType f, int mode)
 
     if (positions) {
 
-      int i;
+      int64_t i;
       Bitfield lines = create_bitfield(cl->size);
       assert(lines);
 
@@ -914,7 +914,7 @@ do_delete_lines(CorpusList *cl, FieldType f, int mode)
 }
 
 void
-do_reduce(CorpusList *cl, int number, int percent) {
+do_reduce(CorpusList *cl, int64_t number, int64_t percent) {
   if (cl == NULL || cl->type != SUB) {
     cqpmessage(Error, "The reduce operator can only be applied to named query results.");
     generate_code = 0;
@@ -944,7 +944,7 @@ do_reduce(CorpusList *cl, int number, int percent) {
   }
 
   {
-    unsigned int to_select, size;
+    uint64_t to_select, size;
     Bitfield lines = create_bitfield(cl->size);
     assert(lines);
 
@@ -967,8 +967,8 @@ do_reduce(CorpusList *cl, int number, int percent) {
 }
 
 void
-do_cut(CorpusList *cl, int first, int last) {
-  int n_matches, i;
+do_cut(CorpusList *cl, int64_t first, int64_t last) {
+  int64_t n_matches, i;
 
   if (cl == NULL || cl->type != SUB) {
     cqpmessage(Error, "The cut operator can only be applied to named query results.");
@@ -988,7 +988,7 @@ do_cut(CorpusList *cl, int first, int last) {
     first = n_matches;    /* so the loop below cannot overflow */
 
   if (last < first) {
-    cqpmessage(Warning, "Cut operator applied with empty range %d .. %d, so result is empty.", first, last);
+    cqpmessage(Warning, "Cut operator applied with empty range %" PRId64 " .. %" PRId64 ", so result is empty.", first, last);
     first = last = n_matches;        /* delete all matches, ensuring that index does not run out of bounds */
   }
 
@@ -997,12 +997,12 @@ do_cut(CorpusList *cl, int first, int last) {
    */
   if (cl->sortidx) {
     for (i = 0; i < first; i++)  {
-      int j = cl->sortidx[i];
+      int64_t j = cl->sortidx[i];
       cl->range[j].start = -1;        /* delete all matches before <first> according to current sort order */
       cl->range[j].end = -1;
     }
     for (i = last + 1; i < n_matches; i++)  {
-      int j = cl->sortidx[i];
+      int64_t j = cl->sortidx[i];
       cl->range[j].start = -1;        /* delete all matches after <last> according to current sort order */
       cl->range[j].end = -1;
     }
@@ -1031,9 +1031,9 @@ do_info(CorpusList *cl)
 
 void
 do_group(CorpusList *cl,
-         FieldType target, int target_offset, char *t_att,
-         FieldType source, int source_offset, char *s_att,
-         int cut, int expand, int is_grouped, struct Redir *redir)
+         FieldType target, int64_t target_offset, char *t_att,
+         FieldType source, int64_t source_offset, char *s_att,
+         int64_t cut, int64_t expand, int64_t is_grouped, struct Redir *redir)
 {
   Group *group;
 
@@ -1049,8 +1049,8 @@ do_group(CorpusList *cl,
 /** Like do_group, but with no source */
 void
 do_group2(CorpusList *cl,
-          FieldType target, int target_offset, char *t_att,
-          int cut, int expand, struct Redir *r)
+          FieldType target, int64_t target_offset, char *t_att,
+          int64_t cut, int64_t expand, struct Redir *r)
 {
   Group *group;
 
@@ -1064,7 +1064,7 @@ do_group2(CorpusList *cl,
 }
 
 CorpusList *
-do_StandardQuery(int cut_value, int keep_flag, char *modifier)
+do_StandardQuery(int64_t cut_value, int64_t keep_flag, char *modifier)
 {
   CorpusList *res;
   res = NULL;
@@ -1074,7 +1074,7 @@ do_StandardQuery(int cut_value, int keep_flag, char *modifier)
   /* embedded modifier (?<modifier>) at start of query */
   if (modifier != NULL) {
     /* currently, modifiers can only be used to set the matching strategy */
-    int code = find_matching_strategy(modifier);
+    int64_t code = find_matching_strategy(modifier);
     if (code < 0) {
       cqpmessage(Error, "embedded modifier (?%s) not recognized;\n"
           "\tuse (?longest), (?shortest), (?standard) or (?traditional) to set matching strategy temporarily",
@@ -1122,11 +1122,11 @@ do_StandardQuery(int cut_value, int keep_flag, char *modifier)
       /* if there is more than 1 initial pattern in the query, it may have returned more than <cut_value> matches */
       if (res->size > cut_value) {
         Bitfield lines = create_bitfield(res->size);
-        int i;
+        int64_t i;
         for (i = 0; i < cut_value; i++)
           set_bit(lines, i);
         if (!delete_intervals(res, lines, UNSELECTED_LINES)) {
-          cqpmessage(Error, "Couldn't reduce query result to first %d matches.\n", cut_value);
+          cqpmessage(Error, "Couldn't reduce query result to first %" PRId64 " matches.\n", cut_value);
         }
         destroy_bitfield(&lines);
       }
@@ -1140,7 +1140,7 @@ do_StandardQuery(int cut_value, int keep_flag, char *modifier)
 }
 
 CorpusList *
-do_MUQuery(Evaltree evalt, int keep_flag, int cut_value)
+do_MUQuery(Evaltree evalt, int64_t keep_flag, int64_t cut_value)
 {
   CorpusList *res;
 
@@ -1241,17 +1241,17 @@ reg_seq(Evaltree left, Evaltree right)
     return NULL;
 }
 
-int
-do_AnchorPoint(FieldType field, int is_closing)
+int64_t
+do_AnchorPoint(FieldType field, int64_t is_closing)
 {
-  int res = -1;
+  int64_t res = -1;
 
   cqpmessage(Message, "Anchor: <%s%s>", ((is_closing) ? "/" : ""), field_type_to_name(field));
 
   if (generate_code) {
     if (CurEnv->MaxPatIndex == MAXPATTERNS) {
       cqpmessage(Error,
-                 "Too many patterns (max is %d)", MAXPATTERNS);
+                 "Too many patterns (max is %" PRId64 ")", MAXPATTERNS);
       generate_code = 0; /* YYABORT; */
     }
   }
@@ -1299,20 +1299,20 @@ do_AnchorPoint(FieldType field, int is_closing)
 }
 
 
-int
-do_XMLTag(char *s_name, int is_closing, int op, char *regex, int flags)
+int64_t
+do_XMLTag(char *s_name, int64_t is_closing, int64_t op, char *regex, int64_t flags)
 {
   Attribute *attr = NULL;
-  int op_type = op & OP_NOT_MASK;
-  int negated = op & OP_NOT;
-  int res = -1;
+  int64_t op_type = op & OP_NOT_MASK;
+  int64_t negated = op & OP_NOT;
+  int64_t res = -1;
 
   cqpmessage(Message, "StructureDescr: <%s%s>", (is_closing ? "/" : ""), s_name);
 
   if (generate_code) {
     if (CurEnv->MaxPatIndex == MAXPATTERNS) {
       cqpmessage(Error,
-                 "Too many patterns (max is %d)", MAXPATTERNS);
+                 "Too many patterns (max is %" PRId64 ")", MAXPATTERNS);
       generate_code = 0; /* YYABORT; */
     }
   }
@@ -1359,7 +1359,7 @@ do_XMLTag(char *s_name, int is_closing, int op, char *regex, int flags)
         /* match as literal string -> don't compile regex */
       }
       else {
-        int safe_regex = !(strchr(regex, '|') || strchr(regex, '\\')); /* see below */
+        int64_t safe_regex = !(strchr(regex, '|') || strchr(regex, '\\')); /* see below */
         char *conv_regex;        /* OP_CONTAINS and OP_MATCHES */
         char *pattern;
         CL_Regex rx;
@@ -1431,10 +1431,10 @@ do_XMLTag(char *s_name, int is_closing, int op, char *regex, int flags)
   return res;
 }
 
-int
-do_NamedWfPattern(target_nature is_target, char *label, int pat_idx) {
+int64_t
+do_NamedWfPattern(target_nature is_target, char *label, int64_t pat_idx) {
   /* is_target = 0 (no marker), 1 (marked as target), 2 (marked as keyword) */
-  int res;
+  int64_t res;
   LabelEntry lab;
 
   res = -1;
@@ -1493,14 +1493,14 @@ do_NamedWfPattern(target_nature is_target, char *label, int pat_idx) {
   return res;
 }
 
-int
-do_WordformPattern(Constrainttree boolt, int lookahead) {
-  int res;
+int64_t
+do_WordformPattern(Constrainttree boolt, int64_t lookahead) {
+  int64_t res;
 
   if (generate_code) {
     if (CurEnv->MaxPatIndex == MAXPATTERNS) {
       cqpmessage(Error,
-                 "Too many patterns (max is %d)", MAXPATTERNS);
+                 "Too many patterns (max is %" PRId64 ")", MAXPATTERNS);
       generate_code = 0;
     }
   }
@@ -1560,15 +1560,15 @@ OptimizeStringConstraint(Constrainttree left,
 
     if (right->leaf.pat_type == REGEXP) {
 
-      int range;
+      int64_t range;
 
       range = get_id_range(left->pa_ref.attr);
 
 
       /* optimise regular expressions to idlists for categorical attributes (at most MAKE_IDLIST_BOUND lexicon entries) */
       if ((range > 0) && (range < MAKE_IDLIST_BOUND)) {
-        int *items;
-        int nr_items;
+        int64_t *items;
+        int64_t nr_items;
 
         items = collect_matching_ids(left->pa_ref.attr,
                                      right->leaf.ctype.sconst,
@@ -1618,10 +1618,10 @@ OptimizeStringConstraint(Constrainttree left,
           /*           if (nr_items > range/2) { */
 
           if (cl_idlist2freq(left->pa_ref.attr, items, nr_items) > cl_max_cpos(left->pa_ref.attr) / 2) {
-            int i, k, pos, last_id;
-            int *ids;
+            int64_t i, k, pos, last_id;
+            int64_t *ids;
 
-            ids = (int *)cl_malloc((range - nr_items) * sizeof(int));
+            ids = (int64_t*)cl_malloc((range - nr_items) * sizeof(*ids));
             pos = 0;
             last_id = -1;
 
@@ -1661,7 +1661,7 @@ OptimizeStringConstraint(Constrainttree left,
     }
     else {
 
-      int id;
+      int64_t id;
 
       assert(right->leaf.pat_type == NORMAL);
 
@@ -1702,7 +1702,7 @@ OptimizeStringConstraint(Constrainttree left,
 }
 
 Constrainttree
-do_StringConstraint(char *s, int flags)
+do_StringConstraint(char *s, int64_t flags)
 {
   Constrainttree c, left, right;
   Attribute *attr = NULL;
@@ -2120,7 +2120,7 @@ do_RelExExpr(Constrainttree left)
 }
 
 Constrainttree
-do_LabelReference(char *label_name, int auto_delete)
+do_LabelReference(char *label_name, int64_t auto_delete)
 {
   Constrainttree res;
   Attribute *attr;
@@ -2211,7 +2211,7 @@ do_LabelReference(char *label_name, int auto_delete)
 }
 
 Constrainttree
-do_IDReference(char *id_name, int auto_delete)  /* auto_delete may only be set if this ID is a bare label */
+do_IDReference(char *id_name, int64_t auto_delete)  /* auto_delete may only be set if this ID is a bare label */
 {
   Constrainttree res;
   Attribute *attr;
@@ -2298,12 +2298,12 @@ do_IDReference(char *id_name, int auto_delete)  /* auto_delete may only be set i
  * Implements expansion of a variable within the RE() operator.
  */
 Constrainttree
-do_flagged_re_variable(char *varname, int flags)
+do_flagged_re_variable(char *varname, int64_t flags)
 {
   Constrainttree tree;
   Variable var;
   char *s, *mark, **items;
-  int length, i, l, N_strings;
+  int64_t length, i, l, N_strings;
 
   tree = NULL;
   if (flags == IGNORE_REGEX) {
@@ -2357,7 +2357,7 @@ do_flagged_re_variable(char *varname, int flags)
 
 
 Constrainttree
-do_flagged_string(char *s, int flags)
+do_flagged_string(char *s, int64_t flags)
 {
   Constrainttree res = NULL;
 
@@ -2414,7 +2414,7 @@ char *
 mval_string_conversion(char *s)
 {
   char *result, *p;
-  int cnt = 0;
+  int64_t cnt = 0;
 
   for (p = s; *p; p++)                /* count dots in <s> */
     if (*p == '.') cnt++;
@@ -2448,12 +2448,12 @@ mval_string_conversion(char *s)
 /* do_mval_string() replaces do_flagged_string() for 'contains' and 'matches' operators
    that operate on multi-valued attributes */
 Constrainttree
-do_mval_string(char *s, int op, int flags)
+do_mval_string(char *s, int64_t op, int64_t flags)
 {
   Constrainttree res = NULL;
   char *pattern;  /* regexp that simulates the multi-value operator */
   char *converted_s;
-  int safe_regexp;
+  int64_t safe_regexp;
 
   if (generate_code) {
     if (flags == IGNORE_REGEX) {
@@ -2494,7 +2494,7 @@ Constrainttree
 FunctionCall(char *f_name, ActualParamList *apl)
 {
   Constrainttree res;
-  int len, predef;
+  int64_t len, predef;
   ActualParamList *p;
   Attribute *attr;
 
@@ -2520,7 +2520,7 @@ FunctionCall(char *f_name, ActualParamList *apl)
         generate_code = 0;
         cqpmessage(Error,
                    "Illegal number of arguments "
-                   "for %s (needs %d, got %d)",
+                   "for %s (needs %" PRId64 ", got %" PRId64 ")",
                    f_name, builtin_function[predef].nr_args, len);
       }
       else {
@@ -2560,7 +2560,7 @@ FunctionCall(char *f_name, ActualParamList *apl)
 
 
 void
-do_Description(Context *context, int nr, char *name)
+do_Description(Context *context, int64_t nr, char *name)
 {
   context->type = word;
   context->attrib = NULL;
@@ -2570,7 +2570,7 @@ do_Description(Context *context, int nr, char *name)
 
     if (nr < 0) {
       cqpmessage(Error,
-                 "Can't expand to negative size: %d", nr);
+                 "Can't expand to negative size: %" PRId64 "", nr);
       generate_code = 0;
     }
     else if (Environment[0].query_corpus) {
@@ -2707,7 +2707,7 @@ do_TABQuery(Evaltree patterns)
 }
 
 Evaltree
-make_first_tabular_pattern(int pattern_index, Evaltree next)
+make_first_tabular_pattern(int64_t pattern_index, Evaltree next)
 {
   union e_tree *node;
 
@@ -2725,7 +2725,7 @@ make_first_tabular_pattern(int pattern_index, Evaltree next)
 }
 
 Evaltree
-add_tabular_pattern(Evaltree patterns, Context *context, int pattern_index)
+add_tabular_pattern(Evaltree patterns, Context *context, int64_t pattern_index)
 {
   union e_tree *node, *k;
 
@@ -2751,7 +2751,7 @@ add_tabular_pattern(Evaltree patterns, Context *context, int pattern_index)
 }
 
 void
-do_OptDistance(Context *context, int l_bound, int u_bound)
+do_OptDistance(Context *context, int64_t l_bound, int64_t u_bound)
 {
   if (l_bound < 0) {
     cqpmessage(Warning, "Left/Min. distance must be >= 0 (reset to 0)");
@@ -2780,9 +2780,9 @@ do_OptDistance(Context *context, int l_bound, int u_bound)
  * Prints the setting of a single Variable as an indented list.
  */
 void
-printSingleVariableValue(Variable v, int max_items)
+printSingleVariableValue(Variable v, int64_t max_items)
 {
-  int i;
+  int64_t i;
 
   if (v) {
     printf("$%s = \n", v->my_name);
@@ -2833,13 +2833,13 @@ do_printVariableSize(char *varName)
   Variable v = FindVariable(varName);
 
   if (v) {
-    int i, size = 0;
+    int64_t i, size = 0;
 
     for (i = 0; i < v->nr_items; i++) {
       if (!v->items[i].free)
         size++;
     }
-    printf("$%s has %d entries\n", v->my_name, size);
+    printf("$%s has %" PRId64 " entries\n", v->my_name, size);
   }
   else
     cqpmessage(Error, "%s: no such variable", varName);
@@ -2867,11 +2867,11 @@ do_SetVariableValue(char *varName, char operator, char *varValues)
 }
 
 void
-do_AddSubVariables(char *var1Name, int add, char *var2Name)
+do_AddSubVariables(char *var1Name, int64_t add, char *var2Name)
 {
   Variable v1, v2;
   char **items;
-  int i, N;
+  int64_t i, N;
 
   if ((v1 = FindVariable(var1Name)) == NULL) {
     cqpmessage(Error, "Variable $%s not defined.", var1Name);
@@ -2935,7 +2935,7 @@ prepare_input(void)
 void
 expand_dataspace(CorpusList *cl)
 {
-  int i, res;
+  int64_t i, res;
 
   if (cl == NULL)
     cqpmessage(Warning, "The selected corpus is empty.");
@@ -3003,7 +3003,7 @@ push_regchr(char c)
 void
 debug_output(void)
 {
-  int i;
+  int64_t i;
   for (i = 0; i <= eep; i++)
     show_environment(i);
 }
@@ -3031,8 +3031,8 @@ void
 do_timing(char *msg)
 {
   struct timeval t;
-  long delta_s;
-  long delta_ms;
+  int64_t delta_s;
+  int64_t delta_ms;
 
   if (timing) {
     gettimeofday(&t, NULL);
@@ -3042,7 +3042,7 @@ do_timing(char *msg)
       delta_s--;
       delta_ms = delta_ms + 1000;
     }
-    cqpmessage(Info, "%s in %ld.%.3ld seconds\n", msg, delta_s, delta_ms);
+    cqpmessage(Info, "%s in %" PRId64 ".%.3ld seconds\n", msg, delta_s, delta_ms);
   }
 }
 
@@ -3055,31 +3055,31 @@ do_size(CorpusList *cl, FieldType field)
   if (cl) {
     if (field != NoField) {
       if (field == TargetField) {
-        int count = 0, i;
+        int64_t count = 0, i;
         if (cl->targets) {
           for (i = 0; i < cl->size; i++) {
             if (cl->targets[i] != -1)
               count++;
           }
         }
-        printf("%d\n", count);
+        printf("%" PRId64 "\n", count);
       }
       else if (field == KeywordField) {
-        int count = 0, i;
+        int64_t count = 0, i;
         if (cl->keywords) {
           for (i = 0; i < cl->size; i++) {
             if (cl->keywords[i] != -1)
               count++;
           }
         }
-        printf("%d\n", count);
+        printf("%" PRId64 "\n", count);
       }
       else {                        /* must be Match or MatchEnd then */
-        printf("%d\n", cl->size);
+        printf("%" PRId64 "\n", cl->size);
       }
     }
     else {
-      printf("%d\n", cl->size);
+      printf("%" PRId64 "\n", cl->size);
     }
   }
   else {
@@ -3097,9 +3097,9 @@ do_size(CorpusList *cl, FieldType field)
  *                 where to dump to.
  */
 void
-do_dump(CorpusList *cl, int first, int last, struct Redir *rd)
+do_dump(CorpusList *cl, int64_t first, int64_t last, struct Redir *rd)
 {
-  int i, j, f, l, target, keyword;
+  int64_t i, j, f, l, target, keyword;
   Range *rg;
 
   if (cl) {
@@ -3115,7 +3115,7 @@ do_dump(CorpusList *cl, int first, int last, struct Redir *rd)
       target  = (cl->targets)  ? cl->targets[j]  : -1;
       keyword = (cl->keywords) ? cl->keywords[j] : -1;
       rg = cl->range + j;
-      fprintf(rd->stream, "%d\t%d\t%d\t%d\n", rg->start, rg->end, target, keyword);
+      fprintf(rd->stream, "%" PRId64 "\t%" PRId64 "\t%" PRId64 "\t%" PRId64 "\n", rg->start, rg->end, target, keyword);
     }
 
     close_stream(rd);
@@ -3129,11 +3129,11 @@ do_dump(CorpusList *cl, int first, int last, struct Redir *rd)
  * 1 = match \t matchend \t target
  * 2 = match \t matchend \t target \t keyword
  */
-int
-do_undump(char *corpname, int extension_fields, int sort_ranges, struct InputRedir *rd)
+int64_t
+do_undump(char *corpname, int64_t extension_fields, int64_t sort_ranges, struct InputRedir *rd)
 {
-  int i, ok, size, match, matchend, target, keyword;
-  int max_cpos, mark, abort;                /* for validity checks */
+  int64_t i, ok, size, match, matchend, target, keyword;
+  int64_t max_cpos, mark, abort;                /* for validity checks */
   char line[CL_MAX_LINE_LENGTH], junk[CL_MAX_LINE_LENGTH], mother[CL_MAX_LINE_LENGTH];
   CorpusList *cl = current_corpus, *new = NULL;
 
@@ -3183,10 +3183,10 @@ do_undump(char *corpname, int extension_fields, int sort_ranges, struct InputRed
 
   ok = 0; /* read undump table header = number of rows */
   if (fgets(line, CL_MAX_LINE_LENGTH, rd->stream)) {
-    if (1 == sscanf(line, "%d %s", &size, junk)) {
+    if (1 == sscanf(line, "%" PRId64 " %s", &size, junk)) {
       ok = 1;
     }
-    else if (2 == sscanf(line, "%d %d", &match, &matchend)) {
+    else if (2 == sscanf(line, "%" PRId64 " %" PRId64 "", &match, &matchend)) {
       /* looks like undump file without line count => determine number of lines */
       if (rd->stream == stdin) {
         cqpmessage(Warning, "You must always provide an explicit line count if undump data is entered manually (i.e. read from STDIN)");
@@ -3219,8 +3219,8 @@ do_undump(char *corpname, int extension_fields, int sort_ranges, struct InputRed
 
   new->size = size;                /* allocate space for required number of (match, matchend) pairs, targets, keywords */
   new->range = (Range *) cl_malloc(sizeof(Range) * size);
-  if (extension_fields >= 1) new->targets = (int *) cl_malloc(sizeof(int) * size);
-  if (extension_fields >= 2) new->keywords = (int *) cl_malloc(sizeof(int) * size);
+  if (extension_fields >= 1) new->targets = (int64_t*) cl_malloc(sizeof(*new->targets) * size);
+  if (extension_fields >= 2) new->keywords = (int64_t*) cl_malloc(sizeof(*new->keywords) * size);
 
   max_cpos = cl->mother_size - 1; /* check validity, ordering, and non-overlapping of match ranges */
   mark = -1;
@@ -3228,25 +3228,25 @@ do_undump(char *corpname, int extension_fields, int sort_ranges, struct InputRed
   for (i = 0; (i < size) && !abort; i++) {        /* now read one data row at a time from the undump table */
     if (feof(rd->stream)
         || (!fgets(line, CL_MAX_LINE_LENGTH, rd->stream)) /* parse input line format */
-        || (sscanf(line, "%d %d %d %d %s", &match, &matchend, &target, &keyword, junk)
+        || (sscanf(line, "%" PRId64 " %" PRId64 " %" PRId64 " %" PRId64 " %s", &match, &matchend, &target, &keyword, junk)
             != (2 + extension_fields))
         ) {
-      cqpmessage(Error, "Format error in undump file (row #%d)", i+1);
+      cqpmessage(Error, "Format error in undump file (row #%" PRId64 ")", i+1);
       abort = 1;
       break;
     }
 
     if (matchend < match) {        /* check validity of match .. matchend range */
-      cqpmessage(Error, "match (%d) must be <= matchend (%d) on row #%d", match, matchend, i+1);
+      cqpmessage(Error, "match (%" PRId64 ") must be <= matchend (%" PRId64 ") on row #%" PRId64 "", match, matchend, i+1);
       abort = 1;
     }
     else if (match < 0 || matchend > max_cpos) {
-      cqpmessage(Error, "match (%d .. %d) out of range (0 .. %d) on row #%d", match, matchend, max_cpos, i+1);
+      cqpmessage(Error, "match (%" PRId64 " .. %" PRId64 ") out of range (0 .. %" PRId64 ") on row #%" PRId64 "", match, matchend, max_cpos, i+1);
       abort = 1;
     }
     else if ((! sort_ranges) && (match <= mark)) { /* current range must start _after_ end of previous range (unless sort_ranges==1) */
       cqpmessage(Error, "matches must be sorted and non-overlapping\n\t"
-                 "match (%d) on row #%d overlaps with previous matchend (%d)", match, i+1, mark);
+                 "match (%" PRId64 ") on row #%" PRId64 " overlaps with previous matchend (%" PRId64 ")", match, i+1, mark);
       abort = 1;
     }
     else {
@@ -3257,7 +3257,7 @@ do_undump(char *corpname, int extension_fields, int sort_ranges, struct InputRed
 
     if (extension_fields >= 1) { /* check validity of target position if specified */
       if (target < -1 || target > max_cpos) {
-        cqpmessage(Error, "target (%d) out of range (0 .. %d) on row #%d", target, max_cpos, i+1);
+        cqpmessage(Error, "target (%" PRId64 ") out of range (0 .. %" PRId64 ") on row #%" PRId64 "", target, max_cpos, i+1);
         abort = 1;
       }
       else
@@ -3266,7 +3266,7 @@ do_undump(char *corpname, int extension_fields, int sort_ranges, struct InputRed
 
     if (extension_fields >= 2) { /* check validity of keyword position if specified */
       if (keyword < -1 || keyword > max_cpos) {
-        cqpmessage(Error, "keyword (%d) out of range (0 .. %d) on row #%d", keyword, max_cpos, i+1);
+        cqpmessage(Error, "keyword (%" PRId64 ") out of range (0 .. %" PRId64 ") on row #%" PRId64 "", keyword, max_cpos, i+1);
         abort = 1;
       }
       else

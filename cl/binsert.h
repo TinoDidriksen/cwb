@@ -22,6 +22,6 @@ void *binsert_g(const void *key,
                 void **base,
                 size_t *nel,
                 size_t size,
-                int (*compar)(const  void  *,  const  void *));
+                int64_t (*compar)(const  void  *,  const  void *));
 
 #endif

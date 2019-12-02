@@ -39,10 +39,10 @@
 void
 init_matchlist(Matchlist *matchlist)
 {
-  matchlist->start = (int *)NULL;
-  matchlist->end =   (int *)NULL;
-  matchlist->target_positions =  (int *)NULL;
-  matchlist->keyword_positions = (int *)NULL;
+  matchlist->start = (int64_t*)NULL;
+  matchlist->end =   (int64_t*)NULL;
+  matchlist->target_positions =  (int64_t*)NULL;
+  matchlist->keyword_positions = (int64_t*)NULL;
   matchlist->tabsize = 0;
   matchlist->matches_whole_corpus = 0;
   matchlist->is_inverted = 0;
@@ -54,13 +54,13 @@ init_matchlist(Matchlist *matchlist)
 void
 show_matchlist(Matchlist matchlist)
 {
-  int i;
+  int64_t i;
   
-  fprintf(stderr, "Matchlist (size: %d, %sinverted):\n",
+  fprintf(stderr, "Matchlist (size: %" PRId64 ", %sinverted):\n",
           matchlist.tabsize, matchlist.is_inverted ? "" : "not ");
 
   for (i = 0; i < matchlist.tabsize; i++) {
-    fprintf(stderr, "ml[%d] = [%d, %d] @:%d @9:%d\n",
+    fprintf(stderr, "ml[%" PRId64 "] = [%" PRId64 ", %" PRId64 "] @:%" PRId64 " @9:%" PRId64 "\n",
             i,
             matchlist.start[i],
             matchlist.end[i],
@@ -80,13 +80,13 @@ show_matchlist(Matchlist matchlist)
 void
 show_matchlist_firstelements(Matchlist matchlist)
 {
-  int i;
-  int n = (matchlist.tabsize >= 1000 ? 1000 : matchlist.tabsize % 1000);
+  int64_t i;
+  int64_t n = (matchlist.tabsize >= 1000 ? 1000 : matchlist.tabsize % 1000);
 
-  fprintf(stderr, "the first (max 1000) elements of the matchlist (size: %d) are:\n",
+  fprintf(stderr, "the first (max 1000) elements of the matchlist (size: %" PRId64 ") are:\n",
           matchlist.tabsize);
   for (i = 0; i < n; i++)
-    fprintf(stderr, "ml[%d] = [%d,...]\n",
+    fprintf(stderr, "ml[%" PRId64 "] = [%" PRId64 ",...]\n",
             i, matchlist.start[i]);
 }
 
@@ -117,10 +117,10 @@ free_matchlist(Matchlist *matchlist)
  *
  * This contains, by far, most of the code in the Matchlist module.
  */
-int
+int64_t
 Setop(Matchlist *list1, MLSetOp operation, Matchlist *list2)
 {
-  int i, j, k, t, ins;
+  int64_t i, j, k, t, ins;
   Matchlist tmp;
   Attribute *attr;
 
@@ -180,19 +180,19 @@ Setop(Matchlist *list1, MLSetOp operation, Matchlist *list2)
 
       tmp.tabsize = list1->tabsize + list2->tabsize;
 
-      tmp.start = (int *)cl_malloc(sizeof(int) * tmp.tabsize);
+      tmp.start = (int64_t*)cl_malloc(sizeof(*tmp.start) * tmp.tabsize);
 
       if (list1->end && list2->end)
-        tmp.end   = (int *)cl_malloc(sizeof(int) * tmp.tabsize);
+        tmp.end   = (int64_t*)cl_malloc(sizeof(*tmp.end) * tmp.tabsize);
       else
         tmp.end = NULL;
 
       if (list1->target_positions && list2->target_positions)
-        tmp.target_positions = (int *)cl_malloc(sizeof(int) * tmp.tabsize);
+        tmp.target_positions = (int64_t*)cl_malloc(sizeof(*tmp.target_positions) * tmp.tabsize);
       else
         tmp.target_positions = NULL;
       if (list1->keyword_positions && list2->keyword_positions)
-        tmp.keyword_positions = (int *)cl_malloc(sizeof(int) * tmp.tabsize);
+        tmp.keyword_positions = (int64_t*)cl_malloc(sizeof(*tmp.keyword_positions) * tmp.tabsize);
       else
         tmp.keyword_positions = NULL;
 
@@ -311,13 +311,13 @@ Setop(Matchlist *list1, MLSetOp operation, Matchlist *list2)
        */
       
       if (k < tmp.tabsize) {
-        tmp.start = (int *)cl_realloc((char *)tmp.start, sizeof(int) * k);
+        tmp.start = (int64_t*)cl_realloc((char *)tmp.start, sizeof(*tmp.start) * k);
         if (tmp.end)
-          tmp.end = (int *)cl_realloc((char *)tmp.end, sizeof(int) * k);
+          tmp.end = (int64_t*)cl_realloc((char *)tmp.end, sizeof(*tmp.end) * k);
         if (tmp.target_positions)
-          tmp.target_positions = (int *)cl_realloc((char *)tmp.target_positions, sizeof(int) * k);
+          tmp.target_positions = (int64_t*)cl_realloc((char *)tmp.target_positions, sizeof(*tmp.target_positions) * k);
         if (tmp.keyword_positions)
-          tmp.keyword_positions = (int *)cl_realloc((char *)tmp.keyword_positions, sizeof(int) * k);
+          tmp.keyword_positions = (int64_t*)cl_realloc((char *)tmp.keyword_positions, sizeof(*tmp.keyword_positions) * k);
       }
 
       cl_free(list1->start);
@@ -390,19 +390,19 @@ Setop(Matchlist *list1, MLSetOp operation, Matchlist *list2)
       else
         tmp.tabsize = MIN(list1->tabsize, list2->tabsize);
 
-      tmp.start = (int *)cl_malloc(sizeof(int) * tmp.tabsize);
+      tmp.start = (int64_t*)cl_malloc(sizeof(*tmp.start) * tmp.tabsize);
 
       if (list1->end && list2->end)
-        tmp.end   = (int *)cl_malloc(sizeof(int) * tmp.tabsize);
+        tmp.end   = (int64_t*)cl_malloc(sizeof(*tmp.end) * tmp.tabsize);
       else
         tmp.end = NULL;
 
       if (list1->target_positions && list2->target_positions)
-        tmp.target_positions = (int *)cl_malloc(sizeof(int) * tmp.tabsize);
+        tmp.target_positions = (int64_t*)cl_malloc(sizeof(*tmp.target_positions) * tmp.tabsize);
       else
         tmp.target_positions = NULL;
       if (list1->keyword_positions && list2->keyword_positions)
-        tmp.keyword_positions = (int *)cl_malloc(sizeof(int) * tmp.tabsize);
+        tmp.keyword_positions = (int64_t*)cl_malloc(sizeof(*tmp.keyword_positions) * tmp.tabsize);
       else
         tmp.keyword_positions = NULL;
 
@@ -470,13 +470,13 @@ Setop(Matchlist *list1, MLSetOp operation, Matchlist *list2)
          * So, in that case, we do not have to bother with reallocs.
          */
       
-        tmp.start = (int *)cl_realloc((char *)tmp.start, sizeof(int) * k);
+        tmp.start = (int64_t*)cl_realloc((char *)tmp.start, sizeof(*tmp.start) * k);
         if (tmp.end)
-          tmp.end = (int *)cl_realloc((char *)tmp.end, sizeof(int) * k);
+          tmp.end = (int64_t*)cl_realloc((char *)tmp.end, sizeof(*tmp.end) * k);
         if (tmp.target_positions)
-          tmp.target_positions = (int *)cl_realloc((char *)tmp.target_positions, sizeof(int) * k);
+          tmp.target_positions = (int64_t*)cl_realloc((char *)tmp.target_positions, sizeof(*tmp.target_positions) * k);
         if (tmp.keyword_positions)
-          tmp.keyword_positions = (int *)cl_realloc((char *)tmp.keyword_positions, sizeof(int) * k);
+          tmp.keyword_positions = (int64_t*)cl_realloc((char *)tmp.keyword_positions, sizeof(*tmp.keyword_positions) * k);
       }
 
       cl_free(list1->start);
@@ -590,7 +590,7 @@ Setop(Matchlist *list1, MLSetOp operation, Matchlist *list2)
       cl_free(list1->target_positions);
       cl_free(list1->keyword_positions);
 
-      list1->start = (int *)cl_malloc(sizeof(int) * tmp.tabsize);
+      list1->start = (int64_t*)cl_malloc(sizeof(*list1->start) * tmp.tabsize);
       list1->tabsize = tmp.tabsize;
       list1->matches_whole_corpus = 1;
       list1->is_inverted = 0;
@@ -604,7 +604,7 @@ Setop(Matchlist *list1, MLSetOp operation, Matchlist *list2)
        * in between.
        */
       
-      tmp.start = (int *)cl_malloc(sizeof(int) * tmp.tabsize);
+      tmp.start = (int64_t*)cl_malloc(sizeof(*tmp.start) * tmp.tabsize);
       tmp.end = NULL;
       tmp.target_positions = NULL;
       tmp.keyword_positions = NULL;
@@ -655,25 +655,25 @@ Setop(Matchlist *list1, MLSetOp operation, Matchlist *list2)
     list1->is_inverted = list2->is_inverted;
 
     if (list2->start) {
-      list1->start = (int *)cl_malloc(sizeof(int) * list2->tabsize);
-      memcpy((char *)list1->start, (char *)list2->start, sizeof(int) * list2->tabsize);
+      list1->start = (int64_t*)cl_malloc(sizeof(*list1->start) * list2->tabsize);
+      memcpy((char *)list1->start, (char *)list2->start, sizeof(*list1->start) * list2->tabsize);
     }
 
     if (list2->end) {
-      list1->end = (int *)cl_malloc(sizeof(int) * list2->tabsize);
-      memcpy((char *)list1->end, (char *)list2->end, sizeof(int) * list2->tabsize);
+      list1->end = (int64_t*)cl_malloc(sizeof(*list1->end) * list2->tabsize);
+      memcpy((char *)list1->end, (char *)list2->end, sizeof(*list1->end) * list2->tabsize);
     }
 
     if (list2->target_positions) {
-      list1->target_positions = (int *)cl_malloc(sizeof(int) * list2->tabsize);
+      list1->target_positions = (int64_t*)cl_malloc(sizeof(*list1->target_positions) * list2->tabsize);
       memcpy((char *)list1->target_positions,
-             (char *)list2->target_positions, sizeof(int) * list2->tabsize);
+             (char *)list2->target_positions, sizeof(*list1->target_positions) * list2->tabsize);
     }
 
     if (list2->keyword_positions) {
-      list1->keyword_positions = (int *)cl_malloc(sizeof(int) * list2->tabsize);
+      list1->keyword_positions = (int64_t*)cl_malloc(sizeof(*list1->keyword_positions) * list2->tabsize);
       memcpy((char *)list1->keyword_positions,
-             (char *)list2->keyword_positions, sizeof(int) * list2->tabsize);
+             (char *)list2->keyword_positions, sizeof(*list1->keyword_positions) * list2->tabsize);
     }
 
     break;
@@ -736,13 +736,13 @@ Setop(Matchlist *list1, MLSetOp operation, Matchlist *list2)
          * Otherwise, the list was used destructively. Free up used space.
          */
 
-        list1->start = (int *)cl_realloc(list1->start, sizeof(int) * ins);
+        list1->start = (int64_t*)cl_realloc(list1->start, sizeof(*list1->start) * ins);
         if (list1->end)
-          list1->end = (int *)cl_realloc(list1->end,   sizeof(int) * ins);
+          list1->end = (int64_t*)cl_realloc(list1->end,   sizeof(*list1->end) * ins);
         if (list1->target_positions)
-          list1->target_positions = (int *)cl_realloc(list1->target_positions,   sizeof(int) * ins);
+          list1->target_positions = (int64_t*)cl_realloc(list1->target_positions,   sizeof(*list1->target_positions) * ins);
         if (list1->keyword_positions)
-          list1->keyword_positions = (int *)cl_realloc(list1->keyword_positions, sizeof(int) * ins);
+          list1->keyword_positions = (int64_t*)cl_realloc(list1->keyword_positions, sizeof(*list1->keyword_positions) * ins);
         list1->tabsize = ins;
         list1->matches_whole_corpus = 0;
         list1->is_inverted = 0;
@@ -824,13 +824,13 @@ Setop(Matchlist *list1, MLSetOp operation, Matchlist *list2)
          * Otherwise, the list was used destructively. Free up used space.
          */
 
-        list1->start = (int *)cl_realloc(list1->start, sizeof(int) * ins);
+        list1->start = (int64_t*)cl_realloc(list1->start, sizeof(*list1->start) * ins);
         if (list1->end)
-          list1->end = (int *)cl_realloc(list1->end,   sizeof(int) * ins);
+          list1->end = (int64_t*)cl_realloc(list1->end,   sizeof(*list1->end) * ins);
         if (list1->target_positions)
-          list1->target_positions = (int *)cl_realloc(list1->target_positions, sizeof(int) * ins);
+          list1->target_positions = (int64_t*)cl_realloc(list1->target_positions, sizeof(*list1->target_positions) * ins);
         if (list1->keyword_positions)
-          list1->keyword_positions = (int *)cl_realloc(list1->keyword_positions, sizeof(int) * ins);
+          list1->keyword_positions = (int64_t*)cl_realloc(list1->keyword_positions, sizeof(*list1->keyword_positions) * ins);
         list1->tabsize = ins;
         list1->matches_whole_corpus = 0;
         list1->is_inverted = 0;

@@ -39,7 +39,7 @@
 /**
  * Flag for whether the "print_align" module has been initialised yet or not.
  */
-static int module_init = 0;
+static int64_t module_init = 0;
 
 
 
@@ -96,16 +96,16 @@ init_align_module()
 void
 printAlignedStrings(Corpus *sourceCorpus, 
                     ContextDescriptor *cd,
-                    int begin_target,
-                    int end_target,
-                    int highlighting,
+                    int64_t begin_target,
+                    int64_t end_target,
+                    int64_t highlighting,
                     FILE *stream)
 {
   AttributeInfo *ai, *Sai, *Tai;
   Attribute *alat;
   Corpus *alignedCorpus;
 
-  int dummy;
+  int64_t dummy;
 
   if (!module_init)
     init_align_module();
@@ -125,9 +125,9 @@ printAlignedStrings(Corpus *sourceCorpus,
           (alignedCorpus = cl_new_corpus(registry, ai->name)) != NULL
           ) {
 
-        int alg1, alg2, alg_start, alg_end;
+        int64_t alg1, alg2, alg_start, alg_end;
         char *s = NULL;
-        int sanitise_aligned_data = 0; /* bool: if true, allow only ascii chars in aligned output */
+        int64_t sanitise_aligned_data = 0; /* bool: if true, allow only ascii chars in aligned output */
 
         /* Do we need to recode contents of the aligned corpus? */
         {

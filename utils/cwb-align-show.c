@@ -47,8 +47,8 @@ FILE *af = NULL;                    /**< file handle .align file */
 
 #define MIN_COL_WIDTH 20
 #define MAX_COL_WIDTH 256
-int COL_WIDTH = 38;                 /**< width of a display column (one column for each language) */
-int COL_SEP = 2;                    /**< column separator (blanks) */
+int64_t COL_WIDTH = 38;                 /**< width of a display column (one column for each language) */
+int64_t COL_SEP = 2;                    /**< column separator (blanks) */
 #define WIDE_COL_WIDTH 55           /**< wider column width available on request (-W option) */
 #define WIDE_COL_SEP   6            /**< column separator to accompany the wider columns */
 
@@ -76,8 +76,8 @@ alignshow_usage(void)
   fprintf(stderr, "Usage: %s [options] <alignment file>\n\n", progname);
   fprintf(stderr, "  -P <p-att> display positional attribute <p-att> [word]\n");
   fprintf(stderr, "  -r <reg>   use registry directory <reg>\n");
-  fprintf(stderr, "  -w <n>     set display column width to <n>   [%d]\n", COL_WIDTH);
-  fprintf(stderr, "  -s <n>     set column separator width to <n> [%d]\n", COL_SEP);
+  fprintf(stderr, "  -w <n>     set display column width to <n>   [%" PRId64 "]\n", COL_WIDTH);
+  fprintf(stderr, "  -s <n>     set column separator width to <n> [%" PRId64 "]\n", COL_SEP);
   fprintf(stderr, "  -W         use alternative default width settings for wide terminal\n");
   fprintf(stderr, "  -h         this help page\n\n");
   fprintf(stderr, "Displays alignment results in terminal. Aligned regions are\n");
@@ -102,13 +102,13 @@ alignshow_usage(void)
  * @return          The value of optind after parsing,
  *                  ie the index of the first argument in argv[]
  */
-int
-alignshow_parse_args(int ac, char *av[], int min_args)
+int64_t
+alignshow_parse_args(int64_t ac, char *av[], int64_t min_args)
 {
   extern int optind;                  /* getopt() interface */
   extern char *optarg;                /* getopt() interface */
-  int c;
-  int n;
+  int64_t c;
+  int64_t n;
 
   while ((c = getopt(ac, av, "hP:r:w:s:W")) != EOF)
     switch (c) {
@@ -127,7 +127,7 @@ alignshow_parse_args(int ac, char *av[], int min_args)
       break;
       /* -w: column width */
     case 'w':
-      if (1 != sscanf(optarg, "%d", &n))
+      if (1 != sscanf(optarg, "%" PRId64 "", &n))
         alignshow_usage();
       if ((n < MIN_COL_WIDTH) || (n > MAX_COL_WIDTH)) {
         fprintf(stderr, "%s: column width must be in range %d .. %d\n",
@@ -140,7 +140,7 @@ alignshow_parse_args(int ac, char *av[], int min_args)
       break;
       /* -s: column separator */
     case 's':
-      if (1 != sscanf(optarg, "%d", &n))
+      if (1 != sscanf(optarg, "%" PRId64 "", &n))
         alignshow_usage();
       COL_SEP = n;
       break;
@@ -169,7 +169,7 @@ alignshow_parse_args(int ac, char *av[], int min_args)
  * @param error_level  The exit code that is returned to the OS.
  */
 void
-alignshow_goodbye(int error_level)
+alignshow_goodbye(int64_t error_level)
 {
   if (af != NULL) {
     cl_close_stream(af);
@@ -227,14 +227,14 @@ void
 alignshow_print_next_region(FILE *f)
 {
   char line[CL_MAX_LINE_LENGTH];
-  int f1, l1, f2, l2;
-  int quality, args;
+  int64_t f1, l1, f2, l2;
+  int64_t quality, args;
   char type[256];
 
   char *word;                         /* current token from corpus */
   char col[MAX_COL_WIDTH + 1];        /* line buffer for columns */
-  int w;                              /* current column width */
-  int i1, i2, n;
+  int64_t w;                              /* current column width */
+  int64_t i1, i2, n;
 
 
   /* get next alignment region */
@@ -242,7 +242,7 @@ alignshow_print_next_region(FILE *f)
     alignshow_end_of_alignment();
   if (NULL == fgets(line, CL_MAX_LINE_LENGTH, f))
     alignshow_end_of_alignment();
-  if (4 > (args = sscanf(line, "%d %d %d %d %s %d", &f1, &l1, &f2, &l2, type, &quality))) {
+  if (4 > (args = sscanf(line, "%" PRId64 " %" PRId64 " %" PRId64 " %" PRId64 " %s %" PRId64 "", &f1, &l1, &f2, &l2, type, &quality))) {
     fprintf(stderr, "%s: format error in line\n\t%s", progname, line);
     fprintf(stderr, "*** IGNORED ***\n");
     return;
@@ -250,11 +250,11 @@ alignshow_print_next_region(FILE *f)
 
   /* print separator bar */
   if (args == 6)
-    sprintf(line, "%s-alignment bead [%d, %d] x [%d, %d] (%d)", type, f1, l1, f2, l2, quality);
+    sprintf(line, "%s-alignment bead [%" PRId64 ", %" PRId64 "] x [%" PRId64 ", %" PRId64 "] (%" PRId64 ")", type, f1, l1, f2, l2, quality);
   else if (args == 5)
-    sprintf(line, "%s-alignment bead [%d, %d] x [%d, %d] ", type, f1, l1, f2, l2);
+    sprintf(line, "%s-alignment bead [%" PRId64 ", %" PRId64 "] x [%" PRId64 ", %" PRId64 "] ", type, f1, l1, f2, l2);
   else
-    sprintf(line, "alignment bead [%d, %d] x [%d, %d] ", f1, l1, f2, l2);
+    sprintf(line, "alignment bead [%" PRId64 ", %" PRId64 "] x [%" PRId64 ", %" PRId64 "] ", f1, l1, f2, l2);
 
   n = (2 * COL_WIDTH + COL_SEP) - strlen(line);
   printf("%s", line);
@@ -330,7 +330,7 @@ alignshow_print_next_region(FILE *f)
 int
 main(int argc, char** argv)
 {
-  int argindex;                                /* index of first argument in argv[] */
+  int64_t argindex;                                /* index of first argument in argv[] */
   char line[CL_MAX_LINE_LENGTH];               /* input buffer for .align file */
   char cmd[CL_MAX_LINE_LENGTH];                /* interactive command input */
 
@@ -399,8 +399,8 @@ main(int argc, char** argv)
       break;
     case 'p':
       {
-        int n;
-        if (1 != sscanf(cmd+1, "%d", &n))
+        int64_t n;
+        if (1 != sscanf(cmd+1, "%" PRId64 "", &n))
           n = 1;
         while ((n--) > 0) {
           alignshow_print_next_region(af);
@@ -410,8 +410,8 @@ main(int argc, char** argv)
       }
     case 's':
       {
-        int n;
-        if (1 != sscanf(cmd+1, "%d", &n))
+        int64_t n;
+        if (1 != sscanf(cmd+1, "%" PRId64 "", &n))
           n = 1;
         while ((n--) > 0)
           alignshow_skip_next_region(af);

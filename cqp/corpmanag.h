@@ -67,8 +67,8 @@ enum case_mode {LOWER, UPPER};
  */
 typedef struct _Range
 {
-  int        start;     /**< start position of the corpus interval  */
-  int        end;       /**< end position of the corpus interval    */
+  int64_t    start;     /**< start position of the corpus interval  */
+  int64_t    end;       /**< end position of the corpus interval    */
 } Range;
 
 /**
@@ -85,7 +85,7 @@ typedef struct _Range
 typedef struct cl {
   char            *name;         /**< corpus name                                */
   char            *mother_name;  /**< name of the original corpus.               */
-  int              mother_size;  /**< size (nr tokens) of mother                 */
+  int64_t          mother_size;  /**< size (nr tokens) of mother                 */
   char            *registry;     /**< registry directory of the original corpus. */
   char            *abs_fn;       /**< absolute file name                         */
   CorpusType       type;         /**< type of the corpus                         */
@@ -105,10 +105,10 @@ typedef struct cl {
                                       (from the Corpus Library)                  */
 
   Range           *range;        /**< an array of corpus intervals               */
-  int              size;         /**< number of intervals                        */
-  int             *sortidx;      /**< sorting index for intervals                */
-  int             *targets;      /**< list of targets                            */
-  int             *keywords;     /**< one keyword, for each concordance line     */
+  int64_t          size;         /**< number of intervals                        */
+  int64_t         *sortidx;      /**< sorting index for intervals                */
+  int64_t         *targets;      /**< list of targets                            */
+  int64_t         *keywords;     /**< one keyword, for each concordance line     */
 
   ContextDescriptor *cd;         /**< additional attributes to print -- only
                                       for ``SYSTEM'' corpora                     */
@@ -132,7 +132,7 @@ CorpusList *corpuslist;
    but we _may_ need it for the CQi server */
 FieldType field_name_to_type(char *name);
 char *field_type_to_name(FieldType field);
-int NrFieldValues(CorpusList *cl, FieldType ft);
+int64_t NrFieldValues(CorpusList *cl, FieldType ft);
 
 /* ---------------------------------------------------------------------- */
 
@@ -140,7 +140,7 @@ void init_corpuslist(void);
 
 void free_corpuslist(void);
 
-CorpusList *findcorpus(char *s, CorpusType type, int try_recursive_search);
+CorpusList *findcorpus(char *s, CorpusType type, int64_t try_recursive_search);
 
 void dropcorpus(CorpusList *cl);
 
@@ -178,11 +178,11 @@ CorpusList *FirstCorpusFromList();
 CorpusList *NextCorpusFromList(CorpusList *cl);
 
 
-int set_current_corpus(CorpusList *cp, int force);
+int64_t set_current_corpus(CorpusList *cp, int64_t force);
 
-int set_current_corpus_name(char *name, int force);
+int64_t set_current_corpus_name(char *name, int64_t force);
 
-int touch_corpus(CorpusList *cp);
+int64_t touch_corpus(CorpusList *cp);
 
 /* IO Functions */
 

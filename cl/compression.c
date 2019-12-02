@@ -37,11 +37,11 @@
  * @param corpus_size ??
  * @return            ??
  */
-int
-compute_ba(int ft, int corpus_size)
+int64_t
+compute_ba(int64_t ft, int64_t corpus_size)
 {
   double p;
-  int pa;
+  int64_t pa;
   
   p = (ft * (double)1.0)/(corpus_size * (double)1.0);
   pa = ceil(-log(2.0-p)/log(1.0-p));
@@ -66,13 +66,13 @@ compute_ba(int ft, int corpus_size)
  * @param bf  The bit-file to read from.
  * @return    Always 1.
  */
-int
-write_golomb_code(int x, int b, BFile *bf)
+void
+write_golomb_code(int64_t x, int64_t b, BFile *bf)
 {
-  int q, res, lb, ub, nr_sc, i;
+  int64_t q, res, lb, ub, nr_sc, i;
 
-  unsigned char bit1 = '\1';
-  unsigned char bit0 = '\0';
+  uint8_t bit1 = '\1';
+  uint8_t bit0 = '\0';
 
   q = x / b;
   res = x - q * b;
@@ -92,14 +92,12 @@ write_golomb_code(int x, int b, BFile *bf)
 
   /* nr_sc = 2^ub - b */
 
-  nr_sc = (1 << ub) - b;
+  nr_sc = (1ll << ub) - b;
   
   if (res < nr_sc)
-    BFwriteWord((unsigned int)res, lb, bf);
+    BFwriteWord((uint64_t)res, lb, bf);
   else
-    BFwriteWord((unsigned int)(res + nr_sc), ub, bf);
-
-  return 1;
+    BFwriteWord((uint64_t)(res + nr_sc), ub, bf);
 }
 
 /**
@@ -109,12 +107,12 @@ write_golomb_code(int x, int b, BFile *bf)
  * @param bf  The bit-file to read from.
  * @return    The integer that is read.
  */
-int read_golomb_code_bf(int b, BFile *bf)
+int64_t read_golomb_code_bf(int64_t b, BFile *bf)
 {
-  int q, i, nr_sc, lb, ub;
+  int64_t q, i, nr_sc, lb, ub;
 
-  unsigned int r;
-  unsigned char bit;
+  uint64_t r;
+  uint8_t bit;
 
   ub = ceil(log2(b * 1.0));
   lb = ub - 1;
@@ -128,7 +126,7 @@ int read_golomb_code_bf(int b, BFile *bf)
       q++;
   } while (bit);
 
-  nr_sc = (1 << ub) - b;
+  nr_sc = (1ll << ub) - b;
   
   /* read binary part, bitwise */
 
@@ -157,13 +155,13 @@ int read_golomb_code_bf(int b, BFile *bf)
  * @param bs  The bitstream to read from.
  * @return    The integer that is read.
  */
-int
-read_golomb_code_bs(int b, BStream *bs)
+int64_t
+read_golomb_code_bs(int64_t b, BStream *bs)
 {
-  int q, i, nr_sc, lb, ub;
+  int64_t q, i, nr_sc, lb, ub;
 
-  unsigned int r;
-  unsigned char bit;
+  uint64_t r;
+  uint8_t bit;
 
   ub = ceil(log2(b * 1.0));
   lb = ub - 1;
@@ -177,7 +175,7 @@ read_golomb_code_bs(int b, BStream *bs)
       q++;
   } while (bit);
 
-  nr_sc = (1 << ub) - b;
+  nr_sc = (1ll << ub) - b;
   
   /* read binary part, bitwise */
 
@@ -197,105 +195,3 @@ read_golomb_code_bs(int b, BStream *bs)
 
   return r + q * b;
 }
-
-
-
-
-
-
-
-
-#ifdef __NEVER__
-
-/*
- * ============================== OLD VERSION, BUGGY
- */
-
-/********************************************************************/
-
-int read_golomb_code_bs(int b, BStream *bs)
-{
-  int q, ub, i;
-
-  unsigned int r;
-  unsigned char bit;
-
-  ub = ceil(log2(b * 1.0));
-
-  /* read unary part */
-
-  q = 0;
-  do {
-    BSread(&bit, 1, bs);
-    if (bit)
-      q++;
-  } while (bit);
-
-  /* read binary part, bitwise */
-
-  r = 0;
-  for (i = 0; i < ub; i++) {
-    r <<= 1;
-    BSread(&bit, 1, bs);
-    r |= bit;
-  }
-
-  return r + q * b;
-}
-
-int read_golomb_code_bf(int b, BFile *bf)
-{
-  int q, lb, ub, nr_sc, nr_lc, lr;
-
-  double ldb;
-
-  unsigned int r;
-  unsigned char bit;
-
-  ldb = log2(b * 1.0);
-  ub = ceil(ldb);
-
-  q = 0;
-  do {
-    BFread(&bit, 1, bf);
-    if (bit)
-      q++;
-  } while (bit);
-
-  r = 0;
-  BFreadWord(&r, ub, bf);
-
-  return r + q * b;
-}
-
-
-int write_golomb_code(int x, int b, BFile *bf)
-{
-  int q, res, lb, ub, nr_sc, nr_lc;
-  int r, lr;
-
-  int i;
-  double ldb;
-
-  unsigned char bit1 = '\1';
-  unsigned char bit0 = '\0';
-
-  q = x / b;
-  res = x - q * b;
-
-  ldb = log2(b * 1.0);
-  ub = ceil(ldb);
-
-  /* write the unary part q */
-
-  for (i = 0; i < q; i++)
-    BFwrite(bit1, 1, bf);
-  BFwrite(bit0, 1, bf);
-
-  /* write the binary part */
-  BFwriteWord((unsigned int)res, ub, bf);
-}
-
-********************************************************************
-
-#endif

@@ -68,8 +68,8 @@ scompare(const void *idx1, const void *idx2)
      and cast them to the actual type in the compare function;
      the definition below conforms to ANSI and POSIX standards according to the LDP */
   return
-    cl_strcmp((char *) SortLexicon->data + ntohl(SortIndex->data[*(int *)idx1]),
-              (char *) SortLexicon->data + ntohl(SortIndex->data[*(int *)idx2]));
+    cl_strcmp((char *) SortLexicon->data + ntohll(SortIndex->data[*(int64_t*)idx1]),
+              (char *) SortLexicon->data + ntohll(SortIndex->data[*(int64_t*)idx2]));
 }
 
 
@@ -84,11 +84,9 @@ scompare(const void *idx1, const void *idx2)
  *
  * @see create_component
  */
-int
+bool
 creat_sort_lexicon(Component *lexsrt)
 {
-  int i;
-
   Component *lex;
   Component *lexidx;
 
@@ -110,7 +108,7 @@ creat_sort_lexicon(Component *lexsrt)
 
   /* read the contents of the lexidx component into the blob of the lexsrt component
    * (note use of MALLOCED to duplicate the content). */
-  if (!read_file_into_blob(lexidx->path, MALLOCED, sizeof(int), &(lexsrt->data))) {
+  if (!read_file_into_blob(lexidx->path, MALLOCED, sizeof(*lexidx->data.data), &(lexsrt->data))) {
     fprintf(stderr, "Can't open %s, can't create lexsrt component\n", lexidx->path);
     perror(lexidx->path);
     return 0;
@@ -124,14 +122,14 @@ creat_sort_lexicon(Component *lexsrt)
   lexsrt->size = lexidx->size;
 
   /* fill the area with ascending indices */
-  for (i = 0; i < lexsrt->data.nr_items; i++)
+  for (int64_t i = 0; i < lexsrt->data.nr_items; i++)
     lexsrt->data.data[i] = i;
 
   /* now sort the indices according to the strings they index to */
 
   SortLexicon = &(lex->data);                /* for the comparison function */
   SortIndex = &(lexidx->data);
-  qsort(lexsrt->data.data, lexsrt->size, sizeof(int), scompare);
+  qsort(lexsrt->data.data, lexsrt->size, sizeof(*lexsrt->data.data), scompare);
 
   if (write_file_from_blob(lexsrt->path, &(lexsrt->data), 1)) {
 
@@ -140,8 +138,8 @@ creat_sort_lexicon(Component *lexsrt)
      * other (later) steps rely on its format. */
 
     /* convert network byte order to native integers */
-    for (i = 0; i < lexsrt->data.nr_items; i++)
-      lexsrt->data.data[i] = htonl(lexsrt->data.data[i]);
+    for (int64_t i = 0; i < lexsrt->data.nr_items; i++)
+      lexsrt->data.data[i] = htonll(lexsrt->data.data[i]);
 
     return 1;
   }
@@ -155,15 +153,13 @@ creat_sort_lexicon(Component *lexsrt)
  *
  * @see create_component
  */
-int
+bool
 creat_freqs(Component *freqs)
 {
   FILE *fd;
-  int mc_buf[BUFSIZE];
+  int64_t mc_buf[BUFSIZE];
 
   char *corpus_fn; /* filename of CompCorpus */
-
-  int i, k, ptr;
 
   /*  read the lexicon into memory */
   Component *lexidx = ensure_component(freqs->attribute, CompLexiconIdx, 1);
@@ -180,7 +176,7 @@ creat_freqs(Component *freqs)
 
   /* load a copy of the CompLexiconIdx file into the CompCorpusFreqs data block.
    * (NB note the use of MALLOCED to enforce operation on a *copy*, not the original... */
-  if (!read_file_into_blob(lexidx->path, MALLOCED, sizeof(int), &(freqs->data))) {
+  if (!read_file_into_blob(lexidx->path, MALLOCED, sizeof(*freqs->data.data), &(freqs->data))) {
     fprintf(stderr, "Can't open %s, can't create freqs component\n", lexidx->path);
     perror(lexidx->path);
     return 0;
@@ -200,14 +196,15 @@ creat_freqs(Component *freqs)
   }
 
   /* do the counts */
+  size_t i = 0;
   do {
-    i = fread(&mc_buf[0], sizeof(int), BUFSIZE, fd);
-    for ( k = 0; k < i; k++) {
-      ptr = ntohl(mc_buf[k]);
+    i = fread(&mc_buf[0], sizeof(*mc_buf), BUFSIZE, fd);
+    for (size_t k = 0; k < i; k++) {
+      int64_t ptr = ntohll(mc_buf[k]);
       if ((ptr >= 0) && (ptr < freqs->size))
         freqs->data.data[ptr]++;
       else
-        fprintf(stderr, "CL makecomps:creat_freqs(): WARNING: index %d out of range\n", ptr);
+        fprintf(stderr, "CL makecomps:creat_freqs(): WARNING: index %" PRId64 " out of range\n", ptr);
     }
   } while (i == BUFSIZE);
   fclose(fd);
@@ -217,8 +214,8 @@ creat_freqs(Component *freqs)
     /* ok, we now have to convert the table to NETWORK order in caseother steps rely on its format. */
 
     /* convert network byte order to native integers */
-    for (ptr = 0; ptr < freqs->size; ptr++)
-      freqs->data.data[ptr] = htonl(freqs->data.data[ptr]);
+    for (int64_t ptr = 0; ptr < freqs->size; ptr++)
+      freqs->data.data[ptr] = htonll(freqs->data.data[ptr]);
 
     return 1;
   }
@@ -238,18 +235,18 @@ creat_freqs(Component *freqs)
  * @see makeall_do_attribute
  * @return  number of passes made through the corpus.
  */
-int
+int64_t
 creat_rev_corpus(Component *revcorp)
 {
   Component *freqs;
-  int cpos = 0, f, id, ints_written, pass;
+  int64_t cpos = 0, f, id, ints_written, pass;
 
-  int datasize;
-  int primus, secundus, lexsize, buf_used;
-  int *buffer;
-  size_t bufsize;                     /* size of buffer (measured in number of 4-byte integers) */
-  int **ptab;                         /* pointers into <buffer> */
-  int *ptr;
+  int64_t datasize;
+  int64_t primus, secundus, lexsize, buf_used;
+  int64_t *buffer;
+  int64_t bufsize;                     /* size of buffer (measured in number of 8-byte integers) */
+  int64_t **ptab;                         /* pointers into <buffer> */
+  int64_t *ptr;
 
   FILE *revcorp_fd;
   Attribute *attr;                    /* the attribute we're working on */
@@ -267,17 +264,17 @@ creat_rev_corpus(Component *revcorp)
   assert(freqs->corpus == revcorp->corpus); /* gotta be kidding ... */
 
   lexsize = cl_max_id(attr);        /* this is the number of lexicon entries for this attribute */
-  ptab = (int **) cl_malloc(sizeof(int *) * ((size_t) lexsize)); /* table of pointers into <buffer> */
+  ptab = (int64_t**)cl_malloc(sizeof(*ptab) * lexsize); /* table of pointers into <buffer> */
 
   /* determine REVCORP size (== number of tokens) */
   datasize = cl_max_cpos(attr);
 
   /* allocate buffer of required size, or maximum allowed by cl_memory_limit */
-  bufsize = (cl_memory_limit > 0) ? cl_memory_limit * (256 * 1024) : datasize; /* 1MB == 256k INTs */
+  bufsize = (cl_memory_limit > 0) ? cl_memory_limit * ((1024/sizeof(*buffer)) * 1024) : datasize; /* 1MB == 256k INTs */
   if (datasize < bufsize) {
     bufsize = datasize;                /* shrink buffer if full size isn't needed */
   }
-  buffer = cl_malloc(4 * bufsize); /* allocate buffer with 4 bytes per integer */
+  buffer = (int64_t*)cl_malloc(sizeof(*buffer) * bufsize); /* allocate buffer with 8 bytes per integer */
 
   /* open REVCORP data file for writing */
   if ((revcorp_fd = fopen(revcorp->path, "wb")) == NULL) {
@@ -294,7 +291,7 @@ creat_rev_corpus(Component *revcorp)
 
   if (cl_debug) {
     fprintf(stderr, "\nCreating REVCORP component as '%s' ... \n", revcorp->path);
-    fprintf(stderr, "Size = %d INTs,  Buffer Size = %ld INTs\n", datasize, bufsize);
+    fprintf(stderr, "Size = %" PRId64 " INTs,  Buffer Size = %zu INTs\n", datasize, bufsize);
   }
 
   primus = 0;
@@ -320,7 +317,7 @@ creat_rev_corpus(Component *revcorp)
     pass++;
     if (cl_debug) {
       double perc = (100.0 * secundus) / lexsize;
-      fprintf(stderr, "CL makecomps: Pass #%-3d (%6.2f%c complete)\n", pass, perc, '%');
+      fprintf(stderr, "CL makecomps: Pass #%-3" PRId64 " (%6.2f%c complete)\n", pass, perc, '%');
     }
 
     for (cpos = 0; cpos < datasize; cpos++) {
@@ -340,7 +337,7 @@ creat_rev_corpus(Component *revcorp)
     for (id = primus + 1; id <= secundus; id++) {
       ptr += cl_id2freq(attr, id);
       if (ptr != ptab[id]) {
-        fprintf(stderr, "CL makecomps: Pointer inconsistency for id=%d. Aborting.\n", id);
+        fprintf(stderr, "CL makecomps: Pointer inconsistency for id=%" PRId64 ". Aborting.\n", id);
         exit(1);
       }
     }
@@ -359,7 +356,7 @@ creat_rev_corpus(Component *revcorp)
 
   /* finally, check amount of data read/written vs. expected */
   if ((ints_written != cpos) || (ints_written != datasize)) {
-    fprintf(stderr, "CL makecomps: Data size inconsistency: expected=%d, read=%d, written=%d.\n", datasize, cpos, ints_written);
+    fprintf(stderr, "CL makecomps: Data size inconsistency: expected=%" PRId64 ", read=%" PRId64 ", written=%" PRId64 ".\n", datasize, cpos, ints_written);
     exit(1);
   }
 
@@ -382,12 +379,12 @@ creat_rev_corpus(Component *revcorp)
  * @see create_component
  * @return  Returns 1.
  */
-int
+void
 creat_rev_corpus_idx(Component *revcidx)
 {
   Component *freqs;
 
-  int i, k, sum;
+  int64_t i, k, sum;
 
   freqs = ensure_component(revcidx->attribute, CompCorpusFreqs, 1);
 
@@ -398,7 +395,7 @@ creat_rev_corpus_idx(Component *revcidx)
 
   /* directly manipulate the MemBlob internals of the new component ... */
   revcidx->data.size = freqs->data.size;
-  revcidx->data.item_size = SIZE_INT;
+  revcidx->data.item_size = sizeof(*revcidx->data.data);
   revcidx->data.nr_items = freqs->data.nr_items;
   revcidx->data.allocation_method = MALLOCED;
   revcidx->data.writeable = 1;
@@ -408,22 +405,22 @@ creat_rev_corpus_idx(Component *revcidx)
   revcidx->data.offset = 0;
 
   /* equivalent to using MALLOCED when calling one of the MemBlob functions... */
-  revcidx->data.data = (int *)cl_malloc(sizeof(int) * revcidx->data.nr_items);
+  revcidx->data.data = (int64_t*)cl_malloc(sizeof(*revcidx->data.data) * revcidx->data.nr_items);
   memset(revcidx->data.data, '\0', revcidx->data.size);
   revcidx->size = revcidx->data.nr_items;
 
   sum = 0;
   for (k = 0; k < freqs->size; k++) { /* for each entry in freqs ... */
-    i = ntohl(freqs->data.data[k]);    /* i = the frequency of type[k] */
+    i = ntohll(freqs->data.data[k]);    /* i = the frequency of type[k] */
 
     /* the startpoint in the reversed index of the entries for type[k] is the sum of freqs of all types whose ID is less than k */
-    revcidx->data.data[k] = htonl(sum);
+    revcidx->data.data[k] = htonll(sum);
 
     sum += i;          /* compute the sum for the next word */
   }
 
   /* sum should be the number of tokens in the corpus, that
-     is, the length of the corpus file / sizeof(int). Check this. */
+     is, the length of the corpus file / sizeof(int64_t). Check this. */
 
   /* WE DO NOT CONVERT the table from host to network order while
    * writing it, since it's already been created in network order!!! */
@@ -432,6 +429,4 @@ creat_rev_corpus_idx(Component *revcidx)
     perror(revcidx->path);
     exit(2);
   }
-
-  return 1;
 }

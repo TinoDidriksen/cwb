@@ -25,9 +25,9 @@
 void
 printAlignedStrings(Corpus *sourceCorpus, 
                     ContextDescriptor *cd,
-                    int begin_target,
-                    int end_target,
-                    int highlighting,
+                    int64_t begin_target,
+                    int64_t end_target,
+                    int64_t highlighting,
                     FILE *stream);
 
 #endif

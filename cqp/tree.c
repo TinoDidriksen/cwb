@@ -40,7 +40,7 @@ void
 init_patternlist(void)
 {
 
-  int i;
+  int64_t i;
 
   for (i = 0; i <= MaxPatIndex; i++)
     if (patternlist[i].type == Tag) {
@@ -70,7 +70,7 @@ init_patternlist(void)
  * @param indent  The indent level to start printing at.
  */
 void
-print_pattern(int envidx, int index, int indent)
+print_pattern(int64_t envidx, int64_t index, int64_t indent)
 {
   if ((index >= 0) && (index <= Environment[envidx].MaxPatIndex))
     switch (Environment[envidx].patternlist[index].type) {
@@ -100,7 +100,7 @@ print_pattern(int envidx, int index, int indent)
       break;
     }
   else 
-    fprintf(stderr, "Illegal index in print_pattern: %d\n", index);
+    fprintf(stderr, "Illegal index in print_pattern: %" PRId64 "\n", index);
 }
 
 
@@ -113,7 +113,7 @@ print_pattern(int envidx, int index, int indent)
  * @param i  The repetition argument symbol to translate.
  */
 void
-print_rep_factor(int i)
+print_rep_factor(int64_t i)
 {
   switch (i) {
   case repeat_inf: 
@@ -123,7 +123,7 @@ print_rep_factor(int i)
     printf("none");
     break;
   default:
-    printf("%d", i);
+    printf("%" PRId64 "", i);
     break;
   }
 }
@@ -141,9 +141,9 @@ print_rep_factor(int i)
  * @param indent  The indent level to start printing at.
  */
 void
-print_evaltree(int envidx, Evaltree etptr, int indent)
+print_evaltree(int64_t envidx, Evaltree etptr, int64_t indent)
 {
-  int i;
+  int64_t i;
 
   if(etptr != NULL) {
     switch (etptr->type) {
@@ -220,7 +220,7 @@ print_evaltree(int envidx, Evaltree etptr, int indent)
 
       switch (etptr->cooc.op_id) {
       case cooc_meet:
-        printf("Meet <%d/%d, %s>", etptr->cooc.lw, 
+        printf("Meet <%" PRId64 "/%" PRId64 ", %s>", etptr->cooc.lw, 
                etptr->cooc.rw,
                etptr->cooc.struc ?
                  etptr->cooc.struc->any.name :
@@ -247,7 +247,7 @@ print_evaltree(int envidx, Evaltree etptr, int indent)
         print_pattern(0, etptr->tab_el.patindex, 2);
         if (etptr->tab_el.next) {
           /* print the distance */
-          printf("  {%d,%d}\n",
+          printf("  {%" PRId64 ",%" PRId64 "}\n",
                  etptr->tab_el.next->tab_el.min_dist,
                  etptr->tab_el.next->tab_el.max_dist);
         }
@@ -452,9 +452,9 @@ init_booltree(Constrainttree *ctptr)
  */ 
 
 void
-print_booltree(Constrainttree ctptr, int indent)
+print_booltree(Constrainttree ctptr, int64_t indent)
 {
-  int i;
+  int64_t i;
   ActualParamList *arg;
 
   if (ctptr != NULL) {
@@ -552,7 +552,7 @@ print_booltree(Constrainttree ctptr, int indent)
       break;
 
     case cnode:
-      printf("constant %d\n", ctptr->constnode.val);
+      printf("constant %" PRId64 "\n", ctptr->constnode.val);
       break;
 
     case id_list:
@@ -566,7 +566,7 @@ print_booltree(Constrainttree ctptr, int indent)
                ctptr->idlist.negated ? "non-" : "",
                ctptr->idlist.attr->any.name);
       for (i = 0; i < ctptr->idlist.nr_items; i++)
-        printf("%d ", ctptr->idlist.items[i]);
+        printf("%" PRId64 " ", ctptr->idlist.items[i]);
       printf("\n");
       break;
 
@@ -638,7 +638,7 @@ print_booltree(Constrainttree ctptr, int indent)
         printf("NORMAL %s\n", ctptr->leaf.ctype.sconst);
         break;
       case CID:
-        printf("CID %d\n", ctptr->leaf.ctype.cidconst);
+        printf("CID %" PRId64 "\n", ctptr->leaf.ctype.cidconst);
         break;
       }
       break;
@@ -647,7 +647,7 @@ print_booltree(Constrainttree ctptr, int indent)
       printf("\n");
       for (i = 1; i<= indent; i++)
         printf("  ");
-      printf("%d\n", ctptr->leaf.ctype.iconst);
+      printf("%" PRId64 "\n", ctptr->leaf.ctype.iconst);
       break;
       
     case float_leaf:
@@ -674,16 +674,16 @@ print_booltree(Constrainttree ctptr, int indent)
  *              whose patternlist is to be printed.
  */
 void
-show_patternlist(int eidx)
+show_patternlist(int64_t eidx)
 { 
-  int i;
+  int64_t i;
   
   printf("\n==================== Pattern List:\n\n");
 
-  printf("Size: %d\n", Environment[eidx].MaxPatIndex + 1);
+  printf("Size: %" PRId64 "\n", Environment[eidx].MaxPatIndex + 1);
 
   for(i = 0; i <= Environment[eidx].MaxPatIndex; i++) {
-    printf("Pattern #%d:\n", i);
+    printf("Pattern #%" PRId64 ":\n", i);
     print_pattern(eidx, i, 0);
   }
 
@@ -703,14 +703,14 @@ show_patternlist(int eidx)
  * @return        The resulting string.
  */
 char *
-evaltree2searchstr(Evaltree etptr, int *length)
+evaltree2searchstr(Evaltree etptr, int64_t *length)
 {
-  int n, p, l, min, max, remain;
+  int64_t n, p, l, min, max, remain;
   char numstr[10];
 
 
   char *left, *right, *result;
-  int len_l, len_r;
+  int64_t len_l, len_r;
 
   result = NULL;
   *length = 0;
@@ -863,7 +863,7 @@ evaltree2searchstr(Evaltree etptr, int *length)
     else {
       assert(etptr->leaf.type == leaf);
         
-      sprintf(numstr, " \"%d\" ",etptr->leaf.patindex);
+      sprintf(numstr, " \"%" PRId64 "\" ",etptr->leaf.patindex);
       result = cl_strdup(numstr);
       *length = strlen(result) + 1;
       
@@ -920,7 +920,7 @@ try_optimization(Constraint *tree)
       LabelEntry left_label, right_label;
 
       enum bnodetype left_type = -1, right_type = -1;
-      int try_opt;
+      int64_t try_opt;
 
       left_label = NULL; right_label = NULL;
       left_attr = NULL; right_attr = NULL;
@@ -1012,7 +1012,7 @@ try_optimization(Constraint *tree)
           left->idlist.items = NULL;
           left->idlist.nr_items = 0;
 
-          right_list.start = (int *)cl_malloc(1 * sizeof(int));
+          right_list.start = (int64_t*)cl_malloc(1 * sizeof(*right_list.start));
           right_list.tabsize = 1;
           right_list.start[0] = right->node.right->leaf.ctype.cidconst;
           
@@ -1028,7 +1028,7 @@ try_optimization(Constraint *tree)
           right->idlist.items = NULL;
           right->idlist.nr_items = 0;
 
-          right_list.start = (int *)cl_malloc(1 * sizeof(int));
+          right_list.start = (int64_t*)cl_malloc(1 * sizeof(*right_list.start));
           right_list.tabsize = 1;
           right_list.start[0] = left->node.right->leaf.ctype.cidconst;
 
@@ -1038,11 +1038,11 @@ try_optimization(Constraint *tree)
 
           /* construct a new id list where both sides are included */
 
-          left_list.start = (int *)cl_malloc(1 * sizeof(int));
+          left_list.start = (int64_t*)cl_malloc(1 * sizeof(*left_list.start));
           left_list.tabsize = 1;
           left_list.start[0] = left->node.right->leaf.ctype.cidconst;
 
-          right_list.start = (int *)cl_malloc(1 * sizeof(int));
+          right_list.start = (int64_t*)cl_malloc(1 * sizeof(*right_list.start));
           right_list.tabsize = 1;
           right_list.start[0] = right->node.right->leaf.ctype.cidconst;
 

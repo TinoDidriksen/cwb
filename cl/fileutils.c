@@ -67,7 +67,7 @@ fd_file_length(FILE *fd)
  * @return        Size of file in bytes.
  */
 off_t
-fi_file_length(int fileno)
+fi_file_length(int64_t fileno)
 {
   struct stat stat_buf;
   if(fstat(fileno, &stat_buf) == EOF)
@@ -86,13 +86,13 @@ fi_file_length(int fileno)
  * @param fname  The file to size up.
  * @return       Size of file in bytes.
  */
-long
+int64_t
 fprobe(char *fname)
 {
   struct stat stat_buf;
   
   if(stat(fname, &stat_buf) == EOF) {
-    return (long) EOF;
+    return EOF;
   }
   else
     /* stat_buf->st_mode holds the permission */
@@ -107,7 +107,7 @@ fprobe(char *fname)
  * @param path  Path to check.
  * @return      Boolean. (Also false if there's an error.)
  */
-int
+int64_t
 is_directory(char *path)
 {
   struct stat sBuf;
@@ -126,7 +126,7 @@ is_directory(char *path)
  * @param path  Path to check.
  * @return      Boolean. (Also false if there's an error.)
  */
-int
+int64_t
 is_file(char *path)
 {
   struct stat sBuf;
@@ -148,7 +148,7 @@ is_file(char *path)
  * @param path  Path to check.
  * @return      Boolean. (Also false if there's an error.)
  */
-int
+int64_t
 is_link(char *path)
 {
 #ifndef __MINGW__
@@ -177,7 +177,7 @@ CLStream open_streams;
 /**
  * SIGPIPE handler and global status variable
  */
-LIBCQPCL_API int cl_broken_pipe = 0;
+LIBCQPCL_API int64_t cl_broken_pipe = 0;
 
 static void
 cl_handle_sigpipe(int signum) {
@@ -205,9 +205,9 @@ cl_handle_sigpipe(int signum) {
  * @return          Standard C stream, or NULL on error
  */
 FILE *
-cl_open_stream(const char *filename, int mode, int type) {
+cl_open_stream(const char *filename, int64_t mode, int64_t type) {
   char *point, *mode_spec;
-  int l = strlen(filename);
+  size_t l = strlen(filename);
   FILE *handle;
   CLStream stream;
   char command[2 * CL_MAX_FILENAME_LENGTH]; /* may be longer than CL_MAX_FILENAME_LENGTH */
@@ -231,7 +231,7 @@ cl_open_stream(const char *filename, int mode, int type) {
     mode_spec = "a";
     break;
   default:
-    fprintf(stderr, "CL: invalid I/O stream mode = %d\n", mode);
+    fprintf(stderr, "CL: invalid I/O stream mode = %" PRId64 "\n", mode);
     cl_errno = CDA_EARGS;
     return NULL;
   }
@@ -328,7 +328,7 @@ cl_open_stream(const char *filename, int mode, int type) {
     handle = (mode == CL_STREAM_READ) ? stdin : stdout;
     break;
   default:
-    fprintf(stderr, "CL: invalid I/O stream type = %d\n", type);
+    fprintf(stderr, "CL: invalid I/O stream type = %" PRId64 "\n", type);
     cl_errno = CDA_EARGS;
     return NULL;
   }
@@ -367,10 +367,10 @@ cl_open_stream(const char *filename, int mode, int type) {
  *
  * @return          0 on success, otherwise the error code returned by fclose() or pclose()
  */
-int
+int64_t
 cl_close_stream(FILE *handle) {
   CLStream stream = open_streams, point;
-  int res = 0, was_pipe = 0;
+  int64_t res = 0, was_pipe = 0;
 
   while (stream) {
     if (stream->handle == handle)
@@ -396,7 +396,7 @@ cl_close_stream(FILE *handle) {
     was_pipe = 1;
     break;
   default:
-    fprintf(stderr, "CL: internal error, managed I/O stream has invalid type = %d\n", stream->type);
+    fprintf(stderr, "CL: internal error, managed I/O stream has invalid type = %" PRId64 "\n", stream->type);
     exit(1);
   }
 
@@ -414,7 +414,7 @@ cl_close_stream(FILE *handle) {
   /* if stream was a pipe, check whether we can uninstall the SIGPIPE handler */
 #ifndef __MINGW__
   if (was_pipe) {
-    int any_pipe = 0;
+    int64_t any_pipe = 0;
     for (point = open_streams; point; point = point->next)
       if (STREAM_IS_PIPE(point->type))
         any_pipe = 1;

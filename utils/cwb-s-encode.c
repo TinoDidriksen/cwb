@@ -66,23 +66,23 @@
 /* ---------------------------------------------------------------------- */
 
 /* configuration variables & command-line switches */
-int debug = 0;                  /**< debug mode on/off */
-int silent = 0;                 /**< avoid messages in -M / -a modes */
-int strip_blanks_in_values = 0; /* Wow, this is unused :o) */
-int set_syntax_strict = 0;      /**< check that set attributes are always given in the same syntax */
-int in_memory = 0;              /**< create list of regions in memory (allowing non-linear input), then write to disk */
-int add_to_existing = 0;        /**< add to existing attribute: implies in_memory; existing regions are automatically
+int64_t debug = 0;                  /**< debug mode on/off */
+int64_t silent = 0;                 /**< avoid messages in -M / -a modes */
+int64_t strip_blanks_in_values = 0; /* Wow, this is unused :o) */
+int64_t set_syntax_strict = 0;      /**< check that set attributes are always given in the same syntax */
+int64_t in_memory = 0;              /**< create list of regions in memory (allowing non-linear input), then write to disk */
+int64_t add_to_existing = 0;        /**< add to existing attribute: implies in_memory; existing regions are automatically
                                      inserted at startup */
 FILE *text_fd = NULL;           /**< stream handle for file to read from. */
 
 /* global variables */
-unsigned long input_line = 0;   /**< input line number (used for error messages) */
+uint64_t input_line = 0;        /**< input line number (used for error messages) */
 Corpus *corpus = NULL;          /**< corpus we're working on; at the moment, this is only required for add_to_existing */
 CorpusCharset encoding_charset; /**< a charset object; will be the same as that of corpus if we are adding to an existing corpus,
                                      otherwise, should be declared. */
 char *encoding_charset_name = "latin1";
                                  /**< character set label from the -c option. Value = pre-4.0 default of latin1. */
-int clean_strings = 0;           /**< clean up input strings by replacing invalid bytes with '?' (except for UTF8 encoding)*/
+int64_t clean_strings = 0;           /**< clean up input strings by replacing invalid bytes with '?' (except for UTF8 encoding)*/
                                  /* hack for v3.5 for backward compatibility: never clean strings. */
 
 /* TODO this would be useful as a general tool , non? */
@@ -103,16 +103,16 @@ typedef struct {
   char *dir;                    /**< directory where this s-attribute is stored */
   char *name;                   /**< s-attribute name */
 
-  int store_values;             /**< flag indicating whether to store values */
+  int64_t store_values;             /**< flag indicating whether to store values */
 
-  int ready;                    /**< flag indicates whether sencode_range_open() has already been called */
+  int64_t ready;                    /**< flag indicates whether sencode_range_open() has already been called */
   FILE *fd;                     /**< fd of x.rng (bin mode) */
   FILE *avx;                    /**< the attribute value index (bin mode)*/
   FILE *avs;                    /**< the attribute value strings (text mode) */
 
-  int last_cpos;                /**< end of last region (consistency checking) */
-  int num;                      /**< the next will be the num-th structure */
-  int offset;                   /**< string offset for next string */
+  int64_t last_cpos;                /**< end of last region (consistency checking) */
+  int64_t num;                      /**< the next will be the num-th structure */
+  int64_t offset;                   /**< string offset for next string */
 } SencodeRange;
 
 /**
@@ -140,8 +140,8 @@ char *progname = NULL;
  * actually encoded and stored on disk.
  */
 typedef struct _SL {
-  int start;                    /**< start of region */
-  int end;                      /**< end of region */
+  int64_t start;                    /**< start of region */
+  int64_t end;                      /**< end of region */
   char *annot;                  /**< annotated string */
   struct _SL *prev;
   struct _SL *next;
@@ -188,7 +188,7 @@ SL_next(void)
  * Find region containing (or preceding) cpos; NULL = start of list; sets SL_Point to returned value.
  */
 SL
-SL_seek(int cpos)
+SL_seek(int64_t cpos)
 {
   if (SL_Point == NULL)          /* start-of-list case */
     SL_Point = StructureList;
@@ -213,7 +213,7 @@ SL_seek(int cpos)
  * insert region [start, end, annot] after SL_Point; no overlap/position checking
  */
 SL
-SL_insert_after_point(int start, int end, char *annot)
+SL_insert_after_point(int64_t start, int64_t end, char *annot)
 {
   /* allocate and initialise new item to insert into list */
   SL item = (SL) cl_malloc(sizeof(struct _SL));
@@ -285,7 +285,7 @@ SL_delete(SL item)
  * Combines SL_seek(), SL_insert_at_point() and ambiguity resolution.
  */
 void
-SL_insert(int start, int end, char *annot)
+SL_insert(int64_t start, int64_t end, char *annot)
 {
   SL point, item;
 
@@ -332,7 +332,7 @@ SL_insert(int start, int end, char *annot)
  *
  * Usage:
  *
- * ok = sencode_parse_line(char *line, int *start, int *end, char **annot);
+ * ok = sencode_parse_line(char *line, int64_t *start, int64_t *end, char **annot);
  *
  * Expects standard TAB-separated format; first two fields must be numbers,
  * optional third field is returned in annot - if not present, annot is
@@ -344,12 +344,12 @@ SL_insert(int start, int end, char *annot)
  * @param annot  Out-parameter: Location to put the annotation string.
  * @return       Boolean; true for all OK, false for error.
  */
-int
-sencode_parse_line(char *line, int *start, int *end, char **annot)
+int64_t
+sencode_parse_line(char *line, int64_t *start, int64_t *end, char **annot)
 {
   char *field, *field_end;
   char *line_copy = cl_strdup(line); /* work on copy to retain original for error messages */
-  int has_annotation = 1; /* Boolean: are there 3 colums on this line? */
+  int64_t has_annotation = 1; /* Boolean: are there 3 colums on this line? */
 
   /* first field: INT range_start */
   field = line_copy;
@@ -392,7 +392,7 @@ sencode_parse_line(char *line, int *start, int *end, char **annot)
       /* nb re clean_strings: it is OK to modify field inplace, because we will free it before we leave the function! */
       if (!cl_string_validate_encoding(field, encoding_charset, clean_strings)) {
         fprintf(stderr,
-            "Encoding error on line #%ld: an invalid byte or byte sequence for charset \"%s\" was encountered.\n",
+            "Encoding error on line #%" PRId64 ": an invalid byte or byte sequence for charset \"%s\" was encountered.\n",
             input_line,
             encoding_charset_name);
         exit(1);
@@ -493,7 +493,7 @@ sencode_usage(void)
  * and sets name/directory
  */
 void
-sencode_declare_new_satt(char *name, char *directory, int store_values)
+sencode_declare_new_satt(char *name, char *directory, int64_t store_values)
 {
   new_satt.name = cl_strdup(name);
   new_satt.dir = cl_strdup(directory);
@@ -571,9 +571,9 @@ sencode_close_files(void)
  * Parse options and set global variables
  */
 void
-sencode_parse_options(int argc, char **argv)
+sencode_parse_options(int64_t argc, char **argv)
 {
-  int c;
+  int64_t c;
   extern char *optarg;
   extern int optind;
 
@@ -733,7 +733,7 @@ cl_lexhash LH = NULL;
  * Write data about a region to disk files (as defined in global variable new_satt).
  */
 void
-sencode_write_region(int start, int end, char *annot)
+sencode_write_region(int64_t start, int64_t end, char *annot)
 {
   if (!new_satt.ready)
     sencode_open_files();
@@ -746,7 +746,7 @@ sencode_write_region(int start, int end, char *annot)
 
   /* store annotation for -V attribute */
   if (new_satt.store_values) {
-    int offset, id;
+    int64_t offset, id;
     cl_lexhash_entry entry;
 
     entry = cl_lexhash_find(LH, annot);
@@ -756,7 +756,7 @@ sencode_write_region(int start, int end, char *annot)
       entry->data.integer = new_satt.offset;
       new_satt.offset += strlen(annot) + 1; /* increment range offset */
       if (new_satt.offset < 0) {
-        fprintf(stderr, "Too many annotation values for <%s> regions (lexicon size > %d bytes)\n", new_satt.name, INT_MAX);
+        fprintf(stderr, "Too many annotation values for <%s> regions (lexicon size > %" PRId64 " bytes)\n", new_satt.name, INT64_MAX);
         exit(1);
       }
       if (0 > fprintf(new_satt.avs, "%s%c", annot, 0)) {
@@ -794,14 +794,14 @@ sencode_write_region(int start, int end, char *annot)
 int
 main(int argc, char **argv)
 {
-  int start, end;
+  int64_t start, end;
   char *annot;
   char buf[CL_MAX_LINE_LENGTH];
   Attribute *att;              /* the existing s-attribute to add to. */
-  int V_switch,                /* boolean: was -V supplied to the program? */
+  int64_t V_switch,                /* boolean: was -V supplied to the program? */
       values,                  /* boolean: does the existing s-attribute have values? */
       S_annotations_dropped;   /* counter of n of annotations ignored from input because we are encoding a -S */
-  int i, N;
+  int64_t i, N;
 
   progname = argv[0];
   sencode_parse_options(argc, argv);
@@ -849,7 +849,7 @@ main(int argc, char **argv)
 
     /* check for buffer overflow */
     if (strlen(buf) >= (CL_MAX_LINE_LENGTH - 1)) {
-      fprintf(stderr, "BUFFER OVERFLOW, input line #%ld is too long:\n>> %s", input_line, buf);
+      fprintf(stderr, "BUFFER OVERFLOW, input line #%" PRId64 " is too long:\n>> %s", input_line, buf);
       exit(1);
     }
 
@@ -857,34 +857,34 @@ main(int argc, char **argv)
     cl_string_chomp(buf);
 
     if (! sencode_parse_line(buf, &start, &end, &annot)) {
-      fprintf(stderr, "FORMAT ERROR on line #%ld:\n>> %s", input_line, buf);
+      fprintf(stderr, "FORMAT ERROR on line #%" PRId64 ":\n>> %s", input_line, buf);
       exit(1);
     }
     if (new_satt.store_values && (annot == NULL)) {
-      fprintf(stderr, "MISSING ANNOTATION on line #%ld:\n>> %s", input_line, buf);
+      fprintf(stderr, "MISSING ANNOTATION on line #%" PRId64 ":\n>> %s", input_line, buf);
       exit(1);
     }
     if ((!new_satt.store_values) && (annot != NULL)) {
       if (! S_annotations_dropped)
-        fprintf(stderr, "WARNING: Annotation for -S attribute ignored on line #%ld (warning issued only once):\n>> %s", input_line, buf);
+        fprintf(stderr, "WARNING: Annotation for -S attribute ignored on line #%" PRId64 " (warning issued only once):\n>> %s", input_line, buf);
       S_annotations_dropped++;
     }
     if ((start <= new_satt.last_cpos) || (end < start)) {
-      fprintf(stderr, "RANGE INCONSISTENCY on line #%ld:\n>> %s(end of previous region was %d)\n", input_line, buf, new_satt.last_cpos);
+      fprintf(stderr, "RANGE INCONSISTENCY on line #%" PRId64 ":\n>> %s(end of previous region was %" PRId64 ")\n", input_line, buf, new_satt.last_cpos);
       exit(1);
     }
     if (annot != NULL && set_att != set_none) {
       /* convert set annotation into standard syntax */
       annot = sencode_check_set(annot);
       if (annot == NULL) {
-        fprintf(stderr, "SET ANNOTATION SYNTAX ERROR on line #%ld:\n>> %s", input_line, buf);
+        fprintf(stderr, "SET ANNOTATION SYNTAX ERROR on line #%" PRId64 ":\n>> %s", input_line, buf);
         exit(1);
       }
     }
 
     /* debugging output */
     if (debug) {
-      fprintf(stderr, "[%d, %d]", start, end);
+      fprintf(stderr, "[%" PRId64 ", %" PRId64 "]", start, end);
       if (annot != NULL)
         fprintf(stderr, " <%s>", annot);
       fprintf(stderr, "\n");
@@ -914,7 +914,7 @@ main(int argc, char **argv)
   sencode_close_files();
 
   if (S_annotations_dropped > 0)
-    fprintf(stderr, "Warning: %d annotation values dropped for -S attribute '%s'.\n", S_annotations_dropped, new_satt.name);
+    fprintf(stderr, "Warning: %" PRId64 " annotation values dropped for -S attribute '%s'.\n", S_annotations_dropped, new_satt.name);
 
   exit(0);
 }

@@ -44,9 +44,9 @@
  * @see SymbolTable.
  */
 typedef struct _label_entry {
-  int        flags;
+  int64_t        flags;
   char      *name;
-  int        ref;             /**< array index the label refers to */
+  int64_t        ref;             /**< array index the label refers to */
   struct _label_entry *next;
 } *LabelEntry;
 
@@ -68,26 +68,26 @@ typedef struct _label_entry {
 typedef struct _symbol_table {
   LabelEntry  user;                /**< user namespace */
   LabelEntry  rdat;                /**< namespace for LAB_RDAT labels */
-  int next_index;                  /**< next free reference table index */
+  int64_t next_index;                  /**< next free reference table index */
 } *SymbolTable;
 
 SymbolTable new_symbol_table();
 
 void delete_symbol_table(SymbolTable st);
 
-LabelEntry findlabel(SymbolTable st, char *s, int flags);
+LabelEntry findlabel(SymbolTable st, char *s, int64_t flags);
 
-LabelEntry labellookup(SymbolTable st, char *s, int flags, int create);
+LabelEntry labellookup(SymbolTable st, char *s, int64_t flags, int64_t create);
 
 void droplabel(SymbolTable st, LabelEntry l);
 
-int check_labels(SymbolTable st);
+int64_t check_labels(SymbolTable st);
 
 void print_symbol_table(SymbolTable st);
 
 /* iterate through labels (visits only labels where the corresponding flags are set) */
-LabelEntry symbol_table_new_iterator(SymbolTable st, int flags);
-LabelEntry symbol_table_iterator(LabelEntry prev, int flags);
+LabelEntry symbol_table_new_iterator(SymbolTable st, int64_t flags);
+LabelEntry symbol_table_iterator(LabelEntry prev, int64_t flags);
 
 
 
@@ -101,8 +101,8 @@ LabelEntry symbol_table_iterator(LabelEntry prev, int flags);
  * The RefTab object (represents a reference table).
  */
 typedef struct _RefTab {
-  int size;
-  int *data;
+  int64_t size;
+  int64_t *data;
 } *RefTab;
 
 RefTab new_reftab(SymbolTable st);
@@ -115,11 +115,11 @@ void dup_reftab(RefTab rt1, RefTab rt2);
 void reset_reftab(RefTab rt);
 
 
-void set_reftab(RefTab rt, int index, int value);
-int  get_reftab(RefTab rt, int index, int cpos);
+void set_reftab(RefTab rt, int64_t index, int64_t value);
+int64_t  get_reftab(RefTab rt, int64_t index, int64_t cpos);
 
 
-void print_label_values(SymbolTable st, RefTab rt, int cpos);
+void print_label_values(SymbolTable st, RefTab rt, int64_t cpos);
 
 
 

@@ -59,10 +59,10 @@ SearchStrategy string_to_strategy(char *s)
 
 /* target can be any field except NoField (-> CQP dies),
    source can be NoField, which deletes the target field (unless that's match or matchend) */
-int
+int64_t
 set_target(CorpusList *corp, FieldType t_id, FieldType s_id)
 {
-  int i;
+  int64_t i;
 
   if (t_id == s_id) {
     cqpmessage(Error, "Fields are identical.");
@@ -135,9 +135,9 @@ set_target(CorpusList *corp, FieldType t_id, FieldType s_id)
 
       case TargetField:
         if (corp->targets == NULL)
-          corp->targets = (int *)cl_malloc(corp->size * sizeof(int));
-        /* bcopy(corp->keywords, corp->targets, corp->size * sizeof(int)); */
-        memcpy(corp->targets, corp->keywords, corp->size * sizeof(int));
+          corp->targets = (int64_t*)cl_malloc(corp->size * sizeof(*corp->targets));
+        /* bcopy(corp->keywords, corp->targets, corp->size * sizeof(*corp->targets)); */
+        memcpy(corp->targets, corp->keywords, corp->size * sizeof(*corp->targets));
         break;
 
       case NoField:
@@ -185,9 +185,9 @@ set_target(CorpusList *corp, FieldType t_id, FieldType s_id)
 
       case KeywordField:
         if (corp->keywords == NULL)
-          corp->keywords = (int *)cl_malloc(corp->size * sizeof(int));
-        /* bcopy(corp->targets, corp->keywords, corp->size * sizeof(int)); */
-        memcpy(corp->keywords, corp->targets, corp->size * sizeof(int));
+          corp->keywords = (int64_t*)cl_malloc(corp->size * sizeof(*corp->keywords));
+        /* bcopy(corp->targets, corp->keywords, corp->size * sizeof(*corp->keywords)); */
+        memcpy(corp->keywords, corp->targets, corp->size * sizeof(*corp->keywords));
         break;
 
       case NoField:
@@ -209,14 +209,14 @@ set_target(CorpusList *corp, FieldType t_id, FieldType s_id)
 
     case KeywordField:
       if (corp->keywords == NULL)
-        corp->keywords = (int *)cl_malloc(corp->size * sizeof(int));
+        corp->keywords = (int64_t*)cl_malloc(corp->size * sizeof(*corp->keywords));
       for (i = 0; i < corp->size; i++)
         corp->keywords[i] = corp->range[i].start;
       break;
 
     case TargetField:
       if (corp->targets == NULL)
-        corp->targets = (int *)cl_malloc(corp->size * sizeof(int));
+        corp->targets = (int64_t*)cl_malloc(corp->size * sizeof(*corp->targets));
       for (i = 0; i < corp->size; i++)
         corp->targets[i] = corp->range[i].start;
       break;
@@ -239,14 +239,14 @@ set_target(CorpusList *corp, FieldType t_id, FieldType s_id)
 
     case KeywordField:
       if (corp->keywords == NULL)
-        corp->keywords = (int *)cl_malloc(corp->size * sizeof(int));
+        corp->keywords = (int64_t*)cl_malloc(corp->size * sizeof(*corp->keywords));
       for (i = 0; i < corp->size; i++)
         corp->keywords[i] = corp->range[i].end;
       break;
 
     case TargetField:
       if (corp->targets == NULL)
-        corp->targets = (int *)cl_malloc(corp->size * sizeof(int));
+        corp->targets = (int64_t*)cl_malloc(corp->size * sizeof(*corp->targets));
       for (i = 0; i < corp->size; i++)
         corp->targets[i] = corp->range[i].end;
       break;
@@ -270,23 +270,23 @@ set_target(CorpusList *corp, FieldType t_id, FieldType s_id)
   return 1;
 }
 
-int evaluate_target(CorpusList *corp,          /* the corpus */
+int64_t evaluate_target(CorpusList *corp,          /* the corpus */
                     FieldType t_id,            /* the field to set */
                     FieldType base,            /* where to start the search */
-                    int inclusive,             /* including or excluding the base */
+                    int64_t inclusive,             /* including or excluding the base */
                     SearchStrategy strategy,   /* disambiguation rule: which item */
                     Constrainttree constr,     /* the constraint */
                     enum ctxtdir direction,    /* context direction */
-                    int units,                       /* number of units */
+                    int64_t units,                       /* number of units */
                     char *attr_name)           /* name of unit */
 {
   Attribute *attr;
-  int *table;
+  int64_t *table;
   Context context;
-  int i, line, lbound, rbound;
-  int excl_start, excl_end;
-  int nr_evals;
-  int percentage, new_percentage; /* for ProgressBar */
+  int64_t i, line, lbound, rbound;
+  int64_t excl_start, excl_end;
+  int64_t nr_evals;
+  int64_t percentage, new_percentage; /* for ProgressBar */
 
   /* ------------------------------------------------------------ */
 
@@ -329,13 +329,13 @@ int evaluate_target(CorpusList *corp,          /* the corpus */
     }
     break;
   default:
-    cqpmessage(Error, "Illegal base field (#%d) in 'set target' command.",
+    cqpmessage(Error, "Illegal base field (#%" PRId64 ") in 'set target' command.",
                base);
     return 0;
   }
 
   if (units <= 0) {
-    cqpmessage(Error, "Invalid search space (%d units) in 'set target' command.",
+    cqpmessage(Error, "Invalid search space (%" PRId64 " units) in 'set target' command.",
                units);
     return 0;
   }
@@ -373,7 +373,7 @@ int evaluate_target(CorpusList *corp,          /* the corpus */
   }
 
 
-  table = (int *)cl_calloc(corp->size, sizeof(int));
+  table = (int64_t*)cl_calloc(corp->size, sizeof(*table));
 
   EvaluationIsRunning = 1;
   nr_evals = 0;
@@ -403,26 +403,26 @@ int evaluate_target(CorpusList *corp,          /* the corpus */
                              corp->range[line].start, context,
                              &lbound, &rbound) == False) {
 
-          fprintf(stderr, "Can't compute boundaries for range #%d", line);
+          fprintf(stderr, "Can't compute boundaries for range #%" PRId64 "", line);
           lbound = rbound = -1;
         }
       }
       else {
 
-        int dummy;
+        int64_t dummy;
 
         if (calculate_ranges(corp,
                              corp->range[line].start, context,
                              &lbound, &dummy) == False) {
 
-          fprintf(stderr, "Can't compute left search space boundary match #%d", line);
+          fprintf(stderr, "Can't compute left search space boundary match #%" PRId64 "", line);
           lbound = rbound = -1;
         }
         else if (calculate_ranges(corp,
                                   corp->range[line].end, context,
                                   &dummy, &rbound) == False) {
 
-          fprintf(stderr, "Can't compute right search space boundary match #%d", line);
+          fprintf(stderr, "Can't compute right search space boundary match #%" PRId64 "", line);
           lbound = rbound = -1;
         }
       }
@@ -436,7 +436,7 @@ int evaluate_target(CorpusList *corp,          /* the corpus */
                              corp->range[line].end, context,
                              &lbound, &rbound) == False) {
 
-          fprintf(stderr, "Can't compute search space boundaries for match #%d", line);
+          fprintf(stderr, "Can't compute search space boundaries for match #%" PRId64 "", line);
           lbound = rbound = -1;
         }
       }
@@ -453,7 +453,7 @@ int evaluate_target(CorpusList *corp,          /* the corpus */
                              corp->targets[line], context,
                                   &lbound, &rbound) == False) {
 
-          fprintf(stderr, "Can't compute search space boundaries for match #%d", line);
+          fprintf(stderr, "Can't compute search space boundaries for match #%" PRId64 "", line);
           lbound = rbound = -1;
         }
       }
@@ -470,7 +470,7 @@ int evaluate_target(CorpusList *corp,          /* the corpus */
                              corp->keywords[line], context,
                              &lbound, &rbound) == False) {
 
-          fprintf(stderr, "Can't compute search space boundaries for match #%d", line);
+          fprintf(stderr, "Can't compute search space boundaries for match #%" PRId64 "", line);
           lbound = rbound = -1;
         }
       }
@@ -485,7 +485,7 @@ int evaluate_target(CorpusList *corp,          /* the corpus */
 
     if ((lbound >= 0) && (rbound >= 0)) {
 
-      int dist, maxdist;
+      int64_t dist, maxdist;
 
       if (direction == ctxtdir_left) {
         rbound = excl_start;
@@ -664,12 +664,12 @@ int evaluate_target(CorpusList *corp,          /* the corpus */
   return 1;
 }
 
-int evaluate_subset(CorpusList *cl, /* the corpus */
+int64_t evaluate_subset(CorpusList *cl, /* the corpus */
                     FieldType the_field,       /* the field to scan */
                     Constrainttree constr)
 {
-  int line, position;
-  int percentage, new_percentage; /* for ProgressBar */
+  int64_t line, position;
+  int64_t percentage, new_percentage; /* for ProgressBar */
 
   assert(cl && constr);
   assert(cl->type == SUB || cl->type == TEMP);

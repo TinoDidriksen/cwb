@@ -40,8 +40,8 @@ struct _CL_Regex {
   pcre *needle;                      /**< buffer for the actual regex object (PCRE) */
   pcre_extra *extra;                 /**< buffer for PCRE's internal optimisation data */
   CorpusCharset charset;             /**< the character set in use for this regex */
-  int icase;                         /**< whether IGNORE_CASE flag was set for this regex (needs special processing) */
-  int idiac;                         /**< whether IGNORE_DIAC flag was set for this regex */
+  int64_t icase;                         /**< whether IGNORE_CASE flag was set for this regex (needs special processing) */
+  int64_t idiac;                         /**< whether IGNORE_DIAC flag was set for this regex */
   char *haystack_buf;                /**< a buffer of size CL_MAX_LINE_LENGTH used for accent folding by cl_regex_match(),
                                           allocated only if IGNORE_DIAC was specified */
   char *haystack_casefold;           /**< additional, larger (2 * CL_MAX_LINE_LENGTH) buffer for a case-folded version,
@@ -50,18 +50,18 @@ struct _CL_Regex {
    * They are allocated once here to avoid frequent small allocation and deallocations in cl_regex_match(). */
 
   /* data from optimiser (see global variables in regopt.c for comments) */
-  int grains;                        /**< number of grains (0 = not optimised). @see cl_regopt_grains */
-  int grain_len;                     /**< @see cl_regopt_grain_len */
+  uint8_t grains;                    /**< number of grains (0 = not optimised). @see cl_regopt_grains */
+  int64_t grain_len;                  /**< @see cl_regopt_grain_len */
   char *grain[MAX_GRAINS];           /**< @see cl_regopt_grain */
-  int anchor_start;                  /**< @see cl_regopt_anchor_start */
-  int anchor_end;                    /**< @see cl_regopt_anchor_end */
-  int jumptable[256];                /**< @see cl_regopt_jumptable @see make_jump_table */
+  bool anchor_start;                 /**< @see cl_regopt_anchor_start */
+  bool anchor_end;                   /**< @see cl_regopt_anchor_end */
+  int64_t jumptable[256];            /**< @see cl_regopt_jumptable @see make_jump_table */
 };
 
 
 /* interface function prototypes are in <cl.h>; internal functions declared here */
 
 void regopt_data_copy_to_regex_object(CL_Regex rx);
-int cl_regopt_analyse(char *regex);
+bool cl_regopt_analyse(char *regex);
 
 #endif

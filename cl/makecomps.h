@@ -23,12 +23,12 @@
 #include "attributes.h"
 
 
-int creat_sort_lexicon(Component *lexsrt);
+bool creat_sort_lexicon(Component *lexsrt);
 
-int creat_freqs(Component *lex);
+bool creat_freqs(Component *lex);
 
-int creat_rev_corpus(Component *component);
+int64_t creat_rev_corpus(Component *component);
 
-int creat_rev_corpus_idx(Component *component);
+void creat_rev_corpus_idx(Component *component);
 
 #endif

@@ -40,16 +40,16 @@ char *corpus_id = NULL;
 /** Record for the corpus we are working on */
 Corpus *corpus; 
 
-void compressrdx_usage(char *msg, int error_code);
-void compressrdx_cleanup(int error_code);
+void compressrdx_usage(char *msg, int64_t error_code);
+void compressrdx_cleanup(int64_t error_code);
 
 /** debug level */
-int debug = 0;
+int64_t debug = 0;
 /** where debug messages are to be sent to (stderr) */
 FILE *debug_output; /* " = stderr;" init moved to main() for Gnuwin32 compatibility */
 
 /** stores current position in a bit-write-file */
-int codepos = 0;
+int64_t codepos = 0;
 
 #if 0
 
@@ -57,16 +57,16 @@ int codepos = 0;
 
 /* ALISTAIR MOFFAT'S COMMENTS WORKED IN ------------------------------ */
 
-void write_golomb_code_am(int x, int b, BFile *bf)
+void write_golomb_code_am(int64_t x, int64_t b, BFile *bf)
 {
-  int q, res, lb, ub, nr_sc, nr_lc;
-  int r, lr;
+  int64_t q, res, lb, ub, nr_sc, nr_lc;
+  int64_t r, lr;
 
-  int i;
+  int64_t i;
   double ldb;
 
-  unsigned char bit1 = '\1';
-  unsigned char bit0 = '\0';
+  uint8_t bit1 = '\1';
+  uint8_t bit0 = '\0';
 
   q = x / b;
   res = x - q * b;
@@ -88,30 +88,30 @@ void write_golomb_code_am(int x, int b, BFile *bf)
   nr_sc = (1 << ub) - b;
   
   if (debug)
-    fprintf(debug_output, " res=%5d CL [%3d/%3d] #sc %4d "
-            "writing %5d/%d\n",
+    fprintf(debug_output, " res=%5" PRId64 " CL [%3" PRId64 "/%3" PRId64 "] #sc %4" PRId64 " "
+            "writing %5" PRId64 "/%" PRId64 "\n",
             res, lb, ub, nr_sc,
             (res < nr_sc) ? res : res + nr_sc,
             (res < nr_sc) ? lb : ub);
 
   if (res < nr_sc) {
-    BFwriteWord((unsigned int)res, lb, bf);
+    BFwriteWord((uint64_t)res, lb, bf);
   }
   else {
-    BFwriteWord((unsigned int)(res + nr_sc), ub, bf);
+    BFwriteWord((uint64_t)(res + nr_sc), ub, bf);
     if (res + nr_sc >= (1 << ub))
-      fprintf(stderr, "Warning: can't encode %d in %d bits\n", 
+      fprintf(stderr, "Warning: can't encode %" PRId64 " in %" PRId64 " bits\n", 
               res + nr_sc, ub);
   }
 
 }
 
-int read_golomb_code_am(int b, BFile *bf)
+int64_t read_golomb_code_am(int64_t b, BFile *bf)
 {
-  int q, i, nr_sc, lb, ub;
+  int64_t q, i, nr_sc, lb, ub;
 
-  unsigned int r;
-  unsigned char bit;
+  uint64_t r;
+  uint8_t bit;
 
   double ldb;
 
@@ -140,7 +140,7 @@ int read_golomb_code_am(int b, BFile *bf)
   }
 
   if (debug)
-    fprintf(debug_output, "%8d:  Read r=%5d [%3d/%3d]  #sc=%4d, ",
+    fprintf(debug_output, "%8" PRId64 ":  Read r=%5" PRId64 " [%3" PRId64 "/%3" PRId64 "]  #sc=%4" PRId64 ", ",
             codepos, r, lb, ub, nr_sc);
 
   if (r >= nr_sc) {
@@ -151,7 +151,7 @@ int read_golomb_code_am(int b, BFile *bf)
   }
 
   if (debug)
-    fprintf(debug_output, "final r=%d\tgap=%d\n", 
+    fprintf(debug_output, "final r=%" PRId64 "\tgap=%" PRId64 "\n", 
             r, r+q*b);
 
   return r + q * b;
@@ -180,20 +180,20 @@ compress_reversed_index(Attribute *attr, char *output_fn)
   char data_fname[CL_MAX_FILENAME_LENGTH];
   char index_fname[CL_MAX_FILENAME_LENGTH];
   
-  int nr_elements;
-  int element_freq;
-  int corpus_size;
-  int last_pos, gap, fpos;
+  int64_t nr_elements;
+  int64_t element_freq;
+  int64_t corpus_size;
+  int64_t last_pos, gap, fpos;
 
-  int b;
+  int64_t b;
 
-  int i, k;
+  int64_t i, k;
 
   BFile data_file;
   FILE *index_file = NULL;
 
   PositionStream PStream;
-  int new_pos;
+  int64_t new_pos;
 
 
   printf("COMPRESSING INDEX of %s.%s\n", corpus_id, attr->any.name);
@@ -277,7 +277,7 @@ compress_reversed_index(Attribute *attr, char *output_fn)
     NwriteInt(fpos, index_file);
     
     if (debug)
-      fprintf(debug_output, "------------------------------ ID %d (f: %d, b: %d)\n",
+      fprintf(debug_output, "------------------------------ ID %" PRId64 " (f: %" PRId64 ", b: %" PRId64 ")\n",
               i, element_freq, b);
     
     last_pos = 0;
@@ -291,7 +291,7 @@ compress_reversed_index(Attribute *attr, char *output_fn)
       last_pos = new_pos;
       
       if (debug)
-        fprintf(debug_output, "%8d:  gap=%4d, b=%4d\n", codepos, gap, b);
+        fprintf(debug_output, "%8" PRId64 ":  gap=%4" PRId64 ", b=%4" PRId64 "\n", codepos, gap, b);
       
       write_golomb_code(gap, b, &data_file);
       codepos++;
@@ -330,19 +330,19 @@ decompress_check_reversed_index(Attribute *attr, char *output_fn)
   char data_fname[CL_MAX_FILENAME_LENGTH];
   char index_fname[CL_MAX_FILENAME_LENGTH];
   
-  int nr_elements;
-  int element_freq;
-  int corpus_size;
-  int pos, gap;
+  int64_t nr_elements;
+  int64_t element_freq;
+  int64_t corpus_size;
+  int64_t pos, gap;
 
-  int b;
-  int i, k;
+  int64_t b;
+  int64_t i, k;
 
   BFile data_file;
   FILE *index_file;
 
   PositionStream PStream;
-  int true_pos;
+  int64_t true_pos;
 
 
   printf("VALIDATING %s.%s\n", corpus_id, attr->any.name);
@@ -405,7 +405,7 @@ decompress_check_reversed_index(Attribute *attr, char *output_fn)
     b = compute_ba(element_freq, corpus_size);
 
     if (debug)
-      fprintf(debug_output, "------------------------------ ID %d (f: %d, b: %d)\n",
+      fprintf(debug_output, "------------------------------ ID %" PRId64 " (f: %" PRId64 ", b: %" PRId64 ")\n",
               i, element_freq, b);
 
     pos = 0;
@@ -419,7 +419,7 @@ decompress_check_reversed_index(Attribute *attr, char *output_fn)
         compressrdx_cleanup(1);
       }
       if (pos != true_pos) {
-        fprintf(stderr, "ERROR: wrong occurrence of type #%d at cpos %d (correct cpos: %d) (on attribute: %s). Aborted.\n",
+        fprintf(stderr, "ERROR: wrong occurrence of type #%" PRId64 " at cpos %" PRId64 " (correct cpos: %" PRId64 ") (on attribute: %s). Aborted.\n",
                 i, pos, true_pos, attr->any.name);
         compressrdx_cleanup(1);
       }
@@ -452,7 +452,7 @@ decompress_check_reversed_index(Attribute *attr, char *output_fn)
  * @param error_code  Value to be returned by the program when it exits.
  */
 void 
-compressrdx_usage(char *msg, int error_code)
+compressrdx_usage(char *msg, int64_t error_code)
 {
   if (msg)
     fprintf(stderr, "Usage error: %s\n", msg);
@@ -482,7 +482,7 @@ compressrdx_usage(char *msg, int error_code)
  * @param error_code  Value to be returned by the program when it exits.
  */
 void
-compressrdx_cleanup(int error_code)
+compressrdx_cleanup(int64_t error_code)
 {
   if (corpus)
     cl_delete_corpus(corpus);
@@ -517,10 +517,10 @@ main(int argc, char **argv)
 
   extern int optind;
   extern char *optarg;
-  int c;
+  int64_t c;
 
-  int i_want_to_believe = 0;        /* skip error checks? */
-  int all_attributes = 0;
+  int64_t i_want_to_believe = 0;        /* skip error checks? */
+  int64_t all_attributes = 0;
 
   debug_output = stderr;        /* 'delayed' init (see top of file) */
 

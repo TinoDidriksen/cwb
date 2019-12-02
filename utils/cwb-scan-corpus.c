@@ -27,39 +27,39 @@
 #define MAX_N 32
 
 /* TODO: rewrite hash entries so that K-tuples can be embedded in the HashEntry struct,
-   e.g. as struct { HashEntry next; int freq; int tuple[1]; }; then allocate  sizeof(*HashEntry) + (K-1) * sizeof(int) bytes
+   e.g. as struct { HashEntry next; int64_t freq; int64_t tuple[1]; }; then allocate  sizeof(*HashEntry) + (K-1) * sizeof(int64_t) bytes
    for each structure and access tuple as entry->tuple[i] or in a similar way */
 
 /**
  * A specialised hashtable for computing frequency distributions over tuples of lexicon IDs.
  */
 struct _Hash {
-  int N;                    /**< number of keys, including constraint-only keys */
+  int64_t N;                    /**< number of keys, including constraint-only keys */
   Attribute *(att[MAX_N]);  /**< list of the N attributes corresponding to the keys of the hash */
-  int offset[MAX_N];        /**< list of optional corpus position offsets */
-  int max_offset;           /**< largest offset of all keys (to avoid scanning past end of corpus */
-  int is_structural[MAX_N]; /**< list of flags identifying s-attributes (all others are p-attributes) */
+  int64_t offset[MAX_N];        /**< list of optional corpus position offsets */
+  int64_t max_offset;           /**< largest offset of all keys (to avoid scanning past end of corpus */
+  int64_t is_structural[MAX_N]; /**< list of flags identifying s-attributes (all others are p-attributes) */
   CL_Regex regex[MAX_N];    /**< optional regex constraint (compiled regular expression) */
-  int is_negated[MAX_N];    /**< whether regex constraint is negated (!=) */
+  int64_t is_negated[MAX_N];    /**< whether regex constraint is negated (!=) */
 
   /* optional frequency values for corpus rows */
   Attribute *frequency_values;
-  int *frequency;           /**< pre-computed integer values for the attribute keys */
+  int64_t *frequency;           /**< pre-computed integer values for the attribute keys */
 
   /* p-attributes */
-  int *(id_list[MAX_N]);    /**< optional regex constraint (stored as a list of matching lexicon IDs) */
-  int id_list_size[MAX_N];  /**< size of this list */
+  int64_t *(id_list[MAX_N]);    /**< optional regex constraint (stored as a list of matching lexicon IDs) */
+  int64_t id_list_size[MAX_N];  /**< size of this list */
 
   /* s-attributes */
-  int current_struc[MAX_N]; /**< number of current or next structure */
-  int start_cpos[MAX_N];    /**< start of this structure (cpos) */
-  int end_cpos[MAX_N];      /**< end of this structure (cpos) */
-  int constraint_ok[MAX_N]; /**< whether constraint is satisfied (initialised at start_cpos, reset at end_cpos) */
-  int virtual_id[MAX_N];    /**< virtual ID of a region's annotation string (constant within region) */
+  int64_t current_struc[MAX_N]; /**< number of current or next structure */
+  int64_t start_cpos[MAX_N];    /**< start of this structure (cpos) */
+  int64_t end_cpos[MAX_N];      /**< end of this structure (cpos) */
+  int64_t constraint_ok[MAX_N]; /**< whether constraint is satisfied (initialised at start_cpos, reset at end_cpos) */
+  int64_t virtual_id[MAX_N];    /**< virtual ID of a region's annotation string (constant within region) */
   char *source_base[MAX_N]; /**< base pointers to compute virtual IDs (= offsets) from annotation strings */
 
-  int is_constraint[MAX_N]; /**< list of flags marking constraint keys ("?...") */
-  int K;                    /**< number of non-constraint keys, i.e. the actual hash table stores K-tuples */
+  int64_t is_constraint[MAX_N]; /**< list of flags marking constraint keys ("?...") */
+  int64_t K;                    /**< number of non-constraint keys, i.e. the actual hash table stores K-tuples */
 
   cl_ngram_hash table;      /**< the actual hash table, a cl_ngram_hash object */
 } Hash;
@@ -68,20 +68,20 @@ struct _Hash {
 Corpus *C;                   /**< corpus we're working on */
 char *reg_dir = NULL;        /**< registry directory (NULL -> use default) */
 char *corpname = NULL;       /**< corpus name (command-line) */
-int check_words = 0;         /**< if set, accept only 'regular' words in frequency counts */
+int64_t check_words = 0;         /**< if set, accept only 'regular' words in frequency counts */
 CL_Regex regular_rx = NULL;  /**< regex object for use when check_words is true. @see scancorpus_word_is_regular */
 char *progname = NULL;       /**< name of this program (from shell command) */
 char *output_file = NULL;    /**< output file name (-o option) */
-int sort_output = 0;         /**< sort output in canonical order (-S option) */
-int frequency_threshold = 0; /**< frequency threshold for result table (-f option) */
+int64_t sort_output = 0;         /**< sort output in canonical order (-S option) */
+int64_t frequency_threshold = 0; /**< frequency threshold for result table (-f option) */
 char *frequency_att = NULL;  /**< p-attribute with frequency entries for corpus rows (when abusing corpus as frequency database) */
-int global_start = 0;        /**< start scanning at this cpos (defaults to start of corpus) */
-int global_end = -1;         /**< will be set up in main() unless changed with -e switch. @see global_start */
+int64_t global_start = 0;        /**< start scanning at this cpos (defaults to start of corpus) */
+int64_t global_end = -1;         /**< will be set up in main() unless changed with -e switch. @see global_start */
 char *ranges_file = NULL;    /**< file with ranges to scan (pairs of corpus positions) */
 FILE *ranges_fh = NULL;      /**< corresponding filehandle */
-int quiet = 0;               /**< if set, don't show progress information on stderr */
-int n_buckets = 0;           /**< if set, use fixed number of buckets; otherwise, revert to cl_ngram_hash defaults */
-int debug_level = 0;         /**< CL debug level */
+int64_t quiet = 0;               /**< if set, don't show progress information on stderr */
+int64_t n_buckets = 0;           /**< if set, use fixed number of buckets; otherwise, revert to cl_ngram_hash defaults */
+int64_t debug_level = 0;         /**< CL debug level */
 
 /**
  * Prints a usage message and exits the program.
@@ -130,12 +130,12 @@ scancorpus_usage(void)
  * @param argv  argv from main()
  * @return      The value of global optind after the function has run.
  */
-int
-scancorpus_parse_options(int argc, char *argv[])
+int64_t
+scancorpus_parse_options(int64_t argc, char *argv[])
 {
   extern int optind;
   extern char *optarg;
-  int c;
+  int64_t c;
 
   while ((c = getopt(argc, argv, "+r:b:o:Sf:F:Cs:e:R:qDh")) != EOF) {
     switch (c) {
@@ -217,7 +217,7 @@ scancorpus_parse_options(int argc, char *argv[])
  * @param s  String containing the token to check.
  * @return   True if the token is regular, otherwise false.
  */
-int
+int64_t
 scancorpus_word_is_regular(char *s)
 {
   /* bad pointer or empty string or first char is hyphen? not regular */
@@ -295,14 +295,14 @@ scancorpus_add_key(char *key)
 {
   char buf[CL_MAX_LINE_LENGTH]; /* stores copy of <key> if we have to mess around with it */
   Attribute *att = NULL;        /* p-attribute object for attribute <att> */
-  int offset = 0;               /* offset obtained from [+<n>] part of key specifier */
+  int64_t offset = 0;               /* offset obtained from [+<n>] part of key specifier */
   char *regex = NULL;           /* <regex> from optional [=/<regex>/[cd]] part */
-  int flags = 0;                /* optional ignore case and/or diacritics flags ([cd]) */
-  int is_negated = 0;           /* regex constraint negated? */
-  int is_constraint = 0;        /* just a constraint key? */
-  int is_structural = 0;        /* positional or structural attribute? */
+  int64_t flags = 0;                /* optional ignore case and/or diacritics flags ([cd]) */
+  int64_t is_negated = 0;           /* regex constraint negated? */
+  int64_t is_constraint = 0;        /* just a constraint key? */
+  int64_t is_structural = 0;        /* positional or structural attribute? */
   char *p;
-  int list_size, mark, point;
+  int64_t list_size, mark, point;
 
   if (key[0] == '?') {
     is_constraint = 1;
@@ -433,15 +433,15 @@ scancorpus_add_key(char *key)
  * @param end   Where to put the end of the next range.
  * @return   FALSE after last range, TRUE otherwise
  */
-int
-get_next_range(int *start, int *end)
+int64_t
+get_next_range(int64_t *start, int64_t *end)
 {
   char buffer[CL_MAX_LINE_LENGTH];
 
   *start = *end = -1;                /* these values are returned on error or at end-of-input */
   if (ranges_fh) {
     if ((fgets(buffer, CL_MAX_LINE_LENGTH, ranges_fh) != NULL) &&
-        (sscanf(buffer, "%d %d", start, end) == 2))
+        (sscanf(buffer, "%" PRId64 " %" PRId64 "", start, end) == 2))
       return 1;
     else
       return 0;
@@ -471,10 +471,10 @@ get_next_range(int *start, int *end)
  */
 void
 print_ngram_entry(FILE *fh, cl_ngram_hash_entry entry) {
-  int i, k;
+  int64_t i, k;
   char *str;
 
-  fprintf(fh, "%d", entry->freq);
+  fprintf(fh, "%" PRId64 "", entry->freq);
   k = 0;
   for (i = 0; i < Hash.N; i++) {
     if (! Hash.is_constraint[i]) {
@@ -511,7 +511,7 @@ int
 collate_ngram_entries(const void *a, const void *b) {
   cl_ngram_hash_entry A = *((cl_ngram_hash_entry *) a);
   cl_ngram_hash_entry B = *((cl_ngram_hash_entry *) b);
-  int i, k, res;
+  int64_t i, k, res;
   char *strA, *strB;
 
   k = 0;
@@ -552,12 +552,12 @@ collate_ngram_entries(const void *a, const void *b) {
  * @param argv   Command-line arguments.
  */
 int
-main (int argc, char *argv[])
+main(int argc, char *argv[])
 {
-  int argind;                      /* will be set to the index of first (non-option) argument in argv[] */
-  int Csize = 0;                   /* corpus size (= number of tokens) */
+  int64_t argind;                      /* will be set to the index of first (non-option) argument in argv[] */
+  int64_t Csize = 0;                   /* corpus size (= number of tokens) */
   Attribute *word;                 /* need default p-attribute to compute corpus size */
-  int cpos, next_cpos, start_cpos, end_cpos, previous_end;
+  int64_t cpos, next_cpos, start_cpos, end_cpos, previous_end;
 
   /* parse command line options */
   progname = argv[0];
@@ -631,7 +631,7 @@ main (int argc, char *argv[])
 
   /* open attribute with frequency entries & precompute vector with numeric values (-F option) */
   if (frequency_att) {
-    int freq_id_range, id, intval;
+    int64_t freq_id_range, id, intval;
     char *strval;
 
     Hash.frequency_values = cl_new_attribute(C, frequency_att, ATT_POS);
@@ -641,7 +641,7 @@ main (int argc, char *argv[])
     }
 
     freq_id_range = cl_max_id(Hash.frequency_values);
-    Hash.frequency = (int *) cl_malloc(freq_id_range * sizeof(int));
+    Hash.frequency = (int64_t*) cl_malloc(freq_id_range * sizeof(*Hash.frequency));
     for (id = 0; id < freq_id_range; id++) {
       strval = cl_id2str(Hash.frequency_values, id);
       intval = atoi(strval);
@@ -654,18 +654,18 @@ main (int argc, char *argv[])
   }
 
   if (! quiet)
-    fprintf(stderr, "Scanning corpus %s for %d-tuples ... \n", corpname, Hash.N);
+    fprintf(stderr, "Scanning corpus %s for %" PRId64 "-tuples ... \n", corpname, Hash.N);
 
   /* loop over all the ranges to be scanned (which is just a single range without -R) */
   previous_end = -1;
   while (get_next_range(&start_cpos, &end_cpos)) {
     if (start_cpos <= previous_end) { /* this also ensures that start_cpos >= */
-      fprintf(stderr, "Overlapping or unsorted ranges: [?, %d] and [%d, %d]. Aborted.\n",
+      fprintf(stderr, "Overlapping or unsorted ranges: [?, %" PRId64 "] and [%" PRId64 ", %" PRId64 "]. Aborted.\n",
               previous_end, start_cpos, end_cpos);
       exit(1);
     }
     if (end_cpos < start_cpos) {
-      fprintf(stderr, "Invalid range [%d, %d] (inversion). Aborted.\n", start_cpos, end_cpos);
+      fprintf(stderr, "Invalid range [%" PRId64 ", %" PRId64 "] (inversion). Aborted.\n", start_cpos, end_cpos);
       exit(1);
     }
     previous_end = end_cpos;
@@ -674,31 +674,31 @@ main (int argc, char *argv[])
     if (Hash.max_offset > 0)
       end_cpos -= Hash.max_offset; /* adjust end_cpos so that all tokens in the tuple fall within the specified range */
     if (end_cpos < start_cpos) {
-      fprintf(stderr, "Warning: range [%d, %d] is too small for selected data (skipped).\n",
+      fprintf(stderr, "Warning: range [%" PRId64 ", %" PRId64 "] is too small for selected data (skipped).\n",
               start_cpos, end_cpos + Hash.max_offset);
     }
 
     /* start the scan loop for this range */
     for (cpos = start_cpos; cpos <= end_cpos; cpos = next_cpos) {
-      int tuple[MAX_N];
-      int i=0, k, accept;
+      int64_t tuple[MAX_N];
+      int64_t i=0, k, accept;
 
       next_cpos = cpos + 1;        /* this device allows the code to "skip" to the next matching region for s-attribute constraints */
 
       if ((! quiet) && ((cpos & 0xffff) == 0)) {
-        int cpK = cpos >> 10;
-        int csK = Csize >> 10;
-        int entriesK = cl_ngram_hash_size(Hash.table) >> 10;
-        fprintf(stderr, "Progress: %7dK / %dK  | %7dK n-grams \r", cpK, csK, entriesK);
+        int64_t cpK = cpos >> 10;
+        int64_t csK = Csize >> 10;
+        int64_t entriesK = cl_ngram_hash_size(Hash.table) >> 10;
+        fprintf(stderr, "Progress: %7" PRId64 "K / %" PRId64 "K  | %7" PRId64 "K n-grams \r", cpK, csK, entriesK);
         fflush(stderr);
       }
 
       accept = 1;
       k = 0;
       for (i = 0; i < Hash.N; i++) { /* don't abort when accept==0, because of side effects for s-attributes */
-        int effective_cpos = cpos + Hash.offset[i];
-        int id, size, bot, top, mid;
-        int *idlist;
+        int64_t effective_cpos = cpos + Hash.offset[i];
+        int64_t id, size, bot, top, mid;
+        int64_t *idlist;
         char *str;
 
         if (! accept)                 /* once accept==0, no need to compute id's and check constraints */
@@ -774,7 +774,7 @@ main (int argc, char *argv[])
                 Hash.constraint_ok[i] = 0;
               /* may jump directly to next region when regex constraint is present (or for ``?head'' constraints) */ 
               if (Hash.regex[i] != NULL || Hash.source_base[i] == NULL) { 
-                int jump_target;
+                int64_t jump_target;
                 if (Hash.constraint_ok[i])
                   jump_target = Hash.start_cpos[i] - Hash.offset[i]; /* convert back from effective_cpos to cpos */
                 else
@@ -825,7 +825,7 @@ main (int argc, char *argv[])
   {
     cl_ngram_hash_entry entry;
     cl_ngram_hash_entry *entry_vec;
-    int i, k, n_items = 0;
+    int64_t i, k, n_items = 0;
     FILE *of;
 
     of = cl_open_stream((output_file) ? output_file : "-", CL_STREAM_WRITE, CL_STREAM_MAGIC); /* if NULL, default to STDOUT */
@@ -879,7 +879,7 @@ main (int argc, char *argv[])
 
     cl_close_stream(of);
     if (! quiet)
-      fprintf(stderr, "%d items.\n", n_items);
+      fprintf(stderr, "%" PRId64 " items.\n", n_items);
   } /* endblock print hash contents to stdout */
 
   /* display hash table usage statistics at higher debug levels (-D -D and above) */

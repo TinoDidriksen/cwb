@@ -59,13 +59,13 @@ static char *field_names[] = { "b",
 /* ------------------------------------------------------ */
 
 char *
-html_print_field(FieldType field, int start);
+html_print_field(FieldType field, int64_t start);
 
 /* ------------------------------------------------------- */
 
 PrintDescriptionRecord
 HTMLPrintDescriptionRecord = {
-  "<EM>%d:</EM>",               /* CPOSPrintFormat */
+  "<EM>%" PRId64 ":</EM>",               /* CPOSPrintFormat */
 
   "<EM>",                       /* BeforePrintStructures */
   " ",                          /* PrintStructureSeparator */
@@ -99,7 +99,7 @@ HTMLPrintDescriptionRecord = {
 
 PrintDescriptionRecord 
 HTMLTabularPrintDescriptionRecord = {
-  "<TD ALIGN=RIGHT>%d:</TD>",   /* CPOSPrintFormat */
+  "<TD ALIGN=RIGHT>%" PRId64 ":</TD>",   /* CPOSPrintFormat */
 
   "<TD><EM>",                   /* BeforePrintStructures */
   " ",                          /* PrintStructureSeparator */
@@ -132,7 +132,7 @@ HTMLTabularPrintDescriptionRecord = {
 
 PrintDescriptionRecord
 HTMLTabularNowrapPrintDescriptionRecord = {
-  "<TD ALIGN=RIGHT nowrap>%d:</TD>", /* CPOSPrintFormat */
+  "<TD ALIGN=RIGHT nowrap>%" PRId64 ":</TD>", /* CPOSPrintFormat */
 
   "<TD nowrap><EM>",            /* BeforePrintStructures */
   " ",                          /* PrintStructureSeparator */
@@ -166,7 +166,7 @@ HTMLTabularNowrapPrintDescriptionRecord = {
 /* ---------------------------------------------------------------------- */
 
 void 
-html_puts(FILE *fd, char *s, int flags)
+html_puts(FILE *fd, char *s, int64_t flags)
 {
   if (!s)
     s = "(null)";
@@ -191,7 +191,7 @@ html_puts(FILE *fd, char *s, int flags)
 }
 
 char *
-html_print_field(FieldType field, int at_end)
+html_print_field(FieldType field, int64_t at_end)
 {
   switch (field) {
 
@@ -239,7 +239,7 @@ char *
 html_convert_string(char *s)
 {
   static char html_s[CL_MAX_LINE_LENGTH*2];
-  int p; /* "pointer" into array */
+  int64_t p; /* "pointer" into array */
 
   if (!s || strlen(s) >(CL_MAX_LINE_LENGTH))
     return NULL;
@@ -321,13 +321,13 @@ void html_print_context(ContextDescriptor *cd, FILE *stream)
 
   switch(cd->left_type) {
   case CHAR_CONTEXT:
-    fprintf(stream, "%d characters", cd->left_width);
+    fprintf(stream, "%" PRId64 " characters", cd->left_width);
     break;
   case WORD_CONTEXT:
-    fprintf(stream, "%d tokens", cd->left_width);
+    fprintf(stream, "%" PRId64 " tokens", cd->left_width);
     break;
   case STRUC_CONTEXT:
-    fprintf(stream, "%d %s", cd->left_width, 
+    fprintf(stream, "%" PRId64 " %s", cd->left_width, 
             cd->left_structure_name ? cd->left_structure_name : "???");
     break;
   default:
@@ -341,13 +341,13 @@ void html_print_context(ContextDescriptor *cd, FILE *stream)
 
   switch(cd->right_type) {
   case CHAR_CONTEXT:
-    fprintf(stream, "%d characters", cd->right_width);
+    fprintf(stream, "%" PRId64 " characters", cd->right_width);
     break;
   case WORD_CONTEXT:
-    fprintf(stream, "%d tokens", cd->right_width);
+    fprintf(stream, "%" PRId64 " tokens", cd->right_width);
     break;
   case STRUC_CONTEXT:
-    fprintf(stream, "%d %s", cd->right_width, 
+    fprintf(stream, "%" PRId64 " %s", cd->right_width, 
             cd->right_structure_name ? cd->right_structure_name : "???");
     break;
   default:
@@ -380,7 +380,7 @@ void html_print_corpus_header(CorpusList *cl, FILE *stream)
             "<tr><td nowrap><em>Corpus:</em></td><td nowrap>%s</td></tr>\n"
             "<tr><td nowrap> </td><td nowrap>%s</td></tr>\n"
             "<tr><td nowrap><em>Subcorpus:</em></td><td nowrap>%s:%s</td></tr>\n"
-            "<tr><td nowrap><em>Number of Matches:</em></td><td nowrap>%d</td></tr>\n",
+            "<tr><td nowrap><em>Number of Matches:</em></td><td nowrap>%" PRId64 "</td></tr>\n",
 #ifndef __MINGW__
             (pwd ? pwd->pw_name : "unknown"),
             (pwd ? pwd->pw_gecos  : "unknown"),
@@ -410,11 +410,11 @@ void html_print_corpus_header(CorpusList *cl, FILE *stream)
 
 void html_print_output(CorpusList *cl, 
                        FILE *stream,
-                       int interactive,
+                       int64_t interactive,
                        ContextDescriptor *cd,
-                       int first, int last)
+                       int64_t first, int64_t last)
 {
-  int line, real_line;
+  int64_t line, real_line;
   ConcLineField clf[NoField];   /* NoField is largest field code (not used by us) */
   AttributeList *strucs;
   PrintDescriptionRecord *pdr;
@@ -484,7 +484,7 @@ void html_print_output(CorpusList *cl,
       
     {
       char *outstr;
-      int dummy;
+      int64_t dummy;
         
       outstr = compose_kwic_line(cl->corpus, 
                                  cl->range[real_line].start, 
@@ -522,14 +522,14 @@ void html_print_output(CorpusList *cl,
 }
 
 void 
-html_print_group(Group *group, int expand, FILE *fd)
+html_print_group(Group *group, int64_t expand, FILE *fd)
 {
-  int source_id, target_id, count;
+  int64_t source_id, target_id, count;
 
   char *target_s = "(null)";
 
-  int cell, last_source_id;
-  int nr_targets;
+  int64_t cell, last_source_id;
+  int64_t nr_targets;
 
   /* na ja... */
   last_source_id = -999;
@@ -559,7 +559,7 @@ html_print_group(Group *group, int expand, FILE *fd)
     fprintf(fd, "<TD>");
     html_puts(fd, target_s, SUBST_ALL);
 
-    fprintf(fd, "<TD>%d</TR>\n", count);
+    fprintf(fd, "<TD>%" PRId64 "</TR>\n", count);
     
     nr_targets++;
   }
